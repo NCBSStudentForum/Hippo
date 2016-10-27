@@ -7,3 +7,14 @@
     alignment : right;
     vertical-align: text-top;
 }
+
+#table_request {
+    text-align : left;
+    background-color:lightyellow; 
+    width : 500px; 
+    border-width: 1px;
+}
+
+#table_request.tr td {
+    border-width = 0.5px;
+}

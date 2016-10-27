@@ -36,8 +36,8 @@
             </div>
         </div>
 
-        <selected></selected>
-    </div>
+		<h3><selecteddate></selecteddate></h3>
+	</div>
 
 
     <div class="row">

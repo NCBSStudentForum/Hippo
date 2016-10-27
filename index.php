@@ -51,8 +51,7 @@
 			</div>
 		</div>
 
-		<h3></h3>
-		<small>To see example with events navigate to march 2013</small>
+		<h3><selecteddate></selecteddate></h3>
 	</div>
 
 	<div class="row">

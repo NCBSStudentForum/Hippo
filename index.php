@@ -1,5 +1,7 @@
-<?php ?>
-<!DOCTYPE html>
+<?php
+require_once( "header.php" );
+?>
+
 <html>
 <head>
 <title>NCBS Calendar</title>
@@ -16,12 +18,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="hero-unit">
-        <h1>NCBS Schedular and Event Calendar</h1>
-    </div>
-
     <div class="page-header">
-
         <div class="pull-right form-inline">
             <div class="btn-group">
                 <button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>

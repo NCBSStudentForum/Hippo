@@ -29,21 +29,14 @@ function getInfoForDisplay()
     return $info;
 }
 
-function getAnimalList( )
+function getVenues( )
 {
     $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
-    $response = $conn->query( "SELECT id, name FROM animals WHERE status='alive'" );
-    $result = Array();
-    $i = 0;
-    while( $arr = $response->fetchArray( SQLITE3_BOTH ) )
-    {
-        $result[$i] = $arr;
-        $i ++;
-    }
-
+    $response = $conn->query( "SELECT * FROM venues" );
+    $arr = $response->fetchArray( SQLITE3_ASSOC );
     $conn->close();
-    return $result;
+    return $arr;
 }
 
 /**

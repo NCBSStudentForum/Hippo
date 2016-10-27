@@ -2,6 +2,7 @@
  * Bootstrap based calendar full view.
  *
  * https://github.com/Serhioromano/bootstrap-calendar
+ * forked : https://github.com/dilawar/bootstap-calendar
  *
  * User: Sergey Romanov <serg4172@mail.ru>
  */

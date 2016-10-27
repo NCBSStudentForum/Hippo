@@ -1,7 +1,8 @@
 <div class="cal-month-day <%= cls %>">
     <!-- Add a button to add event -->
-    <form action="add_event.php" method="post" accept-charset="utf-8">
-        <input id="button_add_event", type="submit" value="+" >
+    <form action="request.php" method="post" accept-charset="utf-8">
+        <button id="button_add_event", name="selected_day", type="submit" 
+            value="<%= data_day %>" >+</button>
     </form>
     <span class="pull-right" data-cal-date="<%= data_day %>" data-cal-view="day" data-toggle="tooltip" title="<%= tooltip %>"><%= day %></span>
     <% if (events.length > 0) { %>

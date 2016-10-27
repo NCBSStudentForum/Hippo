@@ -1,65 +1,37 @@
 <?php
 
 include_once('ldap.php');
+
 function sqlite_open($location)
 {
   $db = new SQLite3($location);
   return $db;
 }
 
-function getAnimalWithId( $id )
+function getEvents( $date )
 {
-    if( ! $id )
+    if( ! $date )
         return NULL;
 
-    $dbname = $_SESSION['db_unmutable'];
+    $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
-
-    $stmt = $conn->prepare( 'SELECT * FROM animals WHERE id=:id');
-    $stmt->bindValue( ':id', $id, SQLITE3_TEXT );
+    $stmt = $conn->prepare( 'SELECT * FROM events WHERE endOn >= :date');
+    $stmt->bindValue( ':date', $date, SQLITE3_TEXT );
     $res = $stmt->execute( );
     $arr = $res->fetchArray( SQLITE3_ASSOC );
-
-    $stmt = $conn->prepare( 'SELECT * FROM current_status WHERE id=:id');
-    $stmt->bindValue( ':id', $id, SQLITE3_TEXT );
-    $res = $stmt->execute( );
-    $arr1 = $res->fetchArray( SQLITE3_ASSOC );
-
-    if( $arr1 )
-        $arr = array_merge( $arr, $arr1 );
-
-    $stmt = $conn->prepare( 'SELECT * FROM health WHERE id=:id');
-    $stmt->bindValue( ':id', $id, SQLITE3_TEXT );
-    $res = $stmt->execute( );
-    $arr2 = $res->fetchArray( SQLITE3_ASSOC );
-
     $conn->close();
-
-    if( $arr2 )
-        $arr = array_merge( $arr, $arr2 );
     return $arr;
 }
 
 function getInfoForDisplay()
 {
-  $conn = sqlite_open("db/jinawar.sqlite");
-  $info = array();
-  if($conn) 
-  {
-      $res = $conn->query("SELECT Count(*) FROM mice");
-      if($res)
-      {
-          $arr = $res->fetchArray();
-          $info['total_mice'] = $arr[0];
-      }
-      $conn->close();
-  }
-  return $info;
+    $info = NULL;
+    return $info;
 }
 
 function getAnimalList( )
 {
-    $dbname = $_SESSION['db_unmutable'];
+    $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
     $response = $conn->query( "SELECT id, name FROM animals WHERE status='alive'" );
     $result = Array();
@@ -83,7 +55,7 @@ function getAnimalList( )
  */
 function getListOfCages( $type = NULL )
 {
-    $dbname = $_SESSION['db_unmutable'];
+    $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die( "failed to open $dbname" );
     $array = Array();
     if( $conn )
@@ -139,7 +111,7 @@ function getHealth( $animal_id )
 
 function connetJinawar( )
 {
-    $dbname = $_SESSION['db_unmutable'];
+    $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die ("Could not connect to $dbname " );
     return $conn;
 }

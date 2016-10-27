@@ -19,9 +19,9 @@ function loginForm()
   return $table;
 }
 
-function animalToHTMLTable( $animal_id, $show_genotype = true, $show_health = true )
+function eventTable( $date )
 {
-    $animal = getAnimalWithId( $animal_id );
+    $events = getEvents( $date );
     __log__( 'Showing animal ' . implode( ',', $animal ) );
     $html = '';
     $html .= "<table class=\"info\" >

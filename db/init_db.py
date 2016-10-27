@@ -36,16 +36,16 @@ def add_tables_to_db( db ):
     db.commit()
     c.execute( 'CREATE TABLE IF NOT EXISTS events ('
             'id NCHAR PRIMARY KEY NOT NULL'
-            ',cloneof NCHAR'
+            ',cloneof NCHAR NOT NULL'
             ',type NCHAR NOT NULL'
-            ',venue NCHAR'
+            ',venue NCHAR NOT NULL'
             ',description TEXT NOT NULL'
             ',startOn DATETIME NOT NULL' 
             ',endOn DATETIME NOT NULL'
-            ',doesRepeat INT default 0'
-            ',booked INT default 0'
+            ",doesRepeat INT DEFAULT '0'"
+            ",booked INT DEFAULT '0'"
             ',COMMENT TEXT'
-            ',FOREIGN KEY(venue) REFERENCE venues(id)'
+            ',FOREIGN KEY(venue) REFERENCES venues(id)'
             ')'
             )
     db.commit( )

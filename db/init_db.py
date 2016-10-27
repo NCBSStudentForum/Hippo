@@ -17,43 +17,48 @@ __status__           = "Development"
 import sqlite3 as sql
 
 # Two databases, one stores non-mutable information and other daily records.
-dbnames_ = [ 'jinawar.sqlite' ]
+dbnames_ = [ 'bmv.sqlite' ]
 
-def add_tables_to_jinawar( db ):
+def add_tables_to_db( db ):
     c = db.cursor( )
     # These values never changes.
     c.execute(
-            "CREATE TABLE IF NOT EXISTS animals ("
+            "CREATE TABLE IF NOT EXISTS venues ("
             "id NCHAR PRIMARY KEY NOT NULL"      
             ",name TEXT NOT NULL"
-            ",dob DATE NOT NULL"
-            ",dod DATE"
-            ",gender NCHAR NOT NULL"
-            ",status NCHAR DEFAULT alive"
-            ",parent_cage_id NCHAR NOT NULL"
-            ",strain NCHAR NOT NULL"
+            ",location TEXT NOT NULL"
+            ",strength INT NOT NULL"
+            ",hasConference INT DEFAULT 0"
+            ",hasProjector INT DEFAULT 0"
             ",comment TEXT"
             ")"
             )
     db.commit()
-    c.execute( 'CREATE TABLE IF NOT EXISTS cages ('
+    c.execute( 'CREATE TABLE IF NOT EXISTS events ('
             'id NCHAR PRIMARY KEY NOT NULL'
+            ',cloneof NCHAR'
             ',type NCHAR NOT NULL'
-            ',location TEXT'
-            ',BARCODE BLOB'
+            ',venue NCHAR'
+            ',description TEXT NOT NULL'
+            ',startOn DATETIME NOT NULL' 
+            ',endOn DATETIME NOT NULL'
+            ',doesRepeat INT default 0'
+            ',booked INT default 0'
             ',COMMENT TEXT'
+            ',FOREIGN KEY(venue) REFERENCE venues(id)'
             ')'
             )
     db.commit( )
-    c.execute( "CREATE TABLE IF NOT EXISTS current_status ("
+    c.execute( "CREATE TABLE IF NOT EXISTS requests ("
             " id NCHAR PRIMARY KEY NOT NULL"
-            ", current_cage_id NCHAR NOT NULL"
-            ", ear_pattern NCHAR NOT NULL"
-            ", genotype_id NCHAR "
-            ", genotype_done_on DATETIME"
-            ", genotype_done_by NCHAR"
+            ", requestBy NCHAR NOT NULL"
+            ", eventId NCHAR"
+            ", venue NCHAR "
+            ", description NOT NULL"
+            ", startOn DATETIME NOT NULL"
+            ", endOn DATETIME NOT NULL"
             ", comment TEXT"
-            ", image BLOB"
+            ", status NCHAR DEFAULT 'pending'"
             ", timestamp DATETIME DEFAULT (datetime('now', 'localtime'))"
             ")"
             )
@@ -61,8 +66,11 @@ def add_tables_to_jinawar( db ):
     db.commit()
     c.execute( "CREATE TABLE IF NOT EXISTS log ("
             " timestamp DATETIME DEFAULT (datetime('now', 'localtime'))"
-            ", prev TEXT "
-            ", curr TEXT "
+            ", requestId NCHAR "
+            ", prevStatus NCHAR "
+            ", currStatus NCHAR "
+            ", changedBy NCHAR "
+            ", comment TEST "
             ")"
             )
     db.commit( )
@@ -70,12 +78,9 @@ def add_tables_to_jinawar( db ):
 
 def add_tables( db ):
     print( 'Adding table to %s' % db )
-    if db == 'jinawar.sqlite':
+    if db == 'bmv.sqlite':
         db_ = sql.connect( db )
-        add_tables_to_jinawar( db_ )
-    elif db == 'record.sqlite':
-        db_ = sql.connect( db )
-        add_tables_to_record( db_ )
+        add_tables_to_db( db_ )
     else:
         print( '[WARN] Unknown database %s' % db )
 

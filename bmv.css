@@ -13,8 +13,13 @@
     background-color:lightyellow; 
     width : 500px; 
     border-width: 1px;
+    border-type : dotted;
 }
 
 #table_request.tr td {
     border-width = 0.5px;
+}
+
+#input {
+    align : right ;
 }

@@ -106,6 +106,7 @@ file_put_contents('count.txt', $hit_count);
     <script type="text/javascript" src="components/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="components/underscore/underscore-min.js"></script>
     <script type="text/javascript" src="components/bootstrap2/js/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="components/jstimezonedetect/jstz.min.js"></script>
     <script type="text/javascript" src="js/language/bg-BG.js"></script>
     <script type="text/javascript" src="js/language/nl-NL.js"></script>

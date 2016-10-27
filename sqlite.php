@@ -94,7 +94,7 @@ function summaryTable( )
 
 function getHealth( $animal_id )
 {
-    $conn = connetJinawar( );
+    $conn = connectDB( );
 
     $stmt = $conn->prepare( 'SELECT * FROM health WHERE id=:id' );
     $stmt->bindValue( ':id', $animal_id, SQLITE3_TEXT );
@@ -109,7 +109,7 @@ function getHealth( $animal_id )
     return $result;
 }
 
-function connetJinawar( )
+function connectDB( )
 {
     $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die ("Could not connect to $dbname " );

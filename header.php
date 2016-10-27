@@ -6,14 +6,12 @@ if(!isset($_SESSION))
 <!DOCTYPE html>
 <html>
 <head>
-<link href="bmv.css" rel="stylesheet" type="text/css">
+<link href="jinawar.css" rel="stylesheet" type="text/css">
 </head>
-<div>
-<title>Book My Venue</title>
-<h3>BMV <small> Book My Venue </small> </h3>
-<small>Ver 0.9.0, GNU GPL <a href="https://github.com/dilawar/bookmyvenue" target='_blank'>(c) Dilawar Singh, 2016.</a>
+<title>JINAWAR </title>
+<h3>JINAWAR <small> Animal Management System </small> </h3>
+<small>Ver 0.9.0, GNU GPL <a href="https://github.com/dilawar/jinawar" target='_blank'>(c) Dilawar Singh, 2016.</a>
 <a href='mailto:dilawar.s.rajput@gamil.com'>Email admin</a></small>
-</div>
 <br />
-<br />
+<hr align="left"/>
 </html>

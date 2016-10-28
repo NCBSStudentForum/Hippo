@@ -20,6 +20,22 @@
     border-width = 0.5px;
 }
 
-#input {
-    align : right ;
+table {
+    width : 500px
+    text-align : left;
+    background-color:lightyellow; 
+    width : 500px; 
+    border-width: 1px;
+    border-type : dotted;
+}
+
+.goback {
+    align : left ;
+}
+
+.update {
+    position : absolute;
+    align : right;
+    left : 440px;
+    border-type : dotted;
 }

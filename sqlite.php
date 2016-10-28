@@ -33,10 +33,16 @@ function getVenues( )
 {
     $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
-    $response = $conn->query( "SELECT * FROM venues" );
-    $arr = $response->fetchArray( SQLITE3_ASSOC );
+    $res = $conn->query( "SELECT * FROM venues" );
+    $array = Array();
+    $i = 0;
+    while( $row = $res->fetchArray( SQLITE3_ASSOC ) )
+    {
+        $array[$i] = $row;
+        $i++;
+    }
     $conn->close();
-    return $arr;
+    return $array;
 }
 
 /**

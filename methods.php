@@ -54,15 +54,15 @@ function cagesToHtml( $cages, $default = NULL )
     return $html;
 }
 
-function animalListToHtml( $animals )
+function venuesToHTMLSelect( $venues )
 {
-    $html = "<select name=\"animal_id\"> 
-        <option disabled selected value> -- select an animal -- </option>"
+    $html = "<select name=\"venue_id\"> 
+        <option disabled selected value> -- select a venue -- </option>"
         ;
-    foreach( $animals as $anim )
+    foreach( $venues as $v )
     {
-        $text = $anim['id'] . ' ' . $anim['name'];
-        $html .= '<option value="' . $anim['id'] . '">' . $text . '</option>';
+        $text = $v['name'] . '(' . $v['strength'] . ')';
+        $html .= '<option value="' . $v['name'] . '">' . $text . '</option>';
     }
 
     $html .= "</select>";

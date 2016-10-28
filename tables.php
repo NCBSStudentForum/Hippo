@@ -21,64 +21,29 @@ function loginForm()
 
 function eventTable( $date )
 {
-    $events = getEvents( $date );
-    __log__( 'Showing animal ' . implode( ',', $animal ) );
-    $html = '';
-    $html .= "<table class=\"info\" >
-        <tr> <td>Animal Id</td>";
-    $html .=  "<td>" . $animal['id'] . "</td>   
-            </tr> <tr> <td >Name</td> <td>" . $animal['name'] . " </td> </tr>";
-    $html .= "<tr>
-            <td >Gender</td> 
-            <td>" . $animal['gender'] .  "</td> </tr>";
-    $html .= " <tr> <td>Strain</td> 
-            <td> " . $animal['strain'] . "</td> </tr>";
-    $html .= "<tr> <td >Current cage ID</td> <td> " . $animal['current_cage_id'] 
-             . " </td> </tr>";
-    $html .= "<tr> <td>Date of birth</td> <td> " 
-            .  $animal['dob'] . " </td> </tr>";
-    $html .= "<tr> <td>Age</td> <td> " . ageInDays( $animal['dob'] ) 
-        . " <font color=\"blue\"> " .  
-        strtoupper($animal['status']) . " </font> " . " </td> </tr> ";
+}
 
-    $html .=  "<tr> <td>Born in cage with ID</td><td> " 
-        . $animal['parent_cage_id'] . " </td> </tr> ";
-    $html .= "</table> <br />";
-    if( $show_genotype )
+function requestsToHTMLTable( $requests )
+{
+    $html = '<table class="request">';
+    foreach( $requests as $r )
     {
-        $html .= " <table  class=\"info\">";
-        $html .= "<tr> <td>Is transgenic</td> <td> " .  
-                $animal['is_transgenic'] . " </td> </tr>";
-        $html .= "<tr> <td>Genotype done on</td> <td> " .
-            $animal['genotype_done_on'] . " </td> </tr> ";
-
-        $html .= " <tr> <td>Genotype done by</td> <td>" .  $animal['genotype_done_by'] . " </td> </tr>";
-        $html .= " </table> <br />";
+        $html .= '<input type="hidden" name="requestId" value="' . $r['id'] . '>"';
+        $html .= "<tr>";
+        $html .= "<td>" . $r['requestBy'] . "</td>";
+        $html .= "<td colspan=\"20\">" . $r['title'] . "</td>";
+        $html .= "<td color=\"blue\">" . $r['venue'] . "</td>";
+        $html .= "<td>" . $r['startOn'] . " to " . $r['endOn'] . "</td>";
+        $html .= "<td>" . $r['repeatPat'] . "</td></tr>";
+        $html .= '<tr>';
+        $html .= "<td><input type=\"text\" value=\"Comment\"></td>";
+        $html .= '<td><input name="response" type="radio" value="approve" checked>Approve</td>';
+        $html .= '<td><input name="response" type="radio" value="reject">Reject </td>';
+        $html .= '<td><input type="submit" value="Submit">  </td>';
+        $html .= "</tr>";
     }
 
-    if( $show_health )
-    {
-        $html .= "<table class=\"info\" >";
-        $html .= "<tr> <td>Weight</td> <td> " . $animal['weight'] . "gm </td> </tr>";
-        $html .= "<tr> <td>Length</td> <td> " .  $animal['length'] . " mm</td> </tr> <tr>";
-        $html .= " <td>Height</td> <td> " .  $animal['height'] . " mm</td> </tr>";
-        $html .= " <tr> <td>Condition</td> <td> " .  $animal['condition'] . "</td> </tr>";
-
-        if( $animal['status'] != "alive" )
-        {
-            $html .= '<tr><td><font color="blue">Died on</strong></td>';
-            $html .= '<td>' . $animal['died_on'] . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr><td>Deadly reason</td>';
-            $html .= '<td>' . $animal['deadly_reason'] . '</td>';
-            $html .= '</tr>';
-        }
-        $html .= "</table> <br />";
-
-        //$html .= "<table  class=\"info\" >";
-        //$html .= "<tr> TODO: Write log </tr> </table>";
-    }
-
+    $html .= '</table>';
     return $html;
 }
 

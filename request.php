@@ -38,7 +38,10 @@ include_once( "methods.php" );
 
 <table class="input" id="table_request">
     <tr> <td>Title</td>
-        <td> <input type="text" value="" > </td>
+        <td> <input name="title" type="text" value="" > </td>
+    </tr>
+    <tr> <td>Description</td>
+        <td> <textarea name="description" cols="22" rows="3" > </textarea> </td>
     </tr>
     <tr> <td>Venue</td>
     <td> <?php echo venuesToHTMLSelect( $venues ); ?> </td>

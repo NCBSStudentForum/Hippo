@@ -16,13 +16,14 @@ $conn = connectDB( );
 
 $query = $conn->prepare( 
     "INSERT INTO requests ( 
-        requestBy, venue, description, startOn, endOn, repeatPat, timestamp, status 
+        requestBy, venue, title, description, startOn, endOn, repeatPat, timestamp, status 
     ) VALUES ( 
-        :requestBy, :venue, :description, :startOn, :endOn, :repeatPat, 'now', 'pending' 
+        :requestBy, :venue, :title, :description, :startOn, :endOn, :repeatPat, 'date(now)', 'pending' 
     )");
 
 $query->bindValue( ':requestBy', $_SESSION['user'] );
 $query->bindValue( ':venue' , $_POST['venueId' ] );
+$query->bindValue( ':title', $_POST['title'] );
 $query->bindValue( ':description', $_POST['description'] );
 $query->bindValue( ':startOn', $_POST['startOn'] );
 $query->bindValue( ':endOn', $_POST['endOn'] );

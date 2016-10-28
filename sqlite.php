@@ -42,33 +42,21 @@ function getVenues( )
     return $array;
 }
 
-/**
-    * @brief Get the ids for all cages with given type.
-    *
-    * @param $type
-    *
-    * @return 
- */
-function getListOfCages( $type = NULL )
+// Get all requests which are pending for review.
+function getPendingRequests( )
 {
-    $dbname = $_SESSION['db'];
-    $conn = sqlite_open( $dbname ) or die( "failed to open $dbname" );
-    $array = Array();
-    if( $conn )
-    {
-        if( $type )
-            $res = $conn->query( 'SELECT * FROM cages WHERE type="'. $type . '"' );
-        else
-            $res = $conn->query( 'SELECT * FROM cages' );
+    return getRequests( 'pending' );
+}
 
-        $i = 0;
-        while( $row = $res->fetchArray( SQLITE3_ASSOC ) )
-        {
-            $array[$i] = $row;
-            $i++;
-        }
-        $conn->close();
-    }
+// Get all requests with given status.
+function getRequests( $status  )
+{
+    $conn = connectDB( );
+    $res = $conn->query( 'SELECT * FROM requests WHERE status="'. $status . '"' );
+    $array = Array();
+    while( $row = $res->fetchArray( SQLITE3_ASSOC ) )
+        array_push( $array, $row );
+    $conn->close();
     return $array;
 }
 
@@ -110,6 +98,12 @@ function connectDB( )
     $dbname = $_SESSION['db'];
     $conn = sqlite_open( $dbname ) or die ("Could not connect to $dbname " );
     return $conn;
+}
+
+function getRequestById( $rid )
+{
+    $conn = connectDB( );
+
 }
 
 ?>

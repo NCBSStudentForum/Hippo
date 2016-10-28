@@ -34,14 +34,6 @@ print_r( $events );
 <?php
 
 include_once( "methods.php" );
-//var_dump( $_POST );
-
-if( $_POST[ "response" ] == "Go back" )
-{
-    goToPage( "index.php", 0 );
-    exit( 0 );
-}
-
 ?>
 
 <table class="input" id="table_request">

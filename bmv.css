@@ -8,7 +8,7 @@
     vertical-align: text-top;
 }
 
-#table_request {
+table.input {
     text-align : left;
     background-color:lightyellow; 
     width : 500px; 
@@ -38,4 +38,21 @@ table {
     align : right;
     left : 440px;
     border-type : dotted;
+}
+
+.submit {
+    position : absolute;
+    align : right;
+    left : 440px;
+    border-type : dotted;
+}
+
+p {
+    font : serif;
+    width : 500px;
+}
+
+p.info {
+    color : blue;
+    width : 500 px;
 }

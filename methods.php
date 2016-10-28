@@ -118,18 +118,57 @@ function __get__( $arr, $what, $default = NULL )
         return $default;
 }
 
-function age( $dob )
+function repeatPatToDays( $pat )
 {
-    $now = new DateTime();
-    $date = new DateTime( $dob );
-    $age = $date->diff($now);
-    return $age;
+    $weekdays = array( "sun", "mon", "tue", "wed", "thu", "fri", "sat" );
+
+    $exploded = explode( ",", $pat);
+    $days = $exploded[0];
+    // These are absolute indices of days.
+    if( $days == "*" )
+        $days = "0/1/2/3/4/5/6";
+    $weeks = __get__( $exploded, 1, "*" );
+    $months = __get__( $exploded, 2, "*" );
+    if( $weeks == "*" )
+        $weeks = "0/1/2/3";
+    if( $months == "*" );
+        $months = "0/1/2/3/4/5/6/7/8/9/10/11";
+
+
+    $months = explode( "/", $months );
+    $weeks = explode( "/", $weeks );
+    $days = explode( "/", $days );
+
+
+    $result = Array();
+
+    // Now fill the dates for given pattern.
+    foreach( $months as $m )
+        foreach( $weeks as $w )
+            foreach( $days as $d )
+            {
+                $day = 28 * intval($m) + 7 * intval($w) + 1 + intval($d);
+                array_push( $result, $day );
+            }
+
+    // Get the base day which is first in the pattern and compute dates from 
+    // this day.
+    $baseDay = strtotime( "next " . $weekdays[$days[0]] );
+    return daysToDate($result, $baseDay);
 }
 
-function ageInDays( $dob )
+function daysToDate( $ndays, $baseDay = NULL )
 {
-    $age = age( $dob );
-    return $age->format( '%R%a days' );
+    $bd = date("l", $baseDay);
+    $result = Array( );
+    $baseDay = date("Y-m-d", $baseDay);
+    foreach( $ndays as $nd )
+    {
+        $date = date('Y-m-d', strtotime( $baseDay . ' + ' . $nd  . ' days'));
+        array_push( $result, $date );
+    }
+    return $result;
 }
+
 
 ?>

@@ -35,12 +35,9 @@ function getVenues( )
     $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
     $res = $conn->query( "SELECT * FROM venues" );
     $array = Array();
-    $i = 0;
     while( $row = $res->fetchArray( SQLITE3_ASSOC ) )
-    {
-        $array[$i] = $row;
-        $i++;
-    }
+        array_push( $array, $row );
+
     $conn->close();
     return $array;
 }

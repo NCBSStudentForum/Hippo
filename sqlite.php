@@ -60,7 +60,7 @@ function getRequestById( $rid )
     $stmt = $db->prepare( 'SELECT * FROM requests WHERE id=:id' );
     $stmt->bindValue( ':id', $rid );
     $stmt->execute( );
-    return fetchEntries( $stmt );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 /**

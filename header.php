@@ -6,7 +6,7 @@ if(!isset($_SESSION))
 <!DOCTYPE html>
 <html>
 <head>
-<link href="bmv.css" rel="stylesheet" type="text/css" />
+<link href="bookmyvenue.css" rel="stylesheet" type="text/css" />
 
 </head>
 <div>

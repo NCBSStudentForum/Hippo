@@ -30,13 +30,14 @@ table.input {
 }
 
 table.request {
-    width : 500px;
     text-align : left;
     background-color:lightyellow; 
-    border-width: 1px;
+    border-spacing: 3px;
+    border-collapse : separate;
+    padding : 3px;
     border-type : dotted;
-    font-size : x-small;
 }
+
 
 tr:nth-of-type( odd ) {
     background : #eee;

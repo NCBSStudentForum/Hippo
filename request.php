@@ -37,6 +37,8 @@ include_once( "methods.php" );
 ?>
 
 <table class="input" id="table_request">
+    <!-- hide the day -->
+    <input type="hidden" name="date" value="<?php echo $date ?>" />
     <tr> <td>Title</td>
         <td> <input name="title" type="text" value="" > </td>
     </tr>

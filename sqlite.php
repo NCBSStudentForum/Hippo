@@ -3,15 +3,12 @@
 include_once( "methods.php" );
 include_once('ldap.php');
 
-class BMVPDO extends PDO {
-
+class BMVPDO extends PDO 
+{
     function __construct( $filename = "db/bmv.sqlite" ) 
     {
         $filename = realpath( $filename );
-        $options = array ( 
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION 
-        );
+        $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         try {
             parent::__construct( 'sqlite:' . $filename, '', '', $options );
         } catch( PODException $e) {
@@ -29,7 +26,7 @@ function getVenues( )
 {
     global $db;
     $res = $db->query( "SELECT * FROM venues" );
-    return fetchEntries( $db );
+    return fetchEntries( $res );
 }
 
 // Get all requests which are pending for review.
@@ -64,6 +61,49 @@ function getRequestById( $rid )
     $stmt->bindValue( ':id', $rid );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get the list of events for today.
+ */
+function getEvents( $date = NULL )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM events WHERE date > :date" );
+    if( ! $date )
+        $date = strtotime( 'today' );
+    $stmt->bindValue( ':date', $date );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Sunmit a request for review.
+    *
+    * @param $request
+    *
+    * @return 
+ */
+function submitRequest( $request )
+{
+    global $db;
+    $repeatPat = $request[ 'repeatPat' ];
+    $query = $db->prepare( 
+        "INSERT INTO requests ( 
+            requestBy, venue, title, description, date, startOn, endOn, repeatPat, timestamp, status 
+        ) VALUES ( 
+            :requestBy, :venue, :title, :description, :date, :startOn, :endOn, :repeatPat, 'date(now)', 'pending' 
+        )");
+
+    $query->bindValue( ':requestBy', $_SESSION['user'] );
+    $query->bindValue( ':venue' , $request['venueId' ] );
+    $query->bindValue( ':title', $request['title'] );
+    $query->bindValue( ':description', $request['description'] );
+    $query->bindValue( ':date', $request['date'] );
+    $query->bindValue( ':startOn', $request['startOn'] );
+    $query->bindValue( ':endOn', $request['endOn'] );
+    $query->bindValue( ':repeatPat', $request['repeatPat'] );
+    return $query->execute();
 }
 
 ?>

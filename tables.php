@@ -28,7 +28,7 @@ function requestsToHTMLTable( $requests )
     $html = '<table class="request">';
     foreach( $requests as $r )
     {
-        $html .= '<input type="hidden" name="requestId" value="' . $r['id'] . '>"';
+        $html .= '<input type="hidden" name="requestId" value="'.$r['id'].'">';
         $html .= "<tr>";
         $html .= "<td>" . $r['requestBy'] . "</td>";
         $html .= "<td colspan=\"20\">" . $r['title'] . "</td>";
@@ -36,7 +36,7 @@ function requestsToHTMLTable( $requests )
         $html .= "<td>" . $r['startOn'] . " to " . $r['endOn'] . "</td>";
         $html .= "<td>" . $r['repeatPat'] . "</td></tr>";
         $html .= '<tr>';
-        $html .= "<td><input type=\"text\" value=\"Comment\"></td>";
+        $html .= "<td><input type=\"text\" placeholder=\"comment\" value=\"\"></td>";
         $html .= '<td><input name="response" type="radio" value="approve" checked>Approve</td>';
         $html .= '<td><input name="response" type="radio" value="reject">Reject </td>';
         $html .= '<td><input type="submit" value="Submit">  </td>';

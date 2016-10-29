@@ -1,45 +1,35 @@
 <?php
 
+include_once( "methods.php" );
 include_once('ldap.php');
 
-function sqlite_open($location)
-{
-  $db = new SQLite3($location);
-  return $db;
+class BMVPDO extends PDO {
+
+    function __construct( $filename = "db/bmv.sqlite" ) 
+    {
+        $filename = realpath( $filename );
+        $options = array ( 
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION 
+        );
+        try {
+            parent::__construct( 'sqlite:' . $filename, '', '', $options );
+        } catch( PODException $e) {
+            echo printWarning( "failed to connect to database: ".  $e->getMessage());
+            $this->error = $e->getMessage( );
+        }
+    }
 }
 
-function getEvents( $date )
-{
-    if( ! $date )
-        return NULL;
+// Construct the PDO
+$db = new BMVPDO( "db/bmv.sqlite" );
 
-    $dbname = $_SESSION['db'];
-    $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
-    $stmt = $conn->prepare( 'SELECT * FROM events WHERE endOn >= :date');
-    $stmt->bindValue( ':date', $date, SQLITE3_TEXT );
-    $res = $stmt->execute( );
-    $arr = $res->fetchArray( SQLITE3_ASSOC );
-    $conn->close();
-    return $arr;
-}
-
-function getInfoForDisplay()
-{
-    $info = NULL;
-    return $info;
-}
 
 function getVenues( )
 {
-    $dbname = $_SESSION['db'];
-    $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );
-    $res = $conn->query( "SELECT * FROM venues" );
-    $array = Array();
-    while( $row = $res->fetchArray( SQLITE3_ASSOC ) )
-        array_push( $array, $row );
-
-    $conn->close();
-    return $array;
+    global $db;
+    $res = $db->query( "SELECT * FROM venues" );
+    return fetchEntries( $db );
 }
 
 // Get all requests which are pending for review.
@@ -51,59 +41,29 @@ function getPendingRequests( )
 // Get all requests with given status.
 function getRequests( $status  )
 {
-    $conn = connectDB( );
-    $res = $conn->query( 'SELECT * FROM requests WHERE status="'. $status . '"' );
-    $array = Array();
-    while( $row = $res->fetchArray( SQLITE3_ASSOC ) )
-        array_push( $array, $row );
-    $conn->close();
+    global $db;
+    $res = $db->query( 'SELECT * FROM requests WHERE status="'. $status . '"' );
+    return fetchEntries( $res );
+}
+
+// Fetch entries from sqlite responses
+function fetchEntries( $res )
+{
+    $array = Array( );
+    if( $res ) {
+        while( $row = $res->fetch( PDO::FETCH_ASSOC ) )
+            array_push( $array, $row );
+    }
     return $array;
-}
-
-function summaryTable( )
-{
-    $html = "<table class=\"summary\" style=\"float: left\">";
-    $animals = getAnimalList( );
-    $breederCages = getListOfCages( "breeder" );
-    $cages = getListOfCages( );
-    $numAnimals = sizeof( $breederCages );
-    $numCages = sizeof( $cages );
-    $numBreederCages = sizeof( $breederCages );
-    $html .= "<tr> <td>Alive animals </td><td> $numAnimals </td> </tr>";
-    $html .= "<tr> <td>Total cages </td><td> $numCages </td> </tr>";
-    $html .= "<tr> <td>Breeder cages </td><td> $numBreederCages </td> </tr>";
-    $html .= "</table>";
-    return $html;
-}
-
-function getHealth( $animal_id )
-{
-    $conn = connectDB( );
-
-    $stmt = $conn->prepare( 'SELECT * FROM health WHERE id=:id' );
-    $stmt->bindValue( ':id', $animal_id, SQLITE3_TEXT );
-
-    $res = $stmt->execute( );
-
-    if( $res )
-        $result = $res->fetchArray( );
-    else
-        $result = Array();
-    $conn->close( );
-    return $result;
-}
-
-function connectDB( )
-{
-    $dbname = $_SESSION['db'];
-    $conn = sqlite_open( $dbname ) or die ("Could not connect to $dbname " );
-    return $conn;
 }
 
 function getRequestById( $rid )
 {
-    $conn = connectDB( );
-
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE id=:id' );
+    $stmt->bindValue( ':id', $rid );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
 }
 
 ?>

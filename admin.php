@@ -5,7 +5,7 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "sqlite.php" );
-include_once( "tables.php" );
+include_once( "tohtml.php" );
 
 ?>
 
@@ -15,8 +15,8 @@ include_once( "tables.php" );
 $requests = getPendingRequests( ); 
 ?>
 
-<form action="admin_request.php" method="post" accept-charset="utf-8">
-<?php echo requestsToHTMLTable( $requests ); ?>
+<form action="admin_request_review.php" method="post" accept-charset="utf-8">
+<?php echo requestsToHTMLReviewForm( $requests ); ?>
 </form>
 
 <button type="logout" value="Log out">Log out</button>

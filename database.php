@@ -91,22 +91,33 @@ function getEventsOnThisDayAndThisVenue( $date, $venue )
 function submitRequest( $request )
 {
     global $db;
-    $repeatPat = $request[ 'repeatPat' ];
+    $repeatPat = $request[ 'repeat_pat' ];
     $query = $db->prepare( 
         "INSERT INTO requests ( 
-            requestBy, venue, title, description, date, startOn, endOn, repeatPat, timestamp, status 
+            user, venue, title, description
+            , date, start_time, end_time
+            , does_repeat, repeat_pat
+            , timestamp, status 
         ) VALUES ( 
-            :requestBy, :venue, :title, :description, :date, :startOn, :endOn, :repeatPat, 'date(now)', 'pending' 
+            :user, :venue, :title, :description
+            , :date , :start_time, :end_time
+            , :does_repeat, :repeat_pat
+            , 'date(now)', 'pending' 
         )");
 
-    $query->bindValue( ':requestBy', $_SESSION['user'] );
-    $query->bindValue( ':venue' , $request['venueId' ] );
+    $query->bindValue( ':user', $_SESSION['user'] );
+    $query->bindValue( ':venue' , $request['venue' ] );
     $query->bindValue( ':title', $request['title'] );
     $query->bindValue( ':description', $request['description'] );
     $query->bindValue( ':date', $request['date'] );
-    $query->bindValue( ':startOn', $request['startOn'] );
-    $query->bindValue( ':endOn', $request['endOn'] );
-    $query->bindValue( ':repeatPat', $request['repeatPat'] );
+    $query->bindValue( ':start_time', $request['start_time'] );
+    $query->bindValue( ':end_time', $request['end_time'] );
+    $query->bindValue( ':repeat_pat', $request['repeat_pat'] );
+    if( strlen( trim($request['repeat_pat']) > 0 ) )
+        $query->bindValue( ':does_repeat', 'Yes' );
+    else
+        $query->bindValue( ':does_repeat', 'No' );
+    //echo $query->debugDumpParams();
     return $query->execute();
 }
 

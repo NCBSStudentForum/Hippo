@@ -56,7 +56,7 @@ function cagesToHtml( $cages, $default = NULL )
 
 function venuesToHTMLSelect( $venues )
 {
-    $html = "<select name=\"venueId\"> 
+    $html = "<select name=\"venue\"> 
         <option disabled selected value> -- select a venue -- </option>"
         ;
     foreach( $venues as $v )

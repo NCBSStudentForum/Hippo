@@ -7,13 +7,14 @@ CREATE TABLE IF NOT EXISTS requests (
     , user VARCHAR(50) NOT NULL
     , title VARCHAR(100) NOT NULL
     , description TEXT 
+    , venue VARCHAR(20) NOT NULL
     , date DATE NOT NULL
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
     , status ENUM ( 'pending', 'approved', 'rejected' ) DEFAULT 'pending'
     , does_repeat ENUM( 'Yes', 'No' ) DEFAULT 'No'
-    , repeat_pat VARCHAR(100) 
-    , timestamp DATETIME 
+    , repeat_pat VARCHAR(100) DEFAULT '-1'
+    , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
     , PRIMARY KEY( id )
     );
     

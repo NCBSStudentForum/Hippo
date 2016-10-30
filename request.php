@@ -69,7 +69,7 @@ include_once( "methods.php" );
         </small>
         </td> 
         <td> 
-            <input type="text" name="repeatPat" id="repeat" value="" /> 
+            <input type="text" name="repeat_pat" id="repeat" value="" /> 
         </td>
     </tr>
 </table>

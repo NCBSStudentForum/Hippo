@@ -8,7 +8,7 @@ include_once( "tohtml.php" );
 
 <script type="text/javascript">
 function toggleMe(source) {
-    var checkboxes = document.getElementsByName( 'request[]' );
+    var checkboxes = document.getElementsByName( 'events[]' );
     for( var index = 0; index < checkboxes.length; ++index )
         checkboxes[index].checked = source.checked;
 }
@@ -44,19 +44,23 @@ if( $_POST['response'] == "Review" )
                 </td>
             </tr>
             ";
+        $childrenId = 0;
         foreach( $days as $day )
         {
-            echo "<tr>";
             $rid = $r['id']; 
+            $eventId = "$rid."."$childrenId"; 
+            $childrenId += 1;
             $r['date'] = $day;
             $r['repeat_pat'] = '';
-            echo "<td><input type=\"checkbox\" name=\"request[]\"
-                    value=\"request_$rid\"></td>";
+            echo "<tr>";
+            echo "<td><input type=\"checkbox\" name=\"events[]\" value=\"$eventId\"></td>";
             echo "<td>" . requestToHTMLTable( $r ) . "</td>";
-            echo "</tr>";
-            echo '<input type="hidden" name="parent_id" value="'.$r["id"].'">';
+            echo '<td>TODO: check venue</td>';
+            echo '</tr>';
+            echo '<input type="hidden" name="request_id" value="'. $rid . '">';
         }
-        echo "</td></tr> </table>";
+        echo '</td>';
+        echo "</tr> </table>";
         echo "</form>";
     }
 }

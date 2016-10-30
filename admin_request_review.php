@@ -1,10 +1,21 @@
 <?php 
+
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "tohtml.php" );
 
-//var_dump( $_POST );
+?>
 
+<script type="text/javascript">
+function toggleMe(source) {
+    var checkboxes = document.getElementsByName( 'request[]' );
+    for( var index = 0; index < checkboxes.length; ++index )
+        checkboxes[index].checked = source.checked;
+}
+</script>
+
+
+<?php
 if( $_POST['response'] == "Review" )
 {
     // Approve after constructing all the events from the patterns.
@@ -20,14 +31,33 @@ if( $_POST['response'] == "Review" )
         echo printInfo("Due to repeat pattern, 
             this will lead to creation of following $numEvents events"
         );
+
+        echo '<form method="post" action="admin_request_submit.php">';
+        echo "<table>";
+        echo "<tr> 
+            <td><input name=\"request[]\" type=\"checkbox\" 
+                onclick=\"toggleMe(this)\" />Check all</td>
+                <!-- Here we create the button to submit requests -->
+                <td> 
+                    <button name=\"response\" value=\"approve\">Approve selected </button>
+                    <button name=\"response\" value=\"reject\">Reject selected</button>
+                </td>
+            </tr>
+            ";
         foreach( $days as $day )
         {
+            echo "<tr>";
+            $rid = $r['id']; 
             $r['date'] = $day;
-            $r['repeatPat'] = '';
-            echo requestToHTMLTable( $r );
-            echo isVenueAvailable( $r['venue'], $r['date']
-                , $r['start_time'], $r['end_time']  );
+            $r['repeat_pat'] = '';
+            echo "<td><input type=\"checkbox\" name=\"request[]\"
+                    value=\"request_$rid\"></td>";
+            echo "<td>" . requestToHTMLTable( $r ) . "</td>";
+            echo "</tr>";
+            echo '<input type="hidden" name="parent_id" value="'.$r["id"].'">';
         }
+        echo "</td></tr> </table>";
+        echo "</form>";
     }
 }
 

@@ -20,13 +20,14 @@ CREATE TABLE IF NOT EXISTS requests (
     
 DROP TABLE IF EXISTS events;
 CREATE TABLE IF NOT EXISTS events (
-    id INT NOT NULL AUTO_INCREMENT
+    -- Sub even will be parent.children format.
+    id DECIMAL(6,4) NOT NULL
+    , short_description VARCHAR(200) NOT NULL
+    , description TEXT
     , date DATE NOT NULL
     , venue VARCHAR(80)
-    , startTime TIME NOT NULL
-    , endTime TIME NOT NULL
-    , description TEXT
-    , short_description VARCHAR(200) NOT NULL
+    , start_time TIME NOT NULL
+    , end_time TIME NOT NULL
     , PRIMARY KEY( id )
     );
     

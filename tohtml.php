@@ -1,6 +1,6 @@
 <?php 
 
-include_once 'sqlite.php';
+include_once 'database.php';
 
 function loginForm()
 {

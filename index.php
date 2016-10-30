@@ -20,9 +20,6 @@ if(!$conf)
 $_SESSION['conf'] = $conf;
 $_SESSION['user'] = 'admin'; // This for testing purpose.
 
-// Has multable tables, log, users etc.
-$_SESSION['db'] = 'db/bmv.sqlite';
-
 /* counter */
 $hit_count = (int)file_get_contents('count.txt');
 $hit_count++;

@@ -1,6 +1,6 @@
 <?php 
 
-include_once('sqlite.php');
+include_once('database.php');
 include_once('error.php');
 include_once( 'logger.php' );
 
@@ -61,8 +61,13 @@ function venuesToHTMLSelect( $venues )
         ;
     foreach( $venues as $v )
     {
-        $text = $v['name'] . '(' . $v['strength'] . ')';
-        $html .= '<option value="' . $v['name'] . '">' . $text . '</option>';
+        $text = $v['id'] . ' (' . $v['strength'] . ') ';
+        if( $v['suitable_for_conference'] == 'Yes' )
+            $text .= '<font color=\"blue\"> +C </font>';
+        if( $v['has_projector'] == 'Yes' )
+            $text .= '<font color=\"blue\"> +P </font>';
+
+        $html .= '<option value="' . $v['id'] . '">' . $text . '</option>';
     }
 
     $html .= "</select>";

@@ -13,9 +13,9 @@ if( $_POST['response'] == "Review" )
     echo "<h2> We are processing following request </h2>";
     echo requestToHTMLTable( $r );
 
-    if( trim($r['repeatPat']) )
+    if( $r['does_repeat'] && strlen(trim($r['repeat_pat'])) > 0 )
     {
-        $days = repeatPatToDays( $r['repeatPat'] );
+        $days = repeatPatToDays( $r['repeat_pat'] );
         $numEvents = count( $days );
         echo printInfo("Due to repeat pattern, 
             this will lead to creation of following $numEvents events"
@@ -26,7 +26,7 @@ if( $_POST['response'] == "Review" )
             $r['repeatPat'] = '';
             echo requestToHTMLTable( $r );
             echo isVenueAvailable( $r['venue'], $r['date']
-                , $r['startOn'], $r['endOn']  );
+                , $r['start_time'], $r['end_time']  );
         }
     }
 }

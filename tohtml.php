@@ -44,11 +44,11 @@ function requestToHTMLTable( $r )
     $html = '<table class="request">';
     $html .= '<input type="hidden" name="requestId" value="'.$r['id'].'">';
     $html .= "<tr>";
-    $html .= "<td>" . $r['requestBy'] . "</td>";
+    $html .= "<td>" . $r['user'] . "</td>";
     $html .= "<td colspan=\"20\">" . $r['title'] . "</td>";
     $html .= "<td class=\"eventvenue\">" . $r['venue'] . "</td>";
-    $html .= "<td class=\"eventtime\">" . $r['startOn'] . " to " . $r['endOn'] . " on " . $r['date'] . "</td>";
-    $html .= "<td>" . $r['repeatPat'] . "</td></tr>";
+    $html .= "<td class=\"eventtime\">" . $r['start_time'] . " to " . $r['end_time'] . " on " . $r['date'] . "</td>";
+    $html .= "<td>" . $r['repeat_pat'] . "</td></tr>";
     $html .= '</table>';
     return $html;
 }

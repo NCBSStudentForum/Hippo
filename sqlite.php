@@ -69,12 +69,15 @@ function getRequestById( $rid )
 function getEvents( $date = NULL )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM events WHERE date > :date" );
-    if( ! $date )
-        $date = strtotime( 'today' );
-    $stmt->bindValue( ':date', $date );
+    $stmt = $db->query( "SELECT * FROM events" );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+function getEventsOnThisDayAndThisVenue( $date, $venue )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date=:date AND venue=:venue" );
 }
 
 /**
@@ -104,6 +107,24 @@ function submitRequest( $request )
     $query->bindValue( ':endOn', $request['endOn'] );
     $query->bindValue( ':repeatPat', $request['repeatPat'] );
     return $query->execute();
+}
+
+/**
+    * @brief Check if a venue is available or not for the given day and given 
+    * time.
+    *
+    * @param $venue
+    * @param $date
+    * @param $startOn
+    * @param $endOn
+    *
+    * @return 
+ */
+function isVenueAvailable( $venue, $date, $startOn, $endOn )
+{
+    $answer = true;
+    $allEventsOnThisday = getEventsOnThisDayAndThisVenue( $date, $venue );
+    return $answer;
 }
 
 ?>

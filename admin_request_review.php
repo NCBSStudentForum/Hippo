@@ -25,6 +25,8 @@ if( $_POST['response'] == "Review" )
             $r['date'] = $day;
             $r['repeatPat'] = '';
             echo requestToHTMLTable( $r );
+            echo isVenueAvailable( $r['venue'], $r['date']
+                , $r['startOn'], $r['endOn']  );
         }
     }
 }

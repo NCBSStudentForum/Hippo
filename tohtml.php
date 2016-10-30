@@ -46,8 +46,8 @@ function requestToHTMLTable( $r )
     $html .= "<tr>";
     $html .= "<td>" . $r['requestBy'] . "</td>";
     $html .= "<td colspan=\"20\">" . $r['title'] . "</td>";
-    $html .= "<td color=\"blue\">" . $r['venue'] . "</td>";
-    $html .= "<td>" . $r['startOn'] . " to " . $r['endOn'] . " on " . $r['date'] . "</td>";
+    $html .= "<td class=\"eventvenue\">" . $r['venue'] . "</td>";
+    $html .= "<td class=\"eventtime\">" . $r['startOn'] . " to " . $r['endOn'] . " on " . $r['date'] . "</td>";
     $html .= "<td>" . $r['repeatPat'] . "</td></tr>";
     $html .= '</table>';
     return $html;

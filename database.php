@@ -139,5 +139,10 @@ function isVenueAvailable( $venue, $date, $startOn, $endOn )
     return $answer;
 }
 
+function actOnRequest( $eventId, $requestId, $status )
+{
+    echo "Changing status to $status ";
+}
+
 ?>
 

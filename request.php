@@ -50,11 +50,11 @@ include_once( "methods.php" );
     </tr>
     <tr> <td>Starts on <br>
     </td>
-        <td> <input type="time" name="startOn" value="" /> </td>
+        <td> <input type="time" name="start_time" value="" /> </td>
     </tr>
     <tr> <td>Ends on <br>
     </td>
-        <td> <input type="time" name="endOn" value="" /> </td>
+        <td> <input type="time" name="end_time" value="" /> </td>
     </tr>
     <tr> <td>Date <br>
     </td>

@@ -5,12 +5,13 @@ include_once('ldap.php');
 
 class BMVPDO extends PDO 
 {
-    function __construct( $filename = "db/bmv.sqlite" ) 
+    function __construct( $host = 'ghevar.ncbs.res.in'  )
     {
-        $filename = realpath( $filename );
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         try {
-            parent::__construct( 'sqlite:' . $filename, '', '', $options );
+            parent::__construct( 'mysql:host=' . $host . ';dbname=bookmyvenue'
+                , 'bookmyvenueuser', 'bookmyvenue', $options 
+            );
         } catch( PODException $e) {
             echo printWarning( "failed to connect to database: ".  $e->getMessage());
             $this->error = $e->getMessage( );
@@ -19,7 +20,7 @@ class BMVPDO extends PDO
 }
 
 // Construct the PDO
-$db = new BMVPDO( "db/bmv.sqlite" );
+$db = new BMVPDO( "ghevar.ncbs.res.in" );
 
 
 function getVenues( )

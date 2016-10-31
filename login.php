@@ -1,6 +1,7 @@
 <?php 
 
-include 'is_valid_access.php';
+include_once( "header.php" );
+include_once( "methods.php" );
 
 $conf = $_SESSION['conf'];
 $ldap = $_POST['username'];

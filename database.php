@@ -65,6 +65,23 @@ function getRequestById( $rid )
 }
 
 /**
+    * @brief Change the status of request.
+    *
+    * @param $requestId
+    * @param $status
+    *
+    * @return true on success, false otherwise.
+ */
+function changeRequestStatus( $requestId, $status )
+{
+    global $db;
+    $stmt = $db->prepare( "UPDATE requests SET status=:status WHERE id=:id" );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':id', $requestId );
+    return $stmt->execute( );
+}
+
+/**
     * @brief Get the list of events for today.
  */
 function getEvents( $date = NULL )
@@ -139,9 +156,47 @@ function isVenueAvailable( $venue, $date, $startOn, $endOn )
     return $answer;
 }
 
+function approveRequest( $eventId, $requestId )
+{
+    $request = getRequestById( $requestId );
+
+    global $db;
+    $stmt = $db->prepare( 'INSERT IGNORE INTO events (
+        id, short_description, description, date, venue, start_time, end_time
+    ) VALUES ( 
+        :id, :short_description, :description, :date, :venue, :start_time, :end_time 
+    )');
+    $stmt->bindValue( ':id', $eventId );
+    $stmt->bindValue( ':short_description', $request['title'] );
+    $stmt->bindValue( ':description', $request['description'] );
+    $stmt->bindValue( ':date', $request['date'] );
+    $stmt->bindValue( ':venue', $request['venue'] );
+    $stmt->bindValue( ':start_time', $request['start_time'] );
+    $stmt->bindValue( ':end_time', $request['end_time'] );
+    $res = $stmt->excute();
+    if( $res )
+    {
+        // Change the status of request 
+        changeRequestStatus( $requestId, 'approved' );
+    }
+    return $res;
+}
+
+function rejectRequest( $eventId, $requestId )
+{
+    return changeRequestStatus( $requestId, 'rejected' );
+}
+
+
 function actOnRequest( $eventId, $requestId, $status )
 {
     echo "Changing status to $status ";
+    if( $status == 'Approve' )
+        approveRequest( $eventId, $requestId );
+    elseif( $status == 'Reject' )
+        rejectRequest( $eventId, $requestId );
+    else
+        echo( printWarning( "unknown request " . $requestId ) );
 }
 
 ?>

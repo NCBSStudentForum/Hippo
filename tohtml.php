@@ -60,5 +60,52 @@ function requestToHTMLTable( $r )
     return $html;
 }
 
+// $day is used to check if this day and hour, something is booked.
+function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
+{
+    $tableName = "<font size=\"1\">$venue</font>";
+    $tableTime = "<font size=\"1\" >" . date('H:i', $hour) . "</font>";
+    $html = "<table class=\"hourtable\">";
+    $html .= "<tr><td colspan=\"$section\"> $tableName $tableTime </td></tr>";
+
+    $html .= "<tr>";
+    for( $i = 0; $i < $section; $i++) 
+    {
+        $stepT = $i * 60 / $section;
+        $segTime = strtotime( "+ $stepT minutes", $hour );
+        // Check  for events at this venue. If non, then display + (addEvent) 
+        // button else show that this timeslot has been booked.
+        $events = eventAtThisVenue( $venue, $day, $segTime );
+        if( count( $events ) == 0 )
+            $html .= "<td><button id=\"button_add_event\" name=\"add_event\" value=\"$segTime\">+</button></td>";
+        else
+            $html .= "<td>E</td>";
+    }
+    $html .= "</tr></table>"; 
+    return $html;
+}
+
+// Convert a event into a nice looking html line.
+function eventLineHTML( $day )
+{
+
+    $html = '<table class="eventline">';
+    $startDay = '8:00';
+    $dt = 60; // Each segment is 15 minutes wide. 
+    $venues = getVenues( );
+    foreach( $venues as $venue )
+    {
+        $html .= "<tr>";
+        for( $i = 0; $i < 12; $i++ )
+        {
+            $stepT = $i * $dt;
+            $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
+            $html .= "<td>" . hourToHTMLTable( $day, $segTime, $venue['id'], 4 ) . "</td>";
+        }
+        $html .= "</tr>";
+    }
+    $html .= '</table>';
+    return $html;
+}
 
 ?>

@@ -3,7 +3,8 @@ USE bookmyvenue;
 
 DROP TABLE IF EXISTS requests;
 CREATE TABLE IF NOT EXISTS requests (
-    id INT NOT NULL AUTO_INCREMENT
+    index INT NOT NULL AUTO_INCREMENT 
+    , id DECIMAL(5,5) NOT NULL
     , user VARCHAR(50) NOT NULL
     , title VARCHAR(100) NOT NULL
     , description TEXT 
@@ -11,8 +12,8 @@ CREATE TABLE IF NOT EXISTS requests (
     , date DATE NOT NULL
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
-    , status ENUM ( 'pending', 'approved', 'rejected' ) DEFAULT 'pending'
-    , does_repeat ENUM( 'Yes', 'No' ) DEFAULT 'No'
+    , status ENUM ( 'PENDING', 'APPROVED', 'REJECTED' ) DEFAULT 'PENDING'
+    , does_repeat ENUM( 'YES', 'NO' ) DEFAULT 'NO'
     , repeat_pat VARCHAR(100) DEFAULT '-1'
     , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
     , PRIMARY KEY( id )
@@ -36,15 +37,15 @@ CREATE TABLE IF NOT EXISTS venues (
     id VARCHAR(80) PRIMARY KEY
     , location VARCHAR(200) NOT NULL
     , strength INT NOT NULL
-    , has_projector ENUM( 'Yes', 'No' ) NOT NULL
-    , suitable_for_conference ENUM( 'Yes', 'No' ) NOT NULL
+    , has_projector ENUM( 'YES', 'NO' ) NOT NULL
+    , suitable_for_conference ENUM( 'YES', 'NO' ) NOT NULL
     );
     
 # Insert venues.
 INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference ) 
-    VALUES ( 'Safeda', 'SLC 2nd Floor', '40', 'Yes', 'No' );
+    VALUES ( 'Safeda', 'SLC 2nd Floor', '40', 'YES', 'NO' );
 INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference )
-    VALUES ( 'Synpase', 'SLC Ground Floor', '10', 'Yes', 'Yes' );
+    VALUES ( 'Synpase', 'SLC Ground Floor', '10', 'YES', 'YES' );
 INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference )
-    VALUES ( 'Mitochondria', 'SLC 1st Floor', '`0', 'Yes', 'No' );
+    VALUES ( 'Mitochondria', 'SLC 1st Floor', '0', 'YES', 'NO' );
 

@@ -1,7 +1,14 @@
 <?php 
-
 include_once 'database.php';
+?>
 
+<script>
+function displayEvent( button ) {
+    alert( button.value );
+};
+</script>
+
+<?php
 function loginForm()
 {
   $conf = $_SESSION['conf'];
@@ -60,6 +67,16 @@ function requestToHTMLTable( $r )
     return $html;
 }
 
+// Return a short description of event.
+function eventToText( $event )
+{
+    $html = '';
+    $html .= $event['short_description'];
+    $html .= ' @' . $event['venue'] . ', ';
+    $html .= $event['start_time'] . ' to ' . $event['end_time'];
+    return $html;
+}
+
 // $day is used to check if this day and hour, something is booked.
 function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 {
@@ -79,14 +96,21 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
         if( count( $events ) == 0 )
             $html .= "<td><button id=\"button_add_event\" name=\"add_event\" value=\"$segTime\">+</button></td>";
         else
-            $html .= "<td>E</td>";
+        {
+            $totalEvents = count( $events );
+            $msg = '';
+            foreach( $events as $e )
+                $msg .= eventToText( $e );
+            $html .= "<td><button class=\"display_event\" 
+            value=\"$msg\" onclick=\"displayEvent(this)\">B</button></td>";
+        }
     }
     $html .= "</tr></table>"; 
     return $html;
 }
 
 // Convert a event into a nice looking html line.
-function eventLineHTML( $day )
+function eventLineHTML( $date )
 {
 
     $html = '<table class="eventline">';
@@ -100,7 +124,7 @@ function eventLineHTML( $day )
         {
             $stepT = $i * $dt;
             $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
-            $html .= "<td>" . hourToHTMLTable( $day, $segTime, $venue['id'], 4 ) . "</td>";
+            $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venue['id'], 4 ) . "</td>";
         }
         $html .= "</tr>";
     }

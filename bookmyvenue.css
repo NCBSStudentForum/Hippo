@@ -31,6 +31,13 @@ table.input {
     border-width = 0.5px;
 }
 
+table.login_main {
+    background-color : lightyellow;
+    border-type : dotted;
+    margin-left : 350px;
+    postion : absolute;
+}
+
 table.input {
     width : 500px
     text-align : left;
@@ -62,10 +69,7 @@ table.eventline tr.page-break {
     page-break : always;
 }
 
-
-
-
-tr:nth-of-type( odd ) {
+table.request tr:nth-of-type( odd ) {
     background : #eee;
 }
 

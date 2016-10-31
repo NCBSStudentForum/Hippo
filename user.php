@@ -2,6 +2,8 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "tohtml.php" );
+include_once( "is_valid_access.php" );
+
 
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.

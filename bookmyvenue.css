@@ -8,6 +8,17 @@
     vertical-align: text-top;
 }
 
+button.display_event {
+    width : 20px;
+    height : 20px;
+    /*border-radius : 50%;*/
+    border-style : none;
+    background : red;
+    alignment : right;
+    vertical-align: text-top;
+}
+
+
 table.input {
     text-align : left;
     background-color:lightyellow; 
@@ -37,6 +48,21 @@ table.request {
     padding : 3px;
     border-type : dotted;
 }
+
+table.eventline {
+    text-align : left;
+    background-color:lightyellow; 
+    border-spacing: 3px;
+    border-collapse : separate;
+    padding : 3px;
+    border-type : dotted;
+}
+
+table.eventline tr.page-break {
+    page-break : always;
+}
+
+
 
 
 tr:nth-of-type( odd ) {

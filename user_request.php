@@ -10,30 +10,41 @@ $venues = getVenues( );
 <script type="text/javascript" src="components/bootstrap2/js/bootstrap-datetimepicker.min.js"></script>
 
 <?php
-if( ! array_key_exists( 'selected_day', $_POST) )
+if( ! array_key_exists( 'date', $_POST) )
 {
     echo printWarning( "No valid day is selected. Going back to main page" );
     goToPage( "index.php", 2 );
     exit(0);
 }
 
-$date = $_POST['selected_day'];
-$day = date( 'l', strtotime( $date ) );
+$date = $_POST['date'];
+$day = date( 'l', $date );
 $events = getEvents( $date );
-echo "<h2>Status of venues <font color=\"blue\">$day, $date</font> </h2>";
-echo "<p>TODO: Show all venues and filter according to user input</p>";
-print_r( $events );
+$calendarDate = date( 'Y-m-d', $date);
+
 ?>
 
 <h2>Request for booking</h2>
 
-<p> Time must be in 24 hrs HH:MM format e.g. 9:30 (for 9:30am), 14:20 for 2:20pm etc. 
+<p class="info"> Time must be in 24 hrs HH:MM format e.g. 9:30 (for 9:30am), 14:20 for 2:20pm etc. 
 </p>
 
-<form class="input" action="request_action.php" method="post" accept-charset="utf-8">
-<?php
+<form class="input" action="user_request_action.php" method="post" accept-charset="utf-8">
 
+<?php
 include_once( "methods.php" );
+
+// Generate options here.
+$venue = __get__( $_POST, 'venue', '' );
+if( $venue )
+    $venueHTML = '<input name="venue" type="text" value="'.$venue.'" readonly>';
+else
+    $venueHTML = venuesToHTMLSelect( $venues );
+
+$startTime = __get__( $_POST, 'start_time', '' );
+$calendarTime = date( 'H:i', $startTime );
+$date = __get__( $_POST, 'date', '' );
+
 ?>
 
 <table class="input" id="table_request">
@@ -46,11 +57,12 @@ include_once( "methods.php" );
         <td> <textarea name="description" cols="22" rows="3" > </textarea> </td>
     </tr>
     <tr> <td>Venue</td>
-    <td> <?php echo venuesToHTMLSelect( $venues ); ?> </td>
+    <td> <?php echo $venueHTML ?> </td>
     </tr>
     <tr> <td>Starts on <br>
     </td>
-        <td> <input type="time" name="start_time" value="" /> </td>
+    <td> <input type="time" name="start_time" 
+            value="<?php echo $calendarTime ?>" /> </td>
     </tr>
     <tr> <td>Ends on <br>
     </td>
@@ -59,7 +71,7 @@ include_once( "methods.php" );
     <tr> <td>Date <br>
     </td>
         <td> 
-        <input type="time" name="selected_day" value=<?php echo $_POST['selected_day'] ?> />
+        <input type="date" name="date" value=<?php echo $calendarDate ?> />
         </td>
     </tr>
     <tr>

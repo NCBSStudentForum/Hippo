@@ -1,6 +1,4 @@
 <?php 
-
-//include_once( "is_valid_access.php" );
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "tohtml.php" );
@@ -21,9 +19,10 @@ echo "<form method=\"post\" action=\"user.php\">
 
 
 $date = $_POST['date'];
-$day = date( 'l', strtotime($date) );
+$calendarDate = humanReadableDate( $date );
+$day = humanReadableDay( $calendarDate );
 
-echo "<h3>List of events for $day $date </h3>";
+echo "<h3>On $day, $calendarDate </h3>";
 $html = eventLineHTML( $date );
 echo $html;
 

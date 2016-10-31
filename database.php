@@ -1,5 +1,6 @@
 <?php
 
+include_once( "header.php" );
 include_once( "methods.php" );
 include_once('ldap.php');
 
@@ -150,15 +151,31 @@ function getEventsOnThisDayAndThisVenue( $date, $venue )
 function submitRequest( $request )
 {
     global $db;
+    if( ! array_key_exists( 'user', $_SESSION ) )
+    {
+        echo printErrorSevere( "Error: I could not determine the name of user" );
+        goToPage( "user.php", 5 );
+    }
+
+    if( ! array_key_exists( 'venue', $request ) )
+    {
+        echo printErrorSevere( "No venue found in your request" );
+        goToPage( "user.php", 5 );
+    }
     $repeatPat = $request[ 'repeat_pat' ];
-    $days = repeatPatToDays( $repeatPat );
+
+    if( strlen( $repeatPat ) > 0 )
+        $days = repeatPatToDays( $repeatPat );
+    else 
+        $days = Array( $request['date'] );
+
     $rid = 0;
     $results = Array( );
+    $res = $db->query( 'SELECT MAX(gid) AS gid FROM requests' );
+    $gid = intval($res->fetch( PDO::FETCH_ASSOC )['gid']) + 1;
     foreach( $days as $day ) 
     {
         $rid += 1;
-        $res = $db->query( 'SELECT MAX(gid) AS gid FROM requests' );
-        $gid = ceil( floatval($res->fetch( PDO::FETCH_ASSOC )['gid'] ) );
         $query = $db->prepare( 
             "INSERT INTO requests ( 
                 gid, rid, user, venue
@@ -182,9 +199,13 @@ function submitRequest( $request )
         $query->bindValue( ':start_time', $request['start_time'] );
         $query->bindValue( ':end_time', $request['end_time'] );
         $res = $query->execute();
+        if( ! $res )
+        {
+            echo printWarning( "Could not submit request id $gid" );
+        }
         array_push( $results, $res );
     }
-    return in_array( false, $results );
+    return (! in_array( FALSE, $results ));
 }
 
 /**
@@ -259,11 +280,15 @@ function actOnRequest( $gid, $rid, $status )
 function eventAtThisVenue( $venue, $date, $time )
 {
     global $db;
-    //$date = date( 'Y-m-d', $day );
+    // Database reads in ISO format.
+    $hDate = date( 'Y-m-d', $date );
     $clockT = date('H:i', $time );
+
+    // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
+    // booked.
     $stmt = $db->prepare( 'SELECT * FROM events WHERE 
-        date=:date AND venue=:venue AND start_time <= :time AND end_time >= :time' );
-    $stmt->bindValue( ':date', $date );
+        date=:date AND venue=:venue AND start_time <= :time AND end_time > :time' );
+    $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
     $stmt->bindValue( ':venue', $venue );
     $stmt->execute( );

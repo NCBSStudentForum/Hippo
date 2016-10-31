@@ -124,6 +124,16 @@ function getEvents( $from = NULL )
     return fetchEntries( $stmt );
 }
 
+function getEventsOn( $day )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date" );
+    $stmt->bindValue( ':date', $day );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
 function getEventsOnThisDayAndThisVenue( $date, $venue )
 {
     global $db;
@@ -243,6 +253,21 @@ function actOnRequest( $gid, $rid, $status )
     else
         echo( printWarning( "unknown request " . $gid . '.' . $rid . 
         " or status " . $status ) );
+}
+
+// Fetch all events at given venue and given day-time.
+function eventAtThisVenue( $venue, $date, $time )
+{
+    global $db;
+    //$date = date( 'Y-m-d', $day );
+    $clockT = date('H:i', $time );
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE 
+        date=:date AND venue=:venue AND start_time <= :time AND end_time >= :time' );
+    $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':time', $clockT );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
 }
 
 ?>

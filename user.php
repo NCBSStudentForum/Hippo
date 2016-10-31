@@ -1,83 +1,33 @@
 <?php 
 
-include_once( "is_valid_access.php" );
+//include_once( "is_valid_access.php" );
+include_once( "header.php" );
 include_once( "methods.php" );
+include_once( "tohtml.php" );
 
-$animals = getAnimalList( );
-$animalDataList = animalsToDataList( $animals );
+// There is a form on this page which will send us to this page again. Therefore 
+// we need to keep $_POST variable to a sane state.
+if( ! array_key_exists( 'date', $_POST ) )
+    $_POST['date'] = strtotime( 'today' );
 
-// List of taks a user can do.
+$venues = getVenues( );
+$venueSelect = venuesToHTMLSelect( $venues );
+
+echo "<form method=\"post\" action=\"user.php\">
+    <input type=\"date\" name=\"date\" placeholder=\"Select date\" >
+    $venueSelect
+    <button name=\"response\" value=\"submit\">Submit</button>
+    </form>";
+
+
+$date = $_POST['date'];
+$day = date( 'l', strtotime($date) );
+
+echo "<h3>List of events for $day $date </h3>";
+$html = eventLineHTML( $date );
+echo $html;
+
 ?>
 
-<div class="action">
-<p>Here you can insert a new animal or a new cage.  </p>
-
- <table id="table_action">
-  <tr align="center">
-    <td> 
-        <form method="post" action="insert_cage.php">
-            <input type="submit" name="response" value="Insert new cage" >
-        </form>
-    </td>
-    <td> 
-        <form method="post" action="insert_animal.php">
-            <input type="submit" name="response" value="Insert new animal" >
-        </form>
-    </td>
-    </tr>
-</table>
-</div>
 
 
-<div class="action">
-
-<p> Once an animal is inserted, you can update verious other paramters related
-to its genotype, health and cage.  </p>
-
-<form method="post" action="user_show_animal_info.php" id="form_show_animnal">
-</form>
-
-<form method="post" action="edit_animal.php" id="form_edit_animal">
-<table id="table_action">
-  <tr>
-    <td valign="top"> <?php echo $animalDataList; ?> 
-        <input list="animal_list" name="animal_id"  placeholder="Pick an animal" required>
-    </td>
-    <td>
-        <select name="response">
-            <option disable selected value>Pick a task </option>
-            <option value="Assign/Change cage">Assign/Change cage</option>
-            <option value="Update Health">Update Health</option>
-            <option value="Record Genotype">Record Genotype</option>
-        </select>
-        <input type="submit" name="edit_animal" id="" value="Submit" />
-    </td>
-</table> 
-</form>
-</div>
-
-
-<div class="action">
-<p> Here you can see information about an animal. </p>
-
-<form method="post" action="user_show_animal_info.php" id="form_show_animal">
-<table id="table_action">
-  <tr>
-    <td valign="top"> <?php echo $animalDataList; ?> 
-        <input list="animal_list" name="animal_id"  placeholder="Pick an animal" required>
-    </td>
-    <td>
-        <select name="response">
-            <option disable selected value>Pick a task </option>
-            <option value="Show information">Show information</option>
-        </select>
-        <input type="submit" name="show_animal" id="" value="Submit" />
-    </td>
-</table> 
-</form>
-</div>
-
-<form method="post" action="index.php">
-<input class="logout" type="submit" name="submit" value="Log Out">
-<?php unset($_SESSION); ?>
-</form>

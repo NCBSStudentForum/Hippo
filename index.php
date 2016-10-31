@@ -57,7 +57,9 @@ file_put_contents('count.txt', $hit_count);
                 <button class="btn btn-warning" data-calendar-view="day">Day</button>
             </div>
         </div>
-
+                <!-- This field (selecteddate)is written by app. Don't change its 
+                    name casually to something else 
+                -->
 		<h3><selecteddate></selecteddate></h3>
 	</div>
 
@@ -85,13 +87,12 @@ file_put_contents('count.txt', $hit_count);
             <h4>Events</h4>
             <small>This list is populated with events dynamically</small>
             <ul id="eventlist" class="nav nav-list"></ul>
-
         </div>
     </div>
 
     <div class="clearfix"></div>
     <br><br>
-    <a href="https://github.com/dilawar/bootstrap-calendar/issues" class="btn btn-block btn-info">
+    <a href="https://github.com/dilawar/bookmyvenue/issues" class="btn btn-block btn-info">
         <center>
             <span class="lead">
                 Submit an issue, ask questions or give your ideas here!<br>

@@ -31,17 +31,19 @@ function getVenues( )
 }
 
 // Get all requests which are pending for review.
-function getPendingRequests( )
+function getPendingRequestsGroupedByGID( )
 {
-    return getRequests( 'pending' );
+    return getRequestsGroupedByGID( 'PENDING' );
 }
 
 // Get all requests with given status.
-function getRequests( $status  )
+function getRequestsGroupedByGID( $status  )
 {
     global $db;
-    $res = $db->query( 'SELECT * FROM requests WHERE status="'. $status . '"' );
-    return fetchEntries( $res );
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE status=:status GROUP BY gid' );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
 }
 
 // Fetch entries from sqlite responses
@@ -55,13 +57,36 @@ function fetchEntries( $res )
     return $array;
 }
 
-function getRequestById( $rid )
+// Get the request when group id and request id is given.
+function getRequestById( $gid, $rid )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE id=:id' );
-    $stmt->bindValue( ':id', $rid );
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND rid=:rid' );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':rid', $rid );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+// Return a list of requested with same group id.
+function getRequestByGroupId( $gid )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid' );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+// Return a list of requested with same group id and status
+function getRequestByGroupIdAndStatus( $gid, $status )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND status=:status' );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
 }
 
 /**
@@ -72,12 +97,15 @@ function getRequestById( $rid )
     *
     * @return true on success, false otherwise.
  */
-function changeRequestStatus( $requestId, $status )
+function changeRequestStatus( $gid, $rid, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE requests SET status=:status WHERE id=:id" );
+    $stmt = $db->prepare( "UPDATE requests SET 
+        status=:status WHERE gid=:gid AND rid=:rid"
+    );
     $stmt->bindValue( ':status', $status );
-    $stmt->bindValue( ':id', $requestId );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':rid', $rid );
     return $stmt->execute( );
 }
 
@@ -109,33 +137,40 @@ function submitRequest( $request )
 {
     global $db;
     $repeatPat = $request[ 'repeat_pat' ];
-    $query = $db->prepare( 
-        "INSERT INTO requests ( 
-            user, venue, title, description
-            , date, start_time, end_time
-            , does_repeat, repeat_pat
-            , timestamp, status 
-        ) VALUES ( 
-            :user, :venue, :title, :description
-            , :date , :start_time, :end_time
-            , :does_repeat, :repeat_pat
-            , 'date(now)', 'pending' 
-        )");
+    $days = repeatPatToDays( $repeatPat );
+    $rid = 0;
+    $results = Array( );
+    foreach( $days as $day ) 
+    {
+        $rid += 1;
+        $res = $db->query( 'SELECT MAX(gid) AS gid FROM requests' );
+        $gid = ceil( floatval($res->fetch( PDO::FETCH_ASSOC )['gid'] ) );
+        $query = $db->prepare( 
+            "INSERT INTO requests ( 
+                gid, rid, user, venue
+                , title, description
+                , date, start_time, end_time
+                , status 
+            ) VALUES ( 
+                :gid, :rid, :user, :venue
+                , :title, :description
+                , :date , :start_time, :end_time
+                , 'PENDING' 
+            )");
 
-    $query->bindValue( ':user', $_SESSION['user'] );
-    $query->bindValue( ':venue' , $request['venue' ] );
-    $query->bindValue( ':title', $request['title'] );
-    $query->bindValue( ':description', $request['description'] );
-    $query->bindValue( ':date', $request['date'] );
-    $query->bindValue( ':start_time', $request['start_time'] );
-    $query->bindValue( ':end_time', $request['end_time'] );
-    $query->bindValue( ':repeat_pat', $request['repeat_pat'] );
-    if( strlen( trim($request['repeat_pat']) > 0 ) )
-        $query->bindValue( ':does_repeat', 'Yes' );
-    else
-        $query->bindValue( ':does_repeat', 'No' );
-    //echo $query->debugDumpParams();
-    return $query->execute();
+        $query->bindValue( ':gid', $gid );
+        $query->bindValue( ':rid', $rid );
+        $query->bindValue( ':user', $_SESSION['user'] );
+        $query->bindValue( ':venue' , $request['venue' ] );
+        $query->bindValue( ':title', $request['title'] );
+        $query->bindValue( ':description', $request['description'] );
+        $query->bindValue( ':date', $day );
+        $query->bindValue( ':start_time', $request['start_time'] );
+        $query->bindValue( ':end_time', $request['end_time'] );
+        $res = $query->execute();
+        array_push( $results, $res );
+    }
+    return in_array( false, $results );
 }
 
 /**
@@ -156,47 +191,54 @@ function isVenueAvailable( $venue, $date, $startOn, $endOn )
     return $answer;
 }
 
-function approveRequest( $eventId, $requestId )
+/**
+    * @brief Create a new event in dateabase. The group id and event id of event 
+    * is same as group id (gid) and rid of request which created it.
+    *
+    * @param $gid
+    * @param $rid
+    *
+    * @return 
+ */
+function approveRequest( $gid, $rid )
 {
-    $request = getRequestById( $requestId );
+    $request = getRequestById( $gid, $rid );
 
     global $db;
     $stmt = $db->prepare( 'INSERT IGNORE INTO events (
-        id, short_description, description, date, venue, start_time, end_time
+        gid, eid, short_description, description, date, venue, start_time, end_time
     ) VALUES ( 
-        :id, :short_description, :description, :date, :venue, :start_time, :end_time 
+        :gid, :eid, :short_description, :description, :date, :venue, :start_time, :end_time 
     )');
-    $stmt->bindValue( ':id', $eventId );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':eid', $rid );
     $stmt->bindValue( ':short_description', $request['title'] );
     $stmt->bindValue( ':description', $request['description'] );
     $stmt->bindValue( ':date', $request['date'] );
     $stmt->bindValue( ':venue', $request['venue'] );
     $stmt->bindValue( ':start_time', $request['start_time'] );
     $stmt->bindValue( ':end_time', $request['end_time'] );
-    $res = $stmt->excute();
+    $res = $stmt->execute();
     if( $res )
-    {
-        // Change the status of request 
-        changeRequestStatus( $requestId, 'approved' );
-    }
+        changeRequestStatus( $gid, $rid, 'APPROVED' );
     return $res;
 }
 
-function rejectRequest( $eventId, $requestId )
+function rejectRequest( $gid, $rid )
 {
-    return changeRequestStatus( $requestId, 'rejected' );
+    return changeRequestStatus( $gid, $rid, 'REJECTED' );
 }
 
 
-function actOnRequest( $eventId, $requestId, $status )
+function actOnRequest( $gid, $rid, $status )
 {
-    echo "Changing status to $status ";
-    if( $status == 'Approve' )
-        approveRequest( $eventId, $requestId );
-    elseif( $status == 'Reject' )
-        rejectRequest( $eventId, $requestId );
+    if( $status == 'APPROVE' )
+        approveRequest( $gid, $rid );
+    elseif( $status == 'REJECT' )
+        rejectRequest( $gid, $rid );
     else
-        echo( printWarning( "unknown request " . $requestId ) );
+        echo( printWarning( "unknown request " . $gid . '.' . $rid . 
+        " or status " . $status ) );
 }
 
 ?>

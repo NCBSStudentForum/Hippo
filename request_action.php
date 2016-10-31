@@ -18,14 +18,14 @@ if( $res )
         "Your request has been submitted and an email has been sent to you 
         with details.
         " );
-    goToPage( "index.php", 5 );
+    //goToPage( "index.php", 5 );
 }
 else
 {
     echo printWarning( 
         "Your request could not be submitted. Please notify the admin." 
     );
-    goToPage( "index.php", 10 );
+    //goToPage( "index.php", 10 );
 }
 
 ?>

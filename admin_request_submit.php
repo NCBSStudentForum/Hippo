@@ -9,13 +9,15 @@ if( ! array_key_exists( 'events', $_POST ) )
     exit(0);
 }
 
-$requests = $_POST['events'];
+$events = $_POST['events'];
 $whatToDo = $_POST['response'];
-$requestId = $_POST['request_id'];
 
-foreach( $requests as $request ) {
-    echo printInfo( "Changing status to $whatToDo for request $request" );
-    actOnRequest( $request, $requestId, $whatToDo );
+foreach( $events as $event )
+{
+    echo printInfo( "Changing status to $whatToDo for request $event" );
+    $event = explode( '.', $event );
+    $gid = $event[0]; $rid = $event[1];
+    actOnRequest( $gid, $rid, $whatToDo );
 }
 
 goToPage( "admin.php", 1 );

@@ -12,7 +12,7 @@ include_once( "tohtml.php" );
 <h2> Pending requests </h2>
 
 <?php 
-$requests = getPendingRequests( ); 
+$requests = getPendingRequestsGroupedByGID( ); 
 ?>
 
 <form action="admin_request_review.php" method="post" accept-charset="utf-8">

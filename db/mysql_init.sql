@@ -3,8 +3,7 @@ USE bookmyvenue;
 
 DROP TABLE IF EXISTS requests;
 CREATE TABLE IF NOT EXISTS requests (
-    index INT NOT NULL AUTO_INCREMENT 
-    , id DECIMAL(5,5) NOT NULL
+    gid INT NOT NULL, rid INT NOT NULL
     , user VARCHAR(50) NOT NULL
     , title VARCHAR(100) NOT NULL
     , description TEXT 
@@ -13,23 +12,21 @@ CREATE TABLE IF NOT EXISTS requests (
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
     , status ENUM ( 'PENDING', 'APPROVED', 'REJECTED' ) DEFAULT 'PENDING'
-    , does_repeat ENUM( 'YES', 'NO' ) DEFAULT 'NO'
-    , repeat_pat VARCHAR(100) DEFAULT '-1'
     , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
-    , PRIMARY KEY( id )
+    , PRIMARY KEY( gid, rid )
     );
     
 DROP TABLE IF EXISTS events;
 CREATE TABLE IF NOT EXISTS events (
     -- Sub even will be parent.children format.
-    id DECIMAL(6,4) NOT NULL
+    gid INT NOT NULL, eid INT NOT NULL
     , short_description VARCHAR(200) NOT NULL
     , description TEXT
     , date DATE NOT NULL
     , venue VARCHAR(80)
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
-    , PRIMARY KEY( id )
+    , PRIMARY KEY( gid, eid )
     );
     
 DROP TABLE IF EXISTS venues;

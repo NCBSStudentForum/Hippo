@@ -44,15 +44,18 @@ function requestToHTMLTable( $r )
     $date = $r['date'];
     $day = date( 'l', strtotime($date) );
     $on = $day . ' ' . $date;
+    $id = $r['gid'] . '.' . $r['rid'];
     $html = '<table class="request">';
-    $html .= '<input type="hidden" name="requestId" value="'.$r['id'].'">';
+    $html .= '<input type="hidden" name="gid" value="'.$r['gid'].'">';
+    $html .= '<input type="hidden" name="rid" value="'.$r['rid'].'">';
     $html .= "<tr>";
+    $html .= "<td>" . $id .  "</td>";
     $html .= "<td>" . $r['user'] . "</td>";
     $html .= "<td colspan=\"20\">" . $r['title'] . "</td>";
     $html .= "<td class=\"eventvenue\">" . $r['venue'] . "</td>";
-    $html .= "<td class=\"eventtime\">" . $r['start_time'] . " to " 
-        . $r['end_time'] . "<br>" . $on . "</td>";
-    $html .= "<td>" . $r['repeat_pat'] . "</td></tr>";
+    $html .= "<td class=\"eventtime\">" . 
+        $r['start_time'] . " to " . $r['end_time'] . "<br>" . $on . 
+        "</td>";
     $html .= '</table>';
     return $html;
 }

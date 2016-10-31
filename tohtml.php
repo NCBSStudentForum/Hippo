@@ -1,5 +1,6 @@
 <?php 
-include_once 'database.php';
+include_once('database.php');
+include_once('methods.php');
 ?>
 
 <script>
@@ -80,8 +81,8 @@ function eventToText( $event )
 // $day is used to check if this day and hour, something is booked.
 function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 {
-    $tableName = "<font size=\"1\">$venue</font>";
-    $tableTime = "<font size=\"1\" >" . date('H:i', $hour) . "</font>";
+    $tableName = "<font style=\"font-size:12px\">" . strtoupper($venue). "</font><br>";
+    $tableTime = "<font style=\"font-size:12px\" >" . date('H:i', $hour) . " Hrs</font>";
     $html = "<table class=\"hourtable\">";
     $html .= "<tr><td colspan=\"$section\"> $tableName $tableTime </td></tr>";
 
@@ -90,11 +91,23 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
     {
         $stepT = $i * 60 / $section;
         $segTime = strtotime( "+ $stepT minutes", $hour );
+
         // Check  for events at this venue. If non, then display + (addEvent) 
         // button else show that this timeslot has been booked.
         $events = eventAtThisVenue( $venue, $day, $segTime );
         if( count( $events ) == 0 )
-            $html .= "<td><button id=\"button_add_event\" name=\"add_event\" value=\"$segTime\">+</button></td>";
+        {
+            // Add a form to trigger adding event purpose.
+            $html .= "<form method=\"post\" action=\"user_request.php\" >";
+            $html .= "<td>";
+            $html .= "<button id=\"button_add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
+            $html .= "</td>";
+            // And the hidden elements to carry the values to the action page.
+            $html .= '<input type="hidden" name="start_time" value="'. $segTime . '">';
+            $html .= '<input type="hidden" name="date" value="'. $day . '">';
+            $html .= '<input type="hidden" name="venue" value="'. $venue . '">';
+            $html .= "</form>";
+        }
         else
         {
             $totalEvents = count( $events );
@@ -112,7 +125,6 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 // Convert a event into a nice looking html line.
 function eventLineHTML( $date )
 {
-
     $html = '<table class="eventline">';
     $startDay = '8:00';
     $dt = 60; // Each segment is 15 minutes wide. 
@@ -130,6 +142,18 @@ function eventLineHTML( $date )
     }
     $html .= '</table>';
     return $html;
+}
+
+// Create a request table 
+function requestTableHTML( $options )
+{
+    $table = '<table class="request">';
+    $date = __get__( $options, 'date', '' );
+    $startTime = __get__( $options, 'start_time', '');
+    $endTime = __get__( $options, 'end_time', '' );
+    $table .= '<tr><td>';
+    $table .= '</table>';
+    return $table;
 }
 
 ?>

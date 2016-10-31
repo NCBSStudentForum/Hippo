@@ -106,11 +106,11 @@ function goToPage($page="index.php", $delay = 3)
   header("Refresh: $delay, url=$url");
 }
 
-function goBackToPageLink( $url )
+function goBackToPageLink( $url, $title = "Go back" )
 {
     $html = "<br />";
     $html .= "<a style=\"float: right\" href=\"$url\">
-            <font color=\"blue\" size=\"5\">Go Back</font>
+            <font color=\"blue\" size=\"5\">$title</font>
         </a>";
     return $html;
 }
@@ -125,8 +125,8 @@ function __get__( $arr, $what, $default = NULL )
 
 function repeatPatToDays( $pat )
 {
+    assert( strlen( $pat ) > 0 );
     $weekdays = array( "sun", "mon", "tue", "wed", "thu", "fri", "sat" );
-
     $exploded = explode( ",", $pat);
     $days = $exploded[0];
     // These are absolute indices of days.
@@ -175,5 +175,14 @@ function daysToDate( $ndays, $baseDay = NULL )
     return $result;
 }
 
+function humanReadableDate( $date )
+{
+    return date( 'Y-M-d', $date );
+}
+
+function humanReadableDay( $date )
+{
+    return date( 'l', strtotime($date) );
+}
 
 ?>

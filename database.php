@@ -2,7 +2,7 @@
 
 include_once( "header.php" );
 include_once( "methods.php" );
-include_once('ldap.php');
+include_once( 'ldap.php' );
 
 class BMVPDO extends PDO 
 {
@@ -293,6 +293,13 @@ function eventAtThisVenue( $venue, $date, $time )
     $stmt->bindValue( ':venue', $venue );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+function summaryTable( )
+{
+    global $db;
+    $summary = 'Summary';
+    return $summary;
 }
 
 ?>

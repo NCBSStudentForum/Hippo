@@ -1,12 +1,16 @@
 <?php
 
-include_once( "header.php" );
-include_once( 'methods.php' );
+include_once( "methods.php" );
 
-if( ! (array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION['AUTHENTICATED'] == true) )
+$validAccces = FALSE;
+if( array_key_exists( 'AUTHENTICATED', $_SESSION) )
+   if( $_SESSION['AUTHENTICATED'] == TRUE ) 
+        $validAcces = TRUE;
+
+if( ! $validAccces )
 {
-    echo printWarning( "You should not be here. Not authenticated" );
-    goToPage( "index.php", 3 );
+    echo ( '<p class="error"> You should not be here. Not authenticated.</p>' );
+    goToPage( "index.php", 1 );
 }
 
 ?>

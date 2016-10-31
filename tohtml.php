@@ -16,7 +16,7 @@ function loginForm()
   /* Check if ldap server is alive. */
   $table = "";
   $table .= '<form action="login.php" method="post">';
-  $table .= '<table id="table_login_main" style="float: left">';
+  $table .= '<table class="login_main">';
   $table .= '<tr><td><small>NCBS Username</small> </td></tr> ';
   $table .= '<tr><td><input type="text" name="username" id="username" /> </td></tr>';
   $table .= '<tr><td><small>NCBS Password</small></td></tr>';

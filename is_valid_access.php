@@ -4,8 +4,11 @@ include_once( "methods.php" );
 
 $validAccces = FALSE;
 if( array_key_exists( 'AUTHENTICATED', $_SESSION) )
-   if( $_SESSION['AUTHENTICATED'] == TRUE ) 
-        $validAcces = TRUE;
+{
+   if( $_SESSION['AUTHENTICATED'] ) 
+        $validAccces = TRUE;
+}
+
 
 if( ! $validAccces )
 {

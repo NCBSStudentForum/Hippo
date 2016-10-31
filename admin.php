@@ -19,4 +19,6 @@ $requests = getPendingRequestsGroupedByGID( );
 <?php echo requestsToHTMLReviewForm( $requests ); ?>
 </form>
 
+<form method="POST" action="logout.php" >
 <button type="logout" value="Log out">Log out</button>
+</form>

@@ -112,10 +112,14 @@ function changeRequestStatus( $gid, $rid, $status )
 /**
     * @brief Get the list of events for today.
  */
-function getEvents( $date = NULL )
+function getEvents( $from = NULL )
 {
+    if( ! $from )
+        $from = '2010-01-01';
+
     global $db;
-    $stmt = $db->query( "SELECT * FROM events" );
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date" );
+    $stmt->bindValue( ':date', $from );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

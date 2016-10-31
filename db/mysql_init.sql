@@ -20,6 +20,11 @@ DROP TABLE IF EXISTS events;
 CREATE TABLE IF NOT EXISTS events (
     -- Sub even will be parent.children format.
     gid INT NOT NULL, eid INT NOT NULL
+    , type ENUM( 'PUBLIC', 'PRIVATE' ) DEFAULT 'PRIVATE' 
+    , class ENUM( 
+        'LABMEET', 'LECTURE', 'MEETING'
+        , 'CONFERENCE', 'UNKNOWN', 'CULTURAL'
+        ) DEFAULT 'UNKNOWN' 
     , short_description VARCHAR(200) NOT NULL
     , description TEXT
     , date DATE NOT NULL
@@ -27,6 +32,7 @@ CREATE TABLE IF NOT EXISTS events (
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
     , PRIMARY KEY( gid, eid )
+    , FOREIGN KEY (venue) REFERENCES venues(id)
     );
     
 DROP TABLE IF EXISTS venues;
@@ -44,5 +50,5 @@ INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_confere
 INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference )
     VALUES ( 'Synpase', 'SLC Ground Floor', '10', 'YES', 'YES' );
 INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference )
-    VALUES ( 'Mitochondria', 'SLC 1st Floor', '0', 'YES', 'NO' );
+    VALUES ( 'Mitochondria', 'SLC 1st Floor', '10', 'YES', 'NO' );
 

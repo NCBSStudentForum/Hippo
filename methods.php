@@ -5,6 +5,15 @@ include_once( 'logger.php' );
 
 date_default_timezone_set('Asia/Kolkata');
 
+function venueToText( $venue )
+{
+    $txt = '';
+    $txt .= $venue['id'] . ' ';
+    $txt .= ' ' . $venue['strength'] . ' ';
+    $txt .= '[' . $venue['type'] . ']' ;
+    return $txt;
+}
+
 
 function venuesToHTMLSelect( $venues, $ismultiple = false )
 {
@@ -24,7 +33,7 @@ function venuesToHTMLSelect( $venues, $ismultiple = false )
 
     foreach( $venues as $v )
     {
-        $text = $v['id'] . ' (' . $v['strength'] . ') ';
+        $text = venueToText( $v );
         if( $v['suitable_for_conference'] == 'Yes' )
             $text .= '<font color=\"blue\"> +C </font>';
         if( $v['has_projector'] == 'Yes' )

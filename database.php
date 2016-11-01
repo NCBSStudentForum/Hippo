@@ -46,6 +46,22 @@ function getVenues( $sortby = 'total_events' )
     return fetchEntries( $res );
 }
 
+function getVenuesGroupsByType(  )
+{
+    global $db;
+    // Sort according to total_events hosted by venue
+    $venues = getVenues( );
+    $newVenues = Array( );
+    foreach( $venues as $venue )
+    {
+        $vtype = $venue['type'];
+        if( ! array_key_exists( $vtype, $newVenues ) )
+            $newVenues[ $vtype ] = Array();
+        array_push( $newVenues[$vtype], $venue );
+    }
+    return $newVenues;
+}
+
 // Return the row representing venue for given venue id.
 function getVenueById( $venueid )
 {

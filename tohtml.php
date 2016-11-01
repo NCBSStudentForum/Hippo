@@ -217,12 +217,29 @@ function userHTML( )
     return $html;
 }
 
-function venuesToHTMLCheck( $venues, $grouped )
+function venuesToChekcButtons( $venues )
 {
-    var_dump( $venues );
-    $html = '<table class="venues">';
+    $html = "<table>";
+    foreach( $venues as $venue )
+    {
+        $html .= '<tr><td><input type="radio" name="venue[]" value="' . $venue['id'] 
+            . '">' . $venue['id'] .  "</td></tr>";
+    }
     $html .= "</table>";
-    return $table;
+    return $html;
+}
+
+function venuesToHTMLCheck( $groupedVenues, $grouped )
+{
+    $html = '<table class="venues">';
+    $html .= "<tr>";
+    foreach( array_keys( $groupedVenues ) as $venueType )
+        $html .= "<td> $venueType </td>";
+    $html .= "</tr><tr>";
+    foreach( array_values($groupedVenues) as  $venues )
+        $html .= "<td> " . venuesToChekcButtons( $venues ) . "</td>";
+    $html .= "</tr></table>";
+    return $html;
 }
 
 

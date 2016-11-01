@@ -38,10 +38,11 @@ class BMVPDO extends PDO
 $db = new BMVPDO( "ghevar.ncbs.res.in" );
 
 
-function getVenues( )
+function getVenues( $sortby = 'total_events' )
 {
     global $db;
-    $res = $db->query( "SELECT * FROM venues" );
+    // Sort according to total_events hosted by venue
+    $res = $db->query( "SELECT * FROM venues ORDER BY $sortby DESC, id" );
     return fetchEntries( $res );
 }
 
@@ -67,6 +68,28 @@ function getRequestsGroupedByGID( $status  )
 {
     global $db;
     $stmt = $db->prepare( 'SELECT * FROM requests WHERE status=:status GROUP BY gid' );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
+/**
+    * @brief Get list of requests made by this users. These requests must be 
+    * newer than the current date minus 2 days and time else they won't show up.
+    *
+    * @param $userid
+    * @param $status
+    *
+    * @return 
+ */
+function getRequestOfUsers( $userid, $status = 'PENDING' )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE user=:user 
+        AND status=:status AND date >= NOW() - INTERVAL 2 DAY
+        GROUP BY gid' );
+    $stmt->bindValue( ':user', $userid );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -251,6 +274,15 @@ function isVenueAvailable( $venue, $date, $startOn, $endOn )
     return $answer;
 }
 
+function increaseEventHostedByVenueByOne( $venueId )
+{
+    global $db;
+    $stmt = $db->prepare( 'UPDATE venues SET total_events = total_events + 1 WHERE id=:id' );
+    $stmt->bindValue( ':id', $venueId );
+    $res = $stmt->execute( );
+    return $res;
+}
+
 /**
     * @brief Create a new event in dateabase. The group id and event id of event 
     * is same as group id (gid) and rid of request which created it.
@@ -265,7 +297,7 @@ function approveRequest( $gid, $rid )
     $request = getRequestById( $gid, $rid );
 
     global $db;
-    $stmt = $db->prepare( 'INSERT IGNORE INTO events (
+    $stmt = $db->prepare( 'INSERT INTO events (
         gid, eid, short_description, description, date, venue, start_time, end_time
         , user
     ) VALUES ( 
@@ -283,7 +315,12 @@ function approveRequest( $gid, $rid )
     $stmt->bindValue( ':user', $request['user'] );
     $res = $stmt->execute();
     if( $res )
+    {
         changeRequestStatus( $gid, $rid, 'APPROVED' );
+        // And update the count of number of events hosted by this venue.
+        increaseEventHostedByVenueByOne( $request['venue'] );
+    }
+
     return $res;
 }
 

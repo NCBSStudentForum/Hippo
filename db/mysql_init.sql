@@ -36,6 +36,8 @@ CREATE TABLE IF NOT EXISTS venues (
     , has_projector ENUM( 'YES', 'NO' ) NOT NULL
     , suitable_for_conference ENUM( 'YES', 'NO' ) NOT NULL
     , has_skype ENUM( 'YES', 'NO' ) DEFAULT 'NO'
+    -- How many events this venue have hosted so far. Meaure of popularity.
+    , total_events INT NOT NULL DEFAULT 0 
     , PRIMARY KEY (id)
     );
     

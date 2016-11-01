@@ -1,8 +1,9 @@
 <?php 
 include_once( "header.php" );
 include_once( "methods.php" );
+include_once( "database.php" );
 
-$venues = getVenues( );
+$venues = getVenues( $sortby = 'total_events' );
 
 ?>
 

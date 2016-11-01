@@ -5,7 +5,7 @@ include_once( "tohtml.php" );
 include_once( "is_valid_access.php" );
 include_once( "database.php" );
 
-echo welcomeUserHTML( );
+echo userHTML( );
 
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.
@@ -66,6 +66,11 @@ echo "</div>";
 
 // Now generate the range of dates.
 $numDays = getNumDaysInBetween( $date, $endDate );
+if( $numDays < 0 )
+{
+    echo printWarning( "End date can't be earlier than start date" );
+}
+
 for( $i = 0; $i <= $numDays; $i++ )
 {
     $thisdate = humanReadableDate( strtotime( $date . " + $i days" ) );

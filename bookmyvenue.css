@@ -24,6 +24,15 @@ button.add_event {
     min-width : 20px;
 }
 
+button.add_event_past {
+    width : 20px;
+    height : 20px;
+    /*border-radius : 50%;*/
+    border-style : none;
+    min-height : 20px;
+    min-width : 20px;
+}
+
 button.display_event {
     min-height : 20px;
     min-width : 20px;

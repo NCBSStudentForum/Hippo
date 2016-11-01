@@ -39,17 +39,15 @@ CREATE TABLE IF NOT EXISTS events (
 DROP TABLE IF EXISTS venues;
 CREATE TABLE IF NOT EXISTS venues (
     id VARCHAR(80) PRIMARY KEY
-    , location VARCHAR(200) NOT NULL
+    , name VARCHAR(300) NOT NULL
+    , location VARCHAR(500) NOT NULL
+    , institute ENUM( 'NCBS', 'CCAMP', 'INSTEM', 'OTHER' )
+    , type ENUM ( 'AUDITORIUM', 'LECTURE HALL', 'MEETING ROOM'
+        , 'SPORTS', 'RECREATION', 'OPEN AIR', 'CAFETERIA'
+        , 'CENTER' ) NOT NULL; 
     , strength INT NOT NULL
+    , distance_from_ncbs DECIMAL(3,3) DEFAULT 0.0 
     , has_projector ENUM( 'YES', 'NO' ) NOT NULL
     , suitable_for_conference ENUM( 'YES', 'NO' ) NOT NULL
     );
     
-# Insert venues.
-INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference ) 
-    VALUES ( 'Safeda', 'SLC 2nd Floor', '40', 'YES', 'NO' );
-INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference )
-    VALUES ( 'Synpase', 'SLC Ground Floor', '10', 'YES', 'YES' );
-INSERT INTO venues 	(id, location, strength, has_projector, suitable_for_conference )
-    VALUES ( 'Mitochondria', 'SLC 1st Floor', '10', 'YES', 'NO' );
-

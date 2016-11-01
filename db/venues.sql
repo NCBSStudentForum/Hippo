@@ -367,7 +367,7 @@ REPLACE INTO venues (
         )
         VALUES ( 
             'Main Canteen 0', 'Main Canteen 0', 'NCBS'
-            , 'NCBS', 'GF', 'NCBS'
+            , 'NCBS', '0', 'NCBS'
             , 'CAFETERIA', '120', 'NO'
             , 'NO', 'NO' 
         );
@@ -379,7 +379,7 @@ REPLACE INTO venues (
         )
         VALUES ( 
             'Main Canteen 1', 'Main Canteen 1', 'NCBS'
-            , 'NCBS', 'FF', 'NCBS'
+            , 'NCBS', '1', 'NCBS'
             , 'CAFETERIA', '157', 'NO'
             , 'NO', 'NO' 
         );

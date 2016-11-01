@@ -29,8 +29,8 @@ NCBS,CAFETERIA,Cafeteria,20, 2, Admin Block,,No
 NCBS,CAFETERIA,Cafeteria,50, 1, ELC,,No
 NCBS,CAFETERIA, Parkside Canteen,50, 0, Near Main Parking,,No
 NCBS,CAFETERIA,Glass Roof Canteen,36, 1, Near SLC,,No
-NCBS,CAFETERIA,Main Canteen 0,120, GF, NCBS,,No
-NCBS,CAFETERIA,Main Canteen 1,157, FF, NCBS,,No
+NCBS,CAFETERIA,Main Canteen 0,120, 0, NCBS,,No
+NCBS,CAFETERIA,Main Canteen 1,157, 1, NCBS,,No
 NCBS,CENTER,Medical Centre,20, 0, NCBS,,No
 CCAMP,MEETING ROOM,Centriole,12, 1, CCAMP, VC,Yes
 CCAMP,LECTURE ROOM,Chausa,48, 0, CCAMP,,Yes

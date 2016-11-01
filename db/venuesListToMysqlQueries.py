@@ -4,7 +4,7 @@ def fToQuery( fs ):
     vc = 'YES' if 'vc' == fs[-2].lower() else 'NO'
     skype = 'YES' if 'skype' == fs[-2].lower() else 'NO'
     hasProjector = fs[-1].upper()
-    query = """INSERT OR REPLACE INTO venues (
+    query = """REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -31,7 +31,7 @@ def main( ):
         lines = f.read( ).split( '\n' )
 
     with open( 'venues.sql', 'w' ) as f:
-        f.write( 'SELECT bookmyvenue_test;\n' )
+        f.write( 'USE bookmyvenue_test;\n' )
 
     for l in lines[1:]:
         if len(l) < 5:

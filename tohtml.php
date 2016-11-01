@@ -74,8 +74,8 @@ function requestToHTMLTable( $r )
 // Return a short description of event.
 function eventToText( $event )
 {
-    $html = 'By' . $event['user'] . ' ';
-    $html = '';
+    $html = 'By ' . $event['user'] . ', ';
+    $html .= '';
     $html .= $event['short_description'];
     $html .= ' @' . $event['venue'] . ', ';
     $html .= $event['start_time'] . ' to ' . $event['end_time'];
@@ -84,7 +84,7 @@ function eventToText( $event )
 
 function requestToText( $req )
 {
-    $html = 'By ' . $req['user'] . ' ';
+    $html = 'By ' . $req['user'] . ', ';
     $html .= $req['title'];
     $html .= ' @' . $req['venue'] . ', ';
     $html .= $req['start_time'] . ' to ' . $req['end_time'];
@@ -96,10 +96,10 @@ function requestToText( $req )
 // booked or have pending requests.
 function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 {
-    $tableName = "<font style=\"font-size:12px\">" . strtoupper($venue). "</font><br>";
+    //$tableName = "<font style=\"font-size:12px\">" . strtoupper($venue). "</font><br>";
     $tableTime = "<font style=\"font-size:12px\" >" . date('H:i', $hour) . " Hrs</font>";
     $html = "<table class=\"hourtable\">";
-    $html .= "<tr><td colspan=\"$section\"> $tableName $tableTime </td></tr>";
+    $html .= "<tr><td colspan=\"$section\"> $tableTime </td></tr>";
 
     $html .= "<tr>";
     for( $i = 0; $i < $section; $i++) 
@@ -116,7 +116,7 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
             // Add a form to trigger adding event purpose.
             $html .= "<form method=\"post\" action=\"user_request.php\" >";
             $html .= "<td>";
-            $html .= "<button id=\"button_add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
+            $html .= "<button class=\"add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
             $html .= "</td>";
             // And the hidden elements to carry the values to the action page.
             $html .= '<input type="hidden" name="start_time" value="'. $segTime . '">';
@@ -132,7 +132,7 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
                 foreach( $events as $e )
                     $msg .= eventToText( $e );
                 $html .= "<td><button class=\"display_event\" 
-                value=\"$msg\" onclick=\"displayEvent(this)\">B</button></td>";
+                value=\"$msg\" onclick=\"displayEvent(this)\"></button></td>";
             }
             elseif( count( $requests ) > 0 )
             {
@@ -140,7 +140,7 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
                 foreach( $requests as $r )
                     $msg .= requestToText( $r );
                 $html .= "<td><button class=\"display_request\" 
-                value=\"$msg\" onclick=\"displayRequest(this)\">R</button></td>";
+                value=\"$msg\" onclick=\"displayRequest(this)\"></button></td>";
             }
         }
     }
@@ -156,11 +156,14 @@ function eventLineHTML( $date, $venueid )
     $startDay = '8:00';
     $dt = 60; // Each segment is 15 minutes wide. 
     $html .= "<tr>";
+    $html .= "<td><div style=\"width:100px\">$venueid</div></td>";
     for( $i = 0; $i < 12; $i++ )
     {
         $stepT = $i * $dt;
         $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
+        //if( ($i+1) % 6 == 0 )
+            //$html .= '</tr><tr><td></td>';
     }
     $html .= "</tr>";
     $html .= '</table>';

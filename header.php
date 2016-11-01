@@ -8,7 +8,6 @@ if(!isset($_SESSION))
 <html>
 <head>
 <link href="bookmyvenue.css" rel="stylesheet" type="text/css" />
-
 </head>
 <div class="header">
 <title>Book My Venue</title>

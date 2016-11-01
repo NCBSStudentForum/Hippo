@@ -97,10 +97,10 @@ table.eventline {
     table-layout : auto;
     text-align : left;
     background-color:lightyellow; 
-    border-spacing: 3px;
     border-collapse : separate;
     padding : 3px;
-    border-type : dotted;
+    border : 1px solid;
+    border-style : dotted;
 }
 
 table.eventline tr td  {

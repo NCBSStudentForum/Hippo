@@ -217,4 +217,14 @@ function userHTML( )
     return $html;
 }
 
+function venuesToHTMLCheck( $venues, $grouped )
+{
+    var_dump( $venues );
+    $html = '<table class="venues">';
+    $html .= "</table>";
+    return $table;
+}
+
+
+
 ?>

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS bookmyvenue;
-USE bookmyvenue;
+CREATE DATABASE IF NOT EXISTS bookmyvenue_test;
+USE bookmyvenue_test;
 
 DROP TABLE IF EXISTS requests;
 CREATE TABLE IF NOT EXISTS requests (

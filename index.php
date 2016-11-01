@@ -3,14 +3,13 @@
 include_once( 'header.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
-include_once( 'database.php' );
 
 session_save_path("/tmp/");
 $conf = array();
 $inifile = "bmvrc";
-if(file_exists($inifile)) {
-	$conf = parse_ini_file($inifile, $process_sections = true );
-}
+
+if(file_exists($inifile)) 
+    $conf = parse_ini_file($inifile, $process_section = TRUE );
 
 if(!$conf)
 {

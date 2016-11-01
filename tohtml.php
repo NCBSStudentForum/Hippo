@@ -184,10 +184,17 @@ function requestTableHTML( $options )
 }
 
 // Welcome user div.
-function welcomeUserHTML( )
+function userHTML( )
 {
     $html = '<div class="user">';
     $html .= 'Welcome <font color="blue">' . $_SESSION['user'] . '</font>';
+    $html .= '<table class="user">';
+    $html .= '<tr><td>
+            <a href="user_show_requests.php">My requests</a>
+        </td><td>
+            <a href="user_show_events.php">My events</a></td>
+        </td></tr>';
+    $html .= "</table>";
     $html .= '</div>';
     return $html;
 }

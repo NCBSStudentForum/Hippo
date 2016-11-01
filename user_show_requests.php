@@ -10,7 +10,11 @@ echo userHTML( );
 $requests = getRequestOfUsers( $_SESSION['user'], $status = 'PENDING' );
 
 foreach( $requests as $request )
+{
+    echo "<form method=\"post\" action=\"user_manage.php\">";
     echo requestToHTML( $request );
+    echo "</form>";
+}
 
 
 echo '<br>';

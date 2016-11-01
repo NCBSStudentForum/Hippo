@@ -13,14 +13,15 @@ function venuesToHTMLSelect( $venues, $ismultiple = false )
     $name = 'velue';
     if( $ismultiple )
     {
-        $multiple = 'multiple size="3"';
+        $multiple = 'multiple size="5"';
         $default = '-- select multiple venues --';
         $name = 'venue[]';
     }
 
-    $html = "<select $multiple name=\"$name\"> 
-        <option disabled selected value>  $default </option>"
-        ;
+    $html = "<select $multiple name=\"$name\">";
+    if( ! $ismultiple )
+        $html .= "<option disabled selected value>  $default </option>";
+
     foreach( $venues as $v )
     {
         $text = $v['id'] . ' (' . $v['strength'] . ') ';
@@ -158,7 +159,7 @@ function getNumDaysInBetween( $startDate, $endDate )
 {
     $start = new DateTime( $startDate );
     $end = new DateTime( $endDate );
-    return $end->diff( $start )->format( "%a" );
+    return intval($start->diff( $end )->format( "%R%a" ));
 }
 
 ?>

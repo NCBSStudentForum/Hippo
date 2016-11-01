@@ -107,6 +107,7 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
     {
         $stepT = $i * 60 / $section;
         $segTime = strtotime( "+ $stepT minutes", $hour );
+        $segDateTime = strtotime( $day . ' ' . date('H:i', $segTime ));
 
         // Check  for events at this venue. If non, then display + (addEvent) 
         // button else show that this timeslot has been booked.
@@ -117,7 +118,15 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
             // Add a form to trigger adding event purpose.
             $html .= "<form method=\"post\" action=\"user_request.php\" >";
             $html .= "<td>";
-            $html .= "<button class=\"add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
+            if( $segDateTime >= strtotime( 'now' ) )
+            {
+                $html .= "<button class=\"add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
+            }
+            else
+            {
+                $html .= "<button class=\"add_event_past\" name=\"add_event\" value=\"$segTime\" disabled></button>";
+
+            }
             $html .= "</td>";
             // And the hidden elements to carry the values to the action page.
             $html .= '<input type="hidden" name="start_time" value="'. $segTime . '">';
@@ -171,16 +180,25 @@ function eventLineHTML( $date, $venueid )
     return $html;
 }
 
-// Create a request table 
-function requestTableHTML( $options )
+// Convert an array to HTML
+function arrayToTableHTML( $r, $tablename )
 {
-    $table = '<table class="request">';
-    $date = __get__( $options, 'date', '' );
-    $startTime = __get__( $options, 'start_time', '');
-    $endTime = __get__( $options, 'end_time', '' );
-    $table .= '<tr><td>';
-    $table .= '</table>';
+    $table = "<table class=\"$tablename\">";
+    $keys = array_keys( $r );
+    $vals = array_values( $r );
+    $table .= "<tr>";
+    foreach( $keys as $k )
+        $table .= "<td>$k</td>";
+    $table .= "</tr><tr>";
+    foreach( $vals as $v )
+        $table .= "<td>$v</td>";
+    $table .= "</tr></table>";
     return $table;
+}
+
+function requestToHTML( $request )
+{
+    return arrayToTableHTML( $request, "request" );
 }
 
 // Welcome user div.

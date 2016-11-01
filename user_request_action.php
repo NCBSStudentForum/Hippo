@@ -10,7 +10,6 @@ if( $res )
         "Your request has been submitted and an email has been sent to you 
         with details.
         " );
-    goToPage( "user.php", 5 );
     echo '<div style="float:left">';
     echo goBackToPageLink( "user.php", "Go back" );
     echo '</div>';

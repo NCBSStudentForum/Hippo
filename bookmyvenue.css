@@ -1,3 +1,19 @@
+div.header {
+    min-width : 500px;
+    /*background-color : yellow;*/
+}
+
+div.user {
+    float : right ;
+    position : relative;
+    /*border : 1px solid #73AD21;*/
+}
+
+div.info {
+    /*border : 1px solid #73AD21;*/
+    background: lightblue;
+}
+
 #button_add_event {
     width : 20px;
     height : 20px;
@@ -17,6 +33,17 @@ button.display_event {
     alignment : right;
     vertical-align: text-top;
 }
+
+button.display_request {
+    width : 20px;
+    height : 20px;
+    /*border-radius : 50%;*/
+    border-style : none;
+    background : red;
+    alignment : right;
+    vertical-align: text-top;
+}
+
 
 
 table.input {

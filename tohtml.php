@@ -7,6 +7,9 @@ include_once('methods.php');
 function displayEvent( button ) {
     alert( button.value );
 };
+function displayRequest( button ) {
+    alert( button.value );
+};
 </script>
 
 <?php
@@ -71,6 +74,7 @@ function requestToHTMLTable( $r )
 // Return a short description of event.
 function eventToText( $event )
 {
+    $html = 'By' . $event['user'] . ' ';
     $html = '';
     $html .= $event['short_description'];
     $html .= ' @' . $event['venue'] . ', ';
@@ -78,7 +82,18 @@ function eventToText( $event )
     return $html;
 }
 
-// $day is used to check if this day and hour, something is booked.
+function requestToText( $req )
+{
+    $html = 'By ' . $req['user'] . ' ';
+    $html .= $req['title'];
+    $html .= ' @' . $req['venue'] . ', ';
+    $html .= $req['start_time'] . ' to ' . $req['end_time'];
+    $html .= "; ";
+    return $html;
+}
+
+// $day and $hour are used to check if at this day and hour  this venue is 
+// booked or have pending requests.
 function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 {
     $tableName = "<font style=\"font-size:12px\">" . strtoupper($venue). "</font><br>";
@@ -94,8 +109,9 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 
         // Check  for events at this venue. If non, then display + (addEvent) 
         // button else show that this timeslot has been booked.
-        $events = eventAtThisVenue( $venue, $day, $segTime );
-        if( count( $events ) == 0 )
+        $events = eventsAtThisVenue( $venue, $day, $segTime );
+        $requests = requestsForThisVenue( $venue, $day, $segTime );
+        if( count( $events ) == 0 and count($requests) == 0)
         {
             // Add a form to trigger adding event purpose.
             $html .= "<form method=\"post\" action=\"user_request.php\" >";
@@ -110,12 +126,22 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
         }
         else
         {
-            $totalEvents = count( $events );
-            $msg = '';
-            foreach( $events as $e )
-                $msg .= eventToText( $e );
-            $html .= "<td><button class=\"display_event\" 
-            value=\"$msg\" onclick=\"displayEvent(this)\">B</button></td>";
+            if( count( $events ) > 0 )
+            {
+                $msg = '';
+                foreach( $events as $e )
+                    $msg .= eventToText( $e );
+                $html .= "<td><button class=\"display_event\" 
+                value=\"$msg\" onclick=\"displayEvent(this)\">B</button></td>";
+            }
+            elseif( count( $requests ) > 0 )
+            {
+                $msg = '';
+                foreach( $requests as $r )
+                    $msg .= requestToText( $r );
+                $html .= "<td><button class=\"display_request\" 
+                value=\"$msg\" onclick=\"displayRequest(this)\">R</button></td>";
+            }
         }
     }
     $html .= "</tr></table>"; 
@@ -123,23 +149,20 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 }
 
 // Convert a event into a nice looking html line.
-function eventLineHTML( $date )
+function eventLineHTML( $date, $venueid )
 {
+    $venue = getVenueById( $venueid );
     $html = '<table class="eventline">';
     $startDay = '8:00';
     $dt = 60; // Each segment is 15 minutes wide. 
-    $venues = getVenues( );
-    foreach( $venues as $venue )
+    $html .= "<tr>";
+    for( $i = 0; $i < 12; $i++ )
     {
-        $html .= "<tr>";
-        for( $i = 0; $i < 12; $i++ )
-        {
-            $stepT = $i * $dt;
-            $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
-            $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venue['id'], 4 ) . "</td>";
-        }
-        $html .= "</tr>";
+        $stepT = $i * $dt;
+        $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
+        $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
     }
+    $html .= "</tr>";
     $html .= '</table>';
     return $html;
 }
@@ -154,6 +177,15 @@ function requestTableHTML( $options )
     $table .= '<tr><td>';
     $table .= '</table>';
     return $table;
+}
+
+// Welcome user div.
+function welcomeUserHTML( )
+{
+    $html = '<div class="user">';
+    $html .= 'Welcome <font color="blue">' . $_SESSION['user'] . '</font>';
+    $html .= '</div>';
+    return $html;
 }
 
 ?>

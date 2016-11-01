@@ -54,10 +54,20 @@ function cagesToHtml( $cages, $default = NULL )
     return $html;
 }
 
-function venuesToHTMLSelect( $venues )
+function venuesToHTMLSelect( $venues, $ismultiple = false )
 {
-    $html = "<select name=\"venue\"> 
-        <option disabled selected value> -- select a venue -- </option>"
+    $multiple = '';
+    $default = '-- select a venue --';
+    $name = 'velue';
+    if( $ismultiple )
+    {
+        $multiple = 'multiple size="3"';
+        $default = '-- select multiple venues --';
+        $name = 'venue[]';
+    }
+
+    $html = "<select $multiple name=\"$name\"> 
+        <option disabled selected value>  $default </option>"
         ;
     foreach( $venues as $v )
     {
@@ -175,14 +185,34 @@ function daysToDate( $ndays, $baseDay = NULL )
     return $result;
 }
 
-function humanReadableDate( $date )
+function validateDate($date, $format = 'Y-m-d H:i:s')
 {
-    return date( 'Y-M-d', $date );
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
 }
 
-function humanReadableDay( $date )
+function humanReadableDate( $date )
 {
-    return date( 'l', strtotime($date) );
+    if( is_int( $date ) )
+        return date( 'Y-M-d', $date );
+
+    return date( 'Y-M-d', strtotime($date) );
+}
+
+
+// Return a format date for mysql database.
+function dbDate( $date )
+{
+    if( is_int( $date ) )
+        return date( 'Y-m-d', $date );
+
+    return date( 'Y-m-d', strtotime( $date ) );
+}
+
+// Return the name of the day for given date.
+function nameOfTheDay( $date )
+{
+    return date( 'l', strtotime( $date ) );
 }
 
 ?>

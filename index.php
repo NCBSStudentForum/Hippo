@@ -20,7 +20,7 @@ if(!$conf)
 }
 
 $_SESSION['conf'] = $conf;
-$_SESSION['user'] = 'admin'; // This for testing purpose.
+$_SESSION['user'] = 'unknown'; // This for testing purpose.
 
 /* counter */
 $hit_count = (int)file_get_contents('count.txt');

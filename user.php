@@ -4,14 +4,21 @@ include_once( "methods.php" );
 include_once( "tohtml.php" );
 include_once( "is_valid_access.php" );
 
+echo welcomeUserHTML( );
 
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.
-if( ! array_key_exists( 'date', $_POST ) )
-    $_POST['date'] = strtotime( 'today' );
-
 $venues = getVenues( );
-$venueSelect = venuesToHTMLSelect( $venues );
+$venueSelect = venuesToHTMLSelect( $venues, true );
+
+// We came to this page without default option. Let's fill them in $_POST. We 
+// are going to iterate over this page for its mandatory to create $_POST.
+if( ! array_key_exists( 'date', $_POST ) )
+    $_POST['date'] = humanReadableDate( strtotime( 'today' ) );
+
+// If no venue if selected then use all venues.
+if( ! array_key_exists( 'venue', $_POST ) )
+    $_POST['venue'] = array_map( function($a) { return $a['id']; }, $venues);
 
 echo "<form method=\"post\" action=\"user.php\">
     <input type=\"date\" name=\"date\" placeholder=\"Select date\" >
@@ -21,11 +28,26 @@ echo "<form method=\"post\" action=\"user.php\">
 
 
 $date = $_POST['date'];
-$calendarDate = humanReadableDate( $date );
-$day = humanReadableDay( $calendarDate );
+$day = nameOfTheDay( $date );
 
-echo "<h3>On $day, $calendarDate </h3>";
-$html = eventLineHTML( $date );
+$html = "<h3>On $day, $date </h3>";
+
+echo "<br>";
+echo "<div class=\"info\">";
+echo "You may not be able to create any request at following blocks";
+echo "<table>
+    <tr><td>
+    <button class=\"display_request\" >R</button>Pending requests
+    </td><td>
+    <button class=\"display_event\" >E</button>Confirmed events
+    </td></tr>
+    </table>";
+echo "</div>";
+
+// Now generate eventline for each venue.
+foreach( $_POST['venue'] as $venueid )
+    $html .= eventLineHTML( $date, $venueid );
+
 echo $html;
 
 ?>

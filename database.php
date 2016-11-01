@@ -31,6 +31,17 @@ function getVenues( )
     return fetchEntries( $res );
 }
 
+// Return the row representing venue for given venue id.
+function getVenueById( $venueid )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM venues WHERE id=:id" );
+    $stmt->bindValue( ':id', $venueid );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+
 // Get all requests which are pending for review.
 function getPendingRequestsGroupedByGID( )
 {
@@ -242,8 +253,10 @@ function approveRequest( $gid, $rid )
     global $db;
     $stmt = $db->prepare( 'INSERT IGNORE INTO events (
         gid, eid, short_description, description, date, venue, start_time, end_time
+        , user
     ) VALUES ( 
         :gid, :eid, :short_description, :description, :date, :venue, :start_time, :end_time 
+        , :user
     )');
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':eid', $rid );
@@ -253,6 +266,7 @@ function approveRequest( $gid, $rid )
     $stmt->bindValue( ':venue', $request['venue'] );
     $stmt->bindValue( ':start_time', $request['start_time'] );
     $stmt->bindValue( ':end_time', $request['end_time'] );
+    $stmt->bindValue( ':user', $request['user'] );
     $res = $stmt->execute();
     if( $res )
         changeRequestStatus( $gid, $rid, 'APPROVED' );
@@ -277,17 +291,39 @@ function actOnRequest( $gid, $rid, $status )
 }
 
 // Fetch all events at given venue and given day-time.
-function eventAtThisVenue( $venue, $date, $time )
+function eventsAtThisVenue( $venue, $date, $time )
 {
     global $db;
     // Database reads in ISO format.
-    $hDate = date( 'Y-m-d', $date );
+    $hDate = dbDate( $date );
     $clockT = date('H:i', $time );
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
     $stmt = $db->prepare( 'SELECT * FROM events WHERE 
         date=:date AND venue=:venue AND start_time <= :time AND end_time > :time' );
+    $stmt->bindValue( ':date', $hDate );
+    $stmt->bindValue( ':time', $clockT );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+// Fetch all requests for given venue and given day-time.
+function requestsForThisVenue( $venue, $date, $time )
+{
+    global $db;
+    // Database reads in ISO format.
+    $hDate = dbDate( $date );
+    $clockT = date('H:i', $time );
+
+    // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
+    // booked.
+    $stmt = $db->prepare( 'SELECT * FROM requests WHERE 
+        status=:status 
+        AND date=:date AND venue=:venue 
+        AND start_time <= :time AND end_time > :time' );
+    $stmt->bindValue( ':status', 'pending' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
     $stmt->bindValue( ':venue', $venue );

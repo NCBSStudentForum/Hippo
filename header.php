@@ -11,9 +11,9 @@ if(!isset($_SESSION))
 <link href="bookmyvenue.css" rel="stylesheet" type="text/css" />
 
 </head>
-<div>
+<div class="header">
 <title>Book My Venue</title>
-<h3>BMV <small> Book My Venue </small> </h3>
+<h1>Book My Venue </h1>
 <small>Ver 0.9.0, GNU GPL <a href="https://github.com/dilawar/bookmyvenue" target='_blank'>(c) Dilawar Singh, 2016.</a>
 <a href='mailto:dilawar.s.rajput@gamil.com'>Email developer</a></small>
 </div>

@@ -15,7 +15,7 @@ def fToQuery( fs ):
             , '%s', '%s', '%s'
             , '%s', '%s', '%s'
             , '%s', '%s' 
-        )""" % ( fs[2], fs[2], fs[0]
+        );""" % ( fs[2], fs[2], fs[0]
                 , fs[5], fs[4], fs[0]
                 , fs[1], fs[3], hasProjector
                 , vc, skype 
@@ -29,6 +29,10 @@ def fToQuery( fs ):
 def main( ):
     with open( "./venues.csv", 'r' ) as f:
         lines = f.read( ).split( '\n' )
+
+    with open( 'venues.sql', 'w' ) as f:
+        f.write( 'SELECT bookmyvenue_test;\n' )
+
     for l in lines[1:]:
         if len(l) < 5:
             continue

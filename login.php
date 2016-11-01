@@ -22,6 +22,7 @@ else
     imap_close( $conn );
     $_SESSION['AUTHENTICATED'] = TRUE;
     goToPage( "user.php", 1 );
+    $_SESSION['user'] = $ldap;
 }
 
 ?>

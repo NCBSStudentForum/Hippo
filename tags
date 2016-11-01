@@ -1,0 +1,383 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BMVPDO	database.php	/^class BMVPDO extends PDO $/;"	c
+DOM	html2text.php	/^		$DOM = $sourceStr;$/;"	v
+DOM	html2text.php	/^		$DOM = new DOMDocument();$/;"	v
+__author__	db/init_db.py	/^__author__           = "Dilawar Singh"$/;"	v
+__author__	db/insert_venues.py	/^__author__           = "Me"$/;"	v
+__construct	database.php	/^    function __construct( $host = 'ghevar.ncbs.res.in'  )$/;"	f
+__copyright__	db/init_db.py	/^__copyright__        = "Copyright 2016, Dilawar Singh"$/;"	v
+__copyright__	db/insert_venues.py	/^__copyright__        = "Copyright 2016, Me"$/;"	v
+__credits__	db/init_db.py	/^__credits__          = ["NCBS Bangalore"]$/;"	v
+__credits__	db/insert_venues.py	/^__credits__          = ["NCBS Bangalore"]$/;"	v
+__email__	db/init_db.py	/^__email__            = "dilawars@ncbs.res.in"$/;"	v
+__email__	db/insert_venues.py	/^__email__            = ""$/;"	v
+__get__	methods.php	/^function __get__( $arr, $what, $default = NULL )$/;"	f
+__license__	db/init_db.py	/^__license__          = "GNU GPL"$/;"	v
+__license__	db/insert_venues.py	/^__license__          = "GNU GPL"$/;"	v
+__log__	logger.php	/^function __log__( $message, $type = "INFO" )$/;"	f
+__maintainer__	db/init_db.py	/^__maintainer__       = "Dilawar Singh"$/;"	v
+__maintainer__	db/insert_venues.py	/^__maintainer__       = "Me"$/;"	v
+__status__	db/init_db.py	/^__status__           = "Development"$/;"	v
+__status__	db/insert_venues.py	/^__status__           = "Development"$/;"	v
+__version__	db/init_db.py	/^__version__          = "1.0.0"$/;"	v
+__version__	db/insert_venues.py	/^__version__          = "1.0.0"$/;"	v
+actOnRequest	database.php	/^function actOnRequest( $gid, $rid, $status )$/;"	f
+add_tables	db/init_db.py	/^def add_tables( db ):$/;"	f
+add_tables_to_db	db/init_db.py	/^def add_tables_to_db( db ):$/;"	f
+allEventsOnThisday	database.php	/^    $allEventsOnThisday = getEventsOnThisDayAndThisVenue( $date, $venue );$/;"	v
+animal	edit_animal.php	/^    $animal = getAnimalWithId( $_POST['animal_id'] );$/;"	v
+animalId	edit_animal_action.php	/^$animalId = $_POST['animal_id'];$/;"	v
+animalsToDataList	methods.php	/^function animalsToDataList( $animals )$/;"	f
+answer	database.php	/^    $answer = true;$/;"	v
+approveRequest	database.php	/^function approveRequest( $gid, $rid )$/;"	f
+arg1	mail.php	/^	$arg1=" -e \\"set smtp_url=\\"smtp:\/\/sandesh.ee.iitb.ac.in:25\\"\\"";$/;"	v
+arg2	mail.php	/^	$arg2=" -e \\"set from=\\"noreply@ee.iitb.ac.in\\"\\"";$/;"	v
+arg3	mail.php	/^	$arg3=" -e \\"set realname=\\"EE-Minion\\"\\"";$/;"	v
+arg4	mail.php	/^	$arg4=" -e \\"set content_type=text\/html\\"";$/;"	v
+arg5	mail.php	/^	$arg5=" '$to' 2>&1";$/;"	v
+array	database.php	/^    $array = Array( );$/;"	v
+base	html2text.php	/^	$base = $element->ownerDocument->h2t_base;$/;"	v
+baseDay	methods.php	/^    $baseDay = date("Y-m-d", $baseDay);$/;"	v
+baseDay	methods.php	/^    $baseDay = strtotime( "next " . $weekdays[$days[0]] );$/;"	v
+base_dn	ldap.php	/^    $base_dn = 'dc=ncbs,dc=res,dc=in';$/;"	v
+base_url	history.php	/^$base_url = $init['base_url'];$/;"	v
+bd	methods.php	/^    $bd = date("l", $baseDay);$/;"	v
+breederCages	insert_animal.php	/^$breederCages = getListOfCages( "breeder" );$/;"	v
+cageId	edit_animal_action.php	/^    $cageId = $_POST['cage_id'];$/;"	v
+cage_types_to_html	insert_cage.php	/^function cage_types_to_html( )$/;"	f
+cages	edit_animal.php	/^$cages = getListOfCages( );$/;"	v
+cagesToHtml	methods.php	/^function cagesToHtml( $cages, $default = NULL )$/;"	f
+calendarTime	user_request.php	/^$calendarTime = date( 'H:i', $startTime );$/;"	v
+cat	print.php	/^	$cat = $data['category'];$/;"	v
+change	edit_animal.php	/^function change( $animal, $what )$/;"	f
+changeRequestStatus	database.php	/^function changeRequestStatus( $gid, $rid, $status )$/;"	f
+characters	methods.php	/^    $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";$/;"	v
+childrenId	admin_request_review.php	/^    $childrenId = 0;$/;"	v
+clockT	database.php	/^    $clockT = date('H:i', $time );$/;"	v
+cmd	mail.php	/^	$cmd="echo '$msg' | mutt -s '$sub' -e 'set copy=no'";$/;"	v
+cmd	mail.php	/^	$cmd="echo '$msg' | mutt -s 'Your details have been edited\/updated successfully' -e 'set copy=no'";$/;"	v
+conf	index.php	/^	$conf = parse_ini_file($inifile, $process_sections = true );$/;"	v
+conf	index.php	/^$conf = array();$/;"	v
+conf	login.php	/^$conf = $_SESSION['conf'];$/;"	v
+conf	methods.php	/^  $conf = $_SESSION['conf'];$/;"	v
+conf	tohtml.php	/^  $conf = $_SESSION['conf'];$/;"	v
+conn	edit_animal_action.php	/^    $conn = connetJinawar( );$/;"	v
+conn	edit_animal_action.php	/^    $conn = sqlite_open( $dbname ) or die( "Failed to connect to $dbname" );$/;"	v
+conn	edit_venues.php	/^$conn = connectDB( );$/;"	v
+conn	insert_animal_action.php	/^    $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );$/;"	v
+conn	insert_cage_action.php	/^    $conn = sqlite_open( $dbname ) or die( "Could not open $dbname" );$/;"	v
+conn	login.php	/^$conn = imap_open( "{imap.ncbs.res.in}INBOX", $ldap, $pass, OP_HALFOPEN );$/;"	v
+content	html2text.php	/^				$content = preg_replace("\/[ \\t\\f\\r\\n]+\/u",' ',preg_replace("\/^[ \\t\\f\\r\\n]+|[ \\t\\f\\r\\n]+$\/u",'',$node->nodeValue));$/;"	v
+course	print.php	/^	$course = $data['specialization'];$/;"	v
+course1	final.php	/^$course1 = getCourseNameFaculty($pCourse, $prevSem);$/;"	v
+course2	final.php	/^$course2 = getCourseNameFaculty($ppCourse, $pprevSem);$/;"	v
+course_list_1	history.php	/^$course_list_1 = getCourseList($prevSem);$/;"	v
+course_list_2	history.php	/^$course_list_2 = getCourseList($pprevSem);$/;"	v
+d	methods.php	/^    $d = DateTime::createFromFormat($format, $date);$/;"	v
+date	methods.php	/^        $date = date('Y-m-d', strtotime( $baseDay . ' + ' . $nd  . ' days'));$/;"	v
+date	tohtml.php	/^    $date = $r['date'];$/;"	v
+date	tohtml.php	/^    $date = __get__( $options, 'date', '' );$/;"	v
+date	user.php	/^$date = $_POST['date'];$/;"	v
+date	user_request.php	/^$date = $_POST['date'];$/;"	v
+date	user_request.php	/^$date = __get__( $_POST, 'date', '' );$/;"	v
+day	methods.php	/^                $day = 28 * intval($m) + 7 * intval($w) + 1 + intval($d);$/;"	v
+day	tohtml.php	/^    $day = date( 'l', strtotime($date) );$/;"	v
+day	user.php	/^$day = nameOfTheDay( $date );$/;"	v
+day	user_request.php	/^$day = nameOfTheDay( $date ); $/;"	v
+days	database.php	/^        $days = Array( $request['date'] );$/;"	v
+days	database.php	/^        $days = repeatPatToDays( $repeatPat );$/;"	v
+days	methods.php	/^        $days = "0\/1\/2\/3\/4\/5\/6";$/;"	v
+days	methods.php	/^    $days = $exploded[0];$/;"	v
+days	methods.php	/^    $days = explode( "\/", $days );$/;"	v
+daysToDate	methods.php	/^function daysToDate( $ndays, $baseDay = NULL )$/;"	f
+db	database.php	/^$db = new BMVPDO( "ghevar.ncbs.res.in" );$/;"	v
+db	final.php	/^$db = "ta".$this_sem;$/;"	v
+dbDate	methods.php	/^function dbDate( $date )$/;"	f
+dbDate	user_request.php	/^$dbDate = dbDate( $date );$/;"	v
+dbname	edit_animal_action.php	/^    $dbname = $_SESSION['db_unmutable'];$/;"	v
+dbname	insert_animal_action.php	/^    $dbname = $_SESSION['db_unmutable'];$/;"	v
+dbname	insert_cage_action.php	/^    $dbname = $_SESSION['db_unmutable'];$/;"	v
+dbnames_	db/init_db.py	/^dbnames_ = [ 'bmv.sqlite' ]$/;"	v
+default	methods.php	/^        $default = '-- select multiple venues --';$/;"	v
+default	methods.php	/^    $default = '-- select a venue --';$/;"	v
+details	final.php	/^$details = getStudentInformation($ldap);$/;"	v
+displayEvent	tohtml.php	/^function displayEvent( button ) {$/;"	f
+drop	html2text.php	/^		$drop = $elementindex == 1 && $elem_det[10];$/;"	v
+ds	ldap.php	/^    $ds = ldap_connect($ldap_ip) or die( "Could not connect to $ldap_ip" );$/;"	v
+dt	tohtml.php	/^    $dt = 60; \/\/ Each segment is 15 minutes wide. $/;"	v
+e	events.json.php	/^    $e = Array();$/;"	v
+elem_det	html2text.php	/^	$elem_det = &$html2text_elements[$tag_name];$/;"	v
+element_render	html2text.php	/^	$element_render = '';$/;"	v
+endTime	tohtml.php	/^    $endTime = __get__( $options, 'end_time', '' );$/;"	v
+err	error.php	/^    $err = "<font size=\\"4\\" color=\\"blue\\">".$msg."<\/font><br>";$/;"	v
+error	database.php	/^            $this->error = $e->getMessage( );$/;"	v
+error	index.php	/^    $error = "Failed to read  configuartion file.";$/;"	v
+event	admin_request_submit.php	/^    $event = explode( '.', $event );$/;"	v
+eventAtThisVenue	database.php	/^function eventAtThisVenue( $venue, $date, $time )$/;"	f
+eventLineHTML	tohtml.php	/^function eventLineHTML( $date, $venueid )$/;"	f
+eventTable	tohtml.php	/^function eventTable( $date )$/;"	f
+eventToText	tohtml.php	/^function eventToText( $event )$/;"	f
+events	admin_request_submit.php	/^$events = $_POST['events'];$/;"	v
+events	tohtml.php	/^        $events = eventAtThisVenue( $venue, $day, $segTime );$/;"	v
+events	user_request.php	/^$events = getEvents( $date );$/;"	v
+exploded	methods.php	/^    $exploded = explode( ",", $pat);$/;"	v
+fac	print.php	/^	$fac = getFacultyName($faculty);$/;"	v
+faculty	print.php	/^	$faculty = $course['faculty'];$/;"	v
+faculty1	print.php	/^	$faculty1 = getFacultyName($first['faculty']);$/;"	v
+faculty2	print.php	/^	$faculty2 = getFacultyName($second['faculty']);$/;"	v
+faculty3	print.php	/^	$faculty3 = getFacultyName($third['faculty']);$/;"	v
+fetchEntries	database.php	/^function fetchEntries( $res )$/;"	f
+first	print.php	/^  $first = getCourseNameFaculty($preferences['preference1'], $this_sem);$/;"	v
+flags	html2text.php	/^	$flags = $element->ownerDocument;$/;"	v
+formattedEvents	events.json.php	/^$formattedEvents = Array( );$/;"	v
+from	database.php	/^        $from = '2010-01-01';$/;"	v
+generateRandomString	methods.php	/^function generateRandomString($length = 10) $/;"	f
+getEvents	database.php	/^function getEvents( $from = NULL )$/;"	f
+getEventsOn	database.php	/^function getEventsOn( $day )$/;"	f
+getEventsOnThisDayAndThisVenue	database.php	/^function getEventsOnThisDayAndThisVenue( $date, $venue )$/;"	f
+getPendingRequestsGroupedByGID	database.php	/^function getPendingRequestsGroupedByGID( )$/;"	f
+getRequestByGroupId	database.php	/^function getRequestByGroupId( $gid )$/;"	f
+getRequestByGroupIdAndStatus	database.php	/^function getRequestByGroupIdAndStatus( $gid, $status )$/;"	f
+getRequestById	database.php	/^function getRequestById( $gid, $rid )$/;"	f
+getRequestsGroupedByGID	database.php	/^function getRequestsGroupedByGID( $status  )$/;"	f
+getUserInfoFromLdap	ldap.php	/^function getUserInfoFromLdap($ldap_ip="ldap.ncbs.res.in", $ldap)$/;"	f
+getVenueById	database.php	/^function getVenueById( $venueid )$/;"	f
+getVenues	database.php	/^function getVenues( )$/;"	f
+gid	admin_request_review.php	/^        $gid = $r['gid'];$/;"	v
+gid	admin_request_submit.php	/^    $gid = $event[0]; $rid = $event[1];$/;"	v
+gid	database.php	/^    $gid = intval($res->fetch( PDO::FETCH_ASSOC )['gid']) + 1;$/;"	v
+goBackToPageLink	methods.php	/^function goBackToPageLink( $url, $title = "Go back" )$/;"	f
+goToPage	methods.php	/^function goToPage($page="index.php", $delay = 3)$/;"	f
+gradMonth	print.php	/^	$gradMonth = $data['gradSem'];$/;"	v
+gradYear	print.php	/^	$gradYear = $data['gradYear'];$/;"	v
+hDate	database.php	/^    $hDate = date( 'Y-m-d', strtotime($date) );$/;"	v
+health	edit_animal.php	/^    $health = getHealth( $animal_id );$/;"	v
+history	final.php	/^$history = getHistoryOfPrevTwoSem($this_sem, $ldap);$/;"	v
+hit_count	index.php	/^$hit_count = (int)file_get_contents('count.txt');$/;"	v
+hourToHTMLTable	tohtml.php	/^function hourToHTMLTable( $day, $hour, $venue, $section = 4 )$/;"	f
+href	html2text.php	/^			$href = preg_replace("\/^\\.\\.\\\/\/u",'',$href);$/;"	v
+html	edit_animal.php	/^    $html = "<h3>Changing animal cage<h3>";$/;"	v
+html	edit_animal.php	/^    $html = "<table id=\\"table_action\\">";$/;"	v
+html	methods.php	/^        $html = "<select name=\\"animal_strain\\" required > $/;"	v
+html	methods.php	/^        $html = "<select name=\\"animal_strain\\" required>"; $/;"	v
+html	methods.php	/^        $html = "<select name=\\"cage_id\\"> $/;"	v
+html	methods.php	/^        $html = "<select name=\\"cage_id\\">";$/;"	v
+html	methods.php	/^    $html = "<br \/>";$/;"	v
+html	methods.php	/^    $html = "<datalist id=\\"animal_list\\">";$/;"	v
+html	methods.php	/^    $html = "<select $multiple name=\\"$name\\"> $/;"	v
+html	tohtml.php	/^    $html = "<table class=\\"hourtable\\">";$/;"	v
+html	tohtml.php	/^    $html = '';$/;"	v
+html	tohtml.php	/^    $html = '<div class="user">';$/;"	v
+html	tohtml.php	/^    $html = '<table class="eventline">';$/;"	v
+html	tohtml.php	/^    $html = '<table class="request">';$/;"	v
+html	user.php	/^$html = "<h3>On $day, $date <\/h3>";$/;"	v
+html2text	html2text.php	/^function html2text( $sourceStr, $isXML = false, $isfile = false ) {$/;"	f
+html2text_before_area	html2text.php	/^function html2text_before_area($element,$index) {$/;"	f
+html2text_before_base	html2text.php	/^function html2text_before_base($element,$index) {$/;"	f
+html2text_before_form	html2text.php	/^function html2text_before_form($element,$index) {$/;"	f
+html2text_before_img	html2text.php	/^function html2text_before_img($element,$index) {$/;"	f
+html2text_before_input	html2text.php	/^function html2text_before_input($element,$index) {$/;"	f
+html2text_before_isindex	html2text.php	/^function html2text_before_isindex($element,$index) {$/;"	f
+html2text_before_li	html2text.php	/^function html2text_before_li($element,$index) {$/;"	f
+html2text_before_link	html2text.php	/^function html2text_before_link($element,$index) {$/;"	f
+html2text_before_quote	html2text.php	/^function html2text_before_quote($element,$index) {$/;"	f
+html2text_cleanspace	html2text.php	/^function html2text_cleanspace($str) {$/;"	f
+html2text_elements	html2text.php	/^$html2text_elements = Array();$/;"	v
+html2text_formattext	html2text.php	/^function html2text_formattext($flags,$node_value) {$/;"	f
+html2text_render	html2text.php	/^function html2text_render($element,$elementindex) {$/;"	f
+html2text_resolve	html2text.php	/^function html2text_resolve($href,$element) {$/;"	f
+humanReadableDate	methods.php	/^function humanReadableDate( $date )$/;"	f
+id	admin_request_review.php	/^        $id = $gid . '.' . $rid;$/;"	v
+id	print.php	/^	$id = $course['id'];$/;"	v
+id	tohtml.php	/^    $id = $r['gid'] . '.' . $r['rid'];$/;"	v
+info	error.php	/^    $info ="<p class=\\"info\\"><font size=\\"4\\" >".$msg."<br><\/font><\/p>";$/;"	v
+info	ldap.php	/^    $info = ldap_get_entries($ds, $sr);$/;"	v
+inifile	index.php	/^$inifile = "bmvrc";$/;"	v
+init	final.php	/^$init = $_SESSION['init'];$/;"	v
+init	history.php	/^$init = $_SESSION['init'];$/;"	v
+init_db	db/init_db.py	/^def init_db( ):$/;"	f
+insert_animal	insert_animal_action.php	/^function insert_animal( $vars )$/;"	f
+insert_cage	insert_cage_action.php	/^function insert_cage( $vars )$/;"	f
+isVenueAvailable	database.php	/^function isVenueAvailable( $venue, $date, $startOn, $endOn )$/;"	f
+ldap	final.php	/^$ldap = $_SESSION['ldap'];$/;"	v
+ldap	login.php	/^$ldap = $_POST['username'];$/;"	v
+listOfStrain	methods.php	/^    $listOfStrain = $_SESSION['conf']['animal']['strain'];$/;"	v
+lname	ldap.php	/^        $lname = $info[$i]["sn"][0];$/;"	v
+logfile	logger.php	/^        $logfile = $_SESSION['conf']['global']['log_file'];$/;"	v
+logfile	logger.php	/^        $logfile = '__jinawar__.log';$/;"	v
+loginForm	tohtml.php	/^function loginForm()$/;"	f
+main	db/init_db.py	/^def main( ):$/;"	f
+main	db/insert_venues.py	/^def main( ):$/;"	f
+module.exports	Gruntfile.js	/^module.exports = function(grunt) {$/;"	f
+months	methods.php	/^        $months = "0\/1\/2\/3\/4\/5\/6\/7\/8\/9\/10\/11";$/;"	v
+months	methods.php	/^    $months = __get__( $exploded, 2, "*" );$/;"	v
+months	methods.php	/^    $months = explode( "\/", $months );$/;"	v
+msg	final.php	/^$msg = "<html> <body>";$/;"	v
+msg	logger.php	/^    $msg = '[' . $type . ']' . ' : ' . $timestamp . ' ' .  $message . PHP_EOL;$/;"	v
+msg	mail.php	/^	$msg = html2text($msg);$/;"	v
+msg	tohtml.php	/^            $msg = '';$/;"	v
+multiple	methods.php	/^        $multiple = 'multiple size="3"';$/;"	v
+multiple	methods.php	/^    $multiple = '';$/;"	v
+name	ldap.php	/^        $name = $info[$i]["givenname"][0];$/;"	v
+name	methods.php	/^        $name = 'venue[]';$/;"	v
+name	methods.php	/^    $name = 'velue';$/;"	v
+name	print.php	/^	$name = $course['name'];$/;"	v
+nameOfTheDay	methods.php	/^function nameOfTheDay( $date )$/;"	f
+node	html2text.php	/^		$node = $element->childNodes->item($i);$/;"	v
+num_child	html2text.php	/^	$num_child = $element->childNodes->length;$/;"	v
+oldval	edit_animal.php	/^        $oldval = 'Unassigned';$/;"	v
+oldval	edit_animal.php	/^        $oldval = __get__( $animal, 'current_cage_id', 'Unknown' );$/;"	v
+oldval	edit_animal.php	/^        $oldval = __get__( $animal, 'strain', 'Unknown' );$/;"	v
+on	tohtml.php	/^    $on = $day . ' ' . $date;$/;"	v
+options	database.php	/^        $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );$/;"	v
+output	html2text.php	/^	$output = '';$/;"	v
+pCourse	final.php	/^$pCourse = $history[0]['job'];$/;"	v
+parent_node	html2text.php	/^		$parent_node = $parent_node->parentNode;$/;"	v
+parent_node	html2text.php	/^	$parent_node = $element->parentNode;$/;"	v
+parent_tag	html2text.php	/^		$parent_tag = strToLower($parent_tag);$/;"	v
+parent_tag	html2text.php	/^	$parent_tag = ( $parent_node == $element->ownerDocument ) ? '' : $element->parentNode->tagName;$/;"	v
+pass	login.php	/^$pass = $_POST['pass'];$/;"	v
+pathprefix	html2text.php	/^			$pathprefix = preg_replace("\/[^\\\/]*\\\/[^\\\/]*$\/u",'',$pathprefix);$/;"	v
+pathprefix	html2text.php	/^	$pathprefix = $base['pathdir'];$/;"	v
+ppCourse	final.php	/^$ppCourse = $history[1]['job'];$/;"	v
+pprevSem	final.php	/^$pprevSem = getPreviousSem($this_sem, 2);$/;"	v
+pprevSem	history.php	/^$pprevSem = getPreviousSem($this_sem, 2);$/;"	v
+prefer	final.php	/^$prefer = getPreferences($this_sem, $ldap);$/;"	v
+prefix	html2text.php	/^	$prefix = $base['scheme'].':';$/;"	v
+prefix	html2text.php	/^	$prefix = '';$/;"	v
+prevSem	final.php	/^$prevSem = getPreviousSem($this_sem, 1);$/;"	v
+prevSem	history.php	/^$prevSem = getPreviousSem($this_sem, 1);$/;"	v
+previous_format	html2text.php	/^	$previous_format = $flags->h2t_ispre;$/;"	v
+previous_margindrop	html2text.php	/^	$previous_margindrop = $flags->h2t_ignoremargin;$/;"	v
+printCourse	print.php	/^function printCourse($course) $/;"	f
+printErrorSevere	error.php	/^function printErrorSevere($msg) $/;"	f
+printInfo	error.php	/^function printInfo( $msg )$/;"	f
+printPreference	print.php	/^function printPreference($preferences, $this_sem)$/;"	f
+printStudentInformation	print.php	/^function printStudentInformation($data) $/;"	f
+printWarning	error.php	/^function printWarning($msg) $/;"	f
+prog	print.php	/^	$prog = $data['program'];$/;"	v
+query	database.php	/^        $query = $db->prepare( $/;"	v
+r	ldap.php	/^    $r = ldap_bind($ds);$/;"	v
+randomString	methods.php	/^    $randomString = '';$/;"	v
+rejectRequest	database.php	/^function rejectRequest( $gid, $rid )$/;"	f
+repeatPat	database.php	/^    $repeatPat = $request[ 'repeat_pat' ];$/;"	v
+repeatPatToDays	methods.php	/^function repeatPatToDays( $pat )$/;"	f
+request	database.php	/^    $request = getRequestById( $gid, $rid );$/;"	v
+requestTableHTML	tohtml.php	/^function requestTableHTML( $options )$/;"	f
+requestToHTMLTable	tohtml.php	/^function requestToHTMLTable( $r )$/;"	f
+requests	admin.php	/^$requests = getPendingRequestsGroupedByGID( ); $/;"	v
+requests	admin_request_review.php	/^    $requests = getRequestByGroupIdAndStatus( $_POST['gid'], 'PENDING' );$/;"	v
+requestsToHTMLReviewForm	tohtml.php	/^function requestsToHTMLReviewForm( $requests )$/;"	f
+res	database.php	/^        $res = $query->execute();$/;"	v
+res	database.php	/^    $res = $db->query( "SELECT * FROM venues" );$/;"	v
+res	database.php	/^    $res = $db->query( 'SELECT MAX(gid) AS gid FROM requests' );$/;"	v
+res	database.php	/^    $res = $stmt->execute();$/;"	v
+res	edit_animal_action.php	/^        $res = $stmt->execute( );$/;"	v
+res	edit_animal_action.php	/^    $res = $stmt->execute( );$/;"	v
+res	edit_animal_action.php	/^    $res = updateHealth( $_POST['animal_id'], $_POST );$/;"	v
+res	insert_animal_action.php	/^    $res = $conn->query( 'SELECT * FROM animals WHERE id="' . $vars['animal_id'] . '"');$/;"	v
+res	insert_animal_action.php	/^$res = insert_animal( $_POST );$/;"	v
+res	insert_cage_action.php	/^    $res = $conn->query( 'SELECT * FROM cages WHERE id="' . $vars['cage_id'] . '"');$/;"	v
+res	insert_cage_action.php	/^$res = insert_cage( $_POST );$/;"	v
+res	user_request_action.php	/^$res = submitRequest( $_POST );$/;"	v
+result	insert_animal_action.php	/^    $result = $stmt->execute( );$/;"	v
+result	insert_cage_action.php	/^    $result = $stmt->execute( );$/;"	v
+result	ldap.php	/^    $result = array();$/;"	v
+result	methods.php	/^    $result = Array( );$/;"	v
+result	methods.php	/^    $result = Array();$/;"	v
+results	database.php	/^    $results = Array( );$/;"	v
+rid	admin_request_review.php	/^        $rid = $r['rid'];$/;"	v
+rid	database.php	/^    $rid = 0;$/;"	v
+second	print.php	/^	$second = getCourseNameFaculty($preferences['preference2'], $this_sem);$/;"	v
+segTime	tohtml.php	/^        $segTime = strtotime( "+ $stepT minutes", $hour );$/;"	v
+segTime	tohtml.php	/^        $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );$/;"	v
+selected	methods.php	/^            $selected = '';$/;"	v
+selected	methods.php	/^            $selected = 'selected';$/;"	v
+sendEmail	mail.php	/^function sendEmail($msg, $ldap) $/;"	f
+sendEmailToAdmin	error.php	/^function sendEmailToAdmin($err_msg, $db_name) {$/;"	f
+sendEmailWithSub	mail.php	/^function sendEmailWithSub($msg, $sub, $ldap) $/;"	f
+sourceStr	html2text.php	/^		$sourceStr = html2text_render($DOM->documentElement,1);$/;"	v
+sr	ldap.php	/^    $sr = ldap_search($ds, $base_dn, "uid=$ldap");$/;"	v
+startDay	tohtml.php	/^    $startDay = '8:00';$/;"	v
+startTime	tohtml.php	/^    $startTime = __get__( $options, 'start_time', '');$/;"	v
+startTime	user_request.php	/^$startTime = __get__( $_POST, 'start_time', '' );$/;"	v
+status	edit_venues.php	/^$status = $stmt->execute( );$/;"	v
+status	edit_venues.php	/^$status = true;$/;"	v
+stepT	tohtml.php	/^        $stepT = $i * $dt;$/;"	v
+stepT	tohtml.php	/^        $stepT = $i * 60 \/ $section;$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date" );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date" );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( "SELECT * FROM events WHERE date=:date AND venue=:venue" );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( "SELECT * FROM venues WHERE id=:id" );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( "UPDATE requests SET $/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( 'INSERT IGNORE INTO events ($/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( 'SELECT * FROM events WHERE $/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND rid=:rid' );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND status=:status' );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid' );$/;"	v
+stmt	database.php	/^    $stmt = $db->prepare( 'SELECT * FROM requests WHERE status=:status GROUP BY gid' );$/;"	v
+stmt	edit_animal_action.php	/^        $stmt = $conn->prepare( $/;"	v
+stmt	edit_animal_action.php	/^        $stmt = $conn->prepare( 'UPDATE animals SET status=:status WHERE id=:id' );$/;"	v
+stmt	edit_animal_action.php	/^    $stmt = $conn->prepare( $/;"	v
+stmt	edit_venues.php	/^$stmt = $conn->prepare( 'REPLACE INTO venues (name,location,strength,$/;"	v
+stmt	insert_animal_action.php	/^    $stmt = $conn->prepare( 'INSERT OR FAIL INTO animals $/;"	v
+stmt	insert_animal_action.php	/^    $stmt = $conn->prepare( 'INSERT OR IGNORE INTO current_status SET id=:id ' );$/;"	v
+stmt	insert_animal_action.php	/^    $stmt = $conn->prepare( 'INSERT OR IGNORE INTO genotype SET id=:id ' );$/;"	v
+stmt	insert_cage_action.php	/^    $stmt = $conn->prepare( 'INSERT OR FAIL INTO cages $/;"	v
+str	print.php	/^	$str = "<b> Roll no : <\/b> : ";$/;"	v
+strain	edit_animal.php	/^    $strain = $animal['strain'];$/;"	v
+strain	edit_animal_action.php	/^    $strain = $_POST['animal_strain'];$/;"	v
+strain	insert_cage.php	/^    $strain = $_SESSION['conf']['cage']['type'];$/;"	v
+strainsToHtml	methods.php	/^function strainsToHtml( $selected_strain = NULL )$/;"	f
+strippedStr	html2text.php	/^			$strippedStr = preg_replace( "\/<\\?[\\w\\W]*\\?>\/u", '', $sourceStr );$/;"	v
+submitRequest	database.php	/^function submitRequest( $request )$/;"	f
+summary	database.php	/^    $summary = 'Summary';$/;"	v
+summaryTable	database.php	/^function summaryTable( )$/;"	f
+table	tohtml.php	/^    $table = '<table class="request">';$/;"	v
+table	tohtml.php	/^  $table = "";$/;"	v
+tableName	tohtml.php	/^    $tableName = "<font style=\\"font-size:12px\\">" . strtoupper($venue). "<\/font><br>";$/;"	v
+tableTime	tohtml.php	/^    $tableTime = "<font style=\\"font-size:12px\\" >" . date('H:i', $hour) . " Hrs<\/font>";$/;"	v
+tag_name	html2text.php	/^	$tag_name = $flags->h2t_isxml ? $element->tagName : strtolower($element->tagName);$/;"	v
+temprender	html2text.php	/^	$temprender = '';$/;"	v
+text	methods.php	/^        $text = $anim['id'] . ' ' . $anim['name'];$/;"	v
+text	methods.php	/^        $text = $v['id'] . ' (' . $v['strength'] . ') ';$/;"	v
+third	print.php	/^	$third = getCourseNameFaculty($preferences['preference3'], $this_sem);$/;"	v
+this_sem	final.php	/^$this_sem = $_SESSION['sem'];$/;"	v
+this_sem	history.php	/^$this_sem = $_SESSION['sem'];$/;"	v
+timestamp	logger.php	/^    $timestamp = date(DATE_RFC2822);$/;"	v
+to	mail.php	/^	$to = $ldap."@iitb.ac.in";$/;"	v
+toggleMe	admin_request_review.php	/^function toggleMe(source) {$/;"	f
+totalEvents	tohtml.php	/^            $totalEvents = count( $events );$/;"	v
+uid	ldap.php	/^        $uid = $info[$i]["uid"][0];$/;"	v
+upcomingEvents	events.json.php	/^$upcomingEvents = getEvents( strtotime( 'today' ) );$/;"	v
+update	edit_animal_action.php	/^function update( $what, $value, $animal_id )$/;"	f
+updateHealth	edit_animal.php	/^function updateHealth( $animal_id )$/;"	f
+updateHealth	edit_animal_action.php	/^function updateHealth( $animal_id, $array )$/;"	f
+url	methods.php	/^  $url = $conf['global']['base_url']."\/".$page;$/;"	v
+validAccces	is_valid_access.php	/^        $validAccces = TRUE;$/;"	v
+validAccces	is_valid_access.php	/^$validAccces = FALSE;$/;"	v
+validateDate	methods.php	/^function validateDate($date, $format = 'Y-m-d H:i:s')$/;"	f
+vars	insert_animal_action.php	/^    $vars = array_map( 'trim', $vars );$/;"	v
+vars	insert_cage_action.php	/^    $vars = array_map( 'trim', $vars );$/;"	v
+venue	tohtml.php	/^    $venue = getVenueById( $venueid );$/;"	v
+venue	user_request.php	/^$venue = __get__( $_POST, 'venue', '' );$/;"	v
+venueHTML	user_request.php	/^    $venueHTML = '<input name="venue" type="text" value="'.$venue.'" readonly>';$/;"	v
+venueHTML	user_request.php	/^    $venueHTML = venuesToHTMLSelect( $venues );$/;"	v
+venueSelect	user.php	/^$venueSelect = venuesToHTMLSelect( $venues, true );$/;"	v
+venues	db/insert_venues.py	/^venues = [ $/;"	v
+venues	manage.php	/^$venues = getVenues( );$/;"	v
+venues	user.php	/^$venues = getVenues( );$/;"	v
+venues	user_request.php	/^$venues = getVenues( );$/;"	v
+venuesToHTMLSelect	methods.php	/^function venuesToHTMLSelect( $venues, $ismultiple = false )$/;"	f
+warn	error.php	/^    $warn ="<p class=\\"warn\\">".$msg."<br \/><\/font>";$/;"	v
+weekdays	methods.php	/^    $weekdays = array( "sun", "mon", "tue", "wed", "thu", "fri", "sat" );$/;"	v
+weeks	methods.php	/^        $weeks = "0\/1\/2\/3";$/;"	v
+weeks	methods.php	/^    $weeks = __get__( $exploded, 1, "*" );$/;"	v
+weeks	methods.php	/^    $weeks = explode( "\/", $weeks );$/;"	v
+welcomeUserHTML	tohtml.php	/^function welcomeUserHTML( )$/;"	f
+whatToDo	admin_request_submit.php	/^$whatToDo = $_POST['response'];$/;"	v

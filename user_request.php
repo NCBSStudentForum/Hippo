@@ -18,16 +18,19 @@ if( ! array_key_exists( 'date', $_POST) )
 }
 
 $date = $_POST['date'];
-$day = date( 'l', $date );
+$day = nameOfTheDay( $date ); 
 $events = getEvents( $date );
-$calendarDate = date( 'Y-m-d', $date);
+$dbDate = dbDate( $date );
 
 ?>
 
 <h2>Request for booking</h2>
 
-<p class="info"> Time must be in 24 hrs HH:MM format e.g. 9:30 (for 9:30am), 14:20 for 2:20pm etc. 
+<div>
+<p class="info"> Time format : HH:MM, 24 Hr format <br>
+</small>9:30 (for 9:30am), 14:20 for 2:20pm etc. </small>
 </p>
+</div>
 
 <form class="input" action="user_request_action.php" method="post" accept-charset="utf-8">
 
@@ -71,7 +74,7 @@ $date = __get__( $_POST, 'date', '' );
     <tr> <td>Date <br>
     </td>
         <td> 
-        <input type="date" name="date" value=<?php echo $calendarDate ?> />
+        <input type="date" name="date" value=<?php echo $dbDate ?> />
         </td>
     </tr>
     <tr>
@@ -88,6 +91,7 @@ $date = __get__( $_POST, 'date', '' );
 <br>
 
 <button name="response" class="submit" type="submit" value="Submit">Submit</button>
-<button name="response" class="goback" type="submit" value="Go back">Go back</button>
+<div style="float:left">
+<?php echo goBackToPageLink( "user.php", "Go back" ); ?>
 
 </form>

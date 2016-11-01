@@ -10,14 +10,19 @@ if( $res )
         "Your request has been submitted and an email has been sent to you 
         with details.
         " );
-    echo goBackToPageLink( "index.php", "Go back" );
+    goToPage( "user.php", 5 );
+    echo '<div style="float:left">';
+    echo goBackToPageLink( "user.php", "Go back" );
+    echo '</div>';
 }
 else
 {
     echo printWarning( 
         "Your request could not be submitted. Please notify the admin." 
     );
-    echo goBackToPageLink( "index.php", "Go back");
+    echo '<div style="float:left">';
+    echo goBackToPageLink( "user.php", "Go back" );
+    echo '</div>';
 }
 
 ?>

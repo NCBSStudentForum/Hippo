@@ -1,5 +1,5 @@
-SELECT bookmyvenue_test;
-INSERT OR REPLACE INTO venues (
+USE bookmyvenue_test;
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -11,7 +11,7 @@ INSERT OR REPLACE INTO venues (
             , 'AUDITORIUM', '200', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -23,7 +23,7 @@ INSERT OR REPLACE INTO venues (
             , 'AUDITORIUM', '70', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -35,7 +35,7 @@ INSERT OR REPLACE INTO venues (
             , 'LECTURE HALL', '108', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -47,7 +47,7 @@ INSERT OR REPLACE INTO venues (
             , 'LECTURE HALL', '30', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -59,7 +59,7 @@ INSERT OR REPLACE INTO venues (
             , 'LECTURE HALL', '70', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -71,7 +71,7 @@ INSERT OR REPLACE INTO venues (
             , 'LECTURE HALL', '72', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -83,7 +83,7 @@ INSERT OR REPLACE INTO venues (
             , 'LECTURE HALL', '50', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -95,7 +95,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '15', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -107,7 +107,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '8', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -119,19 +119,19 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '25', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
             , suitable_for_conference, has_skype 
         )
         VALUES ( 
-            'Director's Annex', 'Director's Annex', 'NCBS'
+            'Director\'s Annex', 'Director\'s Annex', 'NCBS'
             , 'Admin Block', '2', 'NCBS'
             , 'MEETING ROOM', '8', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -143,7 +143,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '12', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -155,7 +155,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '63', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -167,7 +167,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '25', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -179,7 +179,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '12', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -191,7 +191,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '25', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -203,7 +203,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '12', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -215,7 +215,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '40', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -227,7 +227,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '15', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -239,7 +239,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '12', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -251,7 +251,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '30', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -263,7 +263,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '150', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -275,7 +275,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '15', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -287,7 +287,7 @@ INSERT OR REPLACE INTO venues (
             , 'OPEN AIR', '12', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -299,7 +299,7 @@ INSERT OR REPLACE INTO venues (
             , 'SPORTS', '100', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -311,7 +311,7 @@ INSERT OR REPLACE INTO venues (
             , 'SPORTS', '50', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -323,7 +323,7 @@ INSERT OR REPLACE INTO venues (
             , 'CAFETERIA', '20', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -335,7 +335,7 @@ INSERT OR REPLACE INTO venues (
             , 'CAFETERIA', '50', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -347,7 +347,7 @@ INSERT OR REPLACE INTO venues (
             , 'CAFETERIA', '50', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -359,7 +359,7 @@ INSERT OR REPLACE INTO venues (
             , 'CAFETERIA', '36', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -371,7 +371,7 @@ INSERT OR REPLACE INTO venues (
             , 'CAFETERIA', '120', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -383,7 +383,7 @@ INSERT OR REPLACE INTO venues (
             , 'CAFETERIA', '157', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -395,7 +395,7 @@ INSERT OR REPLACE INTO venues (
             , 'CENTER', '20', 'NO'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -407,7 +407,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '12', 'YES'
             , 'YES', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -419,7 +419,7 @@ INSERT OR REPLACE INTO venues (
             , 'LECTURE ROOM', '48', 'YES'
             , 'NO', 'NO' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector
@@ -431,7 +431,7 @@ INSERT OR REPLACE INTO venues (
             , 'MEETING ROOM', '12', 'YES'
             , 'NO', 'YES' 
         );
-INSERT OR REPLACE INTO venues (
+REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location
             , type, strength , has_projector

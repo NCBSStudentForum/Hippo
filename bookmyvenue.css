@@ -14,34 +14,34 @@ div.info {
     background: lightblue;
 }
 
-#button_add_event {
+button.add_event {
     width : 20px;
     height : 20px;
     /*border-radius : 50%;*/
     border-style : none;
     background : lightblue;
-    alignment : right;
-    vertical-align: text-top;
+    min-height : 20px;
+    min-width : 20px;
 }
 
 button.display_event {
-    width : 20px;
-    height : 20px;
+    min-height : 20px;
+    min-width : 20px;
     /*border-radius : 50%;*/
     border-style : none;
     background : red;
-    alignment : right;
-    vertical-align: text-top;
+    /*alignment : right;*/
+    /*vertical-align: text-top;*/
 }
 
 button.display_request {
-    width : 20px;
-    height : 20px;
+    min-height : 20px;
+    min-width : 20px;
     /*border-radius : 50%;*/
     border-style : none;
-    background : red;
-    alignment : right;
-    vertical-align: text-top;
+    background : yellow;
+    /*alignment : right;*/
+    /*vertical-align: text-top;*/
 }
 
 
@@ -84,6 +84,8 @@ table.request {
 }
 
 table.eventline {
+    widht : 1000px;
+    table-layout : auto;
     text-align : left;
     background-color:lightyellow; 
     border-spacing: 3px;
@@ -92,9 +94,19 @@ table.eventline {
     border-type : dotted;
 }
 
-table.eventline tr.page-break {
-    page-break : always;
+table.eventline tr td  {
+    width : 10%;
 }
+
+table.hourtable {
+    table-layout : auto;
+    background-color:lightyellow; 
+}
+
+table.hourtable tr td {
+    width : 10%;
+}
+
 
 table.request tr:nth-of-type( odd ) {
     background : #eee;

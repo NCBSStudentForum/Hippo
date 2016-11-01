@@ -19,6 +19,13 @@ if( ! array_key_exists( 'date', $_POST ) )
     $_POST['end_date'] = humanReadableDate( strtotime( 'today' ) );
 }
 
+// Initialize dates and end_date in form.
+$date = $_POST['date'];
+$endDate = $_POST['end_date'];
+if( ! $endDate )
+    $endDate = $date;
+
+
 // If no venue if selected then use all venues.
 if( ! array_key_exists( 'venue', $_POST ) )
     $_POST['venue'] = array_map( function($a) { return $a['id']; }, $venues);
@@ -29,8 +36,8 @@ echo "<form method=\"post\" action=\"user.php\">
         <th>Start date</th><th>End date</th><th>Select Venues<th><th> </th>
     </tr>
     <tr>
-    <td><input type=\"date\" name=\"date\" placeholder=\"Select start date\" ></td>
-    <td><input type=\"date\" name=\"end_date\" placeholder=\"Select end date\" ></td>
+    <td><input type=\"date\" name=\"date\" value=\"$date\" ></td>
+    <td><input type=\"date\" name=\"end_date\" value=\"$endDate\" ></td>
     <td>  $venueSelect </td>
     <td>
     <button style=\"float:right\" name=\"response\" value=\"submit\">Submit</button>
@@ -42,36 +49,37 @@ echo "<form method=\"post\" action=\"user.php\">
     ";
 
 
-$date = $_POST['date'];
-$endData = $_POST['end_date'];
-if( ! $endDate )
-    $endDate = $date;
-
-echo "Start Date: $date to $endDate <br>";
-
 $day = nameOfTheDay( $date );
+$endDay = nameOfTheDay( $endDate );
 
-$html = "<h3>On $day, $date </h3>";
 
 echo "<br>";
 echo "<div class=\"info\">";
-echo "You may not be able to create any request at following blocks";
-echo "<table>
-    <tr><td>
-    <button class=\"display_request\" >R</button>Pending requests
-    </td><td>
-    <button class=\"display_event\" >E</button>Confirmed events
-    </td></tr>
-    </table>";
+echo "You may not be able to create any request at following slots:";
+echo "
+    <button class=\"display_request\" style=\"width:20px;height:20px\"></button>Pending requests
+    <button class=\"display_event\" style=\"width:20px;height:20px\"></button>Booked slots
+    ";
+echo "<br>Click on them to see details";
 echo "</div>";
 
 // Now generate the range of dates.
+$numDays = getNumDaysInBetween( $date, $endDate );
+for( $i = 0; $i <= $numDays; $i++ )
+{
+    $thisdate = humanReadableDate( strtotime( $date . " + $i days" ) );
+    $thisday = nameOfTheDay( $thisdate );
 
-// Now generate eventline for each venue.
-foreach( $_POST['venue'] as $venueid )
-    $html .= eventLineHTML( $date, $venueid );
-
-echo $html;
+    $html = "
+        <div style=\"float:left\"> <font color=\"blue\">$thisday, $thisdate </font></div> 
+        <!--
+        <div style=\"float:right\"><font color=\"blue\">$thisday, $thisdate </font></div> -->
+        ";
+    // Now generate eventline for each venue.
+    foreach( $_POST['venue'] as $venueid )
+        $html .= eventLineHTML( $thisdate, $venueid );
+    echo $html;
+}
 
 ?>
 

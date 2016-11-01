@@ -215,4 +215,11 @@ function nameOfTheDay( $date )
     return date( 'l', strtotime( $date ) );
 }
 
+function getNumDaysInBetween( $startDate, $endDate )
+{
+    $start = new DateTime( $startDate );
+    $end = new DateTime( $endDate );
+    return $end->diff( $start )->format( "%a" );
+}
+
 ?>

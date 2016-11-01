@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS requests (
     , date DATE NOT NULL
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
-    , status ENUM ( 'PENDING', 'APPROVED', 'REJECTED' ) DEFAULT 'PENDING'
+    , status ENUM ( 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED_BY_USER' ) DEFAULT 'PENDING'
     , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
     , PRIMARY KEY( gid, rid )
     );
@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS events (
     , short_description VARCHAR(200) NOT NULL
     , description TEXT
     , date DATE NOT NULL
-    , venue VARCHAR(80)
+    , venue VARCHAR(80) NOT NULL
+    , user VARCHAR( 50 ) NOT NULL
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
     , PRIMARY KEY( gid, eid )

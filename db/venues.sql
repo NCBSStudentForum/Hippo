@@ -416,7 +416,7 @@ REPLACE INTO venues (
         VALUES ( 
             'Chausa', 'Chausa', 'CCAMP'
             , 'CCAMP', '0', 'CCAMP'
-            , 'LECTURE ROOM', '48', 'YES'
+            , 'LECTURE HALL', '48', 'YES'
             , 'NO', 'NO' 
         );
 REPLACE INTO venues (

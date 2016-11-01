@@ -12,7 +12,6 @@ class BMVPDO extends PDO
     {
         $conf = $_SESSION['conf'];
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
-        var_dump( $conf );
         $host = $conf['mysql']['host'];
         $port = $conf['mysql']['port'];
         if( $port == -1 )

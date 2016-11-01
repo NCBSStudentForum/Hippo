@@ -30,8 +30,7 @@ $( function() {
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.
 $venues = getVenues( );
-$venueSelect = venuesToHTMLSelect( $venues, true );
-$venueSelect = venuesToHTMLCheck( $venues, $grouped = TRUE );
+$venueSelect = venuesToHTMLSelect( $venues, TRUE );
 
 // We came to this page without default option. Let's fill them in $_POST. We 
 // are going to iterate over this page for its mandatory to create $_POST.

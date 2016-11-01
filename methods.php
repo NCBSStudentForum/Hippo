@@ -1,58 +1,10 @@
 <?php 
 
-include_once('database.php');
 include_once('error.php');
 include_once( 'logger.php' );
 
 date_default_timezone_set('Asia/Kolkata');
 
-/**
-    * @brief generate a select list of available strains.
-    *
-    * @return  A html SELECT list.
- */
-function strainsToHtml( $selected_strain = NULL )
-{
-    if( ! $selected_strain )
-        $html = "<select name=\"animal_strain\" required > 
-        <option value=\"unknown\">Yet to determine</option>"
-        ;
-    else
-        $html = "<select name=\"animal_strain\" required>"; 
-
-    $listOfStrain = $_SESSION['conf']['animal']['strain'];
-    foreach( $listOfStrain as $strain )
-    {
-        $html .= '<option value="' . $strain . "\" ";
-        $html .= ($strain == $selected_strain) ? "\"selected\"" : " ";
-        $html .=  '>' . $strain . "</option>";
-    }
-    $html .= "</select>";
-    return $html;
-}
-
-function cagesToHtml( $cages, $default = NULL )
-{
-    if( ! $default )
-        $html = "<select name=\"cage_id\"> 
-            <option disabled selected value> -- select a cage -- </option>"
-            ;
-    else
-        $html = "<select name=\"cage_id\">";
-
-    foreach( $cages as $cage )
-    {
-        if( $default == $cage['id'] )
-            $selected = 'selected';
-        else 
-            $selected = '';
-
-        $html .= '<option value="'.$cage['id']. '" ' . $selected . ' >' 
-            . $cage['id'] .  " (" . $cage['type'] . ")" . '</option>';
-    }
-    $html .= "</select>";
-    return $html;
-}
 
 function venuesToHTMLSelect( $venues, $ismultiple = false )
 {
@@ -81,19 +33,6 @@ function venuesToHTMLSelect( $venues, $ismultiple = false )
     }
 
     $html .= "</select>";
-    return $html;
-}
-
-function animalsToDataList( $animals )
-{
-    $html = "<datalist id=\"animal_list\">";
-    foreach( $animals as $anim )
-    {
-        $text = $anim['id'] . ' ' . $anim['name'];
-        $html .= '<option value="' . $anim['id'] . '">' . $text . '</option>';
-    }
-
-    $html .= "</datalist>";
     return $html;
 }
 

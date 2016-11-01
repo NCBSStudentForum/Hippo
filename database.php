@@ -3,19 +3,34 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( 'ldap.php' );
+include_once( "error.php" );
+
 
 class BMVPDO extends PDO 
 {
     function __construct( $host = 'ghevar.ncbs.res.in'  )
     {
+        $conf = $_SESSION['conf'];
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
+        var_dump( $conf );
+        $host = $conf['mysql']['host'];
+        $port = $conf['mysql']['port'];
+        if( $port == -1 )
+            $port = 3306;
+
+        $user = $conf['mysql']['user'];
+        $password = $conf['mysql']['password'];
+        $dbname = $conf['mysql']['database'];
+        
         try {
-            parent::__construct( 'mysql:host=' . $host . ';dbname=bookmyvenue'
-                , 'bookmyvenueuser', 'bookmyvenue', $options 
+            parent::__construct( 'mysql:host=' . $host . ";dbname=$dbname"
+                , $user, $password, $options 
             );
-        } catch( PODException $e) {
+        } catch( PDOException $e) {
             echo printWarning( "failed to connect to database: ".  $e->getMessage());
             $this->error = $e->getMessage( );
+            echo goBackToPageLink( 'index.php', 0 );
+            exit;
         }
     }
 }

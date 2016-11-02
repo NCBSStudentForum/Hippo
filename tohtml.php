@@ -98,7 +98,7 @@ function requestToText( $req )
 function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 {
     //$tableName = "<font style=\"font-size:12px\">" . strtoupper($venue). "</font><br>";
-    $tableTime = "<font style=\"font-size:12px\" >" . date('H:i', $hour) . " Hrs</font>";
+    $tableTime = "<font style=\"font-size:12px\" >" . date('H:i', $hour) . "</font>";
     $html = "<table class=\"hourtable\">";
     $html .= "<tr><td colspan=\"$section\"> $tableTime </td></tr>";
 
@@ -242,6 +242,31 @@ function venuesToHTMLCheck( $groupedVenues, $grouped )
     return $html;
 }
 
+function requestToEditableTableHTML( $request, $editables = Array( ) )
+{
+    $html = "<table class=\"request_show_edit\">";
+    foreach( $request as $key => $value )
+    {
+        $editHTML = $value;
+        if( in_array( $key, $editables ) )
+        {
+            $inType = "input";
+            $props = "style=\"width:100%;\"";
+            $text = "";
+            if( $key == "description" )
+            {
+                $inType = "textarea";
+                $props  = $props . " rows=\"4\"";
+                $text = $value;
+            }
+
+            $editHTML = "<$inType $props name=\"$key\" value=\"$value\">$text</$inType>";
+        }
+        $html .= "<tr> <td>$key</td><td> $editHTML </td> </tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
 
 
 ?>

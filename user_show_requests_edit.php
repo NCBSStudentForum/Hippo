@@ -23,13 +23,14 @@ if( strtolower($_POST['response']) == 'edit' )
     $request = $requests[0];
     echo "<form method=\"post\" action=\"user_show_requests_edit_submit.php\">";
     echo requestToEditableTableHTML( $request, $editable );
+    echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\" />";
     echo "<button class=\"submit\" name=\"response\" value=\"submit\">Submit</button>";
     echo "</form>";
 }
 
-else if( strtolower($_POST['response']) == 'delete' )
+else if( strtolower($_POST['response']) == 'cancel' )
 {
-    echo "Delete";
+    changeStatusOfRequests( $_POST['gid'], 'CANCELLED' );
 }
 else
 {

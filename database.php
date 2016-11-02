@@ -175,6 +175,23 @@ function changeRequestStatus( $gid, $rid, $status )
 }
 
 /**
+    * @brief Change status of all request identified by group id.
+    *
+    * @param $gid
+    * @param $status
+    *
+    * @return 
+ */
+function changeStatusOfRequests( $gid, $status )
+{
+    global $db;
+    $stmt = $db->prepare( "UPDATE requests SET status=:status WHERE gid=:gid" );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':gid', $gid );
+    return $stmt->execute( );
+}
+
+/**
     * @brief Get the list of events for today.
  */
 function getEvents( $from = NULL )
@@ -403,6 +420,43 @@ function summaryTable( )
     global $db;
     $summary = 'Summary';
     return $summary;
+}
+
+/**
+    * @brief Update a group of requests. It can only modify fields which are set 
+    * editable in function. 
+    *
+    * @param $gid
+    * @param $options Any array as long as it contains fields with name in 
+    * editables.
+    *
+    * @return  On success True, else False.
+ */
+function updateRequestGroup( $gid, $options )
+{
+    global $db;
+    $editable = Array( "title", "description" );
+    $fields = Array( );
+    $placeholder = Array( );
+    foreach( $options as $key => $val )
+    {
+        if( in_array( $key, $editable ) )
+        {
+            array_push( $fields, $key );
+            array_push( $placeholder, "$key=:$key" );
+        }
+    }
+
+    $placeholder = implode( ",", $placeholder );
+    $query = "UPDATE requests SET $placeholder WHERE gid=:gid";
+
+    $stmt = $db->prepare( $query );
+
+    foreach( $fields as $f ) 
+        $stmt->bindValue( ":$f", $options[ $f ] );
+
+    $stmt->bindValue( ':gid', $gid );
+    return $stmt->execute( );
 }
 
 ?>

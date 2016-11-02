@@ -1,4 +1,4 @@
-div.header {
+divdiv.header {
     min-width : 500px;
     /*background-color : yellow;*/
 }
@@ -11,6 +11,7 @@ div.user {
 
 div.info {
     /*border : 1px solid #73AD21;*/
+    width : 1000px;
     background: lightblue;
 }
 

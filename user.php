@@ -15,7 +15,7 @@ $( function() {
     var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
     $( "#datepicker" ).multiDatesPicker( { 
         dateFormat : "y-m-d"
-        , addDates : [ today, tomorrow ] 
+        // , addDates : [ today, tomorrow ] 
     });
 } );
 </script>
@@ -28,19 +28,22 @@ $( function() {
 $venues = getVenues( );
 $venueSelect = venuesToHTMLSelect( $venues, TRUE );
 
-// We came to this page without default option. Let's fill them in $_POST. We 
-// are going to iterate over this page for its mandatory to create $_POST.
-if( ! array_key_exists( 'picked_dates', $_POST ) )
-    $_POST['picked_dates'] = humanReadableDate( strtotime( 'today' ) );
-
-// Initialize dates and end_date in form.
-$dates = explode( ",", $_POST['picked_dates']);
-
 // FIXME: complicated logic here.
 // If no venue if selected then use all venues. If from previous step we already 
 // have some veneues selected then keep using them. NOTE: We convert the array 
 // into string since we want to use these values in next iteration as <input> 
-// value. 
+// value.  Similarly do it for dates.
+if( ! array_key_exists( 'picked_dates', $_POST ) )
+{
+    if( ! array_key_exists( 'selected_dates_before', $_POST ) )
+        $_POST['picked_dates'] = humanReadableDate( strtotime( 'today' ) );
+    else
+        $_POST['picked_dates']  = $_POST['selected_dates_before'];
+}
+
+// Initialize dates and end_date in form.
+$dates = explode( ",", $_POST['picked_dates']);
+
 if( ! array_key_exists( 'venue', $_POST ) )
 {
     if( ! array_key_exists( 'selected_venues_before', $_POST ) )
@@ -50,31 +53,26 @@ if( ! array_key_exists( 'venue', $_POST ) )
 }
 
 // To be sure that we can post this value as value of <input 
-// name="selected_venues_before">.
 if( is_array($_POST['venue']) )
     $_POST['venue'] = implode( "###", $_POST['venue'] );
 
+$pickedDates = $_POST['picked_dates'];
 echo "<form method=\"post\" action=\"user.php\">
     <table>
     <tr>
         <th>Pick dates</th><th>Select Venues<th><th> </th>
     </tr>
     <tr>
-    <td><input type=\"text\" id=\"datepicker\" name=\"picked_dates\" value=\"\"></td>
+    <td><input type=\"text\" id=\"datepicker\" name=\"picked_dates\" value=\"$pickedDates\"></td>
     <td>  $venueSelect </td>
     <td>
     <button style=\"float:right\" name=\"response\" value=\"submit\">Submit</button> ";
 
     // NOTE: These venues were selected on previous steps. When Submit is pressed. And no
     // venue is selected,we keep displaying these venues --> 
-   echo " <input type=\"hidden\" name=\"selected_venues_before\" value=\" " .
-       $_POST['venue'] . "\">
-    </td>
-    </tr>
-    </table>
-    </form>
-    <br><br>
-    ";
+   echo " <input type=\"hidden\" name=\"selected_venues_before\" value=\" " .  $_POST['venue'] . "\">";
+   echo " <input type=\"hidden\" name=\"selected_dates_before\" value=\" " .  $_POST['picked_dates'] . "\">";
+   echo " </td> </tr> </table> </form> <br> ";
 
 
 echo "<br>";
@@ -87,6 +85,7 @@ echo "
 echo "<br>Click on them to see details";
 echo "</div>";
 
+
 // Now generate the range of dates.
 foreach( $dates as $date )
 {
@@ -94,7 +93,7 @@ foreach( $dates as $date )
     $thisday = nameOfTheDay( $thisdate );
 
     $html = "
-        <div style=\"float:left\"> <font color=\"blue\">$thisday, $thisdate </font></div> 
+        <p class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></p> <br>
         <!--
             <div style=\"float:right\"><font color=\"blue\">$thisday, $thisdate </font></div> 
         -->

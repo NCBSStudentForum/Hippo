@@ -11,17 +11,17 @@ echo userHTML( );
 
 <?php
 
-$requests = getRequestOfUsers( $_SESSION['user'], $status = 'PENDING' );
+$events = getMyEvents( $_SESSION['user'] );
 
-foreach( $requests as $request )
+foreach( $events as $event )
 {
-    $gid = $request['gid'];
+    $gid = $event['gid'];
     echo "<table class=\"request_edit\" >";
     echo "<tr>";
-    echo "<td>" . arrayToTableHTML( $request, "request" );
+    echo "<td>" . arrayToTableHTML( $event, "event" );
     echo '<form method="post" action="user_show_requests_edit.php">';
     echo "</td><td><button name=\"response\" value=\"edit\">Edit</button>";
-    echo "</td><td><button name=\"response\" value=\"delete\">Delete</button>";
+    echo "</td><td><button name=\"response\" value=\"cancel\">Delete</button>";
     echo "</td></tr>";
     echo "</table>";
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";

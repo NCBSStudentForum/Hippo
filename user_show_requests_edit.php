@@ -11,12 +11,12 @@ $gid = $_POST['gid'];
 
 $editable = Array( "title", "description" );
 
-echo "<p class=\"info\"> You can only change fields: " . implode( ", ", $editable ) 
-    . " here. If you want to change some other fields, you have to delete 
-    this request a create a new one. </p>";
-
 if( strtolower($_POST['response']) == 'edit' )
 {
+    echo "<p class=\"info\"> You can only change fields: " . implode( ", ", $editable ) 
+        . " here. If you want to change some other fields, you have to delete 
+        this request a create a new one. </p>";
+
     $requests = getRequestByGroupId( $gid );
     // We only edit once request and all other in the same group should get 
     // modified accordingly.
@@ -30,7 +30,15 @@ if( strtolower($_POST['response']) == 'edit' )
 
 else if( strtolower($_POST['response']) == 'cancel' )
 {
-    changeStatusOfRequests( $_POST['gid'], 'CANCELLED' );
+    $res = changeStatusOfRequests( $_POST['gid'], 'CANCELLED' );
+    if( $res )
+    {
+        echo printInfo( "Successfully cancelled request" );
+        goToPage( "user_request.php", 0 );
+    }
+    else
+        echo printWarning( "Could not delete request " . $_POST['gid'] );
+
 }
 else
 {

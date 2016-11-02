@@ -21,7 +21,7 @@ foreach( $requests as $request )
     echo "<td>" . arrayToTableHTML( $request, "request" );
     echo '<form method="post" action="user_show_requests_edit.php">';
     echo "</td><td><button name=\"response\" value=\"edit\">Edit</button>";
-    echo "</td><td><button name=\"response\" value=\"delete\">Delete</button>";
+    echo "</td><td><button name=\"response\" value=\"cancel\">Cancel</button>";
     echo "</td></tr>";
     echo "</table>";
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";

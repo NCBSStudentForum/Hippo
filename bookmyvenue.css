@@ -64,6 +64,15 @@ table.input {
     border-type : dotted;
 }
 
+table.request {
+    text-align : left;
+    background-color:lightyellow; 
+    border-spacing: 3px;
+    border-collapse : separate;
+    padding : 3px;
+    border-type : dotted;
+}
+
 #table_request.tr td {
     border-width = 0.5px;
 }
@@ -84,14 +93,6 @@ table.input {
     border-type : dotted;
 }
 
-table.request {
-    text-align : left;
-    background-color:lightyellow; 
-    border-spacing: 3px;
-    border-collapse : separate;
-    padding : 3px;
-    border-type : dotted;
-}
 
 table.eventline {
     widht : 1000px;

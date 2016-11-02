@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS events (
     , user VARCHAR( 50 ) NOT NULL
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
+    , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID' 
     , PRIMARY KEY( gid, eid )
     , FOREIGN KEY (venue) REFERENCES venues(id)
     );

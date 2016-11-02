@@ -181,16 +181,21 @@ function eventLineHTML( $date, $venueid )
 }
 
 // Convert an array to HTML
-function arrayToTableHTML( $r, $tablename )
+function arrayToTableHTML( $r, $tablename, $tobefilterd )
 {
     $table = "<table class=\"$tablename\">";
     $keys = array_keys( $r );
-    $vals = array_values( $r );
+    $toDisplay = Array();
     $table .= "<tr>";
     foreach( $keys as $k )
-        $table .= "<td>$k</td>";
+        if( ! in_array( $k, $tobefilterd ) )
+        {
+            $table .= "<td>$k</td>";
+            array_push( $toDisplay, $r[$k] );
+        }
+
     $table .= "</tr><tr>";
-    foreach( $vals as $v )
+    foreach( $toDisplay as $v )
         $table .= "<td>$v</td>";
     $table .= "</tr></table>";
     return $table;
@@ -246,6 +251,32 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
 {
     $html = "<table class=\"request_show_edit\">";
     foreach( $request as $key => $value )
+    {
+        $editHTML = $value;
+        if( in_array( $key, $editables ) )
+        {
+            $inType = "input";
+            $props = "style=\"width:100%;\"";
+            $text = "";
+            if( $key == "description" )
+            {
+                $inType = "textarea";
+                $props  = $props . " rows=\"4\"";
+                $text = $value;
+            }
+
+            $editHTML = "<$inType $props name=\"$key\" value=\"$value\">$text</$inType>";
+        }
+        $html .= "<tr> <td>$key</td><td> $editHTML </td> </tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
+
+function eventToEditableTableHTML( $event, $editables = Array( ) )
+{
+    $html = "<table class=\"request_show_edit\">";
+    foreach( $event as $key => $value )
     {
         $editHTML = $value;
         if( in_array( $key, $editables ) )

@@ -89,6 +89,16 @@ function getRequestsGroupedByGID( $status  )
     return fetchEntries( $stmt );
 }
 
+// Get all events with given status.
+function getEventsByGroupId( $gid, $status = 'VALID'  )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE gid=:gid AND status=:status' );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
 
 /**
     * @brief Get list of requests made by this users. These requests must be 
@@ -99,7 +109,7 @@ function getRequestsGroupedByGID( $status  )
     *
     * @return 
  */
-function getRequestOfUsers( $userid, $status = 'PENDING' )
+function getRequestOfUser( $userid, $status = 'PENDING' )
 {
     global $db;
     $stmt = $db->prepare( 'SELECT * FROM requests WHERE user=:user 
@@ -109,6 +119,22 @@ function getRequestOfUsers( $userid, $status = 'PENDING' )
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+function getEventsOfUser( $userid, $from = '-1 days', $status = 'VALID' )
+{
+    global $db;
+    $from = date( 'Y-m-d', strtotime( $from ));
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE user=:user 
+        AND date >= :from
+        AND status=:status
+        GROUP BY gid' );
+    $stmt->bindValue( ':user', $userid );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':from', $from );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+
 }
 
 // Fetch entries from sqlite responses
@@ -191,36 +217,51 @@ function changeStatusOfRequests( $gid, $status )
     return $stmt->execute( );
 }
 
+function changeStatusOfEventGroup( $gid, $user, $status )
+{
+    global $db;
+    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE gid=:gid AND user=:user" );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':user', $user );
+    return $stmt->execute( );
+}
+
 /**
     * @brief Get the list of events for today.
  */
-function getEvents( $from = NULL )
+function getEvents( $from = 'today', $status = 'VALID' )
 {
-    if( ! $from )
-        $from = '2010-01-01';
-
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date" );
+    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
+        status=:status" );
     $stmt->bindValue( ':date', $from );
+    $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
 
-function getEventsOn( $day )
+function getEventsOn( $day, $status = 'VALID')
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date" );
+    $stmt = $db->prepare( "SELECT * FROM events 
+        WHERE status=:status AND date = :date" );
     $stmt->bindValue( ':date', $day );
+    $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
 
 
-function getEventsOnThisDayAndThisVenue( $date, $venue )
-{
-    global $db;
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date=:date AND venue=:venue" );
-}
+//function getEventsOnThisDayAndThisVenue( $date, $venue )
+//{
+    //global $db;
+    //$stmt = $db->prepare( 
+        //"SELECT * FROM events 
+        //WHERE date=:date AND venue=:venue AND status='VALID'" 
+    //);
+//}
 
 /**
     * @brief Sunmit a request for review.
@@ -300,12 +341,12 @@ function submitRequest( $request )
     *
     * @return 
  */
-function isVenueAvailable( $venue, $date, $startOn, $endOn )
-{
-    $answer = true;
-    $allEventsOnThisday = getEventsOnThisDayAndThisVenue( $date, $venue );
-    return $answer;
-}
+//function isVenueAvailable( $venue, $date, $startOn, $endOn )
+//{
+    //$answer = true;
+    //$allEventsOnThisday = getEventsOnThisDayAndThisVenue( $date, $venue );
+    //return $answer;
+//}
 
 function increaseEventHostedByVenueByOne( $venueId )
 {
@@ -458,6 +499,34 @@ function updateRequestGroup( $gid, $options )
     $stmt->bindValue( ':gid', $gid );
     return $stmt->execute( );
 }
+
+function updateEventGroup( $gid, $options )
+{
+    global $db;
+    $editable = Array( "short_description", "description" );
+    $fields = Array( );
+    $placeholder = Array( );
+    foreach( $options as $key => $val )
+    {
+        if( in_array( $key, $editable ) )
+        {
+            array_push( $fields, $key );
+            array_push( $placeholder, "$key=:$key" );
+        }
+    }
+
+    $placeholder = implode( ",", $placeholder );
+    $query = "UPDATE events SET $placeholder WHERE gid=:gid";
+
+    $stmt = $db->prepare( $query );
+
+    foreach( $fields as $f ) 
+        $stmt->bindValue( ":$f", $options[ $f ] );
+
+    $stmt->bindValue( ':gid', $gid );
+    return $stmt->execute( );
+}
+
 
 ?>
 

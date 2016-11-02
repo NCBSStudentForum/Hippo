@@ -68,7 +68,7 @@ function goToPage($page="index.php", $delay = 3)
 function goBackToPageLink( $url, $title = "Go back" )
 {
     $html = "<br />";
-    $html .= "<a style=\"float: right\" href=\"$url\">
+    $html .= "<a style=\"float: left\" href=\"$url\">
             <font color=\"blue\" size=\"5\">$title</font>
         </a>";
     return $html;

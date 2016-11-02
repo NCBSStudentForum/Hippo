@@ -11,17 +11,18 @@ echo userHTML( );
 
 <?php
 
-$events = getMyEvents( $_SESSION['user'] );
+$events = getEventsOfUser( $_SESSION['user'] );
 
+$tofilter = Array( 'is_public_event', 'eid' );
 foreach( $events as $event )
 {
     $gid = $event['gid'];
     echo "<table class=\"request_edit\" >";
     echo "<tr>";
-    echo "<td>" . arrayToTableHTML( $event, "event" );
-    echo '<form method="post" action="user_show_requests_edit.php">';
+    echo "<td>" . arrayToTableHTML( $event, "request", $tofilter );
+    echo '<form method="post" action="user_show_events_edit.php">';
     echo "</td><td><button name=\"response\" value=\"edit\">Edit</button>";
-    echo "</td><td><button name=\"response\" value=\"cancel\">Delete</button>";
+    echo "</td><td><button name=\"response\" value=\"cancel\">Cancel</button>";
     echo "</td></tr>";
     echo "</table>";
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";

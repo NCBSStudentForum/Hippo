@@ -11,7 +11,7 @@ echo userHTML( );
 
 <?php
 
-$requests = getRequestOfUsers( $_SESSION['user'], $status = 'PENDING' );
+$requests = getRequestOfUser( $_SESSION['user'], $status = 'PENDING' );
 
 foreach( $requests as $request )
 {

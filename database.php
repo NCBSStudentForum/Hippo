@@ -625,6 +625,14 @@ function createUserOrUpdateLogin( $userid )
     return $stmt->execute( );
 }
 
+function getRoles( $user )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT roles FROM users WHERE id=:id' );
+    $stmt->bindValue( ':id', $user );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
 
 ?>
 

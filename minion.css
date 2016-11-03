@@ -194,6 +194,12 @@ p.info {
     width : 80% px;
 }
 
+p.warn {
+    color : red;
+    width : 80% px;
+    font-size : large;
+}
+
 .db_table_fieldname {
     font-size : x-small;
 }

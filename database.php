@@ -515,8 +515,19 @@ function requestsForThisVenue( $venue, $date, $time )
 function summaryTable( )
 {
     global $db;
-    $summary = 'Summary';
-    return $summary;
+    $html = '<table class="summary">';
+    $events = getEventsGrouped( );
+    $count = 0;
+    foreach( $events as $event )
+    {
+        $count += 1;
+        if( $count > 10 )
+            break;
+
+        $html .= "<tr><td> " . eventSummary( $event ) . "</td></tr>";
+    }
+    $html .= "</table>";
+    return $html;
 }
 
 /**
@@ -602,6 +613,17 @@ function updateEvent( $gid, $eid, $options )
     return $stmt->execute( );
 }
 
+// Create user if does not exists.
+function createUserOrUpdateLogin( $userid )
+{
+    global $db;
+    $stmt = $db->prepare( "INSERT IGNORE INTO users (id, created_on) 
+        VALUES (:id, NOW()) " );
+    $stmt->bindValue( ':id', $userid );
+    $stmt->execute( );
+    $stmt = $db->query( "UPDATE users SET last_login=NOW()" );
+    return $stmt->execute( );
+}
 
 
 ?>

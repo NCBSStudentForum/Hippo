@@ -6,10 +6,15 @@ include_once( 'tohtml.php' );
 
 session_save_path("/tmp/");
 $conf = array();
-$inifile = "bmvrc";
+$inifile = "minionrc";
 
 if(file_exists($inifile)) 
     $conf = parse_ini_file($inifile, $process_section = TRUE );
+else
+{
+    echo printWarning( "Config file is not found. Can't continue" );
+    exit;
+}
 
 if(!$conf)
 {
@@ -27,6 +32,12 @@ $hit_count++;
 file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
+echo "<table class=\"index\">";
+echo "<tr><td>";
+//summaryTable( );
+echo "</td><td>";
 echo loginForm();
+echo "</td></tr>";
+echo "</table>";
 
 ?>

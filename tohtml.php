@@ -93,6 +93,22 @@ function eventToText( $event )
     return $html;
 }
 
+// Return a short description of event for main page.
+function eventSummary( $event )
+{
+    $html = '<table class=\"event_summary\">';
+    $html .= '<tr><td><small>WHEN</small></td><td>' .  date( 'l M d, Y', strtotime($event['date']));
+    $html .= date('H:i', strtotime($event['start_time']))  . ' to ' .
+            date( 'H:i', strtotime(  $event['end_time'])) . '</td></tr>';
+
+    $html .= '<tr><td><small>WHERE</small></td><td>'.  $event['venue'] . "</td></tr>";
+    $html .= '<tr><td><small>WHAT</small></td><td>' . $event['short_description']
+            . "</td></tr>";
+    $html .= "</table>";
+    return $html;
+}
+
+
 function requestToText( $req )
 {
     $html = 'By ' . $req['user'] . ', ';
@@ -234,6 +250,12 @@ function userHTML( )
             <a href="user_show_requests.php">My requests</a>
         </td><td>
             <a href="user_show_events.php">My events</a></td>
+        </td></tr><tr><td>
+            <a href="user_jc.php">My JC</a>
+        </td><td>
+            <a href="user_aws.php">My AWS</a>
+        </td><tr><td></td><td>
+            <a href="logout.php">logout</a>
         </td></tr>';
     $html .= "</table>";
     $html .= '</div>';

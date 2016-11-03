@@ -1,12 +1,20 @@
 <?php 
 
-// This is admin interface. We are here to manage the requests.
-
+// This is admin interface for book my venue.
+// We are here to manage the requests.
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "database.php" );
 include_once( "tohtml.php" );
 include_once( "is_valid_access.php" );
+
+$roles = getRoles( $_SESSION['user'] );
+if( ! in_array( 'BOOKMYVENUE_ADMIN', explode(",", $roles['roles'] ) ) )
+{
+    echo printWarning( "You don't have enough privileges to user this interface" );
+    goToPage( "user.php", 1 );
+    exit( 0 );
+}
 
 ?>
 

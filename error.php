@@ -12,9 +12,10 @@ function sendEmailToAdmin($err_msg, $db_name) {
 
 function printWarning($msg) 
 {
-    $warn ="<p class=\"warn\">".$msg."<br /></font>";
+    $warn ="<p class=\"warn\">".$msg."</p>";
     return $warn;
 }
+
 
 function printInfo( $msg )
 {

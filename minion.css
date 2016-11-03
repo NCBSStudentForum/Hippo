@@ -3,12 +3,14 @@ divdiv.header {
     /*background-color : yellow;*/
 }
 
-div.user {
+table.show_user {
     font-size : small;
-    position : fixed;
+    /*position : fixed;*/
+    position : absolute;
     top: 10px;
-    left: 70%;
+    left: 80%;
     border : 1px solid #73AD21;
+    min-width : 20%;
 }
 
 div.info {

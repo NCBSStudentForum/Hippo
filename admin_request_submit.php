@@ -17,13 +17,12 @@ $isPublic = $_POST['isPublic'];
 
 foreach( $events as $event )
 {
-    echo printInfo( "Changing status to $whatToDo for request $event" );
     $event = explode( '.', $event );
     $gid = $event[0]; $rid = $event[1];
     actOnRequest( $gid, $rid, $whatToDo );
     changeIfEventIsPublic( $gid, $rid, $isPublic );
 }
 
-goToPage( "admin.php", 1 );
+goToPage( "admin_request_review.php", 1 );
 
 ?>

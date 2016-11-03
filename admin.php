@@ -15,6 +15,8 @@ include_once( "is_valid_access.php" );
 
 <?php 
 $requests = getPendingRequestsGroupedByGID( ); 
+if( count( $requests ) == 0 )
+    echo printInfo( "No booking request is peniding for review" );
 ?>
 
 <form action="admin_request_review.php" method="post" accept-charset="utf-8">
@@ -22,7 +24,7 @@ $requests = getPendingRequestsGroupedByGID( );
 </form>
 
 
-<h2> Manage Upcoming Events </h2>
+<h2> Edit Upcoming Events </h2>
 <?php
 $html = '';
 $events = getEventsGrouped( $sortby = 'date' );

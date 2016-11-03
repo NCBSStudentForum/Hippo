@@ -35,6 +35,16 @@ function eventTable( $date )
 {
 }
 
+function prettify( $string )
+{
+    // Replace _ with space.
+    $string = str_replace( "_", " ", $string );
+
+    // Uppercase first char.
+    $string = ucfirst( $string );
+    return $string;
+}
+
 function requestsToHTMLReviewForm( $requests )
 {
     $html = '<table class="request">';
@@ -116,7 +126,7 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
         if( count( $events ) == 0 and count($requests) == 0)
         {
             // Add a form to trigger adding event purpose.
-            $html .= "<form method=\"post\" action=\"user_request.php\" >";
+            $html .= "<form method=\"post\" action=\"user_submit_request.php\" >";
             $html .= "<td>";
             if( $segDateTime >= strtotime( 'now' ) )
             {
@@ -181,22 +191,30 @@ function eventLineHTML( $date, $venueid )
 }
 
 // Convert an array to HTML
-function arrayToTableHTML( $r, $tablename, $tobefilterd )
+function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Array() )
 {
-    $table = "<table class=\"$tablename\">";
+    if( $background )
+        $background = "style=\"background:$background;\"";
+    else
+        $background = '';
+    
+    $table = "<table class=\"show_$tablename\" $background ;>";
     $keys = array_keys( $r );
     $toDisplay = Array();
     $table .= "<tr>";
     foreach( $keys as $k )
         if( ! in_array( $k, $tobefilterd ) )
         {
-            $table .= "<td>$k</td>";
+            $kval = prettify( $k );
+            $label = strtoupper( $kval );
+            $table .= "<td class=\"db_table_fieldname\">$label</td>";
             array_push( $toDisplay, $r[$k] );
         }
 
+    // Also set the content as div element which can be formatted using css
     $table .= "</tr><tr>";
     foreach( $toDisplay as $v )
-        $table .= "<td>$v</td>";
+        $table .= "<td><div class=\"cell_content\">$v</div></td>";
     $table .= "</tr></table>";
     return $table;
 }
@@ -273,8 +291,92 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     return $html;
 }
 
+
+/**
+    * @brief Convert a database table schema to HTML table. 
+    *
+    * @param $tablename
+    * @param $defaults  . Populate table with these default values. If not found 
+    * in this array, use schema defauls.
+    * @param $editables
+    *
+    * @return 
+ */
+
+function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array() )
+{
+    $html = "<table class=\"editable_$tablename\">";
+    $schema = getTableSchema( $tablename );
+
+    foreach( $schema as $col )
+    {
+        $keyName = $col['Field'];
+        $ctype = $col['Type'];
+
+        $readonly = True;
+        if( in_array($keyName , $editables ) )
+            $readonly = False;
+
+        $match = Array( );
+        // Add row to table
+        $html .= "<tr><td class=\"db_table_fieldname\"> " . 
+            strtoupper(prettify( $keyName )) . "</td>";
+
+        $default = __get__( $defaults, $keyName, $col['Default'] );
+        $val = "<input class=\"editable\"
+            name=\"$keyName\" type=\"text\" value=\"$default\" />";
+
+        if( preg_match( "/^enum\((.*)\)$/" , $ctype, $match ) )
+        {
+            $val = "<select name=\"$keyName\">";
+            foreach( explode(",", $match[1] ) as $v )
+            {
+                $selected = '';
+                $v = str_replace( "'", "", $v );
+                if( $v == $default )
+                    $selected = 'selected';
+                $val .= "<option value=\"$v\" $selected> $v </option>";
+            }
+
+            $val .= "</select>";
+        }
+        else if( strcasecmp( $ctype, 'text' ) == 0 )
+        {
+            $val = "<textarea class=\"editable\" name=\"$keyName\" >$default </textarea>";
+        }
+
+        // When the value is readonly. Just send the value as hidden input and 
+        // display the default value.
+        if( $readonly )
+            $val = "<input type=\"hidden\" name=\"$keyName\" value=\"$default\"/>$default";
+
+
+        $html .= "<td>" . $val . "</td>";
+        $html .= "</tr>";
+    }
+
+    // If some fields are editable then we need a submit button as well.
+    if( count( $editables ) > 0 )
+    {
+        $html .= "<tr style=\"background:white;\"><td></td><td>";
+        $html .= "<button style=\"float:right\" value=\"submit\" name=\"response\">Submit</button>";
+        $html .= "</td></tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
+
+/**
+    * @brief Deprecated: Convert an event to an editable table. 
+    *
+    * @param $event
+    * @param $editables
+    *
+    * @return 
+ */
 function eventToEditableTableHTML( $event, $editables = Array( ) )
 {
+
     $html = "<table class=\"request_show_edit\">";
     foreach( $event as $key => $value )
     {
@@ -298,6 +400,5 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     $html .= "</table>";
     return $html;
 }
-
 
 ?>

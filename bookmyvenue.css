@@ -5,7 +5,9 @@ divdiv.header {
 
 div.user {
     float : right ;
-    position : relative;
+    position : fixed;
+    left: 80%;
+    top: 30px;
     /*border : 1px solid #73AD21;*/
 }
 
@@ -34,16 +36,6 @@ button.add_event_past {
     min-width : 20px;
 }
 
-button.display_event {
-    min-height : 20px;
-    min-width : 20px;
-    /*border-radius : 50%;*/
-    border-style : none;
-    background : red;
-    /*alignment : right;*/
-    /*vertical-align: text-top;*/
-}
-
 button.display_request {
     min-height : 20px;
     min-width : 20px;
@@ -59,7 +51,7 @@ button.display_request {
 table.input {
     text-align : left;
     background-color:lightyellow; 
-    width : 500px; 
+    width : 80%; 
     border-width: 1px;
     border-type : dotted;
 }
@@ -67,15 +59,59 @@ table.input {
 table.request {
     text-align : left;
     background-color:lightyellow; 
-    border-spacing: 3px;
     border-collapse : separate;
-    padding : 3px;
     border-type : dotted;
 }
 
-#table_request.tr td {
+table.show_requests {
+    text-align : left;
+    background-color:lightyellow; 
+    border-collapse : separate;
+    border : 1px dotted;
+}
+
+table.show_events {
+    text-align : left;
+    background-color:lightblue; 
+    width : 100%;
+    /*border-collapse : separate;*/
+    /*border : 1px dotted;*/
+}
+
+
+table.submit_request tr {
+    width : 90%;
+}
+
+table.submit_request.tr td {
     border-width = 0.5px;
 }
+
+table.event {
+    text-align : left;
+    background-color:lightyellow; 
+    border-collapse : separate;
+    border : 1px dotted;
+    max-width : 90%;
+}
+
+table.editable_events {
+    text-align : left;
+    background-color:lightyellow; 
+    border : 0px;
+    /*max-width : 90%;*/
+}
+
+.editable {
+    min-width : 300px;
+}
+
+div.cell_content {
+    max-height : 3cm;
+    overflow: auto;
+    font-size : small;
+}
+
 
 table.login_main {
     background-color : lightyellow;
@@ -143,10 +179,13 @@ table.request tr:nth-of-type( odd ) {
 
 p {
     font : serif;
-    width : 500px;
 }
 
 p.info {
     color : blue;
-    width : 500 px;
+    width : 80% px;
+}
+
+.db_table_fieldname {
+    font-size : x-small;
 }

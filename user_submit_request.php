@@ -27,13 +27,12 @@ $dbDate = dbDate( $date );
 
 <h2>Request for booking</h2>
 
-<div>
-<p class="info"> Time format : HH:MM, 24 Hr format <br>
+<div class="info"> Time format : HH:MM, 24 Hr format 
 </small>9:30 (for 9:30am), 14:20 for 2:20pm etc. </small>
-</p>
 </div>
+<br>
 
-<form class="input" action="user_request_action.php" method="post" accept-charset="utf-8">
+<form class="input" action="user_submit_request_action.php" method="post" accept-charset="utf-8">
 
 <?php
 include_once( "methods.php" );
@@ -51,14 +50,16 @@ $date = __get__( $_POST, 'date', '' );
 
 ?>
 
-<table class="input" id="table_request">
+<table class="input" >
     <!-- hide the day -->
     <input type="hidden" name="date" value="<?php echo $date ?>" />
-    <tr> <td>Title</td>
+    <tr > <td>Title <small>A very short description for calendar</small></td>
         <td> <input name="title" type="text" value="" > </td>
     </tr>
-    <tr> <td>Description</td>
-        <td> <textarea name="description" cols="22" rows="3" > </textarea> </td>
+    <tr> <td style="width:200px">Description <small> Event details. 
+    Its a good idea to copy/paste here. </small>
+</td>
+        <td> <textarea name="description" cols="40" rows="5" > </textarea> </td>
     </tr>
     <tr> <td>Venue</td>
     <td> <?php echo $venueHTML ?> </td>
@@ -75,13 +76,14 @@ $date = __get__( $_POST, 'date', '' );
     <tr> <td>Date <br>
     </td>
         <td> 
-        <input type="date" name="date" value=<?php echo $dbDate ?> />
+        <input type="date" name="date" value=<?php echo $dbDate ?> readonly />
         </td>
     </tr>
     <tr>
         <td>Repeat pattern <br>
-        <small>days,weeks,months.
-                <br> Valid for maximum of 1 year
+        <small>
+        TODO: Details here.
+        <br> Valid for maximum of 6 months
         </small>
         </td> 
         <td> 

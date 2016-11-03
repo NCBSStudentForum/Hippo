@@ -47,7 +47,9 @@ $dates = explode( ",", $_POST['picked_dates']);
 if( ! array_key_exists( 'venue', $_POST ) )
 {
     if( ! array_key_exists( 'selected_venues_before', $_POST ) )
-        $_POST['venue'] = implode( "###", array_map( function($a) { return $a['id']; }, $venues));
+        $_POST['venue'] = implode( "###", array_map( function($a) { 
+            return $a['id']; }, $venues)
+            );
     else
         $_POST['venue'] = $_POST[ 'selected_venues_before' ];
 }

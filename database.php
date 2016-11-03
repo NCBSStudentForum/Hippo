@@ -46,6 +46,14 @@ function getVenues( $sortby = 'total_events' )
     return fetchEntries( $res );
 }
 
+function getTableSchema( $tableName )
+{
+    global $db;
+    $stmt = $db->prepare( "DESCRIBE $tableName" );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 function getVenuesGroupsByType(  )
 {
     global $db;
@@ -90,14 +98,30 @@ function getRequestsGroupedByGID( $status  )
 }
 
 // Get all events with given status.
-function getEventsByGroupId( $gid, $status = 'VALID'  )
+function getEventsByGroupId( $gid, $status = NULL  )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE gid=:gid AND status=:status' );
+    $query = "SELECT * FROM events WHERE gid=:gid";
+    if( $status )
+        $query .= " AND status=:status ";
+
+    $stmt = $db->prepare( $query );
     $stmt->bindValue( ':gid', $gid );
-    $stmt->bindValue( ':status', $status );
+    if( $status )
+        $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+//  Get a event of given gid and eid. There is only one such event.
+function getEventsById( $gid, $eid )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE gid=:gid AND eid=:eid' );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':eid', $eid );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 /**
@@ -228,7 +252,7 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 }
 
 /**
-    * @brief Get the list of events for today.
+    * @brief Get the list of upcoming events.
  */
 function getEvents( $from = 'today', $status = 'VALID' )
 {
@@ -241,6 +265,27 @@ function getEvents( $from = 'today', $status = 'VALID' )
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
+
+/**
+  * @brief Get the list of upcoming events grouped by gid.
+ */
+function getEventsGrouped( $sortby = NULL, $from = 'today', $status = 'VALID' )
+{
+    global $db;
+    if( ! $sortby )
+        $sortby = '';
+    else
+        $sortby = " ORDER BY $sortby";
+
+    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
+        status=:status GROUP BY gid $sortby" );
+    $stmt->bindValue( ':date', $from );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 
 function getEventsOn( $day, $status = 'VALID')
 {
@@ -415,6 +460,17 @@ function actOnRequest( $gid, $rid, $status )
         " or status " . $status ) );
 }
 
+function changeIfEventIsPublic( $gid, $eid, $status )
+{
+    global $db;
+    $stmt = $db->prepare( "UPDATE events SET is_public_event=:status
+        WHERE gid=:gid AND eid=:eid" );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':eid', $eid );
+    return $stmt->execute();
+}
+
 // Fetch all events at given venue and given day-time.
 function eventsAtThisVenue( $venue, $date, $time )
 {
@@ -503,7 +559,25 @@ function updateRequestGroup( $gid, $options )
 function updateEventGroup( $gid, $options )
 {
     global $db;
-    $editable = Array( "short_description", "description" );
+    $events = getEventsByGroupId( $gid );
+    $results = Array( );
+    foreach( $events as $event )
+    {
+        $res = updateEvent( $gid, $event['eid'], $options );
+        if( ! $res )
+            echo printWarning( "I could not update sub-event $eid" );
+        array_push( $results, $res );
+    }
+    return (! in_array( FALSE, $results ));
+
+}
+
+function updateEvent( $gid, $eid, $options )
+{
+    global $db;
+    $editable = Array( "short_description", "description"
+        , "is_public_event", "status", "class" 
+    );
     $fields = Array( );
     $placeholder = Array( );
     foreach( $options as $key => $val )
@@ -516,7 +590,7 @@ function updateEventGroup( $gid, $options )
     }
 
     $placeholder = implode( ",", $placeholder );
-    $query = "UPDATE events SET $placeholder WHERE gid=:gid";
+    $query = "UPDATE events SET $placeholder WHERE gid=:gid AND eid=:eid";
 
     $stmt = $db->prepare( $query );
 
@@ -524,8 +598,10 @@ function updateEventGroup( $gid, $options )
         $stmt->bindValue( ":$f", $options[ $f ] );
 
     $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':eid', $eid );
     return $stmt->execute( );
 }
+
 
 
 ?>

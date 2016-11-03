@@ -244,8 +244,11 @@ function requestToHTML( $request )
 function userHTML( )
 {
     $html = '<div class="user">';
-    $html .= 'Welcome <font color="blue">' . $_SESSION['user'] . '</font>';
-    $html .= '<table class="user">';
+    $html .= '<table class="show_user">';
+    $html .= '<tr><th>Welcome <font color="blue">' 
+        . $_SESSION['user'] . '</font></th>
+        <th> <a href="logout.php">LOGOUT</a> </th>
+        </tr>';
     $html .= '<tr><td>
             <a href="user_show_requests.php">My requests</a>
         </td><td>
@@ -254,9 +257,7 @@ function userHTML( )
             <a href="user_jc.php">My JC</a>
         </td><td>
             <a href="user_aws.php">My AWS</a>
-        </td><tr><td></td><td>
-            <a href="logout.php">logout</a>
-        </td></tr>';
+        </td><tr><td></td><td> </td></tr>';
     $html .= "</table>";
     $html .= '</div>';
     return $html;

@@ -4,11 +4,11 @@ divdiv.header {
 }
 
 div.user {
-    float : right ;
+    font-size : small;
     position : fixed;
-    left: 80%;
-    top: 30px;
-    /*border : 1px solid #73AD21;*/
+    top: 10px;
+    left: 70%;
+    border : 1px solid #73AD21;
 }
 
 div.info {
@@ -34,6 +34,16 @@ button.add_event_past {
     border-style : none;
     min-height : 20px;
     min-width : 20px;
+}
+
+button.display_event {
+    min-height : 20px;
+    min-width : 20px;
+    /*border-radius : 50%;*/
+    border-style : none;
+    background : red;
+    /*alignment : right;*/
+    /*vertical-align: text-top;*/
 }
 
 button.display_request {
@@ -67,15 +77,15 @@ table.show_requests {
     text-align : left;
     background-color:lightyellow; 
     border-collapse : separate;
-    border : 1px dotted;
+    width : 100%;
 }
 
 table.show_events {
     text-align : left;
-    background-color:lightblue; 
+    background-color:lightyellow; 
+    border-collapse : separate;
+    border : 1px dotted;
     width : 100%;
-    /*border-collapse : separate;*/
-    /*border : 1px dotted;*/
 }
 
 
@@ -115,9 +125,7 @@ div.cell_content {
 
 table.login_main {
     background-color : lightyellow;
-    border-type : dotted;
-    margin-left : 350px;
-    postion : absolute;
+    margin-left : 50%;
 }
 
 table.input {
@@ -189,3 +197,19 @@ p.info {
 .db_table_fieldname {
     font-size : x-small;
 }
+
+table.summary {
+    font-size : x-small;
+    width : 100%;
+}
+
+table.index {
+    align : top;
+    min-width : 50%;
+};
+
+table.index tr td {
+    valign : top;
+    min-width : 250px;
+}
+

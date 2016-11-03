@@ -2,6 +2,7 @@
 
 include_once( "header.php" );
 include_once( "methods.php" );
+include_once( "database.php" );
 
 $conf = $_SESSION['conf'];
 $ldap = $_POST['username'];
@@ -19,6 +20,7 @@ if(!$conn)
 else 
 {
     echo printInfo( "Login successful" );
+    createUserOrUpdateLogin( $ldap );
     imap_close( $conn );
     $_SESSION['AUTHENTICATED'] = TRUE;
     goToPage( "user.php", 1 );

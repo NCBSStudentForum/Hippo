@@ -1,4 +1,4 @@
-USE bookmyvenue_test;
+USE minion;
 REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location

@@ -1,9 +1,24 @@
-CREATE DATABASE IF NOT EXISTS bookmyvenue_test;
-USE bookmyvenue_test;
+CREATE DATABASE IF NOT EXISTS minion;
+USE minion;
 
 DROP TABLE IF EXISTS requests;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS venues;
+DROP TABLE IF EXISTS users;
+
+create table users (
+    id VARCHAR(100) PRIMARY KEY
+    , email VARCHAR(200)
+    , alternative_email VARCHAR(200)
+    , fname VARCHAR(200)
+    , mname VARCHAR(100)
+    , lname VARCHAR(200)
+    , roles SET( 'ADMIN', 'USER', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN', 'GUEST' ) DEFAULT 'USER'
+    , created_on DATETIME 
+    , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    , valid_untill DATETIME
+    , institute VARCHAR(200) 
+);
 
 CREATE TABLE IF NOT EXISTS requests (
     gid INT NOT NULL

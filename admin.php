@@ -10,6 +10,7 @@ include_once( "is_valid_access.php" );
 
 ?>
 
+
 <h2> Pending requests </h2>
 
 <?php 
@@ -20,6 +21,35 @@ $requests = getPendingRequestsGroupedByGID( );
 <?php echo requestsToHTMLReviewForm( $requests ); ?>
 </form>
 
+
+<h2> Manage Upcoming Events </h2>
+<?php
+$html = '';
+$events = getEventsGrouped( $sortby = 'date' );
+
+$html .= "<table>";
+foreach( $events as $event )
+{
+    $gid = $event['gid'];
+    $eid = $event['eid'];
+    $html .= "<form method=\"post\" action=\"admin_edit.php\">";
+    $html .= "<tr><td>";
+    $html .= arrayToTableHTML( $event, 'events', '', Array( 'eid' ) );
+    $html .= "</td>";
+    $html .= "<td> <button name=\"response\" value=\"edit\">Edit</button></td>";
+    $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";
+    $html .= "<input name=\"eid\" type=\"hidden\" value=\"$eid\" />";
+    $html .= "</form></tr>";
+}
+
+$html .= "</table>";
+echo $html;
+?>
+
+
+<!-- Log out section -->
+<div style="float:left">
 <form method="POST" action="logout.php" >
 <button type="logout" value="Log out">Log out</button>
 </form>
+</div>

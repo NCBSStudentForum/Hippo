@@ -14,6 +14,13 @@ function venueToText( $venue )
     return $txt;
 }
 
+// Convert an integer to color.
+function toColor($n) 
+{
+    $n = crc32($n % 1000);
+    $n &= 0xffffffff;
+    return("#".substr("000000".dechex($n),-6));
+}
 
 function venuesToHTMLSelect( $venues, $ismultiple = false )
 {

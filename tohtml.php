@@ -198,8 +198,6 @@ function eventLineHTML( $date, $venueid )
         $stepT = $i * $dt;
         $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
-        //if( ($i+1) % 6 == 0 )
-            //$html .= '</tr><tr><td></td>';
     }
     $html .= "</tr>";
     $html .= '</table>';

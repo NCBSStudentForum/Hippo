@@ -50,7 +50,7 @@ function addEventToGoogleCalendar($calendar_name, $event )
     // These are attendees.
     //$cmd .= " --who '" . $event['user'] . "@ncbs.res.in'";
     $cmd .= ' add';
-    //$cmd = escapeshellcmd( $cmd );
+    $cmd = escapeshellcmd( $cmd );
 
     echo("<br>Executing: $cmd");
     $output = NULL; $return = NULL;

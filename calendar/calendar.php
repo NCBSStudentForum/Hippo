@@ -16,6 +16,21 @@ function addEventToGoogleCalendar($calendar_name, $event )
 {
     $duration = round( (strtotime($event['end_time']) - strtotime($event['start_time'])) / 60.0 );
 
+    $client = new Google_Client();
+    $client->setApplicationName("Client_Library_Examples");
+    $client->setDeveloperKey("YOUR_APP_KEY");
+
+    $service = new Google_Service_Books($client);
+    $optParams = array('filter' => 'free-ebooks');
+    $results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
+
+    foreach ($results as $item) {
+        echo $item['volumeInfo']['title'], "<br /> \n";
+    }
+
+
+    return 0;
+
     // FIXME: the timeout is neccessary. We don't want the system to hang for 
     // writing to google calendar.
     //echo arrayToTableHTML( $event, 'event' );

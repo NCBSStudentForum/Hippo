@@ -46,6 +46,7 @@ function getVenues( $sortby = 'total_events' )
     return fetchEntries( $res );
 }
 
+
 function getTableSchema( $tableName )
 {
     global $db;
@@ -631,7 +632,8 @@ function getRoles( $user )
     $stmt = $db->prepare( 'SELECT roles FROM users WHERE id=:id' );
     $stmt->bindValue( ':id', $user );
     $stmt->execute( );
-    return $stmt->fetch( PDO::FETCH_ASSOC );
+    $res = $stmt->fetch( PDO::FETCH_ASSOC );
+    return $res['roles'];
 }
 
 ?>

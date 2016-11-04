@@ -3,7 +3,7 @@
 include_once( 'header.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
-include_once( 'google/calendar.php' );
+include_once( 'calendar/calendar.php' );
 
 session_save_path("/tmp/");
 $conf = array();

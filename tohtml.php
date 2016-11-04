@@ -263,7 +263,8 @@ function userHTML( )
     return $html;
 }
 
-function venuesToChekcButtons( $venues )
+/*
+function venuesToCheckButtons( $venues )
 {
     $html = "<table>";
     foreach( $venues as $venue )
@@ -274,6 +275,7 @@ function venuesToChekcButtons( $venues )
     $html .= "</table>";
     return $html;
 }
+ */
 
 function venuesToHTMLCheck( $groupedVenues, $grouped )
 {
@@ -286,6 +288,11 @@ function venuesToHTMLCheck( $groupedVenues, $grouped )
         $html .= "<td> " . venuesToChekcButtons( $venues ) . "</td>";
     $html .= "</tr></table>";
     return $html;
+}
+
+function venueSummary( $venue )
+{
+    return $venue['name'] . ' ' . $venue['building_name'] . ',' . $venue['location'];
 }
 
 function requestToEditableTableHTML( $request, $editables = Array( ) )

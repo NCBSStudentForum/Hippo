@@ -17,7 +17,10 @@ if(!isset($_SESSION))
 </div>
 <br />
 <br />
+
 </html>
+
+<!-- Here are the js script -->
 <link rel="stylesheet" href="js/jquery-ui.css">
 <script src="js/jquery-1.12.4.js"></script>
 <script src="js/jquery-ui.js"></script>

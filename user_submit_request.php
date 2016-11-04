@@ -2,7 +2,16 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "database.php" );
+include_once( "validate_privileges.php" );
 
+
+if( ! requiredPrivilege( 'USER' ) )
+{
+    echo printWarning( "You don't have enough privilege to open a request" );
+    goToPage( "index.php", 1 );
+    exit( 0 );
+}
+    
 $venues = getVenues( $sortby = 'total_events' );
 
 ?>

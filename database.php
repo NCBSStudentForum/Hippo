@@ -416,7 +416,6 @@ function increaseEventHostedByVenueByOne( $venueId )
 function approveRequest( $gid, $rid )
 {
     $request = getRequestById( $gid, $rid );
-    var_dump( $request );
 
     global $db;
     $stmt = $db->prepare( 'INSERT INTO events (
@@ -435,7 +434,6 @@ function approveRequest( $gid, $rid )
     $stmt->bindValue( ':start_time', $request['start_time'] );
     $stmt->bindValue( ':end_time', $request['end_time'] );
     $stmt->bindValue( ':user', $request['user'] );
-    var_dump( $stmt  );
     $res = $stmt->execute();
     if( $res )
     {

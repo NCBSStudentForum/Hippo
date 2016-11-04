@@ -24,5 +24,6 @@ foreach( $events as $event )
 }
 
 goToPage( "bookmyvenue_admin.php", 1 );
+exit( 0 );
 
 ?>

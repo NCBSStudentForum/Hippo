@@ -13,9 +13,6 @@ function embdedCalendar( )
 
 function addEventToGoogleCalendar($calendar_name, $event )
 {
-    $oauth = json_decode(file_get_contents( 'oauth' ), TRUE);
-    $clientId = $oauth['client_id'];
-    $clientSecret = $oauth['client_secret'];
     $duration = round( (strtotime($event['end_time']) - strtotime($event['start_time'])) / 60.0 );
 
     // FIXME: the timeout is neccessary. We don't want the system to hang for 

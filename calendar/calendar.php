@@ -14,7 +14,7 @@ function addEventToGoogleCalendar($calendar_name, $event )
     //echo arrayToTableHTML( $event, 'event' );
 
     // Before running this command make sure that we have authenticated the app.
-    $cmd = 'timeout 2 /usr/local/bin/gcalcli ';
+    $cmd = 'timeout 2 gcalcli ';
     $cmd .= ' --configFolder ' . getCwd( );
     //$cmd .= " --client_id $clientId";
     //$cmd .= " --client_secret $clientSecret";

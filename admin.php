@@ -2,6 +2,9 @@
 
 include_once( 'validate_privileges.php' );
 include_once( 'methods.php' );
+include_once( 'tohtml.php' );
+
+echo userHTML( );
 
 if( ! requiredPrivilege( 'ADMIN' ) )
 {

@@ -12,3 +12,4 @@ user = minion
 port = -1
 password = minionuser
 database = minion
+

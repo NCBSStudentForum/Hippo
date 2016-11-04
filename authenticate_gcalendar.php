@@ -1,50 +1,56 @@
 <?php 
 
-function authenticate(  )
-{
-    $client = new Google_Client();
-    authenticate( $client );
+require_once './vendor/autoload.php';
+require_once './template/google-api/base.php';
 
-    if (!$oauth_credentials = getOAuthCredentialsFile()) {
-        echo missingOAuth2CredentialsWarning();
-        return;
-    }
+if( isset($_SESSION['calendar_client'] ) )
+    exit( 0 );
 
-    $client->setAuthConfig($oauth_credentials);
-    $client->setScopes(
-        'https://www.googleapis.com/auth/calendar'
-    );
+$client = new Google_Client();
 
-    if (isset($_REQUEST['logout'])) {
-        unset($_SESSION['id_token_token']);
-    }
-    if (isset($_GET['code'])) {
-        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-        $client->setAccessToken($token);
-        // store in the session also
-        $_SESSION['id_token_token'] = $token;
-    }
-    if (
-        !empty($_SESSION['id_token_token'])
-        && isset($_SESSION['id_token_token']['id_token'])
-    ) {
-        $client->setAccessToken($_SESSION['id_token_token']);
-    } else {
-        $authUrl = $client->createAuthUrl();
-        header( 'Location: ' . $authUrl, False );
-        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-        $client->setAccessToken($token);
-        // store in the session also
-        $_SESSION['id_token_token'] = $token;
-    }
-    if ($client->getAccessToken()) {
-        $token_data = $client->verifyIdToken();
-    }
-    return $client;
+
+// Authenticate the client now.
+if (!$oauth_credentials = getOAuthCredentialsFile()) {
+    echo missingOAuth2CredentialsWarning();
+    return;
 }
 
+$client->setAuthConfig($oauth_credentials);
+//$redirectURI = 'http://ghevar.ncbs.res.in/minion/admin.php';
+//$client->setRedirectURI( $redirectURI );
+$client->setScopes(
+    'https://www.googleapis.com/auth/calendar'
+);
 
-var_dump( $_SESSION );
+if (isset($_REQUEST['logout'])) {
+    unset($_SESSION['id_token_token']);
+}
+if (isset($_GET['code'])) {
+    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+    $client->setAccessToken($token);
+    // store in the session also
+    $_SESSION['id_token_token'] = $token;
+}
+if (
+    !empty($_SESSION['id_token_token'])
+    && isset($_SESSION['id_token_token']['id_token'])
+) {
+    $client->setAccessToken($_SESSION['id_token_token']);
+} else {
+    echo "I am here";
+    $authUrl = $client->createAuthUrl();
+    header( 'Location: ' . $authUrl, False );
+    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+    $client->setAccessToken($token);
+    // store in the session also
+    $_SESSION['id_token_token'] = $token;
+}
+
+if ($client->getAccessToken())
+    $token_data = $client->verifyIdToken();
+
+$_SESSION[ 'calendar_client'] = $client;
+exit( 0 );
 
 
 ?>

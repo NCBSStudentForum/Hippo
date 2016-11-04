@@ -4,6 +4,7 @@ include_once( 'database.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
 require_once './vendor/autoload.php';
+require_once './template
 
 function embdedCalendar( )
 {
@@ -12,17 +13,85 @@ function embdedCalendar( )
     return $html;
 }
 
+function authenticate( )
+{
+
+    /*************************************************
+     * Ensure you've downloaded your oauth credentials
+     ************************************************/
+    if (!$oauth_credentials = getOAuthCredentialsFile()) {
+        echo missingOAuth2CredentialsWarning();
+        return;
+    }
+    /************************************************
+     * NOTICE:
+     * The redirect URI is to the current page, e.g:
+     * http://localhost:8080/idtoken.php
+     ************************************************/
+    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+    $client = new Google_Client();
+    $client->setAuthConfig($oauth_credentials);
+    $client->setRedirectUri($redirect_uri);
+    $client->setScopes('email');
+    /************************************************
+     * If we're logging out we just need to clear our
+     * local access token in this case
+     ************************************************/
+    if (isset($_REQUEST['logout'])) {
+        unset($_SESSION['id_token_token']);
+    }
+    /************************************************
+     * If we have a code back from the OAuth 2.0 flow,
+     * we need to exchange that with the
+     * Google_Client::fetchAccessTokenWithAuthCode()
+     * function. We store the resultant access token
+     * bundle in the session, and redirect to ourself.
+     ************************************************/
+    if (isset($_GET['code'])) {
+        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+        $client->setAccessToken($token);
+        // store in the session also
+        $_SESSION['id_token_token'] = $token;
+        // redirect back to the example
+        header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+    }
+/************************************************
+  If we have an access token, we can make
+  requests, else we generate an authentication URL.
+************************************************/
+    if (
+        !empty($_SESSION['id_token_token'])
+        && isset($_SESSION['id_token_token']['id_token'])
+    ) {
+        $client->setAccessToken($_SESSION['id_token_token']);
+    } else {
+        $authUrl = $client->createAuthUrl();
+    }
+/************************************************
+  If we're signed in we can go ahead and retrieve
+  the ID token, which is part of the bundle of
+  data that is exchange in the authenticate step
+  - we only need to do a network call if we have
+  to retrieve the Google certificate to verify it,
+  and that can be cached.
+************************************************/
+    if ($client->getAccessToken()) {
+        $token_data = $client->verifyIdToken();
+    }
+}
+
 function addEventToGoogleCalendar($calendar_name, $event )
 {
     $duration = round( (strtotime($event['end_time']) - strtotime($event['start_time'])) / 60.0 );
+    authenticate( );
+    return 0;
 
     $client = new Google_Client();
-    $client->setApplicationName("Client_Library_Examples");
-    $client->setDeveloperKey("YOUR_APP_KEY");
+    $client->setAuthConfig( './minion-416c6a627083.json' );
 
-    $service = new Google_Service_Books($client);
-    $optParams = array('filter' => 'free-ebooks');
-    $results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
+    $service = new Google_Service_Calendar($client);
+
+    $results = $service->calendarList->listCalendarList( );
 
     foreach ($results as $item) {
         echo $item['volumeInfo']['title'], "<br /> \n";

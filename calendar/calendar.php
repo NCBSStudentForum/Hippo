@@ -13,12 +13,21 @@ function embdedCalendar( )
 
 function addEventToGoogleCalendar($calendar_name, $event )
 {
+    $oauth = json_decode(file_get_contents( 'oauth' ), TRUE);
+    $clientId = $oauth['client_id'];
+    $clientSecret = $oauth['client_secret'];
     $duration = round( (strtotime($event['end_time']) - strtotime($event['start_time'])) / 60.0 );
 
     // FIXME: the timeout is neccessary. We don't want the system to hang for 
     // writing to google calendar.
     //echo arrayToTableHTML( $event, 'event' );
-    $cmd = 'timeout 2 gcalcli ';
+
+    // Before running this command make sure that we have authenticated the app.
+    $cmd = 'timeout 2 /usr/local/bin/gcalcli ';
+    $cmd .= ' --configFolder ' . getCwd( );
+    //$cmd .= " --client_id $clientId";
+    //$cmd .= " --client_secret $clientSecret";
+
     $cmd .= " --calendar '$calendar_name'";
     $cmd .= " --title '" . $event['short_description'] . "'";
     $cmd .= " --where '" . venueSummary( getVenueById($event['venue']) ) . "'";
@@ -26,13 +35,20 @@ function addEventToGoogleCalendar($calendar_name, $event )
     $cmd .= " --duration $duration ";
     $cmd .= " --reminder 60 ";
     $cmd .= " --description '" . $event["description"] . "'";
-    $cmd .= " --who '" . $event['user'] . "@ncbs.res.in'";
+    // These are attendees.
+    //$cmd .= " --who '" . $event['user'] . "@ncbs.res.in'";
     $cmd .= ' add';
-    $output = Array();
-    $return = Array( );
     $cmd = escapeshellcmd( $cmd );
-    echo printInfo("Executing $cmd");
+
+    echo("<br>Executing: $cmd");
+    $output = NULL; $return = NULL;
     exec( $cmd, $output, $return );
+
+    echo( "<br>Command said: <br>" );
+    var_dump( $return );
+    var_dump( $output );
+    echo( "<br>" );
+
     if( $return == 0 )
     {
         echo printInfo( "Successfully added event to public calendar $calendar_name" );
@@ -41,11 +57,10 @@ function addEventToGoogleCalendar($calendar_name, $event )
     else 
     {
         echo printWarning( "Could not add event to calendar $calendar_name" );
-        echo printWarning( "Error was " . $output[0] );
-        echo "TODO: Write email to admin";
+        echo printWarning( "Error was " . $output );
+        echo printWarning("TODO: Write email to admin");
         return -1;
     }
-    ob_flush( );
 }
 
 // This function uses gcalcli command to sync my local caledar with google 
@@ -55,7 +70,10 @@ function addAllEventsToCalednar( $calendarname )
     $events = getEvents( );
     echo "Total " . count( $events ) . " to write";
     foreach( $events as $e )
+    {
         addEventToGoogleCalendar( $calendarname, $e );
+        return 0;
+    }
 }
 
 ?>

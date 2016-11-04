@@ -292,7 +292,7 @@ function venuesToHTMLCheck( $groupedVenues, $grouped )
 
 function venueSummary( $venue )
 {
-    return $venue['name'] . ' ' . $venue['building_name'] . ',' . $venue['location'];
+    return $venue['name'] . ' ' . $venue['building_name'] . ', ' . $venue['location'];
 }
 
 function requestToEditableTableHTML( $request, $editables = Array( ) )

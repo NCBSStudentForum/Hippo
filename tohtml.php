@@ -243,6 +243,9 @@ function requestToHTML( $request )
 // Welcome user div.
 function userHTML( )
 {
+
+    $roles = explode( ",", getRoles( $_SESSION['user'] ));
+
     $html = '<div class="user">';
     $html .= '<table class="show_user">';
     $html .= '<tr><th>Welcome <font color="blue">' 
@@ -257,7 +260,13 @@ function userHTML( )
             <a href="user_jc.php">My JC</a>
         </td><td>
             <a href="user_aws.php">My AWS</a>
-        </td><tr><td></td><td> </td></tr>';
+            </td></tr>';
+
+    $html .= "<tr>";
+    if( in_array( "ADMIN", $roles ) )
+        $html .= '<td> <a href="admin.php">Admin</a></td> </td>';
+
+    $html .= "</tr>";
     $html .= "</table>";
     $html .= '</div>';
     return $html;

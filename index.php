@@ -35,10 +35,9 @@ file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
 echo "<table class=\"index\">";
-//echo "<tr><td>";
+echo '<tr><td style="min-width:75%"></td><td>';
 echo loginForm();
-//echo "</td></tr><tr><td>";
-//echo "</td></tr>";
+echo "</td></tr>";
 echo "</table>";
 
 echo embdedCalendar( );

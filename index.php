@@ -3,13 +3,7 @@
 include_once( 'header.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
-
-function embdedCalendar( )
-{
-    $html = '
-        <iframe src="https://calendar.google.com/calendar/embed?src=6bvpnrto763c0d53shp4sr5rmk%40group.calendar.google.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>';
-    return $html;
-}
+include_once( 'calendar/calendar.php' );
 
 session_save_path("/tmp/");
 $conf = array();
@@ -41,10 +35,9 @@ file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
 echo "<table class=\"index\">";
-//echo "<tr><td>";
+echo '<tr><td style="min-width:75%"></td><td>';
 echo loginForm();
-//echo "</td></tr><tr><td>";
-//echo "</td></tr>";
+echo "</td></tr>";
 echo "</table>";
 
 echo embdedCalendar( );

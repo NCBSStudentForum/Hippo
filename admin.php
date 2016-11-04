@@ -7,7 +7,9 @@ include_once( 'methods.php' );
 //include_once( 'authenticate_gcalendar.php' );
 $_SESSION['validate_calendar'] = FALSE;
 $_SESSION['token_set'] = FALSE;
-include_once( 'oauthcallback.php' );
+
+if( ! array_key_exists( 'gcal_token', $_SESSION ) )
+    include_once( 'oauthcallback.php' );
 
 echo userHTML( );
 
@@ -18,7 +20,6 @@ if( ! requiredPrivilege( 'ADMIN' ) )
     exit( 0 );
 }
 
-var_dump( $_SESSION );
 
 echo "<h3>Hello admin</h3>";
 

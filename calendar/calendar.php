@@ -61,13 +61,12 @@ function addEventToGoogleCalendar($calendar_name, $event, $client )
 // calendar.
 function addAllEventsToCalednar( $calendarname, $client )
 {
-    $events = getEvents( );
-    echo "Total " . count( $events ) . " to write";
     $service = new Google_Service_Calendar($client);
     $results = $service->calendarList->listCalendarList( );
     var_dump( $results );
 
-
+    echo "I am here";
+    $events = getEvents( );
     foreach( $events as $e )
     {
         addEventToGoogleCalendar( $calendarname, $client );

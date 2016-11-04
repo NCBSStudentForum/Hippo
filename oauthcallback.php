@@ -1,12 +1,13 @@
 <?php 
 
+require_once 'header.php';
 require_once './vendor/autoload.php';
 require_once './template/google-api/base.php';
 
-if( $_SESSION[ 'validate_calendar' ] )
-    exit( 0 );
 
-if( ! $_SESSION['token_set'] )
+var_dump( $_SESSION['gcal_token'] );
+
+if( ! array_key_exists( 'gcal_token', $_SESSION ) )
 {
     $client = new Google_Client();
 
@@ -23,35 +24,22 @@ if( ! $_SESSION['token_set'] )
         'https://www.googleapis.com/auth/calendar'
     );
 
-    if (isset($_REQUEST['logout'])) {
-        unset($_SESSION['id_token_token']);
-    }
+
     if (isset($_GET['code'])) {
         $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
         $client->setAccessToken($token);
         // store in the session also
-        $_SESSION['id_token_token'] = $token;
-    }
-    if (
-        !empty($_SESSION['id_token_token'])
-        && isset($_SESSION['id_token_token']['id_token'])
-    ) {
-        $client->setAccessToken($_SESSION['id_token_token']);
-    } else {
-        echo "I am here";
-        $authUrl = $client->createAuthUrl();
-        header( 'Location: ' . $authUrl, False );
-        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-        $client->setAccessToken($token);
-        // store in the session also
-        $_SESSION['id_token_token'] = $token;
+        $_SESSION['gcal_token'] = $token;
+        goToPage( "admin.php", 0 );
+        exit( 0 );
     }
 
-    if ($client->getAccessToken())
-        $token_data = $client->verifyIdToken();
-
-    $_SESSION[ 'calendar_client'] = $client;
+    echo "Redirecting for authentication";
+    $authUrl = $client->createAuthUrl();
+    header( 'Location: ' . $authUrl, False );
     exit( 0 );
+}
 
+goToPage( "admin.php", 0 );
 
 ?>

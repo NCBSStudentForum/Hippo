@@ -5,6 +5,8 @@ include_once( "methods.php" );
 include_once( "tohtml.php" );
 include_once( 'database.php' );
 
+echo userHTML( );
+
 ?>
 
 <script type="text/javascript">
@@ -28,7 +30,7 @@ if( $_POST['response'] == "Review" )
         a request by clicking on 'Edit' button. </p>";
 
     // First insert this request into event calendar.
-    echo '<form method="post" action="admin_request_submit.php">';
+    echo '<form method="post" action="bookmyvenue_admin_request_submit.php">';
     echo "<table>";
     echo "<tr> 
         <td><input name=\"request[]\" type=\"checkbox\" 
@@ -68,6 +70,6 @@ if( $_POST['response'] == "Review" )
     echo "</form>";
 }
 
-echo goBackToPageLink( "admin.php", "Go back" );
+echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 
 ?>

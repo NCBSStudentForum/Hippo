@@ -48,8 +48,9 @@ include_once( "methods.php" );
 
 // Generate options here.
 $venue = __get__( $_POST, 'venue', '' );
+$venue = trim( $venue );
 if( $venue )
-    $venueHTML = '<input name="venue" type="text" value="'.$venue.'" readonly>';
+    $venueHTML = "<input name=\"venue\" type=\"text\" value=\"$venue\" readonly>";
 else
     $venueHTML = venuesToHTMLSelect( $venues );
 

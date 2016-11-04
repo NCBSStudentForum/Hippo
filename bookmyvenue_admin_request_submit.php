@@ -5,7 +5,7 @@ include_once( "database.php" );
 if( ! array_key_exists( 'events', $_POST ) )
 {
     echo printWarning( "You did not select any request" );
-    goToPage( "admin.php", 2 );
+    echo goBackToPageLink( "bootstrap_admin.php", "Go back" );
     exit(0);
 }
 
@@ -23,6 +23,6 @@ foreach( $events as $event )
     changeIfEventIsPublic( $gid, $rid, $isPublic );
 }
 
-goToPage( "admin_request_review.php", 1 );
+goToPage( "bookmyvenue_admin.php", 1 );
 
 ?>

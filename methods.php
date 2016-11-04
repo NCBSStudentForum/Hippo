@@ -36,7 +36,7 @@ function venuesToHTMLSelect( $venues, $ismultiple = false )
 
     $html = "<select $multiple name=\"$name\">";
     if( ! $ismultiple )
-        $html .= "<option disabled selected value>  $default </option>";
+        $html .= "<option disabled selected value>$default</option>";
 
     foreach( $venues as $v )
     {
@@ -46,7 +46,8 @@ function venuesToHTMLSelect( $venues, $ismultiple = false )
         if( $v['has_projector'] == 'Yes' )
             $text .= '<font color=\"blue\"> +P </font>';
 
-        $html .= '<option value="' . $v['id'] . '">' . $text . '</option>';
+        $venueid = $v['id'];
+        $html .= "<option value=\"$venueid\"> $text </option>";
     }
 
     $html .= "</select>";

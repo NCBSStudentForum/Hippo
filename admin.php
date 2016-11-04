@@ -2,6 +2,7 @@
 
 include_once( 'validate_privileges.php' );
 include_once( 'methods.php' );
+include_once( 'authentiate_gcalendar.php' );
 
 if( ! requiredPrivilege( 'ADMIN' ) )
 {
@@ -9,6 +10,9 @@ if( ! requiredPrivilege( 'ADMIN' ) )
     goToPage( "index.php" );
     exit( 0 );
 }
+
+// Authenticate user.
+authenticate( );
 
 echo "<h3>Hello admin</h3>";
 

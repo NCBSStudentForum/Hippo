@@ -127,10 +127,6 @@ div.cell_content {
 
 table.login_main {
     background-color : lightyellow;
-    top : 50px;
-    position : 'fixed';
-    margin-left : 70%;
-    width : 20%;
 }
 
 table.input {

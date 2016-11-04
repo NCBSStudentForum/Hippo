@@ -75,6 +75,7 @@ function getVenuesGroupsByType(  )
 function getVenueById( $venueid )
 {
     global $db;
+    $venueid = trim( $venueid );
     $stmt = $db->prepare( "SELECT * FROM venues WHERE id=:id" );
     $stmt->bindValue( ':id', $venueid );
     $stmt->execute( );

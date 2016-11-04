@@ -8,6 +8,8 @@ include_once( "database.php" );
 include_once( "tohtml.php" );
 include_once( "validate_privileges.php" );
 
+echo userHTML( );
+
 if( ! requiredPrivilege( 'BOOKMYVENUE_ADMIN' ) )
 {
     echo printWarning( "You don't have enough privileges to user this interface" );
@@ -26,7 +28,7 @@ if( count( $requests ) == 0 )
     echo printInfo( "No booking request is peniding for review" );
 ?>
 
-<form action="admin_request_review.php" method="post" accept-charset="utf-8">
+<form action="bookmyvenue_admin_request_review.php" method="post" accept-charset="utf-8">
 <?php echo requestsToHTMLReviewForm( $requests ); ?>
 </form>
 

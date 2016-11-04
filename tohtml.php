@@ -198,8 +198,6 @@ function eventLineHTML( $date, $venueid )
         $stepT = $i * $dt;
         $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
-        //if( ($i+1) % 6 == 0 )
-            //$html .= '</tr><tr><td></td>';
     }
     $html .= "</tr>";
     $html .= '</table>';
@@ -265,6 +263,8 @@ function userHTML( )
     $html .= "<tr>";
     if( in_array( "ADMIN", $roles ) )
         $html .= '<td> <a href="admin.php">Admin</a></td> </td>';
+    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
+        $html .= '<td> <a href="bookmyvenue_admin.php">BookMyVenueAdmin</a></td> </td>';
 
     $html .= "</tr>";
     $html .= "</table>";

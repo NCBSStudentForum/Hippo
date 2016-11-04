@@ -4,12 +4,6 @@ include_once( 'database.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
 
-function embdedCalendar( )
-{
-    $html = '
-        <iframe src="https://calendar.google.com/calendar/embed?src=6bvpnrto763c0d53shp4sr5rmk%40group.calendar.google.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>';
-    return $html;
-}
 
 function addEventToGoogleCalendar($calendar_name, $event, $client )
 {
@@ -24,8 +18,8 @@ function addEventToGoogleCalendar($calendar_name, $event, $client )
     //echo arrayToTableHTML( $event, 'event' );
 
     // Before running this command make sure that we have authenticated the app.
-    $cmd = 'timeout 2 /usr/local/bin/gcalcli ';
-    //$cmd .= ' --configFolder ' . getCwd( );
+    $cmd = 'timeout 2 gcalcli ';
+    $cmd .= ' --configFolder ' . getCwd( );
     //$cmd .= " --client_id $clientId";
     //$cmd .= " --client_secret $clientSecret";
     $cmd .= " --calendar '$calendar_name'";

@@ -1,8 +1,15 @@
 <?php
 
+include_once 'header.php';
+include_once 'tohtml.php';
 include_once( 'validate_privileges.php' );
 include_once( 'methods.php' );
-include_once( 'authentiate_gcalendar.php' );
+//include_once( 'authenticate_gcalendar.php' );
+$_SESSION['validate_calendar'] = FALSE;
+$_SESSION['token_set'] = FALSE;
+include_once( 'oauthcallback.php' );
+
+echo userHTML( );
 
 if( ! requiredPrivilege( 'ADMIN' ) )
 {
@@ -11,8 +18,7 @@ if( ! requiredPrivilege( 'ADMIN' ) )
     exit( 0 );
 }
 
-// Authenticate user.
-authenticate( );
+var_dump( $_SESSION );
 
 echo "<h3>Hello admin</h3>";
 

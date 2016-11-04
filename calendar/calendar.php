@@ -3,8 +3,6 @@
 include_once( 'database.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
-require_once './vendor/autoload.php';
-require_once './template/google-api/base.php';
 
 function embdedCalendar( )
 {

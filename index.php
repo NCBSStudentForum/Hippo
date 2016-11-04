@@ -3,6 +3,7 @@
 include_once( 'header.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
+include_once( 'google/calendar.php' );
 
 session_save_path("/tmp/");
 $conf = array();
@@ -24,7 +25,8 @@ if(!$conf)
 }
 
 $_SESSION['conf'] = $conf;
-$_SESSION['user'] = 'unknown'; // This for testing purpose.
+
+$_SESSION['user'] = 'anonymous'; // This for testing purpose.
 
 /* counter */
 $hit_count = (int)file_get_contents('count.txt');
@@ -33,11 +35,11 @@ file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
 echo "<table class=\"index\">";
-echo "<tr><td>";
-//summaryTable( );
-echo "</td><td>";
+//echo "<tr><td>";
 echo loginForm();
-echo "</td></tr>";
+//echo "</td></tr><tr><td>";
+//echo "</td></tr>";
 echo "</table>";
 
+echo embdedCalendar( );
 ?>

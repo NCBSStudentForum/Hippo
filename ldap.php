@@ -13,7 +13,13 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
 {
     $base_dn = 'dc=ncbs,dc=res,dc=in';
     $ds = ldap_connect($ldap_ip) or die( "Could not connect to $ldap_ip" );
-    $r = ldap_bind($ds);
+    $r = ldap_bind($ds); // or die( "Can't bind to $ldap_ip" );
+    if( ! $r )
+    {
+        echo printWarning( "LDAP binding failed. TODO: Ask user to edit details " );
+        return Array( );
+    }
+
     $sr = ldap_search($ds, $base_dn, "uid=$ldap");
     $info = ldap_get_entries($ds, $sr);
 

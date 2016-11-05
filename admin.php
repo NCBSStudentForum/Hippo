@@ -1,8 +1,8 @@
 <?php
 
-include_once( 'validate_privileges.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
+include_once( 'check_access_permissions.php' );
 
 echo userHTML( );
 
@@ -15,13 +15,22 @@ if( ! requiredPrivilege( 'ADMIN' ) )
 
 echo "<h3>Hello admin</h3>";
 
-echo "<form method=\"post\" action=\"admin_action.php\">";
-echo "<table>";
-echo "<tr><td> <button name=\"response\" value=\"add_all_events\">
-    Add all public events to calendar</button></td>";
-echo "</tr>";
+echo "<table class=\"show_user\">";
+echo '
+    <tr>
+        <td>Synchronize public calendar</td>
+        <td>
+            <a href="' . appRootDir( ) . '/admin_synchronize_public_calendar.php">
+                Synchronize public calendar </a>
+        </td>
+    </tr>
+    <tr>
+        <td>Add or remove privileges of users</td>
+        <td><a href="' . appRootDir() . '/admin_modify_user_privileges.php">Add or remove privileges</a></td>
+    </tr>
+    ';
+
 echo "</table>";
-echo "</form>";
 
 ?>
 

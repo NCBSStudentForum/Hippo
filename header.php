@@ -45,7 +45,7 @@ $( function() {
 
 <script>
 $(function(){
-    $('input.timepicker').timepicker({ 'step' : '15' });
+    $('input.timepicker').timepicker({ 'timeFormat' : 'H:i', 'step' : '15' });
 });
 
 </script>

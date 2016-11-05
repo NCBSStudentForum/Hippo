@@ -98,7 +98,8 @@ create TABLE IF NOT EXISTS supervisors (
     );
 
 create TABLE IF NOT EXISTS annual_work_seminars (
-    speaker VARCHAR(200) NOT NULL -- user
+    id INT AUTO_INCREMENT PRIMARY KEY
+    , speaker VARCHAR(200) NOT NULL -- user
     , date DATE -- final date
     , time TIME 
     , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser 
@@ -117,6 +118,5 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , FOREIGN KEY (tcm_member_2) REFERENCES supervisors(email) 
     , FOREIGN KEY (tcm_member_3) REFERENCES supervisors(email) 
     , FOREIGN KEY (tcm_member_4) REFERENCES supervisors(email) 
-    , PRIMARY KEY (speaker, date)
     );
 

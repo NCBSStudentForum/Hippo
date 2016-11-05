@@ -768,5 +768,23 @@ function updateAWS( $id, $keys, $data )
     return $stmt->execute( );
 }
 
+/**
+    * @brief Get the AWS scheduled in future for this speaker. 
+    *
+    * @param $speaker The speaker.
+    *
+    * @return  Array.
+ */
+function  scheduledAWSInFuture( $speaker )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM annual_work_seminars WHERE
+        speaker=:speaker AND tentatively_scheduled_on > 'NOW()' 
+        " );
+    $stmt->bindValue( ":speaker", $speaker );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
 ?>
 

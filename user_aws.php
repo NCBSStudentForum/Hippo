@@ -10,7 +10,18 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 echo userHTML( );
 
 echo "<h3>Manage upcoming Annual Work Seminar (AWS)</h3>";
-echo "TODO";
+
+$upcomingAWS = scheduledAWSInFuture( $_SESSION['user'] );
+if( ! $upcomingAWS )
+{
+    echo printInfo( "No AWS has been scheduled for you yet!" );
+}
+else {
+    echo printInfo( "You have AWS tentatively scheduled on : " . 
+        humanReadableDate( $upcomingAWS['tentatively_scheduled_on'] ) 
+    );
+    echo "TODO: Ask for postpone/swap with others?";
+}
 
 echo "<h3>Past Annual Work Seminar</h3>";
 

@@ -11,8 +11,8 @@ function requiredPrivilege( $role )
 function anyOfTheseRoles( $roles )
 {
     $userRoles = getRoles( $_SESSION['user'] );
-    foreach( $userRoles as $role )
-        if( in_array( $role, $roles ) )
+    foreach( $roles as $role )
+        if( in_array( $role, $userRoles ) )
             return true;
     return false;
 }
@@ -20,8 +20,8 @@ function anyOfTheseRoles( $roles )
 function allOfTheseRoles( $roles )
 {
     $userRoles = getRoles( $_SESSION['user'] );
-    foreach( $userRoles as $role )
-        if( ! in_array( $role, $roles ) )
+    foreach( $roles as $role )
+        if( ! in_array( $role, $userRoles ) )
             return false;
     return true;
 }

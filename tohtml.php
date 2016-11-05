@@ -238,40 +238,16 @@ function requestToHTML( $request )
     return arrayToTableHTML( $request, "request" );
 }
 
-// Welcome user div.
 function userHTML( )
 {
-
-    $roles = explode( ",", getRoles( $_SESSION['user'] ));
-
-    $html = '<div class="user">';
-    $html .= '<table class="show_user">';
-    $html .= '<tr><th>Welcome <font color="blue">' 
-        . $_SESSION['user'] . '</font></th>
-        <th> <a href="logout.php">LOGOUT</a> </th>
-        </tr>';
-    $html .= '<tr><td>
-            <a href="user_show_requests.php">My requests</a>
-        </td><td>
-            <a href="user_show_events.php">My events</a></td>
-        </td></tr><tr><td>
-            <a href="user_jc.php">My JC</a>
-        </td><td>
-            <a href="user_aws.php">My AWS</a>
-            </td></tr>';
-
-    $html .= "<tr>";
-    if( in_array( "ADMIN", $roles ) )
-        $html .= '<td> <a href="admin.php">Admin</a></td> </td>';
-    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
-        $html .= '<td> <a href="bookmyvenue_admin.php">BookMyVenueAdmin</a></td> </td>';
-
+    $html = "<table class=\"user_float\">";
+    $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
+    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/user.php\">Main page</a>";
+    $html .= '</td><td><a href="logout.php">Logout</a></td>';
     $html .= "</tr>";
     $html .= "</table>";
-    $html .= '</div>';
     return $html;
 }
-
 /*
 function venuesToCheckButtons( $venues )
 {

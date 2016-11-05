@@ -64,12 +64,17 @@ function generateRandomString($length = 10)
     return $randomString;
 }
 
-/* Go to a page */
+function appRootDir( )
+{
+   return  dirname( 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+}
+
+/* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
   echo printWarning("... Going to page $page in $delay seconds ...");
-  $conf = $_SESSION['conf'];
-  $url = $conf['global']['base_url']."/".$page;
+  $baseurl = appRootDir( );
+  $url = "$baseurl/$page";
   header("Refresh: $delay, url=$url");
 }
 
@@ -178,5 +183,12 @@ function getNumDaysInBetween( $startDate, $endDate )
     $end = new DateTime( $endDate );
     return intval($start->diff( $end )->format( "%R%a" ));
 }
+
+// Go back to calling page.
+function goBack( )
+{
+    goToPage( $_SERVER['HTTP_REFERER'], 0 );
+}
+
 
 ?>

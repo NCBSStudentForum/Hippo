@@ -10,7 +10,7 @@ class BMVPDO extends PDO
 {
     function __construct( $host = 'ghevar.ncbs.res.in'  )
     {
-        $conf = $_SESSION['conf'];
+        $conf = parse_ini_file( __DIR__ . '/minionrc', $process_section = TRUE );
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         $host = $conf['mysql']['host'];
         $port = $conf['mysql']['port'];
@@ -634,7 +634,7 @@ function getRoles( $user )
     $stmt->bindValue( ':id', $user );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
-    return $res['roles'];
+    return explode( ",", $res['roles'] );
 }
 
 ?>

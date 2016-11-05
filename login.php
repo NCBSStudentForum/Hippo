@@ -15,16 +15,17 @@ $conn = imap_open( "{imap.ncbs.res.in:993/ssl/readonly}INBOX", $ldap, $pass, OP_
 if(!$conn) 
 {
     echo printErrorSevere("FATAL : Username or password is incorrect.");
-    goToPage("index.php", 3);
+    goToPage( 'index.php', 2 );
 }
+
 else 
 {
     echo printInfo( "Login successful" );
     createUserOrUpdateLogin( $ldap );
     imap_close( $conn );
     $_SESSION['AUTHENTICATED'] = TRUE;
-    goToPage( "user.php", 1 );
     $_SESSION['user'] = $ldap;
+    goToPage( "user.php", 0 );
 }
 
 ?>

@@ -16,24 +16,38 @@ echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
 
 $html = '<table class="show_user">';
 $html .= '<tr>
-            <td>Browse the available venues and create a booking request</td>
-            <td> <a href="bookmyvenue_browse.php">Create a booking request</a> </td>
-        </tr><tr>
-        <td>Your can see your unapproved requests and modify their description and cancel
-        them if neccessary.
-        </td>
-            <td> <a href="user_show_requests.php">Show/Edit my requests</a> </td>
-        </tr><tr>
-        <td>These booking requests have been approved (we call them events). You can 
-       still edit their description (and also cancel them). </td>
-            <td> <a href="user_show_events.php">Show/Edit my events</a></td>
-        </tr><tr>
-            <td>TODO: Journal clubs.</td>
-            <td> <a href="user_jc.php">My JC</a> </td>
-        </tr><tr>
-            <td>Alpha: Annual Work Seminal.</td>
-            <td> <a href="user_aws.php">My AWS</a> </td>
-        </tr>';
+    <td>
+    Your can see your details and edit (most) of them. Details fetched from NCBS 
+    LDAP server are not editable. 
+    </td>
+    <td> 
+    <a href="user_info.php">Show/Edit my details</a> 
+    </td>
+    </tr><tr>
+    <td>Your can see your unapproved requests and modify their description and cancel
+    them if neccessary.
+    </td>
+    <td> <a href="user_show_requests.php">Show/Edit my requests</a> </td>
+    </tr><tr>
+    <tr>
+    <td>Browse the available venues and create a booking request</td>
+    <td> <a href="bookmyvenue_browse.php">Create a booking request</a> </td>
+    </tr><tr>
+    <td>Your can see your unapproved requests and modify their description and cancel
+    them if neccessary.
+    </td>
+    <td> <a href="user_show_requests.php">Show/Edit my requests</a> </td>
+    </tr><tr>
+    <td>These booking requests have been approved (we call them events). You can 
+    still edit their description (and also cancel them). </td>
+    <td> <a href="user_show_events.php">Show/Edit my events</a></td>
+    </tr><tr>
+    <td>TODO: Journal clubs.</td>
+    <td> <a href="user_jc.php">My JC</a> </td>
+    </tr><tr>
+    <td>Alpha: Annual Work Seminal.</td>
+    <td> <a href="user_aws.php">My AWS</a> </td>
+    </tr>';
 
 $html .= "</table>";
 echo $html;

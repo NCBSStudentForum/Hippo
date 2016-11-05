@@ -1,9 +1,13 @@
 <?php 
-//ob_start();
+ob_start();
 if(!isset($_SESSION)) 
     session_start();
 
+// If this is not a index.php page. check if access is valid. 
+if( ! $_SERVER['PHP_SELF'] == 'index.php' ) 
+    include_once( 'is_valid_access.php' );
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>

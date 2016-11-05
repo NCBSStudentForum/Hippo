@@ -18,7 +18,7 @@ create table users (
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     , created_on DATETIME 
     , joined_on DATETIME
-    , valid_untill DATETIME
+    , valid_until DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , institute VARCHAR(200) 
     , laboffice VARCHAR(200)

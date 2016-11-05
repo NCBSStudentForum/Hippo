@@ -13,10 +13,31 @@ table.show_user {
     background : lightyellow;
 }
 
+
 table.show_user tr td 
 {
     border : 0.5px dotted; 
     min-width : 20%;
+}
+
+table.show_aws {
+    max-width : 1000px;
+    min-width : 100%;
+    background : lightyellow;
+}
+
+
+table.show_aws tr td:nth-child(odd)
+{
+    border : 0.5px dotted; 
+    max-width : 20%;
+    text-align : right;
+}
+table.show_aws tr td:nth-child(even)
+{
+    border : 0.5px dotted; 
+    text-align : left;
+    min-width : 80%;
 }
 
 div.info {
@@ -87,6 +108,8 @@ table.input {
 table.input tr td:nth-child(odd) {
     text-align : right;
     min-width : 30%; 
+    vertical-align : top;
+    font-size : small;
 }
 
 table.input tr td:nth-child(even) {

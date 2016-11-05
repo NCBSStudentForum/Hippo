@@ -9,6 +9,12 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
+?>
+
+<script src="ckeditor/ckeditor.js"> </script>
+
+<?php
+
 echo "<h3>Add a missing AWS entry</h3>";
 
 echo printInfo( " 
@@ -27,8 +33,9 @@ foreach( $supervisors as $supervisor )
     $text[ $supervisor['email'] ] = $supervisor['first_name' ] . ' ' . $supervisor['last_name'];
 }
 
-$supervisorHTML = arrayToSelectList( "supervisors", $id, $text, TRUE );
-$tcmHTML = arrayToSelectList( "tcm_members", $id, $text, TRUE );
+// NOTE: Appending name with [] is must for multiple select entries.
+$supervisorHTML = arrayToSelectList( "supervisor[]", $id, $text, TRUE );
+$tcmHTML = arrayToSelectList( "tcm_member[]", $id, $text, TRUE );
 
 echo "<form method=\"post\" action=\"user_add_aws_submit.php\">";
 echo "<table class=\"input\">";
@@ -38,9 +45,10 @@ echo '
         <td><input type="text" class="long" name="title" value="" /></td>
     </tr>
     <tr>
-    <td>Abstract <br><small>This is plain text.
-        For best results, consider copy/paste HTML here. </small></td>
-        <td><textarea name="abstract" rows="10" cols="40"></textarea></td>
+    <td>Abstract <br>
+        <td><textarea id="abstract" name="abstract" rows="10" cols="40"></textarea>
+        <script> CKEDITOR.replace( "abstract" ); </script>
+        </td>
     </tr>
     <tr>
         <td>Supervisor(s) <br><small>Select at least 1</small></td>

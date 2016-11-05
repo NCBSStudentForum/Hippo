@@ -676,8 +676,12 @@ function getRoles( $user )
 function getMyAws( $user )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM annual_work_seminars WHERE speaker=:speaker' );
+    $stmt = $db->prepare( 'SELECT * FROM annual_work_seminars 
+        WHERE speaker=:speaker
+        ORDER BY date DESC
+        ' );
     $stmt->bindValue( ':speaker', $user );
+    $stmt->execute( );
     return fetchEntries( $stmt );
 }
 

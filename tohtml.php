@@ -203,7 +203,7 @@ function eventLineHTML( $date, $venueid )
 }
 
 // Convert an array to HTML
-function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Array() )
+function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
@@ -211,7 +211,7 @@ function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Ar
         $background = '';
     
     $table = "<table class=\"show_$tablename\" $background ;>";
-    $keys = array_keys( $r );
+    $keys = array_keys( $array );
     $toDisplay = Array();
     $table .= "<tr>";
     foreach( $keys as $k )
@@ -220,7 +220,7 @@ function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Ar
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
-            array_push( $toDisplay, $r[$k] );
+            array_push( $toDisplay, $array[$k] );
         }
 
     // Also set the content as div element which can be formatted using css
@@ -230,6 +230,34 @@ function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Ar
     $table .= "</tr></table>";
     return $table;
 }
+
+// Convert an array to HTML table (vertical)
+function arrayToVerticalTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )
+{
+    if( $background )
+        $background = "style=\"background:$background;\"";
+    else
+        $background = '';
+    
+    $table = "<table class=\"show_$tablename\" $background ;>";
+    $keys = array_keys( $array );
+    $toDisplay = Array();
+    foreach( $keys as $k )
+        if( ! in_array( $k, $tobefilterd ) )
+        {
+            $table .= "<tr>";
+            $kval = prettify( $k );
+            $label = strtoupper( $kval );
+            $table .= "<td class=\"db_table_fieldname\">$label</td>";
+            $table .= "<td><div class=\"cell_content\">$array[$k]</div></td>";
+            $table .= "</tr>";
+        }
+
+    // Also set the content as div element which can be formatted using css
+    $table .= "</table>";
+    return $table;
+}
+
 
 function requestToHTML( $request )
 {

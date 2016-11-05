@@ -7,7 +7,8 @@ USE minion;
 DROP TABLE IF EXISTS users;
 
 create table users (
-    id VARCHAR(100) PRIMARY KEY
+    id VARCHAR( 200 ) 
+    , login VARCHAR(100) 
     , email VARCHAR(200)
     , alternative_email VARCHAR(200)
     , fname VARCHAR(200)
@@ -21,6 +22,7 @@ create table users (
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , institute VARCHAR(200) 
     , laboffice VARCHAR(200)
+    , PRIMARY KEY (id, login )
 );
 
 CREATE TABLE IF NOT EXISTS requests (

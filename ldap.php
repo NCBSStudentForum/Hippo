@@ -23,7 +23,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
             )
         );
     }
-    return $result;
+    return $result[0];
 }
 
 ?>

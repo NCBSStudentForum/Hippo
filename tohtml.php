@@ -1,7 +1,5 @@
 <?php 
-
 include_once('methods.php');
-
 ?>
 
 <script>
@@ -391,7 +389,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
  */
 function eventToEditableTableHTML( $event, $editables = Array( ) )
 {
-
     $html = "<table class=\"request_show_edit\">";
     foreach( $event as $key => $value )
     {

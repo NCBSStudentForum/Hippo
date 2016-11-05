@@ -647,6 +647,22 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     return $stmt->execute( );
 }
 
+/**
+    * @brief Get user info from database.
+    *
+    * @param $user Login id of user.
+    *
+    * @return Array.
+ */
+function getUserInfo( $user )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM users WHERE login=:login" );
+    $stmt->bindValue( ":login", $user );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
 function getRoles( $user )
 {
     global $db;

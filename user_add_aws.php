@@ -56,7 +56,7 @@ echo '
     </tr>
     <tr>
         <td>Time</td>
-        <td><input type="timepicker" name="time" id="" value="16:00" /></td>
+        <td><input class="timepicker" name="time" id="" value="16:00" /></td>
     </tr>
     <tr>
         <td></td>

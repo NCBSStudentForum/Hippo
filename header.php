@@ -28,9 +28,20 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 <link rel="stylesheet" href="js/jquery-ui.css">
 <script src="js/jquery-1.12.4.js"></script>
 <script src="js/jquery-ui.js"></script>
+
 <script src="js/jquery-ui.multidatespicker.js"></script>
 
+<script type="text/javascript" src="js/jquery-timepicker/jquery.timepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-timepicker/jquery.timepicker.css" />
+
+<script type="text/javascript" src="js/jquery-timepicker/lib/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-timepicker/lib/bootstrap-datepicker.css" />
+
+<script type="text/javascript" src="js/jquery-timepicker/lib/site.js"></script>
+<link rel="stylesheet" type="text/css" href="lib/site.css" />
+
 <script>
+
 $( function() {
     $( "input.datepicker" ).datepicker();
     $( "#anim" ).on( "change", function() {
@@ -38,11 +49,11 @@ $( function() {
     });
   } );
 </script>
-
-
 <script>
-$(document).ready(function(){
+
+$(function(){
     $('input.timepicker').timepicker({});
 });
+
 </script>
 

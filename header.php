@@ -34,25 +34,18 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 <script type="text/javascript" src="js/jquery-timepicker/jquery.timepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="js/jquery-timepicker/jquery.timepicker.css" />
 
-<script type="text/javascript" src="js/jquery-timepicker/lib/bootstrap-datepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="js/jquery-timepicker/lib/bootstrap-datepicker.css" />
-
 <script type="text/javascript" src="js/jquery-timepicker/lib/site.js"></script>
 <link rel="stylesheet" type="text/css" href="lib/site.css" />
 
 <script>
-
 $( function() {
-    $( "input.datepicker" ).datepicker();
-    $( "#anim" ).on( "change", function() {
-        $( "input.datepicker" ).datepicker( "option", "showAnim", $( this ).val() );
-    });
+    $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
   } );
 </script>
-<script>
 
+<script>
 $(function(){
-    $('input.timepicker').timepicker({});
+    $('input.timepicker').timepicker({ 'step' : '15' });
 });
 
 </script>

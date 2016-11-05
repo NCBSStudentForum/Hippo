@@ -9,10 +9,9 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
     $info = ldap_get_entries($ds, $sr);
 
     $result = array();
-    foreach( $info as $i )
+    for( $s=0; $s < $info['count']; $s++)
     {
-        if( count( $i ) == 0 )
-            continue;
+        $i = $info[$s];
         array_push($result
             , array(
                 "fname" => $i['givenname'][0]

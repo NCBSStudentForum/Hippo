@@ -621,7 +621,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     global $db;
     $stmt = $db->prepare( 
             "INSERT IGNORE INTO users
-        (id, login, fname, lname, joined_on, email, created_on, institute, laboffice) 
+        (id, login, first_name, last_name, joined_on, email, created_on, institute, laboffice) 
             VALUES 
             (:id, :login, :fname, :lname, :joined_on, :email,  NOW(), :institute, :laboffice)" 
         );
@@ -672,6 +672,50 @@ function getRoles( $user )
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
     return explode( ",", $res['roles'] );
 }
+
+function getMyAws( $user )
+{
+    global $db;
+    $stmt = $db->prepare( 'SELECT * FROM annual_work_seminars WHERE speaker=:speaker' );
+    $stmt->bindValue( ':speaker', $user );
+    return fetchEntries( $stmt );
+}
+
+function getSupervisors( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Make sure only valid keys are in database table.
+    *
+    * @param $tablename
+    * @param $data
+    *
+    * @return 
+ */
+function insertIntoTable( $tablename, $keys, $data )
+{
+    global $db;
+
+    $cols = implode( ",", $keys );
+    $values = Array( );
+    foreach( $keys as $k )
+        array_push( $values, ":$k" );
+
+    $values = implode( ",", $values );
+    $query = "INSERT INTO $tablename ( $cols ) VALUES ( $values )";
+
+    $stmt = $db->prepare( $query );
+    foreach( $keys as $k )
+        $stmt->bindValue( ":$k", $data[$k] );
+
+    return $stmt->execute( );
+}
+
 
 ?>
 

@@ -5,7 +5,7 @@ USE minion;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
 DROP TABLE IF EXISTS annual_work_seminars;
-DROP TABLE IF EXISTS supervisers;
+DROP TABLE IF EXISTS supervisors;
 DROP TABLE IF EXISTS users;
 
 
@@ -14,9 +14,8 @@ create table users (
     , login VARCHAR(100) 
     , email VARCHAR(200)
     , alternative_email VARCHAR(200)
-    , fname VARCHAR(200)
-    , mname VARCHAR(100)
-    , lname VARCHAR(200)
+    , first_name VARCHAR(200)
+    , last_name VARCHAR(100)
     , roles SET( 'ADMIN', 'USER', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN', 'GUEST' ) DEFAULT 'USER'
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     , created_on DATETIME 
@@ -90,7 +89,7 @@ CREATE TABLE IF NOT EXISTS events (
     
 
 --  Create  a table of supervisers.
-create TABLE IF NOT EXISTS supervisers (
+create TABLE IF NOT EXISTS supervisors (
     email VARCHAR(200) PRIMARY KEY NOT NULL
     , first_name VARCHAR( 200 ) NOT NULL
     , last_name VARCHAR( 200 ) NOT NULL 
@@ -102,8 +101,8 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     speaker VARCHAR(200) NOT NULL -- user
     , date DATE -- final date
     , time TIME 
-    , superviser_1 VARCHAR( 200 ) NOT NULL -- first superviser 
-    , superviser_2 VARCHAR( 200 ) -- superviser 2, optional
+    , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser 
+    , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
     , tcm_member_1 VARCHAR( 200 )  NOT NULL -- at least one tcm member is required.
     , tcm_member_2 VARCHAR( 200 ) -- optional 
     , tcm_member_3 VARCHAR( 200 ) -- optional 
@@ -112,12 +111,12 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , title VARCHAR( 1000 )
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES users(login)
-    , FOREIGN KEY (superviser_1) REFERENCES supervisers(email) 
-    , FOREIGN KEY (superviser_2) REFERENCES supervisers(email) 
-    , FOREIGN KEY (tcm_member_1) REFERENCES supervisers(email) 
-    , FOREIGN KEY (tcm_member_2) REFERENCES supervisers(email) 
-    , FOREIGN KEY (tcm_member_3) REFERENCES supervisers(email) 
-    , FOREIGN KEY (tcm_member_4) REFERENCES supervisers(email) 
+    , FOREIGN KEY (supervisor_1) REFERENCES supervisors(email) 
+    , FOREIGN KEY (supervisor_2) REFERENCES supervisors(email) 
+    , FOREIGN KEY (tcm_member_1) REFERENCES supervisors(email) 
+    , FOREIGN KEY (tcm_member_2) REFERENCES supervisors(email) 
+    , FOREIGN KEY (tcm_member_3) REFERENCES supervisors(email) 
+    , FOREIGN KEY (tcm_member_4) REFERENCES supervisors(email) 
     , PRIMARY KEY (speaker, date)
     );
 

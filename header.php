@@ -29,3 +29,20 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 <script src="js/jquery-1.12.4.js"></script>
 <script src="js/jquery-ui.js"></script>
 <script src="js/jquery-ui.multidatespicker.js"></script>
+
+<script>
+$( function() {
+    $( "input.datepicker" ).datepicker();
+    $( "#anim" ).on( "change", function() {
+        $( "input.datepicker" ).datepicker( "option", "showAnim", $( this ).val() );
+    });
+  } );
+</script>
+
+
+<script>
+$(document).ready(function(){
+    $('input.timepicker').timepicker({});
+});
+</script>
+

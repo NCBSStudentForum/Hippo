@@ -413,4 +413,38 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     return $html;
 }
 
+/**
+    * @brief Convert a array into select list.
+    *
+    * @param $name Name of the select list.
+    * @param $options Options to populate.
+    * @param $display Search fo text for each option here if not then prettify 
+    * the option and show to user.
+    * @param $multiple_select If true then allow user to select multiple 
+    * entries.
+    *
+    * @return HTML <select> 
+ */
+function arrayToSelectList( $name, $options, $display = Array(), $multiple_select = FALSE )
+{
+    $html = '';
+    if( ! $multiple_select )
+    {
+        $html .= "<select class=\"$name\" name=\"$name\">";
+        $html .= "<option selected disabled>-- Select one --</option>";
+    }
+    else 
+    {
+        $html .= "<select multiple size=\"4\" name=\"$name\">";
+        $html .= "<option selected disabled>-- Select multiple --</option>";
+    }
+
+    foreach( $options as $option )
+        $html .= "<option value=\"$option\">" . 
+            __get__( $display, $option, prettify( $option ) ) . "</option>";
+
+    $html .= "</select>";
+    return $html;
+}
+
 ?>

@@ -676,13 +676,37 @@ function getRoles( $user )
 function getMyAws( $user )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM annual_work_seminars 
-        WHERE speaker=:speaker
-        ORDER BY date DESC
-        ' );
+
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker ORDER BY date DESC "; 
+    $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $user );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+
+function getMyAwsOn( $user, $date )
+{
+    global $db;
+
+    $query = "SELECT * FROM annual_work_seminars 
+        WHERE speaker=:speaker AND date=:date ORDER BY date DESC "; 
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $user );
+    $stmt->bindValue( ':date', $date );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+function getAwsById( $id )
+{
+    global $db;
+
+    $query = "SELECT * FROM annual_work_seminars WHERE id=:id";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':id', $id );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 function getSupervisors( )
@@ -720,6 +744,29 @@ function insertIntoTable( $tablename, $keys, $data )
     return $stmt->execute( );
 }
 
+function updateAWS( $id, $keys, $data )
+{
+    global $db;
+
+    $cols = implode( ",", $keys );
+    $values = Array( );
+    $query = "UPDATE annual_work_seminars SET ";
+    
+    $set = Array( );
+    foreach( $keys as $k )
+        array_push( $set,  "$k=:$k" );
+
+    $query .= implode( ",", $set );
+    $query .= " WHERE id=:id";
+
+    $stmt = $db->prepare( $query );
+    foreach( $keys as $k )
+        $stmt->bindValue( ":$k", $data[$k] );
+
+    $stmt->bindValue( ":id", $id );
+
+    return $stmt->execute( );
+}
 
 ?>
 

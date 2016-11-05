@@ -383,7 +383,8 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
         }
         else if( strcasecmp( $ctype, 'text' ) == 0 )
         {
-            $val = "<textarea class=\"editable\" name=\"$keyName\" >$default </textarea>";
+            $val = "<textarea class=\"editable\" id=\"ckeditor\" name=\"$keyName\" >$default </textarea>";
+            $val .= "<script> CKEDITOR.replace('ckeditor') </script>";
         }
 
         // When the value is readonly. Just send the value as hidden input and 
@@ -450,10 +451,14 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     * the option and show to user.
     * @param $multiple_select If true then allow user to select multiple 
     * entries.
+    * @param $selected If not '' then select this one by default.
     *
     * @return HTML <select> 
  */
-function arrayToSelectList( $name, $options, $display = Array(), $multiple_select = FALSE )
+function arrayToSelectList( $name, $options
+    , $display = Array(), $multiple_select = FALSE 
+    , $selected = ''
+)
 {
     $html = '';
     if( ! $multiple_select )
@@ -463,13 +468,21 @@ function arrayToSelectList( $name, $options, $display = Array(), $multiple_selec
     }
     else 
     {
-        $html .= "<select multiple size=\"4\" name=\"$name\">";
+        $html .= "<select class=\"$name\" multiple size=\"4\" name=\"$name\">";
         $html .= "<option selected disabled>-- Select multiple --</option>";
     }
 
     foreach( $options as $option )
-        $html .= "<option value=\"$option\">" . 
-            __get__( $display, $option, prettify( $option ) ) . "</option>";
+    {
+        $selectText = "";
+
+        if( $option == $selected )
+            $selectText = " selected";
+
+        $html .= "<option value=\"$option\" $selectText >" 
+            .  __get__( $display, $option, prettify( $option ) ) 
+            . "</option>";
+    }
 
     $html .= "</select>";
     return $html;

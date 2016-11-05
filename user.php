@@ -1,111 +1,68 @@
 <?php 
-include_once( "header.php" );
-include_once( "methods.php" );
-include_once( "tohtml.php" );
-include_once( "is_valid_access.php" );
-include_once( "database.php" );
+
+include_once 'header.php';
+include_once 'database.php';
+include_once 'methods.php';
+include_once 'tohtml.php';
+include_once 'check_access_permissions.php';
+
+mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
-?>
-
-<script>
-$( function() {
-    var today = new Date();
-    var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
-    $( "#datepicker" ).multiDatesPicker( { 
-        dateFormat : "y-m-d"
-        // , addDates : [ today, tomorrow ] 
-    });
-} );
-</script>
+echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
 
 
-<?php
 
-// There is a form on this page which will send us to this page again. Therefore 
-// we need to keep $_POST variable to a sane state.
-$venues = getVenues( );
-$venueSelect = venuesToHTMLSelect( $venues, TRUE );
+$html = '<table class="show_user">';
+$html .= '<tr>
+            <td>Browse the available venues and create a booking request</td>
+            <td> <a href="bookmyvenue_browse.php">Create a booking request</a> </td>
+        </tr><tr>
+        <td>Your can see your unapproved requests and modify their description and cancel
+        them if neccessary.
+        </td>
+            <td> <a href="user_show_requests.php">Show/Edit my requests</a> </td>
+        </tr><tr>
+        <td>These booking requests have been approved (we call them events). You can 
+       still edit their description (and also cancel them). </td>
+            <td> <a href="user_show_events.php">Show/Edit my events</a></td>
+        </tr><tr>
+            <td>TODO: Journal clubs.</td>
+            <td> <a href="user_jc.php">My JC</a> </td>
+        </tr><tr>
+            <td>Alpha: Annual Work Seminal.</td>
+            <td> <a href="user_aws.php">My AWS</a> </td>
+        </tr>';
 
-// FIXME: complicated logic here.
-// If no venue if selected then use all venues. If from previous step we already 
-// have some veneues selected then keep using them. NOTE: We convert the array 
-// into string since we want to use these values in next iteration as <input> 
-// value.  Similarly do it for dates.
-if( ! array_key_exists( 'picked_dates', $_POST ) )
+$html .= "</table>";
+echo $html;
+
+if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
+    , 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) ) 
+)
 {
-    if( ! array_key_exists( 'selected_dates_before', $_POST ) )
-        $_POST['picked_dates'] = humanReadableDate( strtotime( 'today' ) );
-    else
-        $_POST['picked_dates']  = $_POST['selected_dates_before'];
-}
+    echo "<h3>You have following roles as admin</h3>";
+    $roles =  getRoles( $_SESSION['user'] );
 
-// Initialize dates and end_date in form.
-$dates = explode( ",", $_POST['picked_dates']);
-
-if( ! array_key_exists( 'venue', $_POST ) )
-{
-    if( ! array_key_exists( 'selected_venues_before', $_POST ) )
-        $_POST['venue'] = implode( "###", array_map( function($a) { 
-            return $a['id']; }, $venues)
-            );
-    else
-        $_POST['venue'] = $_POST[ 'selected_venues_before' ];
-}
-
-// To be sure that we can post this value as value of <input 
-if( is_array($_POST['venue']) )
-    $_POST['venue'] = implode( "###", $_POST['venue'] );
-
-$pickedDates = $_POST['picked_dates'];
-echo "<form method=\"post\" action=\"user.php\">
-    <table>
-    <tr>
-        <th>Pick dates</th><th>Select Venues<th><th> </th>
-    </tr>
-    <tr>
-    <td><input type=\"text\" id=\"datepicker\" name=\"picked_dates\" value=\"$pickedDates\"></td>
-    <td>  $venueSelect </td>
-    <td>
-    <button style=\"float:right\" name=\"response\" value=\"submit\">Submit</button> ";
-
-    // NOTE: These venues were selected on previous steps. When Submit is pressed. And no
-    // venue is selected,we keep displaying these venues --> 
-   echo " <input type=\"hidden\" name=\"selected_venues_before\" value=\" " .  $_POST['venue'] . "\">";
-   echo " <input type=\"hidden\" name=\"selected_dates_before\" value=\" " .  $_POST['picked_dates'] . "\">";
-   echo " </td> </tr> </table> </form> <br> ";
-
-
-echo "<br>";
-echo "<div class=\"info\">";
-echo "You may not be able to create any request at following slots:";
-echo "
-    <button class=\"display_request\" style=\"width:20px;height:20px\"></button>Pending requests
-    <button class=\"display_event\" style=\"width:20px;height:20px\"></button>Booked slots
-    ";
-echo "<br>Click on them to see details";
-echo "</div>";
-
-
-// Now generate the range of dates.
-foreach( $dates as $date )
-{
-    $thisdate = humanReadableDate( strtotime( $date  ) );
-    $thisday = nameOfTheDay( $thisdate );
-
-    $html = "
-        <p class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></p> <br>
-        <!--
-            <div style=\"float:right\"><font color=\"blue\">$thisday, $thisdate </font></div> 
-        -->
-        ";
-    // Now generate eventline for each venue.
-    foreach( explode("###", $_POST['venue']) as $venueid )
-        $html .= eventLineHTML( $thisdate, $venueid );
+    $html = "<table class=\"show_user\">";
+    if( in_array( "ADMIN", $roles ) )
+        $html .= '<tr><td> All migthy ADMIN </td>
+        <td><a href="admin.php">Admin</a></td> </td>
+        </tr>';
+    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
+        $html .= '<tr><td>Approve/reject booking request, modify or cancel them as well.</td>
+            <td> <a href="bookmyvenue_admin.php">BookMyVenueAdmin</a></td> </tr>';
+    if( in_array( "JOURNALCLUB_ADMIN", $roles ) )
+        $html .= '<tr><td>TODO: Add journal club, invite people, select papers.</td>
+            <td> <a href="journalclub_admin.php">BookMyVenueAdmin</a></td> </tr>';
+    if( in_array( "AWS_ADMIN", $roles ) )
+        $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
+        periodically. 
+        </td>
+            <td> <a href="aws_admin.php">BookMyVenueAdmin</a></td> </tr>';
+    $html .= "</table>";
     echo $html;
 }
 
 ?>
-
-

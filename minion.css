@@ -3,13 +3,20 @@ divdiv.header {
     /*background-color : yellow;*/
 }
 
+table.user_float {
+    position : fixed;
+    top : 10px;
+    left : 80%;
+}
+
 table.show_user {
-    font-size : small;
-    /*position : fixed;*/
-    position : absolute;
-    top: 10px;
-    left: 80%;
-    border : 1px solid #73AD21;
+    max-width : 800px;
+    background : lightyellow;
+}
+
+table.show_user tr td 
+{
+    border : 0.5px dotted; 
     min-width : 20%;
 }
 

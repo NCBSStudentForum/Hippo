@@ -3,6 +3,7 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "database.php" );
+include_once( "ldap.php" );
 
 $conf = $_SESSION['conf'];
 $ldap = $_POST['username'];
@@ -25,7 +26,12 @@ else
     imap_close( $conn );
     $_SESSION['AUTHENTICATED'] = TRUE;
     $_SESSION['user'] = $ldap;
-    goToPage( "user.php", 0 );
+    //goToPage( "user.php", 0 );
+
+    echo "Quering LDAP server for user information";
+    $ldapInfo = getUserInfoFromLdap( $ldap );
+    var_dump( $ldapInfo );
+
 }
 
 ?>

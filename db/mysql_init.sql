@@ -14,9 +14,11 @@ create table users (
     , mname VARCHAR(100)
     , lname VARCHAR(200)
     , roles SET( 'ADMIN', 'USER', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN', 'GUEST' ) DEFAULT 'USER'
-    , created_on DATETIME 
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    , created_on DATETIME 
+    , joined_on DATETIME
     , valid_untill DATETIME
+    , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , institute VARCHAR(200) 
 );
 

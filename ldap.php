@@ -1,6 +1,6 @@
 <?php
 
-function getUserInfoFromLdap($ldap_ip="ldap.ncbs.res.in", $ldap)
+function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
 {
     $base_dn = 'dc=ncbs,dc=res,dc=in';
     $ds = ldap_connect($ldap_ip) or die( "Could not connect to $ldap_ip" );
@@ -9,13 +9,19 @@ function getUserInfoFromLdap($ldap_ip="ldap.ncbs.res.in", $ldap)
     $info = ldap_get_entries($ds, $sr);
 
     $result = array();
-    for( $i=0; $i < $info['count']; $i++)
+    foreach( $info as $i )
     {
-        $name = $info[$i]["givenname"][0];
-        $lname = $info[$i]["sn"][0];
-        $uid = $info[$i]["uid"][0];
+        if( count( $i ) == 0 )
+            continue;
         array_push($result
-            , array("fname" => $name , "lname" => $lname, "uid" => $uid )
+            , array(
+                "fname" => $i['givenname'][0]
+                , "lname" => $i['sn'][0]
+                , "uid" => $i['profileidentification'][0]
+                , "email" => $i['mail'][0]
+                , "laboffice" => $i['profilelaboffice'][0]
+                , "joined_on" => $i['profiletenureend'][0]
+            )
         );
     }
     return $result;

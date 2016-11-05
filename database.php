@@ -621,36 +621,37 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     global $db;
     $stmt = $db->prepare( 
             "INSERT IGNORE INTO users
-        (id, fname, lname, joined_on, email, created_on, institute, laboffice) 
+        (id, login, fname, lname, joined_on, email, created_on, institute, laboffice) 
             VALUES 
-            (:id, :fname, :lname, :joined_on, :email,  NOW(), :institute, :laboffice)" 
+            (:id, :login, :fname, :lname, :joined_on, :email,  NOW(), :institute, :laboffice)" 
         );
 
-    $institute = '';
+    $institute = NULL;
     if( count( $ldapInfo ) > 0 ) 
         $institute = 'NCBS Bangalore';
 
-    $userid = __get__( $ldapInfo, "uid", $userid );
+    //var_dump( $ldapInfo );
 
-    $stmt->bindValue( ':id', $userid );
-    $stmt->bindValue( ':fname', __get__( $ldapInfo, "fname", "" ));
-    $stmt->bindValue( ':lname', __get__( $ldapInfo, "lname", "" ));
-    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', '' ));
-    $stmt->bindValue( ':joined_on', __get__( $ldapInfo, 'joined_on', '' ));
-    $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', '' ));
+    $stmt->bindValue( ':login', $userid );
+    $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));
+    $stmt->bindValue( ':fname', __get__( $ldapInfo, "fname", NULL ));
+    $stmt->bindValue( ':lname', __get__( $ldapInfo, "lname", NULL ));
+    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', NULL ));
+    $stmt->bindValue( ':joined_on', __get__( $ldapInfo, 'joined_on', NULL ));
+    $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', NULL ));
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );
 
-    $stmt = $db->prepare( "UPDATE users SET last_login=NOW() WHERE id=:id" );
-    $stmt->bindValue( ':id', $userid );
+    $stmt = $db->prepare( "UPDATE users SET last_login=NOW() WHERE login=:login" );
+    $stmt->bindValue( ':login', $userid );
     return $stmt->execute( );
 }
 
 function getRoles( $user )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT roles FROM users WHERE id=:id' );
-    $stmt->bindValue( ':id', $user );
+    $stmt = $db->prepare( 'SELECT roles FROM users WHERE login=:login' );
+    $stmt->bindValue( ':login', $user );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
     return explode( ",", $res['roles'] );

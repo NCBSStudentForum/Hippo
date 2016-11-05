@@ -22,16 +22,14 @@ if(!$conn)
 else 
 {
     echo printInfo( "Login successful" );
-    createUserOrUpdateLogin( $ldap );
     imap_close( $conn );
     $_SESSION['AUTHENTICATED'] = TRUE;
     $_SESSION['user'] = $ldap;
-    //goToPage( "user.php", 0 );
 
     echo "Quering LDAP server for user information";
     $ldapInfo = getUserInfoFromLdap( $ldap );
-    var_dump( $ldapInfo );
-
+    createUserOrUpdateLogin( $ldap, $ldapInfo );
+    goToPage( "user.php", 0 );
 }
 
 ?>

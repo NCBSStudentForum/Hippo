@@ -615,15 +615,34 @@ function updateEvent( $gid, $eid, $options )
     return $stmt->execute( );
 }
 
-// Create user if does not exists.
-function createUserOrUpdateLogin( $userid )
+// Create user if does not exists and fill information form LDAP server.
+function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 {
     global $db;
-    $stmt = $db->prepare( "INSERT IGNORE INTO users (id, created_on) 
-        VALUES (:id, NOW()) " );
+    $stmt = $db->prepare( 
+            "INSERT IGNORE INTO users
+        (id, fname, lname, joined_on, email, created_on, institute, laboffice) 
+            VALUES 
+            (:id, :fname, :lname, :joined_on, :email,  NOW(), :institute, :laboffice)" 
+        );
+
+    $institute = '';
+    if( count( $ldapInfo ) > 0 ) 
+        $institute = 'NCBS Bangalore';
+
+    $userid = __get__( $ldapInfo, "uid", $userid );
+
     $stmt->bindValue( ':id', $userid );
+    $stmt->bindValue( ':fname', __get__( $ldapInfo, "fname", "" ));
+    $stmt->bindValue( ':lname', __get__( $ldapInfo, "lname", "" ));
+    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', '' ));
+    $stmt->bindValue( ':joined_on', __get__( $ldapInfo, 'joined_on', '' ));
+    $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', '' ));
+    $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );
-    $stmt = $db->query( "UPDATE users SET last_login=NOW()" );
+
+    $stmt = $db->prepare( "UPDATE users SET last_login=NOW() WHERE id=:id" );
+    $stmt->bindValue( ':id', $userid );
     return $stmt->execute( );
 }
 

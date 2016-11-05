@@ -1,9 +1,9 @@
 CREATE DATABASE IF NOT EXISTS minion;
 USE minion;
 
-DROP TABLE IF EXISTS requests;
-DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS venues;
+-- DROP TABLE IF EXISTS requests;
+-- DROP TABLE IF EXISTS events;
+-- DROP TABLE IF EXISTS venues;
 DROP TABLE IF EXISTS users;
 
 create table users (
@@ -20,6 +20,7 @@ create table users (
     , valid_untill DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , institute VARCHAR(200) 
+    , laboffice VARCHAR(200)
 );
 
 CREATE TABLE IF NOT EXISTS requests (

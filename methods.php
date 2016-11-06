@@ -190,5 +190,46 @@ function goBack( )
     goToPage( $_SERVER['HTTP_REFERER'], 0 );
 }
 
+function constructRepeatPattern( $daypat, $weekpat, $monthpat )
+{
+   $weekNum = Array( 
+      "first" => 0, "second" => 1, "third" => 2, "fourth" => 3 
+      , "1st" => 0, "2nd" => 1, "3rd" => 3, "4th" => 3
+      , "fst" => 0, "snd" => 1, "thrd" => 3, "frth" => 3
+   );
+
+   $repeatPat = '';
+   $daypat = str_replace( ",", " ", $daypat );
+   $weekpat = str_replace( ",", " ", $weekpat );
+
+   $days = array_map( function( $day ) {
+      return date('w', strtotime( $day ) ); }, explode( " ", $daypat )
+   );
+   $days = implode( "/", $days );
+
+   $weeks = Array();
+   if( $weekpat )
+   {
+      foreach( explode(" ", $weekpat ) as $w )
+      {
+         if( array_key_exists( $w, $weekNum ) )
+            array_push( $weeks, $weekNum[$w] );
+      }
+   }
+   $weeks = implode( "/", $weeks );
+
+   $months = Array( );
+   if( $monthpat )
+      for ($i = 0; $i < intval( $monthpat ); $i++) 
+         array_push( $months, "$i" );
+
+   $months = implode( "/", $months );
+
+   //echo "Got days $days" ;
+   //echo "Got weeks $weeks" ;
+   //echo "Got months $months" ;
+
+   return "$days,$weeks,$months";
+}
 
 ?>

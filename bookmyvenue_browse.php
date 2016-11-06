@@ -59,10 +59,18 @@ if( is_array($_POST['venue']) )
     $_POST['venue'] = implode( "###", $_POST['venue'] );
 
 $pickedDates = $_POST['picked_dates'];
-echo "<form method=\"post\" action=\"user.php\">
+echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
     <table>
     <tr>
-        <th>Pick dates</th><th>Select Venues<th><th> </th>
+    <th>
+        Pick dates
+        <p class=\"note_to_user\">You can select multiple dates by clicking on them</p>
+    </th>
+    <th>
+        Select Venues
+        <p class=\"note_to_user\">You can select multiple venues by holding 
+            down Ctrl or Shift key</p>
+    </th>
     </tr>
     <tr>
     <td><input type=\"text\" id=\"datepicker\" name=\"picked_dates\" value=\"$pickedDates\"></td>

@@ -23,30 +23,37 @@ $msg = verifyRequest( $_POST );
 
 if( $msg == "OK" )
 {
-    $res = submitRequest( $_POST );
-    if( $res )
-    {
-        echo printInfo( 
-            "Your request has been submitted and an email has been sent to you 
-            with details.
-            " );
-        goToPage( "user.php", 1 );
-        echo goBackToPageLink( "user.php", "Go back" );
-    }
-    else
-    {
-        echo printWarning( 
+   // Generate repeat pattern from days, week and month repeat patter.
+   $repeatPat = constructRepeatPattern( 
+      $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
+   );
+
+   $_POST['repeat_pat']  = $repeatPat;
+
+   $res = submitRequest( $_POST );
+   if( $res )
+   {
+      echo printInfo( 
+         "Your request has been submitted and an email has been sent to you 
+         with details.
+         " );
+         goToPage( "user.php", 1 );
+      }
+      else
+      {
+         echo printWarning( 
             "Your request could not be submitted. Please notify the admin." 
-        );
-        echo goBackToPageLink( "user.php", "Go back" );
-    }
-}
-else
-{
-    echo printWarning( "There was an error in request" );
-    echo printWarning( $msg );
-    echo goBackToPageLink( "user.php", "Go back" );
-    exit;
-}
+         );
+         echo goBackToPageLink( "user.php", "Go back" );
+         exit;
+      }
+   }
+   else
+   {
+      echo printWarning( "There was an error in request" );
+      echo printWarning( $msg );
+      echo goBackToPageLink( "user.php", "Go back" );
+      exit;
+   }
 
 ?>

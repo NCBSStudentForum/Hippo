@@ -32,7 +32,19 @@ else
     echo "Quering LDAP server for user information";
     $ldapInfo = getUserInfoFromLdap( $ldap );
     createUserOrUpdateLogin( $ldap, $ldapInfo );
+
+    // If user title is unspecified then redirect him/her to edit user info
+    $userInfo = getUserInfo( $ldap );
+    if( $userInfo['title'] == 'UNSPECIFIED' )
+    {
+       echo printInfo( "Your details are missing essential information I need to
+       continue ... " );
+       goToPage( "user_info.php", 3 );
+       exit;
+    }
+
     goToPage( "user.php", 0 );
+    exit;
 }
 
 ?>

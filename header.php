@@ -41,6 +41,9 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 $( function() {
     $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
   } );
+$( function() {
+    $( "input.datetimepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
+  } );
 </script>
 
 <script>

@@ -4,9 +4,9 @@ USE minion;
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
-DROP TABLE IF EXISTS annual_work_seminars;
-DROP TABLE IF EXISTS supervisors;
-DROP TABLE IF EXISTS logins;
+-- DROP TABLE IF EXISTS annual_work_seminars;
+-- DROP TABLE IF EXISTS supervisors;
+-- DROP TABLE IF EXISTS logins;
 
 
 CREATE TABLE IF NOT EXISTS logins (
@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS logins (
     , valid_until DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , laboffice VARCHAR(200)
+    , lab  VARCHAR(200) -- Which lab do you work in.
     , title ENUM( 'FACULTY', 'POSTDOC'
         , 'PHD', 'INTPHD', 'MSC'
         , 'JRF', 'SRF'
@@ -37,6 +38,12 @@ CREATE TABLE IF NOT EXISTS logins (
     , PRIMARY KEY (login)
 );
 
+create TABLE IF NOT EXISTS labs (
+   id VARCHAR(200) PRIMARY KEY 
+   , url VARCHAR (500)
+   , faculty_in_charge VARCHAR( 200 ) NOT NULL
+   , FOREIGN KEY (faculty_in_charge) REFERENCES logins(login)
+   );
 
 
 CREATE TABLE IF NOT EXISTS bookmyvenue_requests (

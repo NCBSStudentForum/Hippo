@@ -358,7 +358,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
         if( in_array($keyName , $editables ) )
             $readonly = False;
 
-        $match = Array( );
         // Add row to table
         $html .= "<tr><td class=\"db_table_fieldname\"> " . 
             strtoupper(prettify( $keyName )) . "</td>";
@@ -367,6 +366,8 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
         $val = "<input class=\"editable\"
             name=\"$keyName\" type=\"text\" value=\"$default\" />";
 
+        // Genearte a select list of ENUM type class.
+        $match = Array( );
         if( preg_match( "/^enum\((.*)\)$/" , $ctype, $match ) )
         {
             $val = "<select name=\"$keyName\">";
@@ -381,11 +382,31 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
 
             $val .= "</select>";
         }
+        // TODO generate a multiple select for SET typeclass.
+        else if( preg_match( "/^set\((.*)\)$/", $ctype, $match ) )
+        {
+            $val = "<select multiple name=\"$keyName\">";
+            foreach( explode(",", $match[1] ) as $v )
+            {
+                $selected = '';
+                $v = str_replace( "'", "", $v );
+                if( $v == $default )
+                    $selected = 'selected';
+                $val .= "<option value=\"$v\" $selected> $v </option>";
+            }
+            $val .= "</select>";
+        }
         else if( strcasecmp( $ctype, 'text' ) == 0 )
         {
             $val = "<textarea class=\"editable\" id=\"ckeditor\" name=\"$keyName\" >$default </textarea>";
             $val .= "<script> CKEDITOR.replace('ckeditor') </script>";
         }
+        else if( strcasecmp( $ctype, 'date' ) == 0 )
+           $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";
+        else if( strcasecmp( $ctype, 'datetime' ) == 0 )
+           $val = "<input class=\"datetimepicker\" name=\"$keyName\" value=\"$default\" />";
+        else if( strcasecmp( $ctype, 'time' ) == 0 )
+           $val = "<input id=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
 
         // When the value is readonly. Just send the value as hidden input and 
         // display the default value.

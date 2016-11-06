@@ -4,7 +4,7 @@ include_once( 'header.php' );
 include_once( 'database.php' );
 
 $res = updateTable( "logins", "login"
-    , Array( "valid_until", "title", "laboffice" )
+    , Array( "valid_until", "title", "laboffice", 'joined_on' )
     , $_POST 
 );
 

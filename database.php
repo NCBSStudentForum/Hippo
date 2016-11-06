@@ -340,7 +340,7 @@ function submitRequest( $request )
 
     $rid = 0;
     $results = Array( );
-    $res = $db->query( 'SELECT MAX(gid) AS gid FROM requests' );
+    $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
     $gid = intval($res->fetch( PDO::FETCH_ASSOC )['gid']) + 1;
     foreach( $days as $day ) 
     {
@@ -621,9 +621,9 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     global $db;
     $stmt = $db->prepare( 
        "INSERT IGNORE INTO logins
-        (id, login, first_name, last_name, joined_on, email, created_on, institute, laboffice) 
+        (id, login, first_name, last_name, email, created_on, institute, laboffice) 
             VALUES 
-            (:id, :login, :fname, :lname, :joined_on, :email,  NOW(), :institute, :laboffice)" 
+            (:id, :login, :fname, :lname, :email,  'NOW()', :institute, :laboffice)" 
         );
 
     $institute = NULL;
@@ -637,7 +637,6 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     $stmt->bindValue( ':fname', __get__( $ldapInfo, "fname", NULL ));
     $stmt->bindValue( ':lname', __get__( $ldapInfo, "lname", NULL ));
     $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', NULL ));
-    $stmt->bindValue( ':joined_on', __get__( $ldapInfo, 'joined_on', NULL ));
     $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', NULL ));
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );

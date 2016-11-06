@@ -58,6 +58,7 @@ else
 
 $startTime = __get__( $_POST, 'start_time', '' );
 $calendarTime = date( 'H:i', $startTime );
+$defaultEndTime = date( 'H:i', strtotime( $calendarTime ) + 60*60   );
 $date = __get__( $_POST, 'date', '' );
 
 ?>
@@ -82,12 +83,12 @@ $date = __get__( $_POST, 'date', '' );
    <tr> <td>Starts on <br>
       </td>
       <td> <input class="timepicker" type="time" name="start_time" 
-         value="<?php echo $calendarTime ?>" /> </td>
+         value="<?php echo $calendarTime ?>" readonly /> </td>
    </tr>
    <tr> <td>Ends on <br>
       </td>
       <td> <input class="timepicker" type="time" name="end_time" 
-         value="<?php echo $calendarTime ?>" /> </td>
+         value="<?php echo $defaultEndTime ?>" /> </td>
    </tr>
    <tr> <td>Date <br>
       </td>

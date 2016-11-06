@@ -9,7 +9,8 @@ table.user_float {
 }
 
 table.show_user {
-    max-width : 800px;
+    max-width : 80%;
+    min-width : 500px;
     background : lightyellow;
 }
 
@@ -251,6 +252,14 @@ p.note_to_user {
     font-size : small;
     color : grey;
     max-width : 80%;
+}
+
+p.alert_user {
+   /*font-size : small;*/
+   border : 1px dotted;
+   background : lightblue;
+   max-width : 80%;
+   min-width : 500px;
 }
 
 .db_table_fieldname {

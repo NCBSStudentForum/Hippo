@@ -3,7 +3,6 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( 'ldap.php' );
-include_once( "error.php" );
 
 
 class BMVPDO extends PDO 
@@ -93,7 +92,7 @@ function getPendingRequestsGroupedByGID( )
 function getRequestsGroupedByGID( $status  )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE status=:status GROUP BY gid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE status=:status GROUP BY gid' );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -138,7 +137,7 @@ function getEventsById( $gid, $eid )
 function getRequestOfUser( $userid, $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE user=:user 
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE user=:user 
         AND status=:status AND date >= NOW() - INTERVAL 2 DAY
         GROUP BY gid' );
     $stmt->bindValue( ':user', $userid );
@@ -178,7 +177,7 @@ function fetchEntries( $res )
 function getRequestById( $gid, $rid )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND rid=:rid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND rid=:rid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':rid', $rid );
     $stmt->execute( );
@@ -189,7 +188,7 @@ function getRequestById( $gid, $rid )
 function getRequestByGroupId( $gid )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -199,7 +198,7 @@ function getRequestByGroupId( $gid )
 function getRequestByGroupIdAndStatus( $gid, $status )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND status=:status' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND status=:status' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
@@ -217,7 +216,7 @@ function getRequestByGroupIdAndStatus( $gid, $status )
 function changeRequestStatus( $gid, $rid, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE requests SET 
+    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET 
         status=:status WHERE gid=:gid AND rid=:rid"
     );
     $stmt->bindValue( ':status', $status );
@@ -237,7 +236,7 @@ function changeRequestStatus( $gid, $rid, $status )
 function changeStatusOfRequests( $gid, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE requests SET status=:status WHERE gid=:gid" );
+    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET status=:status WHERE gid=:gid" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
     return $stmt->execute( );
@@ -347,7 +346,7 @@ function submitRequest( $request )
     {
         $rid += 1;
         $query = $db->prepare( 
-            "INSERT INTO requests ( 
+            "INSERT INTO bookmyvenue_requests ( 
                 gid, rid, user, venue
                 , title, description
                 , date, start_time, end_time
@@ -503,7 +502,7 @@ function requestsForThisVenue( $venue, $date, $time )
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE 
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE 
         status=:status 
         AND date=:date AND venue=:venue 
         AND start_time <= :time AND end_time > :time' );
@@ -559,7 +558,7 @@ function updateRequestGroup( $gid, $options )
     }
 
     $placeholder = implode( ",", $placeholder );
-    $query = "UPDATE requests SET $placeholder WHERE gid=:gid";
+    $query = "UPDATE bookmyvenue_requests SET $placeholder WHERE gid=:gid";
 
     $stmt = $db->prepare( $query );
 
@@ -621,7 +620,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 {
     global $db;
     $stmt = $db->prepare( 
-            "INSERT IGNORE INTO users
+       "INSERT IGNORE INTO logins
         (id, login, first_name, last_name, joined_on, email, created_on, institute, laboffice) 
             VALUES 
             (:id, :login, :fname, :lname, :joined_on, :email,  NOW(), :institute, :laboffice)" 
@@ -643,7 +642,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );
 
-    $stmt = $db->prepare( "UPDATE users SET last_login=NOW() WHERE login=:login" );
+    $stmt = $db->prepare( "UPDATE logins SET last_login=NOW() WHERE login=:login" );
     $stmt->bindValue( ':login', $userid );
     return $stmt->execute( );
 }
@@ -658,7 +657,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 function getUserInfo( $user )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM users WHERE login=:login" );
+    $stmt = $db->prepare( "SELECT * FROM logins WHERE login=:login" );
     $stmt->bindValue( ":login", $user );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
@@ -667,7 +666,7 @@ function getUserInfo( $user )
 function getRoles( $user )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT roles FROM users WHERE login=:login' );
+    $stmt = $db->prepare( 'SELECT roles FROM logins WHERE login=:login' );
     $stmt->bindValue( ':login', $user );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );

@@ -135,9 +135,11 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 
         // Check  for events at this venue. If non, then display + (addEvent) 
         // button else show that this timeslot has been booked.
+        
         $events = eventsAtThisVenue( $venue, $day, $segTime );
         $requests = requestsForThisVenue( $venue, $day, $segTime );
-        if( count( $events ) == 0 and count($requests) == 0)
+
+        if( count( $events ) == 0 && count($requests) == 0)
         {
             // Add a form to trigger adding event purpose.
             $html .= "<form method=\"post\" action=\"user_submit_request.php\" >";

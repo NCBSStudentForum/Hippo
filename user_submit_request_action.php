@@ -15,11 +15,17 @@ function verifyRequest( $request )
             $request[ 'end_time' ];
         return $msg;
     }
+    if( ! isset( $request['venue'] ) )
+    {
+        return "No venue found in your request. May be a bug " ;
+    }
     return "OK";
+
 }
 
 
 $msg = verifyRequest( $_POST );
+
 
 if( $msg == "OK" )
 {

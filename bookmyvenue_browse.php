@@ -85,15 +85,13 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
    echo " </td> </tr> </table> </form> <br> ";
 
 
-echo "<br>";
-echo "<div class=\"info\">";
-echo "You may not be able to create any request at following slots:";
-echo "
-    <button class=\"display_request\" style=\"width:20px;height:20px\"></button>Pending requests
-    <button class=\"display_event\" style=\"width:20px;height:20px\"></button>Booked slots
-    ";
-echo "<br>Click on them to see details";
-echo "</div>";
+   echo alterUser( 
+       "
+       <button class=\"display_request\" style=\"width:20px;height:20px\"></button>Pending requests
+       <button class=\"display_event\" style=\"width:20px;height:20px\"></button>Booked slots
+       <button class=\"display_event_with_public_event\" style=\"width:20px;height:20px\"></button>There is a public event at this slot.
+       "
+   );
 
 
 // Now generate the range of dates.
@@ -102,17 +100,15 @@ foreach( $dates as $date )
     $thisdate = humanReadableDate( strtotime( $date  ) );
     $thisday = nameOfTheDay( $thisdate );
 
-    $html = "
-        <p class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></p> <br>
+    $html = "<p class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></p> <br>
         <!--
             <div style=\"float:right\"><font color=\"blue\">$thisday, $thisdate </font></div> 
         -->
         ";
     // Now generate eventline for each venue.
     foreach( explode("###", $_POST['venue']) as $venueid )
-    {
         $html .= eventLineHTML( $thisdate, $venueid );
-    }
+
     echo $html;
 }
 

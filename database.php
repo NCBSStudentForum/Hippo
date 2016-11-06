@@ -476,7 +476,7 @@ function changeIfEventIsPublic( $gid, $eid, $status )
 // Fetch all events at given venue and given day-time.
 function eventsAtThisVenue( $venue, $date, $time )
 {
-    $venue = trim( $vennue );
+    $venue = trim( $venue );
     $date = trim( $date );
     $time = trim( $time );
 
@@ -499,6 +499,10 @@ function eventsAtThisVenue( $venue, $date, $time )
 // Fetch all requests for given venue and given day-time.
 function requestsForThisVenue( $venue, $date, $time )
 {
+    $venue = trim( $venue );
+    $date = trim( $date );
+    $time = trim( $time );
+
     global $db;
     // Database reads in ISO format.
     $hDate = dbDate( $date );

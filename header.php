@@ -50,3 +50,6 @@ $(function(){
 
 </script>
 
+<!-- CKEDIR -->
+<script src="./ckeditor/ckeditor.js"></script>
+

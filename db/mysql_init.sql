@@ -1,14 +1,14 @@
 CREATE DATABASE IF NOT EXISTS minion;
 USE minion;
 
--- DROP TABLE IF EXISTS bookmyvenue_requests;
--- DROP TABLE IF EXISTS events;
--- DROP TABLE IF EXISTS venues;
--- DROP TABLE IF EXISTS annual_work_seminars;
--- DROP TABLE IF EXISTS annual_work_seminars_requests;
--- DROP TABLE IF EXISTS supervisors;
--- DROP TABLE IF EXISTS labs;
--- DROP TABLE IF EXISTS logins;
+DROP TABLE IF EXISTS bookmyvenue_requests;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS venues;
+DROP TABLE IF EXISTS annual_work_seminars;
+DROP TABLE IF EXISTS annual_work_seminars_requests;
+DROP TABLE IF EXISTS supervisors;
+DROP TABLE IF EXISTS labs;
+DROP TABLE IF EXISTS logins;
 
 
 CREATE TABLE IF NOT EXISTS logins (

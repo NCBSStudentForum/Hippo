@@ -43,7 +43,7 @@ if( $msg == "OK" )
          "Your request has been submitted and an email has been sent to you 
          with details.
          " );
-         goToPage( "user.php", 1 );
+         goToPage( "bookmyvenue_browse.php", 1 );
       }
       else
       {

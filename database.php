@@ -331,6 +331,7 @@ function submitRequest( $request )
         echo printErrorSevere( "No venue found in your request" );
         goToPage( "user.php", 5 );
     }
+
     $repeatPat = $request[ 'repeat_pat' ];
 
     if( strlen( $repeatPat ) > 0 )

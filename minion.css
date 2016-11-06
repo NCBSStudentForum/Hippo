@@ -52,6 +52,10 @@ input.long {
     min-width : 300px;
 }
 
+input.user_input_text {
+    min-width : 300px;
+}
+
 button.add_event {
     width : 20px;
     height : 20px;
@@ -226,6 +230,8 @@ table.request tr:nth-of-type( odd ) {
     border-type : dotted;
 }
 
+/* paragraphs */
+
 p {
     font : serif;
 }
@@ -239,6 +245,12 @@ p.warn {
     color : red;
     width : 80% px;
     font-size : large;
+}
+
+p.note_to_user {
+    font-size : small;
+    color : grey;
+    max-width : 80%;
 }
 
 .db_table_fieldname {

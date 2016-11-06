@@ -190,6 +190,15 @@ function goBack( )
     goToPage( $_SERVER['HTTP_REFERER'], 0 );
 }
 
+/**
+    * @brief Construct a repeat pattern out of user queries.
+    *
+    * @param $daypat
+    * @param $weekpat
+    * @param $monthpat
+    *
+    * @return 
+ */
 function constructRepeatPattern( $daypat, $weekpat, $monthpat )
 {
    $weekNum = Array( 
@@ -220,6 +229,8 @@ function constructRepeatPattern( $daypat, $weekpat, $monthpat )
       }
    }
    $weeks = implode( "/", $weeks );
+   if( ! $weeks )
+       $weeks = '0/1/2/3';
 
    $months = Array( );
    if( $monthpat )
@@ -227,10 +238,8 @@ function constructRepeatPattern( $daypat, $weekpat, $monthpat )
          array_push( $months, "$i" );
 
    $months = implode( "/", $months );
-
-   //echo "Got days $days" ;
-   //echo "Got weeks $weeks" ;
-   //echo "Got months $months" ;
+   if( ! $months )
+       $months = '0/1/2/3/4/5';
 
    return "$days,$weeks,$months";
 }

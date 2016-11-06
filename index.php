@@ -35,7 +35,18 @@ file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
 echo "<table class=\"index\">";
-echo '<tr><td style="min-width:75%"></td><td>';
+echo '
+<tr>
+   <td style="min-width:75%">
+
+      This is ALPHA test run. The data you may submit here may be discarded
+      later.  This is essentially to get feedback from community.
+
+      To report issue, please use <a
+         href="https://goo.gl/forms/1yMRtfslqazaMoBY2" target="_black">this form</a>
+   </td>
+   <td>
+   ';
 echo loginForm();
 echo "</td></tr>";
 echo "</table>";

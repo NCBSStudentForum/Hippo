@@ -37,7 +37,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
                 , "uid" => $i['profileidentification'][0]
                 , "email" => $i['mail'][0]
                 , "laboffice" => $laboffice
-                , "joined_on" => $i['profiletenureend'][0]
+                //, "joined_on" => $i['profiletenureend'][0]
             )
         );
     }

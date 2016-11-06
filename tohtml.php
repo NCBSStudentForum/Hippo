@@ -139,20 +139,24 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
         $events = eventsAtThisVenue( $venue, $day, $segTime );
         $requests = requestsForThisVenue( $venue, $day, $segTime );
 
+        // If there is a public event at this time, change the color of all 
+        // button at all venues. Thats clue to user that something else has been 
+        // approved at this time.
+        $is_public_event = '';
+        if( count( publicEvents( $day, $segTime ) ) > 0 )
+            $is_public_event = '_with_public_event"';
+
         if( count( $events ) == 0 && count($requests) == 0)
         {
+
             // Add a form to trigger adding event purpose.
             $html .= "<form method=\"post\" action=\"user_submit_request.php\" >";
             $html .= "<td>";
             if( $segDateTime >= strtotime( 'now' ) )
-            {
-                $html .= "<button class=\"add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
-            }
+                $html .= "<button class=\"add_event$is_public_event\" name=\"add_event\" value=\"$segTime\">+</button>";
             else
-            {
-                $html .= "<button class=\"add_event_past\" name=\"add_event\" value=\"$segTime\" disabled></button>";
+                $html .= "<button class=\"add_event_past$is_public_event\" name=\"add_event\" value=\"$segTime\" disabled></button>";
 
-            }
             $html .= "</td>";
             // And the hidden elements to carry the values to the action page.
             $html .= '<input type="hidden" name="start_time" value="'. $segTime . '">';

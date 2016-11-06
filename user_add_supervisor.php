@@ -31,6 +31,6 @@ echo dbTableToHTMLTable( "supervisors"
 );
 echo "</form>";
 
-echo goBackToPageLink( "user_add_aws.php", "Go back to AWS" );
+echo goBackToPageLink( "user_aws.php", "Go back to AWS" );
 
 ?>

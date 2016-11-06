@@ -28,11 +28,11 @@ if( isset( $_POST['id'] ) )
 
 echo "<h3>Edit or add AWS entry</h3>";
 
-echo printInfo( " 
-    If you can't find your supervior(s) and/or thesis committee member(s) in selection list,
-        please create a entry for them <a href=\"" . appRootDir() . 
-        "/user_add_supervisor.php\">HERE</a>" 
-    );
+echo "<p>
+NOTICE: If you can't find your supervior(s) and/or thesis committee member(s) in selection list,
+please create a entry for them <a href=\"" . appRootDir() . 
+   "/user_add_supervisor.php\">HERE</a>
+</p>";
 
 // Now create an entry
 $supervisors = getSupervisors( );

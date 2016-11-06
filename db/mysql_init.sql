@@ -5,7 +5,9 @@ USE minion;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
 -- DROP TABLE IF EXISTS annual_work_seminars;
+-- DROP TABLE IF EXISTS annual_work_seminars_requests;
 -- DROP TABLE IF EXISTS supervisors;
+-- DROP TABLE IF EXISTS labs;
 -- DROP TABLE IF EXISTS logins;
 
 
@@ -26,12 +28,13 @@ CREATE TABLE IF NOT EXISTS logins (
     , valid_until DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , laboffice VARCHAR(200)
-    , lab  VARCHAR(200) -- Which lab do you work in.
-    , title ENUM( 'FACULTY', 'POSTDOC'
+    -- The faculty fields here must match in faculty table.
+    , title ENUM( 
+        'FACULTY', 'POSTDOC'
         , 'PHD', 'INTPHD', 'MSC'
         , 'JRF', 'SRF'
         , 'NONACADEMIC_STAFF'
-        , 'VISITOR', 'ALUMNI'
+        , 'VISITOR', 'ALUMNI', 'OTHER'
         , 'UNSPECIFIED' 
     ) DEFAULT 'UNSPECIFIED'
     , institute VARCHAR(300)
@@ -44,7 +47,6 @@ create TABLE IF NOT EXISTS labs (
    , faculty_in_charge VARCHAR( 200 ) NOT NULL
    , FOREIGN KEY (faculty_in_charge) REFERENCES logins(login)
    );
-
 
 CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     gid INT NOT NULL
@@ -107,11 +109,12 @@ CREATE TABLE IF NOT EXISTS events (
     );
     
 
---  Create  a table of supervisers.
+--  Create  a table supervisors. They are from outside.
 create TABLE IF NOT EXISTS supervisors (
     email VARCHAR(200) PRIMARY KEY NOT NULL
     , first_name VARCHAR( 200 ) NOT NULL
-    , last_name VARCHAR( 200 ) NOT NULL 
+    , middle_name VARCHAR(200)
+    , last_name VARCHAR( 200 ) 
     , affiliation VARCHAR( 1000 ) NOT NULL
     , url VARCHAR(300)
     );

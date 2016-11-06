@@ -485,7 +485,7 @@ function arrayToSelectList( $name, $options
     if( ! $multiple_select )
     {
         $html .= "<select class=\"$name\" name=\"$name\">";
-        $html .= "<option selected disabled>-- Select one --</option>";
+        $html .= "<option selected value=\"\">-- Select one --</option>";
     }
     else 
     {

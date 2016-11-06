@@ -32,5 +32,18 @@ echo '
 
 echo "</table>";
 
+echo "<h3>Database management </h3>";
+
+echo '
+    <table class="show_user">
+        <tr>
+            <td>Update/Edit list of principal investigators</td>
+            <td>
+                <a href="admin_sync_faculty.php">Synchornize faculty database</a>
+            </td>
+        </tr>
+    </table>
+    ';
+
 ?>
 

@@ -25,7 +25,7 @@ echo "<h3>Edit details </h3>";
 
 echo "<form method=\"post\" action=\"user_info_action.php\">";
 echo dbTableToHTMLTable( 'logins', $userInfo
-      , $editables = Array( 'title', 'institute', 'valid_until' )
+      , $editables = Array( 'title', 'institute', 'valid_until', "laboffice" )
       );
 echo "</form>";
 

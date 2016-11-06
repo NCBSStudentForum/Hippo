@@ -7,7 +7,7 @@ include_once( "check_access_permissions.php" );
 
 try {
     $res = insertIntoTable( 'supervisors'
-        , Array( "email", "first_name", "last_name", "url" )
+        , Array( "email", "first_name", "last_name", "affiliation", "url" )
         , $_POST 
     );
 } catch ( PDOException $e ) {
@@ -23,6 +23,7 @@ if( $res )
 {
     echo printInfo( "Successfully added supervisor to list" );
     goToPage( "user_add_supervisor.php", 1 );
+    exit;
 }
 else
 {

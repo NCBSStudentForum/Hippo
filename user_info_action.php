@@ -3,9 +3,11 @@
 include_once( 'header.php' );
 include_once( 'database.php' );
 
-var_dump( $_POST );
+$res = updateTable( "logins", "login"
+    , Array( "valid_until", "title", "laboffice" )
+    , $_POST 
+);
 
-$res = updateUser( $_POST['login'], $_POST );
 if( $res )
 {
     echo printInfo( "User details have been updated sucessfully" );

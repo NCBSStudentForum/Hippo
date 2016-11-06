@@ -729,44 +729,69 @@ function insertIntoTable( $tablename, $keys, $data )
 {
     global $db;
 
-    $cols = implode( ",", $keys );
     $values = Array( );
-    foreach( $keys as $k )
-        array_push( $values, ":$k" );
 
+    $cols = Array( );
+    foreach( $keys as $k )
+    {
+        // If values for this key in $data is null then don't use it here.
+        if( $data[$k] )
+        {
+            array_push( $cols, "$k" );
+            array_push( $values, ":$k" );
+        }
+            
+    }
+
+    $keysT = implode( ",", $cols );
     $values = implode( ",", $values );
-    $query = "INSERT INTO $tablename ( $cols ) VALUES ( $values )";
+    $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values )";
 
     $stmt = $db->prepare( $query );
-    foreach( $keys as $k )
+    foreach( $cols as $k )
         $stmt->bindValue( ":$k", $data[$k] );
 
     return $stmt->execute( );
 }
 
-function updateAWS( $id, $keys, $data )
+/**
+    * @brief A generic function to update a table.
+    *
+    * @param $tablename Name of table.
+    * @param $wherekey WHERE $wherekey=wherekeyval
+    * @param $keys Keys to be updated.
+    * @param $data An array having all data.
+    *
+    * @return 
+ */
+function updateTable( $tablename, $wherekey, $keys, $data )
 {
     global $db;
+    $query = "UPDATE $tablename SET ";
 
-    $cols = implode( ",", $keys );
+
     $values = Array( );
-    $query = "UPDATE annual_work_seminars SET ";
-    
-    $set = Array( );
+    $cols = Array();
     foreach( $keys as $k )
-        array_push( $set,  "$k=:$k" );
-
-    $query .= implode( ",", $set );
-    $query .= " WHERE id=:id";
+    {
+        // If values for this key in $data is null then don't use it here.
+        if( $data[$k] )
+        {
+            array_push( $cols, $k );
+            array_push( $values, "$k=:$k" );
+        }
+    }
+    $values = implode( ",", $values );
+    $query .= " $values WHERE $wherekey=:$wherekey";
 
     $stmt = $db->prepare( $query );
-    foreach( $keys as $k )
+    foreach( $cols as $k )
         $stmt->bindValue( ":$k", $data[$k] );
 
-    $stmt->bindValue( ":id", $id );
-
+    $stmt->bindValue( ":$wherekey", $data[$wherekey] );
     return $stmt->execute( );
 }
+
 
 /**
     * @brief Get the AWS scheduled in future for this speaker. 

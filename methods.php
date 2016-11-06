@@ -98,7 +98,6 @@ function __get__( $arr, $what, $default = NULL )
 function repeatPatToDays( $pat )
 {
     assert( strlen( $pat ) > 0 );
-    $weekdays = array( "sun", "mon", "tue", "wed", "thu", "fri", "sat" );
     $exploded = explode( ",", $pat);
     $days = $exploded[0];
     // These are absolute indices of days.
@@ -124,13 +123,12 @@ function repeatPatToDays( $pat )
         foreach( $weeks as $w )
             foreach( $days as $d )
             {
-                $day = 28 * intval($m) + 7 * intval($w) + 1 + intval($d);
+                $day = 28 * intval($m) + 7 * intval($w) + intval($d);
                 array_push( $result, $day );
             }
 
-    // Get the base day which is first in the pattern and compute dates from 
-    // this day.
-    $baseDay = strtotime( "next " . $weekdays[$days[0]] );
+    // Get the base day which is Sunday.
+    $baseDay = strtotime( "this Sunday" );
     return daysToDate($result, $baseDay);
 }
 

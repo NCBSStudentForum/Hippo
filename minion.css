@@ -67,6 +67,15 @@ button.add_event {
     min-width : 20px;
 }
 
+button.add_event_with_public_event {
+    width : 20px;
+    height : 20px;
+    border-style : none;
+    background : blue;
+    min-height : 20px;
+    min-width : 20px;
+}
+
 button.add_event_past {
     width : 20px;
     height : 20px;
@@ -85,6 +94,14 @@ button.display_event {
     /*alignment : right;*/
     /*vertical-align: text-top;*/
 }
+
+button.display_event_with_public_event {
+    min-height : 20px;
+    min-width : 20px;
+    border-style : none;
+    background : blue;
+}
+
 
 button.display_request {
     min-height : 20px;

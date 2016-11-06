@@ -142,7 +142,7 @@ function getRequestOfUser( $userid, $status = 'PENDING' )
         GROUP BY gid' );
     $stmt->bindValue( ':user', $userid );
     $stmt->bindValue( ':status', $status );
-    $stmt->execute( );
+    $colorcolorcolorstmt->execute( );
     return fetchEntries( $stmt );
 }
 
@@ -300,15 +300,6 @@ function getEventsOn( $day, $status = 'VALID')
 }
 
 
-//function getEventsOnThisDayAndThisVenue( $date, $venue )
-//{
-    //global $db;
-    //$stmt = $db->prepare( 
-        //"SELECT * FROM events 
-        //WHERE date=:date AND venue=:venue AND status='VALID'" 
-    //);
-//}
-
 /**
     * @brief Sunmit a request for review.
     *
@@ -377,23 +368,6 @@ function submitRequest( $request )
     return (! in_array( FALSE, $results ));
 }
 
-/**
-    * @brief Check if a venue is available or not for the given day and given 
-    * time.
-    *
-    * @param $venue
-    * @param $date
-    * @param $startOn
-    * @param $endOn
-    *
-    * @return 
- */
-//function isVenueAvailable( $venue, $date, $startOn, $endOn )
-//{
-    //$answer = true;
-    //$allEventsOnThisday = getEventsOnThisDayAndThisVenue( $date, $venue );
-    //return $answer;
-//}
 
 function increaseEventHostedByVenueByOne( $venueId )
 {
@@ -520,6 +494,34 @@ function requestsForThisVenue( $venue, $date, $time )
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
     $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get all public events at this time.
+    *
+    * @param $date
+    * @param $time
+    *
+    * @return 
+ */
+function publicEvents( $date, $time )
+{
+    $date = trim( $date );
+    $time = trim( $time );
+
+    global $db;
+    // Database reads in ISO format.
+    $hDate = dbDate( $date );
+    $clockT = date('H:i', $time );
+
+    // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
+    // booked.
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE 
+        date=:date AND start_time <= :time AND end_time > :time' );
+    $stmt->bindValue( ':date', $hDate );
+    $stmt->bindValue( ':time', $clockT );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

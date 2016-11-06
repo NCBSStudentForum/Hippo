@@ -190,13 +190,15 @@ function eventLineHTML( $date, $venueid )
     $venue = getVenueById( $venueid );
     $html = '<table class="eventline">';
     $startDay = '8:00';
-    $dt = 60; // Each segment is 15 minutes wide. 
+    $dt = 60; 
     $html .= "<tr>";
     $html .= "<td><div style=\"width:100px\">$venueid</div></td>";
-    for( $i = 0; $i < 12; $i++ )
+    for( $i = 0; $i < 12; $i++ ) // Day is 12 hours long.
     {
         $stepT = $i * $dt;
-        $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
+        $segTime = strtotime( $startDay ) + 60 * $stepT;
+        // Each hour has 15 minutes segment. FOr each segment hourToHTMLTable 
+        // create a block.
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
     }
     $html .= "</tr>";

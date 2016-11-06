@@ -110,7 +110,10 @@ foreach( $dates as $date )
         ";
     // Now generate eventline for each venue.
     foreach( explode("###", $_POST['venue']) as $venueid )
+    {
+        echo "This date $thisdate and $venueid" ;
         $html .= eventLineHTML( $thisdate, $venueid );
+    }
     echo $html;
 }
 

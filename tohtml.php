@@ -19,9 +19,9 @@ function loginForm()
   $table = "";
   $table .= '<form action="login.php" method="post">';
   $table .= '<table class="login_main">';
-  $table .= '<tr><td><small>NCBS Username</small> </td></tr> ';
+     $table .= '<tr><td><small>NCBS/InStem Username</small> </td></tr> ';
   $table .= '<tr><td><input type="text" name="username" id="username" /> </td></tr>';
-  $table .= '<tr><td><small>NCBS Password</small></td></tr>';
+  $table .= '<tr><td><small>Password</small></td></tr>';
   $table .= '<tr><td> <input type="password"  name="pass" id="pass"> </td></tr>';
   $table .= '<tr><td> <input style="float: right" type="submit" name="response" value="Login" /> </td></tr>';
   $table .= '</table>';

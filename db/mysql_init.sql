@@ -1,33 +1,45 @@
 CREATE DATABASE IF NOT EXISTS minion;
 USE minion;
 
--- DROP TABLE IF EXISTS requests;
+-- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
 DROP TABLE IF EXISTS annual_work_seminars;
 DROP TABLE IF EXISTS supervisors;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS logins;
 
 
-create table users (
+CREATE TABLE IF NOT EXISTS logins (
     id VARCHAR( 200 ) 
     , login VARCHAR(100) 
     , email VARCHAR(200)
     , alternative_email VARCHAR(200)
     , first_name VARCHAR(200)
     , last_name VARCHAR(100)
-    , roles SET( 'ADMIN', 'USER', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN', 'GUEST' ) DEFAULT 'USER'
+    , roles SET( 
+        'USER'
+        , 'ADMIN', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN'
+    ) DEFAULT 'USER'
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     , created_on DATETIME 
     , joined_on DATETIME
     , valid_until DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
-    , institute VARCHAR(200) 
     , laboffice VARCHAR(200)
+    , title ENUM( 'FACULTY', 'POSTDOC'
+        , 'PHD', 'INTPHD', 'MSC'
+        , 'JRF', 'SRF'
+        , 'NONACADEMIC_STAFF'
+        , 'VISITOR', 'ALUMNI'
+        , 'UNSPECIFIED' 
+    ) DEFAULT 'UNSPECIFIED'
+    , institute VARCHAR(300)
     , PRIMARY KEY (login)
 );
 
-CREATE TABLE IF NOT EXISTS requests (
+
+
+CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     gid INT NOT NULL
     , rid INT NOT NULL
     , user VARCHAR(50) NOT NULL
@@ -111,7 +123,7 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , tentatively_scheduled_on DATE 
     , title VARCHAR( 1000 )
     , abstract TEXT
-    , FOREIGN KEY (speaker) REFERENCES users(login)
+    , FOREIGN KEY (speaker) REFERENCES logins(login)
     , FOREIGN KEY (supervisor_1) REFERENCES supervisors(email) 
     , FOREIGN KEY (supervisor_2) REFERENCES supervisors(email) 
     , FOREIGN KEY (tcm_member_1) REFERENCES supervisors(email) 

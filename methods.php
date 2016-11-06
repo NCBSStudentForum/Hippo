@@ -1,6 +1,6 @@
 <?php 
 
-include_once('error.php');
+include_once('display_content.php');
 include_once( 'logger.php' );
 
 date_default_timezone_set('Asia/Kolkata');

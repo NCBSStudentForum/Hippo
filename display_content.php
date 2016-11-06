@@ -23,5 +23,12 @@ function printInfo( $msg )
     return $info;
 }
 
+function alterUser( $msg )
+{
+   $info ="<p class=\"alert_user\">".$msg."</p>";
+   return $info;
+
+}
+
 
 ?>

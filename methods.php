@@ -198,6 +198,9 @@ function constructRepeatPattern( $daypat, $weekpat, $monthpat )
       , "fst" => 0, "snd" => 1, "thrd" => 3, "frth" => 3
    );
 
+   if( ! trim( $daypat ) )
+       return '';
+
    $repeatPat = '';
    $daypat = str_replace( ",", " ", $daypat );
    $weekpat = str_replace( ",", " ", $weekpat );

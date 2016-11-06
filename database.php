@@ -499,14 +499,16 @@ function requestsForThisVenue( $venue, $date, $time )
     // Database reads in ISO format.
     $hDate = dbDate( $date );
     $clockT = date('H:i', $time );
+    //echo "Looking for request at $venue on $hDate at $clockT ";
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
     $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE 
         status=:status 
-        AND date=:date AND venue=:venue 
-        AND start_time <= :time AND end_time > :time' );
-    $stmt->bindValue( ':status', 'pending' );
+        AND date=:date AND venue=:venue
+        AND start_time <= :time AND end_time > :time' 
+    );
+    $stmt->bindValue( ':status', 'PENDING' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
     $stmt->bindValue( ':venue', $venue );

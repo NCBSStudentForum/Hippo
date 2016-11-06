@@ -39,11 +39,15 @@ echo '
 <tr>
    <td style="min-width:75%">
 
-      This is ALPHA test run. The data you may submit here may be discarded
-      later.  This is essentially to get feedback from community.
+      <p class=\"info\">
+      This is ALPHA test run to get feedback from users.
+      <br><br>
 
-      To report issue, please use <a
-         href="https://goo.gl/forms/1yMRtfslqazaMoBY2" target="_black">this form</a>
+      To report issues/bugs or to submit feature request or to comment, please
+      use <a href="https://goo.gl/forms/1yMRtfslqazaMoBY2" target="_black">this
+         form</a>
+
+      </p>
    </td>
    <td>
    ';

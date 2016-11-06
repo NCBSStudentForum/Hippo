@@ -52,7 +52,7 @@ def main( ):
                 fname, mname, lname = name[0], " ".join(name[1:-2]), name[-1]
                 print email
                 with open( "faculty.txt", "a" ) as f:
-                    f.write( "%s,%s,%s,%s,%s" % (fname, mname, lname
+                    f.write( "%s,%s,%s,%s,%s\n" % (fname, mname, lname
                         , email.split('@')[0], email ) )
     
     print( "Wrote faculty names to faculty.txt" )

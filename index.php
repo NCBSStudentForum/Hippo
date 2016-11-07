@@ -35,10 +35,29 @@ file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
 echo "<table class=\"index\">";
-echo '<tr><td style="min-width:75%"></td><td>';
+echo '
+<tr>
+   <td style="min-width:75%">
+
+      <p class=\"info\">
+      This is ALPHA test run to get feedback from users.
+      <br><br>
+
+      To report issues/bugs or to submit feature request or to comment, please
+      use <a href="https://goo.gl/forms/1yMRtfslqazaMoBY2" target="_black">this
+         form</a>
+
+      </p>
+   </td>
+   <td>
+   ';
 echo loginForm();
-echo "</td></tr>";
+echo '</tr>';
 echo "</table>";
+echo "</td></tr>";
+echo '<div class="public_calendar">';
+echo calendarURL( );
+echo '</div>';
 
 //echo embdedCalendar( );
 ?>

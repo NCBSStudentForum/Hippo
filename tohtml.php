@@ -1,7 +1,5 @@
 <?php 
-
 include_once('methods.php');
-
 ?>
 
 <script>
@@ -21,9 +19,9 @@ function loginForm()
   $table = "";
   $table .= '<form action="login.php" method="post">';
   $table .= '<table class="login_main">';
-  $table .= '<tr><td><small>NCBS Username</small> </td></tr> ';
+     $table .= '<tr><td><small>NCBS/InStem Username</small> </td></tr> ';
   $table .= '<tr><td><input type="text" name="username" id="username" /> </td></tr>';
-  $table .= '<tr><td><small>NCBS Password</small></td></tr>';
+  $table .= '<tr><td><small>Password</small></td></tr>';
   $table .= '<tr><td> <input type="password"  name="pass" id="pass"> </td></tr>';
   $table .= '<tr><td> <input style="float: right" type="submit" name="response" value="Login" /> </td></tr>';
   $table .= '</table>';
@@ -137,22 +135,28 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 
         // Check  for events at this venue. If non, then display + (addEvent) 
         // button else show that this timeslot has been booked.
+        
         $events = eventsAtThisVenue( $venue, $day, $segTime );
         $requests = requestsForThisVenue( $venue, $day, $segTime );
-        if( count( $events ) == 0 and count($requests) == 0)
+
+        // If there is a public event at this time, change the color of all 
+        // button at all venues. Thats clue to user that something else has been 
+        // approved at this time.
+        $is_public_event = '';
+        if( count( publicEvents( $day, $segTime ) ) > 0 )
+            $is_public_event = '_with_public_event"';
+
+        if( count( $events ) == 0 && count($requests) == 0)
         {
+
             // Add a form to trigger adding event purpose.
             $html .= "<form method=\"post\" action=\"user_submit_request.php\" >";
             $html .= "<td>";
             if( $segDateTime >= strtotime( 'now' ) )
-            {
-                $html .= "<button class=\"add_event\" name=\"add_event\" value=\"$segTime\">+</button>";
-            }
+                $html .= "<button class=\"add_event$is_public_event\" name=\"add_event\" value=\"$segTime\">+</button>";
             else
-            {
-                $html .= "<button class=\"add_event_past\" name=\"add_event\" value=\"$segTime\" disabled></button>";
+                $html .= "<button class=\"add_event_past$is_public_event\" name=\"add_event\" value=\"$segTime\" disabled></button>";
 
-            }
             $html .= "</td>";
             // And the hidden elements to carry the values to the action page.
             $html .= '<input type="hidden" name="start_time" value="'. $segTime . '">';
@@ -190,13 +194,15 @@ function eventLineHTML( $date, $venueid )
     $venue = getVenueById( $venueid );
     $html = '<table class="eventline">';
     $startDay = '8:00';
-    $dt = 60; // Each segment is 15 minutes wide. 
+    $dt = 60; 
     $html .= "<tr>";
     $html .= "<td><div style=\"width:100px\">$venueid</div></td>";
-    for( $i = 0; $i < 12; $i++ )
+    for( $i = 0; $i < 12; $i++ ) // Day is 12 hours long.
     {
         $stepT = $i * $dt;
-        $segTime = strtotime( "+ $stepT minutes", strtotime($startDay) );
+        $segTime = strtotime( $startDay ) + 60 * $stepT;
+        // Each hour has 15 minutes segment. FOr each segment hourToHTMLTable 
+        // create a block.
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
     }
     $html .= "</tr>";
@@ -205,7 +211,7 @@ function eventLineHTML( $date, $venueid )
 }
 
 // Convert an array to HTML
-function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Array() )
+function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
@@ -213,7 +219,7 @@ function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Ar
         $background = '';
     
     $table = "<table class=\"show_$tablename\" $background ;>";
-    $keys = array_keys( $r );
+    $keys = array_keys( $array );
     $toDisplay = Array();
     $table .= "<tr>";
     foreach( $keys as $k )
@@ -222,7 +228,7 @@ function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Ar
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
-            array_push( $toDisplay, $r[$k] );
+            array_push( $toDisplay, $array[$k] );
         }
 
     // Also set the content as div element which can be formatted using css
@@ -233,45 +239,49 @@ function arrayToTableHTML( $r, $tablename, $background = NULL, $tobefilterd = Ar
     return $table;
 }
 
+// Convert an array to HTML table (vertical)
+function arrayToVerticalTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )
+{
+    if( $background )
+        $background = "style=\"background:$background;\"";
+    else
+        $background = '';
+    
+    $table = "<table class=\"show_$tablename\" $background ;>";
+    $keys = array_keys( $array );
+    $toDisplay = Array();
+    foreach( $keys as $k )
+        if( ! in_array( $k, $tobefilterd ) )
+        {
+            $table .= "<tr>";
+            $kval = prettify( $k );
+            $label = strtoupper( $kval );
+            $table .= "<td class=\"db_table_fieldname\">$label</td>";
+            $table .= "<td><div class=\"cell_content\">$array[$k]</div></td>";
+            $table .= "</tr>";
+        }
+
+    // Also set the content as div element which can be formatted using css
+    $table .= "</table>";
+    return $table;
+}
+
+
 function requestToHTML( $request )
 {
     return arrayToTableHTML( $request, "request" );
 }
 
-// Welcome user div.
 function userHTML( )
 {
-
-    $roles = explode( ",", getRoles( $_SESSION['user'] ));
-
-    $html = '<div class="user">';
-    $html .= '<table class="show_user">';
-    $html .= '<tr><th>Welcome <font color="blue">' 
-        . $_SESSION['user'] . '</font></th>
-        <th> <a href="logout.php">LOGOUT</a> </th>
-        </tr>';
-    $html .= '<tr><td>
-            <a href="user_show_requests.php">My requests</a>
-        </td><td>
-            <a href="user_show_events.php">My events</a></td>
-        </td></tr><tr><td>
-            <a href="user_jc.php">My JC</a>
-        </td><td>
-            <a href="user_aws.php">My AWS</a>
-            </td></tr>';
-
-    $html .= "<tr>";
-    if( in_array( "ADMIN", $roles ) )
-        $html .= '<td> <a href="admin.php">Admin</a></td> </td>';
-    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
-        $html .= '<td> <a href="bookmyvenue_admin.php">BookMyVenueAdmin</a></td> </td>';
-
+    $html = "<table class=\"user_float\">";
+    $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
+    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/user.php\">What can I do, Minion?</a>";
+    $html .= '</td><td><a href="logout.php">Logout</a></td>';
     $html .= "</tr>";
     $html .= "</table>";
-    $html .= '</div>';
     return $html;
 }
-
 /*
 function venuesToCheckButtons( $venues )
 {
@@ -341,7 +351,6 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     *
     * @return 
  */
-
 function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array() )
 {
     $html = "<table class=\"editable_$tablename\">";
@@ -356,7 +365,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
         if( in_array($keyName , $editables ) )
             $readonly = False;
 
-        $match = Array( );
         // Add row to table
         $html .= "<tr><td class=\"db_table_fieldname\"> " . 
             strtoupper(prettify( $keyName )) . "</td>";
@@ -365,6 +373,8 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
         $val = "<input class=\"editable\"
             name=\"$keyName\" type=\"text\" value=\"$default\" />";
 
+        // Genearte a select list of ENUM type class.
+        $match = Array( );
         if( preg_match( "/^enum\((.*)\)$/" , $ctype, $match ) )
         {
             $val = "<select name=\"$keyName\">";
@@ -379,10 +389,33 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
 
             $val .= "</select>";
         }
+        // TODO generate a multiple select for SET typeclass.
+        else if( preg_match( "/^set\((.*)\)$/", $ctype, $match ) )
+        {
+            $val = "<select multiple name=\"" . $keyName . '[]' . "\">";
+            foreach( explode(",", $match[1] ) as $v )
+            {
+                $selected = '';
+                $v = str_replace( "'", "", $v );
+                // If it is set, there might be multiple values here. So check
+                // in all of them.
+                if( in_array($v, explode(',', $default) ) )
+                    $selected = 'selected';
+                $val .= "<option value=\"$v\" $selected> $v </option>";
+            }
+            $val .= "</select>";
+        }
         else if( strcasecmp( $ctype, 'text' ) == 0 )
         {
-            $val = "<textarea class=\"editable\" name=\"$keyName\" >$default </textarea>";
+            $val = "<textarea class=\"editable\" id=\"ckeditor\" name=\"$keyName\" >$default </textarea>";
+            $val .= "<script> CKEDITOR.replace('ckeditor') </script>";
         }
+        else if( strcasecmp( $ctype, 'date' ) == 0 )
+           $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";
+        else if( strcasecmp( $ctype, 'datetime' ) == 0 )
+           $val = "<input class=\"datetimepicker\" name=\"$keyName\" value=\"$default\" />";
+        else if( strcasecmp( $ctype, 'time' ) == 0 )
+           $val = "<input id=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
 
         // When the value is readonly. Just send the value as hidden input and 
         // display the default value.
@@ -415,7 +448,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
  */
 function eventToEditableTableHTML( $event, $editables = Array( ) )
 {
-
     $html = "<table class=\"request_show_edit\">";
     foreach( $event as $key => $value )
     {
@@ -437,6 +469,52 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
         $html .= "<tr> <td>$key</td><td> $editHTML </td> </tr>";
     }
     $html .= "</table>";
+    return $html;
+}
+
+/**
+    * @brief Convert a array into select list.
+    *
+    * @param $name Name of the select list.
+    * @param $options Options to populate.
+    * @param $display Search fo text for each option here if not then prettify 
+    * the option and show to user.
+    * @param $multiple_select If true then allow user to select multiple 
+    * entries.
+    * @param $selected If not '' then select this one by default.
+    *
+    * @return HTML <select> 
+ */
+function arrayToSelectList( $name, $options
+    , $display = Array(), $multiple_select = FALSE 
+    , $selected = ''
+)
+{
+    $html = '';
+    if( ! $multiple_select )
+    {
+        $html .= "<select class=\"$name\" name=\"$name\">";
+        $html .= "<option selected value=\"\">-- Select one --</option>";
+    }
+    else 
+    {
+        $html .= "<select class=\"$name\" multiple size=\"4\" name=\"$name\">";
+        $html .= "<option selected disabled>-- Select multiple --</option>";
+    }
+
+    foreach( $options as $option )
+    {
+        $selectText = "";
+
+        if( $option == $selected )
+            $selectText = " selected";
+
+        $html .= "<option value=\"$option\" $selectText >" 
+            .  __get__( $display, $option, prettify( $option ) ) 
+            . "</option>";
+    }
+
+    $html .= "</select>";
     return $html;
 }
 

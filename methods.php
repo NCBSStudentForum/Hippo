@@ -1,6 +1,6 @@
 <?php 
 
-include_once('error.php');
+include_once('display_content.php');
 include_once( 'logger.php' );
 
 date_default_timezone_set('Asia/Kolkata');
@@ -64,12 +64,17 @@ function generateRandomString($length = 10)
     return $randomString;
 }
 
-/* Go to a page */
+function appRootDir( )
+{
+   return  dirname( 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+}
+
+/* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
   echo printWarning("... Going to page $page in $delay seconds ...");
-  $conf = $_SESSION['conf'];
-  $url = $conf['global']['base_url']."/".$page;
+  $baseurl = appRootDir( );
+  $url = "$baseurl/$page";
   header("Refresh: $delay, url=$url");
 }
 
@@ -93,7 +98,6 @@ function __get__( $arr, $what, $default = NULL )
 function repeatPatToDays( $pat )
 {
     assert( strlen( $pat ) > 0 );
-    $weekdays = array( "sun", "mon", "tue", "wed", "thu", "fri", "sat" );
     $exploded = explode( ",", $pat);
     $days = $exploded[0];
     // These are absolute indices of days.
@@ -119,13 +123,12 @@ function repeatPatToDays( $pat )
         foreach( $weeks as $w )
             foreach( $days as $d )
             {
-                $day = 28 * intval($m) + 7 * intval($w) + 1 + intval($d);
+                $day = 28 * intval($m) + 7 * intval($w) + intval($d);
                 array_push( $result, $day );
             }
 
-    // Get the base day which is first in the pattern and compute dates from 
-    // this day.
-    $baseDay = strtotime( "next " . $weekdays[$days[0]] );
+    // Get the base day which is Sunday.
+    $baseDay = strtotime( "this Sunday" );
     return daysToDate($result, $baseDay);
 }
 
@@ -177,6 +180,66 @@ function getNumDaysInBetween( $startDate, $endDate )
     $start = new DateTime( $startDate );
     $end = new DateTime( $endDate );
     return intval($start->diff( $end )->format( "%R%a" ));
+}
+
+// Go back to calling page.
+function goBack( )
+{
+    goToPage( $_SERVER['HTTP_REFERER'], 0 );
+}
+
+/**
+    * @brief Construct a repeat pattern out of user queries.
+    *
+    * @param $daypat
+    * @param $weekpat
+    * @param $monthpat
+    *
+    * @return 
+ */
+function constructRepeatPattern( $daypat, $weekpat, $monthpat )
+{
+   $weekNum = Array( 
+      "first" => 0, "second" => 1, "third" => 2, "fourth" => 3 
+      , "1st" => 0, "2nd" => 1, "3rd" => 3, "4th" => 3
+      , "fst" => 0, "snd" => 1, "thrd" => 3, "frth" => 3
+   );
+
+   if( ! trim( $daypat ) )
+       return '';
+
+   $repeatPat = '';
+   $daypat = str_replace( ",", " ", $daypat );
+   $weekpat = str_replace( ",", " ", $weekpat );
+
+   $days = array_map( function( $day ) {
+      return date('w', strtotime( $day ) ); }, explode( " ", $daypat )
+   );
+   $days = implode( "/", $days );
+
+   $weeks = Array();
+   if( $weekpat )
+   {
+      foreach( explode(" ", $weekpat ) as $w )
+      {
+         if( array_key_exists( $w, $weekNum ) )
+            array_push( $weeks, $weekNum[$w] );
+      }
+   }
+   $weeks = implode( "/", $weeks );
+   if( ! $weeks )
+       $weeks = '0/1/2/3';
+
+   $months = Array( );
+   if( $monthpat )
+      for ($i = 0; $i < intval( $monthpat ); $i++) 
+         array_push( $months, "$i" );
+
+   $months = implode( "/", $months );
+   if( ! $months )
+       $months = '0/1/2/3/4/5';
+
+   return "$days,$weeks,$months";
 }
 
 ?>

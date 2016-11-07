@@ -142,7 +142,7 @@ function getRequestOfUser( $userid, $status = 'PENDING' )
         GROUP BY gid' );
     $stmt->bindValue( ':user', $userid );
     $stmt->bindValue( ':status', $status );
-    $colorcolorcolorstmt->execute( );
+    $stmt->execute( );
     return fetchEntries( $stmt );
 }
 

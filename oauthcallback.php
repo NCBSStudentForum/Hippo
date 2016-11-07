@@ -1,45 +1,40 @@
 <?php 
 
-require_once 'header.php';
-require_once './vendor/autoload.php';
-require_once './template/google-api/base.php';
+include_once 'header.php';
+include_once 'methods.php';
+include_once 'tohtml.php';
 
+require_once './calendar/NCBSCalendar.php';
 
-var_dump( $_SESSION['gcal_token'] );
+echo userHTML( );
 
-if( ! array_key_exists( 'gcal_token', $_SESSION ) )
+// When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 
+// sends us a GET response. Use this token to process all other queries.
+
+$calendar = new NCBSCalendar( './oauth-credentials.json' );
+$client = $calendar->client;
+$token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+$client->setAccessToken($token);
+
+// Now get the list of calendars.
+
+$service = new Google_Service_Calendar( $client );
+$caledars = $service->calendarList->listCalendarList( );
+//foreach( $caledars as $calendar )
+//   print_r( $calendar );
+
+$calid = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
+$events = $service->events->listEvents( $calid );
+foreach( $events as $event )
 {
-    $client = new Google_Client();
-
-    // Authenticate the client now.
-    if (!$oauth_credentials = getOAuthCredentialsFile()) {
-        echo missingOAuth2CredentialsWarning();
-        return;
-    }
-
-    $client->setAuthConfig($oauth_credentials);
-    //$redirectURI = 'http://ghevar.ncbs.res.in/minion/admin.php';
-    //$client->setRedirectURI( $redirectURI );
-    $client->setScopes(
-        'https://www.googleapis.com/auth/calendar'
-    );
-
-
-    if (isset($_GET['code'])) {
-        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-        $client->setAccessToken($token);
-        // store in the session also
-        $_SESSION['gcal_token'] = $token;
-        goToPage( "admin.php", 0 );
-        exit( 0 );
-    }
-
-    echo "Redirecting for authentication";
-    $authUrl = $client->createAuthUrl();
-    header( 'Location: ' . $authUrl, False );
-    exit( 0 );
+    //var_dump( $event );
+    //print_r( $event );
+    echo $event['summary'];
+    echo "<br>==========================<br>";
 }
 
-goToPage( "admin.php", 0 );
+exit;
+
+//goToPage( "admin.php", 0 );
 
 ?>

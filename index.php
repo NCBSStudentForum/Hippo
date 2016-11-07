@@ -52,8 +52,12 @@ echo '
    <td>
    ';
 echo loginForm();
-echo "</td></tr>";
+echo '</tr>';
 echo "</table>";
+echo "</td></tr>";
+echo '<div class="public_calendar">';
+echo calendarURL( );
+echo '</div>';
 
 //echo embdedCalendar( );
 ?>

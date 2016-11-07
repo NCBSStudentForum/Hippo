@@ -2,7 +2,7 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "database.php" );
-include_once( "validate_privileges.php" );
+include_once( "check_access_permissions.php" );
 include_once( "tohtml.php" );
 
 echo userHTML( );
@@ -58,55 +58,60 @@ else
 
 $startTime = __get__( $_POST, 'start_time', '' );
 $calendarTime = date( 'H:i', $startTime );
+$defaultEndTime = date( 'H:i', strtotime( $calendarTime ) + 60*60   );
 $date = __get__( $_POST, 'date', '' );
 
 ?>
 
 <table class="input" >
-    <!-- hide the day -->
-    <input type="hidden" name="date" value="<?php echo $date ?>" />
-    <tr > <td>Title <small>A very short description for calendar</small></td>
-        <td> <input name="title" type="text" value="" > </td>
-    </tr>
-    <tr> <td style="width:200px">Description <small> Event details. 
-    Its a good idea to copy/paste here. </small>
-</td>
-        <td> <textarea name="description" cols="40" rows="5" > </textarea> </td>
-    </tr>
-    <tr> <td>Venue</td>
-    <td> <?php echo $venueHTML ?> </td>
-    </tr>
-    <tr> <td>Starts on <br>
-    </td>
-    <td> <input type="time" name="start_time" 
-            value="<?php echo $calendarTime ?>" /> </td>
-    </tr>
-    <tr> <td>Ends on <br>
-    </td>
-        <td> <input type="time" name="end_time" value="" /> </td>
-    </tr>
-    <tr> <td>Date <br>
-    </td>
-        <td> 
-        <input type="date" name="date" value=<?php echo $dbDate ?> readonly />
-        </td>
-    </tr>
-    <tr>
-        <td>Repeat pattern <br>
-        <small>
-        TODO: Details here.
-        <br> Valid for maximum of 6 months
-        </small>
-        </td> 
-        <td> 
-            <input type="text" name="repeat_pat" id="repeat" value="" /> 
-        </td>
-    </tr>
+   <!-- hide the day -->
+   <input type="hidden" name="date" value="<?php echo $date ?>" />
+   <tr > <td>Title <p class="note_to_user">A very short description (for
+         calendar )</p></td>
+      <td> <input class="user_input_text" name="title" type="text" value="" > </td>
+   </tr>
+   <tr> <td>Description
+      </td>
+      <td> 
+         <textarea id="event_description" name="description" cols="40" rows="5" > </textarea> 
+         <script>CKEDITOR.replace( "event_description" ) </script>
+      </td>
+   </tr>
+   <tr> <td>Venue</td>
+      <td> <?php echo $venueHTML ?> </td>
+   </tr>
+   <tr> <td>Starts on <br>
+      </td>
+      <td> <input class="timepicker" type="time" name="start_time" 
+         value="<?php echo $calendarTime ?>" readonly /> </td>
+   </tr>
+   <tr> <td>Ends on <br>
+      </td>
+      <td> <input class="timepicker" type="time" name="end_time" 
+         value="<?php echo $defaultEndTime ?>" /> </td>
+   </tr>
+   <tr> <td>Date <br>
+      </td>
+      <td> 
+         <input class="datepicker" type="date" name="date" value=<?php echo $dbDate ?> readonly />
+      </td>
+   </tr>
+   <tr>
+      <td>Repeat pattern <br>
+         <p class="note_to_user">
+            TODO: Details here.
+            <br> Valid for maximum of 6 months
+         </p>
+      </td> 
+      <td> 
+         On <input type="text" name="day_pattern" placeholder="Sun,Mon"/ >
+         every <input type="text" name="week_pattern" placeholder="first,second"/>
+         week for <input type="text" name="month_pattern" placeholder="6" /> months 
+      </td>
+   </tr>
 </table>
 <br>
 
 <button name="response" class="submit" type="submit" value="Submit">Submit</button>
-<div style="float:left">
 <?php echo goBackToPageLink( "user.php", "Go back" ); ?>
-
 </form>

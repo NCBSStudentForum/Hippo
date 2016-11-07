@@ -2,6 +2,14 @@ div.header {
     max-width : 800px;
 }
 
+div.bottom {
+    position : fixed;
+    bottom : 0;
+    font-size : xx-small;
+    padding-top : 5px;
+    font-color : red;
+}
+
 
 table.user_float {
     position : fixed;

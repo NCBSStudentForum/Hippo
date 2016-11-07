@@ -18,31 +18,31 @@ $html = '<table class="show_user">';
    $html .= '
    <tr>
       <td>
-         Your can see your details and edit (most) of them. Details fetched from NCBS 
-         LDAP server are not editable. 
+         See and edit (most of) your details 
+        <small> Details fetched from NCBS LDAP server are not editable </small>
       </td>
       <td> 
          <a href="user_info.php">Show/Edit my details</a> 
       </td>
    </tr>
    <tr>
-      <td>Browse the available venues and create a booking request</td>
-      <td> <a href="bookmyvenue_browse.php">Create a booking request</a> </td>
+      <td>Browse available venues and submit a booking request</td>
+      <td> <a href="bookmyvenue_browse.php">Book my venue</a> </td>
    </tr>
    <tr>
       <td>You can see your unapproved requests and modify their description and cancel
          them if neccessary.
       </td>
-      <td> <a href="user_show_requests.php">Show/Edit my requests</a> </td>
+      <td> <a href="user_show_requests.php">Show/Edit BookMyVenue</a> </td>
    </tr>
    <tr>
       <td>These booking requests have been approved (we call them events). You can 
          still edit their description (and also cancel them). </td>
-      <td> <a href="user_show_events.php">Show/Edit my events</a></td>
+      <td> <a href="user_show_events.php">Show/Edit (my) upcoming events</a></td>
    </tr>
    <tr>
       <td>TODO: Journal clubs.</td>
-      <td> <a href="user_jc.php">My JC</a> </td>
+      <td> <a href="user_jc.php">My Journal Club</a> </td>
    </tr>
    <tr>
       <td>Alpha: Annual Work Seminal.</td>

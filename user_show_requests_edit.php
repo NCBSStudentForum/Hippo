@@ -22,7 +22,7 @@ if( strtolower($_POST['response']) == 'edit' )
     // modified accordingly.
     $request = $requests[0];
     echo "<form method=\"post\" action=\"user_show_requests_edit_submit.php\">";
-    echo dbTableToHTMLTable( "requests", $request, $editable );
+    echo dbTableToHTMLTable( "bookmyvenue_requests", $request, $editable );
     //echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\" />";
     //echo "<button class=\"submit\" name=\"response\" value=\"submit\">Submit</button>";
     echo "</form>";

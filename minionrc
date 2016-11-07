@@ -4,8 +4,8 @@ ldap_port = 389
 log_file = logs/user.log
 
 [mysql]
-; host = ghevar.ncbs.res.in
-host = chamcham.ncbs.res.in
+host = ghevar.ncbs.res.in
+; host = chamcham.ncbs.res.in
 user = minion
 ; Use the default port
 port = -1

@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     , user VARCHAR(50) NOT NULL
     , title VARCHAR(100) NOT NULL
     , description TEXT 
-    , venue VARCHAR(20) NOT NULL
+    , venue VARCHAR(80) NOT NULL
     , date DATE NOT NULL
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL

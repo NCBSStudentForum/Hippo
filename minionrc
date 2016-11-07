@@ -1,13 +1,11 @@
 [global]
 ldap_ip = ldap.ncbs.res.in
 ldap_port = 389
-; base_url = http://ghevar.ncbs.res.in/minion
-base_url = http://localhost/minion
 log_file = logs/user.log
 
 [mysql]
 ; host = ghevar.ncbs.res.in
-host = localhost
+host = chamcham.ncbs.res.in
 user = minion
 ; Use the default port
 port = -1

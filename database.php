@@ -659,6 +659,20 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 }
 
 /**
+    * @brief Get all logins.
+    *
+    * @return 
+ */
+function getLogins( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt->execute( );
+    return  fetchEntries( $stmt );
+}
+
+
+/**
     * @brief Get user info from database.
     *
     * @param $user Login id of user.

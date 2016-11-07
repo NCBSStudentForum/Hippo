@@ -351,7 +351,6 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     *
     * @return 
  */
-
 function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array() )
 {
     $html = "<table class=\"editable_$tablename\">";
@@ -393,12 +392,14 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
         // TODO generate a multiple select for SET typeclass.
         else if( preg_match( "/^set\((.*)\)$/", $ctype, $match ) )
         {
-            $val = "<select multiple name=\"$keyName\">";
+            $val = "<select multiple name=\"" . $keyName . '[]' . "\">";
             foreach( explode(",", $match[1] ) as $v )
             {
                 $selected = '';
                 $v = str_replace( "'", "", $v );
-                if( $v == $default )
+                // If it is set, there might be multiple values here. So check
+                // in all of them.
+                if( in_array($v, explode(',', $default) ) )
                     $selected = 'selected';
                 $val .= "<option value=\"$v\" $selected> $v </option>";
             }

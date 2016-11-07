@@ -6,6 +6,10 @@ if(!isset($_SESSION))
 // If this is not a index.php page. check if access is valid. 
 if( ! $_SERVER['PHP_SELF'] == 'index.php' ) 
     include_once( 'is_valid_access.php' );
+
+error_reporting( E_ALL );
+ini_set( "display_errors", 1 );
+
 ?>
 
 <!DOCTYPE html>

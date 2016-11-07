@@ -1,6 +1,4 @@
 <?php
-
-
 /**
 * @brief Ping a host for given time.
 *
@@ -19,10 +17,6 @@ function ping($host, $port, $timeout)
   return round((($tA - $tB) * 1000), 0)." ms"; 
 }
 
-
-echo ping( "google.com", 80, 10 );
-exit;
- 
 /* Base code provided by Sarah Bailey.
 Case Western Reserve University, Cleveland OH.
 Please do not email me for support. Post a comment instead.
@@ -40,7 +34,6 @@ ini_set("display_errors", 1);
 include(__DIR__ . '/../vendor/autoload.php');
  
 
- 
 //TELL GOOGLE WHAT WE'RE DOING
 $client = new Google_Client();
 $client->setApplicationName("NCBS Minion"); //DON'T THINK THIS MATTERS

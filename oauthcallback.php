@@ -12,20 +12,10 @@ echo userHTML( );
 // sends us a GET response. Use this token to process all other queries.
 
 $calendar = new NCBSCalendar( './oauth-credentials.json' );
-$client = $calendar->client;
-$token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-$client->setAccessToken($token);
+$calendar->setAccessToken( $_GET['code'] );
 
-// Now get the list of calendars.
-
-$service = new Google_Service_Calendar( $client );
-$caledars = $service->calendarList->listCalendarList( );
-//foreach( $caledars as $calendar )
-//   print_r( $calendar );
-
-$calid = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
-$events = $service->events->listEvents( $calid );
-foreach( $events as $event )
+// Now get all events
+foreach( $calendar->getEvents() as $event )
 {
     //var_dump( $event );
     //print_r( $event );

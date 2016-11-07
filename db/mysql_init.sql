@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
     , status ENUM ( 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED' ) DEFAULT 'PENDING'
+    , is_public_event ENUM( "YES", "NO" ) DEFAULT "NO"
     , modified_by VARCHAR(50) -- Who modified the request last time.
     , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
     , PRIMARY KEY( gid, rid )
@@ -92,8 +93,10 @@ CREATE TABLE IF NOT EXISTS events (
     , eid INT NOT NULL
     -- If yes, this entry will be put on google calendar.
     , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO' 
-    , class ENUM( 'LABMEET', 'LECTURE', 'MEETING', 'SEMINAR', 'TALK'
+    , class ENUM( 'LABMEET', 'LECTURE', 'MEETING'
+        , 'SEMINAR', 'TALK', 'SCHOOL'
         , 'CONFERENCE', 'CULTURAL', 'AWS'
+        , 'SPORTS'
         , 'UNKNOWN'
         ) DEFAULT 'UNKNOWN' 
     , short_description VARCHAR(200) NOT NULL

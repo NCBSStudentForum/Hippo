@@ -23,6 +23,19 @@ foreach( $calendar->getEvents() as $event )
     echo "<br>==========================<br>";
 }
 
+echo "Testing creating an event " ;
+$calendar->createEvent( 
+    array( 
+        "title"  => "A dummy event" 
+        , "location" => "NCBS Bangalore"
+        , "start" =>  array(  'dateTime' => "2016-11-08T10:25:00", 'timeZone' => 'Asia/Kolkata' ) 
+        , "end" =>  array(  'dateTime' => "2016-11-08T11:25:00", 'timeZone' => 'Asia/Kolkata' ) 
+
+    )
+    );
+
+
+
 exit;
 
 //goToPage( "admin.php", 0 );

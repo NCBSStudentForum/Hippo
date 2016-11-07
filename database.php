@@ -3,14 +3,13 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( 'ldap.php' );
-include_once( "error.php" );
 
 
 class BMVPDO extends PDO 
 {
     function __construct( $host = 'ghevar.ncbs.res.in'  )
     {
-        $conf = $_SESSION['conf'];
+        $conf = parse_ini_file( __DIR__ . '/minionrc', $process_section = TRUE );
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         $host = $conf['mysql']['host'];
         $port = $conf['mysql']['port'];
@@ -93,7 +92,7 @@ function getPendingRequestsGroupedByGID( )
 function getRequestsGroupedByGID( $status  )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE status=:status GROUP BY gid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE status=:status GROUP BY gid' );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -138,7 +137,7 @@ function getEventsById( $gid, $eid )
 function getRequestOfUser( $userid, $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE user=:user 
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE user=:user 
         AND status=:status AND date >= NOW() - INTERVAL 2 DAY
         GROUP BY gid' );
     $stmt->bindValue( ':user', $userid );
@@ -164,11 +163,11 @@ function getEventsOfUser( $userid, $from = '-1 days', $status = 'VALID' )
 }
 
 // Fetch entries from sqlite responses
-function fetchEntries( $res )
+function fetchEntries( $res, $how = PDO::FETCH_ASSOC )
 {
     $array = Array( );
     if( $res ) {
-        while( $row = $res->fetch( PDO::FETCH_ASSOC ) )
+        while( $row = $res->fetch( $how ) )
             array_push( $array, $row );
     }
     return $array;
@@ -178,7 +177,7 @@ function fetchEntries( $res )
 function getRequestById( $gid, $rid )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND rid=:rid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND rid=:rid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':rid', $rid );
     $stmt->execute( );
@@ -189,7 +188,7 @@ function getRequestById( $gid, $rid )
 function getRequestByGroupId( $gid )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -199,7 +198,7 @@ function getRequestByGroupId( $gid )
 function getRequestByGroupIdAndStatus( $gid, $status )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE gid=:gid AND status=:status' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND status=:status' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
@@ -217,7 +216,7 @@ function getRequestByGroupIdAndStatus( $gid, $status )
 function changeRequestStatus( $gid, $rid, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE requests SET 
+    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET 
         status=:status WHERE gid=:gid AND rid=:rid"
     );
     $stmt->bindValue( ':status', $status );
@@ -237,7 +236,7 @@ function changeRequestStatus( $gid, $rid, $status )
 function changeStatusOfRequests( $gid, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE requests SET status=:status WHERE gid=:gid" );
+    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET status=:status WHERE gid=:gid" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
     return $stmt->execute( );
@@ -301,15 +300,6 @@ function getEventsOn( $day, $status = 'VALID')
 }
 
 
-//function getEventsOnThisDayAndThisVenue( $date, $venue )
-//{
-    //global $db;
-    //$stmt = $db->prepare( 
-        //"SELECT * FROM events 
-        //WHERE date=:date AND venue=:venue AND status='VALID'" 
-    //);
-//}
-
 /**
     * @brief Sunmit a request for review.
     *
@@ -331,6 +321,7 @@ function submitRequest( $request )
         echo printErrorSevere( "No venue found in your request" );
         goToPage( "user.php", 5 );
     }
+
     $repeatPat = $request[ 'repeat_pat' ];
 
     if( strlen( $repeatPat ) > 0 )
@@ -340,13 +331,13 @@ function submitRequest( $request )
 
     $rid = 0;
     $results = Array( );
-    $res = $db->query( 'SELECT MAX(gid) AS gid FROM requests' );
+    $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
     $gid = intval($res->fetch( PDO::FETCH_ASSOC )['gid']) + 1;
     foreach( $days as $day ) 
     {
         $rid += 1;
         $query = $db->prepare( 
-            "INSERT INTO requests ( 
+            "INSERT INTO bookmyvenue_requests ( 
                 gid, rid, user, venue
                 , title, description
                 , date, start_time, end_time
@@ -377,23 +368,6 @@ function submitRequest( $request )
     return (! in_array( FALSE, $results ));
 }
 
-/**
-    * @brief Check if a venue is available or not for the given day and given 
-    * time.
-    *
-    * @param $venue
-    * @param $date
-    * @param $startOn
-    * @param $endOn
-    *
-    * @return 
- */
-//function isVenueAvailable( $venue, $date, $startOn, $endOn )
-//{
-    //$answer = true;
-    //$allEventsOnThisday = getEventsOnThisDayAndThisVenue( $date, $venue );
-    //return $answer;
-//}
 
 function increaseEventHostedByVenueByOne( $venueId )
 {
@@ -476,6 +450,10 @@ function changeIfEventIsPublic( $gid, $eid, $status )
 // Fetch all events at given venue and given day-time.
 function eventsAtThisVenue( $venue, $date, $time )
 {
+    $venue = trim( $venue );
+    $date = trim( $date );
+    $time = trim( $time );
+
     global $db;
     // Database reads in ISO format.
     $hDate = dbDate( $date );
@@ -495,6 +473,44 @@ function eventsAtThisVenue( $venue, $date, $time )
 // Fetch all requests for given venue and given day-time.
 function requestsForThisVenue( $venue, $date, $time )
 {
+    $venue = trim( $venue );
+    $date = trim( $date );
+    $time = trim( $time );
+
+    global $db;
+    // Database reads in ISO format.
+    $hDate = dbDate( $date );
+    $clockT = date('H:i', $time );
+    //echo "Looking for request at $venue on $hDate at $clockT ";
+
+    // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
+    // booked.
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE 
+        status=:status 
+        AND date=:date AND venue=:venue
+        AND start_time <= :time AND end_time > :time' 
+    );
+    $stmt->bindValue( ':status', 'PENDING' );
+    $stmt->bindValue( ':date', $hDate );
+    $stmt->bindValue( ':time', $clockT );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get all public events at this time.
+    *
+    * @param $date
+    * @param $time
+    *
+    * @return 
+ */
+function publicEvents( $date, $time )
+{
+    $date = trim( $date );
+    $time = trim( $time );
+
     global $db;
     // Database reads in ISO format.
     $hDate = dbDate( $date );
@@ -502,14 +518,10 @@ function requestsForThisVenue( $venue, $date, $time )
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM requests WHERE 
-        status=:status 
-        AND date=:date AND venue=:venue 
-        AND start_time <= :time AND end_time > :time' );
-    $stmt->bindValue( ':status', 'pending' );
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE 
+        date=:date AND start_time <= :time AND end_time > :time' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
-    $stmt->bindValue( ':venue', $venue );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -558,7 +570,7 @@ function updateRequestGroup( $gid, $options )
     }
 
     $placeholder = implode( ",", $placeholder );
-    $query = "UPDATE requests SET $placeholder WHERE gid=:gid";
+    $query = "UPDATE bookmyvenue_requests SET $placeholder WHERE gid=:gid";
 
     $stmt = $db->prepare( $query );
 
@@ -615,26 +627,235 @@ function updateEvent( $gid, $eid, $options )
     return $stmt->execute( );
 }
 
-// Create user if does not exists.
-function createUserOrUpdateLogin( $userid )
+// Create user if does not exists and fill information form LDAP server.
+function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 {
     global $db;
-    $stmt = $db->prepare( "INSERT IGNORE INTO users (id, created_on) 
-        VALUES (:id, NOW()) " );
-    $stmt->bindValue( ':id', $userid );
+    $stmt = $db->prepare( 
+       "INSERT IGNORE INTO logins
+        (id, login, first_name, last_name, email, created_on, institute, laboffice) 
+            VALUES 
+            (:id, :login, :fname, :lname, :email,  'NOW()', :institute, :laboffice)" 
+        );
+
+    $institute = NULL;
+    if( count( $ldapInfo ) > 0 ) 
+        $institute = 'NCBS Bangalore';
+
+    //var_dump( $ldapInfo );
+
+    $stmt->bindValue( ':login', $userid );
+    $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));
+    $stmt->bindValue( ':fname', __get__( $ldapInfo, "fname", NULL ));
+    $stmt->bindValue( ':lname', __get__( $ldapInfo, "lname", NULL ));
+    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', NULL ));
+    $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', NULL ));
+    $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );
-    $stmt = $db->query( "UPDATE users SET last_login=NOW()" );
+
+    $stmt = $db->prepare( "UPDATE logins SET last_login=NOW() WHERE login=:login" );
+    $stmt->bindValue( ':login', $userid );
     return $stmt->execute( );
+}
+
+/**
+    * @brief Get all logins.
+    *
+    * @return 
+ */
+function getLogins( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt->execute( );
+    return  fetchEntries( $stmt );
+}
+
+function getLoginIds( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt->execute( );
+    $results =  fetchEntries( $stmt );
+    $logins = Array();
+    foreach( $results as $key => $val )
+        array_push( $logins, $val['login'] );
+    return $logins;
+}
+
+/**
+    * @brief Get user info from database.
+    *
+    * @param $user Login id of user.
+    *
+    * @return Array.
+ */
+function getUserInfo( $user )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM logins WHERE login=:login" );
+    $stmt->bindValue( ":login", $user );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 function getRoles( $user )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT roles FROM users WHERE id=:id' );
-    $stmt->bindValue( ':id', $user );
+    $stmt = $db->prepare( 'SELECT roles FROM logins WHERE login=:login' );
+    $stmt->bindValue( ':login', $user );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
-    return $res['roles'];
+    return explode( ",", $res['roles'] );
+}
+
+function getMyAws( $user )
+{
+    global $db;
+
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker ORDER BY date DESC "; 
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $user );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
+function getMyAwsOn( $user, $date )
+{
+    global $db;
+
+    $query = "SELECT * FROM annual_work_seminars 
+        WHERE speaker=:speaker AND date=:date ORDER BY date DESC "; 
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $user );
+    $stmt->bindValue( ':date', $date );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+function getAwsById( $id )
+{
+    global $db;
+
+    $query = "SELECT * FROM annual_work_seminars WHERE id=:id";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':id', $id );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+function getSupervisors( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Make sure only valid keys are in database table.
+    *
+    * @param $tablename
+    * @param $data
+    *
+    * @return 
+ */
+function insertIntoTable( $tablename, $keys, $data )
+{
+    global $db;
+
+    $values = Array( );
+
+    $cols = Array( );
+    foreach( $keys as $k )
+    {
+        // If values for this key in $data is null then don't use it here.
+        if( $data[$k] )
+        {
+            array_push( $cols, "$k" );
+            array_push( $values, ":$k" );
+        }
+            
+    }
+
+    $keysT = implode( ",", $cols );
+    $values = implode( ",", $values );
+    $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values )";
+
+    $stmt = $db->prepare( $query );
+    foreach( $cols as $k )
+    {
+        $value = $data[$k];
+        if( gettype( $value ) == 'array' )
+            $value = implode( ',', $value );
+        $stmt->bindValue( ":$k", $value );
+    }
+
+    return $stmt->execute( );
+}
+
+/**
+    * @brief A generic function to update a table.
+    *
+    * @param $tablename Name of table.
+    * @param $wherekey WHERE $wherekey=wherekeyval
+    * @param $keys Keys to be updated.
+    * @param $data An array having all data.
+    *
+    * @return 
+ */
+function updateTable( $tablename, $wherekey, $keys, $data )
+{
+    global $db;
+    $query = "UPDATE $tablename SET ";
+
+
+    $values = Array( );
+    $cols = Array();
+    foreach( $keys as $k )
+    {
+        // If values for this key in $data is null then don't use it here.
+        if( $data[$k] )
+        {
+            array_push( $cols, $k );
+            array_push( $values, "$k=:$k" );
+        }
+    }
+    $values = implode( ",", $values );
+    $query .= " $values WHERE $wherekey=:$wherekey";
+
+    $stmt = $db->prepare( $query );
+    foreach( $cols as $k )
+    {
+        $value = $data[$k];
+        if( gettype( $value ) == 'array' )
+            $value = implode( ',', $value );
+
+        $stmt->bindValue( ":$k", $value );
+    }
+
+    $stmt->bindValue( ":$wherekey", $data[$wherekey] );
+    return $stmt->execute( );
+}
+
+
+/**
+    * @brief Get the AWS scheduled in future for this speaker. 
+    *
+    * @param $speaker The speaker.
+    *
+    * @return  Array.
+ */
+function  scheduledAWSInFuture( $speaker )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM annual_work_seminars WHERE
+        speaker=:speaker AND tentatively_scheduled_on > 'NOW()' 
+        " );
+    $stmt->bindValue( ":speaker", $speaker );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 ?>

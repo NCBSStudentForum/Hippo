@@ -1,16 +1,25 @@
 <?php
-
 include_once 'header.php';
-include_once 'tohtml.php';
-include_once( 'validate_privileges.php' );
-include_once( 'methods.php' );
-//include_once( 'authenticate_gcalendar.php' );
-$_SESSION['validate_calendar'] = FALSE;
-$_SESSION['token_set'] = FALSE;
+include_once( 'check_access_permissions.php' );
 
-if( ! array_key_exists( 'gcal_token', $_SESSION ) )
-    include_once( 'oauthcallback.php' );
+mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 
+// Get logins. We'll use them to autocomplete the list of users while modifying
+// the privileges.
+$logins = getLoginIds( );
+
+?>
+
+<!-- Script to autocomplete user -->
+<script>
+$(function() {
+    var logins = <?php echo json_encode( $logins ); ?>;
+    $( "#autocomplete_user" ).autocomplete( { source : logins }); 
+});
+</script>
+
+
+<?php
 echo userHTML( );
 
 if( ! requiredPrivilege( 'ADMIN' ) )
@@ -23,13 +32,45 @@ if( ! requiredPrivilege( 'ADMIN' ) )
 
 echo "<h3>Hello admin</h3>";
 
-echo "<form method=\"post\" action=\"admin_action.php\">";
-echo "<table>";
-echo "<tr><td> <button name=\"response\" value=\"add_all_events\">
-    Add all public events to calendar</button></td>";
-echo "</tr>";
+echo "<table class=\"show_user\">";
+echo '
+    <tr>
+        <td>Synchronize public calendar</td>
+        <td>
+            <a href="' . appRootDir( ) . '/admin_synchronize_public_calendar.php">
+                Synchronize public calendar </a>
+        </td>
+    </tr>
+    </table>';
+
+echo '<h3>User management</h3>';
+echo "<table class=\"show_user\">";
+echo '
+    <tr>
+        <td>Edit user</td>
+        <td>
+            <form method="post" action="admin_modify_user_privileges.php">
+            <input id="autocomplete_user" name="login" placeholder="I will autocomplete " >
+            <button name="response" value="edit">Add or remove privileges</button>
+            </form>
+        </td>
+    </tr>
+    ';
+
 echo "</table>";
-echo "</form>";
+
+echo "<h3>Database management </h3>";
+
+echo '
+    <table class="show_user">
+        <tr>
+            <td>Update/Edit list of principal investigators</td>
+            <td>
+                <a href="admin_sync_faculty.php">Synchornize faculty database</a>
+            </td>
+        </tr>
+    </table>
+    ';
 
 ?>
 

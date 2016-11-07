@@ -1,4 +1,27 @@
 <?php
+
+
+/**
+* @brief Ping a host for given time.
+*
+* @param $host
+* @param $port
+* @param $timeout
+*
+* @return 
+ */
+function ping($host, $port, $timeout) 
+{
+  $tB = microtime(true); 
+  $fP = fSockOpen($host, $port, $errno, $errstr, $timeout); 
+  if (!$fP) { return "down"; } 
+  $tA = microtime(true); 
+  return round((($tA - $tB) * 1000), 0)." ms"; 
+}
+
+
+echo ping( "google.com", 80, 10 );
+exit;
  
 /* Base code provided by Sarah Bailey.
 Case Western Reserve University, Cleveland OH.
@@ -8,26 +31,26 @@ Props to commenter Matt for pointing out the maxResults parameter.
 */
  
 //TO DEBUG UNCOMMENT THESE LINES
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
  
 //INCLUDE THE GOOGLE API PHP CLIENT LIBRARY FOUND HERE
 //https://github.com/google/google-api-php-client
 //DOWNLOAD IT AND PUT IT ON YOUR WEBSERVER IN THE ROOT FOLDER.
-include(__DIR__.'/google-api-php-client-master/src/Google/autoload.php'); 
+include(__DIR__ . '/../vendor/autoload.php');
  
-
 
  
 //TELL GOOGLE WHAT WE'RE DOING
 $client = new Google_Client();
-$client->setApplicationName("My Calendar"); //DON'T THINK THIS MATTERS
-$client->setDeveloperKey('YOUR_SERVER_API_KEY'); //GET AT AT DEVELOPERS.GOOGLE.COM
+$client->setApplicationName("NCBS Minion"); //DON'T THINK THIS MATTERS
+$client->setDeveloperKey( 'AIzaSyAsVYTdSg-z7w9V4oKa9QD9AL7x7auD7So' );
 $cal = new Google_Service_Calendar($client);
+
 //THE CALENDAR ID, FOUND IN CALENDAR SETTINGS. IF YOUR CALENDAR IS THROUGH GOOGLE APPS
 //YOU MAY NEED TO CHANGE THE CENTRAL SHARING SETTINGS. THE CALENDAR FOR THIS SCRIPT
 //MUST HAVE ALL EVENTS VIEWABLE IN SHARING SETTINGS.
-$calendarId = 'you@you.com';
+$calendarId = 'NCBS Calendar';
 //TELL GOOGLE HOW WE WANT THE EVENTS
 $params = array(
 //CAN'T USE TIME MIN WITHOUT SINGLEEVENTS TURNED ON,

@@ -16,12 +16,13 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 <div class="header">
 <title>NCBS Minion</title>
 <h1>NCBS Minion</h1>
-<small>Ver 0.9.0, GNU GPL <a href="https://github.com/dilawar/ncbs-minion" target='_blank'>(c) Dilawar Singh, 2016.</a>
-<a href='mailto:dilawar.s.rajput@gamil.com'>Email developer</a></small>
+<a href="https://github.com/dilawar/ncbs-minion" target='_blank'>Github</a>
+<a href='https://github.com/dilawar/ncbs-minion/issues' target="_blank">Report issue</a></small>
 </div>
 <br />
 <br />
 
+<div class="bottom"> GNU GPL-v3, (c) 2016, Dilawar Singh </div>
 </html>
 
 <!-- Here are the js script -->
@@ -55,4 +56,5 @@ $(function(){
 
 <!-- CKEDIR -->
 <script src="./ckeditor/ckeditor.js"></script>
+
 

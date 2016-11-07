@@ -65,13 +65,9 @@ class NCBSCalendar
         return $events;
     }
 
-    public function createEvent( $options )
+    public function createEvent( $option )
     {
-        $event = new Google_Event( );
-        $event->setSummary( $option[ 'title' ] );
-        $event->setLocation( __get__($option, 'location', 'unspecified' ) );
-        $event->setStart( $option[ 'start_datetime' ] );
-        $event->setEnd( $option['end_datetime'] );
+        $event = new Google_Service_Calendar_Event( $option );
         $createEvent = $this->service( )->events->insert( $this->calid, $event );
         return $createEvent;
     }

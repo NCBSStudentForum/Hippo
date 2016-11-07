@@ -66,15 +66,15 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
    </tr>';
    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
    $html .= '<tr><td>Approve/reject booking request, modify or cancel them as well.</td>
-      <td> <a href="bookmyvenue_admin.php">BookMyVenueAdmin</a></td> </tr>';
+      <td> <a href="bookmyvenue_admin.php">BookMyVenue Admin</a></td> </tr>';
    if( in_array( "JOURNALCLUB_ADMIN", $roles ) )
    $html .= '<tr><td>TODO: Add journal club, invite people, select papers.</td>
-      <td> <a href="journalclub_admin.php">BookMyVenueAdmin</a></td> </tr>';
+      <td> <a href="journalclub_admin.php">JournalClub Admin</a></td> </tr>';
    if( in_array( "AWS_ADMIN", $roles ) )
    $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
          periodically. 
       </td>
-      <td> <a href="aws_admin.php">BookMyVenueAdmin</a></td> </tr>';
+      <td> <a href="aws_admin.php">AWS Admin</a></td> </tr>';
    $html .= "</table>";
 echo $html;
 }

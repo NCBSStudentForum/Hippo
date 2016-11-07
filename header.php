@@ -19,7 +19,7 @@ ini_set( "display_errors", 1 );
 </head>
 <div class="header">
 
-<title>NCBS Minion</a></title>
+<title>NCBS Minion</title>
 
 <h1><a href="<?php echo dirname( 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] ) ?>">NCBS Minion</a></h1>
 <a href="https://github.com/dilawar/ncbs-minion" target='_blank'>Github</a>

@@ -1,21 +1,26 @@
 
 <?php
-
+include_once( 'header.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
 include_once( 'database.php' );
+
 include_once( 'check_access_permissions.php' );
+
+mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 
 // Get logins. We'll use them to autocomplete the list of users while modifying
 // the privileges.
-$logins = getLogins( );
+$logins = getLoginIds( );
 
 ?>
 
 <!-- Script to autocomplete user -->
 <script>
-var logins = <?php echo json_decode( $logins ); ?>;
-$( "autocomplete_user" ).autocomplete( { source : logins }); 
+$(function() {
+    var logins = <?php echo json_encode( $logins ); ?>;
+    $( "#autocomplete_user" ).autocomplete( { source : logins }); 
+});
 </script>
 
 

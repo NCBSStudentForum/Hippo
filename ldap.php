@@ -9,9 +9,25 @@ function findGroup( $laboffice )
     return $laboffice;
 }
 
+function serviceping($host, $port=389, $timeout=1)
+{
+    $op = fsockopen($host, $port, $errno, $errstr, $timeout);
+    if (!$op) return 0; //DC is N/A
+    else {
+        fclose($opanak); //explicitly close open socket connection
+        return 1; //DC is up & running, we can safely connect with ldap_connect
+    }
+}
+
 function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
 {
     $base_dn = 'dc=ncbs,dc=res,dc=in';
+    if( 0 == serviceping( $ldap_ip, 389, 2 ) )
+    {
+        echo "Could not connect to LDAP server. Timeout ... ";
+        return NULL;
+    }
+
     $ds = ldap_connect($ldap_ip) or die( "Could not connect to $ldap_ip" );
     $r = ldap_bind($ds); // or die( "Can't bind to $ldap_ip" );
     if( ! $r )
@@ -43,12 +59,5 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
     }
     return $result[0];
 }
-
-// Test 
-// var_dump( getUserInfoFromLdap( 'dilawars' ) );
-// var_dump( getUserInfoFromLdap( 'bhalla' ) );
-// var_dump( getUserInfoFromLdap( 'cpani' ) );
-// var_dump( getUserInfoFromLdap( 'ashok' ) );
-// var_dump( getUserInfoFromLdap( 'colinj' ) );
 
 ?>

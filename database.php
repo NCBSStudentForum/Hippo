@@ -163,11 +163,11 @@ function getEventsOfUser( $userid, $from = '-1 days', $status = 'VALID' )
 }
 
 // Fetch entries from sqlite responses
-function fetchEntries( $res )
+function fetchEntries( $res, $how = PDO::FETCH_ASSOC )
 {
     $array = Array( );
     if( $res ) {
-        while( $row = $res->fetch( PDO::FETCH_ASSOC ) )
+        while( $row = $res->fetch( $how ) )
             array_push( $array, $row );
     }
     return $array;
@@ -659,6 +659,31 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 }
 
 /**
+    * @brief Get all logins.
+    *
+    * @return 
+ */
+function getLogins( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt->execute( );
+    return  fetchEntries( $stmt );
+}
+
+function getLoginIds( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt->execute( );
+    $results =  fetchEntries( $stmt );
+    $logins = Array();
+    foreach( $results as $key => $val )
+        array_push( $logins, $val['login'] );
+    return $logins;
+}
+
+/**
     * @brief Get user info from database.
     *
     * @param $user Login id of user.
@@ -760,7 +785,12 @@ function insertIntoTable( $tablename, $keys, $data )
 
     $stmt = $db->prepare( $query );
     foreach( $cols as $k )
-        $stmt->bindValue( ":$k", $data[$k] );
+    {
+        $value = $data[$k];
+        if( gettype( $value ) == 'array' )
+            $value = implode( ',', $value );
+        $stmt->bindValue( ":$k", $value );
+    }
 
     return $stmt->execute( );
 }
@@ -797,7 +827,13 @@ function updateTable( $tablename, $wherekey, $keys, $data )
 
     $stmt = $db->prepare( $query );
     foreach( $cols as $k )
-        $stmt->bindValue( ":$k", $data[$k] );
+    {
+        $value = $data[$k];
+        if( gettype( $value ) == 'array' )
+            $value = implode( ',', $value );
+
+        $stmt->bindValue( ":$k", $value );
+    }
 
     $stmt->bindValue( ":$wherekey", $data[$wherekey] );
     return $stmt->execute( );

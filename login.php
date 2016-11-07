@@ -31,7 +31,16 @@ else
 
     echo "Quering LDAP server for user information";
     $ldapInfo = getUserInfoFromLdap( $ldap );
+
+    // In any case, create a entry in database.
     createUserOrUpdateLogin( $ldap, $ldapInfo );
+
+    if( !$ldapInfo )
+    {
+        echo printWarning( "Could not query LDAP server" );
+        goToPage( "user.php", 1 );
+    }
+
 
     // If user title is unspecified then redirect him/her to edit user info
     $userInfo = getUserInfo( $ldap );

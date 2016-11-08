@@ -47,16 +47,30 @@ if( array_key_exists( 'google_command', $_SESSION ) )
             }
         }
     }
-    else if( $_SESSION[ 'google_command' ] == 'update_group_of_events' )
+    else if( $_SESSION[ 'google_command' ] == 'update_eventgroup' )
     {
-        echo "Must set gid parameter in $_SESSION";
+        $events = getEventsByGroupId( $_SESSION[ 'event_gid' ] );
+        $total = count( $events );
+        echo printInfo( "Updating total " . $total 
+            . " events with group id " . $_SESSION['event_gid'] );
+
+
+        for( $i = 1; $i <= $total; $i++ )
+        {
+            $event = $events[ $i - 1 ];
+            if( $event[ 'is_public_event' ] == 'YES' )
+            {
+                $calendar->insertOrUpdateEvent( $event );
+                echo "... Done updating event $i of $total <br>";
+                ob_flush( ); flush();
+            }
+        }
     }
 
     else
-    {
-        echo printWarning( "Unsupported  command " . 
-            $_SESSION['google_command'] );
-    }
+        echo printWarning(
+            "Unsupported  command " .  $_SESSION['google_command'] 
+        );
 }
 else
 {

@@ -3,10 +3,7 @@
 include_once ("header.php" );
 include_once( "database.php" );
 include_once( "tohtml.php" );
-include_once( "calendar/calendar.php");
 
-
-//var_dump( $_POST );
 
 if( strcasecmp($_POST['response'], 'submit' ) == 0 )
 {
@@ -18,10 +15,11 @@ if( strcasecmp($_POST['response'], 'submit' ) == 0 )
     if( $res )
     {
         echo printInfo( "updated succesfully" );
-        $res = updateEventGroupInCalendar( $_POST['gid'] );
-        // Update group in calendar.
-        goToPage( "admin.php", 1 );
-        exit( 0 );
+        header( 
+            "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=" 
+            .  $_POST[ 'gid' ] 
+        );
+        exit;
     }
     else
         echo printWarning( "Above events were not updated" );

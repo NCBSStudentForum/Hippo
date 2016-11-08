@@ -89,7 +89,7 @@ class NCBSCalendar
         *
         * @return
      */
-    public function insertEvent( $option )
+    public function _insertEvent( $option )
     {
         $event = new Google_Service_Calendar_Event( $option );
         try
@@ -210,23 +210,28 @@ class NCBSCalendar
      */
     public function addNewEvent( $event )
     {
+        $startTime = strtotime( $event['date'] . ' ' . $event[ 'start_time' ] );
+        $startTime = $startTime - $this->offset;
+        $endTime = strtotime( $event['date'] . ' ' . $event[ 'end_time' ] );
+        $endTime = $endTime - $this->offset;
+
         $entry = array(
                      "summary" => $event['short_description']
                      , "description" => $event['description']
                      , 'location' => venueSummary( getVenueById( $event['venue' ] ) )
                      , 'start' => array(
-                         "dateTime" => $event['date'] .'T'. $event['start_time']
+                         "dateTime" => date( $this->format, $startTime )
                          , "timeZone" => ini_get( 'date.timezone' )
                      )
                      , 'end' => array(
-                         "dateTime" => $event['date'] .'T'. $event['end_time']
+                         "dateTime" => date( $this->format, $endTime )
                          , "timeZone" => ini_get( 'date.timezone' )
                      )
                      , "htmlLink" => $event['url']
                      , "anyoneCanAddSelf" => True
                  );
 
-        $gevent = $this->insertEvent( $entry );
+        $gevent = $this->_insertEvent( $entry );
 
         if( $gevent )
         {
@@ -267,6 +272,28 @@ class NCBSCalendar
         flush(); ob_flush( );
         return $event->getId( );
 
+    }
+
+    /**
+        * @brief Insert of update an event from mysql database.
+        *
+        * @param $event Event from database.
+        *
+        * @return  Google event.
+     */
+    public function insertOrUpdateEvent( $event )
+    {
+        if( $event['is_public_event'] == 'NO' )
+        {
+            echo printWarning( 'You are trying to add private event to public 
+                calendar. Ignoring ... ' );
+            return;
+        }
+
+        if( trim($event['calendar_event_id']) == '' )
+            return $this->addNewEvent( $event );
+        else
+            return $this->updateEvent( $event );
     }
 }
 

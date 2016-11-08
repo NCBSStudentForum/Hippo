@@ -17,12 +17,9 @@ function calendarURL( )
     ';
 }
 
-
 function addEventToGoogleCalendar($calendar_name, $event, $client )
 {
     $duration = round( (strtotime($event['end_time']) - strtotime($event['start_time'])) / 60.0 );
-
-
 
     return 0;
 

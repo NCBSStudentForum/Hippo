@@ -18,7 +18,8 @@
     "components/jquery": "~1",
     "components/underscore": "~1",
     "twbs/bootstrap": ">2.0.0",
-    "moment/moment": "~2"
+    "moment/moment": "~2",
+    "google/apiclient": "^2.0"
   },
   "extra" : {
     "component" : {

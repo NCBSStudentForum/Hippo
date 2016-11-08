@@ -31,18 +31,8 @@ if( ! requiredPrivilege( 'ADMIN' ) )
 }
 
 
-echo "<h3>Hello admin</h3>";
+echo "<h2>Hello admin</h2>";
 
-echo "<table class=\"show_user\">";
-echo '
-    <tr>
-        <td>Synchronize public calendar</td>
-        <td>
-            <a href="' . appRootDir( ) . '/admin_synchronize_public_calendar.php">
-                Synchronize public calendar </a>
-        </td>
-    </tr>
-    </table>';
 
 echo '<h3>User management</h3>';
 echo "<table class=\"show_user\">";

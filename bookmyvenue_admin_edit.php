@@ -12,12 +12,14 @@ if( strcasecmp($_POST['response'], 'edit' ) == 0 )
     // Get a representative event of this group.
     $event = getEventsById( $gid, $eid );
     echo printInfo( "Chaging event $gid . $eid " );
-    echo '<form method="post" action="admin_edit_submit.php">';
+    echo '<form method="post" action="bookmyvenue_admin_edit_submit.php">';
     echo dbTableToHTMLTable( 'events'
         , $defaults = $event
-        , $editables = Array( 'status', 'class', 'is_public_event'
-        , 'short_description', 'description'
-    ));
+        , $editables = Array( 
+            'status', 'class', 'is_public_event'
+            , 'short_description', 'description'
+            , 'date', 'start_time', 'end_time' 
+        ));
     echo "</form>";
     echo goBackToPageLink( "admin.php", "Go back" );
 }

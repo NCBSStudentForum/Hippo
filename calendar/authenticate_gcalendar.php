@@ -2,9 +2,9 @@
 
 include_once 'NCBSCalendar.php';
 
-$calendar = new NCBSCalendar( './oauth-credentials.json' );
-header( 'Location:' . $calendar->redirectURL, False );
+$calendar = new NCBSCalendar( '../oauth-credentials.json' );
 
+header( 'Location:' . $calendar->redirectURL );
 exit;
 
 ?>

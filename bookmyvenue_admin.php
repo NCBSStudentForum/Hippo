@@ -45,7 +45,9 @@ foreach( $events as $event )
     $eid = $event['eid'];
     $html .= "<form method=\"post\" action=\"admin_edit.php\">";
     $html .= "<tr><td>";
-    $html .= arrayToTableHTML( $event, 'events', '', Array( 'eid' ) );
+    $html .= arrayToTableHTML( $event, 'events', ''
+        , Array( 'eid', 'calendar_id' , 'calendar_event_id' ) 
+    );
     $html .= "</td>";
     $html .= "<td> <button name=\"response\" value=\"edit\">Edit</button></td>";
     $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";

@@ -287,6 +287,20 @@ function getEventsGrouped( $sortby = NULL, $from = 'today', $status = 'VALID' )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Get the list of upcoming events.
+ */
+function getPublicEvents( $from = 'today', $status = 'VALID' )
+{
+    global $db;
+    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
+        status=:status AND is_public_event='YES'" );
+    $stmt->bindValue( ':date', $from );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
 
 function getEventsOn( $day, $status = 'VALID')
 {
@@ -799,17 +813,25 @@ function insertIntoTable( $tablename, $keys, $data )
     * @brief A generic function to update a table.
     *
     * @param $tablename Name of table.
-    * @param $wherekey WHERE $wherekey=wherekeyval
+    * @param $wherekeys WHERE $wherekey=wherekeyval,... etc.
     * @param $keys Keys to be updated.
     * @param $data An array having all data.
     *
     * @return 
  */
-function updateTable( $tablename, $wherekey, $keys, $data )
+function updateTable( $tablename, $wherekeys, $keys, $data )
 {
     global $db;
     $query = "UPDATE $tablename SET ";
 
+    if( gettype( $wherekeys ) == "string" ) // Only one key
+        $wherekeys = array( $wherekeys );
+
+    $whereclause = array( );
+    foreach( $wherekeys as $wkey )
+        array_push( $whereclause, "$wkey=:$wkey" );
+
+    $whereclause = implode( " AND ", $whereclause );
 
     $values = Array( );
     $cols = Array();
@@ -823,7 +845,7 @@ function updateTable( $tablename, $wherekey, $keys, $data )
         }
     }
     $values = implode( ",", $values );
-    $query .= " $values WHERE $wherekey=:$wherekey";
+    $query .= " $values WHERE $whereclause";
 
     $stmt = $db->prepare( $query );
     foreach( $cols as $k )
@@ -835,7 +857,9 @@ function updateTable( $tablename, $wherekey, $keys, $data )
         $stmt->bindValue( ":$k", $value );
     }
 
-    $stmt->bindValue( ":$wherekey", $data[$wherekey] );
+    foreach( $wherekeys as $wherekey )
+        $stmt->bindValue( ":$wherekey", $data[$wherekey] );
+
     return $stmt->execute( );
 }
 

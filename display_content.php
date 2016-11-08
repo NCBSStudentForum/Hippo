@@ -30,5 +30,13 @@ function alterUser( $msg )
 
 }
 
+function minionEmbarrassed( $msg, $info = '' )
+{
+    echo "<p class=\"embarassed\"> This is embarassing! <br>";
+    echo " $msg <br> $info ";
+    echo "</p>";
+}
+
+
 
 ?>

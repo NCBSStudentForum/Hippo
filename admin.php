@@ -1,11 +1,7 @@
-
 <?php
-include_once( 'header.php' );
-include_once( 'methods.php' );
-include_once( 'tohtml.php' );
-include_once( 'database.php' );
-
+include_once 'header.php';
 include_once( 'check_access_permissions.php' );
+include_once( 'tohtml.php' );
 
 mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 
@@ -33,6 +29,7 @@ if( ! requiredPrivilege( 'ADMIN' ) )
     goToPage( "index.php" );
     exit( 0 );
 }
+
 
 echo "<h3>Hello admin</h3>";
 

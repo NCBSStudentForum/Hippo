@@ -6,6 +6,10 @@ if(!isset($_SESSION))
 // If this is not a index.php page. check if access is valid. 
 if( ! $_SERVER['PHP_SELF'] == 'index.php' ) 
     include_once( 'is_valid_access.php' );
+
+error_reporting( E_ALL );
+ini_set( "display_errors", 1 );
+
 ?>
 
 <!DOCTYPE html>
@@ -14,8 +18,10 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 <link href="minion.css" rel="stylesheet" type="text/css" />
 </head>
 <div class="header">
+
 <title>NCBS Minion</title>
-<h1>NCBS Minion</h1>
+
+<h1><a href="<?php echo dirname( 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] ) ?>">NCBS Minion</a></h1>
 <a href="https://github.com/dilawar/ncbs-minion" target='_blank'>Github</a>
 <a href='https://github.com/dilawar/ncbs-minion/issues' target="_blank">Report issue</a></small>
 </div>

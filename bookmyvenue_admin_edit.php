@@ -18,7 +18,7 @@ if( strcasecmp($_POST['response'], 'edit' ) == 0 )
         , $editables = Array( 
             'status', 'class', 'is_public_event'
             , 'short_description', 'description'
-            , 'date', 'start_time', 'end_time' 
+            //, 'date', 'start_time', 'end_time' 
         ));
     echo "</form>";
     echo goBackToPageLink( "admin.php", "Go back" );

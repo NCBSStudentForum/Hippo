@@ -18,31 +18,31 @@ $html = '<table class="show_user">';
    $html .= '
    <tr>
       <td>
-         Your can see your details and edit (most) of them. Details fetched from NCBS 
-         LDAP server are not editable. 
+         See and edit (most of) your details 
+        <small> Details fetched from NCBS LDAP server are not editable </small>
       </td>
       <td> 
          <a href="user_info.php">Show/Edit my details</a> 
       </td>
    </tr>
    <tr>
-      <td>Browse the available venues and create a booking request</td>
-      <td> <a href="bookmyvenue_browse.php">Create a booking request</a> </td>
+      <td>Browse available venues and submit a booking request</td>
+      <td> <a href="bookmyvenue_browse.php">Book my venue</a> </td>
    </tr>
    <tr>
       <td>You can see your unapproved requests and modify their description and cancel
          them if neccessary.
       </td>
-      <td> <a href="user_show_requests.php">Show/Edit my requests</a> </td>
+      <td> <a href="user_show_requests.php">Show/Edit BookMyVenue</a> </td>
    </tr>
    <tr>
       <td>These booking requests have been approved (we call them events). You can 
          still edit their description (and also cancel them). </td>
-      <td> <a href="user_show_events.php">Show/Edit my events</a></td>
+      <td> <a href="user_show_events.php">Show/Edit (my) upcoming events</a></td>
    </tr>
    <tr>
       <td>TODO: Journal clubs.</td>
-      <td> <a href="user_jc.php">My JC</a> </td>
+      <td> <a href="user_jc.php">My Journal Club</a> </td>
    </tr>
    <tr>
       <td>Alpha: Annual Work Seminal.</td>
@@ -66,15 +66,15 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
    </tr>';
    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
    $html .= '<tr><td>Approve/reject booking request, modify or cancel them as well.</td>
-      <td> <a href="bookmyvenue_admin.php">BookMyVenueAdmin</a></td> </tr>';
+      <td> <a href="bookmyvenue_admin.php">BookMyVenue Admin</a></td> </tr>';
    if( in_array( "JOURNALCLUB_ADMIN", $roles ) )
    $html .= '<tr><td>TODO: Add journal club, invite people, select papers.</td>
-      <td> <a href="journalclub_admin.php">BookMyVenueAdmin</a></td> </tr>';
+      <td> <a href="journalclub_admin.php">JournalClub Admin</a></td> </tr>';
    if( in_array( "AWS_ADMIN", $roles ) )
    $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
          periodically. 
       </td>
-      <td> <a href="aws_admin.php">BookMyVenueAdmin</a></td> </tr>';
+      <td> <a href="aws_admin.php">AWS Admin</a></td> </tr>';
    $html .= "</table>";
 echo $html;
 }

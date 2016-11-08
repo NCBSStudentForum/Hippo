@@ -1,11 +1,7 @@
-
 <?php
-include_once( 'header.php' );
-include_once( 'methods.php' );
-include_once( 'tohtml.php' );
-include_once( 'database.php' );
-
+include_once 'header.php';
 include_once( 'check_access_permissions.php' );
+include_once( 'tohtml.php' );
 
 mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 
@@ -34,6 +30,7 @@ if( ! requiredPrivilege( 'ADMIN' ) )
     exit( 0 );
 }
 
+
 echo "<h3>Hello admin</h3>";
 
 echo "<table class=\"show_user\">";
@@ -51,10 +48,10 @@ echo '<h3>User management</h3>';
 echo "<table class=\"show_user\">";
 echo '
     <tr>
-        <td>Add or remove privileges of users</td>
+        <td>Edit user</td>
         <td>
             <form method="post" action="admin_modify_user_privileges.php">
-            <input id="autocomplete_user" name="login">
+            <input id="autocomplete_user" name="login" placeholder="I will autocomplete " >
             <button name="response" value="edit">Add or remove privileges</button>
             </form>
         </td>

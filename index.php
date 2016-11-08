@@ -28,6 +28,8 @@ $_SESSION['conf'] = $conf;
 
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
 
+ini_set( 'date.timezone', 'Asia/Kolkata' );
+
 /* counter */
 $hit_count = (int)file_get_contents('count.txt');
 $hit_count++;

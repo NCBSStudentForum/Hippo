@@ -3,6 +3,7 @@
 include_once 'header.php';
 include_once 'methods.php';
 include_once 'tohtml.php';
+include_once 'database.php';
 
 require_once './calendar/NCBSCalendar.php';
 
@@ -14,30 +15,34 @@ echo userHTML( );
 $calendar = new NCBSCalendar( './oauth-credentials.json' );
 $calendar->setAccessToken( $_GET['code'] );
 
-// Now get all events
-foreach( $calendar->getEvents() as $event )
+$publicEvents = getPublicEvents( );
+
+foreach( $publicEvents as $event )
 {
-    //var_dump( $event );
-    //print_r( $event );
-    echo $event['summary'];
-    echo "<br>==========================<br>";
+    if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
+    {
+        echo "This event " 
+            .  $event['short_description'] 
+            . " is already in public calendar. Updating it .... "
+            ;
+        $res = $calendar->updateEvent( $event );
+        if( $res )
+            echo "Successfully updated. <br>" ;
+        else
+            echo "Failed to update. <br>";
+    }
+    else 
+    {
+        $gevent = $calendar->addNewEvent( $event );
+        flush( );
+        ob_flush();
+    }
 }
 
-echo "Testing creating an event " ;
-$calendar->createEvent( 
-    array( 
-        "title"  => "A dummy event" 
-        , "location" => "NCBS Bangalore"
-        , "start" =>  array(  'dateTime' => "2016-11-08T10:25:00", 'timeZone' => 'Asia/Kolkata' ) 
-        , "end" =>  array(  'dateTime' => "2016-11-08T11:25:00", 'timeZone' => 'Asia/Kolkata' ) 
-
-    )
-    );
-
-
+echo goBackToPageLink( "user.php", "Go back" );
+echo '<br> <br> <br>';
 
 exit;
 
-//goToPage( "admin.php", 0 );
 
 ?>

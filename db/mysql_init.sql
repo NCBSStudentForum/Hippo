@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     , end_time TIME NOT NULL
     , status ENUM ( 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED' ) DEFAULT 'PENDING'
     , is_public_event ENUM( "YES", "NO" ) DEFAULT "NO"
+    , url VARCHAR( 1000 )
     , modified_by VARCHAR(50) -- Who modified the request last time.
     , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
     , PRIMARY KEY( gid, rid )
@@ -107,6 +108,9 @@ CREATE TABLE IF NOT EXISTS events (
     , start_time TIME NOT NULL
     , end_time TIME NOT NULL
     , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID' 
+    , calendar_id VARCHAR(500)
+    , calendar_event_id VARCHAR(500)
+    , url VARCHAR(1000)
     , PRIMARY KEY( gid, eid )
     , FOREIGN KEY (venue) REFERENCES venues(id)
     );

@@ -9,6 +9,7 @@ require_once './calendar/NCBSCalendar.php';
 
 echo userHTML( );
 
+// We come here from google-calendar 
 // When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 
 // sends us a GET response. Use this token to process all other queries.
 
@@ -17,27 +18,49 @@ $calendar->setAccessToken( $_GET['code'] );
 
 $publicEvents = getPublicEvents( );
 
-foreach( $publicEvents as $event )
+if( array_key_exists( 'google_command', $_SESSION ) )
+{ 
+    //
+    if( $_SESSION['google_command'] == 'synchronize_all_events' )
+    {
+
+        foreach( $publicEvents as $event )
+        {
+            //if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
+            if( $calendar->exists( $event ) )
+            {
+                echo "This event " 
+                    .  $event['short_description'] 
+                    . " is already in public calendar. Updating it .... "
+                    ;
+                $res = $calendar->updateEvent( $event );
+                if( $res )
+                    echo "Successfully updated. <br>" ;
+                else
+                    echo "Failed to update. <br>";
+            }
+            else 
+            {
+                $gevent = $calendar->addNewEvent( $event );
+                flush( );
+                ob_flush();
+            }
+        }
+    }
+    else if( $_SESSION[ 'google_command' ] == 'update_group_of_events' )
+    {
+        echo "Must set gid parameter in $_SESSION";
+    }
+
+    else
+    {
+        echo printWarning( "Unsupported  command " . 
+            $_SESSION['google_command'] );
+    }
+}
+else
 {
-    //if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
-    if( $calendar->exists( $event ) )
-    {
-        echo "This event " 
-            .  $event['short_description'] 
-            . " is already in public calendar. Updating it .... "
-            ;
-        $res = $calendar->updateEvent( $event );
-        if( $res )
-            echo "Successfully updated. <br>" ;
-        else
-            echo "Failed to update. <br>";
-    }
-    else 
-    {
-        $gevent = $calendar->addNewEvent( $event );
-        flush( );
-        ob_flush();
-    }
+    echo printInfo( "No command is given regarging google calendar" );
 }
 
 echo goBackToPageLink( "user.php", "Go back" );

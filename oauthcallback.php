@@ -19,8 +19,8 @@ $publicEvents = getPublicEvents( );
 
 foreach( $publicEvents as $event )
 {
-
-    if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
+    //if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
+    if( $calendar->exists( $event ) )
     {
         echo "This event " 
             .  $event['short_description'] 

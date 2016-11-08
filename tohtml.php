@@ -45,40 +45,26 @@ function prettify( $string )
 
 function requestsToHTMLReviewForm( $requests )
 {
-    $html = '<table class="request">';
+    $html = '<table>';
     foreach( $requests as $r )
     {
-        $html .= "<table> <tr> <td>";
-        $html .= requestToHTMLTable( $r );
-        $html .= "</td><td>";
-        $html .= '<input type="submit" name="response" value="Review"> </td></tr>';
+        $html .= '<tr><td>';
+        // Hide some buttons to send information to next page.
+        $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
+        $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
+        $html .= arrayToTableHTML( $r, 'events'
+            , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' ) 
+        );
+        $html .= '</td>';
+        $html .= '<td style="background:white">
+                        <button name="response" value="Review">Review</button>
+                </td>';
+        $html .= '</tr>';
     }
-
     $html .= '</table>';
     return $html;
 }
 
-
-function requestToHTMLTable( $r )
-{
-    $date = $r['date'];
-    $day = date( 'l', strtotime($date) );
-    $on = $day . ' ' . $date;
-    $id = $r['gid'] . '.' . $r['rid'];
-    $html = '<table class="request">';
-    $html .= '<input type="hidden" name="gid" value="'.$r['gid'].'">';
-    $html .= '<input type="hidden" name="rid" value="'.$r['rid'].'">';
-    $html .= "<tr>";
-    $html .= "<td>" . $id .  "</td>";
-    $html .= "<td>" . $r['user'] . "</td>";
-    $html .= "<td colspan=\"20\">" . $r['title'] . "</td>";
-    $html .= "<td class=\"eventvenue\">" . $r['venue'] . "</td>";
-    $html .= "<td class=\"eventtime\">" . 
-        $r['start_time'] . " to " . $r['end_time'] . "<br>" . $on . 
-        "</td>";
-    $html .= '</table>';
-    return $html;
-}
 
 // Return a short description of event.
 function eventToText( $event )

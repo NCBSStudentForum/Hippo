@@ -21,6 +21,11 @@ class NCBSCalendar
 
     public $calID = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
 
+    /**
+        * @brief Format used by google-API.
+     */
+    public $format = 'Y-m-d\TH:i:s';
+
     public function __construct( $oauth_file )
     {
         $this->client = new Google_Client( );
@@ -100,6 +105,8 @@ class NCBSCalendar
                 , "Error was " .  $e->getMessage() 
             );
         }
+        flush();
+        ob_flush( );
         return null;
     }
 
@@ -128,10 +135,30 @@ class NCBSCalendar
         $gevent->setDescription( $event['description'] );
         $gevent->setHtmlLink( $event['url'] );
 
+        $startDateTime = new DateTime( $event['date'] . ' ' . $event['start_time'] );
+        $startDateTime = $startDateTime->format( $this->format );
+        $endDateTime = new DateTime( $event['date'] . ' ' . $event['end_time'] );
+        $endDateTime = $endDateTime->format( $this->format );
+
+        $gStartDateTime = new Google_Service_Calendar_EventDateTime( );
+        $gStartDateTime->setDateTime( $startDateTime );
+        $gStartDateTime->setTimeZone( ini_get( 'date.timezone' ) );
+
+        $gEndDateTime = new Google_Service_Calendar_EventDateTime( );
+        $gEndDateTime->setDateTime( $endDateTime );
+        $gEndDateTime->setTimeZone( ini_get( 'date.timezone' ) );
+
+        $gevent->setStart( $gStartDateTime );
+        $gevent->setEnd( $gEndDateTime );
+
+
+        // I don't know why but this is neccessary. Not everything is returned
+        // by GET request.
+        $gevent->setStatus( 'confirmed' );
+
         try
         {
-            print( gettype( $gevent ) );
-            return $this->service( )->events->update( $event['calendar_id']
+            $gevent = $this->service( )->events->update( $event['calendar_id']
                 , $gevent->getId( )
                 , $gevent 
             );
@@ -142,7 +169,6 @@ class NCBSCalendar
                 "This is embarassing! I could not update public calendar"
             );
             echo printWarning( "Error was : " . $e->getMessage( ) );
-            return FALSE;
         }
         catch ( InvalidArgumentException $e )
         {
@@ -152,6 +178,11 @@ class NCBSCalendar
             );
         }
 
+        //echo "Updated event is <br />";
+        //echo json_encode( $gevent );
+
+        flush();
+        ob_flush( );
         return $gevent;
     }
 
@@ -167,7 +198,7 @@ class NCBSCalendar
         $entry = array(
                      "summary" => $event['short_description']
                      , "description" => $event['description']
-                     , 'location' => venueToText( getVenueById( $event['venue' ] ) )
+                     , 'location' => venueSummary( getVenueById( $event['venue' ] ) )
                      , 'start' => array(
                          "dateTime" => $event['date'] .'T'. $event['start_time']
                          , "timeZone" => ini_get( 'date.timezone' )
@@ -194,6 +225,33 @@ class NCBSCalendar
             return $res;
         }
         return $event;
+
+        flush();
+        ob_flush( );
+    }
+
+    /**
+        * @brief Check if this event exits in calendar.
+        *
+        * @param $event
+        *
+        * @return 
+     */
+    public function exists( $event )
+    {
+        if( ! array_key_exists( 'calendar_event_id', $event ) )
+            return false;
+
+        $eventId = trim( $event[ 'calendar_event_id' ] );
+        if( $eventId == '' )
+            return false;
+
+        // Else check in calendar.
+        $event = $this->service()->events->get( $this->calID, $eventId );
+        echo $event->getSummary( );
+        flush(); ob_flush( );
+        return $event->getId( );
+
     }
 }
 

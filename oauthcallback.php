@@ -19,6 +19,7 @@ $publicEvents = getPublicEvents( );
 
 foreach( $publicEvents as $event )
 {
+
     if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
     {
         echo "This event " 

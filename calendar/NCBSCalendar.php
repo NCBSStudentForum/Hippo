@@ -184,7 +184,7 @@ class NCBSCalendar
 
         if( $gevent )
         {
-            $event[ 'calendar_id' ] = $calendar->calID;
+            $event[ 'calendar_id' ] = $this->calID;
             $event[ 'calendar_event_id'] = $gevent->getId( );
 
             $res = updateTable( "events"

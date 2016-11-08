@@ -1,8 +1,10 @@
 <?php
 
+set_include_path( '..' );
+
 include_once 'methods.php';
 include_once 'database.php';
-require_once './vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 
 /**

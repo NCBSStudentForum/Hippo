@@ -20,31 +20,19 @@ $publicEvents = getPublicEvents( );
 
 if( array_key_exists( 'google_command', $_SESSION ) )
 { 
-    //
     if( $_SESSION['google_command'] == 'synchronize_all_events' )
     {
-
-        foreach( $publicEvents as $event )
+        $total = count( $publicEvents );
+        for ($i = 1; $i <= $total; $i++) 
         {
-            //if( $event['calendar_id'] != '' && $event[ 'calendar_event_id' ] != '' )
+            $event = $publicEvents[ 1 + $i ];
             if( $calendar->exists( $event ) )
-            {
-                echo "This event " 
-                    .  $event['short_description'] 
-                    . " is already in public calendar. Updating it .... "
-                    ;
                 $res = $calendar->updateEvent( $event );
-                if( $res )
-                    echo "Successfully updated. <br>" ;
-                else
-                    echo "Failed to update. <br>";
-            }
             else 
-            {
                 $gevent = $calendar->addNewEvent( $event );
-                flush( );
-                ob_flush();
-            }
+
+            echo "... Done with $i out of total $total events <br>";
+            ob_flush(); flush( );
         }
     }
     else if( $_SESSION[ 'google_command' ] == 'update_eventgroup' )

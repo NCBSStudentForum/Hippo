@@ -11,7 +11,9 @@ include_once 'database.php';
 // SESSION variables.
 
 $_SESSION[ 'google_command'] = 'synchronize_all_events';
-include_once 'calendar/authenticate_gcalendar.php';
+// include_once 'calendar/authenticate_gcalendar.php';
+header( 'Location:calendar/authenticate_gcalendar.php' );
+exit;
 
 
 ?>

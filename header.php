@@ -6,6 +6,10 @@ if(!isset($_SESSION))
 // If this is not a index.php page. check if access is valid. 
 if( ! $_SERVER['PHP_SELF'] == 'index.php' ) 
     include_once( 'is_valid_access.php' );
+
+error_reporting( E_ALL );
+ini_set( "display_errors", 1 );
+
 ?>
 
 <!DOCTYPE html>
@@ -14,14 +18,17 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 <link href="minion.css" rel="stylesheet" type="text/css" />
 </head>
 <div class="header">
+
 <title>NCBS Minion</title>
-<h1>NCBS Minion</h1>
-<small>Ver 0.9.0, GNU GPL <a href="https://github.com/dilawar/ncbs-minion" target='_blank'>(c) Dilawar Singh, 2016.</a>
-<a href='mailto:dilawar.s.rajput@gamil.com'>Email developer</a></small>
+
+<h1><a href="<?php echo dirname( 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] ) ?>">NCBS Minion</a></h1>
+<a href="https://github.com/dilawar/ncbs-minion" target='_blank'>Github</a>
+<a href='https://github.com/dilawar/ncbs-minion/issues' target="_blank">Report issue</a></small>
 </div>
 <br />
 <br />
 
+<div class="bottom"> GNU GPL-v3, (c) 2016, Dilawar Singh </div>
 </html>
 
 <!-- Here are the js script -->
@@ -55,4 +62,5 @@ $(function(){
 
 <!-- CKEDIR -->
 <script src="./ckeditor/ckeditor.js"></script>
+
 

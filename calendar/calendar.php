@@ -4,10 +4,24 @@ include_once( 'database.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
 
+/**
+ * @brief Return link to calendar.
+ * TODO: This must be specified by admin later.
+ *
+ * @return 
+ */
+function calendarURL( ) 
+{
+    return '
+<iframe src="https://calendar.google.com/calendar/embed?src=6bvpnrto763c0d53shp4sr5rmk%40group.calendar.google.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    ';
+}
 
-function addEventToGoogleCalendar($calendar_name, $event )
+function addEventToGoogleCalendar($calendar_name, $event, $client )
 {
     $duration = round( (strtotime($event['end_time']) - strtotime($event['start_time'])) / 60.0 );
+
+    return 0;
 
     // FIXME: the timeout is neccessary. We don't want the system to hang for 
     // writing to google calendar.
@@ -55,13 +69,17 @@ function addEventToGoogleCalendar($calendar_name, $event )
 
 // This function uses gcalcli command to sync my local caledar with google 
 // calendar.
-function addAllEventsToCalednar( $calendarname )
+function addAllEventsToCalednar( $calendarname, $client )
 {
+    $service = new Google_Service_Calendar($client);
+    $results = $service->calendarList->listCalendarList( );
+    var_dump( $results );
+
+    echo "I am here";
     $events = getEvents( );
-    echo "Total " . count( $events ) . " to write";
     foreach( $events as $e )
     {
-        addEventToGoogleCalendar( $calendarname, $e );
+        addEventToGoogleCalendar( $calendarname, $client );
         return 0;
     }
 }

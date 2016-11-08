@@ -21,6 +21,10 @@ class NCBSCalendar
 
     public $calID = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
 
+    // NOTE: This is needed to add to datetime before we send it to GOOGLE. 
+    // Google automatically add the timezone offset which we send to it. 
+    public $offset = null;
+
     /**
         * @brief Format used by google-API.
      */
@@ -28,6 +32,7 @@ class NCBSCalendar
 
     public function __construct( $oauth_file )
     {
+        $this->offset = (new DateTime())->format( 'Z' );
         $this->client = new Google_Client( );
         if( file_exists($oauth_file) )
             $this->oauthFile =  $oauth_file;
@@ -124,21 +129,28 @@ class NCBSCalendar
      */
     public function updateEvent( $event )
     {
-        $gevent = $this->getEvent( 
-            $event['calendar_id' ]
-            , $event['calendar_event_id'] 
-        );
+        if( trim($event['calendar_event_id']) == '' )
+        {
+            echo printWarning( "You tried to update an event without valid event id");
+            echo printWarning( "... I am ignoring your update request" );
+            return;
+        }
+
+        $gevent = $this->getEvent( $event['calendar_id' ] , $event['calendar_event_id'] );
 
         // Now update the summary and description of event. Changing time is not
         // allowed in any case.
         $gevent->setSummary( $event['short_description' ] );
         $gevent->setDescription( $event['description'] );
         $gevent->setHtmlLink( $event['url'] );
+        
+        $startTimeUTC = strtotime( 
+            $event['date'] . ' ' . $event['start_time'] ) - $this->offset;
+        $endTimeUTC = strtotime( 
+            $event['date'] . ' ' . $event['end_time'] ) - $this->offset;
 
-        $startDateTime = new DateTime( $event['date'] . ' ' . $event['start_time'] );
-        $startDateTime = $startDateTime->format( $this->format );
-        $endDateTime = new DateTime( $event['date'] . ' ' . $event['end_time'] );
-        $endDateTime = $endDateTime->format( $this->format );
+        $startDateTime = date( $this->format, $startTimeUTC );
+        $endDateTime = date( $this->format, $endTimeUTC );
 
         $gStartDateTime = new Google_Service_Calendar_EventDateTime( );
         $gStartDateTime->setDateTime( $startDateTime );
@@ -154,7 +166,10 @@ class NCBSCalendar
 
         // I don't know why but this is neccessary. Not everything is returned
         // by GET request.
-        $gevent->setStatus( 'confirmed' );
+        if( $event['status'] == 'VALID' )
+            $gevent->setStatus( 'confirmed' );
+        else
+            $gevent->setStatus( 'cancelled' );
 
         try
         {

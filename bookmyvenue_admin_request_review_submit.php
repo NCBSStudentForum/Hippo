@@ -15,6 +15,21 @@ if( ! array_key_exists( 'events', $_POST ) )
     exit(0);
 }
 $events = $_POST['events'];
+
+// If admin is rejecting then ask for confirmation.
+if( $whatToDo == 'REJECT' )
+{
+    echo '<script>
+        var r = confirm( "Are you sure ?");
+        if( r == false ) {
+            var path = window.location.pathname;
+            window.location.pathname = 
+                <?php echo appRootDir( ) . "bookmyvenue_admin.php" ?>;
+        }
+        </script>';
+
+}
+
 foreach( $events as $event )
 {
     $event = explode( '.', $event );

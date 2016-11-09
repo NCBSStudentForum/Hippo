@@ -1,4 +1,5 @@
 <?php
+session_start( );
 
 set_include_path( '..' );
 
@@ -21,7 +22,7 @@ class NCBSCalendar
 
     public $service = null;
 
-    public $calID = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
+    public $calID = $_SESSION['calendar_id'];
 
     // NOTE: This is needed to add to datetime before we send it to GOOGLE. 
     // Google automatically add the timezone offset which we send to it. 

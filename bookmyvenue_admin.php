@@ -17,12 +17,23 @@ if( ! requiredPrivilege( 'BOOKMYVENUE_ADMIN' ) )
     exit( 0 );
 }
 
-?>
 
+echo '<h2> Calendar administration </h2>';
 
-<h2> Pending requests </h2>
+echo "<table class=\"show_user\">";
+echo "<table class=\"show_user\">";
+echo '
+    <tr>
+        <td>Synchronize public calendar</td>
+        <td>
+        <a href="' . appRootDir( ) .  
+            '/bookmyvenue_admin_synchronize_events_with_google_calendar.php">Synchronize public calendar </a> 
+        </td>
+    </tr>
+    </table>
+    ';
 
-<?php 
+echo '<h2> Pending requests </h2>';
 $requests = getPendingRequestsGroupedByGID( ); 
 if( count( $requests ) == 0 )
     echo printInfo( "No booking request is peniding for review" );
@@ -43,9 +54,11 @@ foreach( $events as $event )
 {
     $gid = $event['gid'];
     $eid = $event['eid'];
-    $html .= "<form method=\"post\" action=\"admin_edit.php\">";
+    $html .= "<form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";
     $html .= "<tr><td>";
-    $html .= arrayToTableHTML( $event, 'events', '', Array( 'eid' ) );
+    $html .= arrayToTableHTML( $event, 'events', ''
+        , Array( 'eid', 'calendar_id' , 'calendar_event_id' ) 
+    );
     $html .= "</td>";
     $html .= "<td> <button name=\"response\" value=\"edit\">Edit</button></td>";
     $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";
@@ -55,12 +68,8 @@ foreach( $events as $event )
 
 $html .= "</table>";
 echo $html;
+
+echo goBackToPageLink( "user.php", "Go back" );
+
 ?>
 
-
-<!-- Log out section -->
-<div style="float:left">
-<form method="POST" action="logout.php" >
-<button type="logout" value="Log out">Log out</button>
-</form>
-</div>

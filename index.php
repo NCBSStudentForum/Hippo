@@ -29,6 +29,8 @@ $_SESSION['conf'] = $conf;
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
+ini_set( 'log_errors', 1 );
+ini_set( 'error_log', '/tmp/__minion__.log' );
 
 /* counter */
 $hit_count = (int)file_get_contents('count.txt');

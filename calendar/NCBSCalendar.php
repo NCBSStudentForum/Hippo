@@ -74,7 +74,7 @@ class NCBSCalendar
             $this->client->setAccessToken($token);
         } catch (InvalidArgumentException $e) {
             echo printWarning( "Token expired! You must try again ..." );
-            echo goBackToPageLink( "admin.php", "Go back"  );
+            echo goBackToPageLink( "bookmyvenue_admin.php", "Go back"  );
             exit;
         }
     }

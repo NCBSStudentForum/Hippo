@@ -16,7 +16,8 @@ echo userHTML( );
 // When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 
 // sends us a GET response. Use this token to process all other queries.
 
-$calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ] );
+$calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ]
+    , $_SESSION['calendar_id'] );
 
 $calendar->setAccessToken( $_GET['code'] );
 

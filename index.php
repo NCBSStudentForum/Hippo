@@ -27,6 +27,8 @@ if(!$conf)
 $_SESSION['conf'] = $conf;
 
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
+$_SESSION[ 'oauth_credential' ] = __DIR__ . '/oauth-credentials.json';
+$_SESSION[ 'calendar_id'] = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );

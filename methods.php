@@ -95,41 +95,64 @@ function __get__( $arr, $what, $default = NULL )
         return $default;
 }
 
+/**
+    * @brief Convert a repeat pattern to dates.
+    *
+    * @param $pat This pattern is command separeted list of days,
+    * weeks,durations. eg. 0/2/4,2/3,5 means that event will be scheduled on day
+    * 0 (sun), day 2 (Tue), and day 4 (Thu), every 2nd and 3rd week for 5
+    * months.
+    *
+    * @return List of dates generated from this pattern. 
+ */
 function repeatPatToDays( $pat )
 {
-    assert( strlen( $pat ) > 0 );
+    if( trim($pat) == '' )
+        return;
+
     $exploded = explode( ",", $pat);
     $days = $exploded[0];
     // These are absolute indices of days.
     if( $days == "*" )
         $days = "0/1/2/3/4/5/6";
+
     $weeks = __get__( $exploded, 1, "*" );
-    $months = __get__( $exploded, 2, "*" );
+    $durationInMonths = __get__( $exploded, 2, 6 );
+
     if( $weeks == "*" )
         $weeks = "0/1/2/3";
-    if( $months == "*" );
-        $months = "0/1/2/3/4/5/6/7/8/9/10/11";
 
-
-    $months = explode( "/", $months );
     $weeks = explode( "/", $weeks );
     $days = explode( "/", $days );
 
-
     $result = Array();
 
+    // Get the base day which is Sunday. If today is not sunday then previous
+    // Sunday must be taken into account.
+    if( date('w', strtotime( 'today' ) ) == 0 )
+        $baseDay = date( 'Y-m-d', strtotime( 'today' ) );
+    else
+        $baseDay = date( 'Y-m-d', strtotime( "previous Sunday" ));
+
     // Now fill the dates for given pattern.
-    foreach( $months as $m )
+    $dates = Array( );
+    for( $i = 0; $i < 12;  $i ++ ) // Iterate of maximum duration.
         foreach( $weeks as $w )
             foreach( $days as $d )
             {
-                $day = 28 * intval($m) + 7 * intval($w) + intval($d);
-                array_push( $result, $day );
+                $nday = (28 * $i) + (7 * intval($w)) + intval($d);
+                $date = date( 'Y-m-d', strtotime( $baseDay . '+ ' . $nday . ' days ') );
+                // Cool, if this day is more than $durationInMonths away, then
+                // stop.
+                $interval = date_diff( date_create($date), date_create($baseDay));
+                $diffMonth = $interval->format( '%m' );
+                if( $diffMonth < $durationInMonths )
+                    array_push( $dates, $date );
+                else
+                    return $dates;
             }
 
-    // Get the base day which is Sunday.
-    $baseDay = strtotime( "this Sunday" );
-    return daysToDate($result, $baseDay);
+    return $dates;
 }
 
 function daysToDate( $ndays, $baseDay = NULL )
@@ -197,7 +220,7 @@ function goBack( )
     *
     * @return 
  */
-function constructRepeatPattern( $daypat, $weekpat, $monthpat )
+function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
 {
    $weekNum = Array( 
       "first" => 0, "second" => 1, "third" => 2, "fourth" => 3 
@@ -226,20 +249,12 @@ function constructRepeatPattern( $daypat, $weekpat, $monthpat )
             array_push( $weeks, $weekNum[$w] );
       }
    }
+
    $weeks = implode( "/", $weeks );
    if( ! $weeks )
        $weeks = '0/1/2/3';
 
-   $months = Array( );
-   if( $monthpat )
-      for ($i = 0; $i < intval( $monthpat ); $i++) 
-         array_push( $months, "$i" );
-
-   $months = implode( "/", $months );
-   if( ! $months )
-       $months = '0/1/2/3/4/5';
-
-   return "$days,$weeks,$months";
+   return "$days,$weeks,$durationInMonths";
 }
 
 ?>

@@ -73,9 +73,11 @@ function appRootDir( )
 function goToPage($page="index.php", $delay = 3)
 {
   echo printWarning("... Going to page $page in $delay seconds ...");
+  ob_flush( ); flush( );
   $baseurl = appRootDir( );
   $url = "$baseurl/$page";
-  header("Refresh: $delay, url=$url");
+  header("Refresh:$delay, url=$url");
+  exit(0);
 }
 
 function goBackToPageLink( $url, $title = "Go back" )

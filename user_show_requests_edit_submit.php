@@ -10,6 +10,9 @@ if( strcasecmp($_POST['response'], 'submit' ) == 0 )
     else
         echo printWarning( "Failed to update update request" );
 
-    goToPage( "user_show_requests.php", 1 );
+    if( array_key_exists( 'go_back_to', $_GET ) )
+        goToPage( $_GET[ 'go_back_to' ], 1 );
+    else
+        goToPage( "user_show_requests.php", 1 );
 }
 ?>

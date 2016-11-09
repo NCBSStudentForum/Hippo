@@ -1,5 +1,7 @@
 <?php
 
+session_start( );
+
 include_once( 'calendar/NCBSCalendar.php' );
 include_once( 'database.php' );
 include_once( 'methods.php' );
@@ -31,7 +33,7 @@ function addAllEventsToCalednar( $calendarname, $client )
 function updateEventGroupInCalendar( $gid )
 {
     $events = getEventsByGroupId( $gid );
-    $calendar = new NCBSCalendar( './oauth-credentials.json' );
+    $calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ] );
     foreach( $events as $event )
     {
         var_dump( $event );

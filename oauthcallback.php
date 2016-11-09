@@ -21,6 +21,8 @@ $calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ]
 
 $calendar->setAccessToken( $_GET['code'] );
 
+$everythingWentOk = true;
+
 
 if( array_key_exists( 'google_command', $_SESSION ) )
 { 
@@ -67,8 +69,16 @@ else
     echo printInfo( "No command is given regarging google calendar" );
 }
 
-echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
-echo '<br> <br> <br>';
+if( $everythingWentOk )
+{
+    goToPage( "bookmyvenue_admin.php", 3 );
+    exit;
+}
+else
+{
+    echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
+    echo '<br> <br> <br>';
+}
 
 exit;
 

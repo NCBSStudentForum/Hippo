@@ -9,6 +9,7 @@ USE minion;
 -- DROP TABLE IF EXISTS supervisors;
 -- DROP TABLE IF EXISTS labs;
 -- DROP TABLE IF EXISTS logins;
+DROP TABLE IF EXISTS faculty;
 
 
 CREATE TABLE IF NOT EXISTS logins (
@@ -123,6 +124,19 @@ create TABLE IF NOT EXISTS supervisors (
     , middle_name VARCHAR(200)
     , last_name VARCHAR( 200 ) 
     , affiliation VARCHAR( 1000 ) NOT NULL
+    , url VARCHAR(300)
+    );
+
+--  Create  a table supervisors. They are from outside.
+create TABLE IF NOT EXISTS faculty (
+    email VARCHAR(200) PRIMARY KEY NOT NULL
+    , first_name VARCHAR( 200 ) NOT NULL
+    , middle_name VARCHAR(200)
+    , last_name VARCHAR( 200 ) 
+    , status ENUM ( 'ACTIVE', 'INACTIVE', 'INVALID' ) DEFAULT 'ACTIVE'
+    , affiliation VARCHAR( 1000 ) NOT NULL DEFAULT 'NCBS Bangalore'
+    , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+    , modified_on DATETIME NOT NULL
     , url VARCHAR(300)
     );
 

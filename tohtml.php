@@ -334,10 +334,13 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     * @param $defaults  . Populate table with these default values. If not found 
     * in this array, use schema defauls.
     * @param $editables
+    * @param button_val What value response of submit must should have.
     *
     * @return 
  */
-function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array() )
+function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
+    , $button_val = 'submit'
+)
 {
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );
@@ -417,7 +420,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
     if( count( $editables ) > 0 )
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
-        $html .= "<button style=\"float:right\" value=\"submit\" name=\"response\">Submit</button>";
+        $html .= "<button style=\"float:right\" value=\"$button_val\" name=\"response\">Submit</button>";
         $html .= "</td></tr>";
     }
     $html .= "</table>";

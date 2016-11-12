@@ -10,8 +10,10 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 echo userHTML( );
 
-echo "<h3>Annual Work Seminar Admin</h3>";
+echo "<h3>Manage pending requests</h3>";
 
-$awsws = getAllUpcomingAWS( );
+$pendingRequests = getPendingAWSRequests( );
+foreach( $pendingRequests as $req )
+    echo arrayToTableHTML( $req, 'aws' );
 
 ?>

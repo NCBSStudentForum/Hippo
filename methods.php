@@ -74,7 +74,10 @@ function goToPage($page="index.php", $delay = 3)
 {
   echo printWarning("... Going to page $page in $delay seconds ...");
   $baseurl = appRootDir( );
-  $url = "$baseurl/$page";
+  if( strpos( $page, "http" ) == 0 )
+      $url = $page;
+  else
+      $url = "$baseurl/$page";
   header("Refresh: $delay, url=$url");
 }
 

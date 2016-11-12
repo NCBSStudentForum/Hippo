@@ -33,11 +33,12 @@ ini_set( "display_errors", 1 );
 </html>
 
 <!-- Here are the js script -->
-<link rel="stylesheet" href="js/jquery-ui.css">
 <script src="js/jquery-1.12.4.js"></script>
 <script src="js/jquery-ui.js"></script>
 
 <script src="js/jquery-ui.multidatespicker.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.css">
+
 
 <script type="text/javascript" src="js/jquery-timepicker/jquery.timepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="js/jquery-timepicker/jquery.timepicker.css" />

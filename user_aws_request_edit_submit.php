@@ -12,6 +12,7 @@ $columns = Array(
     , 'tcm_member_1', 'tcm_member_2', 'tcm_member_3', 'tcm_member_4' 
 );
 
+
 $data = $_POST;
 $rid = $_POST[ 'rid' ];
 

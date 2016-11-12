@@ -41,11 +41,16 @@ foreach( $awsRequests as $awsr )
 
 echo "<h3>Create a request</h3>";
 echo "<table class=\"show_user\">";
-echo '<tr><td>You can add a missing entry here (TODO: Make it available till we 
-    collect all data)
-    </td><td> <a href="' . appRootDir() .  '/user_aws_edit.php">Add previous 
+echo '<tr><td>
+    You can add a missing AWS here for review.
+    </td><td> <a href="' . appRootDir() .  '/user_aws_request.php">Add previous 
     AWS</a>';
 echo "</td></tr>";
+echo '<tr>
+    <td>Edit previous AWS. Something is wrong in my previous AWS entries.</td>
+    <td>Just scroll down to the list of previous AWSes and press Edit button.</td>
+    
+</tr>';
 echo "</table>";
 
 

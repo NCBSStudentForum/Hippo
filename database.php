@@ -762,9 +762,11 @@ function getAwsById( $id )
 function getSupervisors( )
 {
     global $db;
-    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
+    $faculty = getFaculty( $status = 'ACTIVE' );
+    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY last_name' );
     $stmt->execute( );
-    return fetchEntries( $stmt );
+    $supervisors = fetchEntries( $stmt );
+    return array_merge( $faculty, $supervisors );
 }
 
 /**
@@ -882,13 +884,30 @@ function  scheduledAWSInFuture( $speaker )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
-function getFaculty( )
+/**
+    * @brief Fetch faculty from database. Order by last-name
+    *
+    * @param $status
+    *
+    * @return 
+ */
+function getFaculty( $status = '', $order_by = 'last_name' )
 {
     global $db;
-    $stmt = $db->query( 'SELECT * FROM faculty ORDER BY first_name' );
+    $query = 'SELECT * FROM faculty ';
+    if( $status )
+        $query .= " WHERE status=:status ";
+
+    $query .= " ORDER BY  '$order_by' ";
+
+    $stmt = $db->prepare( $query );
+    if( $status )
+        $stmt->bindValue( ':status', $status );
+
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
+
 
 
 ?>

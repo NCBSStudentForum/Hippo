@@ -31,7 +31,7 @@ echo "<h3>Edit or add AWS entry</h3>";
 echo "<p>
 NOTICE: If you can't find your supervior(s) and/or thesis committee member(s) in selection list,
 please create a entry for them <a href=\"" . appRootDir() . 
-   "/user_add_supervisor.php\">HERE</a>
+   "/user_add_supervisor.php\" target=\"_blank\">HERE</a>
 </p>";
 
 // Now create an entry
@@ -41,8 +41,8 @@ $supervisorText = Array( );
 foreach( $supervisors as $supervisor )
 {
     array_push( $supervisorIds, $supervisor['email'] );
-    $supervisorText[ $supervisor['email'] ] = $supervisor['first_name' ] . 
-        ' ' . $supervisor['last_name'];
+    $supervisorText[ $supervisor['email'] ] = $supervisor['first_name']
+        .  ' ' . $supervisor[ 'last_name' ] ;
 }
 
 echo "<form method=\"post\" action=\"user_aws_edit_submit.php\">";

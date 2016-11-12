@@ -173,7 +173,7 @@ create TABLE IF NOT EXISTS aws_requests (
     , scheduled_on DATE 
     , title VARCHAR( 1000 )
     , abstract TEXT
-    , status ENUM( 'PENDING', 'APPROVED', 'REJECTED', 'INVALID' ) DEFAULT 'PENDING'
+    , status ENUM( 'PENDING', 'APPROVED', 'REJECTED', 'INVALID', 'CANCELLED' ) DEFAULT 'PENDING'
     , modidfied_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 

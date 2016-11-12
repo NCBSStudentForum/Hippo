@@ -23,6 +23,40 @@ else {
     echo "TODO: Ask for postpone/swap with others?";
 }
 
+
+echo "<h3>Update pending requests</h3>";
+
+$awsRequests = getAwsRequestsByUser( $_SESSION['user'] );
+foreach( $awsRequests as $awsr )
+{
+    $id = $awsr['id'];
+    echo "<form method=\"post\" action=\"user_aws_request.php\">";
+    echo arrayToTableHTML( $awsr, 'aws' );
+    echo "<button name=\"response\" value=\"edit\">Edit</button>";
+    echo "<button name=\"response\" value=\"cancel\">Cancel</button>";
+    echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
+    echo "</form>";
+}
+
+
+echo "<h3>Create a request</h3>";
+echo "<table class=\"show_user\">";
+echo '<tr><td>
+    You can add a missing AWS here for review.
+    </td><td> <a href="' . appRootDir() .  '/user_aws_request.php">Add previous 
+    AWS</a>';
+echo "</td></tr>";
+echo '<tr>
+    <td>Edit previous AWS. Something is wrong in my previous AWS entries.</td>
+    <td>Just scroll down to the list of previous AWSes and press Edit button.</td>
+    
+</tr>';
+echo "</table>";
+
+
+echo goBackToPageLink( "user.php", "Go back" );
+echo "<br />";
+
 echo "<h3>Past Annual Work Seminar</h3>";
 
 $awses = getMyAws( $_SESSION['user'] );
@@ -40,16 +74,6 @@ foreach( $awses as $aws )
     echo "<br /><br />";
     echo "</div>";
 }
-
-echo "<h3>Add a missing entry</h3>";
-echo "<table class=\"show_user\">";
-echo '<tr><td>You can add a missing entry here (TODO: Make it available till we 
-    collect all data)
-    </td><td> <a href="' . appRootDir() .  '/user_aws_edit.php">Add previous 
-    AWS</a>';
-echo "</td></tr>";
-echo "</table>";
-
 
 echo goBackToPageLink( "user.php", "Go back" );
 

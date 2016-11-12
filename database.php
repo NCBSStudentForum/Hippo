@@ -762,9 +762,13 @@ function getAwsById( $id )
 function getSupervisors( )
 {
     global $db;
+    $faculty = getFaculty( $status = 'ACTIVE' );
     $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
     $stmt->execute( );
-    return fetchEntries( $stmt );
+    $supervisors = fetchEntries( $stmt );
+    foreach( $supervisors as $super )
+        array_push( $faculty, $super );
+    return $faculty;
 }
 
 /**
@@ -773,7 +777,7 @@ function getSupervisors( )
     * @param $tablename
     * @param $data
     *
-    * @return 
+    * @return  The primary key value of this table. Usually id.
  */
 function insertIntoTable( $tablename, $keys, $data )
 {
@@ -805,8 +809,15 @@ function insertIntoTable( $tablename, $keys, $data )
             $value = implode( ',', $value );
         $stmt->bindValue( ":$k", $value );
     }
-
-    return $stmt->execute( );
+    $res = $stmt->execute( );
+    if( $res )
+    {
+        // When created return the id of table else return null;
+        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
+        $stmt->execute( );
+        return $stmt->fetch( PDO::FETCH_ASSOC );
+    }
+    return $res;
 }
 
 /**
@@ -881,6 +892,68 @@ function  scheduledAWSInFuture( $speaker )
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
+
+/**
+    * @brief Fetch faculty from database. Order by last-name
+    *
+    * @param $status
+    *
+    * @return 
+ */
+function getFaculty( $status = '', $order_by = 'first_name' )
+{
+    global $db;
+    $query = 'SELECT * FROM faculty ';
+    if( $status )
+        $query .= " WHERE status=:status ";
+
+    $query .= " ORDER BY  '$order_by' ";
+
+    $stmt = $db->prepare( $query );
+    if( $status )
+        $stmt->bindValue( ':status', $status );
+
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get all pending requests for this user.
+    *
+    * @param $user Name of the user.
+    * @param $status status of the request.
+    *
+    * @return 
+ */
+function getAwsRequestsByUser( $user, $status = 'PENDING' )
+{
+    global $db;
+    $query = "SELECT * FROM aws_requests WHERE status=:status AND speaker=:speaker";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':speaker', $user );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+function getAwsRequestById( $id )
+{
+    global $db;
+    $query = "SELECT * FROM aws_requests WHERE id=:id";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':id', $id );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+function getPendingAWSRequests( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM aws_requests WHERE status='PENDING'" );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 
 ?>
 

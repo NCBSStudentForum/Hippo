@@ -21,7 +21,7 @@ class NCBSCalendar
 
     public $service = null;
 
-    public $calID = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
+    public $calID = null;
 
     // NOTE: This is needed to add to datetime before we send it to GOOGLE. 
     // Google automatically add the timezone offset which we send to it. 
@@ -32,8 +32,9 @@ class NCBSCalendar
      */
     public $format = 'Y-m-d\TH:i:s';
 
-    public function __construct( $oauth_file )
+    public function __construct( $oauth_file, $calID )
     {
+        $this->calID = $calID;
         $this->offset = (new DateTime())->format( 'Z' );
         $this->client = new Google_Client( );
         if( file_exists($oauth_file) )
@@ -73,7 +74,7 @@ class NCBSCalendar
             $this->client->setAccessToken($token);
         } catch (InvalidArgumentException $e) {
             echo printWarning( "Token expired! You must try again ..." );
-            echo goBackToPageLink( "admin.php", "Go back"  );
+            echo goBackToPageLink( "bookmyvenue_admin.php", "Go back"  );
             exit;
         }
     }

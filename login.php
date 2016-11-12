@@ -29,7 +29,6 @@ else
     $_SESSION['AUTHENTICATED'] = TRUE;
     $_SESSION['user'] = $ldap;
 
-    echo "Quering LDAP server for user information";
     $ldapInfo = getUserInfoFromLdap( $ldap );
 
     // In any case, create a entry in database.
@@ -38,7 +37,8 @@ else
     if( !$ldapInfo )
     {
         echo printWarning( "Could not query LDAP server" );
-        goToPage( "user.php", 1 );
+        goToPage( "user.php", 0 );
+        exit( 0 );
     }
 
 
@@ -55,5 +55,5 @@ else
     goToPage( "user.php", 0 );
     exit;
 }
-
+sk
 ?>

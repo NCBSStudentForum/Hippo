@@ -34,6 +34,8 @@ function minionEmbarrassed( $msg, $info = '' )
 {
     echo "<p class=\"embarassed\"> This is embarassing! <br>";
     echo " $msg <br> $info ";
+    echo "I have logged this error! If possible please notify the admin. ";
+    error_log( "failed to updated" );
     echo "</p>";
 }
 

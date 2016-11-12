@@ -4,12 +4,12 @@ USE minion;
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
--- DROP TABLE IF EXISTS annual_work_seminars;
+DROP TABLE IF EXISTS annual_work_seminars;
 -- DROP TABLE IF EXISTS annual_work_seminars_requests;
 -- DROP TABLE IF EXISTS supervisors;
 -- DROP TABLE IF EXISTS labs;
 -- DROP TABLE IF EXISTS logins;
-DROP TABLE IF EXISTS faculty;
+-- DROP TABLE IF EXISTS faculty;
 
 
 CREATE TABLE IF NOT EXISTS logins (
@@ -145,9 +145,9 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , speaker VARCHAR(200) NOT NULL -- user
     , date DATE -- final date
     , time TIME 
-    , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser 
+    , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser must be from NCBS
     , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
-    , tcm_member_1 VARCHAR( 200 )  NOT NULL -- at least one tcm member is required.
+    , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.
     , tcm_member_2 VARCHAR( 200 ) -- optional 
     , tcm_member_3 VARCHAR( 200 ) -- optional 
     , tcm_member_4 VARCHAR( 200 ) -- optional
@@ -155,11 +155,6 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , title VARCHAR( 1000 )
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES logins(login)
-    , FOREIGN KEY (supervisor_1) REFERENCES supervisors(email) 
-    , FOREIGN KEY (supervisor_2) REFERENCES supervisors(email) 
-    , FOREIGN KEY (tcm_member_1) REFERENCES supervisors(email) 
-    , FOREIGN KEY (tcm_member_2) REFERENCES supervisors(email) 
-    , FOREIGN KEY (tcm_member_3) REFERENCES supervisors(email) 
-    , FOREIGN KEY (tcm_member_4) REFERENCES supervisors(email) 
+    , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
     );
 

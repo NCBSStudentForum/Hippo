@@ -6,7 +6,6 @@ USE minion;
 -- DROP TABLE IF EXISTS venues;
 -- DROP TABLE IF EXISTS annual_work_seminars;
 DROP TABLE IF EXISTS aws_requests;
--- DROP TABLE IF EXISTS annual_work_seminars_requests;
 -- DROP TABLE IF EXISTS supervisors;
 -- DROP TABLE IF EXISTS labs;
 -- DROP TABLE IF EXISTS logins;

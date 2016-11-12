@@ -946,6 +946,13 @@ function getAwsRequestById( $id )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getPendingAWSRequests( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM aws_requests WHERE status='PENDING'" );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
 
 
 ?>

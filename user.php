@@ -74,7 +74,7 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
    $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
          periodically. 
       </td>
-      <td> <a href="aws_admin.php">AWS Admin</a></td> </tr>';
+      <td> <a href="admin_aws.php">AWS Admin</a></td> </tr>';
    $html .= "</table>";
 echo $html;
 }

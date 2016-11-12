@@ -16,6 +16,21 @@ echo userHTML( );
 <?php
 
 $default = Array( );
+
+if( ! isset( $_POST['id'] ))
+{
+    // Now here how i do it. First I create a dummy request and use the 'edit'
+    // functionality of this page.
+    $rid = insertIntoTable( 'aws_requests'
+        , array( 'speaker' ) 
+        ,  array( "speaker" => $_SESSION['user'] ) 
+    );
+    $_POST['id'] = $rid[ 'LAST_INSERT_ID()' ];
+    $_POST['response'] = 'edit';
+    // And continue.
+    echo printInfo( "A request is created with id " . $_POST[ 'id' ] );
+}
+
 $rid = $_POST['id'];
 
 if( $_POST['response'] == 'edit' )
@@ -116,6 +131,10 @@ else if( $_POST['response'] == 'cancel' )
     {
         echo minionEmbarrassed( 'I could not cancel your request.' );
     }
+}
+else
+{
+    echo "Unknown request";
 }
 
 echo goBackToPageLink( "user.php", "Go back" );

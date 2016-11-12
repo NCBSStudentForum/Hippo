@@ -777,7 +777,7 @@ function getSupervisors( )
     * @param $tablename
     * @param $data
     *
-    * @return 
+    * @return  The primary key value of this table. Usually id.
  */
 function insertIntoTable( $tablename, $keys, $data )
 {
@@ -809,8 +809,15 @@ function insertIntoTable( $tablename, $keys, $data )
             $value = implode( ',', $value );
         $stmt->bindValue( ":$k", $value );
     }
-
-    return $stmt->execute( );
+    $res = $stmt->execute( );
+    if( $res )
+    {
+        // When created return the id of table else return null;
+        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
+        $stmt->execute( );
+        return $stmt->fetch( PDO::FETCH_ASSOC );
+    }
+    return $res;
 }
 
 /**

@@ -763,10 +763,12 @@ function getSupervisors( )
 {
     global $db;
     $faculty = getFaculty( $status = 'ACTIVE' );
-    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY last_name' );
+    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
     $stmt->execute( );
     $supervisors = fetchEntries( $stmt );
-    return array_merge( $faculty, $supervisors );
+    foreach( $supervisors as $super )
+        array_push( $faculty, $super );
+    return $faculty;
 }
 
 /**
@@ -891,7 +893,7 @@ function  scheduledAWSInFuture( $speaker )
     *
     * @return 
  */
-function getFaculty( $status = '', $order_by = 'last_name' )
+function getFaculty( $status = '', $order_by = 'first_name' )
 {
     global $db;
     $query = 'SELECT * FROM faculty ';

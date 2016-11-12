@@ -20,14 +20,13 @@ if( ! requiredPrivilege( 'BOOKMYVENUE_ADMIN' ) )
 
 echo '<h2> Calendar administration </h2>';
 
-echo "<table class=\"show_user\">";
-echo "<table class=\"show_user\">";
-echo '
+echo '<table class="show_user">
     <tr>
         <td>Synchronize public calendar</td>
         <td>
-        <a href="' . appRootDir( ) .  
-            '/bookmyvenue_admin_synchronize_events_with_google_calendar.php">Synchronize public calendar </a> 
+            <a href="' . appRootDir( ) .  
+            '/bookmyvenue_admin_synchronize_events_with_google_calendar.php">
+            Synchronize public calendar </a> 
         </td>
     </tr>
     </table>
@@ -36,7 +35,8 @@ echo '
 echo '<h2> Pending requests </h2>';
 $requests = getPendingRequestsGroupedByGID( ); 
 if( count( $requests ) == 0 )
-    echo printInfo( "No booking request is peniding for review" );
+    echo printInfo( "Cool! No request is pending for review" );
+
 ?>
 
 <form action="bookmyvenue_admin_request_review.php" method="post" accept-charset="utf-8">

@@ -72,10 +72,11 @@ function appRootDir( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
-  echo printWarning("... Going to page $page in $delay seconds ...");
   $baseurl = appRootDir( );
   $url = "$baseurl/$page";
-  header("Refresh: $delay, url=$url");
+  echo printWarning("... Going to page $url in $delay seconds ...");
+  header("Refresh:$delay, url=$url");
+  exit(0);
 }
 
 function goBackToPageLink( $url, $title = "Go back" )

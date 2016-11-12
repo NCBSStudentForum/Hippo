@@ -4,7 +4,8 @@ USE minion;
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
-DROP TABLE IF EXISTS annual_work_seminars;
+-- DROP TABLE IF EXISTS annual_work_seminars;
+DROP TABLE IF EXISTS aws_requests;
 -- DROP TABLE IF EXISTS annual_work_seminars_requests;
 -- DROP TABLE IF EXISTS supervisors;
 -- DROP TABLE IF EXISTS labs;
@@ -140,21 +141,40 @@ create TABLE IF NOT EXISTS faculty (
     , url VARCHAR(300)
     );
 
+-- These are finally approved AWS. 
 create TABLE IF NOT EXISTS annual_work_seminars (
     id INT AUTO_INCREMENT PRIMARY KEY
     , speaker VARCHAR(200) NOT NULL -- user
-    , date DATE -- final date
-    , time TIME 
+    , date DATE NOT NULL -- final date
+    , time TIME NOT NULL DEFAULT '16:00'
     , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser must be from NCBS
     , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
     , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.
     , tcm_member_2 VARCHAR( 200 ) -- optional 
     , tcm_member_3 VARCHAR( 200 ) -- optional 
     , tcm_member_4 VARCHAR( 200 ) -- optional
-    , tentatively_scheduled_on DATE 
     , title VARCHAR( 1000 )
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES logins(login)
     , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
+    );
+
+-- This table holds all edit and requests.
+create TABLE IF NOT EXISTS aws_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY
+    , speaker VARCHAR(200) NOT NULL -- user
+    , date DATE -- final date
+    , time TIME DEFAULT '16:00'
+    , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser must be from NCBS
+    , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
+    , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.
+    , tcm_member_2 VARCHAR( 200 ) -- optional 
+    , tcm_member_3 VARCHAR( 200 ) -- optional 
+    , tcm_member_4 VARCHAR( 200 ) -- optional
+    , scheduled_on DATE 
+    , title VARCHAR( 1000 )
+    , abstract TEXT
+    , status ENUM( 'PENDING', 'APPROVED', 'REJECTED', 'INVALID' ) DEFAULT 'PENDING'
+    , modidfied_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 

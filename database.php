@@ -910,6 +910,35 @@ function getFaculty( $status = '', $order_by = 'first_name' )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Get all pending requests for this user.
+    *
+    * @param $user Name of the user.
+    * @param $status status of the request.
+    *
+    * @return 
+ */
+function getAwsRequestsByUser( $user, $status = 'PENDING' )
+{
+    global $db;
+    $query = "SELECT * FROM aws_requests WHERE status=:status AND speaker=:speaker";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':speaker', $user );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+function getAwsRequestById( $id )
+{
+    global $db;
+    $query = "SELECT * FROM aws_requests WHERE id=:id";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':id', $id );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
 
 
 ?>

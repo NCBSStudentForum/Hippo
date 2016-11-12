@@ -25,12 +25,12 @@ table.show_user {
     background : lightyellow;
 }
 
-
 table.show_user tr td 
 {
     border : 0.5px dotted; 
     min-width : 20%;
 }
+
 
 table.show_aws {
     max-width : 1000px;
@@ -198,6 +198,19 @@ table.editable_events {
 
 .editable {
     min-width : 300px;
+}
+
+table.editable_faculty {
+    text-align : left;
+    min-width : 500px;
+    background : lightyellow;
+}
+
+
+table.editable_faculty tr td 
+{
+    /*border : 0.5px dotted; */
+    /*min-width : 20%;*/
 }
 
 div.cell_content {

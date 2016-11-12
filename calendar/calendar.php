@@ -1,7 +1,5 @@
 <?php
 
-session_start( );
-
 include_once( 'calendar/NCBSCalendar.php' );
 include_once( 'database.php' );
 include_once( 'methods.php' );

@@ -65,22 +65,10 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         );
 }
 else
-{
     echo printInfo( "No command is given regarging google calendar" );
-}
 
-if( $everythingWentOk )
-{
-    goToPage( "bookmyvenue_admin.php", 3 );
-    exit;
-}
-else
-{
-    echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
-    echo '<br> <br> <br>';
-}
-
+echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
+echo '<br> <br> <br>';
 exit;
-
-
+}
 ?>

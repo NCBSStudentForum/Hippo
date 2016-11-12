@@ -35,7 +35,7 @@ echo '<table class="show_user">
 echo '<h2> Pending requests </h2>';
 $requests = getPendingRequestsGroupedByGID( ); 
 if( count( $requests ) == 0 )
-    echo printInfo( "No booking request is peniding for review" );
+    echo printInfo( "Cool! No request is pending for review" );
 
 ?>
 

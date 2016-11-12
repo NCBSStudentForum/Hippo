@@ -15,7 +15,6 @@ $( function() {
     var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
     $( "#datepicker" ).multiDatesPicker( { 
         dateFormat : "y-m-d"
-        // , addDates : [ today, tomorrow ] 
     });
 } );
 </script>

@@ -885,7 +885,7 @@ function  scheduledAWSInFuture( $speaker )
 function getFaculty( )
 {
     global $db;
-    $stmt = $db->query( 'SELECT * FROM facutly ORDER BY first_name' );
+    $stmt = $db->query( 'SELECT * FROM faculty ORDER BY first_name' );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

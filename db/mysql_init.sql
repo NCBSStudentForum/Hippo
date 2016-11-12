@@ -4,7 +4,7 @@ USE minion;
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
--- DROP TABLE IF EXISTS annual_work_seminars;
+DROP TABLE IF EXISTS annual_work_seminars;
 DROP TABLE IF EXISTS aws_requests;
 -- DROP TABLE IF EXISTS supervisors;
 -- DROP TABLE IF EXISTS labs;
@@ -42,12 +42,6 @@ CREATE TABLE IF NOT EXISTS logins (
     , PRIMARY KEY (login)
 );
 
-create TABLE IF NOT EXISTS labs (
-   id VARCHAR(200) PRIMARY KEY 
-   , url VARCHAR (500)
-   , faculty_in_charge VARCHAR( 200 ) NOT NULL
-   , FOREIGN KEY (faculty_in_charge) REFERENCES logins(login)
-   );
 
 CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     gid INT NOT NULL
@@ -155,7 +149,7 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , title VARCHAR( 1000 )
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES logins(login)
-    , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
+    -- , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
     );
 
 -- This table holds all edit and requests.

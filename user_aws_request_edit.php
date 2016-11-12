@@ -45,7 +45,7 @@ foreach( $supervisors as $supervisor )
         .  ' ' . $supervisor[ 'last_name' ] ;
 }
 
-echo "<form method=\"post\" action=\"user_aws_edit_submit.php\">";
+echo "<form method=\"post\" action=\"user_aws_request_edit_submit.php\">";
 echo "<table class=\"input\">";
 echo '
     <tr>

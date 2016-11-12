@@ -882,5 +882,14 @@ function  scheduledAWSInFuture( $speaker )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getFaculty( )
+{
+    global $db;
+    $stmt = $db->query( 'SELECT * FROM facutly ORDER BY first_name' );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
 ?>
 

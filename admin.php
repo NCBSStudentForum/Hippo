@@ -55,9 +55,9 @@ echo "<h3>Database management </h3>";
 echo '
     <table class="show_user">
         <tr>
-            <td>Update/Edit list of principal investigators</td>
+            <td>Add/Update faculty</td>
             <td>
-                <a href="admin_sync_faculty.php">Synchornize faculty database</a>
+                <a href="admin_manages_faculty.php">Manage faculty</a>
             </td>
         </tr>
     </table>

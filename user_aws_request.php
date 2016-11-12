@@ -119,7 +119,7 @@ else if( $_POST['response'] == 'cancel' )
 {
     $id = $_POST['id'];
     $res = updateTable( 'aws_requests', 'id', array( 'status' )
-        , array( 'id' => $id, 'status' => 'CANCELED' )
+        , array( 'id' => $id, 'status' => 'CANCELLED' )
     );
     if( $res )
     {

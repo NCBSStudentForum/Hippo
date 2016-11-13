@@ -10,10 +10,23 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 echo userHTML( );
 
-echo "<h3>Manage pending requests</h3>";
+echo "<h3>AWS Admin</h3>";
 
-$pendingRequests = getPendingAWSRequests( );
-foreach( $pendingRequests as $req )
-    echo arrayToTableHTML( $req, 'aws' );
+echo '<table border="0" class="admin">
+    <tr>
+        <td>AWS summary</td>
+        <td><a href="admin_aws_summary.php">See AWS summary</a></td>
+    </tr>
+    <tr>
+        <td>Manage upcoming AWS</td>
+        <td><a href="admin_aws_manages_upcoming_aws.php">Manage upcoming AWSes</a></td>
+    </tr>
+    <tr>
+    <td>Manage pending requests</td>
+    <td> <a href="admin_aws_manages_requests.php">Manage pending requests</a> </td>
+    </tr>
+    
+</table>';
+
 
 ?>

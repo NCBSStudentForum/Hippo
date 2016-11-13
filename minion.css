@@ -52,6 +52,20 @@ table.show_aws tr td:nth-child(even)
     min-width : 80%;
 }
 
+table.show_aws_summary {
+    max-width : 1000px;
+    min-width : 100%;
+    background : lightyellow;
+}
+
+
+table.show_aws_summary tr td
+{
+    border : 1px dotted;
+    /*max-width : 20%;*/
+}
+
+
 div.info {
     /*border : 1px solid #73AD21;*/
     max-width : 800px;
@@ -252,6 +266,16 @@ table.hourtable tr td {
 
 table.request tr:nth-of-type( odd ) {
     background : #eee;
+}
+
+table.admin {
+    background : lightyellow;
+    min-width : 500px;
+    max-width : 1000px;
+}
+
+table.admin tr td {
+    border : 1px dotted;
 }
 
 .goback {

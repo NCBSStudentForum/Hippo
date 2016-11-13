@@ -507,4 +507,11 @@ function arrayToSelectList( $name, $options
     return $html;
 }
 
+function loginToText( $loginName )
+{
+    $login = getUserInfo( $loginName );
+    $text = $login['first_name'] . ' ' . $login[ 'last_name' ];
+    return $text;
+}
+
 ?>

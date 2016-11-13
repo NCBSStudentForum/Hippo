@@ -971,7 +971,7 @@ function getAWSFromPast( $from  )
 {
     global $db;
     $stmt = $db->query( "SELECT * FROM annual_work_seminars 
-        WHERE date >= $from ORDER BY speaker, date
+        WHERE date >= $from ORDER BY date, speaker
     " );
     $stmt->execute( );
     return fetchEntries( $stmt );

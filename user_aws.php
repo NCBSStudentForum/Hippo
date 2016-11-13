@@ -65,9 +65,9 @@ foreach( $awses as $aws )
 {
     $id = $aws['id'];
     echo "<div>";
-    echo "<form method=\"post\" action=\"user_aws_edit.php\">";
+    echo "<form method=\"post\" action=\"user_aws_request.php\">";
     echo arrayToVerticalTableHTML( $aws, 'aws', NULL
-    , Array( 'speaker', 'tentatively_scheduled_on', 'id' ));
+    , Array( 'speaker', 'id' ));
     echo "<button class=\"submit\" name=\"response\" value=\"edit\">Edit</button>";
     echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
     echo "</form>";

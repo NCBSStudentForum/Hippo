@@ -19,7 +19,6 @@ $html = '<table class="show_user">';
    <tr>
       <td>
          See and edit (most of) your details 
-        <small> Details fetched from NCBS LDAP server are not editable </small>
       </td>
       <td> 
          <a href="user_info.php">Show/Edit my details</a> 

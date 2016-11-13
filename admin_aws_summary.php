@@ -29,9 +29,9 @@ function daysToLine( $awsDays, $totalDays, $blockSize = 7)
 
 
     // These are fixed to 4 weeks (a month).
-    $line .= intval( $awsDays[0] / 28 ) . ',' ;
+    $line .= intval( $awsDays[0] / 30.41 ) . ',' ;
     for( $i = 1; $i < count( $awsDays ); $i++ )
-        $line .=  intval(( $awsDays[ $i ] - $awsDays[ $i - 1 ] ) / 28 ) . ',';
+        $line .=  intval(( $awsDays[ $i ] - $awsDays[ $i - 1 ] ) / 30.41 ) . ',';
 
     $line .= "</small></td><td>";
 
@@ -48,7 +48,7 @@ function daysToLine( $awsDays, $totalDays, $blockSize = 7)
 }
 
 
-// Get AWS in roughly last 10 years.
+// Get AWS in roughly last 5 years.
 $totalDays = 5 * 365;
 $from = date( 'Y-m-d', strtotime( 'now' ) - $totalDays * 24 * 3600 );
 $awses = getAWSFromPast( $from );
@@ -64,14 +64,16 @@ foreach( $awses as $aws )
 $table = '<table border="0" class="show_aws_summary">';
 
 $table .= '<tr>
-    <th>Name <small>email</small></th>
+    <th></th><th>Name <small>email</small></th>
     <th><small>Months between AWSes</small></th>
     <th>Previous AWSes</th>
     </tr>';
 
+$i = 0;
 foreach( $speakerAWS as $speaker => $awses )
 {
-    $table .= "<tr> <td> " . loginToText( $speaker ) 
+    $i +=1 ;
+    $table .= "<tr> <td>$i</td> <td> " . loginToText( $speaker ) 
                 . "<br><small> $speaker </small>" . "</td>";
     $when = array( );
     foreach( $awses as $aws )

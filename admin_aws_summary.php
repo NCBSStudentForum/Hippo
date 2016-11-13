@@ -23,16 +23,15 @@ function awsOnThisBlock( $awsDays, $block, $blockSize )
 
 function daysToLine( $awsDays, $totalDays, $blockSize = 7)
 {
-    asort( $awsDays );
-
     $today = strtotime( 'now' );
-
     $totalBlocks = intval( $totalDays / $blockSize ) + 1;
     $line = '<td><small>';
 
-    $line .= intval( $awsDays[0] / 30 ) . ',' ;
+
+    // These are fixed to 4 weeks (a month).
+    $line .= intval( $awsDays[0] / 28 ) . ',' ;
     for( $i = 1; $i < count( $awsDays ); $i++ )
-        $line .=  intval(( $awsDays[ $i - 1 ] - $awsDays[ $i ] ) / 30) . ',';
+        $line .=  intval(( $awsDays[ $i ] - $awsDays[ $i - 1 ] ) / 28 ) . ',';
 
     $line .= "</small></td><td>";
 
@@ -66,8 +65,8 @@ $table = '<table border="0" class="show_aws_summary">';
 
 $table .= '<tr>
     <th>Name <small>email</small></th>
-    <th>Months between AWSes</th>
-    <th>Previous AWS</th>
+    <th><small>Months between AWSes</small></th>
+    <th>Previous AWSes</th>
     </tr>';
 
 foreach( $speakerAWS as $speaker => $awses )
@@ -78,10 +77,11 @@ foreach( $speakerAWS as $speaker => $awses )
     foreach( $awses as $aws )
     {
         $awsDay = strtotime( $aws['date'] );
-        $ndays = intval(( strtotime( 'now' ) - $awsDay) / (24 * 3600 ));
+        $ndays = intval(( strtotime( 'today' ) - $awsDay) / (24 * 3600 ));
         array_push( $when, $ndays );
     }
 
+    sort( $when );
     $line = daysToLine( $when, $totalDays, $blockSize = 28 );
     $table .= $line;
     $table .= "</tr>";
@@ -90,5 +90,7 @@ foreach( $speakerAWS as $speaker => $awses )
 
 $table .= "</table>";
 echo $table;
+
+echo goBackToPageLink( "admin_aws.php", "Go back" );
 
 ?>

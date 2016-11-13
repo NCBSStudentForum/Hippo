@@ -885,8 +885,8 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
 function  scheduledAWSInFuture( $speaker )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM annual_work_seminars WHERE
-        speaker=:speaker AND tentatively_scheduled_on > 'NOW()' 
+    $stmt = $db->prepare( "SELECT * FROM aws_requests WHERE
+        speaker=:speaker AND scheduled_on > 'NOW()' 
         " );
     $stmt->bindValue( ":speaker", $speaker );
     $stmt->execute( );

@@ -713,6 +713,11 @@ function getUserInfo( $user )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getLoginInfo( $login_name )
+{
+    return getUserInfo( $login_name );
+}
+
 function getRoles( $user )
 {
     global $db;
@@ -950,6 +955,38 @@ function getPendingAWSRequests( )
 {
     global $db;
     $stmt = $db->query( "SELECT * FROM aws_requests WHERE status='PENDING'" );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
+/**
+    * @brief Return AWS from last n years.
+    *
+    * @param $years
+    *
+    * @return  Array of events.
+ */
+function getAWSFromPast( $from  )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars 
+        WHERE date >= $from ORDER BY speaker, date
+    " );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
+/**
+    * @brief Get AWS users.
+    *
+    * @return Array containing users.
+ */
+function getAWSUsers( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM logins WHERE status='VALID'" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

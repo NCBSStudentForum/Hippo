@@ -14,7 +14,7 @@ try {
 
     echo printWarning( "Could not add supervisor" );
     echo printWarning( "\t Error was " . $e->getMessage( ) );
-    echo goBackToPageLink( "user_aws_edit.php", "Go back to AWS" );
+    echo goBackToPageLink( "user_aws_edit_request.php", "Go back to AWS" );
     exit( 0 );
 }
 
@@ -30,6 +30,6 @@ else
     echo printWarning( "Could not add supervisor" );
 }
 
-echo goBackToPageLink( "user_aws_edit.php", "Go back to AWS" );
+echo goBackToPageLink( "user_aws_edit_request.php", "Go back to AWS" );
 
 ?>

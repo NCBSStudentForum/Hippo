@@ -1,5 +1,8 @@
 <?php 
 
+// User submit a request to change some description in his/her AWS. The request 
+// must be approved by AWS_ADMIN.
+
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( 'tohtml.php' );
@@ -45,7 +48,7 @@ foreach( $supervisors as $supervisor )
         .  ' ' . $supervisor[ 'last_name' ] ;
 }
 
-echo "<form method=\"post\" action=\"user_aws_edit_submit.php\">";
+echo "<form method=\"post\" action=\"user_aws_edit_request_submit.php\">";
 echo "<table class=\"input\">";
 echo '
     <tr>

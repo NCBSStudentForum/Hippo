@@ -15,8 +15,6 @@ echo userHTML( );
 
 <?php
 
-print_r( $_POST );
-
 $default = Array( );
 
 if( ! isset( $_POST['id'] ))

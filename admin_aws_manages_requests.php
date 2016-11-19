@@ -2,6 +2,7 @@
 
 include_once 'header.php';
 include_once 'database.php';
+include_once 'tohtml.php';
 
 echo "<h3>Manage pending requests</h3>";
 

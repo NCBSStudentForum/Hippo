@@ -3,6 +3,8 @@
 Query the database and schedule AWS.
 
 """
+from __future__ import print_function 
+
     
 __author__           = "Me"
 __copyright__        = "Copyright 2016, Me"
@@ -44,11 +46,17 @@ def getAllAWS( ):
     for a in cur.fetchall( ):
         aws[ a[ 'speaker' ] ].append( a )
     db_.close( )
+
+    for speaker in aws:
+        try:
+            sorted( aws[ speaker ], key = lambda x: x['date'], reverse = True )
+        except Exception as e:
+            print( 'x', end='' )
+            sys.stdout.flush( )
     return aws
 
 def main( ):
     aws = getAllAWS( )
-    print aws 
         
     pass
 

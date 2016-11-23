@@ -1,3 +1,5 @@
+#!/usr/bin/env python 
+
 """schedule_aws.py: 
 
 Query the database and schedule AWS.
@@ -24,9 +26,14 @@ import ConfigParser
 from collections import defaultdict
 import networkx as nx
 import datetime 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 
+import logging
+logging.basicConfig(
+        level=logging.DEBUG
+        , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        datefmt='%m-%d %H:%M'
+        )
+logging.info( 'Started on %s' % datetime.datetime.today( ) )
 
 g_ = nx.DiGraph( )
 
@@ -34,7 +41,8 @@ g_ = nx.DiGraph( )
 aws_ = defaultdict( list )
 
 config = ConfigParser.ConfigParser( )
-config.read( '../minionrc' )
+thisdir = os.path.dirname( os.path.realpath( __file__ ) )
+config.read( os.path.join( thisdir, 'minionrc' ) )
 
 class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
     def _row_to_python(self, rowdata, desc=None):
@@ -197,6 +205,7 @@ def draw_graph( ):
 def main( ):
     global aws_
     global db_
+    _logger.info( 'Scheduling AWS' )
     getAllAWS( )
     construct_flow_graph( )
     ans = schedule( )

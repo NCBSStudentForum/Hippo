@@ -190,7 +190,7 @@ def commit_schedule( schedule ):
                 INSERT INTO aws_schedule (speaker, date) VALUES ('{0}', '{1}') 
                 ON DUPLICATE KEY UPDATE date='{1}'
                 """.format( speaker, date ) 
-            print( query )
+            # print( query )
             cur.execute( query )
     db_.commit( )
     print( "Committed to database" )
@@ -209,7 +209,7 @@ def main( ):
     getAllAWS( )
     construct_flow_graph( )
     ans = schedule( )
-    print_schedule( ans )
+    # print_schedule( ans )
     commit_schedule( ans )
     db_.close( )
 

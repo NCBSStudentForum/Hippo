@@ -30,6 +30,9 @@ import matplotlib.pyplot as plt
 
 g_ = nx.DiGraph( )
 
+# All AWS entries.
+aws_ = defaultdict( list )
+
 config = ConfigParser.ConfigParser( )
 config.read( '../minionrc' )
 
@@ -48,34 +51,46 @@ db_ = mysql.connector.connect(
         )
 
 def getAllAWS( ):
-    aws = defaultdict( list )
+    global aws_
     cur = db_.cursor( cursor_class = MySQLCursorDict )
-    cur.execute( 'SELECT * FROM annual_work_seminars' )
+    cur.execute( 'SELECT * FROM annual_work_seminars ORDER BY date DESC' )
     for a in cur.fetchall( ):
-        aws[ a[ 'speaker' ] ].append( a )
+        aws_[ a[ 'speaker' ] ].append( a )
     db_.close( )
 
-    for speaker in aws:
-        try:
-            sorted( aws[ speaker ], key = lambda x: x['date'], reverse = True )
-        except Exception as e:
-            print( 'x', end='' )
-            sys.stdout.flush( )
-    return aws
+def getWeight( speaker, slot_date, last_aws ):
+    """ Here we are working with integers. With float the solution takes
+    incredible large amount of time.
+    """
+    global g_, aws_
+    idealGap = 357
+    nDays = ( slot_date - last_aws ).days
+    # Divide by month to get an interger.
+    weight = abs( nDays - idealGap ) / 30
+    nAws = len( aws_[speaker] )
+    # We multiply the weight by AWS given by this user in a way that first 2 aws
+    # does not effect this weight. But later AWS has significant cost. This is
+    # make sure that first 2 AWS are given preferences over the third or more
+    # AWS users.
+    weight =  weight * max( 1, nAws - 2 )
+    return weight 
 
-def construct_flow_graph( aws ):
+
+def construct_flow_graph(  ):
     global g_
+    global aws_
 
     g_.add_node( 'source', pos = (0,0) )
     g_.add_node( 'sink', pos = (10, 10) )
 
     # Each speaker gets his node.
     speakers = []
-    for i, speaker in enumerate( aws.keys() ):
-        lastDate = aws[ speaker][0]['date']
+    for i, speaker in enumerate( aws_.keys() ):
+        # first entry is most recent
+        lastDate = aws_[speaker][0]['date']
         if lastDate:
             # assert lastDate, "No last date found for speaker %s" % speaker 
-            g_.add_node( speaker, last_date = aws[speaker][0]['date'], pos = (1,3*i) )
+            g_.add_node( speaker, last_date = aws_[speaker][0]['date'], pos = (1,3*i) )
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
             speakers.append( speaker )
         else:
@@ -86,7 +101,7 @@ def construct_flow_graph( aws ):
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
-    for i in range(20):
+    for i in range(40):
         nDays = i * 7
         monday = nextMonday + datetime.timedelta( nDays )
         # For each Monday, we have 3 AWS
@@ -102,10 +117,8 @@ def construct_flow_graph( aws ):
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
-            assert date
-            nDays = ( date - prevAWSDate ).days
-            weight = abs( nDays - idealGap ) / idealGap
-            g_.add_edge( speaker, slot, capacity = 1, weight = weight ) #int(weight) )
+            weight = getWeight( speaker, date, prevAWSDate )
+            g_.add_edge( speaker, slot, capacity = 1, weight = weight ) 
 
 def test_graph( graph ):
     """Test that this graph is valid """
@@ -135,23 +148,39 @@ def schedule( ):
     test_graph( g_ )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
     schedule = getMatches( res )
+    return schedule
+
+def print_schedule( schedule ):
+    global g_, aws_
     for date in  sorted(schedule):
-        print( "On date %s = %s" % (date, schedule[date] ))
-        print( "\t\t Previous %s" % str( 
-            [ g_.node[x]['last_date'].strftime('%Y-%m-%d') for x in schedule[date] ] )
-            )
+        line = "%s :" % date
+        for speaker in schedule[ date ]:
+            line += '%13s (%10s, %1d)' % (speaker
+                , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
+                , len( aws_[ speaker ] )
+                )
+        print( line )
+
+
+def draw_graph( ):
+    global g_
+    pos = nx.get_node_attributes( g_, 'pos' )
+    nx.draw( g_, pos )
+    plt.show( )
+
+
 
 def main( ):
-    aws = getAllAWS( )
-    construct_flow_graph( aws )
+    global aws_
+    getAllAWS( )
+    construct_flow_graph( )
     try:
         nx.write_dot( g_, 'aws.dot' )
     except Exception as e:
         print( 'Failed to write dot %s' % e )
-    schedule( )
-    pos = nx.get_node_attributes( g_, 'pos' )
-    # nx.draw( g_, pos )
-    plt.show( )
+    ans = schedule( )
+    print_schedule( ans )
+    # draw_graph( )
 
 if __name__ == '__main__':
     main()

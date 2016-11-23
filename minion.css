@@ -65,6 +65,23 @@ table.show_aws_summary tr td
     /*max-width : 20%;*/
 }
 
+table.show_schedule {
+    min-width : 500px;
+    max-width : 80%;
+}
+
+table.show_schedule tr td
+{
+    border : 1px dotted;
+    background: lightyellow;
+}
+
+table.show_schedule th
+{
+    background: lightblue;
+    font-size : x-small;
+}
+
 
 div.info {
     /*border : 1px solid #73AD21;*/

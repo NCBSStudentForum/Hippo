@@ -262,7 +262,7 @@ function userHTML( )
 {
     $html = "<table class=\"user_float\">";
     $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
-    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/user.php\">What can I do, Minion?</a>";
+    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/user.php\">My Tasks</a>";
     $html .= '</td><td><a href="logout.php">Logout</a></td>';
     $html .= "</tr>";
     $html .= "</table>";

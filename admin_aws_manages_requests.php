@@ -9,5 +9,6 @@ $pendingRequests = getPendingAWSRequests( );
 foreach( $pendingRequests as $req )
     echo arrayToTableHTML( $req, 'aws' );
 
+echo goBackToPageLink( "admin_aws.php", "Go back" );
 
 ?>

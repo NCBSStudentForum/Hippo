@@ -764,6 +764,45 @@ function getAwsById( $id )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+/**
+    * @brief Return only recent most AWS given by this speaker.
+    *
+    * @param $speaker
+    *
+    * @return 
+ */
+function getLastAwsOfSpeaker( $speaker )
+{
+    global $db;
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+        ORDER BY date DESC LIMIT 1";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->execute( );
+    # Only return the last one.
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+
+}
+
+/**
+    * @brief Return all AWS given by this speaker.
+    *
+    * @param $speaker
+    *
+    * @return 
+ */
+function getAwsOfSpeaker( $speaker )
+{
+    global $db;
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+        ORDER BY date DESC" ;
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->execute( );
+    # Only return the last one.
+    return fetchEntries( $stmt );
+}
+
 function getSupervisors( )
 {
     global $db;
@@ -991,6 +1030,18 @@ function getAWSUsers( )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Return AWS entries schedules by my minion..
+    *
+    * @return 
+ */
+function getTentativeAWSSchedule( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM aws_schedule ORDER BY date" );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
 
 ?>
 

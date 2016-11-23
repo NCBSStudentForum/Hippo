@@ -50,13 +50,25 @@ db_ = mysql.connector.connect(
         , db = 'minion'
         )
 
+def init( cur ):
+    """Create a temporaty table for scheduling AWS"""
+    global gb_
+    cur.execute( 
+            '''
+            CREATE TABLE IF NOT EXISTS aws_schedule 
+            ( speaker VARCHAR(40) PRIMARY KEY, date DATE NOT NULL ) 
+            ''' 
+        )
+    db_.commit( )
+
+
 def getAllAWS( ):
-    global aws_
+    global aws_, db_
     cur = db_.cursor( cursor_class = MySQLCursorDict )
+    init( cur )
     cur.execute( 'SELECT * FROM annual_work_seminars ORDER BY date DESC' )
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ] ].append( a )
-    db_.close( )
 
 def getWeight( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes
@@ -161,6 +173,19 @@ def print_schedule( schedule ):
                 )
         print( line )
 
+def commit_schedule( schedule ):
+    global db_
+    cur = db_.cursor( )
+    for date in sorted(schedule):
+        for speaker in schedule[date]:
+            query = """
+                INSERT INTO aws_schedule (speaker, date) VALUES ('{0}', '{1}') 
+                ON DUPLICATE KEY UPDATE date='{1}'
+                """.format( speaker, date ) 
+            print( query )
+            cur.execute( query )
+    db_.commit( )
+    print( "Committed to database" )
 
 def draw_graph( ):
     global g_
@@ -169,18 +194,15 @@ def draw_graph( ):
     plt.show( )
 
 
-
 def main( ):
     global aws_
+    global db_
     getAllAWS( )
     construct_flow_graph( )
-    try:
-        nx.write_dot( g_, 'aws.dot' )
-    except Exception as e:
-        print( 'Failed to write dot %s' % e )
     ans = schedule( )
     print_schedule( ans )
-    # draw_graph( )
+    commit_schedule( ans )
+    db_.close( )
 
 if __name__ == '__main__':
     main()

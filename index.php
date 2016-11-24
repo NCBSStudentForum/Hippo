@@ -35,9 +35,10 @@ ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/tmp/__minion__.log' );
 
 /* counter */
-$hit_count = (int)file_get_contents('count.txt');
-$hit_count++;
-file_put_contents('count.txt', $hit_count);
+
+//$hit_count = (int)file_get_contents('count.txt');
+//$hit_count++;
+//file_put_contents('count.txt', $hit_count);
 
 // Now create a login form.
 echo "<table class=\"index\">";

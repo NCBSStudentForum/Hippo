@@ -898,11 +898,11 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( $data[$k] )
-        {
-            array_push( $cols, $k );
-            array_push( $values, "$k=:$k" );
-        }
+        if( ! $data[$k] )
+            $data[ $k ] = 'NULL';
+
+        array_push( $cols, $k );
+        array_push( $values, "$k=:$k" );
     }
     $values = implode( ",", $values );
     $query .= " $values WHERE $whereclause";

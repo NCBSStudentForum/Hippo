@@ -15,7 +15,10 @@ echo "<h3>AWS Admin</h3>";
 echo '<table border="0" class="admin">
     <tr>
         <td>AWS summary</td>
-        <td><a href="admin_aws_summary.php">See AWS summary</a></td>
+        <td>
+            <a href="admin_aws_summary_user_wise.php">User wise</a> ||
+            <a href="admin_aws_summary_date_wise.php">Date wise</a>
+        </td>
     </tr>
     <tr>
         <td>Manage upcoming AWS</td>

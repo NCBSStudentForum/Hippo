@@ -544,18 +544,19 @@ function summaryTable( )
 {
     global $db;
     $allAWS = getAllAWS( );
-    $speakers = array();
-    foreach( $allAWS as $aws )
-        array_push( $speakers, $aws['speaker'] );
-
-    $nspeakers = count( array_unique( $speakers ) );
+    $nspeakers = count( getAWSUsers( ) );
     $nAws = count( $allAWS );
+
+    echo date( 'Y-01-01' );
+    $awsThisYear = count( getAWSFromPast( date( 'Y-01-01' ) ) );
 
     $html = "In this database <br>";
     $html .= '<table class="summary">';
     $html .= "<tr>
-        <td>Total $nAws AWSs are given by $nspeakers speakers </td>
-    </tr>";
+        <td>Total $nAws AWSs </td><td> Total $nspeakers active speaker </td>
+        </tr><tr>
+        <td>Total $awsThisYear AWs this year </td> <td></td>
+        </tr>";
     $html .= "</table>";
     return $html;
 }
@@ -1019,7 +1020,7 @@ function getAWSFromPast( $from  )
 {
     global $db;
     $stmt = $db->query( "SELECT * FROM annual_work_seminars 
-        WHERE date >= $from ORDER BY date, speaker
+        WHERE date >= '$from' ORDER BY date, speaker
     " );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -1034,7 +1035,7 @@ function getAWSFromPast( $from  )
 function getAWSUsers( )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM logins WHERE status='VALID'" );
+    $stmt = $db->query( "SELECT * FROM logins WHERE status='ACTIVE'" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

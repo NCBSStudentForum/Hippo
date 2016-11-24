@@ -31,6 +31,8 @@ elseif( $_POST['response'] == 'Accept' )
     $aws = getMyAwsOn( $speaker, $date );
     $req = getAwsRequestById( $_POST[ 'request_id' ] );
 
+    //var_dump( $req );
+
     $res = updateTable( 'annual_work_seminars'
             , 'speaker,date' 
             , array( 'abstract', 'title'

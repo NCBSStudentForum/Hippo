@@ -883,7 +883,9 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     $query = "UPDATE $tablename SET ";
 
     if( gettype( $wherekeys ) == "string" ) // Only one key
-        $wherekeys = array( $wherekeys );
+        $wherekeys = explode( ",", $wherekeys );
+    if( gettype( $keys ) == "string" )
+        $keys = explode(",",  $keys );
 
     $whereclause = array( );
     foreach( $wherekeys as $wkey )

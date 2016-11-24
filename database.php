@@ -899,7 +899,7 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     {
         // If values for this key in $data is null then don't use it here.
         if( ! $data[$k] )
-            $data[ $k ] = 'NULL';
+            $data[ $k ] = null;
 
         array_push( $cols, $k );
         array_push( $values, "$k=:$k" );

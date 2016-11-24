@@ -5,8 +5,10 @@ div.header {
 div.bottom {
     position : fixed;
     bottom : 0;
+    k
+    right : 0;
     font-size : xx-small;
-    padding-top : 5px;
+    padding-top : 50px;
     font-color : red;
 }
 

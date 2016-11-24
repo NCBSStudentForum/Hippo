@@ -543,17 +543,19 @@ function publicEvents( $date, $time )
 function summaryTable( )
 {
     global $db;
-    $html = '<table class="summary">';
-    $events = getEventsGrouped( );
-    $count = 0;
-    foreach( $events as $event )
-    {
-        $count += 1;
-        if( $count > 10 )
-            break;
+    $allAWS = getAllAWS( );
+    $speakers = array();
+    foreach( $allAWS as $aws )
+        array_push( $speakers, $aws['speaker'] );
 
-        $html .= "<tr><td> " . eventSummary( $event ) . "</td></tr>";
-    }
+    $nspeakers = count( array_unique( $speakers ) );
+    $nAws = count( $allAWS );
+
+    $html = "In this database <br>";
+    $html .= '<table class="summary">';
+    $html .= "<tr>
+        <td>Total $nAws AWSs are given by $nspeakers speakers </td>
+    </tr>";
     $html .= "</table>";
     return $html;
 }
@@ -998,6 +1000,13 @@ function getPendingAWSRequests( )
     return fetchEntries( $stmt );
 }
 
+function getAllAWS( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars"  );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
 
 /**
     * @brief Return AWS from last n years.

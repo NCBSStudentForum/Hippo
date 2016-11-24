@@ -1003,7 +1003,7 @@ function getPendingAWSRequests( )
 function getAllAWS( )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM annual_work_seminars"  );
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars ORDER BY date DESC"  );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

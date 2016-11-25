@@ -63,7 +63,7 @@ db_ = mysql.connector.connect(
 def init( cur ):
     """Create a temporaty table for scheduling AWS"""
     global gb_
-    cur.execute( 'DROP TABLE aws_temp_schedule' )
+    cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute( 
             '''
             CREATE TABLE IF NOT EXISTS aws_temp_schedule 

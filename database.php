@@ -1056,19 +1056,68 @@ function getTentativeAWSSchedule( )
 }
 
 /**
-    * @brief Get all upcoming AWSes.
-    *
+    * @brief Get all upcoming AWSes. Closest to today first (Ascending date).
+    * 
     * @return Array of upcming AWS.
  */
 function getUpcomingAWS( )
 {
     global $db;
     $stmt = $db->query( 
-        "SELECT * FROM upcoming_aws WHERE date  >= 'NOW' ORDER BY date DESC" 
+        "SELECT * FROM upcoming_aws WHERE date >= CURDATE() ORDER BY date" 
         );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
 
+/**
+    * @brief Accept a auto generated schedule. We put the entry into table 
+    * upcoming_aws and delete this entry from aws_temp_schedule tables. In case 
+    * of any failure, leave everything untouched.
+    *
+    * @param $speaker
+    * @param $date
+    *
+    * @return 
+ */
+function acceptScheduleOfAWS( $speaker, $date )
+{
+    global $db;
+    $db->beginTransaction( );
+
+    $stmt = $db->prepare( 
+        'INSERT INTO upcoming_aws ( speaker, date ) VALUES ( :speaker, :date )' 
+    );
+
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->bindValue( ':date', $date );
+
+    $res = $stmt->execute( );
+    if( $res )
+    {
+        // delete this row from temp table.
+        $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE 
+            speaker=:speaker AND date=:date
+            ' );
+        $stmt->bindValue( ':speaker', $speaker );
+        $stmt->bindValue( ':date', $date );
+        $res = $stmt->execute( );
+
+        // If this happens, I must not commit the previous results into table.
+        if( ! $res )
+        {
+            $db->rollBack( );
+            return False;
+        }
+    }
+    else
+    {
+        $db->rollBack( );
+        return False;
+    }
+
+    $db->commit( );
+    return True;
 }
 
 ?>

@@ -165,18 +165,18 @@ create TABLE IF NOT EXISTS upcoming_aws (
     , speaker VARCHAR(200) NOT NULL -- user
     , date DATE NOT NULL -- tentative date
     , time TIME NOT NULL DEFAULT '16:00'
-    , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser must be from NCBS
-    , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
-    , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.
-    , tcm_member_2 VARCHAR( 200 ) -- optional 
-    , tcm_member_3 VARCHAR( 200 ) -- optional 
-    , tcm_member_4 VARCHAR( 200 ) -- optional
+    , supervisor_1 VARCHAR( 200 ) 
+    , supervisor_2 VARCHAR( 200 ) 
+    , tcm_member_1 VARCHAR( 200 ) 
+    , tcm_member_2 VARCHAR( 200 ) 
+    , tcm_member_3 VARCHAR( 200 ) 
+    , tcm_member_4 VARCHAR( 200 ) 
     , title VARCHAR( 1000 )
     , abstract TEXT
     , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
     , comment TEXT 
     , FOREIGN KEY (speaker) REFERENCES logins(login)
-    , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
+    , UNIQUE (speaker, date)
     );
 
 -- This table holds all edit and requests.

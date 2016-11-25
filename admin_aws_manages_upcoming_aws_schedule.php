@@ -19,12 +19,13 @@ if( isset( $_POST['response'] ) )
     shell_exec( $command );
 
     // Now read the result file and show to user.
-    $res = file_get_contents( '/tmp/__assignment__.txt' ); //$resfilePath );
-    echo "<h3>Content of result </h3>";
-    echo( "<pre> $res </pre>" );
-
-    //Delete the temp file
+    //$res = file_get_contents( $resfilePath );
+    //echo "<h3>Content of result </h3>";
+    //echo( "<pre> $res </pre>" );
+    // Delete the temp file
     unlink( $resfilePath );
+    goToPage( 'admin_aws_manages_upcoming_aws.php', 1 );
+    exit;
 }
 
 echo goBackToPageLink( "admin_aws_manages_upcoming_aws.php", "Go back" );

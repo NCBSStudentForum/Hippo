@@ -540,20 +540,31 @@ function publicEvents( $date, $time )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Summary table for front page.
+    *
+    * @return 
+ */
 function summaryTable( )
 {
     global $db;
-    $html = '<table class="summary">';
-    $events = getEventsGrouped( );
-    $count = 0;
-    foreach( $events as $event )
-    {
-        $count += 1;
-        if( $count > 10 )
-            break;
+    $allAWS = getAllAWS( );
+    $nspeakers = count( getAWSUsers( ) );
+    $nAws = count( $allAWS );
 
-        $html .= "<tr><td> " . eventSummary( $event ) . "</td></tr>";
-    }
+    echo date( 'Y-01-01' );
+    $awsThisYear = count( getAWSFromPast( date( 'Y-01-01' ) ) );
+
+    $html = "In this database <br>";
+    $html .= '<table class="summary">';
+    $html .= "<tr>
+        <td>Total $nAws AWSs </td><td> Total $nspeakers active speaker </td>
+        </tr><tr>
+        <td>Total $awsThisYear AWs this year </td>
+        <td>
+            <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a>
+        </td>
+        </tr>";
     $html .= "</table>";
     return $html;
 }
@@ -880,7 +891,9 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     $query = "UPDATE $tablename SET ";
 
     if( gettype( $wherekeys ) == "string" ) // Only one key
-        $wherekeys = array( $wherekeys );
+        $wherekeys = explode( ",", $wherekeys );
+    if( gettype( $keys ) == "string" )
+        $keys = explode(",",  $keys );
 
     $whereclause = array( );
     foreach( $wherekeys as $wkey )
@@ -893,11 +906,11 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( $data[$k] )
-        {
-            array_push( $cols, $k );
-            array_push( $values, "$k=:$k" );
-        }
+        if( ! $data[$k] )
+            $data[ $k ] = null;
+
+        array_push( $cols, $k );
+        array_push( $values, "$k=:$k" );
     }
     $values = implode( ",", $values );
     $query .= " $values WHERE $whereclause";
@@ -998,6 +1011,13 @@ function getPendingAWSRequests( )
     return fetchEntries( $stmt );
 }
 
+function getAllAWS( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars ORDER BY date DESC"  );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
 
 /**
     * @brief Return AWS from last n years.
@@ -1010,7 +1030,7 @@ function getAWSFromPast( $from  )
 {
     global $db;
     $stmt = $db->query( "SELECT * FROM annual_work_seminars 
-        WHERE date >= $from ORDER BY date, speaker
+        WHERE date >= '$from' ORDER BY date, speaker
     " );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -1025,7 +1045,7 @@ function getAWSFromPast( $from  )
 function getAWSUsers( )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM logins WHERE status='VALID'" );
+    $stmt = $db->query( "SELECT * FROM logins WHERE status='ACTIVE'" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1038,9 +1058,74 @@ function getAWSUsers( )
 function getTentativeAWSSchedule( )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM aws_schedule ORDER BY date" );
+    $stmt = $db->query( "SELECT * FROM aws_temp_schedule ORDER BY date" );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get all upcoming AWSes. Closest to today first (Ascending date).
+    * 
+    * @return Array of upcming AWS.
+ */
+function getUpcomingAWS( )
+{
+    global $db;
+    $stmt = $db->query( 
+        "SELECT * FROM upcoming_aws WHERE date >= CURDATE() ORDER BY date" 
+        );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Accept a auto generated schedule. We put the entry into table 
+    * upcoming_aws and delete this entry from aws_temp_schedule tables. In case 
+    * of any failure, leave everything untouched.
+    *
+    * @param $speaker
+    * @param $date
+    *
+    * @return 
+ */
+function acceptScheduleOfAWS( $speaker, $date )
+{
+    global $db;
+    $db->beginTransaction( );
+
+    $stmt = $db->prepare( 
+        'INSERT INTO upcoming_aws ( speaker, date ) VALUES ( :speaker, :date )' 
+    );
+
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->bindValue( ':date', $date );
+
+    $res = $stmt->execute( );
+    if( $res )
+    {
+        // delete this row from temp table.
+        $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE 
+            speaker=:speaker AND date=:date
+            ' );
+        $stmt->bindValue( ':speaker', $speaker );
+        $stmt->bindValue( ':date', $date );
+        $res = $stmt->execute( );
+
+        // If this happens, I must not commit the previous results into table.
+        if( ! $res )
+        {
+            $db->rollBack( );
+            return False;
+        }
+    }
+    else
+    {
+        $db->rollBack( );
+        return False;
+    }
+
+    $db->commit( );
+    return True;
 }
 
 ?>

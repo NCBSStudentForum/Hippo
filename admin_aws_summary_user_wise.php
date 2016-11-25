@@ -27,22 +27,23 @@ function daysToLine( $awsDays, $totalDays, $blockSize = 7)
     $totalBlocks = intval( $totalDays / $blockSize ) + 1;
     $line = '<td><small>';
 
-
     // These are fixed to 4 weeks (a month).
-    $line .= intval( $awsDays[0] / 30.41 ) . ',' ;
-    for( $i = 1; $i < count( $awsDays ); $i++ )
-        $line .=  intval(( $awsDays[ $i ] - $awsDays[ $i - 1 ] ) / 30.41 ) . ',';
-
-    $line .= "</small></td><td>";
-
-    for( $i = 0; $i <= $totalBlocks; $i++ )
+    if( count( $awsDays ) > 0 )
     {
-        if( awsOnThisBlock( $awsDays, $i, $blockSize ) )
-            $line .= '|';
-        else
-            $line .= '.';
-    }
+        $line .= intval( $awsDays[0] / 30.41 ) . ',' ;
+        for( $i = 1; $i < count( $awsDays ); $i++ )
+            $line .=  intval(( $awsDays[ $i ] - $awsDays[ $i - 1 ] ) / 30.41 ) . ',';
 
+        $line .= "</small></td><td>";
+
+        for( $i = 0; $i <= $totalBlocks; $i++ )
+        {
+            if( awsOnThisBlock( $awsDays, $i, $blockSize ) )
+                $line .= '|';
+            else
+                $line .= '.';
+        }
+    }
     $line .= "</td>";
     return $line;
 }
@@ -51,15 +52,8 @@ function daysToLine( $awsDays, $totalDays, $blockSize = 7)
 // Get AWS in roughly last 5 years.
 $totalDays = 5 * 365;
 $from = date( 'Y-m-d', strtotime( 'now' ) - $totalDays * 24 * 3600 );
-$awses = getAWSFromPast( $from );
-$speakerAWS = array( );
-foreach( $awses as $aws )
-{
-    if( ! array_key_exists( $aws['speaker'], $speakerAWS ) )
-        $speakerAWS[ $aws['speaker'] ] = array( $aws );
-    else
-        array_push( $speakerAWS[ $aws['speaker'] ], $aws );
-}
+//$awses = getAWSFromPast( $from, 'ACTIVE' );
+$speakers = getAWSUsers( );
 
 $table = '<table border="0" class="show_aws_summary">';
 
@@ -70,12 +64,18 @@ $table .= '<tr>
     </tr>';
 
 $i = 0;
-foreach( $speakerAWS as $speaker => $awses )
+foreach( $speakers as $speaker )
 {
     $i +=1 ;
-    $table .= "<tr> <td>$i</td> <td> " . loginToText( $speaker ) 
-                . "<br><small> $speaker </small>" . "</td>";
+
+    $fname = $speaker['first_name'];
+    $lname = $speaker['last_name'];
+    $login = $speaker['login'];
+
+    $table .= "<tr> <td>$i</td> <td> " . $fname . ' ' . $lname 
+                . "<br><small> $login </small>" . "</td>";
     $when = array( );
+    $awses = getAwsOfSpeaker( $login );
     foreach( $awses as $aws )
     {
         $awsDay = strtotime( $aws['date'] );

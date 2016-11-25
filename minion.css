@@ -5,8 +5,9 @@ div.header {
 div.bottom {
     position : fixed;
     bottom : 0;
+    right : 0;
     font-size : xx-small;
-    padding-top : 5px;
+    padding-top : 50px;
     font-color : red;
 }
 
@@ -287,12 +288,14 @@ table.request tr:nth-of-type( odd ) {
 
 table.admin {
     background : lightyellow;
+    width : 80%;
     min-width : 500px;
-    max-width : 1000px;
+    max-width : 90%;
 }
 
-table.admin tr td {
+table.admin td {
     border : 1px dotted;
+    width : 50%;
 }
 
 .goback {
@@ -315,13 +318,9 @@ table.admin tr td {
 
 /* paragraphs */
 
-p {
-    font : serif;
-}
-
 p.info {
-    color : blue;
-    max-width : 800px;
+    max-width : 90%;
+    min-width : 500px;
 }
 
 p.warn {
@@ -362,7 +361,6 @@ table.index tr td {
     valign : top;
     min-width : 250px;
 }
-
 
 /* SELECT 
  */

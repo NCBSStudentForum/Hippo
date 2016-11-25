@@ -26,12 +26,13 @@ import ConfigParser
 from collections import defaultdict
 import networkx as nx
 import datetime 
-
+import tempfile 
 import logging
-logging.basicConfig(
-        level=logging.DEBUG
-        , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-        datefmt='%m-%d %H:%M'
+
+logging.basicConfig( level=logging.INFO
+        , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        , filemode = 'w'
+        , datefmt='%m-%d %H:%M'
         )
 logging.info( 'Started on %s' % datetime.datetime.today( ) )
 
@@ -43,6 +44,7 @@ aws_ = defaultdict( list )
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
 config.read( os.path.join( thisdir, 'minionrc' ) )
+logging.debug( 'Read config file %s' % str( config ) )
 
 class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
     def _row_to_python(self, rowdata, desc=None):
@@ -61,9 +63,10 @@ db_ = mysql.connector.connect(
 def init( cur ):
     """Create a temporaty table for scheduling AWS"""
     global gb_
+    cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute( 
             '''
-            CREATE TABLE IF NOT EXISTS aws_schedule 
+            CREATE TABLE IF NOT EXISTS aws_temp_schedule 
             ( speaker VARCHAR(40) PRIMARY KEY, date DATE NOT NULL ) 
             ''' 
         )
@@ -114,8 +117,8 @@ def construct_flow_graph(  ):
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
             speakers.append( speaker )
         else:
-            print( 'Warning: Could not find last AWS date for %s' % speaker )
-            print( '\t I am ignoring him' )
+            logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
+            logging.info( '\t I am ignoring him' )
 
     # Now add mondays for next 20 weeks.
     today = datetime.date.today()
@@ -145,9 +148,9 @@ def test_graph( graph ):
     # Each edge must have a capcity and weight 
     for u, v in graph.edges():
         if 'capacity' not in  graph[u][v]:
-            print( 'Error: %s -> %s no capacity assigned' % (u, v) )
+            logging.info( 'Error: %s -> %s no capacity assigned' % (u, v) )
         if 'weight' not in  graph[u][v]:
-            print( 'Error: %s -> %s no weight assigned' % (u, v) )
+            logging.info( 'Error: %s -> %s no weight assigned' % (u, v) )
 
 def getMatches( res ):
     result = defaultdict( list )
@@ -170,8 +173,10 @@ def schedule( ):
     schedule = getMatches( res )
     return schedule
 
-def print_schedule( schedule ):
+def print_schedule( schedule, outfile ):
     global g_, aws_
+    with open( outfile, 'w' ) as f:
+        f.write( "This is what is got \n" )
     for date in  sorted(schedule):
         line = "%s :" % date
         for speaker in schedule[ date ]:
@@ -179,7 +184,8 @@ def print_schedule( schedule ):
                 , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
                 , len( aws_[ speaker ] )
                 )
-        print( line )
+        with open( outfile, 'a' ) as f:
+            f.write( '%s\n' % line )
 
 def commit_schedule( schedule ):
     global db_
@@ -187,13 +193,13 @@ def commit_schedule( schedule ):
     for date in sorted(schedule):
         for speaker in schedule[date]:
             query = """
-                INSERT INTO aws_schedule (speaker, date) VALUES ('{0}', '{1}') 
+                INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}') 
                 ON DUPLICATE KEY UPDATE date='{1}'
                 """.format( speaker, date ) 
-            # print( query )
+            logging.debug( query )
             cur.execute( query )
     db_.commit( )
-    print( "Committed to database" )
+    logging.info( "Committed to database" )
 
 def draw_graph( ):
     global g_
@@ -202,16 +208,19 @@ def draw_graph( ):
     plt.show( )
 
 
-def main( ):
+def main( outfile ):
     global aws_
     global db_
-    _logger.info( 'Scheduling AWS' )
+    logging.info( 'Scheduling AWS' )
     getAllAWS( )
     construct_flow_graph( )
     ans = schedule( )
-    # print_schedule( ans )
+    print_schedule( ans, outfile )
     commit_schedule( ans )
     db_.close( )
 
 if __name__ == '__main__':
-    main()
+    outfile = tempfile.NamedTemporaryFile( ).name
+    if len( sys.argv ) > 1:
+        outfile = sys.argv[1]
+    main( outfile )

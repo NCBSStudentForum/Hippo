@@ -10,18 +10,6 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 echo userHTML( );
 
 echo "<h3>I've scheduled the AWS as follows</h3>";
-
-if( isset( $_POST['response'] ) )
-{
-    $cwd = getcwd( );
-    echo "I must reschedule";
-    $scriptPath = $cwd . '/schedule_aws.py';
-    echo printInfo("Executing $scriptPath, timeout 10 secs");
-    $command = "timeout 10 python $scriptPath";
-    $out = shell_exec( $command );
-    print_r( $out );
-}
-
 $schedule = getTentativeAWSSchedule( );
 
 echo "<table class=\"show_schedule\">";
@@ -33,7 +21,7 @@ $header = "<tr>
     </tr>";
 echo $header;
 
-echo "<form method=\"post\" action=\"admin_aws_manages_upcoming_aws.php\">";
+echo "<form method=\"post\" action=\"admin_aws_manages_upcoming_aws_schedule.php\">";
 echo '<button type="submit" 
     value="schedule" name="response">Reschedule</button>';
 echo "</form>";

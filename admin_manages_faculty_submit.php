@@ -11,7 +11,7 @@ if( $_POST['response'] == 'edit' )
     $_POST[ 'modified_on' ] = date( 'Y-m-d H:i:s', strtotime( 'now' ));
     $res = updateTable( 'faculty', 'email'
         , array( 'first_name' , 'middle_name', 'last_name'
-        , 'status', 'modified_on', 'url'), $_POST 
+        , 'status', 'modified_on', 'url', 'affiliation' ), $_POST 
         );
 
     if( $res )
@@ -33,7 +33,7 @@ else if( $_POST['response'] == 'add' )
     $res = insertIntoTable( 
         'faculty'
         , array( 'email', 'first_name' , 'middle_name', 'last_name'
-        , 'status', 'modified_on', 'url'), $_POST 
+        , 'status', 'modified_on', 'url', 'affiliation' ), $_POST 
         );
 
     if( $res )

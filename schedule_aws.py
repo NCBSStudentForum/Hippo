@@ -27,10 +27,7 @@ from collections import defaultdict
 import networkx as nx
 import datetime 
 import tempfile 
-
 import logging
-
-outfile_ = tempfile.NamedTemporaryFile( ).name 
 
 logging.basicConfig( level=logging.INFO
         , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
@@ -175,9 +172,10 @@ def schedule( ):
     schedule = getMatches( res )
     return schedule
 
-def print_schedule( schedule ):
+def print_schedule( schedule, outfile ):
     global g_, aws_
-    global outfile_
+    with open( outfile, 'w' ) as f:
+        f.write( "This is what is got \n" )
     for date in  sorted(schedule):
         line = "%s :" % date
         for speaker in schedule[ date ]:
@@ -185,7 +183,8 @@ def print_schedule( schedule ):
                 , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
                 , len( aws_[ speaker ] )
                 )
-        print( line, file=outfile_ )
+        with open( outfile, 'a' ) as f:
+            f.write( '%s\n' % line )
 
 def commit_schedule( schedule ):
     global db_
@@ -208,23 +207,19 @@ def draw_graph( ):
     plt.show( )
 
 
-def main(outfile ):
+def main( outfile ):
     global aws_
     global db_
-    global outfile_
-    outfile_ = open( outfile, "w" )
     logging.info( 'Scheduling AWS' )
     getAllAWS( )
     construct_flow_graph( )
     ans = schedule( )
-    print_schedule( ans )
+    print_schedule( ans, outfile )
     commit_schedule( ans )
     db_.close( )
-    sys.stdout.flush( )
-    outfile_.close( )
 
 if __name__ == '__main__':
-    outfile = '__minion__.log'
+    outfile = tempfile.NamedTemporaryFile( ).name
     if len( sys.argv ) > 1:
         outfile = sys.argv[1]
     main( outfile )

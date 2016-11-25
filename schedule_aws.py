@@ -32,7 +32,7 @@ import logging
 
 outfile_ = tempfile.NamedTemporaryFile( ).name 
 
-logging.basicConfig( level=logging.DEBUG
+logging.basicConfig( level=logging.INFO
         , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
         , filemode = 'w'
         , datefmt='%m-%d %H:%M'
@@ -185,7 +185,7 @@ def print_schedule( schedule ):
                 , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
                 , len( aws_[ speaker ] )
                 )
-        print( line, file=outfile_, flush=True )
+        print( line, file=outfile_ )
 
 def commit_schedule( schedule ):
     global db_
@@ -212,7 +212,7 @@ def main(outfile ):
     global aws_
     global db_
     global outfile_
-    outfile_ = outfile
+    outfile_ = open( outfile, "w" )
     logging.info( 'Scheduling AWS' )
     getAllAWS( )
     construct_flow_graph( )
@@ -220,8 +220,8 @@ def main(outfile ):
     print_schedule( ans )
     commit_schedule( ans )
     db_.close( )
-    print( logFile.name )
     sys.stdout.flush( )
+    outfile_.close( )
 
 if __name__ == '__main__':
     outfile = '__minion__.log'

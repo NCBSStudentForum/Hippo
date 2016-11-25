@@ -1050,9 +1050,25 @@ function getAWSUsers( )
 function getTentativeAWSSchedule( )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM aws_schedule ORDER BY date" );
+    $stmt = $db->query( "SELECT * FROM aws_temp_schedule ORDER BY date" );
     $stmt->execute( );
     return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get all upcoming AWSes.
+    *
+    * @return Array of upcming AWS.
+ */
+function getUpcomingAWS( )
+{
+    global $db;
+    $stmt = $db->query( 
+        "SELECT * FROM upcoming_aws WHERE date  >= 'NOW' ORDER BY date DESC" 
+        );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+
 }
 
 ?>

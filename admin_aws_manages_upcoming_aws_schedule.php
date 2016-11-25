@@ -16,14 +16,14 @@ if( isset( $_POST['response'] ) )
     $scriptPath = $cwd . '/schedule_aws.py';
     echo("<pre>Executing $scriptPath $resfilePath, timeout 20 secs</pre>");
     $command = "timeout 20 python $scriptPath $resfilePath";
-    exec( $command, $out, $ret );
+    shell_exec( $command );
 
     // Now read the result file and show to user.
-    $res = file_get_contents( $resfilePath );
+    $res = file_get_contents( '/tmp/__assignment__.txt' ); //$resfilePath );
     echo "<h3>Content of result </h3>";
     echo( "<pre> $res </pre>" );
 
-    // Delete the temp file
+    //Delete the temp file
     unlink( $resfilePath );
 }
 

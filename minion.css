@@ -288,12 +288,14 @@ table.request tr:nth-of-type( odd ) {
 
 table.admin {
     background : lightyellow;
+    width : 80%;
     min-width : 500px;
-    max-width : 1000px;
+    max-width : 90%;
 }
 
-table.admin tr td {
+table.admin td {
     border : 1px dotted;
+    width : 50%;
 }
 
 .goback {

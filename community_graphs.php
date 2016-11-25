@@ -100,7 +100,7 @@ foreach( $community as $pi => $value )
         $color = 1.0 / $edgeNum;
         $dotText .= "\t$login -> $buddy [ "
                 . "color=\"$color $color $color\""
-                . "taillabel=$edgeNum," 
+                . "headlabel=$edgeNum," 
                 . "arrowhead=halfopen,"
                 . "];\n";
     }

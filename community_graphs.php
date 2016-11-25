@@ -110,22 +110,25 @@ foreach( $community as $pi => $value )
 $curdir = getcwd( );
 $dotText .= "}";
 
-$dotFilePath = tempnam( "tmp", "graph_" );
+$dotfileURI = "data/community_$from.dot";
+$dotFilePath = "$curdir/$dotfileURI";
 $imgFormat = "svg";
+
+// Write graphviz to dot file.
 $dotFile = fopen( $dotFilePath, "w" );
 fwrite( $dotFile, $dotText );
 
 $layout = "neato";
-$imgfilename = "community_$from.$imgFormat";
+$imgfileURI = "data/community_$from.$imgFormat";
 
 //Create both SVG and PNG.
-exec( "$layout -T$imgFormat -o $curdir/$imgfilename $dotFilePath", $out, $res );
-exec( "$layout -Tpng -o $curdir/fallback.png $dotFilePath", $out, $res );
+exec( "$layout -T$imgFormat -o $curdir/$imgfileURI $dotFilePath", $out, $res );
+exec( "$layout -Tpng -o $curdir/data/fallback.png $dotFilePath", $out, $res );
 
 // Now load the image into browser.
 echo "<div class=\"image\">";
-echo "<object width=\"100%\" data=\"$imgfilename\" type=\"image/svg+xml\">
-    <img src=\"fallback.png\" />
+echo "<object width=\"100%\" data=\"$imgfileURI\" type=\"image/svg+xml\">
+    <img src=\"data/fallback.png\" />
     </object>
     ";
 echo "</div>";
@@ -133,7 +136,7 @@ echo "</div>";
 // Closing this file will delete its content.
 unlink( $dotFilePath );
 
-//echo "<pre> $dotText </pre>";
+echo "<a href=\"$dotfileURI\" target=\"_blank\">Download graphviz</a>";
 echo goBackToPageLink( "index.php", "Go back" );
 
 ?>

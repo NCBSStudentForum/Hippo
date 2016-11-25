@@ -8,11 +8,42 @@ include_once "check_access_permissions.php";
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
 echo userHTML( );
-echo '<h3>Upcoming AWS</h3>';
+echo '<h3>Upcoming AWS for next week</h3>';
 
 $upcomingAWSs = getUpcomingAWS( );
-foreach( $upcomingAWSs as $upcomingAWS )
-    echo arrayToTableHTML( $upcomingAWS, 'show_aws' );
+
+// For the next week.
+$upcomingAwsNextWeek = array( );
+foreach( $upcomingAWSs as $aws )
+    if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
+        array_push( $upcomingAwsNextWeek, $aws );
+
+foreach( $upcomingAwsNextWeek as $upcomingAWS )
+{
+    echo arrayToTableHTML( $upcomingAWS, 'aws' , ''
+        , array( 'id', 'status', 'comment' )
+    );
+    echo "<br>";
+}
+
+echo "<h3>All upcoming AWS </h3>";
+
+// Show the rest of entries grouped by date.
+$groupDate = strtotime( $upcomingAWSs[0]['date'] );
+echo '<table class="show_schedule">';
+echo '<tr> <td>' . $upcomingAWSs[0]['date'] . '</td>';
+foreach( $upcomingAWSs as $aws )
+{
+    if( strtotime( $aws['date']) != $groupDate )
+    {
+        $groupDate = strtotime( $aws['date'] );
+        echo '</tr>';
+        echo '<tr><td>' . $aws['date'] . '</td>';
+    }
+    echo '<td>' . $aws['speaker'] . '<br>' 
+        . loginToText( $aws['speaker']) . '</td>';
+}
+echo '</tr></table>';
 
 echo "<h3>Temporary assignments </h3>";
 echo '
@@ -32,9 +63,9 @@ $header = "<tr>
     </tr>";
 echo $header;
 
-echo "<form method=\"post\" action=\"admin_aws_manages_upcoming_aws_schedule.php\">";
+echo "<form method=\"post\" action=\"admin_aws_manages_upcoming_aws_submit.php\">";
 echo '<button type="submit" 
-    value="schedule" name="response">Reschedule</button>';
+    value="schedule" name="response" value="Reschedule">Reschedule All</button>';
 echo "</form>";
 echo '<br>';
 
@@ -64,7 +95,7 @@ foreach( $schedule as $upcomingAWS )
     $nDays = $nSecs / (3600 * 24 );
     
     echo "<tr><td>";
-    echo $upcomingAWS[ 'speaker' ];
+    echo $speaker;
     echo "</td><td>";
     echo $upcomingAWS[ 'date' ];
     echo "</td><td>";
@@ -73,7 +104,17 @@ foreach( $schedule as $upcomingAWS )
     echo "<font color=\"blue\"> $nDays </font>";
     echo "</td><td>";
     echo count( $pastAWSes);
-    echo "</td></tr>";
+    echo "</td>";
+
+    // Create a form to approve the schedule.
+    echo '<form method="post" action="admin_aws_manages_upcoming_aws_submit.php">';
+    echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
+    echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
+    echo '<td style="background:white;border:0px;">
+        <button name="response" value="Accept" >Accept</button>
+        </td>';
+    echo "</tr>";
+    echo '</form>';
 }
 echo "</table>";
 

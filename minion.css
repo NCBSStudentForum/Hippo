@@ -251,6 +251,9 @@ div.cell_content {
     font-size : small;
 }
 
+div.image {
+    max-width: 100%;
+}
 
 table.login_main {
     background-color : lightyellow;

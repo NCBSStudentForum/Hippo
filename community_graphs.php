@@ -96,11 +96,12 @@ foreach( $community as $pi => $value )
     foreach( array_count_values( $value['edges'] ) as $val => $edgeNum )
     {
         $buddy = explode( '@', $val)[0];
-        $penwidth = min(3, $edgeNum / 2.0);
+        $penwidth = min(4, $edgeNum / 2.0);
         $color = 1.0 / $edgeNum;
         $dotText .= "\t$login -> $buddy [ "
-                . "color=\"$color $color $color\""
-                . "headlabel=$edgeNum," 
+                . "color=red,"
+                . "penwidth=$penwidth,"
+                . "taillabel=$edgeNum," 
                 . "arrowhead=halfopen,"
                 . "];\n";
     }
@@ -110,20 +111,29 @@ $curdir = getcwd( );
 $dotText .= "}";
 
 $dotFilePath = tempnam( "tmp", "graph_" );
-$imgFormat = "png";
+$imgFormat = "svg";
 $dotFile = fopen( $dotFilePath, "w" );
 fwrite( $dotFile, $dotText );
 
 $layout = "neato";
 $imgfilename = "community_$from.$imgFormat";
+
+//Create both SVG and PNG.
 exec( "$layout -T$imgFormat -o $curdir/$imgfilename $dotFilePath", $out, $res );
+exec( "$layout -Tpng -o $curdir/fallback.png $dotFilePath", $out, $res );
 
 // Now load the image into browser.
-echo "<div class=\"easyzoom\">";
-echo "<img class=\"zoom\" src=\"$imgfilename\" width=\"80%\" height=\"100%\" />";
+echo "<div class=\"image\">";
+echo "<object width=\"100%\" data=\"$imgfilename\" type=\"image/svg+xml\">
+    <img src=\"fallback.png\" />
+    </object>
+    ";
 echo "</div>";
 
 // Closing this file will delete its content.
 unlink( $dotFilePath );
+
+//echo "<pre> $dotText </pre>";
+echo goBackToPageLink( "index.php", "Go back" );
 
 ?>

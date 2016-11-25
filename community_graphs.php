@@ -3,26 +3,43 @@
 include_once 'header.php';
 include_once 'database.php';
 
-// This page is unprotected. Anyone can read it.
+if( isset( $_POST['months'] ) )
+    $howManyMonths = intval( $_POST[ 'months' ] );
+else
+    $howManyMonths = 36;
 
+echo '
+    <form method="post" action="">
+    Show AWS interaction in last <input type="text" name="months" 
+        value="' . $howManyMonths . '" />
+    months.
+    <button name="response" value="Submit">Submit</button>
+    </form>
+    ';
+
+
+$from = date( 'Y-m-d', strtotime( 'today' ) - $howManyMonths * 30 * 24 * 3600 );
+
+$fromD = date( 'M d, Y', strtotime( $from ) );
 echo "<p class=\"info\">
-    Following graph shows the interaction among faculty. 
+    Following graph shows the interaction among faculty since $fromD.
+    Number on the node is the number of AWSs supervised by faculty since $fromD.
     <br>
-    The size of node represents
-    the number of AWSs I found for this faculy in my database, the thickness of edges 
-    represent how many times they were involed in an AWS together either as 
-    co-supervisor or thesis committee member. <br>
+    Thickness of an edge represent how many times thes two faculty were involed 
+    in an AWS together either as co-supervisor or thesis committee member. 
+    <br>
     External faculty is not shown in this graph.
     </p>";
 
-$awses = getAllAWS( );
-$dotText = "graph community {
+$awses = getAWSFromPast( $from  );
+$dotText = "digraph community {
     rankdir=TB;
     overlap=false;
+    sep=\"+30\";
     splines=true;
-    splines=true;"
-    //. "node[label=\"\"];"
-    ;
+    ";
+
+echo printInfo( "Total AWS found in database since $fromD: " . count( $awses ) );
 
 $community = array();
 
@@ -68,37 +85,42 @@ foreach( $community as $pi => $value )
 {
     $login = explode( '@', $pi)[0];
     $count = $value[ 'count' ];
-    $size = $value['count'] / 30.0;
+    $width = max(0.5, $value['count'] / 30.0);
     $dotText .= "\t$login ["
-        . "xlabel=\"$count\",xlp=\"0,0\""
-        . ",color=lightblue,style=\"filled\" ,shape=circle "
-        . ",fixedsize=true"
-        . ",width=$size"
+        //. "xlabel=\"$count\",xlp=\"0,0\","
+        . "color=lightblue,style=\"filled\" ,shape=circle,"
+        . "fixedsize=true,"
+        . "width=$width"
         . "];\n";
 
-    foreach( array_count_values( $value['edges'] ) as $val => $penwidth )
+    foreach( array_count_values( $value['edges'] ) as $val => $edgeNum )
     {
         $buddy = explode( '@', $val)[0];
-        $penwidth = $penwidth / 2.0;
-        $dotText .= "\t$login -- $buddy [color=\"red\",penwidth=$penwidth];\n";
+        $penwidth = min(3, $edgeNum / 2.0);
+        $color = 1.0 / $edgeNum;
+        $dotText .= "\t$login -> $buddy [ "
+                . "color=\"$color $color $color\""
+                . "taillabel=$edgeNum," 
+                . "arrowhead=halfopen,"
+                . "];\n";
     }
 }
 
 $curdir = getcwd( );
 $dotText .= "}";
 
-// Now execute neato command and generat an SVG file.
 $dotFilePath = tempnam( "tmp", "graph_" );
 $imgFormat = "png";
 $dotFile = fopen( $dotFilePath, "w" );
 fwrite( $dotFile, $dotText );
 
-$layout = "fdp";
-exec( "$layout -T$imgFormat -o $curdir/community.$imgFormat $dotFilePath", $out, $res );
+$layout = "neato";
+$imgfilename = "community_$from.$imgFormat";
+exec( "$layout -T$imgFormat -o $curdir/$imgfilename $dotFilePath", $out, $res );
 
 // Now load the image into browser.
 echo "<div class=\"easyzoom\">";
-echo "<img class=\"zoom\" src=\"community.$imgFormat\" width=\"80%\" height=\"100%\" />";
+echo "<img class=\"zoom\" src=\"$imgfilename\" width=\"80%\" height=\"100%\" />";
 echo "</div>";
 
 // Closing this file will delete its content.

@@ -36,6 +36,9 @@ ini_set( "display_errors", 1 );
 <script src="js/jquery-1.12.4.js"></script>
 <script src="js/jquery-ui.js"></script>
 
+<script src="js/easyzoom.js"></script>
+<link rel="stylesheet" href="js/easyzoom.css">
+
 <script src="js/jquery-ui.multidatespicker.js"></script>
 <link rel="stylesheet" href="js/jquery-ui.css">
 

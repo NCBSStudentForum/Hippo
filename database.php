@@ -540,6 +540,11 @@ function publicEvents( $date, $time )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Summary table for front page.
+    *
+    * @return 
+ */
 function summaryTable( )
 {
     global $db;
@@ -555,7 +560,10 @@ function summaryTable( )
     $html .= "<tr>
         <td>Total $nAws AWSs </td><td> Total $nspeakers active speaker </td>
         </tr><tr>
-        <td>Total $awsThisYear AWs this year </td> <td></td>
+        <td>Total $awsThisYear AWs this year </td>
+        <td>
+            <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a>
+        </td>
         </tr>";
     $html .= "</table>";
     return $html;

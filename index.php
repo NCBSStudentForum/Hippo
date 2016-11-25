@@ -41,7 +41,7 @@ ini_set( 'error_log', '/tmp/__minion__.log' );
 //$hit_count++;
 //file_put_contents('count.txt', $hit_count);
 
-$summaryTable = summaryTable( );
+$summary = summaryTable( );
 
 // Now create a login form.
 echo "<table class=\"index\">";
@@ -56,7 +56,7 @@ echo '
       To report issues/bugs or to submit feature request or to comment, please
       use <a href="https://goo.gl/forms/1yMRtfslqazaMoBY2" target="_black">this
          form</a>
-      </p> ' .  $summaryTable .  '</td> <td> ';
+      </p> ' .  $summary .  '</td> <td> ';
 
 echo loginForm();
 echo '</tr>';

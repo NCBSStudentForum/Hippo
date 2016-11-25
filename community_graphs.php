@@ -110,15 +110,17 @@ foreach( $community as $pi => $value )
 $curdir = getcwd( );
 $dotText .= "}";
 
-$dotfileURI = "data/community_$from.dot";
+$dotfileURI = "data/community_$from.dot.txt";
 $dotFilePath = "$curdir/$dotfileURI";
-$imgFormat = "svg";
 
 // Write graphviz to dot file.
 $dotFile = fopen( $dotFilePath, "w" );
 fwrite( $dotFile, $dotText );
+fclose( $dotFile );
 
+//  Image generation.
 $layout = "neato";
+$imgFormat = "svg";
 $imgfileURI = "data/community_$from.$imgFormat";
 
 //Create both SVG and PNG.
@@ -132,9 +134,6 @@ echo "<object width=\"100%\" data=\"$imgfileURI\" type=\"image/svg+xml\">
     </object>
     ";
 echo "</div>";
-
-// Closing this file will delete its content.
-unlink( $dotFilePath );
 
 echo "<a href=\"$dotfileURI\" target=\"_blank\">Download graphviz</a>";
 echo goBackToPageLink( "index.php", "Go back" );

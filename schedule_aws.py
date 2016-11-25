@@ -63,9 +63,10 @@ db_ = mysql.connector.connect(
 def init( cur ):
     """Create a temporaty table for scheduling AWS"""
     global gb_
+    cur.execute( 'DROP TABLE aws_temp_schedule' )
     cur.execute( 
             '''
-            CREATE TABLE IF NOT EXISTS aws_schedule 
+            CREATE TABLE IF NOT EXISTS aws_temp_schedule 
             ( speaker VARCHAR(40) PRIMARY KEY, date DATE NOT NULL ) 
             ''' 
         )
@@ -192,7 +193,7 @@ def commit_schedule( schedule ):
     for date in sorted(schedule):
         for speaker in schedule[date]:
             query = """
-                INSERT INTO aws_schedule (speaker, date) VALUES ('{0}', '{1}') 
+                INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}') 
                 ON DUPLICATE KEY UPDATE date='{1}'
                 """.format( speaker, date ) 
             logging.debug( query )

@@ -8,8 +8,19 @@ include_once "check_access_permissions.php";
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
 echo userHTML( );
+echo '<h3>Upcoming AWS</h3>';
 
-echo "<h3>I've scheduled the AWS as follows</h3>";
+$upcomingAWSs = getUpcomingAWS( );
+foreach( $upcomingAWSs as $upcomingAWS )
+    echo arrayToTableHTML( $upcomingAWS, 'show_aws' );
+
+echo "<h3>Temporary assignments </h3>";
+echo '
+    <p class="info"> Following table shows the best possible schedule I could come up with for 
+    next 20 weeks. Pressing <tt>Approve</tt> button will put them into upcoming
+    AWS list.
+    </p>';
+
 $schedule = getTentativeAWSSchedule( );
 
 echo "<table class=\"show_schedule\">";

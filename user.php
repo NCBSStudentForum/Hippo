@@ -44,8 +44,10 @@ $html = '<table class="show_user">';
       <td> <a href="user_jc.php">My Journal Club</a> </td>
    </tr>
    <tr>
-      <td>Alpha: Annual Work Seminal.</td>
-      <td> <a href="user_aws.php">My AWS</a> </td>
+      <td>Annual Work Seminar.</td>
+      <td> 
+         <a href="user_aws.php">My AWS</a> 
+      </td>
    </tr>';
 
    $html .= "</table>";

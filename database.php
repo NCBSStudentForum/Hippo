@@ -557,13 +557,14 @@ function summaryTable( )
 
     $html = "In this database <br>";
     $html .= '<table class="summary">';
-    $html .= "<tr>
-        <td>Total $nAws AWSs </td><td> Total $nspeakers active speaker </td>
+    $html .= "
+        <tr>
+            <td>$nAws AWSs </td>
+            <td> $nspeakers active speakers</td>
+            <td>$awsThisYear AWs this year </td>
         </tr><tr>
-        <td>Total $awsThisYear AWs this year </td>
-        <td>
-            <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a>
-        </td>
+            <td> <a href=\"user_aws_search.php\" target=\"_blank\">Search AWS</a> </td>
+            <td> <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a> </td>
         </tr>";
     $html .= "</table>";
     return $html;
@@ -1127,6 +1128,33 @@ function acceptScheduleOfAWS( $speaker, $date )
     $db->commit( );
     return True;
 }
+
+/**
+    * @brief Query AWS database of given query.
+    *
+    * @param $query
+    *
+    * @return  List of AWS with matching query.
+ */
+function queryAWS( $query )
+{
+    if( strlen( $query ) == 0 )
+        return array( );
+
+    if( strlen( $query ) < 3 )
+    {
+        echo printWarning( "Query is too small" );
+        return array( );
+    }
+
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars 
+        WHERE LOWER(abstract) LIKE LOWER('%$query%')" 
+    ); 
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 
 ?>
 

@@ -10,18 +10,21 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 if( isset( $_POST['response'] ) )
 {
     $cwd = getcwd( );
-    $resfile = tmpfile( );
-    $meta = stream_get_meta_data( $resfile );
-    $resfilePath = $meta[ 'uri' ];
+    $resfilePath = tempnam( "/tmp", "minion" );
 
     echo printInfo( "Rescheduling ...." );
     $scriptPath = $cwd . '/schedule_aws.py';
-    echo printInfo("Executing $scriptPath $resfilePath, timeout 20 secs");
+    echo("<pre>Executing $scriptPath $resfilePath, timeout 20 secs</pre>");
     $command = "timeout 20 python $scriptPath $resfilePath";
     exec( $command, $out, $ret );
-    echo( "Output of command: " );
-    print_r( $out );
-    echo( "Return code: " . $ret );
+
+    // Now read the result file and show to user.
+    $res = file_get_contents( $resfilePath );
+    echo "<h3>Content of result </h3>";
+    echo( "<pre> $res </pre>" );
+
+    // Delete the temp file
+    unlink( $resfilePath );
 }
 
 echo goBackToPageLink( "admin_aws_manages_upcoming_aws.php", "Go back" );

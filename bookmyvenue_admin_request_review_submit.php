@@ -36,7 +36,7 @@ foreach( $events as $event )
     $gid = $event[0]; $rid = $event[1];
     actOnRequest( $gid, $rid, $whatToDo );
     changeIfEventIsPublic( $gid, $rid, $isPublic );
-    if( $whatToDo == 'APPROVE' && isPublic == 'YES' )
+    if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
     {
         // TODO: Add this to google calendar. 
         header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
@@ -44,7 +44,7 @@ foreach( $events as $event )
     }
 }
 
-goToPage( "bookmyvenue_admin.php", 1 );
+echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 exit( 0 );
 
 ?>

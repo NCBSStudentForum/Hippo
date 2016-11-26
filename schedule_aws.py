@@ -45,7 +45,7 @@ aws_ = defaultdict( list )
 upcoming_aws_ = { }
 
 # These speakers must give AWS.
-speakers_ = []
+speakers_ = { }
 
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
@@ -68,7 +68,7 @@ db_ = mysql.connector.connect(
 
 def init( cur ):
     """Create a temporaty table for scheduling AWS"""
-    global gb_
+    global db_, speakers_
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute( 
             '''
@@ -77,6 +77,10 @@ def init( cur ):
             ''' 
         )
     db_.commit( )
+    cur.execute( "SELECT * FROM logins WHERE eligible_for_aws='YES'" )
+    for a in cur.fetchall( ):
+        speakers_[ a['login'] ] = a
+
 
 
 def getAllAWSPlusUpcoming( ):
@@ -98,14 +102,8 @@ def getAllAWSPlusUpcoming( ):
 
     for a in aws_:
         # Sort a list in place.
-        aws_[a].sort( key = lambda x : x['date'], reverse = True )
+        aws_[a].sort( key = lambda x : x['date'] )
 
-
-def getUpcomingAws( ):
-    """Fetch list of all upcoming AWS. These have been fixed and we ignore these
-    time slots as well speakers."""
-    global db_ 
-    cur = db_.cursor( )
 
 def getWeight( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes
@@ -128,31 +126,48 @@ def getWeight( speaker, slot_date, last_aws ):
 def construct_flow_graph(  ):
     global g_
     global aws_
+    global speakers_
 
     g_.add_node( 'source', pos = (0,0) )
     g_.add_node( 'sink', pos = (10, 10) )
 
     # Each speaker gets his node.
-    speakers = []
-    for i, speaker in enumerate( aws_.keys() ):
-        # first entry is most recent
-        lastDate = aws_[speaker][0]['date']
-        if lastDate:
-            # assert lastDate, "No last date found for speaker %s" % speaker 
-            g_.add_node( speaker, last_date = aws_[speaker][0]['date'], pos = (1,3*i) )
-            g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
-            speakers.append( speaker )
+    # for i, speaker in enumerate( aws_.keys() ):
+    for i, speaker in enumerate( speakers_ ):
+        # Last entry is most recent
+        if speaker in aws_.keys( ):
+            # If this speaker is already on upcoming AWS list, ignore it.
+            if speaker in upcoming_aws_:
+                logging.info( 
+                        'Speaker %s is already scheduled on %s' % ( 
+                            speaker, upcoming_aws_[ speaker ] 
+                            )
+                        )
+                continue
+            lastDate = aws_[speaker][-1]['date']
+            if lastDate:
+                # assert lastDate, "No last date found for speaker %s" % speaker 
+                g_.add_node( speaker, last_date = aws_[speaker][0]['date'], pos = (1,3*i) )
+                g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
+            else:
+                logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
+                logging.info( '\t I am ignoring him' )
         else:
-            logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
-            logging.info( '\t I am ignoring him' )
+            print( '[INFO] Speaker %s has not AWS' % speaker )
+            print( '\t %s' %  speakers_[speaker][ 'joined_on' ] )
 
     # Now add mondays for next 20 weeks.
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
+
     for i in range(40):
         nDays = i * 7
         monday = nextMonday + datetime.timedelta( nDays )
+        if monday in upcoming_aws_.values( ):
+            logging.info( 'Date %s is taken ' % monday )
+            continue 
+
         # For each Monday, we have 3 AWS
         for j in range( 3 ):
             dateSlot = '%s,%d' % (monday, j)
@@ -162,7 +177,10 @@ def construct_flow_graph(  ):
     
     # Now for each student, add potential edges.
     idealGap = 357
-    for speaker in speakers:
+    for speaker in speakers_:
+        if speaker not in g_.nodes( ):
+            logging.info( '[INFO] Nothing for user %s' % speaker )
+            continue
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]

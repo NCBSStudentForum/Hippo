@@ -120,7 +120,10 @@ function repeatPatToDays( $pat )
         $days = "0/1/2/3/4/5/6";
 
     $weeks = __get__( $exploded, 1, "*" );
-    $durationInMonths = __get__( $exploded, 2, 6 );
+
+    $durationInMonths = $exploded[2];
+    if( ! $durationInMonths )
+        $durationInMonths = 6;
 
     if( $weeks == "*" )
         $weeks = "0/1/2/3";

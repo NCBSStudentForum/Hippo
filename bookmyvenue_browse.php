@@ -62,13 +62,16 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
     <table>
     <tr>
     <th>
-        Pick dates
+        Step 1: Pick dates
         <p class=\"note_to_user\">You can select multiple dates by clicking on them</p>
     </th>
     <th>
-        Select Venues
+        Step 2: Select Venues
         <p class=\"note_to_user\">You can select multiple venues by holding 
             down Ctrl or Shift key</p>
+    </th>
+    <th>
+        Step 3: Press submit to filter out other venues
     </th>
     </tr>
     <tr>
@@ -93,16 +96,15 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
    );
 
 
+echo "<h3>Step 4: Press + button to create an event at this time slot</h3>";
 // Now generate the range of dates.
 foreach( $dates as $date )
 {
     $thisdate = humanReadableDate( strtotime( $date  ) );
     $thisday = nameOfTheDay( $thisdate );
 
-    $html = "<p class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></p> <br>
-        <!--
-            <div style=\"float:right\"><font color=\"blue\">$thisday, $thisdate </font></div> 
-        -->
+    $html = "<h4 class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></h4> <br>
+
         ";
     // Now generate eventline for each venue.
     foreach( explode("###", $_POST['venue']) as $venueid )

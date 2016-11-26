@@ -55,5 +55,4 @@ else
     goToPage( "user.php", 0 );
     exit;
 }
-sk
 ?>

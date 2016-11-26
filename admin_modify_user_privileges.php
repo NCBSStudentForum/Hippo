@@ -17,7 +17,8 @@ if( ! $_POST['login'] )
 $default = getUserInfo( $_POST['login'] );
 
 echo '<form method="post" action="admin_modify_user_privileges_submit.php">';
-echo dbTableToHTMLTable( 'logins', $default, $editables = Array( 'roles', 'title' ) );
+echo dbTableToHTMLTable( 'logins', $default
+    , $editables = Array( 'roles', 'title', 'eligible_for_aws', 'joined_on' ) );
 echo '</form>';
 
 echo goBackToPageLink( 'admin.php', 'Go back' );

@@ -38,8 +38,14 @@ logging.info( 'Started on %s' % datetime.datetime.today( ) )
 
 g_ = nx.DiGraph( )
 
-# All AWS entries.
+# All AWS entries in the past.
 aws_ = defaultdict( list )
+
+# Upcoming AWS
+upcoming_aws_ = { }
+
+# These speakers must give AWS.
+speakers_ = []
 
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
@@ -73,13 +79,27 @@ def init( cur ):
     db_.commit( )
 
 
-def getAllAWS( ):
+def getAllAWSPlusUpcoming( ):
     global aws_, db_
+    global upcoming_aws_
     cur = db_.cursor( cursor_class = MySQLCursorDict )
     init( cur )
-    cur.execute( 'SELECT * FROM annual_work_seminars ORDER BY date DESC' )
+
+    # Entries in this table are usually in future.
+    cur.execute( 'SELECT * FROM upcoming_aws' )
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ] ].append( a )
+        upcoming_aws_[ a['speaker'] ] = a['date']
+
+    # Now get all the previous AWSs happened so far.
+    cur.execute( 'SELECT * FROM annual_work_seminars' )
+    for a in cur.fetchall( ):
+        aws_[ a[ 'speaker' ] ].append( a )
+
+    for a in aws_:
+        # Sort a list in place.
+        aws_[a].sort( key = lambda x : x['date'], reverse = True )
+
 
 def getUpcomingAws( ):
     """Fetch list of all upcoming AWS. These have been fixed and we ignore these
@@ -192,6 +212,7 @@ def print_schedule( schedule, outfile ):
                 )
         with open( outfile, 'a' ) as f:
             f.write( '%s\n' % line )
+            print( line )
 
 def commit_schedule( schedule ):
     global db_
@@ -218,7 +239,7 @@ def main( outfile ):
     global aws_
     global db_
     logging.info( 'Scheduling AWS' )
-    getAllAWS( )
+    getAllAWSPlusUpcoming( )
     construct_flow_graph( )
     ans = schedule( )
     print_schedule( ans, outfile )

@@ -262,10 +262,10 @@ function userHTML( )
 {
     $html = "<table class=\"user_float\">";
     $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
-    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/bookmyvenue_browse.php\">BookMyVenue</a>";
-    $html .= '</td><td><a href="user_aws.php">My AWS</a></td>';
-    $html .= "</tr>";
-    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/user.php\">Other Tasks</a>";
+    $html .= "<tr><td><a href=\"bookmyvenue_browse.php\">BookMyVenue</a>";
+    $html .= '</td><td><a href="user_aws.php">MyAWS</a></td>';
+    $html .= "</tr><tr>";
+    $html .= "<td><a href=\"user.php\">Home</a>";
     $html .= '</td><td><a href="logout.php">Logout</a></td>';
     $html .= "</tr>";
     $html .= "</table>";

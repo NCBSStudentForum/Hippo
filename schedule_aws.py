@@ -81,6 +81,12 @@ def getAllAWS( ):
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ] ].append( a )
 
+def getUpcomingAws( ):
+    """Fetch list of all upcoming AWS. These have been fixed and we ignore these
+    time slots as well speakers."""
+    global db_ 
+    cur = db_.cursor( )
+
 def getWeight( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes
     incredible large amount of time.

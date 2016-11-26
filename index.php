@@ -66,5 +66,4 @@ echo '<div class="public_calendar">';
 echo calendarURL( );
 echo '</div>';
 
-//echo embdedCalendar( );
 ?>

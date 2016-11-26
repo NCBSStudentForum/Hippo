@@ -18,18 +18,18 @@ echo '
     ';
 
 
-$from = date( 'Y-m-d', strtotime( 'today' ) - $howManyMonths * 30 * 24 * 3600 );
+$from = date( 'Y-m-d', strtotime( 'today' . " -$howManyMonths months"));
 
 $fromD = date( 'M d, Y', strtotime( $from ) );
-echo "<p class=\"info\">
+echo "<div class=\"info\">
     Following graph shows the interaction among faculty since $fromD.
-    Number on the node is the number of AWSs supervised by faculty since $fromD.
-    <br>
-    Thickness of an edge represent how many times thes two faculty were involed 
-    in an AWS together either as co-supervisor or thesis committee member. 
+    Add numbers on each node to count the number of AWSs.
+    Edge to another node points to either co-supervisor or tcm member.
     <br>
     External faculty is not shown in this graph.
-    </p>";
+    <br>
+    Self Loop indicates that I could not find any TCM member from NCBS for this AWS in my database.
+    </div>";
 
 $awses = getAWSFromPast( $from  );
 $dotText = "digraph community {
@@ -37,72 +37,110 @@ $dotText = "digraph community {
     overlap=false;
     sep=\"+30\";
     splines=true;
+    maxiters=100;
     ";
 
-echo printInfo( "Total AWS found in database since $fromD: " . count( $awses ) );
+echo printInfo( "Total " . count( $awses) . " AWSs found in database since $fromD" );
 
 $community = array();
 
-// Store all $pis.
-$pis = array( );
-foreach( $awses as $aws )
+
+/** 
+ * Here we collect all the unique PIs. This is to make sure that we don't draw 
+ * a node for external PI who is/was not on NCBS faculty list. Sometimes, we 
+ * can't get all relevant PIs if we only search in AWSs given in specific time. 
+ * Therefore we query the faculty table to get the list of all PIs.
+ */
+$faculty = getFaculty( );
+$pis = array( );                                // Just the email
+foreach( $faculty as $fac )
 {
-    $pi = $aws['supervisor_1'];
+    $pi = $fac[ 'email' ];
     array_push( $pis, $pi );
-    if( ! array_key_exists( $pi, $community ) )
-        $community[ $pi ] = array( 'count' => 0, 'edges' => array( ) );
+    $community[ $pi ] = array( 
+        'count' => 0  //  Number of AWS by this supervisor
+        , 'edges' => array( )  // Outgoiing edges
+        , 'degree' => 0 // Degree of this supervisor.
+    );
 }
-$pis = array_unique( $pis );
 
 foreach( $awses as $aws )
 {
+    // How many AWSs this supervisor has.
     $pi = $aws[ 'supervisor_1' ];
-    $community[ $pi ]['count'] += 1;
+    if( ! in_array( $pi, $pis ) )
+        continue;
 
-    // Co-supervisor is a edge
-    if( $aws[ "supervisor_2" ] )
+    $community[ $pi ]['count'] += 1;
+    $community[ $pi ]['degree'] += 1;
+
+    // Co-supervisor is an edge
+    if( strlen( $aws[ "supervisor_2" ] ) > 0 )
     {
         // Only if PI is from NCBS.
-        if( in_array( $aws['supervisor_2'], $pis ) )
-            array_push( $community[ $pi ]['edges'], $aws[ "supervisor_2" ] );
+        $super2 = $aws[ 'supervisor_2' ];
+        if( in_array( $super2, $pis ) )
+        {
+            array_push( $community[ $pi ]['edges'], $super2 );
+            $community[ $super2 ]['degree'] += 1;
+        }
     }
 
     // All TCM members are edges
+    $foundAnyTcm = false;
     for( $i = 1; $i < 5; $i++ )
     {
         if( ! array_key_exists( "tcm_member_$i", $aws ) )
             continue;
-        if( strpos($aws[ "tcm_member_$i" ], '@') == false ) // Valid email id.
+
+        $tcmMember = trim( $aws[ "tcm_member_$i" ] );
+        if( strpos( $tcmMember, '@') == false ) // Invalid email id.
             continue;
 
-        if( in_array( $aws["tcm_member_$i"], $pis ) )
-            array_push( $community[ $pi ][ 'edges' ], $aws["tcm_member_$i"] );
+        if( in_array( $tcmMember, $pis ) )
+        {
+            array_push( $community[ $pi ][ 'edges' ], $tcmMember );
+            $community[ $tcmMember ][ "degree" ] += 1;
+            $foundAnyTcm = true;
+        }
     }
+
+    // If not TCM member is found for this TCM. Add an edge onto PI.
+    if(! $foundAnyTcm )
+        array_push( $community[ $pi ][ 'edges' ], $pi );
 }
 
 // Now generate dot text.
 foreach( $community as $pi => $value )
 {
+    // If there are not edges from or onto this PI, ignore it.
     $login = explode( '@', $pi)[0];
+
+
+    // This PI is not involved in any AWS for this duration.
+    if( $value[ "degree" ] < 1 )
+        continue;
+
+    // Width represent AWS per month.
     $count = $value[ 'count' ];
-    $width = max(0.5, $value['count'] / 30.0);
+    $width = $count / $howManyMonths;
     $dotText .= "\t$login ["
         //. "xlabel=\"$count\",xlp=\"0,0\","
         . "color=lightblue,style=\"filled\" ,shape=circle,"
+        . "width=$width,"
         . "fixedsize=true,"
-        . "width=$width"
         . "];\n";
 
     foreach( array_count_values( $value['edges'] ) as $val => $edgeNum )
     {
         $buddy = explode( '@', $val)[0];
-        $penwidth = min(4, $edgeNum / 2.0);
+        $penwidth = $edgeNum / 4.0;
         $color = 1.0 / $edgeNum;
         $dotText .= "\t$login -> $buddy [ "
                 . "color=red,"
                 . "penwidth=$penwidth,"
-                . "taillabel=$edgeNum," 
-                . "arrowhead=halfopen,"
+                . "taillabel=\"$edgeNum\"," 
+                . "arrowhead=none,"
                 . "];\n";
     }
 }
@@ -119,7 +157,7 @@ fwrite( $dotFile, $dotText );
 fclose( $dotFile );
 
 //  Image generation.
-$layout = "neato";
+$layout = "sfdp";
 $imgFormat = "svg";
 $imgfileURI = "data/community_$from.$imgFormat";
 

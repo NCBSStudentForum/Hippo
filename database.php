@@ -343,6 +343,12 @@ function submitRequest( $request )
     else 
         $days = Array( $request['date'] );
 
+    if( count( $days ) < 1 )
+    {
+        echo minionEmbarrassed( "I could not generate list of slots for you reuqest" );
+        return false;
+    }
+
     $rid = 0;
     $results = Array( );
     $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );

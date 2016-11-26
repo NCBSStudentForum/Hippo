@@ -22,6 +22,8 @@ if( isset( $_GET[ 'query' ] ) )
     echo printInfo( "Total matches " .  count( $awses ) );
     foreach( $awses as $aws )
     {
+        // Add user info to table.
+        $aws['speaker'] .= ',' . loginToText( $aws[ 'speaker' ] );
         echo arrayToVerticalTableHTML( $aws, 'show_aws', ''
             , array( 'id', 'time', 'supervisor_2'
             , 'tcm_member_1', 'tcm_member_2', 'tcm_member_3', 'tcm_member_4'
@@ -31,6 +33,6 @@ if( isset( $_GET[ 'query' ] ) )
     }
 }
 
-echo goBackToPageLink( "user_aws.php", "Go back" );
+echo goBackToPageLink( "index.php", "Go back" );
 
 ?>

@@ -11,10 +11,11 @@ mustHaveAnyOfTheseRoles( Array( 'ADMIN' ) );
 
 //var_dump( $_POST );
 
-$res = updateTable( 'logins', 'login', Array( 'roles', 'title' ), $_POST ); 
+$toUpdate = array( 'roles', 'title', 'joined_on', 'eligible_for_aws' );
+$res = updateTable( 'logins', 'login', $toUpdate, $_POST ); 
 if( $res )
 {
-    echo printInfo( "Successfully updated the user" );
+    echo printInfo( "Successfully updated : " . implode(',', $toUpdate)  );
     goToPage( 'admin.php', 1 );
     exit;
 }

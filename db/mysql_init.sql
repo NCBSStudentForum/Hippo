@@ -21,12 +21,12 @@ CREATE TABLE IF NOT EXISTS logins (
     , first_name VARCHAR(200)
     , last_name VARCHAR(100)
     , roles SET( 
-        'USER'
-        , 'ADMIN', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN'
+        'USER', 'ADMIN', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN'
     ) DEFAULT 'USER'
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     , created_on DATETIME 
     , joined_on DATETIME
+    , eligible_for_aws ENUM ('YES', 'NO' ) DEFAULT 'NO'
     , valid_until DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , laboffice VARCHAR(200)
@@ -42,13 +42,6 @@ CREATE TABLE IF NOT EXISTS logins (
     , institute VARCHAR(300)
     , PRIMARY KEY (login)
 );
-
-create TABLE IF NOT EXISTS labs (
-   id VARCHAR(200) PRIMARY KEY 
-   , url VARCHAR (500)
-   , faculty_in_charge VARCHAR( 200 ) NOT NULL
-   , FOREIGN KEY (faculty_in_charge) REFERENCES logins(login)
-   );
 
 CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     gid INT NOT NULL

@@ -32,6 +32,9 @@ echo dbTableToHTMLTable( 'logins', $userInfo
       );
 echo "</form>";
 
+if( ! $userInfo['eligible_for_aws'] )
+    echo printWarning( "If you should be 'ELIGIBLE FOR AWS', let academic office know." );
+
 echo goBackToPageLink( "user.php", "Go back" );
 
 ?>

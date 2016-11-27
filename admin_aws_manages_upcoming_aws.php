@@ -78,7 +78,7 @@ echo '</tr></table>';
 echo "<h3>Temporary assignments </h3>";
 echo '
     <p class="info"> Following table shows the best possible schedule I could come up with for 
-    next 20 weeks. Pressing <tt>Approve</tt> button will put them into upcoming
+    next 20 weeks. Pressing <button disabled>Accept</button> will put them into upcoming
     AWS list.
     </p>';
 
@@ -125,6 +125,8 @@ foreach( $schedule as $upcomingAWS )
     
     echo "<tr><td>";
     echo $speaker;
+    $intranetLink = getIntranetLink( $speaker );
+    echo "<br>$intranetLink ";
     echo "</td><td>";
     echo $upcomingAWS[ 'date' ];
     echo "</td><td>";

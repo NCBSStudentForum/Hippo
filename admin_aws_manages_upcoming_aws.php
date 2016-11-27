@@ -136,8 +136,9 @@ foreach( $schedule as $upcomingAWS )
     echo "</td>";
 
     // Create a form to approve the schedule.
+    $speakerInfo = $speaker . ', '. loginToText( $speaker );
     echo '<form method="post" action="admin_aws_manages_upcoming_aws_submit.php">';
-    echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
+    echo '<input type="hidden" name="speaker" value="' . $speakerInfo . '" >';
     echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
     echo '<td style="background:white;border:0px;">
         <button name="response" value="Accept" >Accept</button>

@@ -517,4 +517,20 @@ function loginToText( $loginName )
     return $text;
 }
 
+/**
+    * @brief Get link from intranet.
+    *
+    * @param User login.
+    *
+    * @return 
+ */
+function getIntranetLink( $login )
+{
+    $html = "<font style=\"font-size:x-small\"><a 
+        href=\"https://intranet.ncbs.res.in/people-search?name=$login\"
+        target=\"_blank\">Show on intranet</a></font>"
+        ;
+    return $html;
+}
+
 ?>

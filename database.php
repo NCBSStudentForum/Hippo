@@ -695,10 +695,10 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     *
     * @return 
  */
-function getLogins( )
+function getLogins(  )
 {
     global $db;
-    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt = $db->query( 'SELECT * FROM logins ORDER BY joined_on DESC' );
     $stmt->execute( );
     return  fetchEntries( $stmt );
 }
@@ -1052,7 +1052,9 @@ function getAWSFromPast( $from  )
 function getAWSUsers( )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM logins WHERE status='ACTIVE'" );
+    $stmt = $db->query( 
+        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES'" 
+    );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

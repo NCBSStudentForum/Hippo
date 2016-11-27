@@ -137,7 +137,7 @@ def computeCost( speaker, slot_date, last_aws ):
             logging.info( "I am not scheduling AWS for this user." )
             cost = 1000
         
-        else if fromToday >  1.5 * idealGap:
+        elif fromToday >  1.5 * idealGap:
             cost = 0.0
         else:
             cost = ( nDays - idealGap ) / idealGap 

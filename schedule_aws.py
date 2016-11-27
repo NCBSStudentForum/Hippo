@@ -77,7 +77,10 @@ def init( cur ):
             ''' 
         )
     db_.commit( )
-    cur.execute( "SELECT * FROM logins WHERE eligible_for_aws='YES'" )
+    cur.execute( """
+        SELECT * FROM logins WHERE eligible_for_aws='YES' AND status='ACTIVE'
+        """
+        )
     for a in cur.fetchall( ):
         speakers_[ a['login'] ] = a
     logging.info( 'Total speakers %d' % len( speakers_ ) )
@@ -125,7 +128,7 @@ def computeCost( speaker, slot_date, last_aws ):
         # yet for quite a long time. Give preference to them. Reduce the cost to
         # almost zero if the difference is 1.5 times the idealGap
         # Here cost can be between 0 and 1.5
-        if (nDays - idealGap) >  1.5 * idealGap:
+        if (datetime.date.today() - last_aws).days >  1.5 * idealGap:
             cost = 0.0
         else:
             cost = ( nDays - idealGap ) / idealGap 
@@ -136,9 +139,7 @@ def computeCost( speaker, slot_date, last_aws ):
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
     cost =  cost + max(0, nAws - 2 )
-
-    # Since working with intgers make the algorithm faster.
-    return int( 100 * cost )
+    return cost
 
 
 def construct_flow_graph(  ):

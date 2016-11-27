@@ -80,7 +80,7 @@ def init( cur ):
     cur.execute( "SELECT * FROM logins WHERE eligible_for_aws='YES'" )
     for a in cur.fetchall( ):
         speakers_[ a['login'] ] = a
-
+    logging.info( 'Total speakers %d' % len( speakers_ ) )
 
 
 def getAllAWSPlusUpcoming( ):
@@ -103,24 +103,42 @@ def getAllAWSPlusUpcoming( ):
     for a in aws_:
         # Sort a list in place.
         aws_[a].sort( key = lambda x : x['date'] )
+        # print( a, [ x['date'] for x in aws_[a] ] )
 
 
-def getWeight( speaker, slot_date, last_aws ):
+
+def computeCost( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes
     incredible large amount of time.
     """
     global g_, aws_
     idealGap = 357
     nDays = ( slot_date - last_aws ).days
-    # Divide by month to get an interger.
-    weight = abs( nDays - idealGap ) / 30
+    # If nDays is less than idealGap than cost function grows very fast. Use
+    # weeks instead of months as time-unit.
+    if( nDays <= idealGap ):
+        # THere is no way, anyone should get AWS before idealGap. Cost should be
+        # high. Let's measure it in weeks.
+        cost = ( idealGap - nDays ) / 7
+    else:
+        # Here we have two possibilities. Some speaker have not got their AWS
+        # yet for quite a long time. Give preference to them. Reduce the cost to
+        # almost zero if the difference is 1.5 times the idealGap
+        # Here cost can be between 0 and 1.5
+        if (nDays - idealGap) >  1.5 * idealGap:
+            cost = 0.0
+        else:
+            cost = ( nDays - idealGap ) / idealGap 
+
     nAws = len( aws_[speaker] )
     # We multiply the weight by AWS given by this user in a way that first 2 aws
     # does not effect this weight. But later AWS has significant cost. This is
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
-    weight =  weight * max( 1, nAws - 2 )
-    return weight 
+    cost =  cost + max(0, nAws - 2 )
+
+    # Since working with intgers make the algorithm faster.
+    return int( 100 * cost )
 
 
 def construct_flow_graph(  ):
@@ -147,7 +165,7 @@ def construct_flow_graph(  ):
             lastDate = aws_[speaker][-1]['date']
             if lastDate:
                 # assert lastDate, "No last date found for speaker %s" % speaker 
-                g_.add_node( speaker, last_date = aws_[speaker][0]['date'], pos = (1,3*i) )
+                g_.add_node( speaker, last_date = lastDate, pos = (1,3*i) )
                 g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
             else:
                 logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
@@ -161,7 +179,9 @@ def construct_flow_graph(  ):
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
 
-    for i in range(40):
+    totalWeeks = 53
+    logging.info( "Computing for total %d weeks" % totalWeeks )
+    for i in range( totalWeeks ):
         nDays = i * 7
         monday = nextMonday + datetime.timedelta( nDays )
         if monday in upcoming_aws_.values( ):
@@ -184,8 +204,32 @@ def construct_flow_graph(  ):
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
-            weight = getWeight( speaker, date, prevAWSDate )
+            weight = computeCost( speaker, date, prevAWSDate )
             g_.add_edge( speaker, slot, capacity = 1, weight = weight ) 
+
+
+def write_graph( outfile  = 'network.dot' ):
+    # Convert datetime to string before writing to file.
+    # This operation should be done at the very end.
+    # This operation should be done at the very end.
+    dotText = [ "digraph G { " ]
+    for n in g_.nodes():
+        nodeText = '\t"%s" [' % n
+        for attr in g_.node[ n ]:
+            nodeText += '%s="%s", ' % (attr, g_.node[n][attr] ) 
+        nodeText += ']'
+        dotText.append( nodeText )
+
+    for s, t in g_.edges( ):
+        edgeText = ( '\t "%s" -> "%s" [' % (s, t) )
+        for attr in g_[s][t]:
+            edgeText += '%s="%s",' % (attr, g_[s][t][attr] )
+        edgeText += ']'
+        dotText.append( edgeText )
+
+    dotText.append( "}" )
+    with open( outfile, "w" ) as f:
+        f.write( "\n".join( dotText ) )
 
 def test_graph( graph ):
     """Test that this graph is valid """
@@ -262,6 +306,7 @@ def main( outfile ):
     ans = schedule( )
     print_schedule( ans, outfile )
     commit_schedule( ans )
+    write_graph( )
     db_.close( )
 
 if __name__ == '__main__':

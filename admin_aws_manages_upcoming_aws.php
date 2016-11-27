@@ -14,34 +14,64 @@ $upcomingAWSs = getUpcomingAWS( );
 
 // For the next week.
 $upcomingAwsNextWeek = array( );
+if( count( $upcomingAwsNextWeek ) < 1 )
+{
+    echo printInfo( "No AWS has been approved for upcoming week." );
+}
+
 foreach( $upcomingAWSs as $aws )
     if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
         array_push( $upcomingAwsNextWeek, $aws );
-
 foreach( $upcomingAwsNextWeek as $upcomingAWS )
 {
-    echo arrayToTableHTML( $upcomingAWS, 'aws' , ''
-        , array( 'id', 'status', 'comment' )
+    echo '<form action="admin_aws_manages_upcoming_aws_submit.php"
+        method="post" accept-charset="utf-8">';
+    echo '<table>';
+    echo '<tr><td>';
+    echo arrayToTableHTML( $upcomingAWS, 'aws' 
+        , '', array( 'id', 'status', 'comment' )
     );
-    echo "<br>";
+    echo '<input type="hidden", name="date" , value="' . $upcomingAWS[ 'date' ] . '"/>';
+    echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
+    echo '</td><td>';
+    echo '<button name="response" value="Reassign">Reassign</button>';
+    echo "</br>";
+    echo '<button name="response" value="Clear">Clear</button>';
+    echo '</td></tr>';
+    echo '</table>';
+    echo '</form>';
 }
 
 echo "<h3>All upcoming AWS </h3>";
 
 // Show the rest of entries grouped by date.
-$groupDate = strtotime( $upcomingAWSs[0]['date'] );
-echo '<table class="show_schedule">';
-echo '<tr> <td>' . $upcomingAWSs[0]['date'] . '</td>';
+if( count(  $upcomingAWSs ) > 0 )
+{
+    $groupDate = strtotime( $upcomingAWSs[0]['date'] );
+    echo '<table class="show_schedule">';
+    echo '<tr> <td>' . $upcomingAWSs[0]['date'] . '</td>';
+}
+else
+{
+    echo printInfo( "No AWS has been approved for coming weeks" );
+}
 foreach( $upcomingAWSs as $aws )
 {
+    echo '<form action="admin_aws_manages_upcoming_aws_submit.php"
+        method="post" accept-charset="utf-8">';
     if( strtotime( $aws['date']) != $groupDate )
     {
         $groupDate = strtotime( $aws['date'] );
         echo '</tr>';
         echo '<tr><td>' . $aws['date'] . '</td>';
     }
-    echo '<td>' . $aws['speaker'] . '<br>' 
-        . loginToText( $aws['speaker']) . '</td>';
+    echo '<td>';
+    echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker']);
+    echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
+    echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
+    echo '<button name="response" value="Clear">Clear</button>';
+    echo '</td>';
+    echo '</form>';
 }
 echo '</tr></table>';
 
@@ -64,8 +94,7 @@ $header = "<tr>
 echo $header;
 
 echo "<form method=\"post\" action=\"admin_aws_manages_upcoming_aws_submit.php\">";
-echo '<button type="submit" 
-    value="schedule" name="response" value="Reschedule">Reschedule All</button>';
+echo '<button type="submit" name="response" value="Reschedule">Reschedule All</button>';
 echo "</form>";
 echo '<br>';
 

@@ -45,6 +45,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
     {
         $i = $info[$s];
 
+        //var_dump( $i );
         $laboffice = $i['profilelaboffice'][0];
         array_push($result
             , array(
@@ -53,7 +54,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
                 , "uid" => $i['profileidentification'][0]
                 , "email" => $i['mail'][0]
                 , "laboffice" => $laboffice
-                //, "joined_on" => $i['profiletenureend'][0]
+                , "joined_on" => $i['profiledateofjoin'][0]
             )
         );
     }

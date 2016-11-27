@@ -117,6 +117,8 @@ def computeCost( speaker, slot_date, last_aws ):
     global g_, aws_
     idealGap = 357
     nDays = ( slot_date - last_aws ).days
+    nAws = len( aws_[speaker] )
+
     # If nDays is less than idealGap than cost function grows very fast. Use
     # weeks instead of months as time-unit.
     if( nDays <= idealGap ):
@@ -126,29 +128,30 @@ def computeCost( speaker, slot_date, last_aws ):
     else:
         # Here we have two possibilities. Some speaker have not got their AWS
         # yet for quite a long time. Give preference to them. Reduce the cost to
-        # almost zero if the difference is 1.5 times the idealGap. If gap is
-        # more than 2.5 years, than something is wrong with user. Ignore this
-        # profile and emit a warning.
+        # very low but the cost should be larger for later AWS. if the
+        # difference is 1.5 times the idealGap. If gap is more than 2.5 years,
+        # than something is wrong with user. Ignore this profile and emit a
+        # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
         if fromToday > 2.5 * idealGap:
             logging.warn( '%s has not given AWS for %d days' % ( speaker,
                 fromToday) 
                 )
             logging.info( "I am not scheduling AWS for this user." )
-            cost = 1000
-        
+            cost = 100
         elif fromToday >  1.5 * idealGap:
-            cost = 0.0
+            cost = 0.0 + nAws / 10.0
         else:
-            cost = ( nDays - idealGap ) / idealGap 
+            cost = float( nDays - idealGap ) / idealGap 
 
-    nAws = len( aws_[speaker] )
     # We multiply the weight by AWS given by this user in a way that first 2 aws
     # does not effect this weight. But later AWS has significant cost. This is
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
     cost =  cost + max(0, nAws - 2 )
-    return cost
+
+    # This does not work well with float.
+    return int( 100 * cost )
 
 
 def construct_flow_graph(  ):

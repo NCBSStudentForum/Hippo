@@ -1161,6 +1161,25 @@ function queryAWS( $query )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Clear a given AWS from upcoming AWS list.
+    *
+    * @param $speaker
+    * @param $date
+    *
+    * @return 
+ */
+function clearUpcomingAWS( $speaker, $date )
+{
+    global $db;
+    $stmt = $db->prepare( 
+        "DELETE FROM upcoming_aws WHERE speaker=:speaker AND date=:date" 
+    );
+
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->bindValue( ':date', $date );
+    return $stmt->execute( );
+}
 
 ?>
 

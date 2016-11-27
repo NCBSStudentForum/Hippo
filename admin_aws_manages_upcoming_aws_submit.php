@@ -40,6 +40,16 @@ else if( $_POST[ 'response' ] == 'Accept' )
         exit;
     }
 }
+else if( $_POST[ 'response' ] == 'Clear' )
+{
+    $res = clearUpcomingAWS( $_POST[ 'speaker'], $_POST[ 'date' ] );
+    if( $res )
+    {
+        echo printInfo( "Successfully cleared upcoming AWS" );
+        goToPage( "admin_aws_manages_upcoming_aws.php", 2 );
+        exit;
+    }
+}
 else
 {
     echo printWarning( "To Do " . $_POST[ 'response' ] );

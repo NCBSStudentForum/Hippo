@@ -165,7 +165,8 @@ def computeCost( speaker, slot_date, last_aws ):
 
     # Add some random noise to make sure that we don't have same coupling of
     # speakers as before 
-    cost += random.random()
+    # Not a good idea, it changes the schedule every time we run this script.
+    # cost += random.random()
 
     # This does not work well with float.
     return int( 100 * cost )
@@ -177,7 +178,7 @@ def monthdelta(date, delta):
     d = min(date.day, [31,
         29 if y%4==0 and not y%400==0 else 28,31,30,31,30,31,31,30,31,30,31][m-1])
     dt = date.replace(day=d,month=m, year=y)
-    return dt.date( )
+    return dt
 
 def construct_flow_graph(  ):
     global g_
@@ -214,7 +215,12 @@ def construct_flow_graph(  ):
                 if not joinDate:
                     logging.warn( "Could not find joining date" )
                 else:
-                    lastDate = joinDate.date( )
+                    try:
+                        # if datetime.
+                        lastDate = joinDate.date( )
+                    except Exception as e:
+                        # Else its date
+                        lastDate = joinDate
         else: 
             # We are here because this speaker has given AWS before
             # If this speaker is already on upcoming AWS list, ignore it.

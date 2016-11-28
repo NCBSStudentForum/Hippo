@@ -17,7 +17,7 @@ if( $_POST['response'] == "Reschedule" )
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
     $command = "timeout 30 $scriptPath";
     exec( $command );
-    goToPage( 'admin_aws_manages_upcoming_aws.php', 2 );
+    goToPage( 'admin_aws_manages_upcoming_aws.php', 0 );
     exit;
 }
 else if( $_POST[ 'response' ] == 'Accept' )

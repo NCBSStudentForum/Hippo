@@ -114,11 +114,19 @@ foreach( $schedule as $upcomingAWS )
     }
 
     $speaker = $upcomingAWS[ 'speaker' ];
+    $speakerInfo = getLoginInfo( $speaker );
+
     $pastAWSes = getAwsOfSpeaker( $speaker );
 
-    // These are in descending ORDER.
-    $lastAws = $pastAWSes[0];
-    $lastAwsDate = $lastAws[ 'date' ];
+    // This user may have not given any AWS in the past. We consider their 
+    // joining date as last AWS date.
+    if( count( $pastAWSes ) > 0 )
+    {
+        $lastAws = $pastAWSes[0];
+        $lastAwsDate = $lastAws[ 'date' ];
+    }
+    else
+        $lastAwsDate = date( 'Y-m-d', strtotime($speakerInfo[ 'joined_on']));
 
     $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
     $nDays = $nSecs / (3600 * 24 );
@@ -130,7 +138,9 @@ foreach( $schedule as $upcomingAWS )
     echo "</td><td>";
     echo $upcomingAWS[ 'date' ];
     echo "</td><td>";
-    echo $lastAws['date'];
+    echo $lastAwsDate;
+    if( count( $pastAWSes) == 0 )
+        echo "<br><small>Joining date</small>";
     echo "</td><td>";
     echo "<font color=\"blue\"> $nDays </font>";
     echo "</td><td>";

@@ -34,7 +34,7 @@ logging.basicConfig( level=logging.INFO
         , filemode = 'w'
         , datefmt='%m-%d %H:%M'
         )
-logging.info( 'Started on %s' % datetime.datetime.today( ) )
+logging.info( 'Started on %s' % datetime.date.today( ) )
 
 g_ = nx.DiGraph( )
 
@@ -79,10 +79,12 @@ def init( cur ):
     db_.commit( )
     cur.execute( """
         SELECT * FROM logins WHERE eligible_for_aws='YES' AND status='ACTIVE'
+        ORDER BY login 
         """
         )
     for a in cur.fetchall( ):
         speakers_[ a['login'] ] = a
+
     logging.info( 'Total speakers %d' % len( speakers_ ) )
 
 
@@ -134,10 +136,8 @@ def computeCost( speaker, slot_date, last_aws ):
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
         if fromToday > 2.5 * idealGap:
-            logging.warn( '%s has not given AWS for %d days' % ( speaker,
-                fromToday) 
-                )
-            logging.info( "I am not scheduling AWS for this user." )
+            # logging.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
+            # logging.info( "I am not scheduling AWS for this user." )
             cost = 100
         elif fromToday >  1.5 * idealGap:
             cost = 0.0 + nAws / 10.0
@@ -153,6 +153,14 @@ def computeCost( speaker, slot_date, last_aws ):
     # This does not work well with float.
     return int( 100 * cost )
 
+# From  http://stackoverflow.com/a/3425124/1805129
+def monthdelta(date, delta):
+    m, y = (date.month+delta) % 12, date.year + ((date.month)+delta-1) // 12
+    if not m: m = 12
+    d = min(date.day, [31,
+        29 if y%4==0 and not y%400==0 else 28,31,30,31,30,31,31,30,31,30,31][m-1])
+    dt = date.replace(day=d,month=m, year=y)
+    return dt.date( )
 
 def construct_flow_graph(  ):
     global g_
@@ -162,11 +170,36 @@ def construct_flow_graph(  ):
     g_.add_node( 'source', pos = (0,0) )
     g_.add_node( 'sink', pos = (10, 10) )
 
-    # Each speaker gets his node.
-    # for i, speaker in enumerate( aws_.keys() ):
+    lastDate = None
     for i, speaker in enumerate( speakers_ ):
         # Last entry is most recent
-        if speaker in aws_.keys( ):
+        if speaker not in aws_.keys( ):
+            # We are here because this speaker has not given any AWS yet. If
+            # this user has PHD/POSTDOC, or INTPHD title. We create  a dummy
+            # last date to bring her into potential speakers.
+
+            # First make sure, I have their date of joining. Otherwise I
+            # can't continue. For INTPHD assign their first AWS after 18
+            # months. For PHD and POSTDOC, it should be after 12 months.
+            if speakers_[ speaker ]['title'] == 'INTPHD':
+                # InPhd should get their first AWS after 15 months of
+                # joining.
+                logging.info( '%s = INTPHD with 0 AWS so far' % speaker )
+                joinDate = speakers_[ speaker ]['joined_on']
+                if not joinDate:
+                    logging.warn( "Could not find joining date" )
+                else:
+                    lastDate = monthdelta( joinDate, -6 )
+
+            elif speakers_[ speaker ]['title'] in [ 'PHD', 'POSTDOC' ]:
+                joinDate = speakers_[ speaker ]['joined_on']
+                logging.info( '%s PHD/POSTDOC with 0 AWS so far' % speaker )
+                if not joinDate:
+                    logging.warn( "Could not find joining date" )
+                else:
+                    lastDate = joinDate.date( )
+        else: 
+            # We are here because this speaker has given AWS before
             # If this speaker is already on upcoming AWS list, ignore it.
             if speaker in upcoming_aws_:
                 logging.info( 
@@ -174,18 +207,19 @@ def construct_flow_graph(  ):
                             speaker, upcoming_aws_[ speaker ] 
                             )
                         )
-                continue
-            lastDate = aws_[speaker][-1]['date']
-            if lastDate:
+
+                # logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
+                # logging.info( '\t I am ignoring him' )
                 # assert lastDate, "No last date found for speaker %s" % speaker 
-                g_.add_node( speaker, last_date = lastDate, pos = (1,3*i) )
-                g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
+                continue
             else:
-                logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
-                logging.info( '\t I am ignoring him' )
-        else:
-            print( '[INFO] Speaker %s has not AWS' % speaker )
-            print( '\t %s' %  speakers_[speaker][ 'joined_on' ] )
+                lastDate = aws_[speaker][-1]['date']
+
+        # If a speaker has a lastDate either because he has given AWS in the
+        # past or becuase she is fresher. Create an edge.
+        if lastDate:
+            g_.add_node( speaker, last_date = lastDate, pos = (1, 3*i) )
+            g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
 
     # Now add mondays for next 20 weeks.
     today = datetime.date.today()

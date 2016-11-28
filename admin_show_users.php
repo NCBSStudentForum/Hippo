@@ -13,14 +13,24 @@ echo '<table border="0">';
 $i = 0;
 foreach( $logins as $login )
 {
+    if( $login['status'] == 'EXPIRED' )
+        continue;
+
     $i += 1;
+    $loginName = $login[ 'login' ];
     echo '<tr>';
-    echo "<td>$i </td>";
+    echo "<td>$i</td>";
     echo "<td>";
     echo arrayToTableHTML( $login, 'info', ''
         , array( 'alternative_email', 'email', 'roles', 'created_on', 'last_login' )
     );
     echo "</td>";
+    echo "<td> 
+        <form method=\"post\" action=\"admin_modify_user_privileges.php\">
+        <input type=\"hidden\" name=\"login\" value=\"$loginName\" />
+        <button name=\"edit\" value=\"edit\">Edit</button> </td>
+        </form>
+        ";
     echo '</tr>';
 }
 

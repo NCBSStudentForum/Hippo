@@ -4,7 +4,7 @@ USE minion;
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
--- DROP TABLE IF EXISTS annual_work_seminars;
+DROP TABLE IF EXISTS annual_work_seminars;
 -- DROP TABLE IF EXISTS aws_requests;
 DROP TABLE IF EXISTS upcoming_aws;
 -- DROP TABLE IF EXISTS supervisors;
@@ -136,7 +136,7 @@ create TABLE IF NOT EXISTS faculty (
 
 -- These are finally approved AWS. 
 create TABLE IF NOT EXISTS annual_work_seminars (
-    id INT AUTO_INCREMENT PRIMARY KEY
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
     , speaker VARCHAR(200) NOT NULL -- user
     , date DATE NOT NULL -- final date
     , time TIME NOT NULL DEFAULT '16:00'
@@ -149,6 +149,7 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , title VARCHAR( 1000 )
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES logins(login)
+    , UNIQUE KEY (speaker, date)
     -- , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
     );
 

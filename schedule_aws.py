@@ -319,7 +319,11 @@ def main( outfile ):
     ans = schedule( )
     print_schedule( ans, outfile )
     commit_schedule( ans )
-    write_graph( )
+    try:
+        write_graph( )
+    except Exception as e:
+        logging.error( "Could not write graph to file" )
+        logging.error( "\tError was %s" % e )
     db_.close( )
 
 if __name__ == '__main__':

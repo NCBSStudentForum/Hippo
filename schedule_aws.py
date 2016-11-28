@@ -31,9 +31,9 @@ import logging
 import random
 import getpass
 
-logFile = 'minion_sch_%s.log' % getpass.getuser( )
+logFile = '/tmp/__minion_sch_%s.log' % getpass.getuser( )
 logging.basicConfig( 
-        filepath = logFile
+        filename = logFile
         , level=logging.DEBUG
         , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
         , filemode = 'a'
@@ -257,13 +257,14 @@ def construct_flow_graph(  ):
     idealGap = 357
     for speaker in speakers_:
         if speaker not in g_.nodes( ):
-            logging.info( '[INFO] Nothing for user %s' % speaker )
+            logging.info( 'Nothing for user %s' % speaker )
             continue
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
             g_.add_edge( speaker, slot, capacity = 1, weight = weight ) 
+    logging.info( 'Constructed flow graph' )
 
 
 def write_graph( outfile  = 'network.dot' ):
@@ -297,6 +298,7 @@ def test_graph( graph ):
             logging.info( 'Error: %s -> %s no capacity assigned' % (u, v) )
         if 'weight' not in  graph[u][v]:
             logging.info( 'Error: %s -> %s no weight assigned' % (u, v) )
+    logging.info( '\tDone testing graph' )
 
 def getMatches( res ):
     result = defaultdict( list )
@@ -314,9 +316,13 @@ def getMatches( res ):
 
 def schedule( ):
     global g_
+    logging.info( 'Scheduling AWS now' )
     test_graph( g_ )
+    logging.info( 'Computing max-flow, min-cost' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
+    logging.info( '\t Computed. Getting schedules now ...' )
     schedule = getMatches( res )
+    logging.info( '\t ... Computed schedules.' )
     return schedule
 
 def print_schedule( schedule, outfile ):
@@ -337,6 +343,7 @@ def print_schedule( schedule, outfile ):
 def commit_schedule( schedule ):
     global db_
     cur = db_.cursor( )
+    logging.info( 'Committing computed schedules ' )
     for date in sorted(schedule):
         for speaker in schedule[date]:
             query = """
@@ -353,8 +360,11 @@ def main( outfile ):
     global db_
     logging.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )
-    construct_flow_graph( )
-    ans = schedule( )
+    try:
+        construct_flow_graph( )
+        ans = schedule( )
+    except Exception as e:
+        logging.warn( "Failed to schedule. %s" % e )
     try:
         print_schedule( ans, outfile )
     except Exception as e:

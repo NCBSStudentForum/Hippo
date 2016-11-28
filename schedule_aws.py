@@ -29,12 +29,18 @@ import datetime
 import tempfile 
 import logging
 import random
+import getpass
 
-logging.basicConfig( level=logging.INFO
+logFile = 'minion_sch_%s.log' % getpass.getuser( )
+logging.basicConfig( 
+        filepath = logFile
+        , level=logging.DEBUG
         , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        , filemode = 'w'
+        , filemode = 'a'
         , datefmt='%m-%d %H:%M'
         )
+
+print( 'Writing to %s' % logFile )
 logging.info( 'Started on %s' % datetime.date.today( ) )
 
 g_ = nx.DiGraph( )
@@ -341,13 +347,6 @@ def commit_schedule( schedule ):
             cur.execute( query )
     db_.commit( )
     logging.info( "Committed to database" )
-
-def draw_graph( ):
-    global g_
-    pos = nx.get_node_attributes( g_, 'pos' )
-    nx.draw( g_, pos )
-    plt.show( )
-
 
 def main( outfile ):
     global aws_

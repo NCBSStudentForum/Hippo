@@ -6,6 +6,7 @@ include_once 'tohtml.php';
 
 echo userHTML( );
 
+echo 'Search for a keyword/topic. Currently search is very primitive';
 echo '
     <form action="" method="get" accept-charset="utf-8">
     <input type="text" name="query" value="" >

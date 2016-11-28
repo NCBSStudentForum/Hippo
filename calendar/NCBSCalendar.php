@@ -1,7 +1,7 @@
 <?php
-
 set_include_path( '..' );
 
+include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
 require_once 'vendor/autoload.php';
@@ -22,6 +22,8 @@ class NCBSCalendar
     public $service = null;
 
     public $calID = null;
+
+    public $timeZone = 'Asia/Kolkata';
 
     // NOTE: This is needed to add to datetime before we send it to GOOGLE. 
     // Google automatically add the timezone offset which we send to it. 
@@ -157,11 +159,11 @@ class NCBSCalendar
 
         $gStartDateTime = new Google_Service_Calendar_EventDateTime( );
         $gStartDateTime->setDateTime( $startDateTime );
-        $gStartDateTime->setTimeZone( ini_get( 'date.timezone' ) );
+        $gStartDateTime->setTimeZone( $this->timeZone );
 
         $gEndDateTime = new Google_Service_Calendar_EventDateTime( );
         $gEndDateTime->setDateTime( $endDateTime );
-        $gEndDateTime->setTimeZone( ini_get( 'date.timezone' ) );
+        $gEndDateTime->setTimeZone( $this->timeZone );
 
         $gevent->setStart( $gStartDateTime );
         $gevent->setEnd( $gEndDateTime );
@@ -224,11 +226,11 @@ class NCBSCalendar
                      , 'location' => venueSummary( getVenueById( $event['venue' ] ) )
                      , 'start' => array(
                          "dateTime" => date( $this->format, $startTime )
-                         , "timeZone" => ini_get( 'date.timezone' )
+                         , "timeZone" => $this->timeZone
                      )
                      , 'end' => array(
                          "dateTime" => date( $this->format, $endTime )
-                         , "timeZone" => ini_get( 'date.timezone' )
+                         , "timeZone" => $this->timeZone
                      )
                      , "htmlLink" => $event['url']
                      , "anyoneCanAddSelf" => True

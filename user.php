@@ -19,7 +19,6 @@ $html = '<table class="show_user">';
    <tr>
       <td>
          See and edit (most of) your details 
-        <small> Details fetched from NCBS LDAP server are not editable </small>
       </td>
       <td> 
          <a href="user_info.php">Show/Edit my details</a> 
@@ -45,8 +44,10 @@ $html = '<table class="show_user">';
       <td> <a href="user_jc.php">My Journal Club</a> </td>
    </tr>
    <tr>
-      <td>Alpha: Annual Work Seminal.</td>
-      <td> <a href="user_aws.php">My AWS</a> </td>
+      <td>Annual Work Seminar.</td>
+      <td> 
+         <a href="user_aws.php">My AWS</a> 
+      </td>
    </tr>';
 
    $html .= "</table>";

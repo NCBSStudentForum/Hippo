@@ -343,6 +343,12 @@ function submitRequest( $request )
     else 
         $days = Array( $request['date'] );
 
+    if( count( $days ) < 1 )
+    {
+        echo minionEmbarrassed( "I could not generate list of slots for you reuqest" );
+        return false;
+    }
+
     $rid = 0;
     $results = Array( );
     $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
@@ -540,20 +546,32 @@ function publicEvents( $date, $time )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Summary table for front page.
+    *
+    * @return 
+ */
 function summaryTable( )
 {
     global $db;
-    $html = '<table class="summary">';
-    $events = getEventsGrouped( );
-    $count = 0;
-    foreach( $events as $event )
-    {
-        $count += 1;
-        if( $count > 10 )
-            break;
+    $allAWS = getAllAWS( );
+    $nspeakers = count( getAWSUsers( ) );
+    $nAws = count( $allAWS );
 
-        $html .= "<tr><td> " . eventSummary( $event ) . "</td></tr>";
-    }
+    echo date( 'Y-01-01' );
+    $awsThisYear = count( getAWSFromPast( date( 'Y-01-01' ) ) );
+
+    $html = "In this database <br>";
+    $html .= '<table class="summary">';
+    $html .= "
+        <tr>
+            <td>$nAws AWSs </td>
+            <td> $nspeakers active speakers</td>
+            <td>$awsThisYear AWs this year </td>
+        </tr><tr>
+            <td> <a href=\"user_aws_search.php\" target=\"_blank\">Search AWS</a> </td>
+            <td> <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a> </td>
+        </tr>";
     $html .= "</table>";
     return $html;
 }
@@ -677,10 +695,10 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     *
     * @return 
  */
-function getLogins( )
+function getLogins(  )
 {
     global $db;
-    $stmt = $db->query( 'SELECT login FROM logins' );
+    $stmt = $db->query( 'SELECT * FROM logins ORDER BY joined_on DESC' );
     $stmt->execute( );
     return  fetchEntries( $stmt );
 }
@@ -711,6 +729,11 @@ function getUserInfo( $user )
     $stmt->bindValue( ":login", $user );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+function getLoginInfo( $login_name )
+{
+    return getUserInfo( $login_name );
 }
 
 function getRoles( $user )
@@ -757,6 +780,45 @@ function getAwsById( $id )
     $stmt->bindValue( ':id', $id );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+/**
+    * @brief Return only recent most AWS given by this speaker.
+    *
+    * @param $speaker
+    *
+    * @return 
+ */
+function getLastAwsOfSpeaker( $speaker )
+{
+    global $db;
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+        ORDER BY date DESC LIMIT 1";
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->execute( );
+    # Only return the last one.
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+
+}
+
+/**
+    * @brief Return all AWS given by this speaker.
+    *
+    * @param $speaker
+    *
+    * @return 
+ */
+function getAwsOfSpeaker( $speaker )
+{
+    global $db;
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+        ORDER BY date DESC" ;
+    $stmt = $db->prepare( $query );
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->execute( );
+    # Only return the last one.
+    return fetchEntries( $stmt );
 }
 
 function getSupervisors( )
@@ -836,7 +898,9 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     $query = "UPDATE $tablename SET ";
 
     if( gettype( $wherekeys ) == "string" ) // Only one key
-        $wherekeys = array( $wherekeys );
+        $wherekeys = explode( ",", $wherekeys );
+    if( gettype( $keys ) == "string" )
+        $keys = explode(",",  $keys );
 
     $whereclause = array( );
     foreach( $wherekeys as $wkey )
@@ -849,11 +913,11 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( $data[$k] )
-        {
-            array_push( $cols, $k );
-            array_push( $values, "$k=:$k" );
-        }
+        if( ! $data[$k] )
+            $data[ $k ] = null;
+
+        array_push( $cols, $k );
+        array_push( $values, "$k=:$k" );
     }
     $values = implode( ",", $values );
     $query .= " $values WHERE $whereclause";
@@ -954,6 +1018,170 @@ function getPendingAWSRequests( )
     return fetchEntries( $stmt );
 }
 
+function getAllAWS( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars ORDER BY date DESC"  );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Return AWS from last n years.
+    *
+    * @param $years
+    *
+    * @return  Array of events.
+ */
+function getAWSFromPast( $from  )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars 
+        WHERE date >= '$from' ORDER BY date, speaker
+    " );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+
+/**
+    * @brief Get AWS users.
+    *
+    * @return Array containing users.
+ */
+function getAWSUsers( )
+{
+    global $db;
+    $stmt = $db->query( 
+        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES'" 
+    );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Return AWS entries schedules by my minion..
+    *
+    * @return 
+ */
+function getTentativeAWSSchedule( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM aws_temp_schedule ORDER BY date" );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Get all upcoming AWSes. Closest to today first (Ascending date).
+    * 
+    * @return Array of upcming AWS.
+ */
+function getUpcomingAWS( )
+{
+    global $db;
+    $stmt = $db->query( 
+        "SELECT * FROM upcoming_aws WHERE date >= CURDATE() ORDER BY date" 
+        );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Accept a auto generated schedule. We put the entry into table 
+    * upcoming_aws and delete this entry from aws_temp_schedule tables. In case 
+    * of any failure, leave everything untouched.
+    *
+    * @param $speaker
+    * @param $date
+    *
+    * @return 
+ */
+function acceptScheduleOfAWS( $speaker, $date )
+{
+    global $db;
+    $db->beginTransaction( );
+
+    $stmt = $db->prepare( 
+        'INSERT INTO upcoming_aws ( speaker, date ) VALUES ( :speaker, :date )' 
+    );
+
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->bindValue( ':date', $date );
+
+    $res = $stmt->execute( );
+    if( $res )
+    {
+        // delete this row from temp table.
+        $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE 
+            speaker=:speaker AND date=:date
+            ' );
+        $stmt->bindValue( ':speaker', $speaker );
+        $stmt->bindValue( ':date', $date );
+        $res = $stmt->execute( );
+
+        // If this happens, I must not commit the previous results into table.
+        if( ! $res )
+        {
+            $db->rollBack( );
+            return False;
+        }
+    }
+    else
+    {
+        $db->rollBack( );
+        return False;
+    }
+
+    $db->commit( );
+    return True;
+}
+
+/**
+    * @brief Query AWS database of given query.
+    *
+    * @param $query
+    *
+    * @return  List of AWS with matching query.
+ */
+function queryAWS( $query )
+{
+    if( strlen( $query ) == 0 )
+        return array( );
+
+    if( strlen( $query ) < 3 )
+    {
+        echo printWarning( "Query is too small" );
+        return array( );
+    }
+
+    global $db;
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars 
+        WHERE LOWER(abstract) LIKE LOWER('%$query%')" 
+    ); 
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Clear a given AWS from upcoming AWS list.
+    *
+    * @param $speaker
+    * @param $date
+    *
+    * @return 
+ */
+function clearUpcomingAWS( $speaker, $date )
+{
+    global $db;
+    $stmt = $db->prepare( 
+        "DELETE FROM upcoming_aws WHERE speaker=:speaker AND date=:date" 
+    );
+
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->bindValue( ':date', $date );
+    return $stmt->execute( );
+}
 
 ?>
 

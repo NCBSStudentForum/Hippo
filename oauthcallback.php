@@ -70,5 +70,5 @@ else
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 echo '<br> <br> <br>';
 exit;
-}
+
 ?>

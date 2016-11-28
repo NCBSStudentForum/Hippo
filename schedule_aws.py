@@ -24,12 +24,18 @@ import mysql.connector
 import mysql
 import ConfigParser
 from collections import defaultdict
-import networkx as nx
 import datetime 
 import tempfile 
 import logging
 import random
 import getpass
+
+cwd = os.path.dirname( os.path.realpath( __file__ ) )
+networkxPath = os.path.join( '%s/networkx' % cwd )
+sys.path.insert(0, networkxPath )
+import networkx as nx
+print( 'Using networkx from %s' % nx.__file__ )
+logging.info( 'Using networkx from %s' % nx.__file__ )
 
 logFile = '/tmp/__minion_sch_%s.log' % getpass.getuser( )
 logging.basicConfig( 

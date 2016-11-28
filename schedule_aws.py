@@ -275,9 +275,20 @@ def construct_flow_graph(  ):
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
-            g_.add_edge( speaker, slot, capacity = 1, weight = weight ) 
+            addEdge( speaker, slot, 1, weight )
     logging.info( 'Constructed flow graph' )
 
+def addEdge( speaker, slot, capacity, weight ):
+    """Create an edge between speaker and slot.
+
+    TODO: Is it a good idea to make sure that speakers which were grouped last
+    time, do not get to group this time. One way is to add a relatively small
+    random number to the cost. Other is to check before adding the edge. Let's
+    just use the slot index to increase the weight.
+
+    """
+    whichSlot = int( slot.split( ',' )[-1] )
+    g_.add_edge( speaker, slot, capacity = 1, weight = weight + whichSlot ) 
 
 def write_graph( outfile  = 'network.dot' ):
     # Convert datetime to string before writing to file.

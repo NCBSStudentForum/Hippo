@@ -47,7 +47,7 @@ ini_set( "display_errors", 1 );
 <link rel="stylesheet" type="text/css" href="js/jquery-timepicker/jquery.timepicker.css" />
 
 <script type="text/javascript" src="js/jquery-timepicker/lib/site.js"></script>
-<link rel="stylesheet" type="text/css" href="lib/site.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-timepicker/lib/site.css" />
 
 <script>
 $( function() {

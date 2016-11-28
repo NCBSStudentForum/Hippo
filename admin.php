@@ -46,6 +46,12 @@ echo '
             </form>
         </td>
     </tr>
+    <tr>
+        <td>Users Info</td>
+        <td>
+        <a href="admin_show_users.php" target="_blank">Show all users</a>
+        </td>
+    </tr>
     ';
 
 echo "</table>";

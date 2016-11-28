@@ -26,9 +26,14 @@ echo "<h3>Edit details </h3>";
 echo alterUser( "Select your TITLE. Without it I can't continue" );
 echo "<form method=\"post\" action=\"user_info_action.php\">";
 echo dbTableToHTMLTable( 'logins', $userInfo
-      , $editables = Array( 'title', 'institute', 'valid_until', 'joined_on' )
+    , $editables = Array( 'title', 'first_name', 'last_name'
+        , 'alternative_email' , 'institute', 'valid_until', 'joined_on'
+    )
       );
 echo "</form>";
+
+if( ! $userInfo['eligible_for_aws'] )
+    echo printWarning( "If you should be 'ELIGIBLE FOR AWS', let academic office know." );
 
 echo goBackToPageLink( "user.php", "Go back" );
 

@@ -262,7 +262,10 @@ function userHTML( )
 {
     $html = "<table class=\"user_float\">";
     $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
-    $html .= "<tr><td><a href= \"" . appRootDir( ) . "/user.php\">What can I do, Minion?</a>";
+    $html .= "<tr><td><a href=\"bookmyvenue_browse.php\">BookMyVenue</a>";
+    $html .= '</td><td><a href="user_aws.php">MyAWS</a></td>';
+    $html .= "</tr><tr>";
+    $html .= "<td><a href=\"user.php\">Home</a>";
     $html .= '</td><td><a href="logout.php">Logout</a></td>';
     $html .= "</tr>";
     $html .= "</table>";
@@ -504,6 +507,29 @@ function arrayToSelectList( $name, $options
     }
 
     $html .= "</select>";
+    return $html;
+}
+
+function loginToText( $loginName )
+{
+    $login = getUserInfo( $loginName );
+    $text = $login['first_name'] . ' ' . $login[ 'last_name' ];
+    return $text;
+}
+
+/**
+    * @brief Get link from intranet.
+    *
+    * @param User login.
+    *
+    * @return 
+ */
+function getIntranetLink( $login )
+{
+    $html = "<font style=\"font-size:x-small\"><a 
+        href=\"https://intranet.ncbs.res.in/people-search?name=$login\"
+        target=\"_blank\">Show on intranet</a></font>"
+        ;
     return $html;
 }
 

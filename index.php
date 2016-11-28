@@ -2,6 +2,7 @@
 
 include_once( 'header.php' );
 include_once( 'methods.php' );
+include_once( 'database.php' );
 include_once( 'tohtml.php' );
 include_once( 'calendar/calendar.php' );
 
@@ -29,15 +30,19 @@ $_SESSION['conf'] = $conf;
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
 $_SESSION[ 'oauth_credential' ] = __DIR__ . '/oauth-credentials.json';
 $_SESSION[ 'calendar_id'] = '6bvpnrto763c0d53shp4sr5rmk@group.calendar.google.com';
+$_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/tmp/__minion__.log' );
 
 /* counter */
-$hit_count = (int)file_get_contents('count.txt');
-$hit_count++;
-file_put_contents('count.txt', $hit_count);
+
+//$hit_count = (int)file_get_contents('count.txt');
+//$hit_count++;
+//file_put_contents('count.txt', $hit_count);
+
+$summary = summaryTable( );
 
 // Now create a login form.
 echo "<table class=\"index\">";
@@ -52,11 +57,8 @@ echo '
       To report issues/bugs or to submit feature request or to comment, please
       use <a href="https://goo.gl/forms/1yMRtfslqazaMoBY2" target="_black">this
          form</a>
+      </p> ' .  $summary .  '</td> <td> ';
 
-      </p>
-   </td>
-   <td>
-   ';
 echo loginForm();
 echo '</tr>';
 echo "</table>";
@@ -65,5 +67,4 @@ echo '<div class="public_calendar">';
 echo calendarURL( );
 echo '</div>';
 
-//echo embdedCalendar( );
 ?>

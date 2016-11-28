@@ -26,40 +26,43 @@ function verifyRequest( $request )
 
 $msg = verifyRequest( $_POST );
 
-
 if( $msg == "OK" )
 {
-   // Generate repeat pattern from days, week and month repeat patter.
-   $repeatPat = constructRepeatPattern( 
-      $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
-   );
+    // Generate repeat pattern from days, week and month repeat patter.
+    $repeatPat = constructRepeatPattern( 
+        $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
+    );
 
-   $_POST['repeat_pat']  = $repeatPat;
+    echo "<pre>Repeat pattern $repeatPat </pre>";
+    $_POST['repeat_pat']  = $repeatPat;
 
-   $res = submitRequest( $_POST );
-   if( $res )
-   {
-      echo printInfo( 
-         "Your request has been submitted and an email has been sent to you 
-         with details.
-         " );
-         goToPage( "bookmyvenue_browse.php", 1 );
-      }
-      else
-      {
-         echo printWarning( 
+    $res = submitRequest( $_POST );
+    if( $res )
+    {
+        echo printInfo( 
+            "Your request has been submitted and an email has been sent to you 
+            with details.
+            " );
+        //goToPage( "bookmyvenue_browse.php", 1 );
+    }
+    else
+    {
+        echo printWarning( 
             "Your request could not be submitted. Please notify the admin." 
-         );
-         echo goBackToPageLink( "user.php", "Go back" );
-         exit;
-      }
-   }
-   else
-   {
-      echo printWarning( "There was an error in request" );
-      echo printWarning( $msg );
-      echo goBackToPageLink( "user.php", "Go back" );
-      exit;
-   }
+        );
+        echo goBackToPageLink( "user.php", "Go back" );
+        exit;
+    }
+}
+else
+{
+    echo printWarning( "There was an error in request" );
+    echo printWarning( $msg );
+    echo goBackToPageLink( "user.php", "Go back" );
+    exit;
+}
+
+echo goBackToPageLink( "user.php", "Go back" );
+
 
 ?>

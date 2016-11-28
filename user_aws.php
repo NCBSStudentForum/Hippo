@@ -65,9 +65,10 @@ foreach( $awses as $aws )
 {
     $id = $aws['id'];
     echo "<div>";
-    echo "<form method=\"post\" action=\"user_aws_request_edit.php\">";
+    // One can submit an edit request to AWS.
+    echo "<form method=\"post\" action=\"user_aws_edit_request.php\">";
     echo arrayToVerticalTableHTML( $aws, 'aws', NULL
-    , Array( 'speaker', 'tentatively_scheduled_on', 'id' ));
+    , Array( 'speaker', 'id' ));
     echo "<button class=\"submit\" name=\"response\" value=\"edit\">Edit</button>";
     echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
     echo "</form>";

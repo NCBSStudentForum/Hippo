@@ -5,8 +5,9 @@ div.header {
 div.bottom {
     position : fixed;
     bottom : 0;
+    right : 0;
     font-size : xx-small;
-    padding-top : 5px;
+    padding-top : 50px;
     font-color : red;
 }
 
@@ -17,6 +18,7 @@ table.user_float {
     left : 70%;
     max-width: 25%;
     border : 1px solid red;
+    font-size : small;
 }
 
 table.show_user {
@@ -29,6 +31,11 @@ table.show_user tr td
 {
     border : 0.5px dotted; 
     min-width : 20%;
+}
+
+table.show_info tr td 
+{
+    border : 0.5px dotted; 
 }
 
 
@@ -51,6 +58,36 @@ table.show_aws tr td:nth-child(even)
     text-align : left;
     min-width : 80%;
 }
+
+table.show_aws_summary {
+    max-width : 1000px;
+    min-width : 100%;
+    background : lightyellow;
+}
+
+
+table.show_aws_summary tr td
+{
+    border : 1px dotted;
+}
+
+table.show_schedule {
+    min-width : 500px;
+    max-width : 80%;
+}
+
+table.show_schedule tr td
+{
+    border : 1px dotted;
+    background: lightyellow;
+}
+
+table.show_schedule th
+{
+    background: lightblue;
+    font-size : x-small;
+}
+
 
 div.info {
     /*border : 1px solid #73AD21;*/
@@ -219,6 +256,9 @@ div.cell_content {
     font-size : small;
 }
 
+div.image {
+    max-width: 100%;
+}
 
 table.login_main {
     background-color : lightyellow;
@@ -254,6 +294,18 @@ table.request tr:nth-of-type( odd ) {
     background : #eee;
 }
 
+table.admin {
+    background : lightyellow;
+    width : 80%;
+    min-width : 500px;
+    max-width : 90%;
+}
+
+table.admin td {
+    border : 1px dotted;
+    width : 50%;
+}
+
 .goback {
     align : left ;
 }
@@ -274,13 +326,9 @@ table.request tr:nth-of-type( odd ) {
 
 /* paragraphs */
 
-p {
-    font : serif;
-}
-
 p.info {
-    color : blue;
-    max-width : 800px;
+    max-width : 90%;
+    min-width : 500px;
 }
 
 p.warn {
@@ -308,8 +356,12 @@ p.alert_user {
 }
 
 table.summary {
-    font-size : x-small;
+    font-size : small;
     width : 100%;
+}
+
+table.summary tr td  {
+    border : 1px dotted;
 }
 
 table.index {
@@ -321,7 +373,6 @@ table.index tr td {
     valign : top;
     min-width : 250px;
 }
-
 
 /* SELECT 
  */

@@ -4,8 +4,9 @@ USE minion;
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
 -- DROP TABLE IF EXISTS venues;
-DROP TABLE IF EXISTS annual_work_seminars;
-DROP TABLE IF EXISTS aws_requests;
+-- DROP TABLE IF EXISTS annual_work_seminars;
+-- DROP TABLE IF EXISTS aws_requests;
+DROP TABLE IF EXISTS upcoming_aws;
 -- DROP TABLE IF EXISTS supervisors;
 -- DROP TABLE IF EXISTS labs;
 -- DROP TABLE IF EXISTS logins;
@@ -20,12 +21,12 @@ CREATE TABLE IF NOT EXISTS logins (
     , first_name VARCHAR(200)
     , last_name VARCHAR(100)
     , roles SET( 
-        'USER'
-        , 'ADMIN', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN'
+        'USER', 'ADMIN', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN'
     ) DEFAULT 'USER'
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     , created_on DATETIME 
     , joined_on DATETIME
+    , eligible_for_aws ENUM ('YES', 'NO' ) DEFAULT 'NO'
     , valid_until DATETIME
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , laboffice VARCHAR(200)
@@ -41,7 +42,6 @@ CREATE TABLE IF NOT EXISTS logins (
     , institute VARCHAR(300)
     , PRIMARY KEY (login)
 );
-
 
 CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
     gid INT NOT NULL
@@ -150,6 +150,26 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES logins(login)
     -- , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
+    );
+
+-- This table holds all the upcoming AWSs. 
+create TABLE IF NOT EXISTS upcoming_aws (
+    id INT AUTO_INCREMENT PRIMARY KEY
+    , speaker VARCHAR(200) NOT NULL -- user
+    , date DATE NOT NULL -- tentative date
+    , time TIME NOT NULL DEFAULT '16:00'
+    , supervisor_1 VARCHAR( 200 ) 
+    , supervisor_2 VARCHAR( 200 ) 
+    , tcm_member_1 VARCHAR( 200 ) 
+    , tcm_member_2 VARCHAR( 200 ) 
+    , tcm_member_3 VARCHAR( 200 ) 
+    , tcm_member_4 VARCHAR( 200 ) 
+    , title VARCHAR( 1000 )
+    , abstract TEXT
+    , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
+    , comment TEXT 
+    , FOREIGN KEY (speaker) REFERENCES logins(login)
+    , UNIQUE (speaker, date)
     );
 
 -- This table holds all edit and requests.

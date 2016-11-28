@@ -14,17 +14,10 @@ if( $_POST['response'] == "Reschedule" )
 
     echo printInfo( "Rescheduling ...." );
     $scriptPath = $cwd . '/schedule_aws.py';
-    echo("<pre>Executing $scriptPath $resfilePath, timeout 20 secs</pre>");
-    $command = "timeout 20 python $scriptPath $resfilePath";
-    shell_exec( $command );
-
-    // Now read the result file and show to user.
-    //$res = file_get_contents( $resfilePath );
-    //echo "<h3>Content of result </h3>";
-    //echo( "<pre> $res </pre>" );
-    // Delete the temp file
-    unlink( $resfilePath );
-    goToPage( 'admin_aws_manages_upcoming_aws.php', 1 );
+    echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
+    $command = "timeout 30 $scriptPath";
+    exec( $command );
+    goToPage( 'admin_aws_manages_upcoming_aws.php', 2 );
     exit;
 }
 else if( $_POST[ 'response' ] == 'Accept' )

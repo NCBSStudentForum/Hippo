@@ -1109,9 +1109,9 @@ function acceptScheduleOfAWS( $speaker, $date )
     $stmt->bindValue( ':speaker', $speaker );
     $stmt->bindValue( ':date', $date );
 
-    $res = $stmt->execute( );
-    if( $res )
-    {
+    try {
+
+        $res = $stmt->execute( );
         // delete this row from temp table.
         $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE 
             speaker=:speaker AND date=:date
@@ -1126,10 +1126,13 @@ function acceptScheduleOfAWS( $speaker, $date )
             $db->rollBack( );
             return False;
         }
-    }
-    else
+    } 
+    catch (Exception $e) 
     {
         $db->rollBack( );
+        echo minionEmbarrassed( 
+            "Failed to insert $speaker, $date into database: " . $e->getMessage() 
+        );
         return False;
     }
 

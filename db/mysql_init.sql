@@ -25,9 +25,9 @@ CREATE TABLE IF NOT EXISTS logins (
     ) DEFAULT 'USER'
     , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     , created_on DATETIME 
-    , joined_on DATETIME
+    , joined_on DATE
     , eligible_for_aws ENUM ('YES', 'NO' ) DEFAULT 'NO'
-    , valid_until DATETIME
+    , valid_until DATE
     , status SET( "ACTIVE", "INACTIVE", "TEMPORARLY_INACTIVE", "EXPIRED" ) DEFAULT "ACTIVE" 
     , laboffice VARCHAR(200)
     -- The faculty fields here must match in faculty table.

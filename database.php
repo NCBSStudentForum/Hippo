@@ -571,6 +571,7 @@ function summaryTable( )
         </tr><tr>
             <td> <a href=\"user_aws_search.php\" target=\"_blank\">Search AWS</a> </td>
             <td> <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a> </td>
+            <td> <a href=\"stats.php\" target=\"_blank\" >Statistics </a> </td>
         </tr>";
     $html .= "</table>";
     return $html;

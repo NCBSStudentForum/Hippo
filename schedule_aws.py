@@ -28,6 +28,7 @@ import networkx as nx
 import datetime 
 import tempfile 
 import logging
+import random
 
 logging.basicConfig( level=logging.INFO
         , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
@@ -149,6 +150,10 @@ def computeCost( speaker, slot_date, last_aws ):
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
     cost =  cost + max(0, nAws - 2 )
+
+    # Add some random noise to make sure that we don't have same coupling of
+    # speakers as before 
+    cost += random.random()
 
     # This does not work well with float.
     return int( 100 * cost )
@@ -351,7 +356,11 @@ def main( outfile ):
     getAllAWSPlusUpcoming( )
     construct_flow_graph( )
     ans = schedule( )
-    print_schedule( ans, outfile )
+    try:
+        print_schedule( ans, outfile )
+    except Exception as e:
+        logging.error( "Could not print schedule. %s" % e )
+
     commit_schedule( ans )
     try:
         write_graph( )

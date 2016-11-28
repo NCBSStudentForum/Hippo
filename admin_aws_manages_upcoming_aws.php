@@ -3,11 +3,45 @@
 include_once "header.php";
 include_once "methods.php";
 include_once "tohtml.php";
+include_once 'database.php';
 include_once "check_access_permissions.php";
+
+$speakers = getAWSUsers( );
+
+?>
+
+<!-- Script to autocomplete user -->
+<script>
+$(function() {
+    var speakers = <?php echo json_encode( $speakers ); ?>;
+    $( "#autocomplete_user" ).autocomplete( { source : speakers }); 
+});
+</script>
+
+
+<?php
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
+
 echo userHTML( );
+
+echo '<h3>Assign AWS</h3>';
+echo '
+    <table border="0">
+    <form method="post" action="admin_aws_manages_upcoming_aws_submit.php">
+    <tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>
+    <tr>
+        <td> <input class="datepicker" type="date" name="date" value="" > </td>
+        <td>
+            <input id="autocomplete_user" name="speaker" placeholder="I\'ll autocomplete" >
+        </td>
+        <td> <button name="response" value="Assign">Assign</button> </td>
+    </tr>
+    </form>
+    </table>
+    ';
+
 echo '<h3>Upcoming AWS for next week</h3>';
 
 $upcomingAWSs = getUpcomingAWS( );

@@ -77,8 +77,9 @@ echo '</tr></table>';
 
 echo "<h3>Temporary assignments </h3>";
 echo '
-    <p class="info"> Following table shows the best possible schedule I could come up with for 
-    next 20 weeks. Pressing <button disabled>Accept</button> will put them into upcoming
+    <p class="info"> Following table shows the best possible schedule I could 
+    come up with for whole year starting today. Pressing <button 
+    disabled>Accept</button> will put them into upcoming
     AWS list.
     </p>';
 

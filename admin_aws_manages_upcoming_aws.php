@@ -6,15 +6,15 @@ include_once "tohtml.php";
 include_once 'database.php';
 include_once "check_access_permissions.php";
 
-$speakers = getAWSUsers( );
+$speakers = getLoginIds( );
 
 ?>
 
 <!-- Script to autocomplete user -->
-<script>
+<script type="text/javascript" charset="utf-8">
 $(function() {
     var speakers = <?php echo json_encode( $speakers ); ?>;
-    $( "#autocomplete_user" ).autocomplete( { source : speakers }); 
+    $( "#autocomplete_speaker" ).autocomplete( { source : speakers }); 
 });
 </script>
 
@@ -22,7 +22,6 @@ $(function() {
 <?php
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
-
 
 echo userHTML( );
 
@@ -34,7 +33,7 @@ echo '
     <tr>
         <td> <input class="datepicker" type="date" name="date" value="" > </td>
         <td>
-            <input id="autocomplete_user" name="speaker" placeholder="I\'ll autocomplete" >
+            <input id="autocomplete_speaker" name="speaker" placeholder="I will autocomplete" />
         </td>
         <td> <button name="response" value="Assign">Assign</button> </td>
     </tr>
@@ -165,9 +164,10 @@ foreach( $schedule as $upcomingAWS )
 
     $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
     $nDays = $nSecs / (3600 * 24 );
+    $speakerInfo = $speaker . '<br>'. loginToText( $speaker );
     
     echo "<tr><td>";
-    echo $speaker;
+    echo $speakerInfo;
     $intranetLink = getIntranetLink( $speaker );
     echo "<br>$intranetLink ";
     echo "</td><td>";
@@ -183,9 +183,8 @@ foreach( $schedule as $upcomingAWS )
     echo "</td>";
 
     // Create a form to approve the schedule.
-    $speakerInfo = $speaker . ', '. loginToText( $speaker );
     echo '<form method="post" action="admin_aws_manages_upcoming_aws_submit.php">';
-    echo '<input type="hidden" name="speaker" value="' . $speakerInfo . '" >';
+    echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
     echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
     echo '<td style="background:white;border:0px;">
         <button name="response" value="Accept" >Accept</button>

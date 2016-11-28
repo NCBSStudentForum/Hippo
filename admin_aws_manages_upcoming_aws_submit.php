@@ -28,7 +28,7 @@ else if( $_POST[ 'response' ] == 'Accept' )
     $res = acceptScheduleOfAWS( $_POST[ 'speaker' ], $_POST[ 'date' ] );
     if( $res )
     {
-        echo printInfo( "Successfully created a upcoming AWS for this user" );
+        echo printInfo( "Successfully assigned" );
         goToPage( "admin_aws_manages_upcoming_aws.php", 1 );
         exit;
     }
@@ -40,6 +40,18 @@ else if( $_POST[ 'response' ] == 'Clear' )
     {
         echo printInfo( "Successfully cleared upcoming AWS" );
         goToPage( "admin_aws_manages_upcoming_aws.php", 2 );
+        exit;
+    }
+}
+else if( $_POST['response'] == 'Assign' )
+{
+    $speaker = $_POST[ 'speaker' ];
+    $date = $_POST[ 'date' ];
+    $res = acceptScheduleOfAWS( $speaker, $date );
+    if( $res )
+    {
+        echo printInfo( "Successfully assigned." );
+        goToPage( "admin_aws_manages_upcoming_aws.php", 1 );
         exit;
     }
 }

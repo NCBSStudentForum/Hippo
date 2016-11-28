@@ -24,7 +24,9 @@ echo '
   <table border="0" class="admin">
     <tr>
     <td>AWS summary
-        <small>See the summary of all AWSs </small>
+    <small>
+        See the summary of all AWSs. You may be able to missing AWS entry in "Date Wise" list. 
+    </small>
     </td>
 
       <td><a href="admin_aws_summary_user_wise.php">User wise</a>

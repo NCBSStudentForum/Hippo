@@ -213,7 +213,7 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
         {
             $kval = prettify( $k );
             $label = strtoupper( $kval );
-            $table .= "<td class=\"db_table_fieldname\">$label</td>";
+            $table .= "<th class=\"db_table_fieldname\">$label</th>";
             array_push( $toDisplay, $array[$k] );
         }
 

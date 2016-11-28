@@ -33,11 +33,18 @@ table.show_user tr td
     min-width : 20%;
 }
 
+
 table.show_info tr td 
 {
     border : 0.5px dotted; 
+    min-width: 10%;
+    max-width: 20%;
 }
 
+table.show_info th
+{
+    font-size: xx-small;
+}
 
 table.show_aws {
     max-width : 1000px;

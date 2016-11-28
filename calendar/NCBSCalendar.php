@@ -12,7 +12,6 @@ require_once 'vendor/autoload.php';
  */
 class NCBSCalendar
 {
-
     public $client = null;
 
     public $redirectURL = null;
@@ -52,7 +51,6 @@ class NCBSCalendar
                    Once downloaded, move them into the root directory of this repository and
                    rename them 'oauth-credentials.json'.
                    </p>";
-            echo $ret;
             return None;
         }
 

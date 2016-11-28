@@ -33,10 +33,7 @@ function updateEventGroupInCalendar( $gid )
     $events = getEventsByGroupId( $gid );
     $calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ] );
     foreach( $events as $event )
-    {
-        var_dump( $event );
         $calendar->updateEvent( $event );
-    }
 }
 
 ?>

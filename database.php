@@ -949,8 +949,28 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
 function  scheduledAWSInFuture( $speaker )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM aws_requests WHERE
-        speaker=:speaker AND scheduled_on > 'NOW()' 
+    $stmt = $db->prepare( 
+        "SELECT * FROM upcoming_aws WHERE
+        speaker=:speaker AND date > NOW() 
+        " );
+    $stmt->bindValue( ":speaker", $speaker );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+/**
+    * @brief Check if there is a temporary AWS schedule.
+    *
+    * @param $speaker
+    *
+    * @return 
+ */
+function temporaryAwsSchedule( $speaker )
+{
+    global $db;
+    $stmt = $db->prepare( 
+        "SELECT * FROM aws_temp_schedule WHERE
+        speaker=:speaker AND date > NOW() 
         " );
     $stmt->bindValue( ":speaker", $speaker );
     $stmt->execute( );

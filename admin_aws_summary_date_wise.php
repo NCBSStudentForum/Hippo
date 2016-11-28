@@ -8,8 +8,26 @@ include_once 'check_access_permissions.php';
 
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
-echo "<h3>Date-wise AWS Summary</h3>";
+?>
 
+<script type="text/javascript" charset="utf-8">
+    function showAWSDetails( ) {
+        var text = <?php echo json_encode( $aws ) ?>;
+       alert( text );
+    }
+</script>
+
+<?php
+
+/**
+    * @brief Put a AWS on this block.
+    *
+    * @param $awsDays
+    * @param $block
+    * @param $blockSize
+    *
+    * @return 
+ */
 function awsOnThisBlock( $awsDays, $block, $blockSize )
 {
     foreach( $awsDays as $awsDay )
@@ -49,9 +67,22 @@ function daysToLine( $awsDays, $totalDays, $blockSize = 7)
 
 
 // Get AWS in roughly last 5 years.
-$totalDays = 5 * 365;
-$from = date( 'Y-m-d', strtotime( 'now' ) - $totalDays * 24 * 3600 );
-$awses = getAllAWS( $from );
+$numMonths = 60;
+if( isset( $_GET['past_months'] ) )
+    $numMonths = $_GET[ 'past_months' ];
+
+echo '
+    <form method="get" action="">
+    Show me AWSs in last 
+    <input type="text" name="past_months" value="' . $numMonths . '"> months
+    <button name="response" value="Submit">Submit</button>
+    </form>
+    ';
+
+echo "<h3>Date-wise AWS Summary of last $numMonths months</h3>";
+
+$from = date( 'Y-m-d', strtotime( "- $numMonths months" ) );
+$awses = getAWSFromPast( $from );
 $datewiseAWS = array( );
 
 // Partition AWSes according to date. Each date should have 3 AWes, ideally.
@@ -75,6 +106,9 @@ foreach( $datewiseAWS as $date => $awses )
     {
         $speaker = $aws[ 'speaker' ];
         $column = loginToText( $speaker ) . "<br><small> $speaker </small>";
+        $column .= "<br><small>" . $aws[ 'supervisor_1' ] . "</small>";
+        //$column .= "<p><small>" . $aws[ 'title' ] . "</small></p>";
+        //$table .= '<td><button onClick="showAWSDetails()">'.$column .'</button>';
         $table .= "<td> $column </td>";
     }
     $table .= "</tr>";

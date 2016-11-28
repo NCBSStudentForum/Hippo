@@ -11,16 +11,22 @@ echo userHTML( );
 
 echo "<h3>Manage upcoming Annual Work Seminar (AWS)</h3>";
 
-$upcomingAWS = scheduledAWSInFuture( $_SESSION['user'] );
-if( ! $upcomingAWS )
+$scheduledAWS = scheduledAWSInFuture( $_SESSION['user'] );
+$tempScheduleAWS = temporaryAwsSchedule( $_SESSION[ 'user' ] );
+if( $scheduledAWS )
 {
-    echo printInfo( "No AWS has been scheduled for you yet!" );
+    echo printInfo( "You AWS has been scheduled on " . $scheduledAWS['date'] );
 }
-else {
-    echo printInfo( "You have AWS tentatively scheduled on : " . 
-        humanReadableDate( $upcomingAWS['tentatively_scheduled_on'] ) 
-    );
-    echo "TODO: Ask for postpone/swap with others?";
+else if( $tempScheduleAWS )
+{
+    echo printInfo( "You AWS is most likely to be around " . 
+        $tempScheduleAWS[ 'date' ] );
+    echo printWarning( "This date is likely to change if any other speaker
+        request to change their AWS. " );
+}
+else
+{
+    echo printInfo( "You don't have any AWS scheduled in next 12 months" );
 }
 
 

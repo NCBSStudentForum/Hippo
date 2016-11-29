@@ -23,12 +23,7 @@ $from = date( 'Y-m-d', strtotime( 'today' . " -$howManyMonths months"));
 $fromD = date( 'M d, Y', strtotime( $from ) );
 echo "<div class=\"info\">
     Following graph shows the interaction among faculty since $fromD.
-    Add numbers on each node to count the number of AWSs.
-    Edge to another node points to either co-supervisor or tcm member.
-    <br>
-    External faculty is not shown in this graph.
-    <br>
-    Self Loop indicates that I could not find any TCM member from NCBS for this AWS in my database.
+    Double click on a node to see his/her interaction.
     </div>";
 
 $awses = getAWSFromPast( $from  );
@@ -125,7 +120,8 @@ foreach( $community as $pi => $value )
 
     foreach( array_count_values( $value['edges'] ) as $val => $edgeNum )
         array_push( $network[ 'edges']
-            , array( 'source_email' => $pi, 'tgt_email' => $val, 'width' => $edgeNum )
+            , array( 'source_email' => $pi, 'tgt_email' => $val, 'width' => $edgeNum 
+                    , 'count' => $edgeNum )
         );
 }
 
@@ -160,7 +156,7 @@ fclose( $handle );
 
     var linkDistance=200;
 
-    var colors = d3.scale.category20();
+    var colors = d3.scale.category10();
 
     var graph = <?php echo $networkJSON; ?>;
  
@@ -194,7 +190,7 @@ fclose( $handle );
       .append("circle")
       .attr({"r":function(d) { return 50 * d.width; } })
       .style( "opacity", 1 )
-      .style("fill",function(d,i){return colors(i);})
+      .style("fill",function(d,i){return colors(10);})
       .call(force.drag)
       .on( 'dblclick', connectedNodes )
 
@@ -203,23 +199,29 @@ fclose( $handle );
        .data(graph.nodes)
        .enter()
        .append("text")
-       .attr({"x":function(d){return d.x;},
-              "y":function(d){return d.y;},
-              "class":"nodelabel",
-              "stroke":"black"})
-       .text(function(d){return d.name;});
+       .attr( {
+                "x":     function(d){return d.x;},
+               "y":      function(d){return d.y;},
+               "class":  "nodelabel",
+               "stroke": "blue"
+              }
+        )
+        .text(function(d){return d.name;});
 
     var edgepaths = svg.selectAll(".edgepath")
         .data(graph.edges)
         .enter()
         .append('path')
-        .attr({'d': function(d) {return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y},
-               'class':'edgepath',
-               'fill-opacity':0,
-               'stroke-opacity':0,
-               'fill':'blue',
-               'stroke':'red',
-               'id':function(d,i) {return 'edgepath'+i}})
+        .attr({'d': function(d) {
+                    return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y
+                },
+                'class':'edgepath',
+                'fill-opacity':0,
+                'stroke-opacity':0,
+                'fill':'blue',
+                'stroke':'red',
+                'id':function(d,i) {return 'edgepath'+i}}
+        )
         .style("pointer-events", "none");
 
     var edgelabels = svg.selectAll(".edgelabel")
@@ -232,12 +234,12 @@ fclose( $handle );
                'dx':80,
                'dy':0,
                'font-size':10,
-               'fill':'#aaa'});
+               'fill':'#f00'});
 
     edgelabels.append('textPath')
         .attr('xlink:href',function(d,i) {return '#edgepath'+i})
         .style("pointer-events", "none")
-        .text(function(d,i){return ''}); // Return edge level.
+        .text(function(d,i){return d.count}); // Return edge level.
 
 
     svg.append('defs').append('marker')
@@ -271,9 +273,10 @@ fclose( $handle );
         nodelabels.attr("x", function(d) { return d.x; }) 
                   .attr("y", function(d) { return d.y; });
 
-        edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
-                                           //console.log(d)
-                                           return path});       
+        edgepaths.attr('d', function(d) { 
+            var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
+            return path
+        });       
 
         edgelabels.attr('transform',function(d,i){
             if (d.target.x<d.source.x){
@@ -298,21 +301,24 @@ fclose( $handle );
     });
 
 
-
     function neighboring(a, b) {
         return linkedByIndex[a.index + "," + b.index];
     }
 
     function connectedNodes() {
-        console.log( 'Connected nodes' );
         if (toggle == 0) {
             d = d3.select(this).node().__data__;
             node.style("opacity", function (o) {
                 return neighboring(d, o) | neighboring(o, d) ? 1 : 0.15;
             });
+            nodelabels.text( function (o) {
+                return neighboring(d, o) | neighboring(o, d) ? o.name : '';
+            });
+
             toggle = 1;
         } else {
             node.style("opacity", 1);;
+            nodelabels.text(function(d){return d.name;});
             toggle = 0;
         }
     }

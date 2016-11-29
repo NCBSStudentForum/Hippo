@@ -31,10 +31,11 @@ foreach( $awsCounts as $key => $val )
 {
     array_push( $plotAData,  array($val, 0) );
     for( $i = 1; $i < count( $awsDates[ $key ] ); $i ++ )
-        array_push( $plotBData, array( 
-            ( strtotime( $awsDates[ $key ][$i-1] ) 
-            - strtotime( $awsDates[ $key ][$i])) / (30.5 * 86400), 0) 
-        ); 
+    {
+        $gap = (strtotime( $awsDates[ $key ][$i-1] ) - 
+            strtotime( $awsDates[ $key ][$i]) )/ (30.5 * 86400);
+        array_push( $plotBData, array( $gap, 0 ) );
+    }
 }
 
 ?>
@@ -87,14 +88,14 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Per speaker AWSs'
+            text: 'Speaker with x AWSs'
         },
         xAxis: {
             gridLineWidth: 1
         },
         yAxis: [{
             title: {
-                text: 'AWS Count'
+                text: 'Speaker Count'
             }
         }, ],
         series: [{
@@ -182,7 +183,9 @@ $(function () {
 });
 </script>
 
-<h3>Number of AWSs per speaker</h3>
+<h3>No of speakers with x AWSs</h3>
+<p> Following graph shows number of spearkers with x AWS </p>
+
 <div id="container1" style="width:100%; height:400px;"></div>
 
 <h3> Gap between consecutive AWSs </h3>

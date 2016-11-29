@@ -30,10 +30,11 @@ $plotBData = array( );
 foreach( $awsCounts as $key => $val )
 {
     array_push( $plotAData,  array($val, 0) );
-    for( $i = 1; $i < count( $awsDates[ $key ] ); $i ++ )
+    for( $i = 1; $i < count( $awsDates[ $key ] ); $i++ )
     {
         $gap = (strtotime( $awsDates[ $key ][$i-1] ) - 
             strtotime( $awsDates[ $key ][$i]) )/ (30.5 * 86400);
+        // We need a tuple. Second entry is dummy.
         array_push( $plotBData, array( $gap, 0 ) );
     }
 }

@@ -6,6 +6,21 @@ include_once 'methods.php';
 include_once 'database.php';
 include_once 'check_access_permissions.php';
 
+$logins = getLoginIds( );
+
+?>
+
+<!-- Script to autocomplete user -->
+<script>
+$(function() {
+    var logins = <?php echo json_encode( $logins ); ?>;
+    $( "#autocomplete_user" ).autocomplete( { source : logins }); 
+});
+</script>
+
+
+<?php
+
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 echo userHTML( );
@@ -45,4 +60,14 @@ echo '
       upcoming AWSes</a></td>
     </tr>
   </table>';
+
+echo '<h3> Danger zone</h3>';
+echo '
+    <form method="get" action="">
+    Pick an login ID <input id="autocomplete_user" type="text" value="" />
+    Pick an AWS date<input class="datepicker" value="" >
+    <button type="submit">Delete</button>
+    </form>
+    '
 ?>
+

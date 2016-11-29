@@ -109,11 +109,15 @@ foreach( $datewiseAWS as $date => $awses )
         $column .= "<br><small>" . $aws[ 'supervisor_1' ] . "</small>";
         /* Add a form to edit or delete this entry */
         $table .= "<td> $column";
-        $table .= '<form action="admin_aws_summary_date_wise_edit.php" method="post" accept-charset="utf-8">
+
+        /* NOONE but speaker should be able to edit his/her AWS.
+        $table .= '<form action="admin_aws_edit.php" method="post" accept-charset="utf-8">
                 <input type="hidden" name="speaker" value="' . $speaker . '"/>
                 <input type="hidden" name="date" value="' . $aws['date'] . '" />
                 <button name="response">Edit</button>
         </form>';
+         */
+
         $table .= "</td>";
     }
     $table .= "</tr>";

@@ -818,7 +818,6 @@ function getAwsOfSpeaker( $speaker )
     $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $speaker );
     $stmt->execute( );
-    # Only return the last one.
     return fetchEntries( $stmt );
 }
 

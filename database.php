@@ -1206,5 +1206,24 @@ function clearUpcomingAWS( $speaker, $date )
     return $stmt->execute( );
 }
 
+/**
+    * @brief Delete an entry from annual_work_seminars table.
+    *
+    * @param $speaker
+    * @param $date
+    *
+    * @return True, on success. False otherwise.
+ */
+function deleteAWSEntry( $speaker, $date )
+{
+    global $db;
+    $stmt = $db->prepare( 
+        "DELETE FROM annual_work_seminars WHERE speaker=:speaker AND date=:date" 
+    );
+    $stmt->bindValue( ':speaker', $speaker );
+    $stmt->bindValue( ':date', $date );
+    return $stmt->execute( );
+}
+
 ?>
 

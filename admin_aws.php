@@ -79,9 +79,16 @@ if( isset( $_GET[ 'response' ] ))
         $login = $_GET[ 'login' ];
         $date = $_GET[ 'date' ];
     }
-    elseif( $_GET[ 'response' ] == 'Delete' )
+    else if( $_GET[ 'response' ] == 'Delete' )
     {
         echo "Deleting this AWS entry.";
+        $res = deleteAWSEntry( $_GET['speaker'], $_GET['date' ] );
+        if( $res )
+        {
+            echo printInfo( "Successfully deleted" );
+            goToPage( 'admin_aws.php', 0);
+            exit;
+        }
     }
 
     $awss = array( );
@@ -92,10 +99,17 @@ if( isset( $_GET[ 'response' ] ))
 
     foreach( $awss as $aws )
     {
+        $speaker = $aws[ 'speaker' ];
+        $date = $aws['date'];
+        echo "<a>Entry for $speaker (" . loginToText( $speaker ) . ") on " . 
+            date( 'D M d, Y', strtotime( $date ) ) . "</a>";
+
         echo arrayToVerticalTableHTML( $aws, 'annual_work_seminars' );
         echo '<br>';
         echo '<form method="get" action="">
-                <button style=\"float:right\" name="resonse" value="Delete">Delete</button>
+            <input type="hidden" name="speaker" value="' . $speaker . '">
+            <input type="hidden" name="date" value="' . $date . '" >
+            <button style=\"float:right\" name="response" value="Delete">Delete</button>
             </form>
             ';
     }

@@ -32,15 +32,7 @@ echo "<div class=\"info\">
     </div>";
 
 $awses = getAWSFromPast( $from  );
-$network = array( 'nodes' => array(), 'links' => array( ) );
-
-$dotText = "digraph community {
-    rankdir=TB;
-    overlap=false;
-    sep=\"+30\";
-    splines=true;
-    maxiters=100;
-    ";
+$network = array( 'nodes' => array(), 'edges' => array( ) );
 
 echo printInfo( "Total " . count( $awses) . " AWSs found in database since $fromD" );
 
@@ -66,6 +58,8 @@ foreach( $faculty as $fac )
     );
 }
 
+// Each node must have a unique integer id. We use it to generate a distinct 
+// color for each node in d3. Also edges are drawn from id to id.
 foreach( $awses as $aws )
 {
     // How many AWSs this supervisor has.
@@ -112,12 +106,11 @@ foreach( $awses as $aws )
         array_push( $community[ $pi ][ 'edges' ], $pi );
 }
 
-// Now generate dot text.
+// Now for each PI, draw edges to other PIs.
 foreach( $community as $pi => $value )
 {
     // If there are not edges from or onto this PI, ignore it.
     $login = explode( '@', $pi)[0];
-
 
     // This PI is not involved in any AWS for this duration.
     if( $value[ "degree" ] < 1 )
@@ -126,69 +119,31 @@ foreach( $community as $pi => $value )
     // Width represent AWS per month.
     $count = $value[ 'count' ];
     $width = $count / $howManyMonths;
-    array_push( $network[ 'nodes' ], array( 'id' => $login,
-        'size' => $width, "group" => 0 ) );
-
-    $dotText .= "\t$login ["
-        //. "xlabel=\"$count\",xlp=\"0,0\","
-        . "color=lightblue,style=\"filled\" ,shape=circle,"
-        . "width=$width,"
-        . "fixedsize=true,"
-        . "];\n";
+    array_push( 
+        $network[ 'nodes' ], array( 'name' => $login, 'width' => $width ) 
+    );
 
     foreach( array_count_values( $value['edges'] ) as $val => $edgeNum )
-    {
-        $buddy = explode( '@', $val)[0];
-        $penwidth = $edgeNum / 4.0;
-        $color = 1.0 / $edgeNum;
-
-        array_push( $network[ 'links']
-            , array( 'source' => $login, 'target' => $buddy, 'value' => 1 ) 
+        array_push( $network[ 'edges']
+            , array( 'source_email' => $pi, 'tgt_email' => $val, 'width' => $edgeNum )
         );
-
-        $dotText .= "\t$login -> $buddy [ "
-                . "color=red,"
-                . "penwidth=$penwidth,"
-                . "taillabel=\"$edgeNum\"," 
-                . "arrowhead=none,"
-                . "];\n";
-    }
 }
 
-$curdir = getcwd( );
-$dotText .= "}";
+// Before writing to JSON use index of node as source and target in edges.
+$nodeIds = array();
+foreach( $network['nodes'] as $node )
+    $nodeIds[ $node['name'] ] = count( $nodeIds );
 
-$dotfileURI = "data/community_$from.dot.txt";
-$dotFilePath = "$curdir/$dotfileURI";
-
-// Write graphviz to dot file.
-$dotFile = fopen( $dotFilePath, "w" );
-fwrite( $dotFile, $dotText );
-fclose( $dotFile );
-
-//  Image generation.
-$layout = "sfdp";
-$imgFormat = "svg";
-$imgfileURI = "data/community_$from.$imgFormat";
-
-//Create both SVG and PNG.
-exec( "$layout -T$imgFormat -o $curdir/$imgfileURI $dotFilePath", $out, $res );
-exec( "$layout -Tpng -o $curdir/data/fallback.png $dotFilePath", $out, $res );
-
-// Now load the image into browser.
-echo "<div class=\"image\">";
-echo "<object width=\"100%\" data=\"$imgfileURI\" type=\"image/svg+xml\">
-    <img src=\"data/fallback.png\" />
-    </object>
-    ";
-echo "</div>";
-
-echo "<a href=\"$dotfileURI\" target=\"_blank\">Download graphviz</a>";
-echo goBackToPageLink( "index.php", "Go back" );
+for( $i = 0; $i < count( $network['edges']); $i++)
+{
+    $src = explode( '@', $network['edges'][$i][ 'source_email' ] )[0];
+    $tgt = explode( '@', $network['edges'][$i][ 'tgt_email' ] )[0];
+    $network['edges'][$i][ 'source' ] = $nodeIds[ $src ];
+    $network['edges'][$i][ 'target' ] = $nodeIds[ $tgt ];
+}
 
 // Write the network array to json array.
 $networkJSON = json_encode( $network, JSON_PRETTY_PRINT );
-//$networkJSONFileName = tempnam( "/tmp", "network" );
 $networkJSONFileName = "data/network.json";
 $handle = fopen( $networkJSONFileName, "w+" );
 fwrite( $handle, $networkJSON );
@@ -196,60 +151,177 @@ fclose( $handle );
 ?>
 
 <!-- Use d3 to draw graph -->
-
-<canvas width="960" height="600"></canvas>
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<div>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var canvas = document.querySelector("canvas"),
-    context = canvas.getContext("2d"),
-    width = canvas.width,
-    height = canvas.height;
+    var w = 1000;
+    var h = 1000;
 
-var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter());
+    var linkDistance=200;
 
-d3.json( "data/network.json", function(error, graph) {
-  if (error) throw error;
+    var colors = d3.scale.category20();
 
-  simulation
-      .nodes(graph.nodes)
-      .on("tick", ticked);
+    var graph = <?php echo $networkJSON; ?>;
+ 
+    var svg = d3.select("body").append("svg").attr({"width":w,"height":h});
 
-  simulation.force("link")
-      .links(graph.links);
+    var toggle = 0;
 
-  function ticked() {
-    context.clearRect(0, 0, width, height);
-    context.save();
-    context.translate(width / 2, height / 2);
+    var force = d3.layout.force()
+        .nodes(graph.nodes)
+        .links(graph.edges)
+        .size([w,h])
+        .linkDistance([linkDistance])
+        .charge([-500])
+        .theta(0.1)
+        .gravity(0.05)
+        .start();
 
-    context.beginPath();
-    graph.links.forEach(drawLink);
-    context.strokeStyle = "#aaa";
-    context.stroke();
+    var edges = svg.selectAll("line")
+      .data(graph.edges)
+      .enter()
+      .append("line")
+      .attr("id",function(d,i) {return 'ede'+i})
+      //.attr('marker-end','url(#arrowhead)')
+      .attr( 'stroke-width', function(e) { return e.width; } )
+      .style("stroke","#ccc")
+      .style("pointer-events", "none");
+    
+    var node = svg.selectAll("circle")
+      .data(graph.nodes)
+      .enter()
+      .append("circle")
+      .attr({"r":function(d) { return 50 * d.width; } })
+      .style( "opacity", 1 )
+      .style("fill",function(d,i){return colors(i);})
+      .call(force.drag)
+      .on( 'dblclick', connectedNodes )
 
-    context.beginPath();
-    graph.nodes.forEach(drawNode);
-    context.fill();
-    context.strokeStyle = "#fff";
-    context.stroke();
 
-    context.restore();
-  }
-});
+    var nodelabels = svg.selectAll(".nodelabel") 
+       .data(graph.nodes)
+       .enter()
+       .append("text")
+       .attr({"x":function(d){return d.x;},
+              "y":function(d){return d.y;},
+              "class":"nodelabel",
+              "stroke":"black"})
+       .text(function(d){return d.name;});
 
-function drawLink(d) {
-  context.moveTo(d.source.x, d.source.y);
-  context.lineTo(d.target.x, d.target.y);
-}
+    var edgepaths = svg.selectAll(".edgepath")
+        .data(graph.edges)
+        .enter()
+        .append('path')
+        .attr({'d': function(d) {return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y},
+               'class':'edgepath',
+               'fill-opacity':0,
+               'stroke-opacity':0,
+               'fill':'blue',
+               'stroke':'red',
+               'id':function(d,i) {return 'edgepath'+i}})
+        .style("pointer-events", "none");
 
-function drawNode(d) {
-  context.moveTo(d.x + 3, d.y);
-  context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
-}
+    var edgelabels = svg.selectAll(".edgelabel")
+        .data(graph.edges)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr({'class':'edgelabel',
+               'id':function(d,i){return 'edgelabel'+i},
+               'dx':80,
+               'dy':0,
+               'font-size':10,
+               'fill':'#aaa'});
+
+    edgelabels.append('textPath')
+        .attr('xlink:href',function(d,i) {return '#edgepath'+i})
+        .style("pointer-events", "none")
+        .text(function(d,i){return ''}); // Return edge level.
+
+
+    svg.append('defs').append('marker')
+        .attr({'id':'arrowhead',
+               'viewBox':'-0 -5 10 10',
+               'refX':25,
+               'refY':0,
+               //'markerUnits':'strokeWidth',
+               'orient':'auto',
+               'markerWidth':10,
+               'markerHeight':10,
+               'xoverflow':'visible'})
+        .append('svg:path')
+            .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+            .attr('fill', '#ccc')
+            .attr('stroke','#ccc');
+     
+
+    force.on("tick", function(){
+
+        edges.attr({"x1": function(d){return d.source.x;},
+                    "y1": function(d){return d.source.y;},
+                    "x2": function(d){return d.target.x;},
+                    "y2": function(d){return d.target.y;}
+        });
+
+        node.attr({"cx":function(d){return d.x;},
+                    "cy":function(d){return d.y;}
+        });
+
+        nodelabels.attr("x", function(d) { return d.x; }) 
+                  .attr("y", function(d) { return d.y; });
+
+        edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
+                                           //console.log(d)
+                                           return path});       
+
+        edgelabels.attr('transform',function(d,i){
+            if (d.target.x<d.source.x){
+                bbox = this.getBBox();
+                rx = bbox.x+bbox.width/2;
+                ry = bbox.y+bbox.height/2;
+                return 'rotate(180 '+rx+' '+ry+')';
+                }
+            else {
+                return 'rotate(0)';
+                }
+        });
+    });
+
+
+    var linkedByIndex = {};
+    for (i = 0; i < graph.nodes.length; i++) {
+        linkedByIndex[i + "," + i] = 1;
+    };
+    graph.edges.forEach(function (d) {
+        linkedByIndex[d.source.index + "," + d.target.index] = 1;
+    });
+
+
+
+    function neighboring(a, b) {
+        return linkedByIndex[a.index + "," + b.index];
+    }
+
+    function connectedNodes() {
+        console.log( 'Connected nodes' );
+        if (toggle == 0) {
+            d = d3.select(this).node().__data__;
+            node.style("opacity", function (o) {
+                return neighboring(d, o) | neighboring(o, d) ? 1 : 0.15;
+            });
+            toggle = 1;
+        } else {
+            node.style("opacity", 1);;
+            toggle = 0;
+        }
+    }
+
 
 </script>
 
+</div>
+
+<?php
+echo goBackToPageLink( "index.php", "Go back" );
+?>

@@ -23,11 +23,21 @@ $calendar->setAccessToken( $_GET['code'] );
 
 $everythingWentOk = true;
 
+// Find event in list of events but comparing summary.
+function findEvent( $events, $event )
+{
+    foreach( $events as $e )
+        if( $e[ 'summary' ] == $event[ 'summary' ] )
+            return true;
+    return false;
+}
+
 
 if( array_key_exists( 'google_command', $_SESSION ) )
 { 
     if( $_SESSION['google_command'] == 'synchronize_all_events' )
     {
+        echo printInfo( "Synchronizing google calendar ..." );
         $publicEvents = getPublicEvents( );
         $total = count( $publicEvents );
         for ($i = 0; $i < $total; $i++) 
@@ -41,6 +51,21 @@ if( array_key_exists( 'google_command', $_SESSION ) )
 
             echo "... Done with " . $i+1 . " out of total $total events <br>";
             ob_flush(); flush( );
+        }
+
+        // Now get all events from google calendar and if some of them are not 
+        // in database, remove them.
+        $eventsOnGoogleCalendar = $calendar->getEvents( );
+        foreach( $eventsOnGoogleCalendar as $event )
+        {
+            if( findEvent( $publicEvents, $event ) )
+                continue;           // We are good.
+            else
+            {
+                echo "<pre>Deleting event: " . $event[ 'summary' ] . "</pre>";
+                $calendar->deleteEvent( $event );
+                ob_flush(); flush( );
+            }
         }
     }
     else if( $_SESSION[ 'google_command' ] == 'update_eventgroup' )

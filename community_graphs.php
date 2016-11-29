@@ -247,7 +247,6 @@ fclose( $handle );
                'viewBox':'-0 -5 10 10',
                'refX':25,
                'refY':0,
-               //'markerUnits':'strokeWidth',
                'orient':'auto',
                'markerWidth':10,
                'markerHeight':10,
@@ -309,17 +308,25 @@ fclose( $handle );
         if (toggle == 0) {
             d = d3.select(this).node().__data__;
             node.style("opacity", function (o) {
-                return neighboring(d, o) | neighboring(o, d) ? 1 : 0.15;
+                return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
             });
             nodelabels.text( function (o) {
                 return neighboring(d, o) | neighboring(o, d) ? o.name : '';
             });
 
+            edges.style("stroke", function( e ) {
+                console.log( e.source );
+                if( e.source.name == d.name  || e.target.name == d.name )
+                    return "#800";
+                else
+                    return "#ccc";
+            });
             toggle = 1;
         } else {
             node.style("opacity", 1);;
             nodelabels.text(function(d){return d.name;});
             toggle = 0;
+            edges.style("stroke", "#ccc")
         }
     }
 

@@ -2,11 +2,11 @@
 
 // This is admin interface for book my venue.
 // We are here to manage the requests.
-include_once( "header.php" );
-include_once( "methods.php" );
-include_once( "database.php" );
-include_once( "tohtml.php" );
-include_once( "check_access_permissions.php" );
+include_once "header.php";
+include_once "methods.php";
+include_once "database.php";
+include_once "tohtml.php";
+include_once "check_access_permissions.php";
 
 echo userHTML( );
 

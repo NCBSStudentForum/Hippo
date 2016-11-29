@@ -64,10 +64,43 @@ echo '
 echo '<h3> Danger zone</h3>';
 echo '
     <form method="get" action="">
-    Pick an login ID <input id="autocomplete_user" type="text" value="" />
-    Pick an AWS date<input class="datepicker" value="" >
-    <button type="submit">Delete</button>
+    Pick an login ID <input id="autocomplete_user" name="login" type="text" />
+    Optionally select AWS date<input class="datepicker" name="date" value="" >
+    <button name="response" value="Select">Select</button>
     </form>
-    '
+    ';
+
+$login = null;
+$date = null;
+if( isset( $_GET[ 'response' ] ))
+{
+    if( $_GET[ 'response' ] == 'Select' )
+    {
+        $login = $_GET[ 'login' ];
+        $date = $_GET[ 'date' ];
+    }
+    elseif( $_GET[ 'response' ] == 'Delete' )
+    {
+        echo "Deleting this AWS entry.";
+    }
+
+    $awss = array( );
+    if( $login and $date )
+        $awss = array( getMyAwsOn( $login, $date ) );
+    else if( $login )
+        $awss = getAwsOfSpeaker( $login );
+
+    foreach( $awss as $aws )
+    {
+        echo arrayToVerticalTableHTML( $aws, 'annual_work_seminars' );
+        echo '<br>';
+        echo '<form method="get" action="">
+                <button style=\"float:right\" name="resonse" value="Delete">Delete</button>
+            </form>
+            ';
+    }
+}
+
+
 ?>
 

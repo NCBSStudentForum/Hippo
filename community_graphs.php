@@ -21,10 +21,11 @@ echo '
 $from = date( 'Y-m-d', strtotime( 'today' . " -$howManyMonths months"));
 
 $fromD = date( 'M d, Y', strtotime( $from ) );
-echo "<div class=\"info\">
+echo "<p>
     Following graph shows the interaction among faculty since $fromD.
-    Double click on a node to see his/her interaction.
-    </div>";
+    No on edges are number of AWSs between two faculty either as co-supervisor
+    or as thesis committee members.
+    </p>";
 
 $awses = getAWSFromPast( $from  );
 $network = array( 'nodes' => array(), 'edges' => array( ) );

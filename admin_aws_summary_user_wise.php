@@ -50,10 +50,7 @@ function daysToLine( $awsDays, $totalDays, $blockSize = 7)
 
 
 // Get AWS in roughly last 5 years.
-$totalDays = 5 * 365;
-$from = date( 'Y-m-d', strtotime( 'now' ) - $totalDays * 24 * 3600 );
-//$awses = getAWSFromPast( $from, 'ACTIVE' );
-$speakers = getAWSUsers( );
+$allAWS = getAllAWS( );
 
 $table = '<table border="0" class="show_aws_summary">';
 
@@ -64,10 +61,20 @@ $table .= '<tr>
     </tr>';
 
 $i = 0;
-foreach( $speakers as $speaker )
+$awsGroupedBySpeaker = array( );
+foreach( $allAWS as $aws )
+{
+    if( ! array_key_exists( $aws['speaker'], $awsGroupedBySpeaker ) )
+        $awsGroupedBySpeaker[ $aws[ 'speaker' ] ] = array( );
+    array_push( $awsGroupedBySpeaker[ $aws[ 'speaker' ] ], $aws );
+}
+
+// This is the length of block.
+$totalDays = 10 * 365;
+foreach( $awsGroupedBySpeaker as $speaker => $awses )
 {
     $i +=1 ;
-
+    $speaker = getLoginInfo( $speaker );
     $fname = $speaker['first_name'];
     $lname = $speaker['last_name'];
     $login = $speaker['login'];
@@ -75,7 +82,6 @@ foreach( $speakers as $speaker )
     $table .= "<tr> <td>$i</td> <td> " . $fname . ' ' . $lname 
                 . "<br><small> $login </small>" . "</td>";
     $when = array( );
-    $awses = getAwsOfSpeaker( $login );
     foreach( $awses as $aws )
     {
         $awsDay = strtotime( $aws['date'] );

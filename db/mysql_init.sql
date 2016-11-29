@@ -150,7 +150,7 @@ create TABLE IF NOT EXISTS annual_work_seminars (
     , abstract TEXT
     , FOREIGN KEY (speaker) REFERENCES logins(login)
     , UNIQUE KEY (speaker, date)
-    -- , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
+    , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
     );
 
 -- This table holds all the upcoming AWSs. 

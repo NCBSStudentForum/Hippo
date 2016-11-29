@@ -216,11 +216,8 @@ class NCBSCalendar
             );
         }
 
-        //echo "Updated event is <br />";
-        //echo json_encode( $gevent );
-
+        echo str_repeat( ' ', 1024 * 64 );
         flush();
-        ob_flush( );
         return $gevent;
     }
 
@@ -253,7 +250,7 @@ class NCBSCalendar
                      , "htmlLink" => $event['url']
                      , "anyoneCanAddSelf" => True
                      , "extendedProperties" => array( "shared" => array(
-                         "gid" => $event['rid'], 'eid' => $event[ 'eid' ] ) )
+                         "gid" => $event['gid'], 'eid' => $event[ 'eid' ] ) )
                  );
 
         $gevent = $this->_insertEvent( $entry );

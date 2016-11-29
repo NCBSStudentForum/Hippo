@@ -179,7 +179,6 @@ fclose( $handle );
       .enter()
       .append("line")
       .attr("id",function(d,i) {return 'ede'+i})
-      //.attr('marker-end','url(#arrowhead)')
       .attr( 'stroke-width', function(e) { return e.width; } )
       .style("stroke","#ccc")
       .style("pointer-events", "none");
@@ -192,7 +191,8 @@ fclose( $handle );
       .style( "opacity", 1 )
       .style("fill",function(d,i){return colors(10);})
       .call(force.drag)
-      .on( 'dblclick', connectedNodes )
+      .on( 'mouseover', connectedNodes )
+      .on( 'mouseout', connectedNodes )
 
 
     var nodelabels = svg.selectAll(".nodelabel") 

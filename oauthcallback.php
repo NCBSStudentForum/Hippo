@@ -36,7 +36,8 @@ $everythingWentOk = true;
 function findEvent( $events, $event )
 {
     foreach( $events as $e )
-        if( $e[ 'summary' ] == $event[ 'summary' ] )
+        // Database event compared with google event summary.
+        if( $e[ 'short_description' ] == $event[ 'summary' ] )
             return true;
     return false;
 }
@@ -52,13 +53,10 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         for ($i = 0; $i < $total; $i++) 
         {
             $event = $publicEvents[ $i ];
-
             if( $calendar->exists( $event ) )
                 $gevent = $calendar->updateEvent( $event );
             else 
                 $gevent = $calendar->addNewEvent( $event );
-
-
         }
 
         // Now get all events from google calendar and if some of them are not 

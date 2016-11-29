@@ -24,8 +24,7 @@ echo '<table class="show_user">
     <tr>
         <td>Synchronize public calendar</td>
         <td>
-            <a href="' . appRootDir( ) .  
-            '/bookmyvenue_admin_synchronize_events_with_google_calendar.php">
+            <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
             Synchronize public calendar </a> 
         </td>
     </tr>

@@ -79,9 +79,29 @@ class NCBSCalendar
         }
     }
 
+    /**
+        * @brief Return all events on this calendar.
+        *
+        * @return 
+     */
     public function getEvents( )
     {
-        $events = $this->service()->events->listEvents( $this->calID );
+        //echo "Getting list of events from " . $this->calID;
+        $eventGen = $this->service()->events->listEvents( $this->calID );
+        $events = array();
+        while( true ) {
+            foreach( $eventGen->getItems() as $event ) {
+                array_push( $events, $event );
+            }
+
+            $pageToken = $eventGen->getNextPageToken();
+            if ($pageToken) {
+                $optParams = array('pageToken' => $pageToken);
+                $eventGen = $this->service->events->listEvents( $this->calID,  $optParams);
+            } else {
+                break;
+            }
+        }
         return $events;
     }
 
@@ -232,6 +252,8 @@ class NCBSCalendar
                      )
                      , "htmlLink" => $event['url']
                      , "anyoneCanAddSelf" => True
+                     , "extendedProperties" => array( "shared" => array(
+                         "gid" => $event['rid'], 'eid' => $event[ 'eid' ] ) )
                  );
 
         $gevent = $this->_insertEvent( $entry );
@@ -252,6 +274,20 @@ class NCBSCalendar
         flush();
         ob_flush( );
     }
+
+    /**
+        * @brief Delete a given event.
+        *
+        * @param $event
+        *
+        * @return 
+     */
+    public function deleteEvent( $event )
+    {
+        return $this->service->events->delete( $this->calID, $event['id'] );
+    }
+
+
 
     /**
         * @brief Check if this event exits in calendar.

@@ -6,8 +6,6 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
-mustHaveAnyOfTheseRoles( Array( 'USER' ) );
-
 echo userHTML( );
 
 echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';

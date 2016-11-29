@@ -10,6 +10,15 @@ require_once './calendar/NCBSCalendar.php';
 
 mustHaveAllOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
 
+?>
+
+<!-- Progress bar holder -->
+<div id="progress" style="width:500px;border:1px solid #ccc;"></div>
+<!-- Progress information -->
+<div id="information" style="width"></div>
+
+<?php
+
 echo userHTML( );
 
 // We come here from google-calendar 
@@ -49,13 +58,14 @@ if( array_key_exists( 'google_command', $_SESSION ) )
             else 
                 $gevent = $calendar->addNewEvent( $event );
 
-            echo "... Done with " . $i+1 . " out of total $total events <br>";
-            ob_flush(); flush( );
+
         }
 
         // Now get all events from google calendar and if some of them are not 
         // in database, remove them.
         $eventsOnGoogleCalendar = $calendar->getEvents( );
+        $total = count( $eventsOnGoogleCalendar );
+        $i = 0;
         foreach( $eventsOnGoogleCalendar as $event )
         {
             if( findEvent( $publicEvents, $event ) )
@@ -66,6 +76,16 @@ if( array_key_exists( 'google_command', $_SESSION ) )
                 $calendar->deleteEvent( $event );
                 ob_flush(); flush( );
             }
+
+            $percent = intval( $i / $total * 100 ) . "%";
+            echo '<script language="javascript">
+                document.getElementById("progress").innerHTML="<div 
+                    style=\"width:'.$percent.';background-color:#ddd;\">&nbsp;</div>";
+                document.getElementById("information").innerHTML="'.$i.' row(s) processed.";
+            </script>';
+            $i += 1;
+            echo str_repeat( ' ', 1024*64 );
+            flush( );
         }
     }
     else if( $_SESSION[ 'google_command' ] == 'update_eventgroup' )
@@ -80,7 +100,8 @@ if( array_key_exists( 'google_command', $_SESSION ) )
                 // Insert is needed if an event is made public.
                 $calendar->insertOrUpdateEvent( $event );
                 echo "... Done updating event " .  $i + 1 . " of $total <br>";
-                ob_flush( ); flush();
+                echo str_repeat( ' ', 1024*64 );
+                flush( );
             }
         }
     }

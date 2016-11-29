@@ -32,6 +32,8 @@ echo "<div class=\"info\">
     </div>";
 
 $awses = getAWSFromPast( $from  );
+$network = array( 'nodes' => array(), 'links' => array( ) );
+
 $dotText = "digraph community {
     rankdir=TB;
     overlap=false;
@@ -124,6 +126,9 @@ foreach( $community as $pi => $value )
     // Width represent AWS per month.
     $count = $value[ 'count' ];
     $width = $count / $howManyMonths;
+    array_push( $network[ 'nodes' ], array( 'id' => $login,
+        'size' => $width, "group" => 0 ) );
+
     $dotText .= "\t$login ["
         //. "xlabel=\"$count\",xlp=\"0,0\","
         . "color=lightblue,style=\"filled\" ,shape=circle,"
@@ -136,6 +141,11 @@ foreach( $community as $pi => $value )
         $buddy = explode( '@', $val)[0];
         $penwidth = $edgeNum / 4.0;
         $color = 1.0 / $edgeNum;
+
+        array_push( $network[ 'links']
+            , array( 'source' => $login, 'target' => $buddy, 'value' => 1 ) 
+        );
+
         $dotText .= "\t$login -> $buddy [ "
                 . "color=red,"
                 . "penwidth=$penwidth,"
@@ -176,4 +186,70 @@ echo "</div>";
 echo "<a href=\"$dotfileURI\" target=\"_blank\">Download graphviz</a>";
 echo goBackToPageLink( "index.php", "Go back" );
 
+// Write the network array to json array.
+$networkJSON = json_encode( $network, JSON_PRETTY_PRINT );
+//$networkJSONFileName = tempnam( "/tmp", "network" );
+$networkJSONFileName = "data/network.json";
+$handle = fopen( $networkJSONFileName, "w+" );
+fwrite( $handle, $networkJSON );
+fclose( $handle );
 ?>
+
+<!-- Use d3 to draw graph -->
+
+<canvas width="960" height="600"></canvas>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+var canvas = document.querySelector("canvas"),
+    context = canvas.getContext("2d"),
+    width = canvas.width,
+    height = canvas.height;
+
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter());
+
+d3.json( "data/network.json", function(error, graph) {
+  if (error) throw error;
+
+  simulation
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation.force("link")
+      .links(graph.links);
+
+  function ticked() {
+    context.clearRect(0, 0, width, height);
+    context.save();
+    context.translate(width / 2, height / 2);
+
+    context.beginPath();
+    graph.links.forEach(drawLink);
+    context.strokeStyle = "#aaa";
+    context.stroke();
+
+    context.beginPath();
+    graph.nodes.forEach(drawNode);
+    context.fill();
+    context.strokeStyle = "#fff";
+    context.stroke();
+
+    context.restore();
+  }
+});
+
+function drawLink(d) {
+  context.moveTo(d.source.x, d.source.y);
+  context.lineTo(d.target.x, d.target.y);
+}
+
+function drawNode(d) {
+  context.moveTo(d.x + 3, d.y);
+  context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
+}
+
+</script>
+

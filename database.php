@@ -850,19 +850,22 @@ function getSupervisors( )
 }
 
 /**
-    * @brief Make sure only valid keys are in database table.
+    * @brief Insert a new entry in table.
     *
     * @param $tablename
+    * @param $keys, Keys to update/insert in table.
     * @param $data
     *
-    * @return  The primary key value of this table. Usually id.
+    * @return  The id of newly inserted entry on success. Null otherwise.
  */
 function insertIntoTable( $tablename, $keys, $data )
 {
     global $db;
 
-    $values = Array( );
+    if( gettype( $keys ) == "string" )
+        $keys = explode( ',', $keys );
 
+    $values = Array( );
     $cols = Array( );
     foreach( $keys as $k )
     {
@@ -895,7 +898,61 @@ function insertIntoTable( $tablename, $keys, $data )
         $stmt->execute( );
         return $stmt->fetch( PDO::FETCH_ASSOC );
     }
-    return $res;
+    return null;
+}
+
+/**
+    * @brief Delete an entry from table. 
+    *
+    * @param $tableName
+    * @param $keys
+    * @param $data
+    *
+    * @return The id of deleted entry on success, null otherwise.
+ */
+function deleteFromTable( $tableName, $keys, $data )
+{
+    global $db;
+
+    if( gettype( $keys ) == "string" )
+        $keys = explode( ',', $keys );
+
+    $values = Array( );
+    $cols = Array( );
+    foreach( $keys as $k )
+        if( $data[$k] )
+        {
+            array_push( $cols, "$k" );
+            array_push( $values, ":$k" );
+        }
+
+    $keysT = implode( ",", $cols );
+    $values = implode( ",", $values );
+    $query = "DELETE FROM $tablename WHERE ";
+
+    $whereClause = array( );
+    foreach( $cols as $k )
+        array_push( $whereClause, "$k=:$k" );
+
+    $query .= implode( " AND", $whereClause );
+
+    $stmt = $db->prepare( $query );
+    foreach( $cols as $k )
+    {
+        $value = $data[$k];
+        if( gettype( $value ) == 'array' )
+            $value = implode( ',', $value );
+        $stmt->bindValue( ":$k", $value );
+    }
+    $res = $stmt->execute( );
+    if( $res )
+    {
+        // When created return the id of table else return null;
+        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
+        $stmt->execute( );
+        return $stmt->fetch( PDO::FETCH_ASSOC );
+    }
+    return null;
 }
 
 /**
@@ -1240,6 +1297,16 @@ function deleteAWSEntry( $speaker, $date )
     $stmt->bindValue( ':date', $date );
     return $stmt->execute( );
 }
+
+function getHolidays( $from = NULL )
+{
+    global $db;
+    if( ! $from )
+        $from = date( 'Y-m-d', strtotime( 'today' ) );
+    $stmt = $db->query( "SELECT * FROM holidays WHERE date >= '$from' ORDER BY date" );
+    return fetchEntries( $stmt );
+}
+
 
 ?>
 

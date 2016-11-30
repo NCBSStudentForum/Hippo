@@ -850,6 +850,27 @@ function getSupervisors( )
 }
 
 /**
+    * @brief 
+    *
+    * @param $tablename
+    * @param $orderby
+    *
+    * @return 
+ */
+function getTableEntries( $tablename, $orderby = '' )
+{
+    global $db;
+    $query = "SELECT * FROM $tablename ";
+
+    if( $orderby )
+        $query .= " ORDER BY $orderby";
+
+    $stmt = $db->query( $query );
+    return fetchEntries( $stmt );
+}
+
+
+/**
     * @brief Insert a new entry in table.
     *
     * @param $tablename

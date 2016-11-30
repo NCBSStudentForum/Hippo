@@ -30,12 +30,28 @@ class BMVPDO extends PDO
             echo goBackToPageLink( 'index.php', 0 );
             exit;
         }
+
     }
 }
 
 // Construct the PDO
 $db = new BMVPDO( "ghevar.ncbs.res.in" );
+initialize( );
 
+/**
+    * @brief Create all tables.
+    *
+    * @return 
+ */
+function initialize( )
+{
+    global $db;
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS holidays 
+            (date DATE NOT NULL PRIMARY KEY, description VARCHAR(100) NOT NULL)
+        ' );
+    return $res;
+}
 
 function getVenues( $sortby = 'total_events' )
 {

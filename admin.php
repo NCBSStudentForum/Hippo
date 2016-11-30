@@ -66,6 +66,12 @@ echo '
                 <a href="admin_manages_faculty.php">Manage faculty</a>
             </td>
         </tr>
+        <tr>
+            <td>Add/Update holidays</td>
+            <td>
+                <a href="admin_manages_holiday.php">Manage holidays</a>
+            </td>
+        </tr>
     </table>
     ';
 

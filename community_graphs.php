@@ -116,7 +116,7 @@ foreach( $community as $pi => $value )
     $count = $value[ 'count' ];
     $width = $count / $howManyMonths;
     array_push( 
-        $network[ 'nodes' ], array( 'name' => $login, 'width' => $width ) 
+        $network[ 'nodes' ], array( 'name' => $login, 'count' => $count, 'width' => $width ) 
     );
 
     foreach( array_count_values( $value['edges'] ) as $val => $edgeNum )
@@ -235,7 +235,7 @@ fclose( $handle );
                'dx':80,
                'dy':0,
                'font-size':10,
-               'fill':'#f00'});
+               'fill':'#acc'});
 
     edgelabels.append('textPath')
         .attr('xlink:href',function(d,i) {return '#edgepath'+i})
@@ -259,12 +259,12 @@ fclose( $handle );
      
 
     force.on("tick", function(){
-
-        edges.attr({"x1": function(d){return d.source.x;},
-                    "y1": function(d){return d.source.y;},
-                    "x2": function(d){return d.target.x;},
-                    "y2": function(d){return d.target.y;}
-        });
+        edges.attr( { 
+                      "x1": function(d){return d.source.x;},
+                      "y1": function(d){return d.source.y;},
+                      "x2": function(d){return d.target.x;},
+                      "y2": function(d){return d.target.y;}
+                   });
 
         node.attr({"cx":function(d){return d.x;},
                     "cy":function(d){return d.y;}
@@ -312,6 +312,8 @@ fclose( $handle );
                 return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
             });
             nodelabels.text( function (o) {
+                if( o.name == d.name )
+                    return 'Total AWS:' + d.count;
                 return neighboring(d, o) | neighboring(o, d) ? o.name : '';
             });
 
@@ -322,12 +324,20 @@ fclose( $handle );
                 else
                     return "#ccc";
             });
+
+            edgelabels.attr( 'fill', function(e) {
+                if( e.source.name == d.name || e.target.name == d.name )
+                    return "#000";
+                else
+                    return "#acc";
+            } );
             toggle = 1;
         } else {
             node.style("opacity", 1);;
             nodelabels.text(function(d){return d.name;});
             toggle = 0;
             edges.style("stroke", "#ccc")
+            edgelabels.attr( 'fill', "#acc" );
         }
     }
 

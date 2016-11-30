@@ -8,6 +8,8 @@ include_once 'check_access_permissions.php';
 
 $logins = getLoginIds( );
 
+$pendingRequests = getPendingAWSRequests( );
+
 ?>
 
 <!-- Script to autocomplete user -->
@@ -29,8 +31,12 @@ echo "<h2>AWS Admin</h2>";
 
 echo '<table class="admin">';
 echo '<tr>
-    <td>Manage pending requests</td>
-    <td> <a href="admin_aws_manages_requests.php">Manage pending requests</a> </td>
+        <td>Manage pending requests</td>
+        <td> <a href="admin_aws_manages_requests.php">Manage ' . count( $pendingRequests) . 
+            ' pending requests</a> </td>
+    </tr><tr>
+        <td>Manage speakers</td>
+        <td> <a href="admin_aws_edit_speakers.php">Manage speakers </td>
     </tr>';
 echo '</table>';
 

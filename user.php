@@ -6,6 +6,9 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
+mustHaveAnyOfTheseRoles( array( 'USER', 'ADMIN', 'AWS_ADMIN'
+    , 'JC_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
+
 echo userHTML( );
 
 echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';

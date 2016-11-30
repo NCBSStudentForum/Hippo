@@ -31,11 +31,7 @@ if( isset( $_POST['id'] ) )
 
 echo "<h3>Edit or add AWS entry</h3>";
 
-echo "<p>
-NOTICE: If you can't find your supervior(s) and/or thesis committee member(s) in selection list,
-please create a entry for them <a href=\"" . appRootDir() . 
-   "/user_add_supervisor.php\" target=\"_blank\">HERE</a>
-</p>";
+echo alertUser( "Supervisor 1 must be a local faculty. Others can be from outside." );
 
 // Now create an entry
 $supervisors = getSupervisors( );
@@ -64,6 +60,7 @@ echo '
         </td>
     </tr>';
 
+$addMissingUrl = '<a href="user_add_supervisor.php">Add missing member</a>';
 for( $i = 1; $i <= 2; $i++ )
 {
     $name = "supervisor_$i";
@@ -71,9 +68,10 @@ for( $i = 1; $i <= 2; $i++ )
     echo '
     <tr>
         <td>Supervisor ' . $i . '<br></td>
-        <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected ) 
-        .  '</td>
-    </tr>';
+        <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected );
+    if( $i == 2 )
+        echo $addMissingUrl;
+    echo '</td> </tr>';
 }
 for( $i = 1; $i <= 4; $i++ )
 {
@@ -83,8 +81,9 @@ for( $i = 1; $i <= 4; $i++ )
     <tr>
         <td>Thesis Committee Member ' . $i . '<br></td>
         <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected) 
-        .  '</td>
-    </tr>';
+        . $addMissingUrl . '</td>';
+    echo '</tr>';
+
 }
     echo '
     <tr>

@@ -23,14 +23,23 @@ $from = date( 'Y-m-d', strtotime( 'today' . " -$howManyMonths months"));
 $fromD = date( 'M d, Y', strtotime( $from ) );
 echo "<p>
     Following graph shows the interaction among faculty since $fromD.
-    No on edges are number of AWSs between two faculty either as co-supervisor
-    or as thesis committee members.
+    <br>
+
+    Number on edges are number of AWSs between two faculty, either of them is involved 
+    in an AWS as co-supervisor or as a thesis committee member.
+
     </p>";
 
 $awses = getAWSFromPast( $from  );
 $network = array( 'nodes' => array(), 'edges' => array( ) );
 
 echo printInfo( "Total " . count( $awses) . " AWSs found in database since $fromD" );
+
+echo '
+    <strong>
+    Hover over a node to see the interaction of particular faculty.
+    </strong>
+    ';
 
 $community = array();
 

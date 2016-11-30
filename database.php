@@ -329,6 +329,30 @@ function getEventsOn( $day, $status = 'VALID')
     return fetchEntries( $stmt );
 }
 
+function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM events 
+        WHERE venue=:venue AND status=:status AND date=:date" );
+    $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+function getRequestsOnThisVenueOnThisday( $venue, $date, $status = 'PENDING' )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests 
+        WHERE venue=:venue AND status=:status AND date=:date" );
+    $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 
 /**
     * @brief Sunmit a request for review.

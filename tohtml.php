@@ -29,9 +29,6 @@ function loginForm()
   return $table;
 }
 
-function eventTable( $date )
-{
-}
 
 function prettify( $string )
 {
@@ -195,6 +192,33 @@ function eventLineHTML( $date, $venueid )
     $html .= '</table>';
     return $html;
 }
+
+// Convert a event into a readonly event line.
+function readOnlyEventLineHTML( $date, $venueid )
+{
+    $events = getEventsOnThisVenueOnThisday( $venueid, $date );
+    $requests = getRequestsOnThisVenueOnThisday( $venueid, $date );
+
+    $html = '';
+    if( count( $events ) + count( $requests ) > 0 )
+    {
+        $html .= '<table class="show_calendar">';
+        $html .= "<tr> <td> $venueid </td>";
+
+        $html .= "<td> <table class=\"show_info\"><tr>";
+        foreach( $requests as $req )
+            $html .= '<td> Unapproved:<br>' . requestToText( $req ) . "</td>";
+
+        foreach( $events as $event )
+            $html .=  "<td>" . eventToText( $event ) . "</td>";
+        $html .= "</tr></table>";
+
+        $html .= "</td></tr>";
+        $html .= '</table>';
+    }
+    return $html;
+}
+
 
 // Convert an array to HTML
 function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )

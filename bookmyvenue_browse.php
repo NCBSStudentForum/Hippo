@@ -32,7 +32,7 @@ foreach( getTableEntries( 'holidays', 'date' ) as $holiday )
 if( ! array_key_exists( 'picked_dates', $_POST ) )
 {
     if( ! array_key_exists( 'selected_dates_before', $_POST ) )
-        $_POST['picked_dates'] = humanReadableDate( strtotime( 'today' ) );
+        $_POST['picked_dates'] = dbDate(strtotime( 'today' ) );
     else
         $_POST['picked_dates']  = $_POST['selected_dates_before'];
 }
@@ -110,7 +110,7 @@ foreach( $dates as $date )
 
     // Now generate eventline for each venue.
     foreach( explode("###", $_POST['venue']) as $venueid )
-        $html .= eventLineHTML( $thisdate, $venueid );
+        $html .= eventLineHTML( $date, $venueid );
 
     echo $html;
 }

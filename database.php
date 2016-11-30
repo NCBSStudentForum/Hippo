@@ -573,21 +573,23 @@ function summaryTable( )
     $allAWS = getAllAWS( );
     $nspeakers = count( getAWSUsers( ) );
     $nAws = count( $allAWS );
-
-    echo date( 'Y-01-01' );
     $awsThisYear = count( getAWSFromPast( date( 'Y-01-01' ) ) );
-
-    $html = "In this database <br>";
-    $html .= '<table class="summary">';
+    $html = '<table class="summary">';
     $html .= "
+        <tr>
+            <td>
+            <a href=\"show_events.php\" target=\"_blank\">Event Calendar</a>
+            </td>
+        </tr>
+        <tr>
+            <td> <a href=\"user_aws_search.php\" target=\"_blank\">Search AWS</a> </td>
+            <td> <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a> </td>
+            <td> <a href=\"aws_stats.php\" target=\"_blank\" >AWS Statistics </a> </td>
+        </tr>
         <tr>
             <td>$nAws AWSs </td>
             <td> $nspeakers active speakers</td>
-            <td>$awsThisYear AWs this year </td>
-        </tr><tr>
-            <td> <a href=\"user_aws_search.php\" target=\"_blank\">Search AWS</a> </td>
-            <td> <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a> </td>
-            <td> <a href=\"stats.php\" target=\"_blank\" >Statistics </a> </td>
+            <td> $awsThisYear AWSs so far this year </td>
         </tr>";
     $html .= "</table>";
     return $html;

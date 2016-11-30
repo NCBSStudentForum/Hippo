@@ -2,27 +2,15 @@
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "tohtml.php" );
-include_once( "is_valid_access.php" );
 include_once( "database.php" );
 include_once 'display_content.php';
+include_once "./check_access_permissions.php";
+
+mustHaveAnyOfTheseRoles( 
+    array( 'USER', 'ADMIN', 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN', 'JC_ADMIN' ) 
+);
 
 echo userHTML( );
-
-?>
-
-<!-- Make sure date is in yyyy-dd-mm format e.g. 2016-11-31 etc. -->
-<script>
-$( function() {
-    var today = new Date();
-    var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
-    $( "#datepicker" ).multiDatesPicker( { 
-        dateFormat : "yy-m-d"
-    });
-} );
-</script>
-
-
-<?php
 
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.
@@ -84,7 +72,8 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
     </th>
     </tr>
     <tr>
-    <td><input type=\"text\" id=\"datepicker\" name=\"picked_dates\" value=\"$pickedDates\"></td>
+    <td><input type=\"text\" class=\"multidatespicker\" 
+            name=\"picked_dates\" value=\"$pickedDates\"></td>
     <td>  $venueSelect </td>
     <td>
     <button style=\"float:right\" name=\"response\" value=\"submit\">Filter</button> ";

@@ -62,9 +62,19 @@ $( function() {
 $(function(){
     $('input.timepicker').timepicker({ 'timeFormat' : 'H:i', 'step' : '15' });
 });
-
 </script>
 
+<!-- Make sure date is in yyyy-dd-mm format e.g. 2016-11-31 etc. -->
+<script>
+$( function() {
+    var today = new Date();
+    var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
+    $( "input.multidatespicker" ).multiDatesPicker( { 
+        dateFormat : "yy-m-d"
+    });
+} );
+
+</script>
 <!-- CKEDIR -->
 <script src="./ckeditor/ckeditor.js"></script>
 

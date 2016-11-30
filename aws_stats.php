@@ -7,11 +7,17 @@ include_once 'database.php';
 
 $awses = getAllAWS( );
 $awsPerSpeaker = array( );
+
+$awsYearData = array_map(
+    function( $x ) { return array(date('Y', strtotime($x['date'])), 0); } , $awses
+    );
+
 foreach( $awses as $aws )
 {
     $speaker = $aws[ 'speaker' ];
     if( ! array_key_exists( $speaker, $awsPerSpeaker ) )
         $awsPerSpeaker[ $speaker ] = array();
+
     array_push( $awsPerSpeaker[ $speaker ], $aws );
 }
 
@@ -42,6 +48,67 @@ foreach( $awsCounts as $key => $val )
 ?>
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+$(function () {
+    
+    var data = <?php echo json_encode( $awsYearData ); ?>;
+
+    /**
+     * Get histogram data out of xy data
+     * @param   {Array} data  Array of tuples [x, y]
+     * @param   {Number} step Resolution for the histogram
+     * @returns {Array}       Histogram data
+     */
+    function histogram(data, step) {
+        var histo = {},
+            x,
+            i,
+            arr = [];
+
+        // Group down
+        for (i = 0; i < data.length; i++) {
+            x = Math.floor(data[i][0] / step) * step;
+            if (!histo[x]) {
+                histo[x] = 0;
+            }
+            histo[x]++;
+        }
+
+        // Make the histo group into an array
+        for (x in histo) {
+            if (histo.hasOwnProperty((x))) {
+                arr.push([parseFloat(x), histo[x]]);
+            }
+        }
+
+        // Finally, sort the array
+        arr.sort(function (a, b) {
+            return a[0] - b[0];
+        });
+
+        return arr;
+    }
+
+    Highcharts.chart('container0', {
+        chart: { type: 'column' },
+        title: { text: 'AWSs per year' },
+        xAxis: { gridLineWidth: 1 },
+        yAxis: [{ title: { text: 'AWS Count' } }, ],
+        series: [{
+            name: 'AWS per year',
+            type: 'column',
+            data: histogram(data, 1),
+            pointPadding: 0,
+            groupPadding: 0,
+            pointPlacement: 'between'
+        }, 
+    ] });
+
+});
+
+</script>
+
 
 <script type="text/javascript" charset="utf-8">
 $(function () {
@@ -183,6 +250,9 @@ $(function () {
 
 });
 </script>
+
+<h3>AWS per year</h3>
+<div id="container0" style="width:100%; height:400px;"></div>
 
 <h3>No of speakers with x AWSs</h3>
 <p> Following graph shows number of spearkers with x AWS </p>

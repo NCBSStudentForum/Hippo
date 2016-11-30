@@ -9,26 +9,33 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
-echo "<h3>Manage upcoming Annual Work Seminar (AWS)</h3>";
 
+echo '<div class="info">';
 $scheduledAWS = scheduledAWSInFuture( $_SESSION['user'] );
 $tempScheduleAWS = temporaryAwsSchedule( $_SESSION[ 'user' ] );
 if( $scheduledAWS )
 {
-    echo printInfo( "You AWS has been scheduled on " . $scheduledAWS['date'] );
+    echo alertUser( "&#x2620 Your AWS has been scheduled on " . 
+        humanReadableDate( $scheduledAWS[ 'date' ] )
+    );
 }
 else if( $tempScheduleAWS )
 {
-    echo printInfo( "You AWS is most likely to be around " . 
-        $tempScheduleAWS[ 'date' ] );
-    echo printWarning( "This date is likely to change if any other speaker
-        request to change their AWS. " );
+    echo printInfo( "&#x2620 Your AWS is most likely to be on " . 
+        humanReadableDate( $tempScheduleAWS[ 'date' ] ) );
+
+    echo printWarning( "This date is likely to change if any other speakers
+        request to change their AWS or new speakers are added." 
+    );
 }
 else
 {
     echo printInfo( "You don't have any AWS scheduled in next 12 months" );
 }
+echo '</div>';
 
+
+echo "<h3>Manage upcoming Annual Work Seminar (AWS)</h3>";
 
 echo "<h3>Update pending requests</h3>";
 

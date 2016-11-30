@@ -60,6 +60,9 @@ upcoming_aws_ = { }
 # These speakers must give AWS.
 speakers_ = { }
 
+# List of holidays.
+holidays_ = {}
+
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
 config.read( os.path.join( thisdir, 'minionrc' ) )
@@ -82,6 +85,7 @@ db_ = mysql.connector.connect(
 def init( cur ):
     """Create a temporaty table for scheduling AWS"""
     global db_, speakers_
+    global holidays_
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute( 
             '''
@@ -97,7 +101,10 @@ def init( cur ):
         )
     for a in cur.fetchall( ):
         speakers_[ a['login'] ] = a
+    cur.execute( """SELECT * FROM holidays ORDER BY date""")
 
+    for a in cur.fetchall( ):
+        holidays_[ a['date'] ] = a
     logging.info( 'Total speakers %d' % len( speakers_ ) )
 
 
@@ -184,6 +191,7 @@ def construct_flow_graph(  ):
     global g_
     global aws_
     global speakers_
+    global holidays_
 
     g_.add_node( 'source', pos = (0,0) )
     g_.add_node( 'sink', pos = (10, 10) )
@@ -254,6 +262,10 @@ def construct_flow_graph(  ):
     for i in range( totalWeeks ):
         nDays = i * 7
         monday = nextMonday + datetime.timedelta( nDays )
+        if monday in holidays_:
+            logging.warn( "This date %s is holiday" % monday )
+            continue
+
         if monday in upcoming_aws_.values( ):
             logging.info( 'Date %s is taken ' % monday )
             continue 

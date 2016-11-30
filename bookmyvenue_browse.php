@@ -4,17 +4,19 @@ include_once( "methods.php" );
 include_once( "tohtml.php" );
 include_once( "is_valid_access.php" );
 include_once( "database.php" );
+include_once 'display_content.php';
 
 echo userHTML( );
 
 ?>
 
+<!-- Make sure date is in yyyy-dd-mm format e.g. 2016-11-31 etc. -->
 <script>
 $( function() {
     var today = new Date();
     var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
     $( "#datepicker" ).multiDatesPicker( { 
-        dateFormat : "y-m-d"
+        dateFormat : "yy-m-d"
     });
 } );
 </script>
@@ -26,6 +28,13 @@ $( function() {
 // we need to keep $_POST variable to a sane state.
 $venues = getVenues( );
 $venueSelect = venuesToHTMLSelect( $venues, TRUE );
+
+
+// Get the holiday on particular day. Write it infront of date to notify user.
+$holidays = array( );
+foreach( getTableEntries( 'holidays', 'date' ) as $holiday )
+    $holidays[ $holiday['date'] ] = $holiday['description'];
+
 
 // FIXME: complicated logic here.
 // If no venue if selected then use all venues. If from previous step we already 
@@ -71,14 +80,14 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
             down Ctrl or Shift key</p>
     </th>
     <th>
-        Step 3: Press submit to filter out other venues
+        Step 3: Press <button disabled>Filter</button> to filter out other venues
     </th>
     </tr>
     <tr>
     <td><input type=\"text\" id=\"datepicker\" name=\"picked_dates\" value=\"$pickedDates\"></td>
     <td>  $venueSelect </td>
     <td>
-    <button style=\"float:right\" name=\"response\" value=\"submit\">Submit</button> ";
+    <button style=\"float:right\" name=\"response\" value=\"submit\">Filter</button> ";
 
     // NOTE: These venues were selected on previous steps. When Submit is pressed. And no
     // venue is selected,we keep displaying these venues --> 
@@ -87,7 +96,7 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
    echo " </td> </tr> </table> </form> <br> ";
 
 
-   echo alterUser( 
+   echo alertUser( 
        "
        <button class=\"display_request\" style=\"width:20px;height:20px\"></button>Pending requests
        <button class=\"display_event\" style=\"width:20px;height:20px\"></button>Booked slots
@@ -103,9 +112,13 @@ foreach( $dates as $date )
     $thisdate = humanReadableDate( strtotime( $date  ) );
     $thisday = nameOfTheDay( $thisdate );
 
-    $html = "<h4 class=\"info\"> <font color=\"blue\">$thisday, $thisdate </font></h4> <br>
+    $holidayText = '';
+    if( array_key_exists( $date, $holidays ) )
+        $holidayText =  '<div style="float:right"> &#9786 ' . $holidays[ $date ] . '</div>';
 
-        ";
+    $html = "<h4 class=\"info\"> <font color=\"blue\">
+        $thisday, $thisdate, $holidayText </font></h4>";
+
     // Now generate eventline for each venue.
     foreach( explode("###", $_POST['venue']) as $venueid )
         $html .= eventLineHTML( $thisdate, $venueid );

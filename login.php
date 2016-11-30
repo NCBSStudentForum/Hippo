@@ -46,9 +46,8 @@ else
     $userInfo = getUserInfo( $ldap );
     if( $userInfo['title'] == 'UNSPECIFIED' )
     {
-       echo printInfo( "Your details are missing essential information I need to
-       continue ... " );
-       goToPage( "user_info.php", 3 );
+       echo printInfo( "Please review your details " );
+       goToPage( "user_info.php", 1 );
        exit;
     }
 

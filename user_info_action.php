@@ -4,14 +4,14 @@ include_once( 'header.php' );
 include_once( 'database.php' );
 
 $res = updateTable( "logins", "login"
-    , Array( "valid_until", "title", "laboffice", 'joined_on' )
+    , Array( "valid_until", "title", "laboffice", 'joined_on', 'alternative_email' )
     , $_POST 
 );
 
 if( $res )
 {
     echo printInfo( "User details have been updated sucessfully" );
-    goToPage( 'user.php', 1 );
+    goToPage( 'user.php', 0 );
     exit;
 }
 

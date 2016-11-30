@@ -183,9 +183,9 @@ function validateDate($date, $format = 'Y-m-d H:i:s')
 function humanReadableDate( $date )
 {
     if( is_int( $date ) )
-        return date( 'Y-M-d', $date );
+        return date( 'D, M d, Y', $date );
 
-    return date( 'Y-M-d', strtotime($date) );
+    return date( 'D, M d Y', strtotime($date) );
 }
 
 
@@ -384,4 +384,3 @@ function diffline($line1, $line2)
     return $result;
 }
 
-?>

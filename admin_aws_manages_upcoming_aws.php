@@ -75,7 +75,7 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '</form>';
 }
 
-echo "<h3>All upcoming AWS </h3>";
+echo "<h3>Upcoming approved AWSs</h3>";
 
 // Show the rest of entries grouped by date.
 if( count(  $upcomingAWSs ) > 0 )

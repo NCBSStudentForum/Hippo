@@ -51,10 +51,10 @@ ini_set( "display_errors", 1 );
 
 <script>
 $( function() {
-    $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
+    $( "input.datepicker" ).datepicker( { dateFormat: "yyyy-mm-dd" } );
   } );
 $( function() {
-    $( "input.datetimepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
+    $( "input.datetimepicker" ).datepicker( { dateFormat: "yyyy-mm-dd" } );
   } );
 </script>
 

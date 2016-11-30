@@ -23,7 +23,7 @@ function printInfo( $msg )
     return $info;
 }
 
-function alterUser( $msg )
+function alertUser( $msg )
 {
    $info ="<p class=\"alert_user\">".$msg."</p>";
    return $info;

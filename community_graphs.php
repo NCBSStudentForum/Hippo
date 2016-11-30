@@ -123,7 +123,7 @@ foreach( $community as $pi => $value )
 
     // Width represent AWS per month.
     $count = $value[ 'count' ];
-    $width = $count / $howManyMonths;
+    $width = 0.1 + 0.5 * ( $count / $howManyMonths );
     array_push( 
         $network[ 'nodes' ], array( 'name' => $login, 'count' => $count, 'width' => $width ) 
     );
@@ -174,14 +174,17 @@ fclose( $handle );
 
     var toggle = 0;
 
+    var charge = -100 * <?php echo $howManyMonths; ?>;
+    var gravity = 0.04 * <?php echo $howManyMonths; ?>;
+
     var force = d3.layout.force()
         .nodes(graph.nodes)
         .links(graph.edges)
         .size([w,h])
         .linkDistance([linkDistance])
-        .charge([-500])
-        .theta(0.1)
-        .gravity(0.05)
+        .charge( [ charge ] )
+        .theta(0.2)
+        .gravity( gravity )
         .start();
 
     var edges = svg.selectAll("line")

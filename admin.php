@@ -69,7 +69,7 @@ echo '
         <tr>
             <td>Add/Update holidays</td>
             <td>
-                <a href="admin_manages_holiday.php">Manage holidays</a>
+                <a href="admin_manages_holidays.php">Manage holidays</a>
             </td>
         </tr>
     </table>

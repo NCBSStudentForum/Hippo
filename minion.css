@@ -52,7 +52,6 @@ table.show_aws {
     background : lightyellow;
 }
 
-
 table.show_aws tr td:nth-child(odd)
 {
     border : 0.5px dotted; 
@@ -64,6 +63,19 @@ table.show_aws tr td:nth-child(even)
     border : 0.5px dotted; 
     text-align : left;
     min-width : 80%;
+}
+
+table.show_calendar {
+    max-width : 1000px;
+    min-width : 100%;
+    background : lightyellow;
+}
+
+table.show_calendar tr td:nth-child(1)
+{
+    border : 0.5px dotted; 
+    max-width : 20%;
+    text-align : right;
 }
 
 table.show_aws_summary {

@@ -6,7 +6,7 @@ include_once 'tohtml.php';
 
 echo userHTML( );
 
-echo 'Search for a keyword/topic. Currently search is very primitive';
+echo '<strong>Multiple keywords can be separated by , </strong>';
 echo '
     <form action="" method="get" accept-charset="utf-8">
     <input type="text" name="query" value="" >
@@ -18,6 +18,7 @@ if( isset( $_GET[ 'query' ] ) )
 {
     $query = $_GET['query' ];
     echo printInfo( "Searching for $query" );
+    $query = implode( '%', explode( ',', $query ));
 
     $awses = queryAWS( $query );
     echo printInfo( "Total matches " .  count( $awses ) );

@@ -595,7 +595,7 @@ function summaryTable( )
 {
     global $db;
     $allAWS = getAllAWS( );
-    $nspeakers = count( getAWSUsers( ) );
+    $nspeakers = count( getAWSSpeakers( ) );
     $nAws = count( $allAWS );
     $awsThisYear = count( getAWSFromPast( date( 'Y-01-01' ) ) );
     $html = '<table class="summary">';
@@ -738,10 +738,14 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
     *
     * @return 
  */
-function getLogins(  )
+function getLogins( $status = ''  )
 {
     global $db;
-    $stmt = $db->query( 'SELECT * FROM logins ORDER BY joined_on DESC' );
+    $where = '';
+    if( $status )
+        $where = " WHERE status='$status' ";
+    $query = "SELECT * FROM logins $where ORDER BY joined_on DESC";
+    $stmt = $db->query( $query );
     $stmt->execute( );
     return  fetchEntries( $stmt );
 }
@@ -1181,9 +1185,9 @@ function getAWSFromPast( $from  )
 /**
     * @brief Get AWS users.
     *
-    * @return Array containing users.
+    * @return Array containing AWS speakers.
  */
-function getAWSUsers( )
+function getAWSSpeakers( )
 {
     global $db;
     $stmt = $db->query( 

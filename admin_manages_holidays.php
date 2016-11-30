@@ -55,7 +55,7 @@ if( isset( $_GET[ 'response' ] ) )
     }
     elseif( $_GET[ 'response' ] == 'Delete' )
     {
-        $res = deleteFromTable( 'holiday', 'date,description', $_GET );
+        $res = deleteFromTable( 'holidays', 'date,description', $_GET );
         if( $res )
         {
             echo printInfo( "Successfully deleted entry from holiday list" );

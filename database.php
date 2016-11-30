@@ -908,9 +908,9 @@ function insertIntoTable( $tablename, $keys, $data )
     * @param $keys
     * @param $data
     *
-    * @return The id of deleted entry on success, null otherwise.
+    * @return Status of execute statement.
  */
-function deleteFromTable( $tableName, $keys, $data )
+function deleteFromTable( $tablename, $keys, $data )
 {
     global $db;
 
@@ -934,7 +934,8 @@ function deleteFromTable( $tableName, $keys, $data )
     foreach( $cols as $k )
         array_push( $whereClause, "$k=:$k" );
 
-    $query .= implode( " AND", $whereClause );
+    $query .= implode( " AND ", $whereClause );
+
 
     $stmt = $db->prepare( $query );
     foreach( $cols as $k )
@@ -945,14 +946,7 @@ function deleteFromTable( $tableName, $keys, $data )
         $stmt->bindValue( ":$k", $value );
     }
     $res = $stmt->execute( );
-    if( $res )
-    {
-        // When created return the id of table else return null;
-        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
-        $stmt->execute( );
-        return $stmt->fetch( PDO::FETCH_ASSOC );
-    }
-    return null;
+    return $res;
 }
 
 /**

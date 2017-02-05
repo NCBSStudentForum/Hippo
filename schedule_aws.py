@@ -30,14 +30,17 @@ import logging
 import random
 import getpass
 
+print( 'VERSION connector %s' % mysql.connector.version )
+
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
 sys.path.insert(0, networkxPath )
+
 import networkx as nx
 print( 'Using networkx from %s' % nx.__file__ )
 logging.info( 'Using networkx from %s' % nx.__file__ )
 
-logFile = '/tmp/__minion_sch_%s.log' % getpass.getuser( )
+logFile = '/tmp/__hippo_sch_%s.log' % getpass.getuser( )
 logging.basicConfig( 
         filename = logFile
         , level=logging.DEBUG
@@ -65,7 +68,7 @@ holidays_ = {}
 
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
-config.read( os.path.join( thisdir, 'minionrc' ) )
+config.read( os.path.join( thisdir, 'hipporc' ) )
 logging.debug( 'Read config file %s' % str( config ) )
 
 class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
@@ -78,8 +81,8 @@ class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
 db_ = mysql.connector.connect( 
         host = config.get( 'mysql', 'host' )
         , user = config.get( 'mysql', 'user' )
-        , passwd = config.get( 'mysql', 'password' )
-        , db = 'minion'
+        , passwd = config.get( 'mysql', 'password' ).replace( '"', '')
+        , db = 'hippo'
         )
 
 def init( cur ):
@@ -111,7 +114,8 @@ def init( cur ):
 def getAllAWSPlusUpcoming( ):
     global aws_, db_
     global upcoming_aws_
-    cur = db_.cursor( cursor_class = MySQLCursorDict )
+    # cur = db_.cursor( cursor_class = MySQLCursorDict )
+    cur = db_.cursor( dictionary = True )
     init( cur )
 
     # Entries in this table are usually in future.

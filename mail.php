@@ -20,6 +20,18 @@ function sendEmailWithSub($msg, $sub, $to)
     return $out;
 }
 
+// function sendMail( $msg, $sub, $to )
+// {
+//     $headers[] = 'MIME-Version: 1.0';
+//     $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+// 
+//     // Additional headers
+//      $headers[] = "To: $to";
+//      $headers[] = 'From: NCBS Hippo <noreply@ncbs.res.in>';
+// 
+//      mail( $to, $sub, $msg, implode( "\r\n", $headers ) );
+// }
+
 $res = sendEmailWithSub( "testing", "Your request has been created", "dilawars@ncbs.res.in" );
 
 ?>

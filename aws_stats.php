@@ -47,7 +47,8 @@ foreach( $awsCounts as $key => $val )
 
 ?>
 
-<script src="http://code.highcharts.com/highcharts.js"></script>
+<!-- <script src="http://code.highcharts.com/highcharts.js"></script> -->
+<script src="./node_modules/highcharts/highcharts.js"></script>
 
 <script type="text/javascript" charset="utf-8">
 $(function () {

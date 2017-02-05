@@ -29,7 +29,7 @@ ini_set( "display_errors", 1 );
 <br />
 <br />
 
-<div class="bottom"> GNU GPL-v3, (c) 2016, Dilawar Singh </div>
+<div class="bottom"> GNU GPL-v3, (c) 2016-17, Dilawar Singh </div>
 </html>
 
 <!-- Here are the js script -->

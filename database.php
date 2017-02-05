@@ -7,9 +7,9 @@ include_once( 'ldap.php' );
 
 class BMVPDO extends PDO 
 {
-    function __construct( $host = 'ghevar.ncbs.res.in'  )
+    function __construct( $host = 'localhost'  )
     {
-        $conf = parse_ini_file( __DIR__ . '/minionrc', $process_section = TRUE );
+        $conf = parse_ini_file( __DIR__ . '/hipporc', $process_section = TRUE );
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         $host = $conf['mysql']['host'];
         $port = $conf['mysql']['port'];

@@ -93,7 +93,7 @@ $(function () {
 
     Highcharts.chart('container0', {
         chart: { type: 'column' },
-        title: { text: 'AWSs per year' },
+        title: { text: 'Number of Annual Work Seminars per year' },
         xAxis: { gridLineWidth: 1 },
         yAxis: [{ title: { text: 'AWS Count' } }, ],
         series: [{
@@ -157,7 +157,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Speaker with x AWSs'
+            text: 'Total speakers with #AWSs'
         },
         xAxis: {
             gridLineWidth: 1
@@ -168,7 +168,7 @@ $(function () {
             }
         }, ],
         series: [{
-            name: 'Speakers with #AWS',
+            name: 'Total speakers with #AWS',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,
@@ -252,12 +252,10 @@ $(function () {
 });
 </script>
 
-<h3>AWS per year</h3>
+<h3></h3>
 <div id="container0" style="width:100%; height:400px;"></div>
 
-<h3>No of speakers with x AWSs</h3>
-<p> Following graph shows number of spearkers with x AWS </p>
-
+<h3></h3>
 <div id="container1" style="width:100%; height:400px;"></div>
 
 <h3> Gap between consecutive AWSs </h3>

@@ -266,9 +266,11 @@ def construct_flow_graph(  ):
     for i in range( totalWeeks ):
         nDays = i * 7
         monday = nextMonday + datetime.timedelta( nDays )
-        if monday in holidays_:
-            logging.warn( "This date %s is holiday" % monday )
-            continue
+
+        # AWS don't care about holidays.
+        #if monday in holidays_:
+        #    logging.warn( "This date %s is holiday" % monday )
+        #    continue
 
         if monday in upcoming_aws_.values( ):
             logging.info( 'Date %s is taken ' % monday )

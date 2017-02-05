@@ -13,11 +13,11 @@ if( $_POST['response'] == "Reschedule" )
     $resfilePath = tempnam( "/tmp", "minion" );
 
     echo printInfo( "Rescheduling ...." );
-    $scriptPath = $cwd . '/schedule_aws.py';
+    $scriptPath = $cwd . '/schedule.sh';
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
-    $command = "timeout 30 $scriptPath";
+    $command = "timeout 30 bash $scriptPath";
     exec( $command );
-    goToPage( 'admin_aws_manages_upcoming_aws.php', 0 );
+    goToPage( 'admin_aws_manages_upcoming_aws.php', 1);
     exit;
 }
 else if( $_POST[ 'response' ] == 'Accept' )

@@ -8,7 +8,7 @@ include_once( 'calendar/calendar.php' );
 
 session_save_path("/tmp/");
 $conf = array();
-$inifile = "minionrc";
+$inifile = "hipporc";
 
 if(file_exists($inifile)) 
     $conf = parse_ini_file($inifile, $process_section = TRUE );

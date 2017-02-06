@@ -1352,6 +1352,21 @@ function getHolidays( $from = NULL )
     return fetchEntries( $stmt );
 }
 
+// Deprecated: Images are stored in ./pictures/ folder.
+// /**
+//     * @brief Get user data from logins_metadata table. 
+//     *
+//     * @param $user
+//     *
+//     * @return 
+//  */
+// function getUserPicuture( $user ) 
+// {
+//     global $db;
+//     $res = $db->query( "SELECT user_image FROM logins_metadata 
+//         WHERE login='$user'" );
+//     return $res->fetch( PDO::FETCH_ASSOC );
+// }
 
 ?>
 

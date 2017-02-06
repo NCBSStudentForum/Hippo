@@ -1,4 +1,4 @@
-USE minion;
+USE hippo;
 REPLACE INTO venues (
             id, name, institute
             , building_name, floor, location

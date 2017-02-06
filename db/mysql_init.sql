@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS minion;
-USE minion;
+CREATE DATABASE IF NOT EXISTS hippo;
+USE hippo;
 
 -- DROP TABLE IF EXISTS bookmyvenue_requests;
 -- DROP TABLE IF EXISTS events;
@@ -192,3 +192,10 @@ create TABLE IF NOT EXISTS aws_requests (
     , modidfied_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+-- This table to hold other stuff about users.
+create TABLE IF NOT EXISTS logins_metadata (
+    login VARCHAR(200) PRIMARY KEY
+    , user_image blob NOT NULL
+    , other_image blob
+    , FOREIGN KEY (login) REFERENCES logins( login )
+    );

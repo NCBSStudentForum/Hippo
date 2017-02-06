@@ -36,9 +36,10 @@ table.show_user tr td
 
 table.show_info tr td 
 {
-    border : 0.5px dotted; 
+    /*border : 0.5px dotted; */
     min-width: 10%;
     max-width: 20%;
+    background : lightyellow;
 }
 
 table.show_info th

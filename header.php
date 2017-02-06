@@ -16,7 +16,7 @@ ini_set( "display_errors", 1 );
 <!DOCTYPE html>
 <html>
 <head>
-<link href="minion.css" rel="stylesheet" type="text/css" />
+<link href="hippo.css" rel="stylesheet" type="text/css" />
 </head>
 <div class="header">
 

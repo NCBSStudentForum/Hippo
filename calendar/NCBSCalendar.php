@@ -47,10 +47,7 @@ class NCBSCalendar
                    Warning: You need to set the location of your OAuth2 Client Credentials from the
                    <a href='http://developers.google.com/console'>Google API console</a>.
                    </h3>
-                   <p>
-                   Once downloaded, move them into the root directory of this repository and
-                   rename them 'oauth-credentials.json'.
-                   </p>";
+                   ";
             return None;
         }
 

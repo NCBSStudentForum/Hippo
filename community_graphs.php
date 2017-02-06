@@ -23,8 +23,6 @@ $from = date( 'Y-m-d', strtotime( 'today' . " -$howManyMonths months"));
 $fromD = date( 'M d, Y', strtotime( $from ) );
 echo "<p>
     Following graph shows the interaction among faculty since $fromD.
-    <br>
-
     Number on edges are number of AWSs between two faculty, either of them is involved 
     in an AWS as co-supervisor or as a thesis committee member.
 

@@ -9,6 +9,7 @@ mustHaveAllOfTheseRoles( array( 'ADMIN' ) );
 
 $logins = getLogins( );
 
+echo '<h3>Active users </h3>';
 echo '<table border="0">';
 $i = 0;
 foreach( $logins as $login )

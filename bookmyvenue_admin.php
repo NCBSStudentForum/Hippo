@@ -22,7 +22,11 @@ echo '<h2> Calendar administration </h2>';
 
 echo '<table class="show_user">
     <tr>
-        <td>Synchronize public calendar</td>
+    <td>
+    To synchronize public calendar make sure you are logged-in using correct 
+    google account
+    </strong>
+    </td>
         <td>
             <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
             Synchronize public calendar </a> 

@@ -26,6 +26,7 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 echo userHTML( );
 
 echo '<h3>Assign AWS</h3>';
+echo 'To manually assign a date of a AWS, you can use this interface.';
 echo '
     <table border="0">
     <form method="post" action="admin_aws_manages_upcoming_aws_submit.php">
@@ -55,16 +56,19 @@ if( count( $upcomingAwsNextWeek ) < 1 )
 foreach( $upcomingAWSs as $aws )
     if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
         array_push( $upcomingAwsNextWeek, $aws );
+
 foreach( $upcomingAwsNextWeek as $upcomingAWS )
 {
     echo '<form action="admin_aws_manages_upcoming_aws_submit.php"
         method="post" accept-charset="utf-8">';
     echo '<table>';
     echo '<tr><td>';
+
     echo arrayToTableHTML( $upcomingAWS, 'aws' 
         , '', array( 'id', 'status', 'comment' )
     );
-    echo '<input type="hidden", name="date" , value="' . $upcomingAWS[ 'date' ] . '"/>';
+
+    echo '<input type="hidden", name="date" , value="' .  $upcomingAWS[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
     echo '</td><td>';
     echo '<button name="response" value="Reassign">Reassign</button>';

@@ -2,6 +2,25 @@
     font-family : open-sans, droid-serif, sans-serif, Verdana;
 }
 
+// img.login_picture and table.editable_user_picture should co-exists.
+img.login_picture {
+    width : 20%;
+    height : auto;
+    max-height : 300px;
+}
+
+table.editable_user_picture 
+{
+    min-width : 500px;
+    max-width : 70%;
+}
+
+table.editable_user_picture tr td {
+    text-align: left;
+    background-color: lightyellow;
+    word-wrap: break-word;
+    max-width : 80%;
+}
 
 div.header {
     max-width : 800px;
@@ -28,14 +47,14 @@ table.user_float {
 
 table.show_user {
     max-width : 80%;
-    min-width : 500px;
-    background : lightyellow;
+    min-width : 400px;
 }
 
 table.show_user tr td 
 {
-    border : 0.5px dotted; 
+    /*border : 0.5px dotted; */
     min-width : 20%;
+    background : lightyellow;
 }
 
 
@@ -256,6 +275,18 @@ table.editable_events {
     background-color:lightyellow; 
     border : 0px;
     /*max-width : 90%;*/
+}
+
+table.editable_logins {
+    min-width: 300px;
+    max-width: 80%;
+}
+
+table.editable_logins tr td {
+    text-align: left;
+    background-color: lightyellow;
+    word-wrap: break-word;
+    max-width : 70%;
 }
 
 .editable {

@@ -384,3 +384,15 @@ function diffline($line1, $line2)
     return $result;
 }
 
+/**
+    * @brief Check if given string a date.
+    *  http://php.net/manual/en/function.checkdate.php#113205
+    * @param $date
+    *
+    * @return True if string is a date.
+ */
+function isStringAValidDate( $date )
+{
+    $d = Datetime::createFromFormat( 'Y-m-d', $date );
+    return $d && $d->format( 'Y-m-d' ) === $d;
+}

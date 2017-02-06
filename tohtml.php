@@ -40,6 +40,7 @@ function prettify( $string )
     return $string;
 }
 
+
 function requestsToHTMLReviewForm( $requests )
 {
     $html = '<table>';
@@ -238,13 +239,20 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<th class=\"db_table_fieldname\">$label</th>";
+
             array_push( $toDisplay, $array[$k] );
         }
 
     // Also set the content as div element which can be formatted using css
     $table .= "</tr><tr>";
     foreach( $toDisplay as $v )
+    {
+        if( isStringAValidDate( $v ) )
+            $v = humanReadableDate( $v );
+
         $table .= "<td><div class=\"cell_content\">$v</div></td>";
+    }
+
     $table .= "</tr></table>";
     return $table;
 }

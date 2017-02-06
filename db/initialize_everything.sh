@@ -21,8 +21,8 @@ set -o nounset                              # Treat unset variables as an error
 set -x
 
 echo "Populating database"
-read -p "Mysql user minion password " pass
+read -p "Mysql user hippouser password " pass
 
-mysql -h localhost -u minion -p$pass < ./mysql_init.sql 
-mysql -h localhost -u minion -p$pass < ./venues.sql 
+mysql -h localhost -u hippouser -p$pass < ./mysql_init.sql 
+mysql -h localhost -u hippouser -p$pass < ./venues.sql 
 

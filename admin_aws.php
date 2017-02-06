@@ -27,7 +27,7 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 echo userHTML( );
 
-echo "<h2>AWS Admin</h2>";
+echo '<h2 align="left">AWS Admin</h2>';
 
 echo '<table class="admin">';
 echo '<tr>
@@ -40,22 +40,6 @@ echo '<tr>
     </tr>';
 echo '</table>';
 
-echo "<h3> Information</h3>";
-echo '
-  <table border="0" class="admin">
-    <tr>
-    <td>AWS summary
-    <small>
-        See the summary of all AWSs. You may be able to missing AWS entry in "Date Wise" list. 
-    </small>
-    </td>
-
-      <td><a href="admin_aws_summary_user_wise.php">User wise</a>
-      || <a href="admin_aws_summary_date_wise.php">Date
-      wise</a></td>
-    </tr>
-
-  </table>';
 
 echo "<h3>Scheduling</h3>";
 echo '
@@ -70,8 +54,8 @@ echo '
 echo '<h3> Danger zone</h3>';
 echo '
     <form method="get" action="">
-    Pick an login ID <input id="autocomplete_user" name="login" type="text" />
-    Optionally select AWS date<input class="datepicker" name="date" value="" >
+    Type AWS speaker id<input id="autocomplete_user" name="login" type="text" />
+    and optionally select AWS date<input class="datepicker" name="date" value="" >
     <button name="response" value="Select">Select</button>
     </form>
     ';
@@ -103,8 +87,12 @@ if( isset( $_GET[ 'response' ] ))
     else if( $login )
         $awss = getAwsOfSpeaker( $login );
 
+    /* These AWS are upcoming */
     foreach( $awss as $aws )
     {
+        if( ! $aws )
+            continue;
+
         $speaker = $aws[ 'speaker' ];
         $date = $aws['date'];
         echo "<a>Entry for $speaker (" . loginToText( $speaker ) . ") on " . 
@@ -112,6 +100,8 @@ if( isset( $_GET[ 'response' ] ))
 
         echo arrayToVerticalTableHTML( $aws, 'annual_work_seminars' );
         echo '<br>';
+
+        /* This forms remain on this page only */
         echo '<form method="get" action="">
             <input type="hidden" name="speaker" value="' . $speaker . '">
             <input type="hidden" name="date" value="' . $date . '" >
@@ -121,6 +111,22 @@ if( isset( $_GET[ 'response' ] ))
     }
 }
 
+echo "<h3> Information</h3>";
+echo '
+  <table border="0" class="admin">
+    <tr>
+    <td>AWS summary
+    <small>
+        See the summary of all AWSs. You may be able to missing AWS entry in "Date Wise" list. 
+    </small>
+    </td>
+
+      <td><a href="admin_aws_summary_user_wise.php">User wise</a>
+      || <a href="admin_aws_summary_date_wise.php">Date
+      wise</a></td>
+    </tr>
+
+  </table>';
 
 ?>
 

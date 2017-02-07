@@ -45,14 +45,7 @@ echo '
 echo '<h3>Upcoming AWS for next week</h3>';
 
 $upcomingAWSs = getUpcomingAWS( );
-
-// For the next week.
 $upcomingAwsNextWeek = array( );
-if( count( $upcomingAwsNextWeek ) < 1 )
-{
-    echo printInfo( "No AWS has been approved for upcoming week." );
-}
-
 foreach( $upcomingAWSs as $aws )
     if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
         array_push( $upcomingAwsNextWeek, $aws );
@@ -88,10 +81,7 @@ if( count(  $upcomingAWSs ) > 0 )
     echo '<table class="show_schedule">';
     echo '<tr> <td>' . $upcomingAWSs[0]['date'] . '</td>';
 }
-else
-{
-    echo printInfo( "No AWS has been approved for coming weeks" );
-}
+
 foreach( $upcomingAWSs as $aws )
 {
     echo '<form action="admin_aws_manages_upcoming_aws_submit.php"

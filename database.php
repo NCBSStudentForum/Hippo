@@ -57,7 +57,7 @@ function getVenues( $sortby = 'total_events' )
 {
     global $db;
     // Sort according to total_events hosted by venue
-    $res = $db->query( "SELECT * FROM venues ORDER BY $sortby DESC, id" );
+    $res = $db->query( "SELECT * FROM venues ORDER BY $sortby, id" );
     return fetchEntries( $res );
 }
 
@@ -261,7 +261,8 @@ function changeStatusOfRequests( $gid, $status )
 function changeStatusOfEventGroup( $gid, $user, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE gid=:gid AND user=:user" );
+    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE 
+        gid=:gid AND user=:user" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':user', $user );
@@ -341,12 +342,46 @@ function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
     return fetchEntries( $stmt );
 }
 
+function getEventsOnThisVenueOnThisDatetime( $venue, $date, $time, $status = 'VALID' )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM events 
+        WHERE venue=:venue AND status=:status 
+        AND date=:date
+        AND ( start_time >= :time OR end_time <= :time )
+        "
+    );
+    $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':time', $time );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 function getRequestsOnThisVenueOnThisday( $venue, $date, $status = 'PENDING' )
 {
     global $db;
     $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests 
         WHERE venue=:venue AND status=:status AND date=:date" );
     $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':venue', $venue );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
+function getRequestsOnThisVenueOnThisDatetime( $venue, $date, $time
+    , $status = 'PENDING' )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests 
+        WHERE venue=:venue AND status=:status 
+        AND date=:date
+        AND ( start_time >= :time OR end_time <= :time )
+        " );
+    $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':time', $time );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':venue', $venue );
     $stmt->execute( );

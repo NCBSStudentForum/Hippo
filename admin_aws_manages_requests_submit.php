@@ -16,7 +16,7 @@ $speakerInfo = getUserInfo( $speaker );
 $rid = $_POST[ 'request_id' ];
 $user = loginToText( $speaker );
 
-$msg = '<p>Dear' . $user . ' </p>';
+$msg = '<p>Dear ' . $user . ' </p>';
 
 if( $_POST[ 'response' ] == 'Reject' )
 {

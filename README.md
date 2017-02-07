@@ -1,3 +1,3 @@
-# bookmyvenue
+#NCBS Hippo
 
-A schedular cum calendar for your institute. A work in progress.
+AWS scheduler cum even manager for NCBS. 

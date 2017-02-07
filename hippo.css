@@ -82,12 +82,14 @@ table.show_aws tr td:nth-child(odd)
     border : 0.5px dotted; 
     max-width : 20%;
     text-align : right;
+    max-height: 3cm;
 }
 table.show_aws tr td:nth-child(even)
 {
     border : 0.5px dotted; 
     text-align : left;
     min-width : 80%;
+    max-height: 3cm;
 }
 
 table.show_calendar {
@@ -304,12 +306,6 @@ table.editable_faculty tr td
 {
     /*border : 0.5px dotted; */
     /*min-width : 20%;*/
-}
-
-div.cell_content {
-    max-height : 3cm;
-    overflow: auto;
-    font-size : small;
 }
 
 div.image {

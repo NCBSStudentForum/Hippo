@@ -25,8 +25,8 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
 echo userHTML( );
 
-echo '<h3>Assign AWS</h3>';
-echo 'To manually assign a date of a AWS, you can use this interface.';
+echo '<h3>Manually assign AWS</h3>';
+echo '<p>To manually assign a date to a speaker, you can use this interface.</p>';
 echo '
     <table border="0">
     <form method="post" action="admin_aws_manages_upcoming_aws_submit.php">

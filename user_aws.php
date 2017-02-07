@@ -44,7 +44,7 @@ foreach( $awsRequests as $awsr )
 {
     $id = $awsr['id'];
     echo "<form method=\"post\" action=\"user_aws_request.php\">";
-    echo arrayToTableHTML( $awsr, 'aws' );
+    echo arrayToVerticalTableHTML( $awsr, 'aws' );
     echo "<button name=\"response\" value=\"edit\">Edit</button>";
     echo "<button name=\"response\" value=\"cancel\">Cancel</button>";
     echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";

@@ -60,7 +60,7 @@ echo '
         </td>
     </tr>';
 
-$addMissingUrl = '<a href="user_add_supervisor.php">Add missing member</a>';
+$addMissingUrl = '<a target="_blank" href="user_add_supervisor.php">Add missing member</a>';
 for( $i = 1; $i <= 2; $i++ )
 {
     $name = "supervisor_$i";

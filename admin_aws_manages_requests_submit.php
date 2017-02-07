@@ -4,34 +4,66 @@ include_once 'header.php';
 include_once 'check_access_permissions.php';
 include_once 'database.php';
 include_once 'tohtml.php';
+include_once 'mail.php';
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
 echo userHTML( );
 
+// Start preparing email.
+$speaker = $_POST[ 'speaker' ];
+$speakerInfo = getUserInfo( $speaker );
+$rid = $_POST[ 'request_id' ];
+$user = loginToText( $speaker );
+
+$msg = '<p>Dear' . $user . ' </p>';
+
 if( $_POST[ 'response' ] == 'Reject' )
 {
-    echo "TODO: Need to write an email to user";
+    if( strlen( $_POST[ 'reason' ]) < 8 )
+    {
+        echo printWarning( "
+            Empty reason or reason too short (less than 8 characters).
+            A request can not rejected without a proper reason.
+            You must enter a valid reason."
+        );
+        echo goBackToPageLink( "admin_aws_manages_requests.php", "Go back" );
+        exit;
+    }
+
     $res = updateTable( 
         'aws_requests', 'id' , 'status'
-        , array( 'id' => $_POST['request_id'], 'status' => 'REJECTED' )
+        , array( 'id' => $rid, 'status' => 'REJECTED' )
     );
+
     if( $res )
     {
         echo printInfo( "This request has been rejected" );
+        // Now notify user.
+        $msg .= "<p>Your AWS add/edit request has been rejected </p>";
+        $msg .= "<p>Reason: " . $_POST[ 'reason' ] . "</p>";
+        $msg .= "<p>Feel free to drop an email to hippo@lists.ncbs.res.in for
+            further clarification. Please mention your request id in email.
+            </p>";
+
+        // Get the latest request.
+        $req = getAwsRequestById( $rid );
+        $msg .= arrayToVerticalTableHTML( $req, "request" );
+
+        sendEmail( $msg
+            , "Your AWS edit request (id:". $rid . ") has been rejected"
+            , $speakerInfo[ 'email' ]
+        );
+
         goToPage( "admin_aws_manages_requests.php", 1 );
         exit;
     }
 }
 elseif( $_POST['response'] == 'Accept' )
 {
-    echo "TODO: Need to write email";
-    $speaker = $_POST[ 'speaker' ];
     $date = $_POST[ 'date' ];
     $aws = getMyAwsOn( $speaker, $date );
-    $req = getAwsRequestById( $_POST[ 'request_id' ] );
-
-    //var_dump( $req );
+    $req = getAwsRequestById( $rid );
 
     $res = updateTable( 'annual_work_seminars'
             , 'speaker,date' 
@@ -46,12 +78,26 @@ elseif( $_POST['response'] == 'Accept' )
     {
         $res = updateTable( 
             'aws_requests', 'id', 'status'
-            , array( 'id' => $_POST[ 'request_id' ], 'status' => 'APPROVED' ) 
+            , array( 'id' => $rid, 'status' => 'APPROVED' ) 
         );
 
         if( $res )
         {
-            echo printInfo( "Successfully updated request." );
+            $user = loginToText( $speaker );
+            $msg .= "<p>
+                Your edit to your AWS entry has been approved. 
+                The updated entry is following:
+                </p>";
+
+            // Get the latest request.
+            $req = getAwsRequestById( $rid );
+            $msg .= arrayToVerticalTableHTML( $req, "request" );
+
+            sendEmail( $msg
+                , "Your AWS edit request (id:$rid) has been approved"
+                , $speakerInfo['email' ]
+            );
+            
             echo goToPage( 'admin_aws_manages_requests.php', 1 );
             exit;
         }

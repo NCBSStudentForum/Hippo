@@ -243,7 +243,6 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
             array_push( $toDisplay, $array[$k] );
         }
 
-    // Also set the content as div element which can be formatted using css
     $table .= "</tr><tr>";
     foreach( $toDisplay as $v )
     {
@@ -546,6 +545,8 @@ function loginToText( $loginName )
 {
     $login = getUserInfo( $loginName );
     $text = $login['first_name'] . ' ' . $login[ 'last_name' ];
+    if( strlen( trim( $text ) ) < strlen($loginName) )
+        $text = $loginName;
     return $text;
 }
 

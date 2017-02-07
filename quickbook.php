@@ -11,8 +11,8 @@ $now = date( 'H:m', strtotime( 'now' ) );
 
 echo "<strong> Do not use this interface yet. Under construction .. </strong>";
 
-echo '<form action="" method="post" accept-charset="utf-8">';
 echo '<table border="0">';
+echo '<form action="" method="post" accept-charset="utf-8">';
 echo '
     <tr>
         <td>Pick a date</td>
@@ -42,13 +42,16 @@ echo '
             <input type="radio" name="openair" value="YES" /> Yes
         </td>
     </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button class="submit" name="Response" value="scan">Scan</button>
+        </td>
+    </tr>
     ';
 
-echo '</table>';
-echo '<button class="submit" name="Response" value="scan">Scan</button>';
 echo '</form>';
-
-var_dump( $_POST );
+echo '</table>';
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {

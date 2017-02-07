@@ -23,7 +23,7 @@ ini_set( "display_errors", 1 );
 
 <title>NCBS Hippo</title>
 
-<h1><a href="index.php">Hippo</a></h1>
+<h1><a href="index.php">NCBS Hippo</a></h1>
 <a href="https://github.com/dilawar/ncbs-hippo" target='_blank'>Github</a>
 <a href='https://github.com/dilawar/ncbs-hippo/issues' target="_blank">Report issue</a></small>
 </div>

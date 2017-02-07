@@ -8,6 +8,7 @@ require_once 'class.Diff.php';
 
 echo "<h3>Manage pending requests</h3>";
 
+
 $pendingRequests = getPendingAWSRequests( );
 foreach( $pendingRequests as $req )
 {
@@ -28,8 +29,11 @@ foreach( $pendingRequests as $req )
     echo '<table class="show_aws" border="0">
         <tr style="background:white">
             <td style="border:0px;min-width:50%;align:left;">
-                <button type="submit" name ="response" value="Reject">Reject</button>
+            <textarea rows="3" cols="80%" name="reason" 
+                placeholder="Reason for rejection" >Reason for rejection</textarea>
+            <button type="submit" name ="response" value="Reject">Reject</button>
             </td>
+        </tr><tr>
             <td style="border:0px;max-width:50%;">
                 <button type="submit" name ="response" value="Accept">Accept</button>
             </td>

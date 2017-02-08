@@ -15,11 +15,14 @@ foreach( $pendingRequests as $req )
     $speaker = $req['speaker'];
     $date = $req['date'];
     $aws = getMyAwsOn( $speaker, $date );
-
     $diff = array( );
-    foreach( $aws as $key => $val )
-        if( array_key_exists( $key, $req ) )
-            $diff[ $key ] = Diff::compare( $aws[$key], $req[$key] );
+
+    if( $aws )
+    {
+        foreach( $aws as $key => $val )
+            if( array_key_exists( $key, $req ) )
+                $diff[ $key ] = Diff::compare( $aws[$key], $req[$key] );
+    }
 
     echo '<form method="post" action="admin_aws_manages_requests_submit.php">';
     echo arrayToVerticalTableHTML( $req, 'aws', ''

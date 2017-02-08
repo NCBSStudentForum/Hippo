@@ -8,7 +8,7 @@ include_once( 'calendar/calendar.php' );
 
 session_save_path("/tmp/");
 $conf = array();
-$inifile = "hipporc";
+$inifile = "/etc/hippo/hipporc";
 
 if(file_exists($inifile)) 
     $conf = parse_ini_file($inifile, $process_section = TRUE );
@@ -28,8 +28,8 @@ if(!$conf)
 $_SESSION['conf'] = $conf;
 
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
-$_SESSION[ 'oauth_credential' ] = __DIR__ . 
-    '/client_secret_636127149215-mn7vk37265hlq48d39qt45asnsvdbti0.apps.googleusercontent.com.json';
+$_SESSION[ 'oauth_credential' ] =
+    '/etc/hippo/client_secret_636127149215-mn7vk37265hlq48d39qt45asnsvdbti0.apps.googleusercontent.com.json';
 $_SESSION[ 'calendar_id'] = 
     'd2jud2r7bsj0i820k0f6j702qo@group.calendar.google.com'; 
 

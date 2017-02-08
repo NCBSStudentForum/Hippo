@@ -75,5 +75,7 @@ echo '
     </table>
     ';
 
+echo goBackToPageLink( 'user.php', 'Go back' );
+
 ?>
 

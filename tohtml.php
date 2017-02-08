@@ -646,7 +646,7 @@ function editableAWSTable( $awsId = -1 )
         <td></td>
         <td>
         <input  name="awsid" type="hidden" value="' . $awsId . '"  />
-        <button class="submit" name=\"response\" value="submit">Submit</button>
+        <button class="submit" name="response" value="submit">Submit</button>
         </td>
         </tr>
         ';

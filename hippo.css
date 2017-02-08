@@ -217,8 +217,8 @@ button.submit {
 table.input {
     text-align : left;
     background-color:lightyellow; 
-    min-width : 500px;
-    max-width : 800px;; 
+    min-width : 400px;
+    max-width : 800px; 
 }
 
 table.input tr td:nth-child(odd) {

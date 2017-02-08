@@ -647,7 +647,7 @@ function summaryTable( )
         </tr>
         <tr>
             <td>$nAws AWSs </td>
-            <td> $nspeakers active speakers</td>
+            <td> $nspeakers <a href=\"active_speakers.php\" target=\"_blank\" >active speakers</a></td>
             <td> $awsThisYear AWSs so far this year </td>
         </tr>";
     $html .= "</table>";
@@ -1222,11 +1222,15 @@ function getAWSFromPast( $from  )
     *
     * @return Array containing AWS speakers.
  */
-function getAWSSpeakers( )
+function getAWSSpeakers( $sortby = False )
 {
     global $db;
+    $sortExpr = '';
+    if( $sortby )
+        $sortExpr = " ORDER BY '$sortby'";
+
     $stmt = $db->query( 
-        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES'" 
+        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES' $sortExpr " 
     );
     $stmt->execute( );
     return fetchEntries( $stmt );

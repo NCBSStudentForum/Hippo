@@ -19,7 +19,7 @@ $default = Array( );
 
 if( ! isset( $_POST['id'] ))
 {
-    echo "Creating a dummy request for further edit";
+    //echo "Creating a dummy request for further edit";
 
     // Now here how i do it. First I create a dummy request and use the 'edit'
     // functionality of this page.
@@ -29,7 +29,7 @@ if( ! isset( $_POST['id'] ))
     $_POST['id'] = $rid[ 'LAST_INSERT_ID()' ];
     $_POST['response'] = 'edit';
     // And continue.
-    echo printInfo( "A request is created with id " . $_POST[ 'id' ] );
+    //echo printInfo( "A request is created with id " . $_POST[ 'id' ] );
 }
 
 
@@ -41,9 +41,9 @@ if( $_POST['response'] == 'edit' )
     echo "<h3>Edit your AWS entry</h3>";
 
     echo "<p>
-    NOTICE: If you can't find your supervior(s) and/or thesis committee member(s) in selection list,
-    please create a entry for them <a href=\"" . appRootDir() . 
-       "/user_add_supervisor.php\" target=\"_blank\">HERE</a>
+        NOTICE: If you can't find your supervior(s) and/or thesis committee member(s) 
+        in selection list, please create a entry for them
+        <a href=\"user_add_supervisor.php\" target=\"_blank\">HERE</a>
     </p>";
 
     // Now create an entry

@@ -66,7 +66,7 @@ function generateRandomString($length = 10)
 
 function appRootDir( )
 {
-   return  dirname( 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+   return  'https://ncbs.res.in/hippo';
 }
 
 /* Go to a page relative to base dir. */

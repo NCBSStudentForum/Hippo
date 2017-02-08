@@ -34,8 +34,9 @@ else
 }
 echo '</div>';
 
-
 echo "<h3>Manage upcoming Annual Work Seminar (AWS)</h3>";
+echo "TODO";
+echo "<p>User should add/update his/her upcoming AWS here </p>";
 
 echo "<h3>Update pending requests</h3>";
 
@@ -56,7 +57,7 @@ echo "<h3>Create a request</h3>";
 echo "<table class=\"show_user\">";
 echo '<tr><td>
     You can add a missing AWS here for review.
-    </td><td> <a href="' . appRootDir() .  '/user_aws_request.php">Add previous 
+    </td><td> <a href="user_aws_request.php">Add previous 
     AWS</a>';
 echo "</td></tr>";
 echo '<tr>

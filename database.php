@@ -832,7 +832,8 @@ function getMyAws( $user )
 {
     global $db;
 
-    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker ORDER BY date DESC "; 
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+        ORDER BY date DESC "; 
     $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $user );
     $stmt->execute( );

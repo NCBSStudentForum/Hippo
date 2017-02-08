@@ -68,7 +68,7 @@ holidays_ = {}
 
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
-config.read( os.path.join( thisdir, 'hipporc' ) )
+config.read( os.path.join( '/etc', 'hippo', 'hipporc' ) )
 logging.debug( 'Read config file %s' % str( config ) )
 
 class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):

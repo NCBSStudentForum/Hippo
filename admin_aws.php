@@ -34,9 +34,9 @@ echo '<tr>
         <td>Manage pending requests</td>
         <td> <a href="admin_aws_manages_requests.php">Manage ' . count( $pendingRequests) . 
             ' pending requests</a> </td>
-    </tr><tr>
-        <td>Manage speakers</td>
-        <td> <a href="admin_aws_edit_speakers.php">Manage speakers </td>
+        </tr>
+        <td>Add AWS entry</td>
+        <td> <a href="admin_aws_add_aws_entry.php">Add AWS entry</td>
     </tr>';
 echo '</table>';
 
@@ -51,10 +51,13 @@ echo '
     </tr>
   </table>';
 
-echo '<h3> Danger zone</h3>';
+echo '<h3>Danger zone</h3>';
+echo '<strong>
+    Select a user and optionally her AWS date, you can delete an AWS entry 
+    from my database. </strong>';
 echo '
     <form method="get" action="">
-    Type AWS speaker id<input id="autocomplete_user" name="login" type="text" />
+    AWS speaker id <input id="autocomplete_user" name="login" type="text" />
     and optionally select AWS date<input class="datepicker" name="date" value="" >
     <button name="response" value="Select">Select</button>
     </form>

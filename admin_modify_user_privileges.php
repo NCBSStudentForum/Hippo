@@ -4,10 +4,11 @@ include_once( 'header.php' );
 include_once( 'check_access_permissions.php' );
 include_once( 'tohtml.php' );
 
-mustHaveAnyOfTheseRoles( Array( 'ADMIN' ) );
+mustHaveAnyOfTheseRoles( Array( 'ADMIN', 'AWS_ADMIN' ) );
+
 echo userHTML( );
 
-if( ! $_POST['login'] )
+if( ! array_key_exists( 'login', $_POST ) )
 {
     echo printInfo( "You didn't select anyone. Going back ... " );
     goToPage( 'admin.php', 1 );

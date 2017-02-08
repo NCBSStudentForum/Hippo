@@ -16,7 +16,6 @@ ini_set( "display_errors", 1 );
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=open-sans">
 <link href="hippo.css" rel="stylesheet" type="text/css" />
 </head>
 <div class="header">

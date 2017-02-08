@@ -142,7 +142,7 @@ table.show_schedule th
 div.info {
     /*border : 1px solid #73AD21;*/
     max-width : 800px;
-    background: lightblue;
+    /*background: lightblue;*/
 }
 
 /* BUTTONS and INPUT */
@@ -401,8 +401,8 @@ p.note_to_user {
 
 p.alert_user {
    /*font-size : small;*/
-   border : 1px dotted;
-   background : lightblue;
+   /*border : 1px dotted;*/
+   /*background : lightblue;*/
    max-width : 80%;
    min-width : 500px;
 }

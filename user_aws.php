@@ -15,8 +15,9 @@ $scheduledAWS = scheduledAWSInFuture( $_SESSION['user'] );
 $tempScheduleAWS = temporaryAwsSchedule( $_SESSION[ 'user' ] );
 if( $scheduledAWS )
 {
-    echo alertUser( "&#x2620 Your AWS has been scheduled on " . 
-        humanReadableDate( $scheduledAWS[ 'date' ] )
+    echo alertUser( "
+        <strong>&#x2620 Your AWS has been scheduled on " . 
+        humanReadableDate( $scheduledAWS[ 'date' ] ) . '</strong>'
     );
 }
 else if( $tempScheduleAWS )
@@ -35,9 +36,23 @@ else
 }
 echo '</div>';
 
-echo "<h3>Manage upcoming Annual Work Seminar (AWS)</h3>";
-echo "TODO";
-echo "<p>User should add/update his/her upcoming AWS here </p>";
+echo printInfo( 'Please fill-in details of your upcoming  AWS below.
+     We will use this to generate the notification email
+     and document. You can change it as many times as you like 
+     <small> (Note: We will not store the old version).</small>
+    ' );
+
+if( $scheduledAWS )
+{
+    $id = $scheduledAWS[ 'id' ];
+    echo "<form method=\"post\" action=\"user_aws_update_upcoming_aws.php\">";
+    echo arrayToVerticalTableHTML( $scheduledAWS, 'aws', NULL
+        , Array( 'speaker', 'id' ));
+    echo "<button class=\"submit\" name=\"response\" value=\"update\">Update</button>";
+    echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
+    echo "</form>";
+}
+
 
 echo "<h3>Update pending requests</h3>";
 

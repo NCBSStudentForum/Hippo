@@ -1264,6 +1264,14 @@ function getUpcomingAWS( )
     return fetchEntries( $stmt );
 }
 
+function getUpcomingAWSById( $id )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM upcoming_aws WHERE id = $id " );
+    $stmt->execute( );
+    return  $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
 /**
     * @brief Accept a auto generated schedule. We put the entry into table 
     * upcoming_aws and delete this entry from aws_temp_schedule tables. In case 
@@ -1404,8 +1412,6 @@ function getHolidays( $from = NULL )
 //     global $db;
 //     $res = $db->query( "SELECT user_image FROM logins_metadata 
 //         WHERE login='$user'" );
-//     return $res->fetch( PDO::FETCH_ASSOC );
-// }
-
+//     return $res->fetch( PDO::FETCH_ASSOC ); // } 
 ?>
 

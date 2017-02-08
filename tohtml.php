@@ -568,15 +568,16 @@ function getIntranetLink( $login )
 }
 
 /**
-    * @brief Return a AWS table which is editable by user.
+    * @brief Return a AWS table which is editable by user. When $default array 
+    * is present, use it to construct the table. Else query the AWS table. 
+    * Passing array is useful when AWS is coming from some other table such as 
+    * upcoming_aws etc.
     *
-    * @return  A editable table with submit button. It needs to be enclosed in 
-    * appropriate form.
+    * @return  A editable table with submit button. 
  */
-function editableAWSTable( $awsId = -1 )
+function editableAWSTable( $awsId = -1,  $default = NULL )
 {
-    $default = array( );
-    if( $awsId > 0 )
+    if( $awsId > 0 && ! $default )
         $default = getAwsById( $awsId );
 
     // Now create an entry
@@ -634,20 +635,20 @@ function editableAWSTable( $awsId = -1 )
     }
     $html .= '
         <tr>
-        <td>Date</td>
-        <td><input class="datepicker" type="date" name="date" id="" value="' . 
-        __get__($default, 'date', '' ) . '" /></td>
+            <td>Date</td>
+            <td><input class="datepicker"  name="date" value="' . 
+                __get__($default, 'date', '' ) . '" readonly ></td>
         </tr>
         <tr>
-        <td>Time</td>
-        <td><input class="timepicker" name="time" id="" value="16:00" /></td>
+            <td>Time</td>
+            <td><input class="timepicker" name="time" value="16:00" readonly/></td>
         </tr>
         <tr>
-        <td></td>
-        <td>
-        <input  name="awsid" type="hidden" value="' . $awsId . '"  />
-        <button class="submit" name="response" value="submit">Submit</button>
-        </td>
+            <td></td>
+            <td>
+                <input  name="awsid" type="hidden" value="' . $awsId . '"  />
+                <button class="submit" name="response" value="submit">Submit</button>
+            </td>
         </tr>
         ';
     $html .= "</table>";

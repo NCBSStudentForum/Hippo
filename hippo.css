@@ -66,6 +66,10 @@ table.show_info tr td
     background : lightyellow;
 }
 
+table.show_speaker tr td  {
+    background : lightyellow;
+}
+
 table.show_info th
 {
     font-size: xx-small;

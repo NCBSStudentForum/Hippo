@@ -21,6 +21,7 @@ if( $scheduledAWS )
 }
 else if( $tempScheduleAWS )
 {
+    echo "<strong>This is a test message. This is NOT an official date, yet!</strong>";
     echo printInfo( "&#x2620 Your AWS is most likely to be on " . 
         humanReadableDate( $tempScheduleAWS[ 'date' ] ) );
 

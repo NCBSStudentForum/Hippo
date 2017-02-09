@@ -61,10 +61,16 @@ if( $msg == "OK" )
         $msg .= "<p>Your booking request id $gid has been created. </p>";
         $msg .= arrayToVerticalTableHTML( getRequestByGroupId( $gid )[0], 'request' );
         $msg .= "<p>You can edit/cancel the request anytime you like </p>";
+
         sendEmail( $msg
             , "Your booking request (id-$gid) has been recieved"
             , $userEmail 
-        );
+            );
+        sendEmail( $msg
+            , "A new request has been created by $userEmail"
+            , 'hippo@lists.ncbs.res.in'
+            );
+
         goToPage( "user.php", 1 );
         exit;
     }

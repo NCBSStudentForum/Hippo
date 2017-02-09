@@ -20,6 +20,8 @@ echo userHTML( );
 
 echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
 
+// Manage speakers in NCBS.
+
 $html = '<table class="show_user">';
    $html .= '
    <tr>
@@ -60,6 +62,20 @@ $html = '<table class="show_user">';
 
    $html .= "</table>";
 echo $html;
+
+echo "<h3>Talk manangement </h3>";
+echo '<table class="show_user">
+   <form action="user_register_talk.php" method="post">
+    <tr>
+        <td> 
+            Register a new talk <br>You can schedule it later</br> 
+        </td>
+        <td> <input type="text" name="email" placeholder="email of speaker" />
+            <button type="submit" name="AddNewSpeaker">Register talk</button>
+        </td>
+    </tr>
+    </form>
+    </table>';
 
 if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
 , 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) ) 

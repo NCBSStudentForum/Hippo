@@ -6,6 +6,16 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
+// If not authenticated, go to index.php
+if( ! ( array_key_exists( 'AUTHENTICATED', $_SESSION ) 
+    && $_SESSION[ 'AUTHENTICATED'] )
+)
+{
+    echo printInfo( "Please login first" );
+    goToPage( "index.php", 0 );
+    exit;
+}
+
 mustHaveAnyOfTheseRoles( array( 'USER', 'ADMIN', 'AWS_ADMIN'
     , 'JC_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
 

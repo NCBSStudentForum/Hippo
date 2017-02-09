@@ -35,19 +35,37 @@ echo '<table class="show_user">
     </table>
     ';
 
-echo '<h2> Pending requests </h2>';
+echo '<h3> Pending requests </h3>';
 $requests = getPendingRequestsGroupedByGID( ); 
+
 if( count( $requests ) == 0 )
     echo printInfo( "Cool! No request is pending for review" );
 
+
+$html = '<table>';
+foreach( $requests as $r )
+{
+    $html .= '<form action="bookmyvenue_admin_request_review.php" method="post">';
+    $html .= '<tr><td>';
+    // Hide some buttons to send information to next page.
+    $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
+    $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
+    $html .= arrayToTableHTML( $r, 'events'
+        , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' ) 
+    );
+    $html .= '</td>';
+    $html .= '<td style="background:white">
+                    <button name="response" value="Review">Review</button>
+            </td>';
+    $html .= '</tr>';
+    $html .= '</form>';
+}
+$html .= '</table>';
+echo $html;
+
 ?>
 
-<form action="bookmyvenue_admin_request_review.php" method="post" accept-charset="utf-8">
-<?php echo requestsToHTMLReviewForm( $requests ); ?>
-</form>
-
-
-<h2> Edit Upcoming Events </h2>
+<h3> Edit Upcoming Events </h3>
 <?php
 $html = '';
 $events = getEventsGrouped( $sortby = 'date' );

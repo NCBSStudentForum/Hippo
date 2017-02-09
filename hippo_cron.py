@@ -21,4 +21,10 @@ __status__           = "Development"
 
 import sys
 import os
-import logging
+from logger import _logger
+
+def main( ):
+    _logger.info( 'Running cronjob' )
+
+if __name__ == '__main__':
+    main()

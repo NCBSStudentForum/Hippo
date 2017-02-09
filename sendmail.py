@@ -5,17 +5,7 @@ import sys
 import smtplib 
 import html2text
 from email.mime.text import MIMEText
-import logging
-
-logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-        datefmt='%m-%d %H:%M',
-        filename='/var/log/hippo.log',
-        filemode='a'
-        )
-
-_logger = logging.getLogger('hippo.sendmail')
+from logger import _logger
 
 if len( sys.argv ) < 4:
     _logger.error( "Usage: %s TO SUBJECT MSG_FILE" % sys.argv[0] )

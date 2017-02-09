@@ -321,19 +321,15 @@ table.login_main {
 }
 
 
-table.eventline {
-    widht : 1000px;
+table.eventline  {
     table-layout : auto;
     text-align : left;
-    background-color:lightyellow; 
-    border-collapse : separate;
-    padding : 3px;
-    border : 1px solid;
-    border-style : dotted;
 }
 
 table.eventline tr td  {
     width : 10%;
+    background-color:lightyellow; 
+    padding : 1px;
 }
 
 table.hourtable {

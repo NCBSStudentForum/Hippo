@@ -34,7 +34,10 @@ foreach( getTableEntries( 'holidays', 'date' ) as $holiday )
 $defaults = array( 
     'selected_dates' => dbDate( strtotime( 'today' ) )
     , 'selected_venues' => $venueNames
-    , 'start_time' => date( 'H:i', strtotime( 'now ' ) )
+    // This trick to make sure we get 15 minutes block.
+    , 'start_time' => date( 
+        'H:i', floor( strtotime( 'now ' ) / (15 * 60 )) * (15 * 60) 
+    )
     // It is essential that we stop at 11:59. After than we have 00:00. Which is 
     // a lower number than start time. We can not iterate over the difference.
     , 'end_time' => date( 'H:i'

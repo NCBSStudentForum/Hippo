@@ -22,32 +22,46 @@ function toColor($n)
     return("#".substr("000000".dechex($n),-6));
 }
 
-function venuesToHTMLSelect( $venues, $ismultiple = false )
+/**
+    * @brief Generate a select list outof given values.
+    *
+    * @param $venues List of venues.
+    * @param $ismultiple Do we want to select multiple entries.
+    * @param $selected Pre-select these guys.
+    *
+    * @return 
+ */
+function venuesToHTMLSelect( $venues, $ismultiple = false
+    , $selectName = 'venue', $preSelected = array() 
+    )
 {
     $multiple = '';
     $default = '-- select a venue --';
-    $name = 'velue';
     if( $ismultiple )
     {
         $multiple = 'multiple size="5"';
         $default = '-- select multiple venues --';
-        $name = 'venue[]';
+        $selectName .= "[]";
     }
 
-    $html = "<select $multiple name=\"$name\">";
+    $html = "<select $multiple name=\"$selectName\">";
     if( ! $ismultiple )
         $html .= "<option disabled selected value>$default</option>";
 
     foreach( $venues as $v )
     {
+        $selected = '';
+        if( in_array( $v['id'], $preSelected ) )
+            $selected = 'selected';
+
         $text = venueToText( $v );
-        if( $v['suitable_for_conference'] == 'Yes' )
+        if( $v['suitable_for_conference'] == 'YES' )
             $text .= '<font color=\"blue\"> +C </font>';
-        if( $v['has_projector'] == 'Yes' )
+        if( $v['has_projector'] == 'YES' )
             $text .= '<font color=\"blue\"> +P </font>';
 
         $venueid = $v['id'];
-        $html .= "<option value=\"$venueid\"> $text </option>";
+        $html .= "<option value=\"$venueid\" $selected> $text </option>";
     }
 
     $html .= "</select>";

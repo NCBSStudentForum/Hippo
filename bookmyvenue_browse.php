@@ -21,7 +21,9 @@ if( isMobile( ) )
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.
 $venues = getVenues( );
-$venueSelect = venuesToHTMLSelect( $venues, TRUE );
+$venueNames = implode( ","
+    , array_map( function( $x ) { return $x['id']; }, $venues )
+    );
 
 
 // Get the holiday on particular day. Write it infront of date to notify user.
@@ -29,44 +31,44 @@ $holidays = array( );
 foreach( getTableEntries( 'holidays', 'date' ) as $holiday )
     $holidays[ $holiday['date'] ] = $holiday['description'];
 
+// Construct a array to keep track of values. Since we are iterating over this 
+// page many times.
+$defaults = array( 
+    'selected_dates' => dbDate( strtotime( 'today' ) )
+    , 'selected_venues' => $venueNames
+    , 'start_time' => date( 'H:i', strtotime( 'now ' ) )
+    , 'end_time' => date( 'H:i', strtotime( 'now' ) + 6 * 3600 )
+    );
 
-// FIXME: complicated logic here.
-// If no venue if selected then use all venues. If from previous step we already 
-// have some veneues selected then keep using them. NOTE: We convert the array 
-// into string since we want to use these values in next iteration as <input> 
-// value.  Similarly do it for dates.
-if( ! array_key_exists( 'picked_dates', $_POST ) )
-{
-    if( ! array_key_exists( 'selected_dates_before', $_POST ) )
-        $_POST['picked_dates'] = dbDate(strtotime( 'today' ) );
-    else
-        $_POST['picked_dates']  = $_POST['selected_dates_before'];
-}
+// Update these values by $_POST variable.
+foreach( $_POST as $key => $val )
+    if( array_key_exists( $key, $defaults ) )
+    {
+        // All entries in $defaults are CSV.
+        if( is_array( $val ) )
+            $val = implode( ",", $val );
+        $defaults[ $key ] = $val;
+    }
 
-// Initialize dates and end_date in form.
-$dates = explode( ",", $_POST['picked_dates']);
+$selectedDates = explode( ",", $defaults['selected_dates'] );
+$selectedVenues = explode( ",", $defaults[ 'selected_venues' ] );
 
-if( ! array_key_exists( 'venue', $_POST ) )
-{
-    if( ! array_key_exists( 'selected_venues_before', $_POST ) )
-        $_POST['venue'] = implode( "###", array_map( function($a) { 
-            return $a['id']; }, $venues)
-            );
-    else
-        $_POST['venue'] = $_POST[ 'selected_venues_before' ];
-}
+// Use selected_venues and construct a select list. Check all venues selected 
+// before.
+print_r( $_POST );
 
-// To be sure that we can post this value as value of <input 
-if( is_array($_POST['venue']) )
-    $_POST['venue'] = implode( "###", $_POST['venue'] );
+// Name of the option in this select list is 'venue'
+$venueSelect = venuesToHTMLSelect( $venues, true
+    , "selected_venues", $selectedVenues 
+    );
 
-$pickedDates = $_POST['picked_dates'];
-echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
+echo "<form method=\"post\" action=\"\">
     <table>
     <tr>
     <th>
         Step 1: Pick dates
-        <p class=\"note_to_user\">You can select multiple dates by clicking on them</p>
+        <p class=\"note_to_user\">
+        You can select multiple dates by clicking on popup calendar</p>
     </th>
     <th>
         Step 2: Select Venues
@@ -74,20 +76,17 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
             down Ctrl or Shift key</p>
     </th>
     <th>
-        Step 3: Press <button disabled>Filter</button> to filter out other venues
+        Step 3: Press <button disabled>Filter</button> to filter out 
+        non-selected venues
     </th>
     </tr>
     <tr>
-    <td><input type=\"text\" class=\"multidatespicker\" 
-            name=\"picked_dates\" value=\"$pickedDates\"></td>
-    <td>  $venueSelect </td>
+    <td><input type=\"text\" class=\"multidatespicker\" name=\"selected_dates\" 
+        value=\"" . $defaults[ 'selected_dates' ] . "\" ></td>
+    <td> $venueSelect </td>
     <td>
     <button style=\"float:right\" name=\"response\" value=\"submit\">Filter</button> ";
 
-    // NOTE: These venues were selected on previous steps. When Submit is pressed. And no
-    // venue is selected,we keep displaying these venues --> 
-   echo " <input type=\"hidden\" name=\"selected_venues_before\" value=\" " .  $_POST['venue'] . "\">";
-   echo " <input type=\"hidden\" name=\"selected_dates_before\" value=\" " .  $_POST['picked_dates'] . "\">";
    echo " </td> </tr> </table> </form> <br> ";
 
 
@@ -102,7 +101,7 @@ echo "<form method=\"post\" action=\"bookmyvenue_browse.php\">
 
 echo "<h3>Step 4: Press + button to create an event at this time slot</h3>";
 // Now generate the range of dates.
-foreach( $dates as $date )
+foreach( $selectedDates as $date )
 {
     $thisdate = humanReadableDate( strtotime( $date  ) );
     $thisday = nameOfTheDay( $thisdate );
@@ -115,7 +114,7 @@ foreach( $dates as $date )
         $thisday, $thisdate, $holidayText </font></h4>";
 
     // Now generate eventline for each venue.
-    foreach( explode("###", $_POST['venue']) as $venueid )
+    foreach( $selectedVenues as $venueid )
         $html .= eventLineHTML( $date, $venueid );
 
     echo $html;

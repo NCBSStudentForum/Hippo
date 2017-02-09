@@ -35,7 +35,7 @@ class BMVPDO extends PDO
 }
 
 // Construct the PDO
-$db = new BMVPDO( "ghevar.ncbs.res.in" );
+$db = new BMVPDO( "localhost" );
 initialize( );
 
 /**
@@ -50,6 +50,26 @@ function initialize( )
         'CREATE TABLE IF NOT EXISTS holidays 
             (date DATE NOT NULL PRIMARY KEY, description VARCHAR(100) NOT NULL)
         ' );
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS visitors 
+            ( title ENUM( "Mr.", "Ms.", "Dr.", "Prof" )
+            , email VARCHAR(100) PRIMARY KEY
+            , first_name VARCHAR(100) NOT NULL
+            , middle_name VARCHAR(100)
+            , last_name VARCHAR(100)
+            , department VARCHAR(500)
+            , institute VARCHAR(1000) NOT NULL
+            )' );
+
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS talks 
+        ( id INT AUTO_INCREMENT
+        , speaker VARCHAR(100) NOT NULL
+        , host VARCHAR(100) NOT NULL
+        , title VARCHAR(1000) NOT NULL
+        , description TEXT 
+        )' );
+
     return $res;
 }
 

@@ -151,7 +151,8 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 
             $html .= "</td>";
             // And the hidden elements to carry the values to the action page.
-            $html .= '<input type="hidden" name="start_time" value="'. $segTime . '">';
+            $html .= '<input type="hidden" name="start_time" value="'. 
+                dbTime($segTime) . '">';
             $html .= '<input type="hidden" name="date" value="'. $day . '">';
             $html .= '<input type="hidden" name="venue" value="'. $venue . '">';
             $html .= "</form>";
@@ -194,7 +195,7 @@ function eventLineHTML( $date, $venueid, $start = '8:00', $end = '18:00' )
     {
         $stepT = $i * $dt;
         $segTime = strtotime( $startDay ) + 60 * $stepT;
-        // Each hour has 15 minutes segment. FOr each segment hourToHTMLTable 
+        // Each hour has 15 minutes segment. For each segment hourToHTMLTable 
         // create a block.
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
     }

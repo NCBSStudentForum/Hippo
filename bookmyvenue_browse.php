@@ -6,9 +6,7 @@ include_once( "database.php" );
 include_once 'display_content.php';
 include_once "./check_access_permissions.php";
 
-mustHaveAnyOfTheseRoles( 
-    array( 'USER', 'ADMIN', 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN', 'JC_ADMIN' ) 
-);
+mustHaveAnyOfTheseRoles( array( 'USER' ));
 
 echo userHTML( );
 
@@ -53,11 +51,6 @@ foreach( $_POST as $key => $val )
 $selectedDates = explode( ",", $defaults['selected_dates'] );
 $selectedVenues = explode( ",", $defaults[ 'selected_venues' ] );
 
-// Use selected_venues and construct a select list. Check all venues selected 
-// before.
-print_r( $_POST );
-
-// Name of the option in this select list is 'venue'
 $venueSelect = venuesToHTMLSelect( $venues, true
     , "selected_venues", $selectedVenues 
     );
@@ -66,7 +59,7 @@ echo "<form method=\"post\" action=\"\">
     <table>
     <tr>
     <th>
-        Step 1: Pick dates
+        Step 1: Pick dates (and optionally a time-range)
         <p class=\"note_to_user\">
         You can select multiple dates by clicking on popup calendar</p>
     </th>
@@ -75,31 +68,49 @@ echo "<form method=\"post\" action=\"\">
         <p class=\"note_to_user\">You can select multiple venues by holding 
             down Ctrl or Shift key</p>
     </th>
-    <th>
-        Step 3: Press <button disabled>Filter</button> to filter out 
-        non-selected venues
-    </th>
     </tr>
     <tr>
-    <td><input type=\"text\" class=\"multidatespicker\" name=\"selected_dates\" 
-        value=\"" . $defaults[ 'selected_dates' ] . "\" ></td>
-    <td> $venueSelect </td>
     <td>
-    <button style=\"float:right\" name=\"response\" value=\"submit\">Filter</button> ";
+        <input type=\"text\" class=\"multidatespicker\" name=\"selected_dates\" 
+        value=\"" . $defaults[ 'selected_dates' ] . "\" >
+        <br />
+        <p>Explore time range </p>
+        <input type=\"time\" value=\"" . $defaults[ 'start_time' ] . 
+            "\" class=\"timepicker\" name=\"start_time\"> Start Time
+        <br />
+        <input type=\"time\" value=\"" . $defaults[ 'end_time' ] . 
+                "\" class=\"timepicker\" name=\"end_time\"> End Time
+    </td>
+    <td> $venueSelect </td>
+    </tr>
+    <tr> <td></td>
+        <td>
+            <button  name=\"response\" value=\"submit\">Filter</button>
+        </td>
+    </tr>";
 
-   echo " </td> </tr> </table> </form> <br> ";
+echo '</table>';
+echo '</form>';
 
 
-   echo alertUser( 
-       "
-       <button class=\"display_request\" style=\"width:20px;height:20px\"></button>Pending requests
-       <button class=\"display_event\" style=\"width:20px;height:20px\"></button>Booked slots
-       <button class=\"display_event_with_public_event\" style=\"width:20px;height:20px\"></button>There is a public event at this slot.
-       "
-   );
+echo "<h3>Step 3: Press <button disabled>+</button> to book your venue. 
+    Next, you'll be asked to fill details and thats it.
+    </h3>";
 
+echo "<table border=\"1\" style=\"table-layout:fixed;width:100%;\">
+    <tr><td><button class=\"display_request\"></button>
+        Someone can alreay created a booking request (pending approval). You 
+        CANNOT book at this slot.
+    </td>
+    <td><button class=\"display_event\"></button>
+        This slot has already been booked. You CANNOT book at this slot. </td>
+    <td><button class=\"display_event_with_public_event\"></button>
+        There is a public event at this slot at some other venue.
+        You can book at this slot. </td>
+    </tr>
+   </table>
+       ";
 
-echo "<h3>Step 4: Press + button to create an event at this time slot</h3>";
 // Now generate the range of dates.
 foreach( $selectedDates as $date )
 {
@@ -111,11 +122,14 @@ foreach( $selectedDates as $date )
         $holidayText =  '<div style="float:right"> &#9786 ' . $holidays[ $date ] . '</div>';
 
     $html = "<h4 class=\"info\"> <font color=\"blue\">
-        $thisday, $thisdate, $holidayText </font></h4>";
+        $thisdate $holidayText </font></h4>";
 
     // Now generate eventline for each venue.
     foreach( $selectedVenues as $venueid )
-        $html .= eventLineHTML( $date, $venueid );
+        $html .= eventLineHTML( 
+                    $date, $venueid
+                    , $defaults[ 'start_time' ] , $defaults[ 'end_time' ]
+                );
 
     echo $html;
 }

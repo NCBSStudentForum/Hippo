@@ -26,9 +26,9 @@ import ConfigParser
 from collections import defaultdict
 import datetime 
 import tempfile 
-import logging
 import random
 import getpass
+from logger import _logger
 
 print( 'VERSION connector %s' % mysql.connector.version )
 
@@ -38,19 +38,10 @@ sys.path.insert(0, networkxPath )
 
 import networkx as nx
 print( 'Using networkx from %s' % nx.__file__ )
-logging.info( 'Using networkx from %s' % nx.__file__ )
-
-logFile = '/tmp/__hippo_sch_%s.log' % getpass.getuser( )
-logging.basicConfig( 
-        filename = logFile
-        , level=logging.DEBUG
-        , format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        , filemode = 'a'
-        , datefmt='%m-%d %H:%M'
-        )
+_logger.info( 'Using networkx from %s' % nx.__file__ )
 
 print( 'Writing to %s' % logFile )
-logging.info( 'Started on %s' % datetime.date.today( ) )
+_logger.info( 'Started on %s' % datetime.date.today( ) )
 
 g_ = nx.DiGraph( )
 
@@ -69,7 +60,7 @@ holidays_ = {}
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
 config.read( os.path.join( '/etc', 'hippo', 'hipporc' ) )
-logging.debug( 'Read config file %s' % str( config ) )
+_logger.debug( 'Read config file %s' % str( config ) )
 
 class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
     def _row_to_python(self, rowdata, desc=None):
@@ -108,7 +99,7 @@ def init( cur ):
 
     for a in cur.fetchall( ):
         holidays_[ a['date'] ] = a
-    logging.info( 'Total speakers %d' % len( speakers_ ) )
+    _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
 
 def getAllAWSPlusUpcoming( ):
@@ -167,8 +158,8 @@ def computeCost( speaker, slot_date, last_aws ):
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
         if fromToday > 2.5 * idealGap:
-            # logging.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
-            # logging.info( "I am not scheduling AWS for this user." )
+            # _logger.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
+            # _logger.info( "I am not scheduling AWS for this user." )
             cost = 100
         elif fromToday >  1.5 * idealGap:
             cost = 0.0 + nAws / 10.0
@@ -221,18 +212,18 @@ def construct_flow_graph(  ):
             if speakers_[ speaker ]['title'] == 'INTPHD':
                 # InPhd should get their first AWS after 15 months of
                 # joining.
-                logging.info( '%s = INTPHD with 0 AWS so far' % speaker )
+                _logger.info( '%s = INTPHD with 0 AWS so far' % speaker )
                 joinDate = speakers_[ speaker ]['joined_on']
                 if not joinDate:
-                    logging.warn( "Could not find joining date" )
+                    _logger.warn( "Could not find joining date" )
                 else:
                     lastDate = monthdelta( joinDate, -6 )
 
             elif speakers_[ speaker ]['title'] in [ 'PHD', 'POSTDOC' ]:
                 joinDate = speakers_[ speaker ]['joined_on']
-                logging.info( '%s PHD/POSTDOC with 0 AWS so far' % speaker )
+                _logger.info( '%s PHD/POSTDOC with 0 AWS so far' % speaker )
                 if not joinDate:
-                    logging.warn( "Could not find joining date" )
+                    _logger.warn( "Could not find joining date" )
                 else:
                     try:
                         # if datetime.
@@ -244,14 +235,14 @@ def construct_flow_graph(  ):
             # We are here because this speaker has given AWS before
             # If this speaker is already on upcoming AWS list, ignore it.
             if speaker in upcoming_aws_:
-                logging.info( 
+                _logger.info( 
                         'Speaker %s is already scheduled on %s' % ( 
                             speaker, upcoming_aws_[ speaker ] 
                             )
                         )
 
-                # logging.info( 'Warning: Could not find last AWS date for %s' % speaker )
-                # logging.info( '\t I am ignoring him' )
+                # _logger.info( 'Warning: Could not find last AWS date for %s' % speaker )
+                # _logger.info( '\t I am ignoring him' )
                 # assert lastDate, "No last date found for speaker %s" % speaker 
                 continue
             else:
@@ -269,18 +260,18 @@ def construct_flow_graph(  ):
     slots = []
 
     totalWeeks = 53
-    logging.info( "Computing for total %d weeks" % totalWeeks )
+    _logger.info( "Computing for total %d weeks" % totalWeeks )
     for i in range( totalWeeks ):
         nDays = i * 7
         monday = nextMonday + datetime.timedelta( nDays )
 
         # AWS don't care about holidays.
         #if monday in holidays_:
-        #    logging.warn( "This date %s is holiday" % monday )
+        #    _logger.warn( "This date %s is holiday" % monday )
         #    continue
 
         if monday in upcoming_aws_.values( ):
-            logging.info( 'Date %s is taken ' % monday )
+            _logger.info( 'Date %s is taken ' % monday )
             continue 
 
         # For each Monday, we have 3 AWS
@@ -294,14 +285,14 @@ def construct_flow_graph(  ):
     idealGap = 357
     for speaker in speakers_:
         if speaker not in g_.nodes( ):
-            logging.info( 'Nothing for user %s' % speaker )
+            _logger.info( 'Nothing for user %s' % speaker )
             continue
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
             addEdge( speaker, slot, 1, weight )
-    logging.info( 'Constructed flow graph' )
+    _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
     """Create an edge between speaker and slot.
@@ -343,10 +334,10 @@ def test_graph( graph ):
     # Each edge must have a capcity and weight 
     for u, v in graph.edges():
         if 'capacity' not in  graph[u][v]:
-            logging.info( 'Error: %s -> %s no capacity assigned' % (u, v) )
+            _logger.info( 'Error: %s -> %s no capacity assigned' % (u, v) )
         if 'weight' not in  graph[u][v]:
-            logging.info( 'Error: %s -> %s no weight assigned' % (u, v) )
-    logging.info( '\tDone testing graph' )
+            _logger.info( 'Error: %s -> %s no weight assigned' % (u, v) )
+    _logger.info( '\tDone testing graph' )
 
 def getMatches( res ):
     result = defaultdict( list )
@@ -364,13 +355,13 @@ def getMatches( res ):
 
 def schedule( ):
     global g_
-    logging.info( 'Scheduling AWS now' )
+    _logger.info( 'Scheduling AWS now' )
     test_graph( g_ )
-    logging.info( 'Computing max-flow, min-cost' )
+    _logger.info( 'Computing max-flow, min-cost' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
-    logging.info( '\t Computed. Getting schedules now ...' )
+    _logger.info( '\t Computed. Getting schedules now ...' )
     schedule = getMatches( res )
-    logging.info( '\t ... Computed schedules.' )
+    _logger.info( '\t ... Computed schedules.' )
     return schedule
 
 def print_schedule( schedule, outfile ):
@@ -391,39 +382,39 @@ def print_schedule( schedule, outfile ):
 def commit_schedule( schedule ):
     global db_
     cur = db_.cursor( )
-    logging.info( 'Committing computed schedules ' )
+    _logger.info( 'Committing computed schedules ' )
     for date in sorted(schedule):
         for speaker in schedule[date]:
             query = """
                 INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}') 
                 ON DUPLICATE KEY UPDATE date='{1}'
                 """.format( speaker, date ) 
-            logging.debug( query )
+            _logger.debug( query )
             cur.execute( query )
     db_.commit( )
-    logging.info( "Committed to database" )
+    _logger.info( "Committed to database" )
 
 def main( outfile ):
     global aws_
     global db_
-    logging.info( 'Scheduling AWS' )
+    _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )
     try:
         construct_flow_graph( )
         ans = schedule( )
     except Exception as e:
-        logging.warn( "Failed to schedule. %s" % e )
+        _logger.warn( "Failed to schedule. %s" % e )
     try:
         print_schedule( ans, outfile )
     except Exception as e:
-        logging.error( "Could not print schedule. %s" % e )
+        _logger.error( "Could not print schedule. %s" % e )
 
     commit_schedule( ans )
     try:
         write_graph( )
     except Exception as e:
-        logging.error( "Could not write graph to file" )
-        logging.error( "\tError was %s" % e )
+        _logger.error( "Could not write graph to file" )
+        _logger.error( "\tError was %s" % e )
     db_.close( )
 
 if __name__ == '__main__':

@@ -656,4 +656,10 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
 
 }
 
+function initUserMsg( )
+{
+    $msg = "<p> Dear " . loginToText( $_SESSION[ 'user' ] ) . "<p>";
+    return $msg;
+}
+
 ?>

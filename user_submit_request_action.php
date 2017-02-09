@@ -1,11 +1,19 @@
 <?php
-include_once( "header.php" );
-include_once( "methods.php" );
-include_once( "database.php" );
+include_once 'check_access_permissions.php';
+mustHaveAnyOfTheseRoles( array( 'USER' ) );
+
+include_once "header.php" ;
+include_once "methods.php" ;
+include_once "database.php" ;
+include_once "mail.php";
+include_once 'tohtml.php';
 
 // verify the request.
 function verifyRequest( $request )
 {
+    if( ! isset( $request ) )
+        return "Empty request";
+
     // Check the end_time must be later than start_time .
     // At least 15 minutes event
     if( strtotime( $request['end_time'] ) - strtotime( $request['start_time'] ) < 900 )
@@ -17,10 +25,10 @@ function verifyRequest( $request )
     }
     if( ! isset( $request['venue'] ) )
     {
-        return "No venue found in your request. May be a bug " ;
+        return "No venue found in your request. If you think this is a bug, 
+           please write to hippo@lists.ncbs.res.in " ;
     }
     return "OK";
-
 }
 
 
@@ -35,15 +43,30 @@ if( $msg == "OK" )
 
     echo "<pre>Repeat pattern $repeatPat </pre>";
     $_POST['repeat_pat']  = $repeatPat;
+    $gid = submitRequest( $_POST );
 
-    $res = submitRequest( $_POST );
-    if( $res )
+     // Unset POST here so refresh page does not cause creation of another 
+    // request.
+    $_POST = array( );
+
+    if( $gid > 0 )
     {
+        $msg = initUserMsg( );
+        $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
+        $userEmail = $userInfo[ 'email' ];
         echo printInfo( 
-            "Your request has been submitted and an email has been sent to you 
-            with details.
+            "Your request has been submitted and an emails have been sent to you
+            and to administrator for further action. 
             " );
-        //goToPage( "bookmyvenue_browse.php", 1 );
+        $msg .= "<p>Your booking request id $gid has been created. </p>";
+        $msg .= arrayToVerticalTableHTML( getRequestByGroupId( $gid )[0], 'request' );
+        $msg .= "<p>You can edit/cancel the request anytime you like </p>";
+        sendEmail( $msg
+            , "Your booking request (id-$gid) has been recieved"
+            , $userEmail 
+        );
+        goToPage( "user.php", 1 );
+        exit;
     }
     else
     {

@@ -7,14 +7,13 @@ function sendEmail($msg, $sub, $to)
     $msg .= "
         <p>==========================================================</p>
         <p>
-        This is a computer generated email, you need not reply. In case of 
-        any query, please write to acadoffice@ncbs.res.in.  </p>
-
-        <p>If you are not the intended recipeint of this email, please write 
-        to acadoffice@ncbs.res.in . </p>
+        This email is a computer generated email, you need not reply. In case of 
+        any query or issue, please write to hippo@lists.ncbs.res.in. 
+        </p>
+        <p>Email generated on : $timestamp </p>
+        <p>==========================================================</p>
         ";
 
-    $msg .= "<p>Created on : $timestamp </p>";
     $msgfile = "/tmp/__msg__.html";
 
     file_put_contents( $msgfile, $msg );

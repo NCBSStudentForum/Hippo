@@ -1,4 +1,5 @@
 <?php 
+
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "database.php" );
@@ -7,12 +8,7 @@ include_once( "tohtml.php" );
 
 echo userHTML( );
 
-if( ! requiredPrivilege( 'USER' ) )
-{
-    echo printWarning( "You don't have enough privilege to open a request" );
-    goToPage( "index.php", 1 );
-    exit( 0 );
-}
+mustHaveAnyOfTheseRoles( array( 'USER' ) );
     
 $venues = getVenues( $sortby = 'total_events' );
 
@@ -25,7 +21,7 @@ $venues = getVenues( $sortby = 'total_events' );
 if( ! array_key_exists( 'date', $_POST) )
 {
     echo printWarning( "No valid day is selected. Going back to main page" );
-    goToPage( "index.php", 2 );
+    goToPage( "user.php", 1 );
     exit(0);
 }
 
@@ -57,8 +53,13 @@ else
     $venueHTML = venuesToHTMLSelect( $venues );
 
 $startTime = __get__( $_POST, 'start_time', '' );
-$calendarTime = date( 'H:i', $startTime );
-$defaultEndTime = date( 'H:i', strtotime( $calendarTime ) + 60*60   );
+
+// This is END time of event. It may come from user from ./quickbook.php or use 
+// default of 1 hrs in future.
+$defaultEndTime = __get__( $_POST, 'end_time'
+    , date( 'H:i', strtotime( $startTime ) + 60*60 )
+    );
+
 $date = __get__( $_POST, 'date', '' );
 
 ?>
@@ -83,7 +84,7 @@ $date = __get__( $_POST, 'date', '' );
    <tr> <td>Starts on <br>
       </td>
       <td> <input class="timepicker" type="time" name="start_time" 
-         value="<?php echo $calendarTime ?>" readonly /> </td>
+         value="<?php echo $startTime ?>" readonly /> </td>
    </tr>
    <tr> <td>Ends on <br>
       </td>

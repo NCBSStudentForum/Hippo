@@ -342,17 +342,20 @@ function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
     return fetchEntries( $stmt );
 }
 
-function getEventsOnThisVenueOnThisDatetime( $venue, $date, $time, $status = 'VALID' )
+function getEventsOnThisVenueBetweenTime( $venue, $date
+    , $start_time, $end_time
+   ,  $status = 'VALID' )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM events 
-        WHERE venue=:venue AND status=:status 
-        AND date=:date
-        AND ( start_time >= :time OR end_time <= :time )
+    $stmt = $db->prepare( 
+        "SELECT * FROM events
+        WHERE venue=:venue AND status=:status AND date=:date 
+            AND ( start_time >= :start_time OR end_time <= :end_time )
         "
     );
     $stmt->bindValue( ':date', $date );
-    $stmt->bindValue( ':time', $time );
+    $stmt->bindValue( ':start_time', $start_time );
+    $stmt->bindValue( ':end_time', $end_time );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':venue', $venue );
     $stmt->execute( );
@@ -371,17 +374,19 @@ function getRequestsOnThisVenueOnThisday( $venue, $date, $status = 'PENDING' )
     return fetchEntries( $stmt );
 }
 
-function getRequestsOnThisVenueOnThisDatetime( $venue, $date, $time
+function getRequestsOnThisVenueBetweenTime( $venue, $date
+    , $start_time, $end_time
     , $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests 
-        WHERE venue=:venue AND status=:status 
-        AND date=:date
-        AND ( start_time >= :time OR end_time <= :time )
+    $stmt = $db->prepare( 
+        "SELECT * FROM bookmyvenue_requests 
+        WHERE venue=:venue AND status=:status AND date=:date
+            AND ( start_time >= :start_time OR end_time <= :end_time )
         " );
     $stmt->bindValue( ':date', $date );
-    $stmt->bindValue( ':time', $time );
+    $stmt->bindValue( ':start_time', $start_time );
+    $stmt->bindValue( ':end_time', $end_time );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':venue', $venue );
     $stmt->execute( );
@@ -394,7 +399,7 @@ function getRequestsOnThisVenueOnThisDatetime( $venue, $date, $time
     *
     * @param $request
     *
-    * @return 
+    * @return  Group id of request.
  */
 function submitRequest( $request )
 {
@@ -457,10 +462,11 @@ function submitRequest( $request )
         if( ! $res )
         {
             echo printWarning( "Could not submit request id $gid" );
+            return 0;
         }
         array_push( $results, $res );
     }
-    return (! in_array( FALSE, $results ));
+    return $gid;
 }
 
 

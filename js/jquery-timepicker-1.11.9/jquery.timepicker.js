@@ -1,5 +1,5 @@
 /*!
- * jquery-timepicker v1.11.6 - A jQuery timepicker plugin inspired by Google Calendar. It supports both mouse and keyboard navigation.
+ * jquery-timepicker v1.11.9 - A jQuery timepicker plugin inspired by Google Calendar. It supports both mouse and keyboard navigation.
  * Copyright (c) 2015 Jon Thornton - http://jonthornton.github.com/jquery-timepicker/
  * License: MIT
  */
@@ -242,6 +242,8 @@
 				settings = _parseSettings(settings);
 
 				self.data('timepicker-settings', settings);
+
+				_formatValue.call(self.get(0), {'type':'change'}, 'initial');
 
 				if (list) {
 					list.remove();
@@ -507,8 +509,8 @@
 				row.text(timeString);
 			} else {
 				var row = $('<li />');
-				row.addClass(timeInt % 86400 < 43200 ? 'ui-timepicker-am' : 'ui-timepicker-pm');
-				row.data('time', (timeInt <= 86400 ? timeInt : timeInt % 86400));
+				row.addClass((timeInt % _ONE_DAY) < (_ONE_DAY / 2) ? 'ui-timepicker-am' : 'ui-timepicker-pm');
+				row.data('time', _moduloSeconds(timeInt, settings));
 				row.text(timeString);
 			}
 
@@ -758,7 +760,7 @@
 		var prettyTime = _int2time(seconds, settings);
 
 		if (rangeError) {
-			if (_setTimeValue(self, prettyTime, 'error')) {
+			if (_setTimeValue(self, prettyTime, 'error') || e && e.type == 'change') {
 				self.trigger('timeRangeError');
 			}
 		} else {
@@ -1178,6 +1180,14 @@
 		return ("0" + n).slice(-2);
 	}
 
+	function _moduloSeconds(seconds, settings) {
+		if (seconds == _ONE_DAY && settings.show2400) {
+			return seconds;
+		}
+
+		return seconds%_ONE_DAY;
+	}
+
 	// Plugin entry
 	$.fn.timepicker = function(method)
 	{
@@ -1215,6 +1225,11 @@
 			} else {
 				var offset = seconds % (settings.step*60); // step is in minutes
 
+				var start = settings.minTime || 0;
+
+                // adjust offset by start mod step so that the offset is aligned not to 00:00 but to the start
+                offset -= start % (settings.step * 60);
+
 				if (offset >= settings.step*30) {
 					// if offset is larger than a half step, round up
 					seconds += (settings.step*60) - offset;
@@ -1223,11 +1238,7 @@
 					seconds -= offset;
 				}
 
-				if (seconds == _ONE_DAY && settings.show2400) {
-					return seconds;
-				}
-
-				return seconds%_ONE_DAY;
+				return _moduloSeconds(seconds, settings);
 			}
 		},
 		scrollDefault: null,

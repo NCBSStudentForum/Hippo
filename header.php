@@ -43,11 +43,11 @@ ini_set( "display_errors", 1 );
 <link rel="stylesheet" href="js/jquery-ui.css">
 
 
-<script type="text/javascript" src="js/jquery-timepicker/jquery.timepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="js/jquery-timepicker/jquery.timepicker.css" />
+<script type="text/javascript" src="js/jquery-timepicker-1.11.9/jquery.timepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-timepicker-1.11.9/jquery.timepicker.css" />
 
-<script type="text/javascript" src="js/jquery-timepicker/lib/site.js"></script>
-<link rel="stylesheet" type="text/css" href="js/jquery-timepicker/lib/site.css" />
+<script type="text/javascript" src="js/jquery-timepicker-1.11.9/lib/site.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-timepicker-1.11.9/lib/site.css" />
 
 <script>
 $( function() {
@@ -60,7 +60,11 @@ $( function() {
 
 <script>
 $(function(){
-    $('input.timepicker').timepicker({ 'timeFormat' : 'H:i', 'step' : '15' });
+    $('input.timepicker').timepicker( { 
+            minTime : '8am'
+            , scrollDefault : 'now'
+            , timeFormat : 'H:i', step : '15' 
+    });
 });
 </script>
 

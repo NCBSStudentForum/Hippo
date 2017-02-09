@@ -78,11 +78,11 @@ class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
             return dict(zip(self.column_names, row))
         return None
 
+user = config.get( 'mysql', 'user' )
+passwd = config.get( 'mysql', 'password' ).replace( '"', '')
 db_ = mysql.connector.connect( 
-        host = config.get( 'mysql', 'host' )
-        , user = config.get( 'mysql', 'user' )
-        , passwd = config.get( 'mysql', 'password' ).replace( '"', '')
-        , db = 'hippo'
+        host = config.get( 'mysql', 'host' ) 
+        , user = user , password = passwd , db = 'hippo'
         )
 
 def init( cur ):
@@ -115,7 +115,16 @@ def getAllAWSPlusUpcoming( ):
     global aws_, db_
     global upcoming_aws_
     # cur = db_.cursor( cursor_class = MySQLCursorDict )
-    cur = db_.cursor( dictionary = True )
+    try:
+        cur = db_.cursor( dictionary = True )
+    except Exception as e:
+        print( 
+        '''If complain is about dictionary keyword. Install 
+        https://pypi.python.org/pypi/mysql-connector-python-rf/2.2.2
+        using easy_install'''
+        )
+        quit( )
+
     init( cur )
 
     # Entries in this table are usually in future.
@@ -133,8 +142,6 @@ def getAllAWSPlusUpcoming( ):
         # Sort a list in place.
         aws_[a].sort( key = lambda x : x['date'] )
         # print( a, [ x['date'] for x in aws_[a] ] )
-
-
 
 def computeCost( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes

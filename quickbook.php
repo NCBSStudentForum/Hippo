@@ -95,7 +95,9 @@ echo '
 echo '</form>';
 echo '</table>';
 
-$publicEvents = getPublicEventsOnThisDay( $_POST[ 'date' ] );
+$date = __get__( $_POST, 'date', dbDate(strtotime( 'today' )) );
+
+$publicEvents = getPublicEventsOnThisDay( $date );
 if( count( $publicEvents ) > 0 )
 {
     echo alertUser( "FYI. Following public events are happening on the campus on 

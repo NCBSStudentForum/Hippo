@@ -35,7 +35,11 @@ $defaults = array(
     'selected_dates' => dbDate( strtotime( 'today' ) )
     , 'selected_venues' => $venueNames
     , 'start_time' => date( 'H:i', strtotime( 'now ' ) )
-    , 'end_time' => date( 'H:i', strtotime( 'now' ) + 6 * 3600 )
+    // It is essential that we stop at 11:59. After than we have 00:00. Which is 
+    // a lower number than start time. We can not iterate over the difference.
+    , 'end_time' => date( 'H:i'
+        , min( strtotime('today midnight') - 60, strtotime( 'now' ) + 6 * 3600)
+        )
     );
 
 // Update these values by $_POST variable.

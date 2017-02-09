@@ -2,9 +2,12 @@
 
 include_once 'database.php';
 include_once 'methods.php';
+include_once 'tohtml.php';
 include_once './check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( "USER" ) );
+
+echo userHTML( );
 
 $roundedTimeNow = round( time( ) / (15 * 60) ) * (15 * 60 );
 
@@ -36,7 +39,11 @@ else
     $openAirNo = 'checked';
 
 
-echo printInfo("Do not use this interface yet. Under construction .. ");
+echo alertUser(
+    'A less user-friendly though powerful booking interface is
+    <a href="bookmyvenue_browse.php">available here</a>
+    '
+    );
 
 echo '<table border="0">';
 echo '<form action="" method="post" accept-charset="utf-8">';
@@ -78,13 +85,24 @@ echo '
     <tr>
         <td></td>
         <td>
-            <button class="submit" name="Response" value="scan">Show me venues</button>
+            <button style="text-align:right;" name="Response" value="scan">Show me venues</button>
         </td>
     </tr>
     ';
 
 echo '</form>';
 echo '</table>';
+
+$publicEvents = getPublicEventsOnThisDay( $_POST[ 'date' ] );
+if( count( $publicEvents ) > 0 )
+{
+    echo alertUser( "FYI. Following public events are happening on the campus on 
+        selected date" );
+    foreach( $publicEvents as $event )
+        echo arrayToTableHTML( $event, 'event', ''
+            , array( 'gid', 'eid', 'description', 'status', 'is_public_event' )
+        );
+}
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {

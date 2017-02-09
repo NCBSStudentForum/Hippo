@@ -319,6 +319,26 @@ function getPublicEvents( $from = 'today', $status = 'VALID' )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Get list of public event on given day.
+    *
+    * @param $date
+    * @param $status
+    *
+    * @return 
+ */
+function getPublicEventsOnThisDay( $date = 'today', $status = 'VALID' )
+{
+    global $db;
+    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date AND 
+        status=:status AND is_public_event='YES'" );
+    $stmt->bindValue( ':date', $date );
+    $stmt->bindValue( ':status', $status );
+    $stmt->execute( );
+    return fetchEntries( $stmt );
+}
+
 function getEventsOn( $day, $status = 'VALID')
 {
     global $db;

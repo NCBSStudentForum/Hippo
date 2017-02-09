@@ -399,12 +399,11 @@ p.note_to_user {
     max-width : 80%;
 }
 
-p.alert_user {
-   /*font-size : small;*/
-   /*border : 1px dotted;*/
-   /*background : lightblue;*/
+div.alert_user {
+   font-size : large;
    max-width : 80%;
-   min-width : 500px;
+   min-width : 300px;
+   padding-bottom : 10px;
 }
 
 .db_table_fieldname {

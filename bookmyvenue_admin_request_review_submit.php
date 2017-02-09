@@ -41,7 +41,7 @@ foreach( $events as $event )
     $event = explode( '.', $event );
     $gid = $event[0]; $rid = $event[1];
 
-    $eventInfo = getRequestByGroupId( $gid, $rid );
+    $eventInfo = getRequestById( $gid, $rid );
     $eventText = eventToText( $eventInfo );
     $msg .= "<tr><td> $eventToText </td><td>". $whatToDo ."ED</td></tr>";
     actOnRequest( $gid, $rid, $whatToDo );

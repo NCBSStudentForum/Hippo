@@ -32,7 +32,7 @@ $dbDate = dbDate( $date );
 
 ?>
 
-<h2>Request for booking</h2>
+<h3>Booking form</h3>
 
 <div class="info"> Time format : HH:MM, 24 Hr format 
 </small>9:30 (for 9:30am), 14:20 for 2:20pm etc. </small>
@@ -52,7 +52,7 @@ if( $venue )
 else
     $venueHTML = venuesToHTMLSelect( $venues );
 
-$startTime = __get__( $_POST, 'start_time', '' );
+$startTime = dbTime( $_POST[ 'start_time' ] );
 
 // This is END time of event. It may come from user from ./quickbook.php or use 
 // default of 1 hrs in future.

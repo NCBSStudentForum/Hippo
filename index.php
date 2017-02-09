@@ -9,9 +9,12 @@ include_once( 'calendar/calendar.php' );
 // If user is already authenticated, redirect him to user.php
 if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
 {
-    echo printInfo( "Already logged-in" );
-    goToPage( 'user.php', 0 );
-    exit;
+    if( $_SESSION[ 'user' ] != 'anonymous' )
+    {
+        echo printInfo( "Already logged-in" );
+        goToPage( 'user.php', 0 );
+        exit;
+    }
 }
 
 session_save_path("/tmp/");

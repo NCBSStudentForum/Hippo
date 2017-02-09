@@ -16,14 +16,9 @@ if( ! ( array_key_exists( 'AUTHENTICATED', $_SESSION )
     exit;
 }
 
-mustHaveAnyOfTheseRoles( array( 'USER', 'ADMIN', 'AWS_ADMIN'
-    , 'JC_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
-
 echo userHTML( );
 
 echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
-
-
 
 $html = '<table class="show_user">';
    $html .= '

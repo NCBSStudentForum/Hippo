@@ -3,6 +3,7 @@
 include_once "header.php" ;
 include_once "database.php";
 include_once 'tohtml.php';
+include_once 'mail.php';
 
 
 $whatToDo = $_POST['response'];
@@ -14,35 +15,50 @@ if( ! array_key_exists( 'events', $_POST ) )
     echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
     exit(0);
 }
+
 $events = $_POST['events'];
+
+$msg = initUserMsg( );
+$userEmail = getUserInfo( $_SESSION[ 'user' ] )['email'] ;
 
 // If admin is rejecting then ask for confirmation.
 if( $whatToDo == 'REJECT' )
 {
-    echo '<script>
-        var r = confirm( "Are you sure ?");
-        if( r == false ) {
-            var path = window.location.pathname;
-            window.location.pathname = 
-                <?php echo appRootDir( ) . "bookmyvenue_admin.php" ?>;
-        }
-        </script>';
-
+    // If no valid response is given, rejection of request is not possible.
+    if( strlen( $_POST[ 'reason' ] ) < 5 )
+    {
+        echo printWarning( "Before you can reject a request, you must provide
+            a valid reason (more than 5 characters long)" );
+        goToPage( "bookmyvenue_admin.php", 3 );
+        exit;
+    }
 }
 
+$msg .= "<p>Note the following changes to your requests </p>";
+$msg .= '<table border="0">';
 foreach( $events as $event )
 {
     $event = explode( '.', $event );
     $gid = $event[0]; $rid = $event[1];
+
+    $eventInfo = getRequestByGroupId( $gid, $rid );
+    $eventText = eventToText( $eventInfo );
+    $msg .= "<tr><td> $eventToText </td><td>". $whatToDo ."ED</td></tr>";
     actOnRequest( $gid, $rid, $whatToDo );
     changeIfEventIsPublic( $gid, $rid, $isPublic );
     if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
     {
         // TODO: Add this to google calendar. 
-        header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
-        exit;
+        //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
+        //exit;
     }
 }
+
+$msg .= "</table>";
+sendEmail( $msg
+    , "[ $whatToDo ] Booking request for $venue has been acted upon"
+    , $userEmail 
+    );
 
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 exit( 0 );

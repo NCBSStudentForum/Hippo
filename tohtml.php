@@ -42,6 +42,13 @@ function prettify( $string )
 }
 
 
+/**
+    * @brief Convert requests to HTML form for review.
+    *
+    * @param $requests
+    *
+    * @return 
+ */
 function requestsToHTMLReviewForm( $requests )
 {
     $html = '<table>';

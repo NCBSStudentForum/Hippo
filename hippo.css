@@ -155,30 +155,12 @@ input.user_input_text {
     min-width : 300px;
 }
 
+// change them together.
 button.add_event {
     width : 20px;
     height : 20px;
-    /*border-radius : 50%;*/
     border-style : none;
     background : lightblue;
-    min-height : 20px;
-    min-width : 20px;
-}
-
-button.add_event_with_public_event {
-    width : 20px;
-    height : 20px;
-    border-style : none;
-    background : blue;
-    min-height : 20px;
-    min-width : 20px;
-}
-
-button.add_event_past {
-    width : 20px;
-    height : 20px;
-    /*border-radius : 50%;*/
-    border-style : none;
     min-height : 20px;
     min-width : 20px;
 }
@@ -186,19 +168,34 @@ button.add_event_past {
 button.display_event {
     min-height : 20px;
     min-width : 20px;
-    /*border-radius : 50%;*/
     border-style : none;
     background : red;
-    /*alignment : right;*/
-    /*vertical-align: text-top;*/
 }
 
+// Change both together.
+button.add_event_with_public_event {
+    width : 20px;
+    height : 20px;
+    border-style : none;
+    background : gray;
+    min-height : 20px;
+    min-width : 20px;
+}
 button.display_event_with_public_event {
     min-height : 20px;
     min-width : 20px;
     border-style : none;
-    background : blue;
+    background : gray;
 }
+
+button.add_event_past {
+    width : 20px;
+    height : 20px;
+    border-style : none;
+    min-height : 20px;
+    min-width : 20px;
+}
+
 
 
 button.display_request {
@@ -321,28 +318,23 @@ table.login_main {
 }
 
 
-table.eventline {
-    widht : 1000px;
-    table-layout : auto;
+table.eventline  {
+    table-layout : fixed;
     text-align : left;
-    background-color:lightyellow; 
-    border-collapse : separate;
-    padding : 3px;
-    border : 1px solid;
-    border-style : dotted;
 }
 
 table.eventline tr td  {
-    width : 10%;
+    background-color:lightyellow; 
+    padding : 1px;
 }
 
 table.hourtable {
-    table-layout : auto;
+    table-layout : fixed;
     background-color:lightyellow; 
 }
 
 table.hourtable tr td {
-    width : 10%;
+    width : 30px;
 }
 
 
@@ -399,12 +391,12 @@ p.note_to_user {
     max-width : 80%;
 }
 
-p.alert_user {
-   /*font-size : small;*/
-   /*border : 1px dotted;*/
-   /*background : lightblue;*/
-   max-width : 80%;
-   min-width : 500px;
+div.alert_user {
+   font-size : large;
+   max-width : 500px;
+   min-width : 300px;
+   padding-bottom : 10px;
+   background: white;
 }
 
 .db_table_fieldname {

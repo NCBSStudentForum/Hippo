@@ -36,7 +36,7 @@ echo userHTML( );
     //echo printWarning( 'Invalid response by user' . $_POST['response'] );
 //}
 
-var_dump( $_SESSION );
+//var_dump( $_SESSION );
 
 //echo goBackToPageLink( 'admin.php', 'Go back' );
 

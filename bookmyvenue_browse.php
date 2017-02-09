@@ -12,6 +12,12 @@ mustHaveAnyOfTheseRoles(
 
 echo userHTML( );
 
+if( isMobile( ) )
+    echo alertUser( 
+        "If you are on a mobile device, you may like another interface.
+        <a href=\"quickbook.php\">TAKE ME THERE</a>"
+        );
+
 // There is a form on this page which will send us to this page again. Therefore 
 // we need to keep $_POST variable to a sane state.
 $venues = getVenues( );

@@ -40,12 +40,14 @@ else
 
 
 echo alertUser(
-    'A less user-friendly though powerful booking interface is
-    <a href="bookmyvenue_browse.php">available here</a>
+    'A powerful booking interface (not mobile friendly) is recommended 
+    if you need to explore other events/dates/venues before booking.
+    <a href="bookmyvenue_browse.php">TAKE ME THERE</a>
     '
     );
 
-echo '<table border="0">';
+echo '<br />';
+echo '<table style="min-width:300px;max-width:500px",border="0">';
 echo '<form action="" method="post" accept-charset="utf-8">';
 echo '
     <tr>
@@ -106,9 +108,11 @@ if( count( $publicEvents ) > 0 )
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {
-    echo "<h3>I've found following available venues</h3>";
+    $date = humanReadableDate( $_POST[ 'date' ] );
 
-    $venues = getVenues( $sortby = 'strength' );
+    echo "<h3>I found following available venues for $date</h3>";
+
+    $venues = getVenues( $sortby = 'name' );
 
     echo '<table border="0">';
     foreach ($venues as $venue) 

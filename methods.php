@@ -212,6 +212,13 @@ function dbDate( $date )
     return date( 'Y-m-d', strtotime( $date ) );
 }
 
+function dbTime( $time )
+{
+    if( is_int( $time ) )
+        return date( 'H:i', $time );
+    return date( 'H:i', strtotime( $time ) );
+}
+
 // Return the name of the day for given date.
 function nameOfTheDay( $date )
 {

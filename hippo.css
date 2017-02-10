@@ -2,6 +2,16 @@
     font-family : open-sans, droid-serif, sans-serif, Verdana;
 }
 
+:root { --background : ivory }
+
+body {
+
+}
+
+h2 {
+    font-size : 150%;
+}
+
 // img.login_picture and table.editable_user_picture should co-exists.
 img.login_picture {
     width : 20%;
@@ -17,7 +27,7 @@ table.editable_user_picture
 
 table.editable_user_picture tr td {
     text-align: left;
-    background-color: lightyellow;
+    background-color: var(--background);
     word-wrap: break-word;
     max-width : 80%;
 }
@@ -59,7 +69,7 @@ table.show_user tr td
 {
     /*border : 0.5px dotted; */
     min-width : 20%;
-    background : lightyellow;
+    background : var(--background);
 }
 
 table.show_info {
@@ -70,18 +80,18 @@ table.show_info {
 
 table.show_info tr td 
 {
-    background : lightyellow;
+    background : var(--background);
 }
 
 table.show_speaker tr td  {
-    background : lightyellow;
+    background : var(--background);
 }
 
 
 table.show_aws {
     max-width : 1000px;
     min-width : 300px;
-    background : lightyellow;
+    background : var(--background);
 }
 
 table.show_aws tr td:nth-child(odd)
@@ -103,7 +113,7 @@ table.show_aws tr td:nth-child(even)
 table.show_calendar {
     max-width : 1000px;
     min-width : 100%;
-    background : lightyellow;
+    background : var(--background);
 }
 
 table.show_calendar tr td:nth-child(1)
@@ -116,7 +126,7 @@ table.show_calendar tr td:nth-child(1)
 table.show_aws_summary {
     max-width : 1000px;
     min-width : 100%;
-    background : lightyellow;
+    background : var(--background);
 }
 
 
@@ -133,7 +143,7 @@ table.show_schedule {
 table.show_schedule tr td
 {
     border : 1px dotted;
-    background: lightyellow;
+    background: var(--background);
 }
 
 table.show_schedule th
@@ -221,7 +231,7 @@ button.submit {
 
 table.input {
     text-align : left;
-    background-color:lightyellow; 
+    background-color:var(--background); 
     min-width : 400px;
     max-width : 800px; 
 }
@@ -244,7 +254,7 @@ table.request {
 
 table.show_requests {
     text-align : left;
-    background-color:lightyellow; 
+    background-color:var(--background); 
     border-collapse : separate;
     width : 100%;
 }
@@ -252,7 +262,7 @@ table.show_requests {
 table.show_events tr td  {
     layout : auto;
     text-align : left;
-    background-color:lightyellow; 
+    background-color:var(--background); 
     /*border-collapse : separate;*/
     /*border : 1px dotted;*/
 }
@@ -268,7 +278,7 @@ table.submit_request.tr td {
 
 table.event {
     text-align : left;
-    background-color:lightyellow; 
+    background-color:var(--background); 
     border-collapse : separate;
     border : 1px dotted;
     max-width : 90%;
@@ -276,7 +286,7 @@ table.event {
 
 table.editable_events {
     text-align : left;
-    background-color:lightyellow; 
+    background-color:var(--background); 
     border : 0px;
     /*max-width : 90%;*/
 }
@@ -288,7 +298,7 @@ table.editable_logins {
 
 table.editable_logins tr td {
     text-align: left;
-    background-color: lightyellow;
+    background-color: var(--background);
     word-wrap: break-word;
     max-width : 70%;
 }
@@ -300,7 +310,7 @@ table.editable_logins tr td {
 table.editable_faculty {
     text-align : left;
     min-width : 500px;
-    background : lightyellow;
+    background : var(--background);
 }
 
 
@@ -315,7 +325,7 @@ div.image {
 }
 
 table.login_main {
-    background-color : lightyellow;
+    background-color : var(--background);
 }
 
 
@@ -325,13 +335,13 @@ table.eventline  {
 }
 
 table.eventline tr td  {
-    background-color:lightyellow; 
+    background-color:var(--background); 
     padding : 1px;
 }
 
 table.hourtable {
     table-layout : fixed;
-    background-color:lightyellow; 
+    background-color:var(--background); 
 }
 
 table.hourtable tr td {
@@ -344,7 +354,7 @@ table.request tr:nth-of-type( odd ) {
 }
 
 table.admin {
-    background : lightyellow;
+    background : var(--background);
     width : 80%;
     min-width : 500px;
     max-width : 90%;

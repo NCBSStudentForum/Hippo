@@ -23,45 +23,52 @@ echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
 // Manage speakers in NCBS.
 
 $html = '<table class="show_user">';
-   $html .= '
+$html .= '
    <tr>
       <td>
          See and edit (most of) your details 
       </td>
       <td> 
-         <a href="user_info.php">Show/Edit my details</a> 
+         <a href="user_info.php">Edit my profile</a> 
       </td>
    </tr>
-   <tr>
-      <td>Browse available venues and submit a booking request</td>
-      <td> <a href="bookmyvenue_browse.php">Book my venue</a> </td>
-   </tr>
-   <tr>
-      <td>You can see your unapproved requests and modify their description and cancel
-         them if neccessary.
-      </td>
-      <td> <a href="user_show_requests.php">Show/Edit BookMyVenue</a> </td>
-   </tr>
-   <tr>
-      <td>These booking requests have been approved (we call them events). You can 
-         still edit their description (and also cancel them). </td>
-      <td> <a href="user_show_events.php">Show/Edit (my) upcoming events</a></td>
-   </tr>
-   <!--
-   <tr>
-      <td>TODO: Journal clubs.</td>
-      <td> <a href="user_jc.php">My Journal Club</a> </td>
-   </tr>
-   -->
-   <tr>
+   </table>';
+echo $html;
+
+echo '<h3>Annual Work Seminars</h3>';
+$html = '<table class="show_user">';
+$html .= '<tr>
       <td>Annual Work Seminar.</td>
       <td> 
          <a href="user_aws.php">My AWS</a> 
       </td>
    </tr>';
 
-   $html .= "</table>";
+$html .= "</table>";
 echo $html;
+
+echo '<h3>BookMyVenue</h3>';
+
+$html = '<table class="show_user">';
+$html .= '<tr>
+      <td>Browse available venues and submit a booking request</td>
+      <td> <a href="bookmyvenue_browse.php">Browse and book a venue</a> </td>
+   </tr>
+   <tr>
+      <td>You can see your unapproved requests and modify their description and cancel
+         them if neccessary.
+      </td>
+      <td> <a href="user_show_requests.php">Update my bookings</a> </td>
+   </tr>
+   <tr>
+      <td>These booking requests have been approved (we call them events). You can 
+         still edit their description (and also cancel them). </td>
+      <td> <a href="user_show_events.php">Update my events</a></td>
+   </tr>
+   </table>';
+
+echo $html;
+
 
 echo "<h3>Talk manangement </h3>";
 echo '<table class="show_user">
@@ -81,7 +88,7 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
 , 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) ) 
 )
 {
-   echo "<h3>You have following roles as admin</h3>";
+   echo "<h2>Admin</h2>";
    $roles =  getRoles( $_SESSION['user'] );
 
    $html = "<table class=\"show_user\">";

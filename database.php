@@ -63,11 +63,12 @@ function initialize( )
 
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS talks 
-        ( id INT AUTO_INCREMENT
+        ( id INT NOT NULL AUTO_INCREMENT
         , speaker VARCHAR(100) NOT NULL
         , host VARCHAR(100) NOT NULL
         , title VARCHAR(1000) NOT NULL
         , description TEXT 
+        , PRIMARY KEY (id)
         )' );
 
     return $res;

@@ -10,8 +10,6 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 if( $_POST['response'] == "Reschedule" )
 {
     $cwd = getcwd( );
-    $resfilePath = tempnam( "/tmp", "minion" );
-
     echo printInfo( "Rescheduling ...." );
     $scriptPath = $cwd . '/schedule.sh';
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
@@ -29,6 +27,21 @@ else if( $_POST[ 'response' ] == 'Accept' )
     if( $res )
     {
         echo printInfo( "Successfully assigned" );
+
+        // Now insert a entry into email database.
+        $msg = getEmailTemplateById( 'aws_confirmed_notify_speaker' );
+        // Replace text in the template.
+        $msg = str_replace( '%SPEAKER%', loginToText( $_POST[ 'speaker'], $msg ); 
+        $msg = str_replace( '%DATE%', humanReadableDate( $_POST[ 'date'], $msg ); 
+
+        // Store this to database.
+        $data = array( "recipients" => getLoginEmail( $_POST[ 'speaker' ] )
+            , "subject" => "We have fixed date of your next AWS"
+            , "msg" => $msg 
+            , "when_to_send" => dbDateTime( strtotime( '+1 day' ) 
+        );
+        insertIntoTable( 'emails', 'recipients,subject,msg,when_to_send', $data ); 
+
         goToPage( "admin_aws_manages_upcoming_aws.php", 1 );
         exit;
     }

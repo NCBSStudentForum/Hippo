@@ -212,6 +212,14 @@ function dbDate( $date )
     return date( 'Y-m-d', strtotime( $date ) );
 }
 
+function dbDateTime( $date )
+{
+    if( is_int( $date ) )
+        return date( 'Y-m-d H:i:s', $date );
+
+    return date( 'Y-m-d H:i:s', strtotime( $date ) );
+}
+
 function dbTime( $time )
 {
     if( is_int( $time ) )

@@ -464,7 +464,8 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
     if( count( $editables ) > 0 )
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
-        $html .= "<button style=\"float:right\" value=\"$button_val\" name=\"response\">Submit</button>";
+        $html .= "<button style=\"float:right\" value=\"$button_val\" 
+            name=\"response\">" . ucfirst( $button_val ) . "</button>";
         $html .= "</td></tr>";
     }
     $html .= "</table>";

@@ -82,7 +82,7 @@ table.show_info th
 
 table.show_aws {
     max-width : 1000px;
-    min-width : 100%;
+    min-width : 300px;
     background : lightyellow;
 }
 
@@ -93,11 +93,12 @@ table.show_aws tr td:nth-child(odd)
     text-align : right;
     max-height: 3cm;
 }
+
 table.show_aws tr td:nth-child(even)
 {
     border : 0.5px dotted; 
     text-align : left;
-    min-width : 80%;
+    min-width : 400px;
     max-height: 3cm;
 }
 

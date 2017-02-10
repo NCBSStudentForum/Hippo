@@ -284,7 +284,7 @@ function arrayToVerticalTableHTML( $array, $tablename, $background = NULL, $tobe
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
-            $table .= "<td class=\"cell_content\">$array[$k]</td>";
+            $table .= "<td><div class=\"cell_content\">$array[$k]</div></td>";
             $table .= "</tr>";
         }
 

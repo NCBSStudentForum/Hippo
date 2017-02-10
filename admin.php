@@ -73,6 +73,12 @@ echo '
                 <a href="admin_manages_holidays.php">Manage holidays</a>
             </td>
         </tr>
+        <tr>
+            <td>Manage email templates</td>
+            <td>
+                <a href="admin_manages_email_templates.php">Manage Email template</a>
+            </td>
+        </tr>
     </table>
     ';
 

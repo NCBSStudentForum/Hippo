@@ -71,6 +71,14 @@ function initialize( )
         , PRIMARY KEY (id)
         )' );
 
+    // This table holds the email template.
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS email_templates
+        ( id VARCHAR(100) NOT NULL
+        , when_to_send VARCHAR(200)
+        , description TEXT, PRIMARY KEY (id) )' 
+        );
+
     return $res;
 }
 
@@ -1444,6 +1452,18 @@ function getHolidays( $from = NULL )
     if( ! $from )
         $from = date( 'Y-m-d', strtotime( 'today' ) );
     $stmt = $db->query( "SELECT * FROM holidays WHERE date >= '$from' ORDER BY date" );
+    return fetchEntries( $stmt );
+}
+
+/**
+    * @brief Fetch all existing email templates.
+    *
+    * @return 
+ */
+function getEmailTemplates( )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM email_templates" );
     return fetchEntries( $stmt );
 }
 

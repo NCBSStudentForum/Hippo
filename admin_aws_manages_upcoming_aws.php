@@ -42,7 +42,7 @@ echo '
     </table>
     ';
 
-echo '<h3>Upcoming AWS for next week</h3>';
+echo '<h3>AWS for next week</h3>';
 
 $upcomingAWSs = getUpcomingAWS( );
 $upcomingAwsNextWeek = array( );
@@ -57,7 +57,7 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '<table>';
     echo '<tr><td>';
 
-    echo arrayToTableHTML( $upcomingAWS, 'aws' 
+    echo arrayToVerticalTableHTML( $upcomingAWS, 'aws' 
         , '', array( 'id', 'status', 'comment' )
     );
 

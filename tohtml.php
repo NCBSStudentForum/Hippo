@@ -306,7 +306,7 @@ function userHTML( )
     $html .= "<tr><td><a href=\"quickbook.php\">QuickBook</a>";
     $html .= '</td><td><a href="user_aws.php">MyAWS</a></td>';
     $html .= "</tr><tr>";
-    $html .= "<td><a href=\"user.php\">Home</a>";
+    $html .= "<td><a href=\"user.php\">My Home</a>";
     $html .= '</td><td><a href="logout.php">Logout</a></td>';
     $html .= "</tr>";
     $html .= "</table>";

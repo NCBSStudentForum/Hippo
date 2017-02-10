@@ -22,6 +22,7 @@ function toColor($n)
     return("#".substr("000000".dechex($n),-6));
 }
 
+
 /**
     * @brief Generate a select list outof given values.
     *

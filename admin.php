@@ -56,6 +56,24 @@ echo '
 
 echo "</table>";
 
+echo '<h3>Email management</h3>';
+echo '
+    <table class="show_user">
+        <tr>
+        <td>Manange emails
+        <p>
+            You can see scheduled emails, canncel them or edit the message. 
+            If neccessary, send them right away.
+        </p>
+        </td>
+            <td>
+                <a href="admin_manages_email.php">Manage emails</a>
+            </td>
+        </tr>
+    </table>
+    ';
+
+
 
 echo "<h3>Database management </h3>";
 

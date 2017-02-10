@@ -1,5 +1,7 @@
 <?php
 
+include_once 'database.php';
+
 function sendEmail($msg, $sub, $to) 
 {
     $timestamp = date( 'r', strtotime( 'now' ) );
@@ -7,8 +9,8 @@ function sendEmail($msg, $sub, $to)
     $msg .= "
         <p>==========================================================</p>
         <p>
-        This email is a computer generated email, you need not reply. In case of 
-        any query or issue, please write to hippo@lists.ncbs.res.in. 
+        This is a computer generated email, you need not reply. In case of 
+        any query, please write to hippo@lists.ncbs.res.in. 
         </p>
         <p>Email generated on : $timestamp </p>
         <p>==========================================================</p>
@@ -20,11 +22,20 @@ function sendEmail($msg, $sub, $to)
     $to = trim( $to );
 
     $cmd= __DIR__ . "/sendmail.py '$to' '$sub' '$msgfile' ";
-    $out = shell_exec( $cmd );
+    $out = exec( $cmd, $output, $ret );
+    return $ret;
+}
 
-    //unlink( $msgfile );
+function sendEmailById( $id )
+{
+    $email = getEmailById( $id );
+    if( ! $email )
+        return false;
 
-    return $out;
+    $msg = $email[ 'msg' ];
+    $sub = $email[ 'subject' ];
+    $to = $email[ 'recipients' ];
+    return sendEmail( $msg, $sub, $to );
 }
 
 // $res = sendEmail( "testing"

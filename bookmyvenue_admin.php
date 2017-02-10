@@ -42,7 +42,7 @@ if( count( $requests ) == 0 )
     echo printInfo( "Cool! No request is pending for review" );
 
 
-$html = '<table>';
+$html = '<table class="show_request">';
 foreach( $requests as $r )
 {
     $html .= '<form action="bookmyvenue_admin_request_review.php" method="post">';

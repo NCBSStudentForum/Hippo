@@ -35,6 +35,11 @@ div.bottom {
     font-color : red;
 }
 
+div.cell_content {
+    min-width : 10px;
+    max-height : 200px;
+    overflow : auto;
+}
 
 table.user_float {
     position : fixed;
@@ -238,9 +243,6 @@ table.request {
     width : 100%;
 }
 
-table.request tr td {
-}
-
 table.show_requests {
     text-align : left;
     background-color:lightyellow; 
@@ -248,12 +250,12 @@ table.show_requests {
     width : 100%;
 }
 
-table.show_events {
+table.show_events tr td  {
+    layout : auto;
     text-align : left;
     background-color:lightyellow; 
-    border-collapse : separate;
-    border : 1px dotted;
-    width : 100%;
+    /*border-collapse : separate;*/
+    /*border : 1px dotted;*/
 }
 
 

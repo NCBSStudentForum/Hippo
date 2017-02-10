@@ -15,7 +15,7 @@ def toText( msg ):
     # First try with pandoc.
     try:
         import pypandoc
-        msg = pypandoc.convert_text( msg, 'html', format = 'md' ) 
+        msg = pypandoc.convert_text( msg, 'md', format = 'html' ) 
     except Exception as e:
         _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )
         _logger.info( 'Trying html2text ' )

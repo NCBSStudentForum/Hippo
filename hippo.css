@@ -62,12 +62,14 @@ table.show_user tr td
     background : lightyellow;
 }
 
+table.show_info {
+    min-width : 80%;
+    max-width : 1000px;
+    layout : auto;
+}
 
 table.show_info tr td 
 {
-    /*border : 0.5px dotted; */
-    min-width: 10%;
-    max-width: 20%;
     background : lightyellow;
 }
 
@@ -75,10 +77,6 @@ table.show_speaker tr td  {
     background : lightyellow;
 }
 
-table.show_info th
-{
-    font-size: xx-small;
-}
 
 table.show_aws {
     max-width : 1000px;

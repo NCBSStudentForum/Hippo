@@ -259,7 +259,7 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
         if( isStringAValidDate( $v ) )
             $v = humanReadableDate( $v );
 
-        $table .= "<td class=\"cell_content\">$v</td>";
+        $table .= "<td><div class=\"cell_content\">$v</div></td>";
     }
 
     $table .= "</tr></table>";

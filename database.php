@@ -87,9 +87,9 @@ function initialize( )
             , subject VARCHAR(1000) NOT NULL
             , msg TEXT NOT NULL
             , when_to_send DATETIME NOT NULL
-            , status ENUM( "PENDING", "SENT", "FAILED" ) DEFAULT "PENDING"
+            , status ENUM( "PENDING", "SENT", "FAILED", "CANCELLED" ) DEFAULT "PENDING"
             , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            , sent_on DATETIME 
+            , last_tried_on DATETIME 
             , PRIMARY KEY (id) 
         )' 
         );
@@ -1497,6 +1497,34 @@ function getEmailTemplateById( $id )
     $stmt = $db->query( "SELECT * FROM email_templates where id='$id'" );
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
+
+function getEmailsByStatus( $status = 'PENDING' )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM emails where status = '$status'
+        ORDER BY when_to_send DESC
+        " );
+    return fetchEntries( $stmt );
+}
+
+function getEmailById( $id )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM emails where id = '$id'" );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
+
+function getUpcomingEmails( $from = null )
+{
+    global $db;
+    if( ! $from )
+        $from = dbDateTime( strtotime( 'today' ) );
+
+    $stmt = $db->query( "SELECT *k FROM emails where when_to_send>='$from'" );
+    return fetchEntries( $stmt );
+}
+
 
 // Deprecated: Images are stored in ./pictures/ folder.
 // /**

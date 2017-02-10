@@ -23,8 +23,14 @@ import sys
 import os
 from logger import _logger
 
+
+def sendEmails( ):
+
+
+
 def main( ):
     _logger.info( 'Running cronjob' )
+    sendEmails( )
 
 if __name__ == '__main__':
     main()

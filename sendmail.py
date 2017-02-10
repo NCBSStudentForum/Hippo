@@ -3,7 +3,6 @@
 import os
 import sys
 import smtplib 
-import html2text
 from email.mime.text import MIMEText
 from logger import _logger
 
@@ -12,39 +11,58 @@ if len( sys.argv ) < 4:
     _logger.error( "|- Got params %s" % sys.argv )
     quit( )
 
-fromAddress = 'NCBS Hippo <noreply@ncbs.res.in>'
-toAddr = sys.argv[1]
-subject = sys.argv[2]
+def toText( msg ):
+    # First try with pandoc.
+    try:
+        import pypandoc
+        msg = pypandoc.convert_text( msg, 'html', format = 'md' ) 
+    except Exception as e:
+        _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )
+        _logger.info( 'Trying html2text ' )
+        try:
+            import html2text
+            msg = html2text.html2text( msg )
+        except Exception as e:
+            _logger.warn( 'Failed to convert to html using html2text. %s' % e )
+    return msg
 
-_logger.debug( "Got command line params %s" % sys.argv )
+def sendMail( fromAddr, toAddr, subject, msg ):
+    msg = toText( msg )
+    msg = MIMEText( msg )
+    msg[ 'subject' ] = subject
+    msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
 
-msg = '''Error: no text found'''
+    s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
+    s.set_debuglevel( 2 )
 
-try:
-    with open( sys.argv[3], 'r' )  as f:
-        msg = f.read( )
-except Exception as e:
-    _logger.error( "I could not read file %s. Error was %s" % (sys.argv[3], e))
-    quit( )
+    success = False
+    try:
+        _logger.info( 'Sending email to %s' % toAddr )
+        s.sendmail( fromAddr, toAddr.split( ',' ), msg.as_string( ) )
+        success = True
+    except Exception as e:
+        with open( '/var/log/hippo.log', 'a' ):
+            _logger.error( 'Failed to send email. Error was %s' % e )
 
-try:
-    msg = html2text.html2text( msg )
-except Exception as e:
-    _logger.warn( 'Failed to convert to html. Error was %s' % e )
+        _logger.info( "Everything went OK. Mail sent sucessfully" )
+    s.quit( )
+    return success
 
-msg = MIMEText( msg )
-msg[ 'subject' ] = subject
-msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
+def main( args ):
+    _logger.debug( "Got command line params %s" % args )
+    fromAddr = 'NCBS Hippo <noreply@ncbs.res.in>'
+    toAddr = args[1]
+    subject = args[2]
 
-s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
-s.set_debuglevel( 2 )
+    msg = '''Error: no text found'''
+    try:
+        with open( args[3], 'r' )  as f:
+            msg = f.read( )
+    except Exception as e:
+        _logger.error( "I could not read file %s. Error was %s" % (args[3], e))
+        return False
 
-try:
-    _logger.info( 'Sending email to %s' % toAddr )
-    s.sendmail( fromAddress, toAddr.split( ',' ), msg.as_string( ) )
-except Exception as e:
-    with open( '/var/log/hippo.log', 'a' ):
-        _logger.error( 'Failed to send email. Error was %s' % e )
+    return sendMail( fromAddr, toAddr, subject, msg )
 
-_logger.info( "Everything went OK. Mail sent sucessfully" )
-s.quit( )
+if __name__ == '__main__':
+    main( sys.argv )

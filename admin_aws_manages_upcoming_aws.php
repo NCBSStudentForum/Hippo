@@ -26,7 +26,12 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 echo userHTML( );
 
 echo '<h3>Manually assign AWS</h3>';
-echo '<p>To manually assign a date to a speaker, you can use this interface.</p>';
+echo printInfo( 
+    'Here you can manually assign speakers to an AWS slot After assignment,
+    you may want to press <button disabled>Reschedule All</button> below to 
+    update schedule again after the changes made manually.
+    ' );
+
 echo '
     <table border="0">
     <form method="post" action="admin_aws_manages_upcoming_aws_submit.php">

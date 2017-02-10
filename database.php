@@ -79,6 +79,21 @@ function initialize( )
         , description TEXT, PRIMARY KEY (id) )' 
         );
 
+    // Save the emails here. A bot should send these emails.
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS emails
+        ( id INT NOT NULL AUTO_INCREMENT
+            , recipients VARCHAR(1000) NOT NULL
+            , subject VARCHAR(1000) NOT NULL
+            , msg TEXT NOT NULL
+            , when_to_send DATETIME NOT NULL
+            , status ENUM( "PENDING", "SENT", "FAILED" ) DEFAULT "PENDING"
+            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , sent_on DATETIME 
+            , PRIMARY KEY (id) 
+        )' 
+        );
+
     return $res;
 }
 
@@ -873,6 +888,15 @@ function getLoginInfo( $login_name )
     return getUserInfo( $login_name );
 }
 
+function getLoginEmail( $login )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT email FROM logins WHERE login=:login" );
+    $stmt->bindValue( ":login", $login );
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC )['email'];
+}
+
 function getRoles( $user )
 {
     global $db;
@@ -1465,6 +1489,13 @@ function getEmailTemplates( )
     global $db;
     $stmt = $db->query( "SELECT * FROM email_templates" );
     return fetchEntries( $stmt );
+}
+
+function getEmailTemplateById( $id )
+{
+    global $db;
+    $stmt = $db->query( "SELECT * FROM email_templates where id='$id'" );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 // Deprecated: Images are stored in ./pictures/ folder.

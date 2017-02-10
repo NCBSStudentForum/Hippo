@@ -15,16 +15,20 @@ __status__           = "Development"
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG,
-    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-    datefmt='%m-%d %H:%M',
-    filename='/var/log/hippo.log',
-    filemode='a'
-    )
+try:
+    logging.basicConfig(level=logging.DEBUG,
+        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        datefmt='%m-%d %H:%M',
+        filename='/var/log/hippo.log',
+        filemode='a'
+        )
+except Exception as e:
+    pass
 
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 console.setFormatter(formatter)
+
 _logger = logging.getLogger('hippo')
 _logger.addHandler(console)

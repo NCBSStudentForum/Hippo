@@ -20,17 +20,13 @@ __status__           = "Development"
 import sys
 import os
 import math
-import mysql.connector
-import mysql
-import ConfigParser
 from collections import defaultdict
 import datetime 
 import tempfile 
 import random
 import getpass
 from logger import _logger
-
-print( 'VERSION connector %s' % mysql.connector.version )
+from db_connect import db_
 
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
@@ -39,8 +35,6 @@ sys.path.insert(0, networkxPath )
 import networkx as nx
 print( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
-
-print( 'Writing to %s' % logFile )
 _logger.info( 'Started on %s' % datetime.date.today( ) )
 
 g_ = nx.DiGraph( )
@@ -56,25 +50,6 @@ speakers_ = { }
 
 # List of holidays.
 holidays_ = {}
-
-config = ConfigParser.ConfigParser( )
-thisdir = os.path.dirname( os.path.realpath( __file__ ) )
-config.read( os.path.join( '/etc', 'hippo', 'hipporc' ) )
-_logger.debug( 'Read config file %s' % str( config ) )
-
-class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
-    def _row_to_python(self, rowdata, desc=None):
-        row = super(MySQLCursorDict, self)._row_to_python(rowdata, desc)
-        if row:
-            return dict(zip(self.column_names, row))
-        return None
-
-user = config.get( 'mysql', 'user' )
-passwd = config.get( 'mysql', 'password' ).replace( '"', '')
-db_ = mysql.connector.connect( 
-        host = config.get( 'mysql', 'host' ) 
-        , user = user , password = passwd , db = 'hippo'
-        )
 
 def init( cur ):
     """Create a temporaty table for scheduling AWS"""

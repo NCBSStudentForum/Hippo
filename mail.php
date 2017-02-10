@@ -19,10 +19,10 @@ function sendEmail($msg, $sub, $to)
     file_put_contents( $msgfile, $msg );
     $to = trim( $to );
 
-    $cmd= __DIR__ . "/sendmail.py '$to' '$sub' '$msgfile' 2>&1 | tee /tmp/_sendmail.log_";
+    $cmd= __DIR__ . "/sendmail.py '$to' '$sub' '$msgfile' ";
     $out = shell_exec( $cmd );
 
-    unlink( $msgfile );
+    //unlink( $msgfile );
 
     return $out;
 }

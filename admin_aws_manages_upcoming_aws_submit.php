@@ -4,23 +4,28 @@ include_once 'header.php';
 include_once 'database.php';
 include_once 'methods.php';
 include_once "check_access_permissions.php";
+include_once 'tohtml.php';
 
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 function createEmailEntry( $speaker, $date )
 {
     // Now insert a entry into email database.
-    $msg = getEmailTemplateById( 'aws_confirmed_notify_speaker' );
+    $msg = getEmailTemplateById( 'aws_confirmed_notify_speaker' )[ 'description'];
     // Replace text in the template.
-    $msg = str_replace( '%SPEAKER%', loginToText( $speaker, $msg ); 
-    $msg = str_replace( '%DATE%', humanReadableDate( $date, $msg ); 
+    $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $msg); 
+    $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg ); 
 
     // Store this to database.
     $data = array( "recipients" => getLoginEmail( $speaker )
         , "subject" => "We have fixed date of your next AWS"
         , "msg" => $msg 
-        , "when_to_send" => dbDateTime( strtotime( '+1 day' ) 
+        , "when_to_send" => dbDateTime( strtotime( '+1 day' ) ) 
     );
+
+    // For debugging write to temp file.
+    file_put_contents( '/tmp/__mail_apache.html', $msg );
+
     insertIntoTable( 'emails', 'recipients,subject,msg,when_to_send', $data ); 
 }
 

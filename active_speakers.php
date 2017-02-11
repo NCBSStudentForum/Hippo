@@ -21,5 +21,6 @@ foreach( $speakers as $speaker )
 }
 echo '</table>';
 
-
 ?>
+
+<a href="javascript:window.close();">Close Window</a>

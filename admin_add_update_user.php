@@ -34,7 +34,7 @@ if( ! $default )
     $buttonVal = 'Add New';
 }
 
-echo '<form method="post" action="admin_modify_user_privileges_submit.php">';
+echo '<form method="post" action="admin_add_update_user_submit.php">';
 echo dbTableToHTMLTable(
     'logins', $default
     , Array( 'roles', 'status', 'title', 'eligible_for_aws', 'joined_on' ) 

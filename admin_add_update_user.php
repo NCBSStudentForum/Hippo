@@ -42,6 +42,8 @@ echo dbTableToHTMLTable(
     , $buttonVal
     );
 
+echo  '<br/><br/>';
+echo '<button type="submit" name="response" value="Delete">Delete User!</button>';
 echo '</form>';
 
 echo goBackToPageLink( 'admin.php', 'Go back' );

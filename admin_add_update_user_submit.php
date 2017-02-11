@@ -29,6 +29,17 @@ if( $_POST[ 'response' ] == "Add New" )
         exit;
     }
 }
+else if( $_POST[ 'response' ] == 'Delete' )
+{
+    $user = $_POST[ 'login' ];
+    echo printInfo( "Deleting $user" );
+    $res = deleteFromTable( 'logins', 'login', array( 'login' => $user ) ); 
+    if( $res )
+    {
+        echo printInfo( "Successfully deleted a new login" );
+        goToPage( "admin.php", 1 );
+    }
+}
 else
 {
     $toUpdate = array( 'roles', 'title', 'joined_on', 'eligible_for_aws', 'status' );

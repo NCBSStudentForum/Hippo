@@ -36,14 +36,14 @@ else
 }
 echo '</div>';
 
-echo printInfo( 'Please fill-in details of your upcoming  AWS below.
-     We will use this to generate the notification email
-     and document. You can change it as many times as you like 
-     <small> (Note: We will not store the old version).</small>
-    ' );
-
 if( $scheduledAWS )
 {
+
+    echo printInfo( 'Please fill-in details of your upcoming  AWS below.
+         We will use this to generate the notification email
+         and document. You can change it as many times as you like 
+         <small> (Note: We will not store the old version).</small>
+        ' );
     $id = $scheduledAWS[ 'id' ];
     echo "<form method=\"post\" action=\"user_aws_update_upcoming_aws.php\">";
     echo arrayToVerticalTableHTML( $scheduledAWS, 'aws', NULL
@@ -53,10 +53,10 @@ if( $scheduledAWS )
     echo "</form>";
 }
 
-
-echo "<h3>Update pending requests</h3>";
-
 $awsRequests = getAwsRequestsByUser( $_SESSION['user'] );
+if( count( $awsRequests ) > 0 )
+    echo "<h3>Update pending requests</h3>";
+
 foreach( $awsRequests as $awsr )
 {
     $id = $awsr['id'];
@@ -69,25 +69,21 @@ foreach( $awsRequests as $awsr )
 }
 
 
-echo "<h3>Create a request</h3>";
-echo "<table class=\"show_user\">";
-echo '<tr><td>
-    You can add a missing AWS here for review.
-    </td><td> <a href="user_aws_request.php">Add previous 
-    AWS</a>';
-echo "</td></tr>";
-echo '<tr>
-    <td>Edit previous AWS. Something is wrong in my previous AWS entries.</td>
-    <td>Just scroll down to the list of previous AWSes and press Edit button.</td>
-    
-</tr>';
-echo "</table>";
 
 
 echo goBackToPageLink( "user.php", "Go back" );
 echo "<br />";
 
 echo "<h3>Past Annual Work Seminar</h3>";
+
+echo "<table>";
+echo '<tr><td>
+    You can add a missing AWS for review.
+    </td><td> <a href="user_aws_request.php">Add previous 
+    AWS</a>';
+echo "</td></tr>";
+echo "</table>";
+echo "<br/>";
 
 $awses = getMyAws( $_SESSION['user'] );
 

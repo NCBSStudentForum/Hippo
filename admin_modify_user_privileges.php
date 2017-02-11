@@ -1,8 +1,9 @@
 <?php 
 
-include_once( 'header.php' );
-include_once( 'check_access_permissions.php' );
-include_once( 'tohtml.php' );
+include_once 'header.php' ;
+include_once 'check_access_permissions.php' ;
+include_once 'tohtml.php' ;
+include_once 'ldap.php';
 
 mustHaveAnyOfTheseRoles( Array( 'ADMIN', 'AWS_ADMIN' ) );
 
@@ -16,10 +17,30 @@ if( ! array_key_exists( 'login', $_POST ) )
 }
 
 $default = getUserInfo( $_POST['login'] );
+$buttonVal = 'Update';
+
+if( ! $default )
+{
+    $default = getUserInfoFromLdap( $_POST[ 'login' ] );
+    if( ! $default )
+    {
+        echo printWarning( 
+            "Invalid username. I did not find anyone named " .
+            $_POST[ 'login' ] . " on LDAP server" );
+        exit;
+    }
+
+    $default[ 'login' ] = $_POST[ 'login' ];
+    $buttonVal = 'Add New';
+}
 
 echo '<form method="post" action="admin_modify_user_privileges_submit.php">';
-echo dbTableToHTMLTable( 'logins', $default
-    , $editables = Array( 'roles', 'status', 'title', 'eligible_for_aws', 'joined_on' ) );
+echo dbTableToHTMLTable(
+    'logins', $default
+    , Array( 'roles', 'status', 'title', 'eligible_for_aws', 'joined_on' ) 
+    , $buttonVal
+    );
+
 echo '</form>';
 
 echo goBackToPageLink( 'admin.php', 'Go back' );

@@ -94,7 +94,7 @@ $(function () {
     Highcharts.chart('container0', {
         chart: { type: 'column' },
         title: { text: 'Number of Annual Work Seminars per year' },
-        xAxis: { gridLineWidth: 1 },
+        xAxis: { min : 2010 },
         yAxis: [{ title: { text: 'AWS Count' } }, ],
         series: [{
             name: 'AWS per year',
@@ -159,9 +159,7 @@ $(function () {
         title: {
             text: 'Total speakers with #AWSs'
         },
-        xAxis: {
-            gridLineWidth: 1
-        },
+        xAxis: { min : 0 },
         yAxis: [{
             title: {
                 text: 'Speaker Count'
@@ -231,9 +229,7 @@ $(function () {
         title: {
             text: 'Gap in months between consecutive AWSs'
         },
-        xAxis: {
-            gridLineWidth: 1
-        },
+        xAxis: { max : 36 },
         yAxis: [{
             title: {
                 text: 'AWS Count'

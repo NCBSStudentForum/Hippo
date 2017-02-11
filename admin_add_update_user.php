@@ -27,6 +27,7 @@ if( ! $default )
         echo printWarning( 
             "Invalid username. I did not find anyone named " .
             $_POST[ 'login' ] . " on LDAP server" );
+        echo goBackToPageLink( 'admin.php', 'Go back' );
         exit;
     }
 

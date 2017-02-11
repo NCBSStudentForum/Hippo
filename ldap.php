@@ -33,7 +33,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
     if( ! $r )
     {
         echo printWarning( "LDAP binding failed. TODO: Ask user to edit details " );
-        return Array( );
+        return null;
     }
 
     $sr = ldap_search($ds, $base_dn, "uid=$ldap");
@@ -64,7 +64,11 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
             )
         );
     }
-    return $result[0];
+
+    if( count( $result ) > 0 )
+        return $result[0];
+    else
+        return null;
 }
 
 ?>

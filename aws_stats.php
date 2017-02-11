@@ -31,19 +31,22 @@ foreach( $awsPerSpeaker as $speaker => $awses )
     );
 }
 
-$plotAData = array( );
-$plotBData = array( );
+$numAWSPerSpeaker = array( );
+$gapBetweenAWS = array( );
 foreach( $awsCounts as $key => $val )
 {
-    array_push( $plotAData,  array($val, 0) );
+    array_push( $numAWSPerSpeaker,  array($val, 0) );
+
     for( $i = 1; $i < count( $awsDates[ $key ] ); $i++ )
     {
         $gap = (strtotime( $awsDates[ $key ][$i-1] ) - 
             strtotime( $awsDates[ $key ][$i]) )/ (30.5 * 86400);
+
         // We need a tuple. Second entry is dummy.
-        array_push( $plotBData, array( $gap, 0 ) );
+        array_push( $gapBetweenAWS, array( $gap, 0 ) );
     }
 }
+
 
 ?>
 
@@ -114,7 +117,7 @@ $(function () {
 <script type="text/javascript" charset="utf-8">
 $(function () {
     
-    var data = <?php echo json_encode( $plotAData ); ?>;
+    var data = <?php echo json_encode( $numAWSPerSpeaker ); ?>;
 
     /**
      * Get histogram data out of xy data
@@ -184,7 +187,7 @@ $(function () {
 
 $(function () {
     
-    var data = <?php echo json_encode( $plotBData ); ?>;
+    var data = <?php echo json_encode( $gapBetweenAWS ); ?>;
 
     /**
      * Get histogram data out of xy data

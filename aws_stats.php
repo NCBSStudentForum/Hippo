@@ -262,8 +262,5 @@ $(function () {
 Ideally, this value should be 12 months for all AWSs.
 <div id="container2" style="width:100%; height:400px;"></div>
 
-<?php
+<a href="javascript:window.close();">Close Window</a>
 
-echo  goBackToPageLink( "index.php", "Go back" );
-
-?>

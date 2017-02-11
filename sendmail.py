@@ -2,6 +2,7 @@
 
 import os
 import sys
+import re
 import smtplib 
 from email.mime.text import MIMEText
 from logger import _logger
@@ -13,6 +14,10 @@ if len( sys.argv ) < 4:
 
 def toText( msg ):
     # First try with pandoc.
+    #   Remove all <div> tags.
+    msg = msg.replace( '</div>', '' )
+    msg = re.sub( r'\<div\s+.+?\>', '', msg )
+
     try:
         import pypandoc
         if not os.path.isfile( '/usr/bin/pandoc' ):

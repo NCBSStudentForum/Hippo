@@ -382,12 +382,15 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     *
     * @return 
  */
-function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = Array()
+function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = ''
     , $button_val = 'submit'
 )
 {
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );
+
+    if( is_string( $editables ) )
+        $editables = explode( ",", $editables );
 
     foreach( $schema as $col )
     {

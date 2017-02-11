@@ -38,9 +38,9 @@ echo '<h3>User management</h3>';
 echo "<table class=\"show_user\">";
 echo '
     <tr>
-        <td>Edit user</td>
+        <td>Add new user or update existing user</td>
         <td>
-            <form method="post" action="admin_modify_user_privileges.php">
+            <form method="post" action="admin_add_update_user.php">
             <input id="autocomplete_user" name="login" placeholder="I will autocomplete " >
             <button name="response" value="edit">Add or remove privileges</button>
             </form>

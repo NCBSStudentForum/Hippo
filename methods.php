@@ -107,6 +107,9 @@ function goBackToPageLink( $url, $title = "Go back" )
 
 function __get__( $arr, $what, $default = NULL )
 {
+    if( ! $arr )
+        return $default;
+
     if( array_key_exists( $what, $arr ) )
         return $arr[$what];
     else

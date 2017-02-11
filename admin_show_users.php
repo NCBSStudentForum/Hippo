@@ -27,7 +27,7 @@ foreach( $logins as $login )
     );
     echo "</td>";
     echo "<td> 
-        <form method=\"post\" action=\"admin_modify_user_privileges.php\">
+        <form method=\"post\" action=\"admin_add_update_user.php\">
         <input type=\"hidden\" name=\"login\" value=\"$loginName\" />
         <button name=\"edit\" value=\"edit\">Edit</button> </td>
         </form>

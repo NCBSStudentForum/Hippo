@@ -52,14 +52,15 @@ function initialize( )
         ' );
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS visitors 
-        ( id INT NOT NULL
-            , title ENUM( "Mr.", "Ms.", "Dr.", "Prof" )
-            , email VARCHAR(100) PRIMARY KEY
-            , first_name VARCHAR(100) NOT NULL
+        ( id INT NOT NULL AUTO_INCREMENT
+            , title ENUM( "Mr.", "Ms.", "Dr.", "Prof" ) DEFAULT "Dr."
+            , email VARCHAR(100) 
+            , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
             , middle_name VARCHAR(100)
             , last_name VARCHAR(100)
             , department VARCHAR(500)
-            , institute VARCHAR(1000) NOT NULL
+            , institute VARCHAR(1000) NOT NULL CHECK( institute <> "" )
+            , PRIMARY KEY (id)
             , UNIQUE KEY (email,first_name,last_name)
             )' );
 
@@ -1056,6 +1057,7 @@ function insertIntoTable( $tablename, $keys, $data )
         $value = $data[$k];
         if( gettype( $value ) == 'array' )
             $value = implode( ',', $value );
+
         $stmt->bindValue( ":$k", $value );
     }
     $res = $stmt->execute( );

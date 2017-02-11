@@ -27,29 +27,49 @@ function findSpeakerDetails( $email, $all )
 $visitors = getVisitors( );
 $faculty = getFaculty( );
 
+var_dump( $visitors );
+
 $allSpeakersSearchable = array_map( function( $x ) {
         return $x[ 'first_name' ] . ' ' . $x[ 'last_name' ] .
             ' (' . $x['email'] . ')' ; 
             } , $visitors 
         );
 
+echo printInfo( "Total speakers in my database " . count( $visitors ) );
+
 if( array_key_exists( 'response', $_POST ) )
 {
+    echo "Post";
+    var_dump( $_POST );
+
     preg_match( "/.*\((.+@.+)\)/", $_POST[ 'speaker' ], $email);
     if( count( $email ) > 0 )
     {
         $email = $email[1];
         $default[ 'email' ] = $email;
     }
-    else
-        $default[ 'email' ] = $_POST[ 'speaker' ];
 
     $speaker = findSpeakerDetails( $email, $visitors );
     if( $speaker )
         $default = array_merge( $default, $speaker );
 
-
-    $_POST = array( );
+    // Now if response is AddNew, add a new visitor else update it.
+    if( $_POST[ 'response' ] == 'AddNewSpeaker' )
+        $res = insertIntoTable( 'visitors'
+            , 'email,first_name,middle_name,last_name,department,institute'
+            , $_POST 
+            );
+    else if( $_POST[ 'response' ] == "SelectSpeaker" )
+    {
+        if( array_key_exists( 'id', $_POST) && $_POST[ 'id' ] )
+            $res = updateTable( 'visitors'
+                , 'id'
+                , 'email,first_name,middle_name,last_name,department,institute'
+                , $default 
+                );
+    }
+    else
+        echo printInfo( "Unknown response " . $_POST[ 'response' ] );
 }
     
 
@@ -79,10 +99,20 @@ $(function() {
 
 <?php
 
-echo dbTableToHTMLTable( 'visitors', $default 
-    , 'title,email,first_name,middle_name,last_name,department,institute'
+if( array_key_exists( 'response', $_POST ) && 
+    $_POST[ 'response' ] == 'SelectSpeaker'
+    )
+{
+    echo '<form method="post" action="">';
+    $whatToDo = 'AddNewSpeaker';
+    if( $default[ 'id' ] )
+        $whatToDo = 'UpdateSpeaker';
+
+    echo dbTableToHTMLTable( 'visitors', $default 
+        , 'title,email,first_name,middle_name,last_name,department,institute'
+        , $whatToDo
     );
-
-
+    echo '</form>';
+}
 
 ?>

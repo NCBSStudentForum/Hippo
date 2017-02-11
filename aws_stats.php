@@ -6,12 +6,19 @@ include_once 'database.php';
 // Get all data.
 
 $awses = getAllAWS( );
+$speakers = getAWSSpeakers( );
+
 $awsPerSpeaker = array( );
 
 $awsYearData = array_map(
     function( $x ) { return array(date('Y', strtotime($x['date'])), 0); } , $awses
     );
 
+// Here each valid AWS speaker initialize her count to 0.
+foreach( $speakers as $speaker )
+    $awsPerSpeaker[ $speaker['login'] ] = array();
+
+// If there is already an AWS for a speaker, add to her count.
 foreach( $awses as $aws )
 {
     $speaker = $aws[ 'speaker' ];

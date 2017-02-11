@@ -353,9 +353,6 @@ $networkJSONFileName = "data/network.json";
 
 
 </script>
-
 </div>
 
-<?php
-echo goBackToPageLink( "index.php", "Go back" );
-?>
+<a href="javascript:window.close();">Close Window</a>

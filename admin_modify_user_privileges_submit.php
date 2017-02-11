@@ -11,13 +11,34 @@ mustHaveAnyOfTheseRoles( Array( 'ADMIN' ) );
 
 //var_dump( $_POST );
 
-$toUpdate = array( 'roles', 'title', 'joined_on', 'eligible_for_aws', 'status' );
-$res = updateTable( 'logins', 'login', $toUpdate, $_POST ); 
-if( $res )
+if( $_POST[ 'response' ] == "Add New" )
 {
-    echo printInfo( "Successfully updated : " . implode(',', $toUpdate)  );
-    goToPage( 'admin.php', 1 );
-    exit;
+    $_POST[ 'created_on' ] = dbDateTime( 'now' );
+    $res = insertIntoTable( 'logins'
+        , "id,title,roles,joined_on,eligible_for_aws,status,first_name,last_name"
+        . ",login,valid_untill,laboffice,email,created_on"
+        , $_POST );
+    if( $res )
+    {
+        echo printInfo( "Successfully added a new login" );
+        goToPage( "admin.php", 1 );
+    }
+    else
+    {
+        echo printWarning( "Failed to add a new user" );
+        exit;
+    }
+}
+else
+{
+    $toUpdate = array( 'roles', 'title', 'joined_on', 'eligible_for_aws', 'status' );
+    $res = updateTable( 'logins', 'login', $toUpdate, $_POST ); 
+    if( $res )
+    {
+        echo printInfo( "Successfully updated : " . implode(',', $toUpdate)  );
+        goToPage( 'admin.php', 1 );
+        exit;
+    }
 }
 echo goBackToPageLink( 'admin.php', 'Go back' );
 

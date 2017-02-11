@@ -6,8 +6,11 @@ include_once 'mail.php';
 include_once 'tohtml.php';
 
 $res = updateTable( "logins", "login"
-    , Array( "valid_until", "title", "laboffice"
-        , 'joined_on' , 'alternative_email' )
+    , Array( 
+        "valid_until", "title", "laboffice"
+        , 'joined_on' , 'alternative_email' 
+        , "first_name", "last_name"
+        )
     , $_POST 
     );
 

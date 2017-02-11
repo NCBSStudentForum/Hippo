@@ -38,11 +38,13 @@ echo '<h3>User management</h3>';
 echo "<table class=\"show_user\">";
 echo '
     <tr>
-        <td>Add new user or update existing user</td>
+    <td>Add, Update or Delete user <br>
+        <small>Type a login name and press the button.</small>
+    </td>
         <td>
             <form method="post" action="admin_add_update_user.php">
             <input id="autocomplete_user" name="login" placeholder="I will autocomplete " >
-            <button name="response" value="edit">Add or remove privileges</button>
+            <button name="response" value="edit">Add/Update/Delete user</button>
             </form>
         </td>
     </tr>

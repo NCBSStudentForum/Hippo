@@ -152,6 +152,20 @@ table.show_schedule th
     font-size : x-small;
 }
 
+table.tasks {
+    max-width : 80%;
+    min-width : 500px;
+}
+
+table.tasks tr td 
+{
+    /*border : 0.5px dotted; */
+    min-width : 20%;
+    max-width : 60%;
+    background : var(--background);
+}
+
+
 
 div.info {
     /*border : 1px solid #73AD21;*/

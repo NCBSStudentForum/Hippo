@@ -22,7 +22,7 @@ echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
 
 // Manage speakers in NCBS.
 
-$html = '<table class="show_user">';
+$html = '<table class="tasks">';
 $html .= '
    <tr>
       <td>
@@ -36,7 +36,7 @@ $html .= '
 echo $html;
 
 echo '<h3>Annual Work Seminars</h3>';
-$html = '<table class="show_user">';
+$html = '<table class="tasks">';
 $html .= '<tr>
       <td>Annual Work Seminar.</td>
       <td> 
@@ -49,7 +49,7 @@ echo $html;
 
 echo '<h3>BookMyVenue</h3>';
 
-$html = '<table class="show_user">';
+$html = '<table class="tasks">';
 $html .= '<tr>
       <td>Browse available venues and submit a booking request</td>
       <td> <a href="bookmyvenue_browse.php">Browse and book a venue</a> </td>
@@ -71,14 +71,14 @@ echo $html;
 
 
 echo "<h3>Talk manangement </h3>";
-echo '<table class="show_user">
+echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
     <tr>
         <td> 
-            Register a new talk <br>You can schedule it later</br> 
+            Register a new talk (and optionally book a vanue of it)
+        </td><td>
+            <a href="user_register_talk.php">Register a talk</a></td>
         </td>
-        <td> <input type="text" name="email" placeholder="email of speaker" />
-            <button type="submit" name="AddNewSpeaker">Register talk</button>
         </td>
     </tr>
     </form>
@@ -91,7 +91,7 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
    echo "<h2>Admin</h2>";
    $roles =  getRoles( $_SESSION['user'] );
 
-   $html = "<table class=\"show_user\">";
+   $html = "<table class=\"tasks\">";
   if( in_array( "ADMIN", $roles ) )
       $html .= '<tr><td> All migthy ADMIN </td>
          <td><a href="admin.php">Admin</a></td> </td>

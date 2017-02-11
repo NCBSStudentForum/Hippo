@@ -52,13 +52,15 @@ function initialize( )
         ' );
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS visitors 
-            ( title ENUM( "Mr.", "Ms.", "Dr.", "Prof" )
+        ( id INT NOT NULL
+            , title ENUM( "Mr.", "Ms.", "Dr.", "Prof" )
             , email VARCHAR(100) PRIMARY KEY
             , first_name VARCHAR(100) NOT NULL
             , middle_name VARCHAR(100)
             , last_name VARCHAR(100)
             , department VARCHAR(500)
             , institute VARCHAR(1000) NOT NULL
+            , UNIQUE KEY (email,first_name,last_name)
             )' );
 
     $res = $db->query( 
@@ -1523,6 +1525,13 @@ function getUpcomingEmails( $from = null )
 
     $stmt = $db->query( "SELECT *k FROM emails where when_to_send>='$from'" );
     return fetchEntries( $stmt );
+}
+
+function getVisitors( )
+{
+    global $db;
+    $res = $db->query( 'SELECT * FROM visitors' );
+    return fetchEntries( $res );
 }
 
 

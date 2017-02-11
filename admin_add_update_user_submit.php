@@ -16,7 +16,7 @@ if( $_POST[ 'response' ] == "Add New" )
     $_POST[ 'created_on' ] = dbDateTime( 'now' );
     $res = insertIntoTable( 'logins'
         , "id,title,roles,joined_on,eligible_for_aws,status,first_name,last_name"
-        . ",login,valid_untill,laboffice,email,created_on"
+        . ",login,valid_until,laboffice,email,created_on"
         , $_POST );
     if( $res )
     {

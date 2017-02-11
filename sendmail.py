@@ -15,6 +15,9 @@ def toText( msg ):
     # First try with pandoc.
     try:
         import pypandoc
+        if not os.path.isfile( '/usr/bin/pandoc' ):
+            os.environ.setdefault( 'PYPANDOC_PANDOC', '/usr/local/bin/pandoc' )
+
         msg = pypandoc.convert_text( msg, 'md', format = 'html' ) 
     except Exception as e:
         _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )

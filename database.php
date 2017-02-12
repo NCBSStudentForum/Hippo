@@ -55,7 +55,7 @@ function initialize( )
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS visitors 
         ( id INT NOT NULL AUTO_INCREMENT
-            , title ENUM( "Mr.", "Ms.", "Dr.", "Prof" ) DEFAULT "Dr."
+            , title ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
             , email VARCHAR(100) 
             , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
             , middle_name VARCHAR(100)
@@ -1108,6 +1108,16 @@ function insertIntoTable( $tablename, $keys, $data )
     return null;
 }
 
+/**
+    * @brief Insert an entry into table. On collision, update the table.
+    *
+    * @param $tablename
+    * @param $keys
+    * @param $updatekeys
+    * @param $data
+    *
+    * @return The value of last updated row.
+ */
 function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
 {
     global $db;
@@ -1166,6 +1176,7 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         );
     }
 
+    // This is MYSQL specific.
     if( $res )
     {
         // When created return the id of table else return null;

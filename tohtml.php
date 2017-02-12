@@ -396,7 +396,8 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     * @return  An html table. You need to wrap it in a form.
  */
 function dbTableToHTMLTable( $tablename
-    , $defaults=Array(), $editables = '' , $button_val = 'submit', $hide = ''
+        , $defaults=Array(), $editables = '' 
+        , $button_val = 'submit', $hide = ''
     )
 {
     $html = "<table class=\"editable_$tablename\">";
@@ -596,12 +597,18 @@ function arrayToSelectList( $name, $options
     return $html;
 }
 
-function loginToText( $loginName )
+function loginToText( $login )
 {
-    $login = getUserInfo( $loginName );
+    // If only login name is give, query database to get the array. Otherwise 
+    // assume that an array has been given to use.
+    if( is_string( $login ) )
+        $login = getUserInfo( $login );
+
     $text = $login['first_name'] . ' ' . $login[ 'last_name' ];
-    if( strlen( trim( $text ) ) < strlen($loginName) )
-        $text = $loginName;
+
+    if( array_key_exists( 'email', $login) && $login[ 'email' ] )
+        $text .= " (" . $login['email'] . ")";
+
     return $text;
 }
 

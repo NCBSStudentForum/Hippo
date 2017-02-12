@@ -94,7 +94,7 @@ $( function() {
 <script type="text/javascript" charset="utf-8">
 function AreYouSure( button )
 {
-    var x = confirm( "Are your sure, you want to do this?" );
+    var x = confirm( "ALERT! Destructive operation! Continue?" );
     if( x )
         button.setAttribute( 'value', 'delete' );
     return x;

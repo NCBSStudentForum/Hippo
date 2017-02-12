@@ -1,7 +1,9 @@
 <?php
 
+
 include_once 'check_access_permissions.php';
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
+
 
 include_once 'database.php';
 include_once 'tohtml.php';
@@ -31,9 +33,18 @@ $(function() {
 
 <?php
 echo '<form method="post" action="user_register_talk_action.php">';
-echo printInfo( "Speaker details" );
+echo "<h3>Speaker details</h3>";
+echo printInfo( 
+    "Email id of visitor is desirable. It just help keeping the database clean 
+    by avoidling duplicate entries. You can continue without it though.
+    <br><br>
+    <strong>First name</strong> and <strong>institute</strong> are required 
+    fields.
+    "
+    );
+
 echo dbTableToHTMLTable( 'visitors', $speaker 
-    , 'title,email,first_name,middle_name,last_name,department,institute'
+    , 'title,email,homepage,first_name,middle_name,last_name,department,institute'
     , '', 'id'
     );
 echo printInfo( "Talk information" );
@@ -41,5 +52,7 @@ echo dbTableToHTMLTable( 'talks', $talk
     , 'host,title,description', 'Submit', 'id,speaker,date,time,venue'
     );
 echo '</form>';
+
+echo goBackToPageLink( 'user.php', 'Go back' );
 
 ?>

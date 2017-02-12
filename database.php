@@ -25,7 +25,9 @@ class BMVPDO extends PDO
                 , $user, $password, $options 
             );
         } catch( PDOException $e) {
-            echo printWarning( "failed to connect to database: ".  $e->getMessage());
+            echo minionEmbarrassed( 
+                "failed to connect to database: ".  $e->getMessage()
+            );
             $this->error = $e->getMessage( );
             echo goBackToPageLink( 'index.php', 0 );
             exit;
@@ -59,6 +61,7 @@ function initialize( )
             , middle_name VARCHAR(100)
             , last_name VARCHAR(100)
             , department VARCHAR(500)
+            , homepage VARCHAR(500)
             , institute VARCHAR(1000) NOT NULL CHECK( institute <> "" )
             , PRIMARY KEY (id)
             , UNIQUE KEY (email,first_name,last_name)
@@ -1044,23 +1047,91 @@ function insertIntoTable( $tablename, $keys, $data )
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );
         }
-            
     }
 
     $keysT = implode( ",", $cols );
     $values = implode( ",", $values );
-    $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values )";
 
+    $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values )";
     $stmt = $db->prepare( $query );
+
     foreach( $cols as $k )
     {
         $value = $data[$k];
-        if( gettype( $value ) == 'array' )
+        if( is_array( $value ) )
             $value = implode( ',', $value );
 
         $stmt->bindValue( ":$k", $value );
     }
     $res = $stmt->execute( );
+    if( $res )
+    {
+        // When created return the id of table else return null;
+        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
+        $stmt->execute( );
+        return $stmt->fetch( PDO::FETCH_ASSOC );
+    }
+    return null;
+}
+
+function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
+{
+    global $db;
+
+    if( is_string( $keys ) )
+        $keys = explode( ',', $keys );
+
+    if( is_string( $updatekeys ) )
+        $updatekeys = explode( ',', $updatekeys );
+
+    $values = Array( );
+    $cols = Array( );
+    foreach( $keys as $k )
+    {
+        // If values for this key in $data is null then don't use it here.
+        if( $data[$k] && strlen( $data[ $k ] ) > 0 )
+        {
+            array_push( $cols, "$k" );
+            array_push( $values, ":$k" );
+        }
+    }
+
+    $keysT = implode( ",", $cols );
+    $values = implode( ",", $values );
+
+    $updateExpr = '';
+    if( count( $updatekeys ) > 0 )
+    {
+        $updateExpr .= ' ON DUPLICATE KEY UPDATE ';
+        foreach( $updatekeys as $k )
+            // Update only if the new value is not empty.
+            if( strlen( $data[ $k ] ) > 0 )
+                $updateExpr .= "$k=:$k,";
+
+        // Remove last ','
+        $updateExpr = rtrim( $updateExpr, "," );
+    }
+
+    $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values ) $updateExpr";
+    $stmt = $db->prepare( $query );
+    foreach( $cols as $k )
+    {
+        $value = $data[$k];
+        if( is_array( $value ) )
+            $value = implode( ',', $value );
+        $stmt->bindValue( ":$k", $value );
+    }
+
+    $res = null;
+    try {
+        $res = $stmt->execute( );
+    } catch ( PDOException $e ) {
+        //echo $stmt->debugDumpParams( );
+        echo minionEmbarrassed( "Failed to execute <pre> " . $query . "</pre>"
+            , $e->getMessage( )
+        );
+    }
+
     if( $res )
     {
         // When created return the id of table else return null;
@@ -1118,6 +1189,8 @@ function deleteFromTable( $tablename, $keys, $data )
     $res = $stmt->execute( );
     return $res;
 }
+
+
 
 /**
     * @brief A generic function to update a table.

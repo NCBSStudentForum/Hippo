@@ -86,8 +86,9 @@ echo '
     </tr>
     <tr>
         <td></td>
-        <td>
-            <button style="text-align:right;" name="Response" value="scan">Show me venues</button>
+        <td style="text-align:right">
+        <button title="Scan for venues" 
+            name="Response" value="scan">' .  $symbScan . '</button>
         </td>
     </tr>
     ';
@@ -162,7 +163,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         $venueT = venueToText( $venue );
         echo "<td>$venueT</td>";
-        echo '<td> <button type="submit">Book</button></td>';
+        echo '<td> <button type="submit" title="Book this venue">' . $symbThumbsUp . '</button></td>';
         echo '</form>';
         echo '</tr>';
     }

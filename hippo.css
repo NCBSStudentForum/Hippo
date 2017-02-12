@@ -183,6 +183,11 @@ input.user_input_text {
     min-width : 300px;
 }
 
+button {
+    font-size: x-large;
+    /*min-width : 50px;*/
+}
+
 // change them together.
 button.add_event {
     width : 20px;

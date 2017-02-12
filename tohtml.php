@@ -1,6 +1,9 @@
 <?php 
+
 include_once 'methods.php';
 include_once 'database.php';
+include_once 'tohtml.php';
+
 ?>
 
 <script>
@@ -643,6 +646,7 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
     }
 
     $html = "<table class=\"input\">";
+    $text = sanitiesForTinyMCE( __get__( $default, 'abstract', '' ));
     $html .= '
         <tr>
             <td>Title</td>
@@ -651,9 +655,17 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
         </tr>
         <tr>
             <td>Abstract </td>
-            <td><textarea id="abstract" name="abstract" rows="10" cols="40">' 
-                . __get__( $default, 'abstract', '' ) . '</textarea>
-            <script> CKEDITOR.replace( "abstract" ); </script>
+            <td>
+                <textarea class="editable" id="abstract" name="abstract">' . 
+                    $text . '</textarea>
+                <script>
+                    tinymce.init( { selector : "#abstract"
+                            , init_instance_callback: "insert_content"
+                        } );
+                    function insert_content( inst ) {
+                        inst.setContent( \'' . $text . '\');
+                    }
+                </script>
             </td>
         </tr>';
 

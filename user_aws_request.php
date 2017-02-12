@@ -9,12 +9,6 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
-?>
-
-<script src="ckeditor/ckeditor.js"> </script>
-
-<?php
-
 $default = Array( );
 
 if( ! isset( $_POST['id'] ))
@@ -59,17 +53,27 @@ if( $_POST['response'] == 'edit' )
 
     echo "<form method=\"post\" action=\"user_aws_request_edit_submit.php\">";
     echo "<table class=\"input\">";
+
+    $abstract = sanitiesForTinyMCE( __get__( $default, 'abstract', '' ) );
     echo '
         <tr>
             <td>Title</td>
             <td><input type="text" class="long" name="title" value="' 
-                . __get__( $default, 'title', '') . '" /></td>
+                . __get__( $default, 'title', '') . '" />
+            </td>
         </tr>
         <tr>
             <td>Abstract </td>
             <td><textarea id="abstract" name="abstract" rows="10" cols="40">' 
-                . __get__( $default, 'abstract', '' ) . '</textarea>
-                <script> CKEDITOR.replace( "abstract" ); </script>
+                . $abstract . '</textarea>
+                <script>
+                    tinymce.init( { selector : "#abstract"
+                            , init_instance_callback: "insert_content"
+                        } );
+                    function insert_content( inst ) {
+                        inst.setContent( \'' . $abstract . '\');
+                    }
+                </script>
             </td>
         </tr>';
 

@@ -14,9 +14,10 @@ if( $_POST['response'] == 'edit' )
 {
     $id = $_POST[ 'id' ];
     $aws = getAwsById( $id );
-    echo dbTableToHTMLTable( 'annual_work_seminars', $aws , array( 'title', 'abstract' ));
+    echo dbTableToHTMLTable( 'annual_work_seminars'
+        , $aws , array( 'title', 'abstract' )
+        );
 }
-
 
 
 

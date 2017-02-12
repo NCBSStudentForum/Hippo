@@ -75,10 +75,15 @@ echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
     <tr>
         <td> 
-            Register a new talk (and optionally book a vanue of it)
+            Register a new talk
         </td><td>
-            <a href="user_register_talk.php">Register a talk</a></td>
+            <a href="user_register_talk.php">Register a new talk</a></td>
         </td>
+    </tr><tr>
+        <td> 
+            Edit/update a previously registered talk and book a venue for it
+        </td><td>
+            <a href="user_manage_talk.php">Manage my talks</a></td>
         </td>
     </tr>
     </form>

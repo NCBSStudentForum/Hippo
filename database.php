@@ -74,6 +74,14 @@ function initialize( )
         , host VARCHAR(100) NOT NULL
         , title VARCHAR(1000) NOT NULL
         , description TEXT 
+        , created_by VARCHAR(100) NOT NULL CHECK( register_by <> "" )
+        , create_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        , date DATE 
+        , time TIME
+        , venue VARCHAR(100)
+        , status ENUM( 
+            "DELIVERED", "SCHEDULED", "NOT_SCHEDULED", "CANCELLED", "INVALID" 
+            ) DEFAULT "NOT_SCHEDULED"
         , PRIMARY KEY (id)
         )' );
 
@@ -1005,13 +1013,17 @@ function getSupervisors( )
     *
     * @param $tablename
     * @param $orderby
+    * @param $where
     *
     * @return 
  */
-function getTableEntries( $tablename, $orderby = '' )
+function getTableEntries( $tablename, $orderby = '', $where = '' )
 {
     global $db;
-    $query = "SELECT * FROM $tablename ";
+    $query = "SELECT * FROM $tablename";
+
+    if( strlen( $where ) > 0 )
+        $query .= " WHERE $where ";
 
     if( $orderby )
         $query .= " ORDER BY $orderby";

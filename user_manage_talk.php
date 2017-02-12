@@ -34,8 +34,12 @@ foreach( $talks as $t )
     echo '</tr><tr>';
     echo '
         <input type="hidden" name="id" value="' . $t[ 'id' ] . '" />
-        <td><button onclick="AreYouSure(this)" name="response" >Delete</button></td>
-        <td><button style="float:right" name="response" value="edit">Edit</button></td>
+        <td><button onclick="AreYouSure(this)" name="response" 
+            title="Delete this entry" >' . $symbDelete . '</button></td>
+        <td><button style="float:right" title="Schedule this talk" 
+            name="response" value="schedule">' . $symbCalendar . '</button></td>
+        <td><button style="float:right" title="Edit this entry"
+                name="response" value="edit">' . $symbEdit . '</button></td>
         ';
     echo '</tr></table>';
     echo '</form>';

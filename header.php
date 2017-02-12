@@ -101,4 +101,14 @@ function AreYouSure( button )
 }
 </script>
 
+<!-- load basic unicode chara -->
+<?php
 
+$symbEdit = "&#9998";
+$symbCalendar = "&#128197";
+$symbDelete = "&#10008";
+$symbScan = "&#128269";
+$symbThumbsUp = "&#128077";
+$symbPerfect = "&#128076";
+
+?>

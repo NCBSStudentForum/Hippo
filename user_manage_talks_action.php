@@ -38,6 +38,21 @@ else if( $_POST[ 'response' ] == 'edit' )
     echo dbTableToHTMLTable('talks', $talk, 'host,title,description', 'update');
     echo '</form>';
 }
+else if( $_POST[ 'response' ] == 'schedule' )
+{
+    echo printInfo( 'Scheduling' );
+    $venues = array_map( 
+        function( $x ) { return $x['id' ]; }
+        ,  getTableEntries( 'venues', 'strength', "has_projector='YES'"  )
+        );
+
+    $venueSelect = arrayToSelectList( 'venue', $venues );
+
+    $default = array( "venue" => $venueSelect );
+    echo $venueSelect;
+
+
+}
 
 echo goBackToPageLink( "user_manage_talk.php", "Go back" );
 exit;

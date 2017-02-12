@@ -565,7 +565,7 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     * @return HTML <select> 
  */
 function arrayToSelectList( $name, $options
-    , $display = Array(), $multiple_select = FALSE 
+    , $display = array(), $multiple_select = FALSE 
     , $selected = ''
 )
 {

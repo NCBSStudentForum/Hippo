@@ -11,7 +11,7 @@ include_once 'tohtml.php';
 if( ! $_POST[ 'response' ] )
 {
     // Go back to previous page.
-    goToPage( $_SERVER[ 'HTTP_REFERER' ], 0 );
+    goToPage( "user_manage_talk.php", 0 );
     exit;
 }
 else if( $_POST[ 'response' ] == 'update' )
@@ -27,7 +27,7 @@ else if( $_POST[ 'response' ] == 'update' )
         echo printWarning( "Failed to update the talk " );
 }
 
-echo goBackToPageLink( $_SERVER[ 'HTTP_REFERER' ], "Go back" );
+echo goBackToPageLink( 'user_manage_talk.php', "Go back" );
 exit;
 
 ?>

@@ -17,6 +17,7 @@ ini_set( "error_log", "/var/log/hippo.log" );
 
 <!DOCTYPE html>
 <html>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 
 <div class="header">
 
@@ -87,6 +88,17 @@ $( function() {
 
 </script>
 <!-- CKEDIR -->
-<script src="./ckeditor/ckeditor.js"></script>
+<script src="./ckeditor/ckeditor.js"> </script>
+
+<!-- confirm on delete -->
+<script type="text/javascript" charset="utf-8">
+function AreYouSure( button )
+{
+    var x = confirm( "Are your sure, you want to do this?" );
+    if( x )
+        button.setAttribute( 'value', 'delete' );
+    return x;
+}
+</script>
 
 

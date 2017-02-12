@@ -14,8 +14,6 @@ echo userHTML( );
 
 ?>
 
-<script src="ckeditor/ckeditor.js"> </script>
-
 <?php
 
 // If we have come here by a post request, get the speaker and date and fetch 
@@ -33,6 +31,7 @@ echo "<h3>Edit or add AWS entry</h3>";
 
 echo alertUser( "Supervisor 1 must be a local faculty. Others can be from outside." );
 
+echo '<form method="post" action="user_aws_edit_request_submit.php">';
 echo editableAWSTable( $awsId );
 echo "</form>";
 

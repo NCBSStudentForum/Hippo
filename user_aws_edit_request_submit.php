@@ -15,7 +15,7 @@ $res = insertIntoTable( 'aws_requests'
 if( $res )
 {
     echo printInfo( 'Successfully created a request to edit AWS details ' );
-    goToPage( 'user_aws.php', 3 );
+    goToPage( 'user_aws.php', 1 );
     exit;
 }
 else

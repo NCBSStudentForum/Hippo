@@ -10,9 +10,13 @@ include_once 'methods.php';
 echo userHTML( );
 
 // Logic for POST requests.
-$default = array( 
+$speaker = array( 
     'first_name' => '', 'middle_name' => '', 'last_name' => '', 'email' => ''
     , 'department' => '', 'institute' => '', 'title' => '', 'id' => ''
+    , 'homepage' => ''
+    );
+
+$talk = array( 
     );
     
 
@@ -27,7 +31,7 @@ function findSpeakerDetails( $email, $all )
 $visitors = getVisitors( );
 $faculty = getFaculty( );
 
-var_dump( $visitors );
+//var_dump( $visitors );
 
 $allSpeakersSearchable = array_map( function( $x ) {
         return $x[ 'first_name' ] . ' ' . $x[ 'last_name' ] .
@@ -35,12 +39,11 @@ $allSpeakersSearchable = array_map( function( $x ) {
             } , $visitors 
         );
 
-echo printInfo( "Total speakers in my database " . count( $visitors ) );
+//echo printInfo( "Total speakers in my database " . count( $visitors ) );
 
 if( array_key_exists( 'response', $_POST ) )
 {
-    echo "Post";
-    var_dump( $_POST );
+    //var_dump( $_POST );
 
     preg_match( "/.*\((.+@.+)\)/", $_POST[ 'speaker' ], $email);
     if( count( $email ) > 0 )
@@ -72,8 +75,6 @@ if( array_key_exists( 'response', $_POST ) )
         echo printInfo( "Unknown response " . $_POST[ 'response' ] );
 }
     
-
-echo '<h3>Step 1 : Register your speaker </h3>';
 ?>
 
 <script>
@@ -83,36 +84,17 @@ $(function() {
 });
 </script>
 
-<form method="post" action="">
-<table class="tasks">
-    <tr>
-        <td>Type the email of speaker, I may be able to find him if (s)he has
-            visited before. If you don't know the email, leave it blank.
-        </td>
-        <td>
-            <input type="input" name="speaker" id="autocomplete_user" value="" />
-            <button type="submit" name="response" value="SelectSpeaker">Select speaker</button>
-        </td>
-    </tr>
-</table>
-</form>
-
 <?php
-
-if( array_key_exists( 'response', $_POST ) && 
-    $_POST[ 'response' ] == 'SelectSpeaker'
-    )
-{
-    echo '<form method="post" action="">';
-    $whatToDo = 'AddNewSpeaker';
-    if( $default[ 'id' ] )
-        $whatToDo = 'UpdateSpeaker';
-
-    echo dbTableToHTMLTable( 'visitors', $default 
-        , 'title,email,first_name,middle_name,last_name,department,institute'
-        , $whatToDo
+echo '<form method="post" action="user_register_talk_action.php">';
+echo printInfo( "Speaker details" );
+echo dbTableToHTMLTable( 'visitors', $speaker 
+    , 'title,email,first_name,middle_name,last_name,department,institute'
+    , '', 'id'
     );
-    echo '</form>';
-}
+echo printInfo( "Talk information" );
+echo dbTableToHTMLTable( 'talks', $talk
+    , 'host,title,description', 'Submit', 'id,speaker'
+    );
+echo '</form>';
 
 ?>

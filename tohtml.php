@@ -372,18 +372,19 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
 
 
 /**
-    * @brief Convert a database table schema to HTML table. 
+    * @brief Convert a database table schema to HTML table to user to 
+    * edit/update.
     *
-    * @param $tablename
-    * @param $defaults  . Populate table with these default values. If not found 
-    * in this array, use schema defauls.
-    * @param $editables
-    * @param button_val What value response of submit must should have.
+    * @param $tablename Name of table (same as database)
+    * @param $defaults Default values to pass to entries.
+    * @param $editables These keys will be convert to appropriate input fields.
+    * @param $button_val What value should be visible on 'response' button?
+    * @param $hide These keys will be hidden to user.
     *
-    * @return 
+    * @return  An html table. You need to wrap it in a form.
  */
-function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = ''
-    , $button_val = 'submit'
+function dbTableToHTMLTable( $tablename, $defaults=Array()
+    , $editables = '' , $button_val = 'submit', $hide = ''
 )
 {
     $html = "<table class=\"editable_$tablename\">";
@@ -391,10 +392,17 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = ''
 
     if( is_string( $editables ) )
         $editables = explode( ",", $editables );
+    if( is_string( $hide ) )
+        $hide = explode( ",", $hide );
 
     foreach( $schema as $col )
     {
         $keyName = $col['Field'];
+
+        // If this entry is in $hide value, do not process it.
+        if( in_array( $keyName, $hide ) )
+            continue;
+
         $ctype = $col['Type'];
 
         $readonly = True;
@@ -406,8 +414,11 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = ''
             strtoupper(prettify( $keyName )) . "</td>";
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
+
+        $idVal = $tablename . "_" . $keyName;
         $val = "<input class=\"editable\"
-            name=\"$keyName\" type=\"text\" value=\"$default\" />";
+            name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$idVal\"
+            />";
 
         // Genearte a select list of ENUM type class.
         $match = Array( );
@@ -463,8 +474,9 @@ function dbTableToHTMLTable( $tablename, $defaults=Array(), $editables = ''
         $html .= "</tr>";
     }
 
-    // If some fields are editable then we need a submit button as well.
-    if( count( $editables ) > 0 )
+    // If some fields are editable then we need a submit button as well unless 
+    // user pass an empty value
+    if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
         $html .= "<button style=\"float:right\" value=\"$button_val\" 

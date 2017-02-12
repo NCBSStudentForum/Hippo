@@ -88,7 +88,7 @@ $( function() {
 
 </script>
 <!-- CKEDIR -->
-<script src="./ckeditor/ckeditor.js"> </script>
+<script src="tinymce/js/tinymce/tinymce.min.js"></script>
 
 <!-- confirm on delete -->
 <script type="text/javascript" charset="utf-8">

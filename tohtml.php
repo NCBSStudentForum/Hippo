@@ -459,12 +459,17 @@ function dbTableToHTMLTable( $tablename
         }
         else if( strcasecmp( $ctype, 'text' ) == 0 )
         {
-
-            // CKEDITOR replaces name (and probably id too). Lets make both of 
-            // them same.
-            $val = "<textarea class=\"editable\" id=\"$inputId\" 
-                name=\"$inputId\" > $default </textarea>";
-            $val .= "<script>CKEDITOR.replace(\"$inputId\")</script>";
+            // NOTE: name and id should be same of ckeditor to work properly.
+            // Sometimes we have two fileds with same name in two tables, thats 
+            // a sticky situation.
+            echo $default;
+            $val = "<textarea class=\"editable\" \
+                id=\"$inputId\" name=\"$keyName\" > $default </textarea>";
+            $val .= "<script>
+                    tinymce.init( {
+                        selector : '#" . $inputId . "',
+                        } );
+                </script>";
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
            $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";

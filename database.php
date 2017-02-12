@@ -1032,6 +1032,28 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     return fetchEntries( $stmt );
 }
 
+function getTableEntry( $tablename, $whereKeys, $data )
+{
+    global $db;
+    if( is_string( $whereKeys ) )
+        $whereKeys = explode( ",", $whereKeys );
+
+    $where = array( );
+    foreach( $whereKeys as $key )
+        array_push( $where,  "$key=:$key" );
+    $where = implode( " AND ", $where );
+
+    $query = "SELECT * FROM $tablename WHERE $where";
+
+    $stmt = $db->prepare( $query );
+
+    foreach( $whereKeys as $key )
+        $stmt->bindValue( ":$key", $data[ $key ] );
+
+    $stmt->execute( );
+    return $stmt->fetch( PDO::FETCH_ASSOC );
+}
+
 
 /**
     * @brief Insert a new entry in table.

@@ -238,6 +238,9 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
         $background = "style=\"background:$background;\"";
     else
         $background = '';
+
+    if( is_string( $tobefilterd ) )
+        $tobefilterd = explode( ',', $tobefilterd );
     
     $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
@@ -383,9 +386,9 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     *
     * @return  An html table. You need to wrap it in a form.
  */
-function dbTableToHTMLTable( $tablename, $defaults=Array()
-    , $editables = '' , $button_val = 'submit', $hide = ''
-)
+function dbTableToHTMLTable( $tablename
+    , $defaults=Array(), $editables = '' , $button_val = 'submit', $hide = ''
+    )
 {
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );
@@ -405,6 +408,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         $ctype = $col['Type'];
 
+        // If not in editables list, make field readonly.
         $readonly = True;
         if( in_array($keyName , $editables ) )
             $readonly = False;
@@ -415,9 +419,9 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
-        $idVal = $tablename . "_" . $keyName;
+        $inputId = $tablename . "_" . $keyName;
         $val = "<input class=\"editable\"
-            name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$idVal\"
+            name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
             />";
 
         // Genearte a select list of ENUM type class.
@@ -436,6 +440,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
             $val .= "</select>";
         }
+
         // TODO generate a multiple select for SET typeclass.
         else if( preg_match( "/^set\((.*)\)$/", $ctype, $match ) )
         {
@@ -454,8 +459,12 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         }
         else if( strcasecmp( $ctype, 'text' ) == 0 )
         {
-            $val = "<textarea class=\"editable\" id=\"ckeditor\" name=\"$keyName\" >$default </textarea>";
-            $val .= "<script> CKEDITOR.replace('ckeditor') </script>";
+
+            // CKEDITOR replaces name (and probably id too). Lets make both of 
+            // them same.
+            $val = "<textarea class=\"editable\" id=\"$inputId\" 
+                name=\"$inputId\" > $default </textarea>";
+            $val .= "<script>CKEDITOR.replace(\"$inputId\")</script>";
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
            $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";

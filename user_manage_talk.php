@@ -16,8 +16,8 @@ $speaker = array(
     , 'homepage' => ''
     );
 
-
 $whereExpr = "created_by='" . $_SESSION[ 'user' ] . "'";
+$whereExpr .= "AND status!='INVALID'";
 $talks = getTableEntries( 'talks', '', $whereExpr );
 if( count( $talks ) < 1 )
 {
@@ -26,7 +26,19 @@ if( count( $talks ) < 1 )
 
 foreach( $talks as $t )
 {
-    echo dbTableToHTMLTable( 'talks', $t );
+    //echo dbTableToHTMLTable( 'talks', $t );
+    echo '<form method="post" action="user_manage_talks_action.php">';
+    echo '<table border="0">';
+    echo '<tr>';
+    echo arrayToTableHTML( $t, 'info', '', 'created_by');
+    echo '</tr><tr>';
+    echo '
+        <input type="hidden" name="id" value="' . $t[ 'id' ] . '" />
+        <td><button onclick="AreYouSure(this)" name="response" >Delete</button></td>
+        <td><button style="float:right" name="response" value="edit">Edit</button></td>
+        ';
+    echo '</tr></table>';
+    echo '</form>';
 }
     
 echo goBackToPageLink( "user.php", "Go back" );

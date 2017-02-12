@@ -30,6 +30,12 @@ function loginForm()
   return $table;
 }
 
+function sanitiesForTinyMCE( $text )
+{
+    $text = preg_replace( "/\r\n|\r|\n/", "<br/>", $text );
+    $text = str_replace( "'", "\'", $text );
+    return $text;
+}
 
 function prettify( $string )
 {
@@ -462,13 +468,19 @@ function dbTableToHTMLTable( $tablename
             // NOTE: name and id should be same of ckeditor to work properly.
             // Sometimes we have two fileds with same name in two tables, thats 
             // a sticky situation.
-            echo $default;
+            
+            $default = sanitiesForTinyMCE( $default );
+
+
             $val = "<textarea class=\"editable\" \
                 id=\"$inputId\" name=\"$keyName\" > $default </textarea>";
             $val .= "<script>
-                    tinymce.init( {
-                        selector : '#" . $inputId . "',
-                        } );
+                tinymce.init( { selector : '#" . $inputId . "'
+                        , init_instance_callback: \"insert_content\"
+                    } );
+                function insert_content( inst ) {
+                    inst.setContent( '$default' );
+                }
                 </script>";
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )

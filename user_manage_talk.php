@@ -26,11 +26,10 @@ if( count( $talks ) < 1 )
 
 foreach( $talks as $t )
 {
-    //echo dbTableToHTMLTable( 'talks', $t );
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';
     echo '<tr>';
-    echo arrayToTableHTML( $t, 'info', '', 'created_by');
+    echo arrayToTableHTML( $t, 'talk', '', 'created_by');
     echo '</tr><tr>';
     echo '
         <input type="hidden" name="id" value="' . $t[ 'id' ] . '" />

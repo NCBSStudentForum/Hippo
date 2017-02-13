@@ -5,6 +5,12 @@ include_once 'check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( "USER" ) );
 
+$conf = $_SESSION[ 'conf' ];
+print_r( $conf );
+
+$picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' 
+    . $_SESSION[ 'user' ] . '.png';
+
 if( $_POST[ 'Response' ] == 'upload' )
 {
     $img = $_FILES[ 'picture' ];
@@ -15,24 +21,23 @@ if( $_POST[ 'Response' ] == 'upload' )
         exit;
     }
 
+    $ext = explode( "/", $img['type'] )[1];
     $tmppath = $img[ 'tmp_name' ];
 
     if( $img['size'] > 1024 * 1024 )
-    {
         echo printWarning( "Picture is too big. Maximum size allowed is 1MB" );
-        exit;
-    }
-
-    if( ! move_uploaded_file( 
-        $tmppath , sprintf( __DIR__ . '/pictures/%s', $_SESSION[ 'user' ] )
-    )) {
-        echo minionEmbarrassed( "I could not upload your image!" );
-        exit;
-    }
     else
     {
-        echo printInfo( "File is uploaded sucessfully" );
-        goBack( "user_info.php", 1 );
+        // Convert to png file and tave to $picPath
+        if ( ! convertImage( $tmppath, $ext, $picPath ) )
+            echo minionEmbarrassed( 
+                "I could not upload your image (allowed formats: png, jpg, bmp)!" 
+            );
+        else
+        {
+            echo printInfo( "File is uploaded sucessfully" );
+            //goBack( "user_info.php", 1 );
+        }
     }
 }
 

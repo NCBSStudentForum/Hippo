@@ -732,4 +732,11 @@ function initUserMsg( )
     return $msg;
 }
 
+function dataURI( $filepath, $mime )
+{
+    $contents = file_get_contents($filepath);
+    $base64   = base64_encode($contents); 
+    return ('data:' . $mime . ';base64,' . $base64);
+}
+
 ?>

@@ -20,6 +20,19 @@ $defaults = array(
     , "openair" => "NO"
     );
 
+$external_id = null;
+if( array_key_exists( 'external_id', $_GET ) )
+{
+    $external_id = $_GET[ 'external_id' ];
+    $expr = explode( ".", $external_id );
+    $tableName = $expr[ 0 ];
+    $id = $expr[ 1 ];
+    $entry = getTableEntry( $tableName, 'id', array( "id" => $id ) );
+    echo printInfo( "Scheduling for a following talk" );
+    echo arrayToTableHTML( $entry, 'talk', '', 'id,status,date,time,venue,venue' );
+    $defaults = array_merge( $defaults, $entry );
+}
+
 // Since we come back to this page again and again, we reuse the previous values 
 // provided by user.
 foreach( $defaults as $key => $val )
@@ -39,12 +52,12 @@ else
     $openAirNo = 'checked';
 
 
-echo alertUser(
-    'A powerful booking interface (not mobile friendly) is recommended 
-    if you need to explore other events/dates/venues before booking.
-    <a href="bookmyvenue_browse.php">TAKE ME THERE</a>
-    '
-    );
+//echo alertUser(
+    //'A powerful booking interface (not mobile friendly) is recommended 
+    //if you need to explore other events/dates/venues before booking.
+    //<a href="bookmyvenue_browse.php">TAKE ME THERE</a>
+    //'
+    //);
 
 echo '<br />';
 echo '<table style="min-width:300px;max-width:500px",border="0">';
@@ -66,7 +79,7 @@ echo '
             value="' . $defaults[ 'end_time'] . '" /> </td>
     </tr>
     <tr>
-        <td>Number of people? </td>
+        <td>Mininum seatings required? </td>
         <td><input type="text" name="strength" 
             value="' . $defaults[ 'strength' ] . '" /> </td>
     </tr>
@@ -151,6 +164,14 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         // Now construct a table and form
         echo '<tr>';
         echo '<form method="post" action="user_submit_request.php">';
+
+        // Create hidden fields from defaults.
+        $title = 'Talk by ' . $defaults[ 'speaker' ];
+        echo '<input type="hidden" name="title" value="' . $title . '">';
+        echo '<input type="hidden" name="description" 
+            value="' . $defaults[ 'title' ] . '">';
+        echo '<input type="hidden" name="external_id" 
+            value="' . $external_id . '">';
         // Insert all information into form.
         echo '<input type="hidden" name="date" value="' . $defaults[ 'date' ] . '" >';
 

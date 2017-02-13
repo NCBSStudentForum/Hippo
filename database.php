@@ -297,14 +297,14 @@ function initialize( )
             )"
         );
 
-    $res = $db->query( "
-        create TABLE IF NOT EXISTS logins_metadata (
-            login VARCHAR(200) PRIMARY KEY
-            , user_image blob NOT NULL
-            , other_image blob
-            , FOREIGN KEY (login) REFERENCES logins( login )
-            )"
-        );
+    //$res = $db->query( "
+        //create TABLE IF NOT EXISTS logins_metadata (
+            //login VARCHAR(200) PRIMARY KEY
+            //, user_image blob NOT NULL
+            //, other_image blob
+            //, FOREIGN KEY (login) REFERENCES logins( login )
+            //)"
+        //);
 
     return $res;
 }

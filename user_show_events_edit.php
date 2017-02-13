@@ -9,7 +9,7 @@ include_once( "tohtml.php" );
 
 $gid = $_POST['gid'];
 
-$editable = Array( "short_description", "description" );
+$editable = Array( "title", "description" );
 
 if( strtolower($_POST['response']) == 'edit' )
 {

@@ -66,7 +66,7 @@ foreach( $events as $event )
 $msg .= "</table>";
 
 $res = sendEmail( $msg
-    , "[ $whatToDo ] Your request for event title '$title'  
+    , "[ $whatToDo ] Your request for event title '$eventGroupTitle'  
             has been acted upon"
     , $userEmail 
     );

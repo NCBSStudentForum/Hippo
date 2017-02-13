@@ -111,6 +111,8 @@ echo '</table>';
 
 $date = __get__( $_POST, 'date', dbDate(strtotime( 'today' )) );
 
+// Get list of public events on user request day and show them to him. So he can 
+// decides if some other timeslot should be used.
 $publicEvents = getPublicEventsOnThisDay( $date );
 if( count( $publicEvents ) > 0 )
 {

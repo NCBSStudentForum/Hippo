@@ -4,6 +4,7 @@ include_once "header.php" ;
 include_once "database.php";
 include_once 'tohtml.php';
 include_once 'mail.php';
+include_once 'methods.php';
 
 
 $whatToDo = $_POST['response'];
@@ -19,7 +20,9 @@ if( ! array_key_exists( 'events', $_POST ) )
 $events = $_POST['events'];
 
 $msg = initUserMsg( );
-$userEmail = getUserInfo( $_SESSION[ 'user' ] )['email'] ;
+
+$userEmail = getUserInfo( $events[0][ 'user' ] )['email'] ;
+$eventGroupTitle = $events[0]['short_description'];
 
 // If admin is rejecting then ask for confirmation.
 if( $whatToDo == 'REJECT' )
@@ -43,9 +46,11 @@ foreach( $events as $event )
 
     $eventInfo = getRequestById( $gid, $rid );
     $eventText = eventToText( $eventInfo );
-    $msg .= "<tr><td> $eventToText </td><td>". $whatToDo ."ED</td></tr>";
+    $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
+
     actOnRequest( $gid, $rid, $whatToDo );
     changeIfEventIsPublic( $gid, $rid, $isPublic );
+
     if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
     {
         // TODO: Add this to google calendar. 
@@ -53,14 +58,20 @@ foreach( $events as $event )
         //exit;
     }
 }
-
 $msg .= "</table>";
-sendEmail( $msg
-    , "[ $whatToDo ] Booking request for $venue has been acted upon"
+
+$res = sendEmail( $msg
+    , "[ $whatToDo ] Your request for event title '$short_description'  
+            has been acted upon"
     , $userEmail 
     );
 
+if( $res )
+{
+    goToPage( "bookmyvenue_admin.php", 0 );
+    exit;
+}
+    
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
-exit( 0 );
 
 ?>

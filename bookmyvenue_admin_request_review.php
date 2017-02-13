@@ -65,7 +65,8 @@ if( $_POST['response'] == "Review" )
             <tr>
                 <td> </td>
                 <td>
-                    <button name=\"response\" value=\"APPROVE\">Approve selected </button>
+                    <button name=\"response\" value=\"APPROVE\" 
+                        title=\"Approve selected\">" . $symbApprove . "</button>
                 </td>
             </tr>
             <tr> 
@@ -76,7 +77,8 @@ if( $_POST['response'] == "Review" )
                     ></textarea>
                 </td>
                 <td>
-                    <button name=\"response\" value=\"REJECT\">Reject selected</button>
+                    <button name=\"response\" value=\"REJECT\"
+                        title=\"Reject selected\">" . $symbReject . "</button>
                 </td>
             </tr>
 

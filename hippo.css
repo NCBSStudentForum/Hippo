@@ -73,14 +73,14 @@ table.show_user tr td
 }
 
 table.show_info {
-    min-width : 80%;
-    max-width : 1000px;
-    layout : auto;
+    min-width : 500px;
+    max-width : 100%;
 }
 
 table.show_info tr td 
 {
     background : var(--background);
+    max-width : 25%;
 }
 
 table.show_speaker tr td  {

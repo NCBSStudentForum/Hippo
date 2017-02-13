@@ -107,8 +107,14 @@ function AreYouSure( button )
 $symbEdit = "&#9998";
 $symbCalendar = "&#128197";
 $symbDelete = "&#10008";
+$symbCancel = "&#10008";
+$symbReject = "&#10008";
 $symbScan = "&#128269";
 $symbThumbsUp = "&#128077";
+$symbThumbsDown = "&#128078";
+$symbApprove = "&#128077";
+$symbReject = "&#128078";
 $symbPerfect = "&#128076";
+$symbReview = "&#128065";
 
 ?>

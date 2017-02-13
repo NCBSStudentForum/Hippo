@@ -160,7 +160,7 @@ class NCBSCalendar
 
         // Now update the summary and description of event. Changing time is not
         // allowed in any case.
-        $gevent->setSummary( $event['short_description' ] );
+        $gevent->setSummary( $event['title' ] );
         $gevent->setDescription( $event['description'] );
         $gevent->setHtmlLink( $event['url'] );
         
@@ -233,7 +233,7 @@ class NCBSCalendar
         $endTime = $endTime - $this->offset;
 
         $entry = array(
-                     "summary" => $event['short_description']
+                     "summary" => $event['title']
                      , "description" => $event['description']
                      , 'location' => venueSummary( getVenueById( $event['venue' ] ) )
                      , 'start' => array(

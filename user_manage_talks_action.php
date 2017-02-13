@@ -40,18 +40,13 @@ else if( $_POST[ 'response' ] == 'edit' )
 }
 else if( $_POST[ 'response' ] == 'schedule' )
 {
-    echo printInfo( 'Scheduling' );
-    $venues = array_map( 
-        function( $x ) { return $x['id' ]; }
-        ,  getTableEntries( 'venues', 'strength', "has_projector='YES'"  )
-        );
-
-    $venueSelect = arrayToSelectList( 'venue', $venues );
-
-    $default = array( "venue" => $venueSelect );
-    echo $venueSelect;
-
-
+    // We are sending this to quickbook.php as GET request. Only external_id is 
+    // sent to page.
+    var_dump( $_POST );
+    $external_id = "talks." . $_POST[ 'id' ];
+    $query = "&external_id=".$external_id;
+    header( "Location: quickbook.php?" . $query );
+    exit;
 }
 
 echo goBackToPageLink( "user_manage_talk.php", "Go back" );

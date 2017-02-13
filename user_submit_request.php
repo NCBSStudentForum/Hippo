@@ -12,12 +12,8 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
     
 $venues = getVenues( $sortby = 'total_events' );
 
-?>
+print_r( $_POST );
 
-<link rel="stylesheet" href="components/bootstrap2/css/bootstrap-datetimepicker.min.css">
-<script type="text/javascript" src="components/bootstrap2/js/bootstrap-datetimepicker.min.js"></script>
-
-<?php
 if( ! array_key_exists( 'date', $_POST) )
 {
     echo printWarning( "No valid day is selected. Going back to main page" );
@@ -61,21 +57,26 @@ $defaultEndTime = __get__( $_POST, 'end_time'
     );
 
 $date = __get__( $_POST, 'date', '' );
+$short_description = __get__( $_POST, 'title', '' );
+$description = __get__( $_POST, 'description', '' );
+$external_id = __get__( $_POST, 'external_id', NULL );
 
 ?>
 
 <table class="input" >
    <!-- hide the day -->
+   <input type="hidden" name="external_id" value="<?php echo $external_id ?>" />
    <input type="hidden" name="date" value="<?php echo $date ?>" />
    <tr > <td>Title <p class="note_to_user">A very short description (for
          calendar )</p></td>
-      <td> <input class="user_input_text" name="title" type="text" value="" > </td>
+         <td> <input class="user_input_text" name="title" type="text" 
+         value="<?php echo $short_description; ?>" > </td>
    </tr>
    <tr> <td>Description
       </td>
       <td> 
-         <textarea id="event_description" name="description" cols="40" rows="5" > </textarea> 
-         <script>CKEDITOR.replace( "event_description" ) </script>
+         <textarea id="event_description" name="description" cols="40" rows="5" > 
+         <?php echo $description ?> </textarea> 
       </td>
    </tr>
    <tr> <td>Venue</td>

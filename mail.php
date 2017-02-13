@@ -4,6 +4,10 @@ include_once 'database.php';
 
 function sendEmail($msg, $sub, $to) 
 {
+    // TODO: Disable it in production code.
+    return null;
+
+
     $timestamp = date( 'r', strtotime( 'now' ) );
 
     $msg .= "

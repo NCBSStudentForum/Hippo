@@ -17,7 +17,7 @@ if( strcasecmp($_POST['response'], 'edit' ) == 0 )
         , $defaults = $event
         , $editables = Array( 
             'status', 'class', 'is_public_event'
-            , 'short_description', 'description'
+            , 'title', 'description'
             //, 'date', 'start_time', 'end_time' 
         ));
     echo "</form>";

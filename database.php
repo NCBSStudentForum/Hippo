@@ -141,7 +141,7 @@ function initialize( )
         CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
             gid INT NOT NULL
             , rid INT NOT NULL
-            , user VARCHAR(50) NOT NULL
+            , created_by VARCHAR(50) NOT NULL
             , title VARCHAR(100) NOT NULL
             , external_id VARCHAR(50) 
             , description TEXT 
@@ -196,7 +196,7 @@ function initialize( )
                 , 'SCHOOL' , 'CONFERENCE'
                 , 'CULTURAL', 'SPORTS', 'UNKNOWN'
                 ) DEFAULT 'UNKNOWN' 
-            , short_description VARCHAR(200) NOT NULL
+            , title VARCHAR(200) NOT NULL
             , description TEXT
             , date DATE NOT NULL
             , venue VARCHAR(80) NOT NULL
@@ -409,10 +409,11 @@ function getEventsById( $gid, $eid )
 function getRequestOfUser( $userid, $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE user=:user 
+    $stmt = $db->prepare( 
+        'SELECT * FROM bookmyvenue_requests WHERE created_by=:created_by 
         AND status=:status AND date >= NOW() - INTERVAL 2 DAY
         GROUP BY gid' );
-    $stmt->bindValue( ':user', $userid );
+    $stmt->bindValue( ':created_by', $userid );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -422,11 +423,11 @@ function getEventsOfUser( $userid, $from = '-1 days', $status = 'VALID' )
 {
     global $db;
     $from = date( 'Y-m-d', strtotime( $from ));
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:user 
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:created_by 
         AND date >= :from
         AND status=:status
         GROUP BY gid' );
-    $stmt->bindValue( ':user', $userid );
+    $stmt->bindValue( ':created_by', $userid );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':from', $from );
     $stmt->execute( );
@@ -518,10 +519,10 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 {
     global $db;
     $stmt = $db->prepare( "UPDATE events SET status=:status WHERE 
-        gid=:gid AND created_by=:user" );
+        gid=:gid AND created_by=:created_by" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
-    $stmt->bindValue( ':user', $user );
+    $stmt->bindValue( ':created_by', $user );
     return $stmt->execute( );
 }
 
@@ -686,7 +687,7 @@ function submitRequest( $request )
         goToPage( "user.php", 3 );
         exit;
     }
-    $request[ 'user' ] = $_SESSION[ 'user' ];
+    $request[ 'created_by' ] = $_SESSION[ 'user' ];
 
     $repeatPat = $request[ 'repeat_pat' ];
 
@@ -712,7 +713,7 @@ function submitRequest( $request )
         $request[ 'date' ] = $day;
 
         $res = insertIntoTable( 'bookmyvenue_requests'
-            , 'gid,rid,external_id,user,venue,title,description,date,start_time,end_time'
+            , 'gid,rid,external_id,created_by,venue,title,description,date,start_time,end_time'
             , $request 
         );
         if( ! $res )
@@ -749,21 +750,21 @@ function approveRequest( $gid, $rid )
 
     global $db;
     $stmt = $db->prepare( 'INSERT INTO events (
-        gid, eid, short_description, description, date, venue, start_time, end_time
+        gid, eid, title, description, date, venue, start_time, end_time
         , created_by
     ) VALUES ( 
-        :gid, :eid, :short_description, :description, :date, :venue, :start_time, :end_time 
-        , :user
+        :gid, :eid, :title, :description, :date, :venue, :start_time, :end_time 
+        , :created_by
     )');
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':eid', $rid );
-    $stmt->bindValue( ':short_description', $request['title'] );
+    $stmt->bindValue( ':title', $request['title'] );
     $stmt->bindValue( ':description', $request['description'] );
     $stmt->bindValue( ':date', $request['date'] );
     $stmt->bindValue( ':venue', $request['venue'] );
     $stmt->bindValue( ':start_time', $request['start_time'] );
     $stmt->bindValue( ':end_time', $request['end_time'] );
-    $stmt->bindValue( ':user', $request['user'] );
+    $stmt->bindValue( ':created_by', $request['created_by'] );
     $res = $stmt->execute();
     if( $res )
     {
@@ -971,7 +972,7 @@ function updateEventGroup( $gid, $options )
 function updateEvent( $gid, $eid, $options )
 {
     global $db;
-    $editable = Array( "short_description", "description"
+    $editable = Array( "title", "description"
         , "is_public_event", "status", "class" 
     );
     $fields = Array( );

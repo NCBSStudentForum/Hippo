@@ -43,7 +43,7 @@ $defaultEndTime = __get__( $_POST, 'end_time'
     );
 
 $date = __get__( $_POST, 'date', '' );
-$short_description = __get__( $_POST, 'title', '' );
+$title = __get__( $_POST, 'title', '' );
 $description = __get__( $_POST, 'description', '' );
 
 // If external_id is given then this needs to go into request table. This is 
@@ -69,7 +69,7 @@ if( array_key_exists( 'external_id', $_POST ) )
    <tr > <td>Title <p class="note_to_user">A very short description (for
          calendar )</p></td>
          <td> <input class="user_input_text" name="title" type="text" 
-         value="<?php echo $short_description; ?>" > </td>
+         value="<?php echo $title; ?>" > </td>
    </tr>
    <tr> <td>Description
       </td>

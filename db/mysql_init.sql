@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS events (
         , 'SPORTS'
         , 'UNKNOWN'
         ) DEFAULT 'UNKNOWN' 
-    , short_description VARCHAR(200) NOT NULL
+    , title VARCHAR(200) NOT NULL
     , description TEXT
     , date DATE NOT NULL
     , venue VARCHAR(80) NOT NULL

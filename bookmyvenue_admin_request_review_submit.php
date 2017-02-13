@@ -17,12 +17,8 @@ if( ! array_key_exists( 'events', $_POST ) )
     exit(0);
 }
 
-$events = $_POST['events'];
-
 $msg = initUserMsg( );
 
-$userEmail = getUserInfo( $events[0][ 'user' ] )['email'] ;
-$eventGroupTitle = $events[0]['short_description'];
 
 // If admin is rejecting then ask for confirmation.
 if( $whatToDo == 'REJECT' )
@@ -39,6 +35,11 @@ if( $whatToDo == 'REJECT' )
 
 $msg .= "<p>Note the following changes to your requests </p>";
 $msg .= '<table border="0">';
+
+$events = $_POST['events'];
+$userEmail = '';
+$eventGroupTitle = '';
+
 foreach( $events as $event )
 {
     $event = explode( '.', $event );
@@ -46,6 +47,10 @@ foreach( $events as $event )
 
     $eventInfo = getRequestById( $gid, $rid );
     $eventText = eventToText( $eventInfo );
+
+    $userEmail = $eventInfo[ 'created_by' ];
+    $eventGroupTitle = $eventInfo[ 'title' ];
+
     $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
 
     actOnRequest( $gid, $rid, $whatToDo );
@@ -61,7 +66,7 @@ foreach( $events as $event )
 $msg .= "</table>";
 
 $res = sendEmail( $msg
-    , "[ $whatToDo ] Your request for event title '$short_description'  
+    , "[ $whatToDo ] Your request for event title '$title'  
             has been acted upon"
     , $userEmail 
     );

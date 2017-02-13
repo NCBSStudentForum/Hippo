@@ -37,7 +37,7 @@ function findEvent( $events, $event )
 {
     foreach( $events as $e )
         // Database event compared with google event summary.
-        if( $e[ 'short_description' ] == $event[ 'summary' ] )
+        if( $e[ 'title' ] == $event[ 'summary' ] )
             return true;
     return false;
 }

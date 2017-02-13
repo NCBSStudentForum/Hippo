@@ -84,9 +84,9 @@ function requestsToHTMLReviewForm( $requests )
 // Return a short description of event.
 function eventToText( $event )
 {
-    $html = 'By ' . $event['user'] . ', ';
+    $html = 'By ' . $event['created_by'] . ', ';
     $html .= '';
-    $html .= __get__( $event, 'short_description', '' );
+    $html .= __get__( $event, 'title', '' );
     $html .= ' @' . $event['venue'] . ', ';
     $html .= $event['start_time'] . ' to ' . $event['end_time'];
     return $html;
@@ -101,7 +101,7 @@ function eventSummary( $event )
             date( 'H:i', strtotime(  $event['end_time'])) . '</td></tr>';
 
     $html .= '<tr><td><small>WHERE</small></td><td>'.  $event['venue'] . "</td></tr>";
-    $html .= '<tr><td><small>WHAT</small></td><td>' . $event['short_description']
+    $html .= '<tr><td><small>WHAT</small></td><td>' . $event['title']
             . "</td></tr>";
     $html .= "</table>";
     return $html;
@@ -241,12 +241,11 @@ function readOnlyEventLineHTML( $date, $venueid )
 
 
 // Convert an array to HTML
-function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )
+function arrayToTableHTML( $array, $tablename, $background = ''
+    , $tobefilterd = Array() )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
-    else
-        $background = '';
 
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ',', $tobefilterd );

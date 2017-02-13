@@ -10,7 +10,7 @@ foreach( $upcomingEvents as $event )
     $e = Array();
     $e['id'] = $event['gid'] . '.' . $event['eid'];
     $e['class'] = ''; //$event['class'];
-    $e['title'] = $event['short_description'];
+    $e['title'] = $event['title'];
     $e['url'] = ''; //$event['url'];
     $e['start'] = strtotime( $event['date'] . ' ' . $event['start_time']);
     $e['end'] = strtotime( $event['date'] . ' ' . $event['end_time']);

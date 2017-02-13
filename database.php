@@ -65,26 +65,22 @@ function initialize( )
             , institute VARCHAR(1000) NOT NULL CHECK( institute <> "" )
             , PRIMARY KEY (id)
             , UNIQUE KEY (email,first_name,last_name)
-            )' );
+        )' );
 
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS talks 
         ( id INT NOT NULL AUTO_INCREMENT
-        , speaker VARCHAR(100) NOT NULL
-        , host VARCHAR(100) NOT NULL
-        , title VARCHAR(1000) NOT NULL
-        , description TEXT 
-        , created_by VARCHAR(100) NOT NULL CHECK( register_by <> "" )
-        , create_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        , date DATE 
-        , time TIME
-        , venue VARCHAR(100)
-        , status ENUM( 
-            "DELIVERED", "SCHEDULED", "NOT_SCHEDULED", "CANCELLED", "INVALID" 
-            ) DEFAULT "NOT_SCHEDULED"
-        , PRIMARY KEY (id)
-        , UNIQUE KEY (speaker,date,time)
-        , FOREIGN KEY (created_by) REFERENCES logins(id)
+            , speaker VARCHAR(100) NOT NULL
+            , host VARCHAR(100) NOT NULL
+            -- Since this has to be unique key, this cannot be very large.
+            , title VARCHAR(200) NOT NULL
+            , description TEXT 
+            , created_by VARCHAR(100) NOT NULL CHECK( register_by <> "" )
+            , create_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , status ENUM( "CANCELLED", "INVALID", "VALID") DEFAULT "VALID"
+            , PRIMARY KEY (id)
+            , UNIQUE KEY (speaker,title)
+            , FOREIGN KEY (created_by) REFERENCES logins(id)
         )' );
 
     // This table holds the email template.

@@ -8,8 +8,8 @@ echo userHTML( );
 
 $info = getUserInfo( $_SESSION['user'] );
 
-$picPath = "./pictures/" . $_SESSION[ 'user' ] ;
-
+$picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . 
+    '/' . $_SESSION['user'] . '.png';
 
 echo "<h3>Your details from LDAP</h3>";
 
@@ -29,8 +29,10 @@ echo '<table class="editable_user_picture">';
 echo '<tr><td>';
 
 if( file_exists( $picPath ) )
+{
     echo '<img class="login_picture" width="200px"
-        height="auto" src="' . $picPath . '" >';
+        height="auto" src="' . dataURI( $picPath, 'image/png' ) . '" >';
+}
 else 
 {
     echo printInfo( "I could not find your picture in my database.
@@ -47,11 +49,10 @@ echo '<form action="user_upload_picture.php"
 echo '<p>
     This picture will be used in AWS notifications. It will be 
     rescaled to fit 5 cm x 5 cm space. I will not accept any picture bigger 
-    than 1MB in size.
+    than 1MB in size. Allowed formats (PNG/JPG/GIF/BMP).
     </p>
     <br />
     ';
-
 echo '<input type="file" name="picture" id="picture" value="" />';
 echo '<button name="Response" value="upload">Upload</button>';
 echo '</form>';

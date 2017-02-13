@@ -279,12 +279,16 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
 }
 
 // Convert an array to HTML table (vertical)
-function arrayToVerticalTableHTML( $array, $tablename, $background = NULL, $tobefilterd = Array() )
+function arrayToVerticalTableHTML( $array, $tablename
+    , $background = NULL, $tobefilterd = '' )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
     else
         $background = '';
+
+    if( is_string( $tobefilterd ) )
+        $tobefilterd = explode( ",", $tobefilterd );
     
     $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
@@ -506,11 +510,15 @@ function dbTableToHTMLTable( $tablename
 
     // If some fields are editable then we need a submit button as well unless 
     // user pass an empty value
+    $buttonSym = ucfirst( $button_val );
+    if( $button_val == 'submit' )
+        $buttonSym = "&#10003";
+
     if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
         $html .= "<button style=\"float:right\" value=\"$button_val\" 
-            name=\"response\">" . ucfirst( $button_val ) . "</button>";
+            title=\"$button_val\" name=\"response\">" . $buttonSym . "</button>";
         $html .= "</td></tr>";
     }
     $html .= "</table>";

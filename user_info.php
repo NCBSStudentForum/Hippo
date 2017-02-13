@@ -54,7 +54,8 @@ echo '<p>
     <br />
     ';
 echo '<input type="file" name="picture" id="picture" value="" />';
-echo '<button name="Response" value="upload">Upload</button>';
+echo '<button name="Response" title="Upload your picture" value="upload">' 
+        . $symbUpload . '</button>';
 echo '</form>';
 echo '</td></tr>';
 echo '</table>';

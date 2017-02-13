@@ -83,6 +83,8 @@ function initialize( )
             "DELIVERED", "SCHEDULED", "NOT_SCHEDULED", "CANCELLED", "INVALID" 
             ) DEFAULT "NOT_SCHEDULED"
         , PRIMARY KEY (id)
+        , UNIQUE KEY (speaker,date,time)
+        , FOREIGN KEY (created_by) REFERENCES logins(id)
         )' );
 
     // This table holds the email template.
@@ -178,30 +180,35 @@ function initialize( )
             , PRIMARY KEY (id) )"
         );
 
+    // All events are put on this table.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS events (
-            -- Sub even will be parent.children format.
-            gid INT NOT NULL
-            , eid INT NOT NULL
+            -- Sub event will be parent.children format. 
+            gid INT NOT NULL -- This is group id of events.
+            , eid INT NOT NULL -- This is event id in that group.
+            -- If details of this event are also stored in some other table, use 
+            -- this field. Format tablename.id e.g. talks and aws can be referred 
+            -- to here.
+            , external_id VARCHAR(50) NOT NULL default 'SELF.0'
             -- If yes, this entry will be put on google calendar.
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO' 
-            , class ENUM( 'LABMEET', 'LECTURE', 'MEETING'
-                , 'SEMINAR', 'TALK', 'SCHOOL'
-                , 'CONFERENCE', 'CULTURAL', 'AWS'
-                , 'SPORTS'
-                , 'UNKNOWN'
+            , class ENUM( 'LABMEET', 'MEETING'
+                , 'TALK', 'LECTURE', 'SEMINAR', 'AWS'
+                , 'SCHOOL' , 'CONFERENCE'
+                , 'CULTURAL', 'SPORTS', 'UNKNOWN'
                 ) DEFAULT 'UNKNOWN' 
             , short_description VARCHAR(200) NOT NULL
             , description TEXT
             , date DATE NOT NULL
             , venue VARCHAR(80) NOT NULL
-            , user VARCHAR( 50 ) NOT NULL
+            , created_by VARCHAR( 50 ) NOT NULL
             , start_time TIME NOT NULL
             , end_time TIME NOT NULL
             , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID' 
             , calendar_id VARCHAR(500)
             , calendar_event_id VARCHAR(500)
             , url VARCHAR(1000)
+            , last_modified_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             , PRIMARY KEY( gid, eid )
             , FOREIGN KEY (venue) REFERENCES venues(id)
             )"
@@ -415,7 +422,7 @@ function getEventsOfUser( $userid, $from = '-1 days', $status = 'VALID' )
 {
     global $db;
     $from = date( 'Y-m-d', strtotime( $from ));
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE user=:user 
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:user 
         AND date >= :from
         AND status=:status
         GROUP BY gid' );
@@ -511,7 +518,7 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 {
     global $db;
     $stmt = $db->prepare( "UPDATE events SET status=:status WHERE 
-        gid=:gid AND user=:user" );
+        gid=:gid AND created_by=:user" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':user', $user );
@@ -764,7 +771,7 @@ function approveRequest( $gid, $rid )
     global $db;
     $stmt = $db->prepare( 'INSERT INTO events (
         gid, eid, short_description, description, date, venue, start_time, end_time
-        , user
+        , created_by
     ) VALUES ( 
         :gid, :eid, :short_description, :description, :date, :venue, :start_time, :end_time 
         , :user

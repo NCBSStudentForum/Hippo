@@ -46,7 +46,7 @@ foreach( $talks as $t )
 
     // If either a request of event is found, don't let user schedule the talk. 
     // She can edit the request/event.
-    if( ! ($request || $events) )
+    if( ! ($request || $event ) )
         echo '<td><button style="float:right" title="Schedule this talk" 
         name="response" value="schedule">' . $symbCalendar . '</button></td>';
     else
@@ -66,10 +66,12 @@ foreach( $talks as $t )
         echo $html;
     }
 
-
     if( $request )
     {
-        echo "<strong>Booking request for above talk is pending review</strong>";
+        echo "<strong>Booking request for above talk is pending review</strong>
+            Please note that you can not change venue, date, or time of this 
+            request; to do so you have to create a fresh request cancelling it.
+            ";
         $gid = $request[ 'gid' ];
 
         echo arrayToTableHTML( $request, 'requests', ''
@@ -77,8 +79,9 @@ foreach( $talks as $t )
 
         echo '<form method="post" action="user_show_requests_edit.php">';
         echo "<table class=\"show_requests\"><tr>";
-        echo "<td><button name=\"response\" title=\"Cancel this request\"
-            value=\"cancel\"> $symbCancel </button></td>";
+        echo "<td><button onclick=\"AreYouSure(this)\" 
+            name=\"response\" title=\"Cancel this request\"> 
+            $symbCancel </button></td>";
         echo "<td style=\"float:right\">
             <button name=\"response\" title=\"Edit this request\"
             value=\"edit\"> $symbEdit </button></td>";
@@ -86,7 +89,6 @@ foreach( $talks as $t )
         echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
         echo '</form>';
     }
-
 }
     
 echo goBackToPageLink( "user.php", "Go back" );

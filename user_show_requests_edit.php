@@ -1,9 +1,9 @@
 <?php 
 
-include_once( "header.php" );
-include_once( "methods.php" );
-include_once( "database.php" );
-include_once( "tohtml.php" );
+include_once "header.php" ;
+include_once "methods.php" ;
+include_once "database.php" ;
+include_once "tohtml.php" ;
 
 //var_dump( $_POST );
 
@@ -28,7 +28,9 @@ if( strtolower($_POST['response']) == 'edit' )
     echo "</form>";
 }
 
-else if( strtolower($_POST['response']) == 'cancel' )
+// delete and DO_NOTHING  always come from AreYouSure( ) function.
+else if( strtolower($_POST['response']) == 'cancel' || 
+    $_POST[ 'response' ] == 'delete' )
 {
     $res = changeStatusOfRequests( $_POST['gid'], 'CANCELLED' );
     if( $res )
@@ -40,11 +42,16 @@ else if( strtolower($_POST['response']) == 'cancel' )
         echo printWarning( "Could not delete request " . $_POST['gid'] );
 
 }
+else if( $_POST[ 'response' ] == 'DO_NOTHING' )
+{
+    echo printInfo( "User said NO" );
+    echo goToPage( __get__( $_SERVER, 'HTTP_REFERER', 'user.php' ), 0 );
+    exit;
+}
 else
 {
     echo printWarning( "Bad response " .  $_POST['response']  );
+    exit;
 }
 
-echo "<div style=\"float:left\">";
 echo goBackToPageLink( "user_show_requests.php", "Go back");
-echo "</div>";

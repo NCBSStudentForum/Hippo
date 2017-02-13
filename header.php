@@ -97,6 +97,8 @@ function AreYouSure( button )
     var x = confirm( "ALERT! Destructive operation! Continue?" );
     if( x )
         button.setAttribute( 'value', 'delete' );
+    else
+        button.setAttribute( 'value', 'DO_NOTHING' );
     return x;
 }
 </script>

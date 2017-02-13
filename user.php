@@ -58,7 +58,7 @@ $html .= '<tr>
       <td>You can see your unapproved requests and modify their description and cancel
          them if neccessary.
       </td>
-      <td> <a href="user_show_requests.php">Update my bookings</a> </td>
+      <td> <a href="user_show_requests.php">Update booking REQUESTS</a> </td>
    </tr>
    <tr>
       <td>These booking requests have been approved (we call them events). You can 

@@ -20,11 +20,23 @@ else if( $_POST[ 'response' ] == 'delete' )
     if( $res )
     {
         echo printInfo( 'Successfully delete entry' );
-        echo goToPage( $_SERVER[ 'HTTP_REFERER' ], 0 );
+        // Delete the request as well.
+        updateTable( 
+            'bookmyvenue_requests', 'external_id', 'status'
+            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
+                    , 'status' => 'CANCELLED' )
+            );
+        goBack( );
         exit;
     }
     else
         echo printWarning( "Failed to delete the talk " );
+}
+else if( $_POST[ 'response' ] == 'DO_NOTHING' )
+{
+    echo printInfo( "User said NO!" );
+    goBack( $default = 'user.php' );
+    exit;
 }
 else if( $_POST[ 'response' ] == 'edit' )
 {

@@ -28,7 +28,7 @@ foreach( $requests as $request )
     echo "</td><td><button name=\"response\" title=\"Edit this request\"
         value=\"edit\"> $symbEdit </button>";
     echo "</td><td><button name=\"response\" title=\"Cancel this request\"
-        value=\"cancel\"> $symbCancel </button>";
+        onclick=\"AreYouSure( this )\" > $symbCancel </button>";
     echo "</td></tr>";
     echo "</table>";
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";

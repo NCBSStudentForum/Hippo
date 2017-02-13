@@ -105,6 +105,19 @@ function goBackToPageLink( $url, $title = "Go back" )
     return $html;
 }
 
+/**
+    * @brief Go back to referer page.
+    *
+    * @param $defaultPage
+    *
+    * @return 
+ */
+function goBack( $default = 'index.php', $delay = 0 )
+{
+    $url = __get__( $_SERVER, 'HTTP_REFERER', $default );
+    goToPage( $url, $delay );
+}
+
 function __get__( $arr, $what, $default = NULL )
 {
     if( ! $arr )
@@ -242,12 +255,6 @@ function getNumDaysInBetween( $startDate, $endDate )
     $start = new DateTime( $startDate );
     $end = new DateTime( $endDate );
     return intval($start->diff( $end )->format( "%R%a" ));
-}
-
-// Go back to calling page.
-function goBack( )
-{
-    goToPage( $_SERVER['HTTP_REFERER'], 0 );
 }
 
 /**

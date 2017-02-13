@@ -51,12 +51,12 @@ foreach( $requests as $r )
     $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
     $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
     $html .= arrayToTableHTML( $r, 'events'
-        , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' ) 
+        , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' )
     );
     $html .= '</td>';
     $html .= '<td style="background:white">
-                    <button name="response" value="Review">Review</button>
-            </td>';
+        <button name="response" value="Review" title="Review request"> ' . 
+            $symbReview . '</button> </td>';
     $html .= '</tr>';
     $html .= '</form>';
 }

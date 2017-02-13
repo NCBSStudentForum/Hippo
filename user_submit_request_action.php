@@ -1,4 +1,5 @@
 <?php
+
 include_once 'check_access_permissions.php';
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
@@ -45,7 +46,7 @@ if( $msg == "OK" )
     $_POST['repeat_pat']  = $repeatPat;
     $gid = submitRequest( $_POST );
 
-     // Unset POST here so refresh page does not cause creation of another 
+    // Unset POST here so refresh page does not cause creation of another 
     // request.
     $_POST = array( );
 
@@ -66,6 +67,7 @@ if( $msg == "OK" )
             , "Your booking request (id-$gid) has been recieved"
             , $userEmail 
             );
+
         sendEmail( $msg
             , "A new request has been created by $userEmail"
             , 'hippo@lists.ncbs.res.in'

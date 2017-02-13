@@ -86,7 +86,7 @@ function eventToText( $event )
 {
     $html = 'By ' . $event['user'] . ', ';
     $html .= '';
-    $html .= $event['short_description'];
+    $html .= __get__( $event, 'short_description', '' );
     $html .= ' @' . $event['venue'] . ', ';
     $html .= $event['start_time'] . ' to ' . $event['end_time'];
     return $html;

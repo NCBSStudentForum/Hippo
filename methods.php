@@ -426,8 +426,10 @@ function diffline($line1, $line2)
  */
 function isStringAValidDate( $date )
 {
-    $d = Datetime::createFromFormat( 'Y-m-d', $date );
-    return $d && $d->format( 'Y-m-d' ) === $d;
+    $d = date_create_from_format( 'Y-m-d', $date );
+    if( ! $d )
+        return false;
+    return (strcasecmp( $d->format( 'Y-m-d' ), $date ) == 0);
 }
 
 function isMobile() 

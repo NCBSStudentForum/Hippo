@@ -5,6 +5,7 @@ include_once 'database.php';
 function sendEmail($msg, $sub, $to) 
 {
     // TODO: Disable it in production code.
+    echo "Sending email has been disabled <br/>";
     return null;
 
 

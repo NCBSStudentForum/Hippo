@@ -12,8 +12,6 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
     
 $venues = getVenues( $sortby = 'total_events' );
 
-print_r( $_POST );
-
 if( ! array_key_exists( 'date', $_POST) )
 {
     echo printWarning( "No valid day is selected. Going back to main page" );
@@ -22,23 +20,11 @@ if( ! array_key_exists( 'date', $_POST) )
 }
 
 $date = $_POST['date'];
+
+
 $day = nameOfTheDay( $date ); 
 $events = getEvents( $date );
 $dbDate = dbDate( $date );
-
-?>
-
-<h3>Booking form</h3>
-
-<div class="info"> Time format : HH:MM, 24 Hr format 
-</small>9:30 (for 9:30am), 14:20 for 2:20pm etc. </small>
-</div>
-<br>
-
-<form class="input" action="user_submit_request_action.php" method="post" accept-charset="utf-8">
-
-<?php
-include_once( "methods.php" );
 
 // Generate options here.
 $venue = __get__( $_POST, 'venue', '' );
@@ -59,10 +45,23 @@ $defaultEndTime = __get__( $_POST, 'end_time'
 $date = __get__( $_POST, 'date', '' );
 $short_description = __get__( $_POST, 'title', '' );
 $description = __get__( $_POST, 'description', '' );
-$external_id = __get__( $_POST, 'external_id', NULL );
+
+// If external_id is given then this needs to go into request table. This is 
+// used to fetch event data from external table. The format of this field if 
+// TABLENAME.ID. 'SELF.-1' means the there is not external dependency.
+$external_id = 'SELF.-1';
+if( array_key_exists( 'external_id', $_POST ) )
+    $external_id = $_POST[ 'external_id' ];
 
 ?>
 
+<h3>Booking form</h3>
+<div class="info"> Time format : HH:MM, 24 Hr format 
+</small>9:30 (for 9:30am), 14:20 for 2:20pm etc. </small>
+</div>
+<br>
+
+<form action="user_submit_request_action.php" method="post">
 <table class="input" >
    <!-- hide the day -->
    <input type="hidden" name="external_id" value="<?php echo $external_id ?>" />
@@ -77,6 +76,14 @@ $external_id = __get__( $_POST, 'external_id', NULL );
       <td> 
          <textarea id="event_description" name="description" cols="40" rows="5" > 
          <?php echo $description ?> </textarea> 
+        <script>
+            tinymce.init( { selector : "#event_description"
+                    , init_instance_callback: "insert_content"
+                } );
+            function insert_content( inst ) {
+                inst.setContent( ' <?php echo $description ?> ');
+            }
+        </script>
       </td>
    </tr>
    <tr> <td>Venue</td>

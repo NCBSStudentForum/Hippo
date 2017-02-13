@@ -61,8 +61,8 @@ function initialize( )
             , middle_name VARCHAR(100)
             , last_name VARCHAR(100)
             , department VARCHAR(500)
-            , homepage VARCHAR(500)
             , institute VARCHAR(1000) NOT NULL CHECK( institute <> "" )
+            , homepage VARCHAR(500)
             , PRIMARY KEY (id)
             , UNIQUE KEY (email,first_name,last_name)
         )' );
@@ -80,7 +80,7 @@ function initialize( )
             , status ENUM( "CANCELLED", "INVALID", "VALID") DEFAULT "VALID"
             , PRIMARY KEY (id)
             , UNIQUE KEY (speaker,title)
-            , FOREIGN KEY (created_by) REFERENCES logins(id)
+            , FOREIGN KEY (created_by) REFERENCES logins(login)
         )' );
 
     // This table holds the email template.
@@ -143,6 +143,7 @@ function initialize( )
             , rid INT NOT NULL
             , user VARCHAR(50) NOT NULL
             , title VARCHAR(100) NOT NULL
+            , external_id VARCHAR(50) 
             , description TEXT 
             , venue VARCHAR(80) NOT NULL
             , date DATE NOT NULL
@@ -153,7 +154,9 @@ function initialize( )
             , url VARCHAR( 1000 )
             , modified_by VARCHAR(50) -- Who modified the request last time.
             , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
-            , PRIMARY KEY( gid, rid ) )
+            , PRIMARY KEY (gid, rid) 
+            , UNIQUE KEY (gid,rid,external_id)
+            )
            " ); 
     $res = $db->query( "
         -- venues must created before events because events refer to venues key as
@@ -185,7 +188,7 @@ function initialize( )
             -- If details of this event are also stored in some other table, use 
             -- this field. Format tablename.id e.g. talks and aws can be referred 
             -- to here.
-            , external_id VARCHAR(50) NOT NULL default 'SELF.0'
+            , external_id VARCHAR(50) 
             -- If yes, this entry will be put on google calendar.
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO' 
             , class ENUM( 'LABMEET', 'MEETING'
@@ -205,7 +208,8 @@ function initialize( )
             , calendar_event_id VARCHAR(500)
             , url VARCHAR(1000)
             , last_modified_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            , PRIMARY KEY( gid, eid )
+            , PRIMARY KEY ( gid, eid )
+            , UNIQUE KEY (gid,eid,external_id)
             , FOREIGN KEY (venue) REFERENCES venues(id)
             )"
         );
@@ -679,14 +683,10 @@ function submitRequest( $request )
     if( ! array_key_exists( 'user', $_SESSION ) )
     {
         echo printErrorSevere( "Error: I could not determine the name of user" );
-        goToPage( "user.php", 5 );
+        goToPage( "user.php", 3 );
+        exit;
     }
-
-    if( ! array_key_exists( 'venue', $request ) )
-    {
-        echo printErrorSevere( "No venue found in your request" );
-        goToPage( "user.php", 5 );
-    }
+    $request[ 'user' ] = $_SESSION[ 'user' ];
 
     $repeatPat = $request[ 'repeat_pat' ];
 
@@ -702,41 +702,24 @@ function submitRequest( $request )
     }
 
     $rid = 0;
-    $results = Array( );
     $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
     $gid = intval($res->fetch( PDO::FETCH_ASSOC )['gid']) + 1;
     foreach( $days as $day ) 
     {
         $rid += 1;
-        $query = $db->prepare( 
-            "INSERT INTO bookmyvenue_requests ( 
-                gid, rid, user, venue
-                , title, description
-                , date, start_time, end_time
-                , status 
-            ) VALUES ( 
-                :gid, :rid, :user, :venue
-                , :title, :description
-                , :date , :start_time, :end_time
-                , 'PENDING' 
-            )");
+        $request[ 'gid' ] = $gid;
+        $request[ 'rid' ] = $rid;
+        $request[ 'date' ] = $day;
 
-        $query->bindValue( ':gid', $gid );
-        $query->bindValue( ':rid', $rid );
-        $query->bindValue( ':user', $_SESSION['user'] );
-        $query->bindValue( ':venue' , $request['venue' ] );
-        $query->bindValue( ':title', $request['title'] );
-        $query->bindValue( ':description', $request['description'] );
-        $query->bindValue( ':date', $day );
-        $query->bindValue( ':start_time', $request['start_time'] );
-        $query->bindValue( ':end_time', $request['end_time'] );
-        $res = $query->execute();
+        $res = insertIntoTable( 'bookmyvenue_requests'
+            , 'gid,rid,external_id,user,venue,title,description,date,start_time,end_time'
+            , $request 
+        );
         if( ! $res )
         {
             echo printWarning( "Could not submit request id $gid" );
             return 0;
         }
-        array_push( $results, $res );
     }
     return $gid;
 }

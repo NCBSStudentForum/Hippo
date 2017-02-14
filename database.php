@@ -40,6 +40,7 @@ class BMVPDO extends PDO
 $db = new BMVPDO( "localhost" );
 initialize( );
 
+
 /**
     * @brief Create all tables.
     *
@@ -308,6 +309,52 @@ function initialize( )
         //);
 
     return $res;
+}
+
+/**
+ * @brief It does the following tasks.
+ *  1. Move the entruies from upcoming_aws to annual_work_seminars lists.
+ *
+ * @return 
+ */
+function doAWSHouseKeeping( )
+{
+    global $db;
+    $oldAwsOnUpcomingTable = getTableEntries( 'upcoming_aws'
+        , $orderby = 'date'
+        , $where = "status='VALID' AND date < NOW( )" 
+        );
+
+    $html = '';
+    foreach( $oldAwsOnUpcomingTable as $aws )
+    {
+        if( strlen( $aws[ 'title' ]) < 1 || strlen( $aws[ 'abstract' ] ) < 1)
+        {
+            $html .= printWarning( "This entry is incomplete" );
+            $html .=  arrayToTableHTML( $aws, 'aws' );
+            continue;
+        }
+
+        // First copy the entry to AWS table.
+        $res1 = insertOrUpdateTable( 'annual_work_seminars'
+            , array_keys( $aws ), 'title,abstract',  $aws
+            );
+        if( $res1 )
+        {
+            $res2 = deleteFromTable( 'upcoming_aws', 'speaker,date', $aws );
+            if( ! $res2 )
+                $html .= printWarning( 
+                    "Could not delete entry from upcoming_aws table" 
+                );
+        }
+        else
+            $html .=  printWarning( "Could not move entry to main AWS list" );
+
+    }
+
+    if( strlen( $html ) < 1 )
+        $html .= printInfo( "AWS house is in order" );
+    return $html;
 }
 
 function getVenues( $sortby = 'total_events' )

@@ -131,5 +131,8 @@ echo '
 
   </table>';
 
+echo "<h2>Automatic Housekeeping</h2>";
+echo doAWSHouseKeeping( );
+
 ?>
 

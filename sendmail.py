@@ -40,7 +40,7 @@ def sendMail( fromAddr, toAddr, subject, msg ):
     msg[ 'subject' ] = subject
     msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
 
-    s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
+    s = smtplib.SMTP( 'ghevar.ncbs.res.in', 587 )
     s.set_debuglevel( 2 )
 
     success = False

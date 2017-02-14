@@ -18,7 +18,7 @@ foreach( $speakers as $visitor )
     if( strlen( $visitor[ 'email' ] ) > 0 )
         $speakersMap[ $visitor[ 'email' ] ] = $visitor;
 
-$speakersIds = array_map( function( $x ) {return $x['email']; }, $speakers );
+$speakersIds = array_map( function( $x ) { return $x['email']; }, $speakers );
 $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
 $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 

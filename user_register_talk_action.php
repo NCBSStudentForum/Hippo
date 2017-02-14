@@ -37,6 +37,7 @@ if( $res1 )
         $endTime = $_POST[ 'end_time' ];
         $date = $_POST[ 'end_time' ];
         $venue = $_POST[ 'venue' ];
+
         $reqs = getRequestsOnThisVenueBetweenTime( $venue, $date
             , $startTime, $endTime );
         $events = getEventsOnThisVenueBetweenTime( $venue, $date
@@ -53,23 +54,27 @@ if( $res1 )
             exit;
         }
 
-        // Else create a request.
-        $external_id = "taks." . $res1[ 'id' ];
-        $_POST[ 'external_id' ] = $external_id;
-        $_POST[ 'is_public_event' ] = 'YES';
-
-        // Modify talk title for calendar.
-        $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . 'on \'' . 
-            trim( $_POST[ 'title' ] ) . "'";
-        $res = submitRequest( $_POST );
-        if( $res )
+        if( $venue && $startTime && $endTime && $date )
         {
-            echo printInfo( "Successfully created booking request" );
-            goToPage( "user.php", 2 );
-            exit;
+            // Else create a request.
+            $external_id = "taks." . $res1[ 'id' ];
+            $_POST[ 'external_id' ] = $external_id;
+            $_POST[ 'is_public_event' ] = 'YES';
+
+            // Modify talk title for calendar.
+            $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . 'on \'' . 
+                trim( $_POST[ 'title' ] ) . "'";
+
+            $res = submitRequest( $_POST );
+            if( $res )
+            {
+                echo printInfo( "Successfully created booking request" );
+                goToPage( "user.php", 2 );
+                exit;
+            }
+            else
+                echo printWarning( "Oh Snap! Failed to create booking request" );
         }
-        else
-            echo printWarning( "Oh Snap! Failed to create booking request" );
     }
     else
         echo printWarning( "Oh Snap! Failed to add your talk to database." );

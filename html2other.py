@@ -1,0 +1,59 @@
+"""html2markdown.py: 
+
+"""
+    
+__author__           = "Dilawar Singh"
+__copyright__        = "Copyright 2016, Dilawar Singh"
+__credits__          = ["NCBS Bangalore"]
+__license__          = "GNU GPL"
+__version__          = "1.0.0"
+__maintainer__       = "Dilawar Singh"
+__email__            = "dilawars@ncbs.res.in"
+__status__           = "Development"
+
+import sys
+import os
+import re
+
+pandoc_ = True
+try:
+    if not os.path.isfile( '/usr/bin/pandoc' ):
+        os.environ.setdefault( 'PYPANDOC_PANDOC', '/usr/local/bin/pandoc' )
+    import pypandoc
+except Exception as e:
+    _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )
+    pandoc_ = False
+
+def tomd( msg ):
+    # First try with pandoc.
+    #   Remove all <div> tags.
+    msg = msg.replace( '</div>', '' )
+    msg = re.sub( r'\<div\s+.+?\>', '', msg )
+
+    if pandoc_:
+        msg = pypandoc.convert_text( msg, 'md', format = 'html' ) 
+    else:
+        _logger.info( 'Trying html2text ' )
+        try:
+            import html2text
+            msg = html2text.html2text( msg )
+        except Exception as e:
+            _logger.warn( 'Failed to convert to html using html2text. %s' % e )
+    return msg
+
+def htmlfile2md( filename ):
+    with open( filename, 'r' ) as f:
+        text = f.read( )
+    return tomd( text )
+
+def main( ):
+    infile = sys.argv[1]
+    outfmt = sys.argv[2]
+    if outfmt == 'md':
+        print( htmlfile2md( infile ) )
+    else outfmt == 'pdf':
+        html2pdf( infile )
+
+
+if __name__ == '__main__':
+    main()

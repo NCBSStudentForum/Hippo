@@ -1,15 +1,18 @@
 <?php 
 
 include_once 'methods.php';
+include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( "USER" ) );
 
-$conf = $_SESSION[ 'conf' ];
-print_r( $conf );
+echo userHTML( );
 
-$picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' 
-    . $_SESSION[ 'user' ] . '.png';
+var_dump( $_SESSION );
+
+$conf = $_SESSION[ 'conf' ];
+
+$picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION[ 'user' ] . '.png';
 
 if( $_POST[ 'Response' ] == 'upload' )
 {

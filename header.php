@@ -29,8 +29,6 @@ ini_set( "error_log", "/var/log/hippo.log" );
 </div>
 <br />
 <br />
-
-<div class="bottom"> GNU GPL-v3, (c) 2016-17, Dilawar Singh </div>
 </html>
 
 <!-- Here are the js script -->

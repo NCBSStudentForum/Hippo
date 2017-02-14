@@ -26,13 +26,23 @@ echo '<h3>Annual Work Seminars</h3>';
 $html = '<table class="tasks">';
 $html .= '
     <tr>
-      <td>Add/update your TCM members and supervisors</td>
+    <td>
+        Add/update your TCM members and supervisors. <br/>
+        <small>
+        You should do it before doing anything else with your AWS entries. 
+        Better you visit this link to see if everyone your AWS requires is in my 
+        database.</small>
+        </td>
       <td> 
          <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a> 
       </td>
     </tr>
     <tr>
-      <td>Annual Work Seminar.</td>
+    <td>
+        Annual Work Seminar <br>
+        <small> You can see your previous AWS, and check the details about upcoming 
+        AWS.  </small>
+    </td>
       <td> 
          <a href="user_aws.php">My AWS</a> 
       </td>
@@ -57,7 +67,7 @@ $html .= '<tr>
    </tr>
    <tr>
       <td>These booking requests have been approved (we call them events). You can 
-         still edit their description (and also cancel them). </td>
+         still edit their title and description (and also cancel them). </td>
       <td> <a href="user_show_events.php">Manage my BOOKED events</a></td>
    </tr>
    </table>';

@@ -149,6 +149,7 @@ class NCBSCalendar
      */
     public function updateEvent( $event )
     {
+        echo printInfo( "Updating event: " . eventToText( $event ) );
         if( trim($event['calendar_event_id']) == '' )
         {
             echo printWarning( "You tried to update an event without valid event id");
@@ -227,6 +228,7 @@ class NCBSCalendar
      */
     public function addNewEvent( $event )
     {
+        echo printInfo( "Adding new event " . eventToText( $event ) );
         $startTime = strtotime( $event['date'] . ' ' . $event[ 'start_time' ] );
         $startTime = $startTime - $this->offset;
         $endTime = strtotime( $event['date'] . ' ' . $event[ 'end_time' ] );
@@ -278,6 +280,7 @@ class NCBSCalendar
      */
     public function deleteEvent( $event )
     {
+        echo printInfo( "Deleting event " . eventToText( $event ) );
         return $this->service->events->delete( $this->calID, $event['id'] );
     }
 

@@ -49,13 +49,14 @@ if( $res1 )
                 I am redirecting you to page where you can create booking reqest
                 after exploring possible options.  "
             );
-            goToPage( 'user_manage_talk.php', 5 );
+            goToPage( 'user_manage_talk.php', 3 );
             exit;
         }
 
         // Else create a request.
         $external_id = "taks." . $res1[ 'id' ];
         $_POST[ 'external_id' ] = $external_id;
+        $_POST[ 'is_public_event' ] = 'YES';
         $res = submitRequest( $_POST );
         if( $res )
         {

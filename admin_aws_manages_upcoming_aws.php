@@ -39,7 +39,8 @@ echo '
     <tr>
         <td> <input class="datepicker" type="date" name="date" value="" > </td>
         <td>
-            <input id="autocomplete_speaker" name="speaker" placeholder="I will autocomplete" />
+            <input id="autocomplete_speaker" name="speaker" 
+                placeholder="I will autocomplete" />
         </td>
         <td> <button name="response" value="Assign">Assign</button> </td>
     </tr>

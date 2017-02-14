@@ -749,4 +749,63 @@ function dataURI( $filepath, $mime )
     return ('data:' . $mime . ';base64,' . $base64);
 }
 
+function __ucwords__( $text )
+{
+    return ucwords( strtolower( $text ) );
+}
+
+function awsToTable( $aws )
+{
+    $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
+
+    $supervisors = array( __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_1' ] ), false ))
+                ,  __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_2' ] ), false ))
+            );
+    $supervisors = array_filter( $supervisors );
+
+    $tcm = array( );
+    array_push( $tcm, __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_1' ] ), false ))
+            , __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_2' ] ), false ))
+            ,  __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_3' ] ), false ))
+            , __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_4' ] ), false ))
+        );
+    $tcm = array_filter( $tcm );
+
+    $title = __ucwords__( $aws[ 'title' ] );
+    $abstract = $aws[ 'abstract' ] ;
+
+    $html =  '<table border="1">
+        <tr>
+            <td>Speaker</td>
+            <td>' . $speaker . '</td>
+        </tr>
+        <tr>
+            <td>Supervisors</td>
+            <td>' . implode( "<br/>", $supervisors ) . '</td>
+        </tr>
+        <tr>
+            <td>Thesis Committee Members</td>
+            <td>' . implode( "<br/>", $tcm) . '</td>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td>' . $title . '</td>
+        </tr>
+        <tr>
+            <td>Abstract</td>
+            <td>' . $abstract . '</td>
+        </tr>
+            
+        </table>';
+
+    return $html;
+
+}
+
 ?>

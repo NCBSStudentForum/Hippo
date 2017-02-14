@@ -59,8 +59,8 @@ foreach( $events as $event )
     if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
     {
         // TODO: Add this to google calendar. 
-        //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
-        //exit;
+        header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
+        exit;
     }
 }
 $msg .= "</table>";

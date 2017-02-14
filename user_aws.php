@@ -48,7 +48,9 @@ if( $scheduledAWS )
     echo "<form method=\"post\" action=\"user_aws_update_upcoming_aws.php\">";
     echo arrayToVerticalTableHTML( $scheduledAWS, 'aws', NULL
         , Array( 'speaker', 'id' ));
-    echo "<button class=\"submit\" name=\"response\" value=\"update\">Update</button>";
+    echo "<button class=\"submit\" name=\"response\" 
+        title=\"Update this entry\" value=\"update\">" 
+            . $symbEdit . "</button>";
     echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
     echo "</form>";
 }

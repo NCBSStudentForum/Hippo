@@ -13,6 +13,10 @@ h2 {
     font-size : 150%;
 }
 
+pre {
+    display : inline;
+}
+
 .editable {
     min-width : 300px;
 }
@@ -230,7 +234,7 @@ button.display_request {
 
 button.submit {
     float : right;
-    alignment : right;
+    left-margin : 100%;
 }
 
 

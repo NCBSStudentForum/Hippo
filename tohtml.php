@@ -690,9 +690,6 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
             </td>
         </tr>';
 
-    $addMissingUrl = '<a target="_blank" href="user_add_supervisor.php">
-        Add missing member</a>';
-
     for( $i = 1; $i <= 2; $i++ )
     {
         $name = "supervisor_$i";
@@ -701,8 +698,7 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
             <tr>
             <td>Supervisor ' . $i . '<br></td>
             <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected );
-        if( $i == 2 )
-            $html .= $addMissingUrl;
+
         $html .= '</td> </tr>';
     }
     for( $i = 1; $i <= 4; $i++ )
@@ -713,7 +709,7 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
             <tr>
             <td>Thesis Committee Member ' . $i . '<br></td>
             <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected) 
-            . $addMissingUrl . '</td>';
+            . '</td>';
         $html .= '</tr>';
 
     }

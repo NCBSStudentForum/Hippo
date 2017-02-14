@@ -13,6 +13,16 @@ h2 {
     font-size : 150%;
 }
 
+.editable {
+    min-width : 300px;
+}
+
+input.long {
+    min-width: 500px;
+    max-width: 100%;
+}
+
+
 // img.login_picture and table.editable_user_picture should co-exists.
 img.login_picture {
     width : 20%;
@@ -301,10 +311,6 @@ table.editable_logins tr td {
     background-color: var(--background);
     word-wrap: break-word;
     max-width : 70%;
-}
-
-.editable {
-    min-width : 300px;
 }
 
 table.editable_faculty {

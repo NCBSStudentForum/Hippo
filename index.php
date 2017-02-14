@@ -6,16 +6,6 @@ include_once( 'database.php' );
 include_once( 'tohtml.php' );
 include_once( 'calendar/calendar.php' );
 
-// If user is already authenticated, redirect him to user.php
-if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
-{
-    if( $_SESSION[ 'user' ] != 'anonymous' )
-    {
-        echo printInfo( "Already logged-in" );
-        goToPage( 'user.php', 0 );
-        exit;
-    }
-}
 
 session_save_path("/tmp/");
 
@@ -50,6 +40,18 @@ $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/tmp/__hippo__.log' );
+
+// If user is already authenticated, redirect him to user.php
+// NOTE: DO NOT put this block before loading configuration files.
+if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
+{
+    if( $_SESSION[ 'user' ] != 'anonymous' )
+    {
+        echo printInfo( "Already logged-in" );
+        goToPage( 'user.php', 0 );
+        exit;
+    }
+}
 
 /* counter */
 

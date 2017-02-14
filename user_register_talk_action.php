@@ -8,9 +8,9 @@ include_once 'tohtml.php';
 //var_dump( $_POST );
 
 // Here I get both speaker and talk details. I need a function which can either 
-// insert of update the visitor table. Other to create a entry in talks table.
+// insert of update the speaker table. Other to create a entry in talks table.
 
-$res1 = insertOrUpdateTable( 'visitors'
+$res1 = insertOrUpdateTable( 'speakers'
     , 'email,first_name,middle_name,last_name,department,institute,homepage'
     , 'department,institute,homepage,email'
     , $_POST 
@@ -20,7 +20,7 @@ if( $res1 )
 {
     // Assign speaker id from previous query.
     $res1[ 'id' ] = $res1[ 'LAST_INSERT_ID()' ];
-    $speaker = getTableEntry( 'visitors', 'id', $res1 );
+    $speaker = getTableEntry( 'speakers', 'id', $res1 );
     $speakerText = loginToText( $speaker );
     $_POST[ 'speaker' ] = $speakerText;
     $res2 = insertIntoTable( 'talks'

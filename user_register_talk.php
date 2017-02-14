@@ -10,38 +10,46 @@ echo userHTML( );
 
 // Javascript.
 $faculty = getFaculty( );
-$visitors = getTableEntries( 'visitors' );
-$visitorsMap = array( );
-foreach( $visitors as $visitor )
-    if( strlen( $visitor[ 'email' ] ) > 0 )
-        $visitorsMap[ $visitor[ 'email' ] ] = $visitor;
+$speakers = getTableEntries( 'speakers' );
+$logins = getTableEntries( 'logins' );
 
-$visitorsIds = array_map( function( $x ) {return $x['email']; }, $visitors );
-$logins = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
+$speakersMap = array( );
+foreach( $speakers as $visitor )
+    if( strlen( $visitor[ 'email' ] ) > 0 )
+        $speakersMap[ $visitor[ 'email' ] ] = $visitor;
+
+$speakersIds = array_map( function( $x ) {return $x['email']; }, $speakers );
+$faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
+$logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
+
 ?>
 
 <script type="text/javascript" charset="utf-8">
 // Autocomplete speaker.
 $( function() {
-    var visitors = <?php echo json_encode( $visitorsMap ) ?>;
-    var data = <?php echo json_encode( $logins ); ?>;
-    var emails = <?php echo json_encode( $visitorsIds ); ?>;
-    $( "#talks_host" ).autocomplete( { source : data }); 
+    var speakers = <?php echo json_encode( $speakersMap ) ?>;
+    var host = <?php echo json_encode( $faculty ); ?>;
+    var logins = <?php echo json_encode( $logins ); ?>;
+    var emails = <?php echo json_encode( $speakersIds ); ?>;
+    $( "#talks_host" ).autocomplete( { source : host }); 
     $( "#talks_host" ).attr( "placeholder", "autocomplete" );
 
+    $( "#talks_coordinator" ).autocomplete( { source : logins }); 
+    $( "#talks_coordinator" ).attr( "placeholder", "autocomplete" );
+
     // Once email is matching we need to fill other fields.
-    $( "#visitors_email" ).attr( "placeholder", "autocomplete" );
-    $( "#visitors_email" ).autocomplete( {
+    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
+    $( "#speakers_email" ).autocomplete( {
         source : emails, focus : function( ) { return false; } 
     }).on( 'autocompleteselect', function( e, ui ) 
         {
             var email = ui.item.value;
-            $('#visitors_first_name').val( visitors[ email ]['first_name'] );
-            $('#visitors_middle_name').val( visitors[ email ]['middle_name'] );
-            $('#visitors_last_name').val( visitors[ email ]['last_name'] );
-            $('#visitors_department').val( visitors[ email ]['department'] );
-            $('#visitors_institute').val( visitors[ email ]['institute'] );
-            $('#visitors_homepage').val( visitors[ email ]['homepage'] );
+            $('#speakers_first_name').val( speakers[ email ]['first_name'] );
+            $('#speakers_middle_name').val( speakers[ email ]['middle_name'] );
+            $('#speakers_last_name').val( speakers[ email ]['last_name'] );
+            $('#speakers_department').val( speakers[ email ]['department'] );
+            $('#speakers_institute').val( speakers[ email ]['institute'] );
+            $('#speakers_homepage').val( speakers[ email ]['homepage'] );
         });
 
 
@@ -65,20 +73,20 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 echo '<form method="post" action="user_register_talk_action.php">';
 echo "<h3>Speaker details</h3>";
 echo printInfo( 
-    "Email id of visitor is desirable. It just help keeping the database clean 
-    by avoidling duplicate entries and make autocompletion possible.");
+    "Email id of speaker is desirable. It helps keeping database clean 
+    by avoidling duplicate entries (and make autocompletion possible).");
 
 echo printInfo( 
     "<strong>First name</strong> and <strong>institute</strong> are required 
     fields.  ");
 
-echo dbTableToHTMLTable( 'visitors', $speaker 
+echo dbTableToHTMLTable( 'speakers', $speaker 
     , 'title,email,homepage,first_name,middle_name,last_name,department,institute'
     , '', 'id'
     );
 echo printInfo( "Talk information" );
 echo dbTableToHTMLTable( 'talks', $talk
-    , 'host,title,description', 'Submit', 'id,speaker,date,time,venue'
+    , 'host,coordinator,title,description', 'Submit', 'id,speaker,date,time,venue'
     );
 echo '</form>';
 

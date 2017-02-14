@@ -163,7 +163,7 @@ table.tasks tr td
 {
     /*border : 0.5px dotted; */
     min-width : 20%;
-    max-width : 60%;
+    max-width : 50%;
     background : var(--background);
 }
 

@@ -53,7 +53,7 @@ function initialize( )
             (date DATE NOT NULL PRIMARY KEY, description VARCHAR(100) NOT NULL)
         ' );
     $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS visitors 
+        'CREATE TABLE IF NOT EXISTS speakers 
         ( id INT NOT NULL AUTO_INCREMENT
             , title ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
             , email VARCHAR(100) 
@@ -72,6 +72,7 @@ function initialize( )
         ( id INT NOT NULL AUTO_INCREMENT
             , speaker VARCHAR(100) NOT NULL
             , host VARCHAR(100) NOT NULL
+            , coordinator VARCHAR(100)
             -- Since this has to be unique key, this cannot be very large.
             , title VARCHAR(200) NOT NULL
             , description TEXT 
@@ -1825,10 +1826,10 @@ function getUpcomingEmails( $from = null )
     return fetchEntries( $stmt );
 }
 
-function getVisitors( )
+function getSpeakers( )
 {
     global $db;
-    $res = $db->query( 'SELECT * FROM visitors' );
+    $res = $db->query( 'SELECT * FROM speakers' );
     return fetchEntries( $res );
 }
 

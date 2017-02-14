@@ -25,7 +25,7 @@ function findSpeakerDetails( $email, $all )
     return null;
 }
 
-$visitors = getVisitors( );
+$visitors = getSpeakers( );
 $faculty = getFaculty( );
 
 $allSpeakersSearchable = array_map( function( $x ) {

@@ -21,7 +21,8 @@ if( strcasecmp($_POST['response'], 'edit' ) == 0 )
             //, 'date', 'start_time', 'end_time' 
         ));
     echo "</form>";
-    echo goBack( "bookmyvenue_admin.php", "Go back" );
 }
+
+echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 
 ?>

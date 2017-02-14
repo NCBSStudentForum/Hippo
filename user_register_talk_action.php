@@ -5,7 +5,7 @@ include_once 'database.php';
 include_once 'mail.php';
 include_once 'tohtml.php';
 
-//var_dump( $_POST );
+var_dump( $_POST );
 
 // Here I get both speaker and talk details. I need a function which can either 
 // insert of update the speaker table. Other to create a entry in talks table.
@@ -33,8 +33,38 @@ if( $res1 )
     if( $res2 )
     {
         echo printInfo( "Successfully registered your talk." );
-        goToPage( "user.php", 1 );
-        exit;
+        $startTime = $_POST[ 'start_time' ];
+        $endTime = $_POST[ 'end_time' ];
+        $date = $_POST[ 'end_time' ];
+        $venue = $_POST[ 'venue' ];
+        $reqs = getRequestsOnThisVenueBetweenTime( $venue, $date
+            , $startTime, $endTime );
+        $events = getEventsOnThisVenueBetweenTime( $venue, $date
+            , $startTime, $endTime );
+        if( $reqs || $events )
+        {
+            echo printInfo( "There is already an events on $venue on $date
+                between $startTime and $endTime. 
+                <br />
+                I am redirecting you to page where you can create booking reqest
+                after exploring possible options.  "
+            );
+            goToPage( 'user_manage_talk.php', 5 );
+            exit;
+        }
+
+        // Else create a request.
+        $external_id = $res1[ 'id' ];
+        $_POST[ 'external_id' ] = $external_id;
+        $res = submitRequest( $_POST );
+        if( $res )
+        {
+            echo printInfo( "Successfully created booking request" );
+            goToPage( "user.php", 1 );
+            exit;
+        }
+        else
+            echo printWarning( "Oh Snap! Failed to create booking request" );
     }
     else
         echo printWarning( "Oh Snap! Failed to add your talk to database." );

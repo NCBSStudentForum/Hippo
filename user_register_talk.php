@@ -84,12 +84,47 @@ echo dbTableToHTMLTable( 'speakers', $speaker
     , 'title,email,homepage,first_name,middle_name,last_name,department,institute'
     , '', 'id'
     );
-echo printInfo( "Talk information" );
+echo "<h3>Talk information</h3>" ;
 echo dbTableToHTMLTable( 'talks', $talk
-    , 'host,coordinator,title,description', 'Submit', 'id,speaker,date,time,venue'
+    , 'host,coordinator,title,description'
+    , ''
+    , $hide = 'id,speaker,status,created_on'
     );
+
+echo "<h3>Optionally create a booking request</h3>" ;
+echo printInfo( 
+    "
+    $symbWarn I may not be able to book if there is aleady any pending 
+    booking request at your preferred venue/slot. In any case,
+    you can book later by clicking on <strong>Manage my talks</strong> in 
+    your HOME page.
+    <br />
+    "
+    );
+
+$venueSelect = venuesToHTMLSelect( );
+echo "<table class=\"editable\" >";
+echo '<tr>
+        <td class="db_table_fieldname">Venue</td> <td>' . $venueSelect . '</td>
+    </tr>';
+echo '<tr>
+        <td class="db_table_fieldname">date</td> 
+        <td><input name="date" class="datepicker" type=\"date\" ></td>
+    </tr>';
+echo '<tr>
+        <td class="db_table_fieldname">start time</td> 
+        <td><input name="start_time" class="timepicker" type=\"time\" ></td>
+    </tr>';
+echo '<tr>
+        <td class="db_table_fieldname">end time</td> 
+        <td><input name="end_time" class="timepicker" type=\"time\" ></td>
+    </tr>';
+echo "</table>";
+echo '<button class="submit" title="Submit talk" 
+    name="response" value="submit">' . $symbCheck . "</button>";
 echo '</form>';
 
+echo "<br/><br/>";
 echo goBackToPageLink( 'user.php', 'Go back' );
 
 ?>

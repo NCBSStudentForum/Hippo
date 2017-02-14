@@ -172,7 +172,6 @@ table.tasks tr td
 div.info {
     /*border : 1px solid #73AD21;*/
     max-width : 800px;
-    /*background: lightblue;*/
 }
 
 button {
@@ -395,8 +394,10 @@ table.admin td {
 /* paragraphs */
 
 p.info {
-    max-width : 90%;
-    min-width : 500px;
+    max-width : 800px;
+    min-width : 100%;
+    background-color : lightyellow;
+    font-size : x-small;
 }
 
 p.warn {
@@ -419,8 +420,9 @@ div.alert_user {
    background: white;
 }
 
-.db_table_fieldname {
+td.db_table_fieldname {
     font-size : x-small;
+    text-transform : uppercase;
 }
 
 table.summary {

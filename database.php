@@ -77,7 +77,7 @@ function initialize( )
             , title VARCHAR(200) NOT NULL
             , description TEXT 
             , created_by VARCHAR(100) NOT NULL CHECK( register_by <> "" )
-            , create_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             , status ENUM( "CANCELLED", "INVALID", "VALID") DEFAULT "VALID"
             , PRIMARY KEY (id)
             , UNIQUE KEY (speaker,title)

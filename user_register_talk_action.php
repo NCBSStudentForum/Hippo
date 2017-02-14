@@ -57,6 +57,10 @@ if( $res1 )
         $external_id = "taks." . $res1[ 'id' ];
         $_POST[ 'external_id' ] = $external_id;
         $_POST[ 'is_public_event' ] = 'YES';
+
+        // Modify talk title for calendar.
+        $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . 'on \'' . 
+            trim( $_POST[ 'title' ] ) . "'";
         $res = submitRequest( $_POST );
         if( $res )
         {

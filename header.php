@@ -119,5 +119,7 @@ $symbReject = "&#128078";
 $symbPerfect = "&#128076";
 $symbReview = "&#128065";
 $symbUpload = "&#8682";
+$symbWarn = "&#9888";
+$symbCheck = "&#10003";
 
 ?>

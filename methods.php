@@ -32,10 +32,13 @@ function toColor($n)
     *
     * @return 
  */
-function venuesToHTMLSelect( $venues, $ismultiple = false
+function venuesToHTMLSelect( $venues = null, $ismultiple = false
     , $selectName = 'venue', $preSelected = array() 
     )
 {
+    if( ! $venues )
+        $venues = getVenues( );
+
     $multiple = '';
     $default = '-- select a venue --';
     if( $ismultiple )

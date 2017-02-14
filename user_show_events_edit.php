@@ -9,21 +9,22 @@ include_once( "tohtml.php" );
 
 $gid = $_POST['gid'];
 
-$editable = Array( "title", "description" );
 
 if( strtolower($_POST['response']) == 'edit' )
 {
-    echo "<p class=\"info\"> You can only change fields: " . implode( ", ", $editable ) 
-        . " here. </p>";
-
+    echo printInfo( 
+        "You are editing an upcoming event. You can only modify 
+        title, description and class of the events."
+        );
     $events = getEventsByGroupId( $gid );
     // We only edit once request and all other in the same group should get 
     // modified accordingly.
     $event = $events[0];
     echo "<form method=\"post\" action=\"user_show_events_edit_submit.php\">";
-    echo eventToEditableTableHTML( $event, $editable );
+    echo dbTableToHTMLTable( 'events', $event
+        , 'title,description,class' 
+        );
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\" />";
-    echo "<button class=\"submit\" name=\"response\" value=\"submit\">Submit</button>";
     echo "</form>";
 }
 
@@ -50,4 +51,4 @@ else
     echo printWarning( "Bad response " .  $_POST['response']  );
 }
 
-echo goBackToPageLink( "user_show_requests.php", "Go back");
+echo goBackToPageLink( "user_show_event.php", "Go back");

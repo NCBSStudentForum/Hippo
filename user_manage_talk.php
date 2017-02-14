@@ -60,9 +60,10 @@ foreach( $talks as $t )
 
     if( $event )
     {
-        echo "<strong>Following talk has been confirmed</strong>";
-        $html = arrayToTableHTML( $request, 'event', ''
-            , 'external_id,url,modified_by,timestamp' );
+        echo "<strong>Above talk has been confirmed</strong>";
+        $html = arrayToTableHTML( $event, 'events', ''
+            , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
+            ',status,calendar_event_id,last_modified_on' );
         echo $html;
     }
 
@@ -75,7 +76,8 @@ foreach( $talks as $t )
         $gid = $request[ 'gid' ];
 
         echo arrayToTableHTML( $request, 'requests', ''
-            , 'external_id,url,modified_by,status,timestamp' );
+            , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
+            ',status,calendar_event_id,last_modified_on' );
 
         echo '<form method="post" action="user_show_requests_edit.php">';
         echo "<table class=\"show_requests\"><tr>";
@@ -89,6 +91,8 @@ foreach( $talks as $t )
         echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
         echo '</form>';
     }
+    echo "<hr>";
+    echo "<br />";
 }
     
 echo goBackToPageLink( "user.php", "Go back" );

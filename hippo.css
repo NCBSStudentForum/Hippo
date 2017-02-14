@@ -267,10 +267,14 @@ table.show_requests {
     width : 100%;
 }
 
+table.show_events {
+    border: 1px dotted;
+}
+
 table.show_events tr td  {
     layout : auto;
     text-align : left;
-    background-color:var(--background); 
+    background-color: cyan;
     /*border-collapse : separate;*/
     /*border : 1px dotted;*/
 }

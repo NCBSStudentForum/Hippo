@@ -750,14 +750,15 @@ function approveRequest( $gid, $rid )
 
     global $db;
     $stmt = $db->prepare( 'INSERT INTO events (
-        gid, eid, title, description, date, venue, start_time, end_time
+        gid, eid, external_id, title, description, date, venue, start_time, end_time
         , created_by
     ) VALUES ( 
-        :gid, :eid, :title, :description, :date, :venue, :start_time, :end_time 
+        :gid, :eid, :external_id, :title, :description, :date, :venue, :start_time, :end_time 
         , :created_by
     )');
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':eid', $rid );
+    $stmt->bindValue( ':external_id', $request[ 'external_id'] );
     $stmt->bindValue( ':title', $request['title'] );
     $stmt->bindValue( ':description', $request['description'] );
     $stmt->bindValue( ':date', $request['date'] );
@@ -972,9 +973,8 @@ function updateEventGroup( $gid, $options )
 function updateEvent( $gid, $eid, $options )
 {
     global $db;
-    $editable = Array( "title", "description"
-        , "is_public_event", "status", "class" 
-    );
+    $editable = Array( "title", "description", "is_public_event"
+        , "status", "class" );
     $fields = Array( );
     $placeholder = Array( );
     foreach( $options as $key => $val )

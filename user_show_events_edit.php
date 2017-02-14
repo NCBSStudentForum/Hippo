@@ -39,6 +39,12 @@ else if( strtolower($_POST['response']) == 'cancel' )
         echo printWarning( "Could not cancel event " . $_POST['gid'] );
 
 }
+else if( $_POST['response'] == "DO_NOTHING" )
+{
+    echo printInfo( "User cancelled. Going back" );
+    goBack( "user_show_events.php" );
+    exit;
+}
 else
 {
     echo printWarning( "Bad response " .  $_POST['response']  );

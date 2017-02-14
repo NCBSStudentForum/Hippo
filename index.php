@@ -1,6 +1,5 @@
 <?php
 
-include_once( 'header.php' );
 include_once( 'methods.php' );
 include_once( 'database.php' );
 include_once( 'tohtml.php' );
@@ -28,6 +27,17 @@ if(!$conf)
 }
 
 $_SESSION['conf'] = $conf;
+// If user is already authenticated, redirect him to user.php
+// NOTE: DO NOT put this block before loading configuration files.
+if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
+{
+    if( $_SESSION[ 'user' ] != 'anonymous' )
+    {
+        echo printInfo( "Already logged-in" );
+        goToPage( 'user.php', 0 );
+        exit;
+    }
+}
 
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
 $_SESSION[ 'oauth_credential' ] =
@@ -40,18 +50,6 @@ $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/tmp/__hippo__.log' );
-
-// If user is already authenticated, redirect him to user.php
-// NOTE: DO NOT put this block before loading configuration files.
-if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
-{
-    if( $_SESSION[ 'user' ] != 'anonymous' )
-    {
-        echo printInfo( "Already logged-in" );
-        goToPage( 'user.php', 0 );
-        exit;
-    }
-}
 
 /* counter */
 

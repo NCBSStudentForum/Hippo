@@ -88,24 +88,15 @@ table.show_speaker tr td  {
 table.show_aws {
     max-width : 800px;
     min-width : 100%;
-    background : var(--background);
 }
 
-table.show_aws tr td:nth-child(odd)
-{
-    border : 0.5px dotted; 
-    max-width : 20%;
-    text-align : right;
-    max-height: 3cm;
-}
-
-table.show_aws tr td:nth-child(even)
+table.show_aws tr td
 {
     border : 0.5px dotted; 
     text-align : left;
-    min-width : 50%;
-    max-width : 400px;
+    max-width : 500px;
     max-height: 3cm;
+    background : var(--background);
 }
 
 table.show_calendar {

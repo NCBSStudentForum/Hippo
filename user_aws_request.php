@@ -11,22 +11,6 @@ echo userHTML( );
 
 $default = Array( );
 
-if( ! isset( $_POST['id'] ))
-{
-    //echo "Creating a dummy request for further edit";
-
-    // Now here how i do it. First I create a dummy request and use the 'edit'
-    // functionality of this page.
-    $rid = insertIntoTable( 'aws_requests'
-        , array( 'speaker' ),  array( "speaker" => $_SESSION['user'] )
-    );
-    $_POST['id'] = $rid[ 'LAST_INSERT_ID()' ];
-    $_POST['response'] = 'edit';
-    // And continue.
-    //echo printInfo( "A request is created with id " . $_POST[ 'id' ] );
-}
-
-
 if( $_POST['response'] == 'edit' )
 {
     $rid = $_POST['id'];

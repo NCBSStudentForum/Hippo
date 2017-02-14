@@ -6,8 +6,7 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
-mustHaveAnyOfTheseRoles( array( 'USER') );
-
+mustHaveAnyOfTheseRoles( array( 'USER') ); 
 echo userHTML( );
 
 $html = '<table class="tasks">';

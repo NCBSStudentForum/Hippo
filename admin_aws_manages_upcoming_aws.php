@@ -98,7 +98,7 @@ foreach( $upcomingAWSs as $aws )
         echo '<tr><td>' . $aws['date'] . '</td>';
     }
     echo '<td>';
-    echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker']);
+    echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
     echo '<button name="response" value="Clear">Clear</button>';
@@ -163,7 +163,7 @@ foreach( $schedule as $upcomingAWS )
 
     $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
     $nDays = $nSecs / (3600 * 24 );
-    $speakerInfo = $speaker . '<br>'. loginToText( $speaker );
+    $speakerInfo = $speaker . '<br>'. loginToText( $speaker, $withEmail = false );
     
     echo "<tr><td>";
     echo $speakerInfo;

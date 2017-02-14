@@ -6,21 +6,9 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
-// If not authenticated, go to index.php
-if( ! ( array_key_exists( 'AUTHENTICATED', $_SESSION ) 
-    && $_SESSION[ 'AUTHENTICATED'] )
-)
-{
-    echo printInfo( "Please login first" );
-    goToPage( "index.php", 0 );
-    exit;
-}
+mustHaveAnyOfTheseRoles( array( 'USER') );
 
 echo userHTML( );
-
-echo "<h3>Welcome " . $_SESSION['user'] . '</h3>';
-
-// Manage speakers in NCBS.
 
 $html = '<table class="tasks">';
 $html .= '

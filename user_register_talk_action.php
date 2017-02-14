@@ -21,7 +21,10 @@ if( $res1 )
     // Assign speaker id from previous query.
     $res1[ 'id' ] = $res1[ 'LAST_INSERT_ID()' ];
     $speaker = getTableEntry( 'speakers', 'id', $res1 );
-    $speakerText = loginToText( $speaker );
+
+    // This entry may be used on public calendar. Putting email anywhere on 
+    // public domain is allowed.
+    $speakerText = loginToText( $speaker, $withEmail = False  );
     $_POST[ 'speaker' ] = $speakerText;
     $res2 = insertIntoTable( 'talks'
         , 'host,title,speaker,description,created_by'

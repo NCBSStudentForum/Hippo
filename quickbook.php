@@ -119,8 +119,11 @@ if( count( $publicEvents ) > 0 )
     echo alertUser( "FYI. Following public events are happening on the campus on 
         selected date" );
     foreach( $publicEvents as $event )
-        echo arrayToTableHTML( $event, 'event', ''
-            , array( 'gid', 'eid', 'description', 'status', 'is_public_event' )
+        echo arrayToTableHTML( $event, 'events', ''
+        , array( 'gid', 'eid', 'description', 'status', 'is_public_event'
+            , 'external_id'
+            , 'calendar_id', 'calendar_event_id', 'last_modified_on' 
+            )
         );
 }
 

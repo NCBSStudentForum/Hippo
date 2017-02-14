@@ -28,7 +28,7 @@ if( strtolower($_POST['response']) == 'edit' )
     echo "</form>";
 }
 
-else if( strtolower($_POST['response']) == 'cancel' )
+else if( strtolower($_POST['response']) == 'delete' )
 {
     $res = changeStatusOfEventGroup( $_POST['gid'], $_SESSION['user'], 'CANCELLED' );
     if( $res )

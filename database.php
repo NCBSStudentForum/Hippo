@@ -692,9 +692,9 @@ function submitRequest( $request )
         goToPage( "user.php", 3 );
         exit;
     }
-    $request[ 'created_by' ] = $_SESSION[ 'user' ];
 
-    $repeatPat = $request[ 'repeat_pat' ];
+    $request[ 'created_by' ] = $_SESSION[ 'user' ];
+    $repeatPat = __get__( $request, 'repeat_pat', '' );
 
     if( strlen( $repeatPat ) > 0 )
         $days = repeatPatToDays( $repeatPat );

@@ -51,9 +51,6 @@ $( function() {
             $('#speakers_institute').val( speakers[ email ]['institute'] );
             $('#speakers_homepage').val( speakers[ email ]['homepage'] );
         });
-
-
-
 });
 </script>
 

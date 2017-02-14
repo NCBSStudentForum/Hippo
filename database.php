@@ -68,45 +68,6 @@ function initialize( )
             , UNIQUE KEY (email,first_name,last_name)
         )' );
 
-    $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS talks 
-        ( id INT NOT NULL AUTO_INCREMENT
-            , speaker VARCHAR(100) NOT NULL
-            , host VARCHAR(100) NOT NULL
-            , coordinator VARCHAR(100)
-            -- Since this has to be unique key, this cannot be very large.
-            , title VARCHAR(200) NOT NULL
-            , description TEXT 
-            , created_by VARCHAR(100) NOT NULL CHECK( register_by <> "" )
-            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            , status ENUM( "CANCELLED", "INVALID", "VALID") DEFAULT "VALID"
-            , PRIMARY KEY (id)
-            , UNIQUE KEY (speaker,title)
-            , FOREIGN KEY (created_by) REFERENCES logins(login)
-        )' );
-
-    // This table holds the email template.
-    $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS email_templates
-        ( id VARCHAR(100) NOT NULL
-        , when_to_send VARCHAR(200)
-        , description TEXT, PRIMARY KEY (id) )' 
-        );
-
-    // Save the emails here. A bot should send these emails.
-    $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS emails
-        ( id INT NOT NULL AUTO_INCREMENT
-            , recipients VARCHAR(1000) NOT NULL
-            , subject VARCHAR(1000) NOT NULL
-            , msg TEXT NOT NULL
-            , when_to_send DATETIME NOT NULL
-            , status ENUM( "PENDING", "SENT", "FAILED", "CANCELLED" ) DEFAULT "PENDING"
-            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            , last_tried_on DATETIME 
-            , PRIMARY KEY (id) )' 
-        );
-
     // Other tables.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS logins (
@@ -137,6 +98,46 @@ function initialize( )
             ) DEFAULT 'UNSPECIFIED'
             , institute VARCHAR(300)
             , PRIMARY KEY (login))" 
+        );
+
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS talks 
+        ( id INT NOT NULL AUTO_INCREMENT
+            , speaker VARCHAR(100) NOT NULL
+            , host VARCHAR(100) NOT NULL
+            , coordinator VARCHAR(100)
+            -- Since this has to be unique key, this cannot be very large.
+            , title VARCHAR(200) NOT NULL
+            , description TEXT 
+            , created_by VARCHAR(100) NOT NULL 
+                CHECK( register_by <> "" )
+            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , status ENUM( "CANCELLED", "INVALID", "VALID") 
+                DEFAULT "VALID"
+            , PRIMARY KEY (id)
+            , UNIQUE KEY (speaker,title)
+        )' );
+
+    // This table holds the email template.
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS email_templates
+        ( id VARCHAR(100) NOT NULL
+        , when_to_send VARCHAR(200)
+        , description TEXT, PRIMARY KEY (id) )' 
+        );
+
+    // Save the emails here. A bot should send these emails.
+    $res = $db->query( 
+        'CREATE TABLE IF NOT EXISTS emails
+        ( id INT NOT NULL AUTO_INCREMENT
+            , recipients VARCHAR(1000) NOT NULL
+            , subject VARCHAR(1000) NOT NULL
+            , msg TEXT NOT NULL
+            , when_to_send DATETIME NOT NULL
+            , status ENUM( "PENDING", "SENT", "FAILED", "CANCELLED" ) DEFAULT "PENDING"
+            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , last_tried_on DATETIME 
+            , PRIMARY KEY (id) )' 
         );
 
     $res = $db->query( "

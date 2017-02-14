@@ -24,12 +24,20 @@ echo $html;
 
 echo '<h3>Annual Work Seminars</h3>';
 $html = '<table class="tasks">';
-$html .= '<tr>
+$html .= '
+    <tr>
+      <td>Add/update your TCM members and supervisors</td>
+      <td> 
+         <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a> 
+      </td>
+    </tr>
+    <tr>
       <td>Annual Work Seminar.</td>
       <td> 
          <a href="user_aws.php">My AWS</a> 
       </td>
-   </tr>';
+    </tr>
+    ';
 
 $html .= "</table>";
 echo $html;

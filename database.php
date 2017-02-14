@@ -1528,8 +1528,11 @@ function getFaculty( $status = '', $order_by = 'first_name' )
     $query = 'SELECT * FROM faculty ';
     if( $status )
         $query .= " WHERE status=:status ";
+    else
+        $query .= " WHERE status != 'INACTIVE' ";
 
-    $query .= " ORDER BY  '$order_by' ";
+    if( $order_by )
+        $query .= " ORDER BY  '$order_by' ";
 
     $stmt = $db->prepare( $query );
     if( $status )

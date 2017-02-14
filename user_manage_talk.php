@@ -26,13 +26,6 @@ if( count( $talks ) < 1 )
 
 foreach( $talks as $t )
 {
-    // Check if this talk has already been approved or in pending approval.
-    $event = getTableEntry( 'events', 'external_id,status'
-        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status' => 'VALID' )
-        );
-    $request = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
-        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status'  => 'PENDING' )
-        );
 
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';
@@ -44,20 +37,30 @@ foreach( $talks as $t )
         <td><button onclick="AreYouSure(this)" name="response" 
             title="Delete this entry" >' . $symbDelete . '</button></td>';
 
+    // Check if this talk has already been approved or in pending approval.
+    $event = getTableEntry( 'events', 'external_id,status'
+        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status' => 'VALID' )
+        );
+    $request = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
+        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status'  => 'PENDING' )
+        );
+
     // If either a request of event is found, don't let user schedule the talk. 
-    // She can edit the request/event.
+    // Here we disable the schedule button.
     if( ! ($request || $event ) )
         echo '<td><button style="float:right" title="Schedule this talk" 
         name="response" value="schedule">' . $symbCalendar . '</button></td>';
     else
         echo '<td></td>';
 
+    // Put an edit button. 
     echo '<td><button style="float:right" title="Edit this entry"
             name="response" value="edit">' . $symbEdit . '</button></td>';
 
     echo '</tr></table>';
     echo '</form>';
 
+    // If event is already approved, show it here.
     if( $event )
     {
         echo "<strong>Above talk has been confirmed</strong>";
@@ -66,12 +69,13 @@ foreach( $talks as $t )
             ',status,calendar_event_id,last_modified_on' );
         echo $html;
     }
-
-    if( $request )
+    // Else there might be a pending request.
+    else if( $request )
     {
         echo "<strong>Booking request for above talk is pending review</strong>
             Please note that you can not change venue, date, or time of this 
-            request; to do so you have to create a fresh request cancelling it.
+            request; to do so you have to cancel this requst and create 
+            a fresh one.
             ";
         $gid = $request[ 'gid' ];
 

@@ -73,4 +73,7 @@ echo '<div class="public_calendar">';
 echo calendarURL( );
 echo '</div>';
 
+echo "<br><br>";
+
+include_once 'footer.php';
 ?>

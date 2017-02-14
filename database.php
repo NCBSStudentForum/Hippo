@@ -553,9 +553,13 @@ function getEventsGrouped( $sortby = NULL, $from = 'today', $status = 'VALID' )
     else
         $sortby = " ORDER BY $sortby";
 
+    $nowTime = dbTime( 'now' );
     $from = date( 'Y-m-d', strtotime( 'today' ));
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
-        status=:status GROUP BY gid $sortby" );
+    $stmt = $db->prepare( 
+        "SELECT * FROM events WHERE date >= :date 
+            AND end_time >= '$nowTime'
+            AND status=:status GROUP BY gid $sortby" 
+        );
     $stmt->bindValue( ':date', $from );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );

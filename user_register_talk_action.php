@@ -54,13 +54,13 @@ if( $res1 )
         }
 
         // Else create a request.
-        $external_id = $res1[ 'id' ];
+        $external_id = "taks." . $res1[ 'id' ];
         $_POST[ 'external_id' ] = $external_id;
         $res = submitRequest( $_POST );
         if( $res )
         {
             echo printInfo( "Successfully created booking request" );
-            goToPage( "user.php", 1 );
+            goToPage( "user.php", 2 );
             exit;
         }
         else
@@ -73,6 +73,5 @@ else
     echo printWarning( "Oh Snap! Failed to add speaker to database" );
 
 echo goBackToPageLink( "user.php", "Go back" );
-exit;
 
 ?>

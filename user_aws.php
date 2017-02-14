@@ -78,9 +78,9 @@ echo "<h3>Past Annual Work Seminar</h3>";
 
 echo "<table>";
 echo '<tr><td>
-    You can add a missing AWS for review.
-    </td><td> <a href="user_aws_request.php">Add previous 
-    AWS</a>';
+    If you notice a missing AWS in your list, please emails details to 
+    <a href="mailto:hippo@lists.ncbs.res.in" target="_black">hippo@lists.ncbs.res.in</a>
+    ';
 echo "</td></tr>";
 echo "</table>";
 echo "<br/>";
@@ -95,7 +95,8 @@ foreach( $awses as $aws )
     echo "<form method=\"post\" action=\"user_aws_edit_request.php\">";
     echo arrayToVerticalTableHTML( $aws, 'aws', NULL
     , Array( 'speaker', 'id' ));
-    echo "<button class=\"submit\" name=\"response\" value=\"edit\">Edit</button>";
+    echo "<button title=\"Edit this entry\" 
+            name=\"response\" value=\"edit\">" . $symbEdit . "</button>";
     echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
     echo "</form>";
     echo "<br /><br />";

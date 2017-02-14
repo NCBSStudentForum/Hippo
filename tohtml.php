@@ -604,17 +604,24 @@ function arrayToSelectList( $name, $options
     return $html;
 }
 
-function loginToText( $login )
+function loginToText( $login, $withEmail = true )
 {
     // If only login name is give, query database to get the array. Otherwise 
     // assume that an array has been given to use.
     if( is_string( $login ) )
-        $login = getUserInfo( $login );
+        $user = getUserInfo( $login );
+    else
+        $user = $login;
 
-    $text = $login['first_name'] . ' ' . $login[ 'last_name' ];
+    if( ! $user )
+        return $login;
 
-    if( array_key_exists( 'email', $login) && $login[ 'email' ] )
-        $text .= " (" . $login['email'] . ")";
+    if( array_key_exists( 'first_name', $user ) )
+        $text = $user['first_name'] . ' ' . $user[ 'last_name' ];
+
+    if( $withEmail )
+        if( array_key_exists( 'email', $user) && $user[ 'email' ] )
+            $text .= " (" . $user['email'] . ")";
 
     return $text;
 }

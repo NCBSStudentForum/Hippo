@@ -11,7 +11,7 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
 if( ! $_POST[ 'response' ] )
 {
     // Go back to previous page.
-    goToPage( $_SERVER[ 'HTTP_REFERER' ], 0 );
+    goBack( );
     exit;
 }
 else if( $_POST[ 'response' ] == 'delete' )

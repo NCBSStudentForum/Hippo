@@ -20,8 +20,8 @@ if( $_POST['response'] == 'edit' )
 
     echo "<p>
         NOTICE: If you can't find your supervior(s) and/or thesis committee member(s) 
-        in selection list, please create a entry for them
-        <a href=\"user_add_supervisor.php\" target=\"_blank\">HERE</a>
+        in selection list, please go back to your HOME and click on 
+       <pre>Update TCM Members/Supervisors</pre> link.
     </p>";
 
     // Now create an entry

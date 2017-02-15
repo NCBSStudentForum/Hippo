@@ -5,21 +5,26 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 
-$today = dbDate( 'now' );
+echo "<h2>Browse AWSs of a particular day</h2>";
 
-if( array_key_exists( 'date', $_POST ) )
-    $default[ 'date' ] = $_POST[  'date' ];
+echo printInfo( "Please select a day (MONDAY) to see the details of annual 
+    work seminars" );
+
+$today = dbDate( 'next monday' );
+
+if( array_key_exists( 'date', $_GET ) )
+    $default[ 'date' ] = $_GET[  'date' ];
 else
     $default = array( 'date' => $today );
 
 echo '
-    <form method="post" action="">
+    <form method="get" action="">
     <table border="0">
         <tr>
             <td>Select date</td>
             <td><input class="datepicker" type="text" name="date" value="' . 
                     $default[ 'date' ] . '" ></td>
-            <td><button type="submit" name="response" value="scan">' . 
+            <td><button type="submit" name="response" value="show">' . 
                 $symbScan . '</button></td>
         </tr>
     </table>
@@ -30,11 +35,22 @@ $whichDay = $default[ 'date' ];
 
 $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
 
-foreach( $awses as $aws )
+if( count( $awses ) < 1 )
 {
-    echo '<pre>' . html2text( awsToTable( $aws ) ) . '</pre>';
-    echo "<hr>";
+    echo printInfo( "I could not find any AWS in my database on this day" );
+}
+else 
+{
+    foreach( $awses as $aws )
+    {
+        $user = $aws[ 'speaker' ];
+        $awstext = awsToTable( $aws );
+        $imgHtml = "<div style=\"margin-left:50%\">" . getUserPicture( $user ) . "</div>";
+        echo "<div float=\"right\"> $imgHtml </div>";
+        echo $awstext;
+    }
 }
 
+echo closePage( );
 
 ?>

@@ -488,3 +488,18 @@ function getUserPicture( $user )
         height="auto" src="' . dataURI( $picPath, 'image/png' ) . '" >';
     return $html;
 }
+
+/**
+    * @brief Reschedule AWS.
+    *
+    * @return 
+ */
+function rescheduleAWS( )
+{
+    echo printInfo( "Rescheduling ...." );
+    $scriptPath = __DIR__ . '/schedule.sh';
+    echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
+    $command = "timeout 30 bash $scriptPath";
+    exec( $command, $output, $return );
+    return $output;
+}

@@ -31,12 +31,7 @@ function createEmailEntry( $speaker, $date )
 
 if( $_POST['response'] == "Reschedule" )
 {
-    $cwd = getcwd( );
-    echo printInfo( "Rescheduling ...." );
-    $scriptPath = $cwd . '/schedule.sh';
-    echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
-    $command = "timeout 30 bash $scriptPath";
-    exec( $command );
+    rescheduleAWS( );
     goToPage( 'admin_aws_manages_upcoming_aws.php', 1);
     exit;
 }

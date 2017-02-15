@@ -1544,7 +1544,10 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     foreach( $wherekeys as $wherekey )
         $stmt->bindValue( ":$wherekey", $data[$wherekey] );
 
-    return $stmt->execute( );
+    $res = $stmt->execute( );
+    if( ! $res )
+        echo "<pre>Failed to execute $query </pre>";
+    return $res;
 }
 
 

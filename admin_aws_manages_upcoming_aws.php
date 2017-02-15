@@ -101,7 +101,8 @@ foreach( $upcomingAWSs as $aws )
     echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
-    echo '<button name="response" value="Clear">Clear</button>';
+    echo '<button name="response" value="Clear" title="Delete this entry"
+            >' . $symbDelete . '</button>';
     echo '</td>';
     echo '</form>';
 }
@@ -111,7 +112,7 @@ echo "<h3>Temporary assignments </h3>";
 echo '
     <p class="info"> Following table shows the best possible schedule I could 
     come up with for whole year starting today. Pressing <button 
-    disabled>Accept</button> will put them into upcoming
+    disabled>' . $symbThumbsUp . '</button> will put them into upcoming
     AWS list.
     </p>';
 
@@ -186,7 +187,8 @@ foreach( $schedule as $upcomingAWS )
     echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
     echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
     echo '<td style="background:white;border:0px;">
-        <button name="response" value="Accept" >Accept</button>
+        <button name="response" title="Confirm this slot" 
+            value="Accept" >' . $symbThumbsUp . '</button>
         </td>';
     echo "</tr>";
     echo '</form>';

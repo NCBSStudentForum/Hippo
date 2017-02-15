@@ -39,7 +39,8 @@ foreach( $awses as $aws )
     $tmpfile = tempnam( sys_get_temp_dir( ), "aws_entry" );
     $handle = fopen( $tmpfile, "w" );
     $awstext = awsToTable( $aws );
-    echo $awsToTable;
+    echo "<h2>Annual Work Seminar</h2>";
+    echo $awstext;
 }
 
 // Only if the AWS date in future/today, allow admin to send emails.

@@ -786,7 +786,10 @@ function awsToTable( $aws )
     $title = __ucwords__( $aws[ 'title' ]);
     $abstract = $aws[ 'abstract' ];
 
-    $html =  '<table border="1">
+    $html = '<style type="text/css">
+        .email tr td { border : 1px dotted; } 
+        </style>';
+    $html .=  '<table style="width:600px;" class="email">
         <tr>
             <td>Speaker</td>
             <td>' . $speaker . '</td>

@@ -26,10 +26,9 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 echo userHTML( );
 
 echo '<h3>Manually assign AWS</h3>';
+
 echo printInfo( 
     'Here you can manually assign speakers to an AWS slot After assignment,
-    you may want to press <button disabled>Reschedule All</button> below to 
-    update schedule again after the changes made manually.
     ' );
 
 echo '

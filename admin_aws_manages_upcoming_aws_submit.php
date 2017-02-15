@@ -45,6 +45,7 @@ else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
     if( $res )
     {
         echo printInfo( "Successfully assigned" );
+        rescheduleAWS( );
         createEmailEntry( $_POST[ 'speaker' ], $_POST[ 'date' ] );
         goToPage( "admin_aws_manages_upcoming_aws.php", 1 );
         exit;

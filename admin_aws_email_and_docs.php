@@ -37,8 +37,6 @@ foreach( $awses as $aws )
 {
 
     $user = $aws[ 'speaker' ];
-    $tmpfile = tempnam( sys_get_temp_dir( ), "aws_entry" );
-    $handle = fopen( $tmpfile, "w" );
     $awstext = awsToTable( $aws );
     echo "<h2>Annual Work Seminar</h2>";
     $imgHtml = getUserPicture( $user );

@@ -623,6 +623,9 @@ function loginToText( $login, $withEmail = true )
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
             $text .= " (" . $user['email'] . ")";
 
+    if( strlen( trim($text) ) < 1 )
+        return $login;
+
     return $text;
 }
 
@@ -787,7 +790,8 @@ function awsToTable( $aws )
     $abstract = $aws[ 'abstract' ];
 
     $html = '<style type="text/css">
-        .email tr td { border : 1px dotted; } 
+        .email { border:1px solid; } 
+        .email tr td {background-color: ivory; } 
         </style>';
     $html .=  '<table style="width:600px;" class="email">
         <tr>
@@ -817,4 +821,8 @@ function awsToTable( $aws )
 
 }
 
+function closePage( )
+{
+    return "<a href=\"javascript:window.close();\">Close Window</a>";
+}
 ?>

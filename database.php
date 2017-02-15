@@ -953,7 +953,10 @@ function summaryTable( )
     $html .= "
         <tr>
             <td>
-            <a href=\"show_events.php\" target=\"_blank\">Event Calendar</a>
+            <a href=\"show_events.php\" target=\"_blank\">All Events</a>
+            </td>
+            <td>
+            <a href=\"show_aws_entry.php\" target=\"_blank\">See AWSs</a>
             </td>
         </tr>
         <tr>

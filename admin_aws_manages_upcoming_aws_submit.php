@@ -25,8 +25,8 @@ function createEmailEntry( $speaker, $date )
 
     // For debugging write to temp file.
     file_put_contents( '/tmp/__mail_apache.html', $msg );
-
     insertIntoTable( 'emails', 'recipients,subject,msg,when_to_send', $data ); 
+    sendEmail( data['recipients'], $data['subject'], $msg );
 }
 
 if( $_POST['response'] == "Reschedule" )

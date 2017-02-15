@@ -23,19 +23,8 @@ function sendEmail($msg, $sub, $to)
 
     $cmd= __DIR__ . "/sendmail.py '$to' '$sub' '$msgfile' ";
     $out = exec( $cmd, $output, $ret );
+    //unlink( $msgfile );
     return $ret;
-}
-
-function sendEmailById( $id )
-{
-    $email = getEmailById( $id );
-    if( ! $email )
-        return false;
-
-    $msg = $email[ 'msg' ];
-    $sub = $email[ 'subject' ];
-    $to = $email[ 'recipients' ];
-    return sendEmail( $msg, $sub, $to );
 }
 
 // $res = sendEmail( "testing"

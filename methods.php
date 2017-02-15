@@ -479,7 +479,7 @@ function convertImage($originalImage, $ext, $outputImage, $quality = 9 )
  */
 function getUserPicture( $user )
 {
-    $picPath = $_SESSION[ 'conf' ]['user_imagedir'] . '/' . $user . '.png';
+    $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
     if( ! file_exists( $picPath ) )
         $picPath = __DIR__ . "/data/no_image_available.png";
         

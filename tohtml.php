@@ -749,4 +749,72 @@ function dataURI( $filepath, $mime )
     return ('data:' . $mime . ';base64,' . $base64);
 }
 
+function __ucwords__( $text )
+{
+    return ucwords( strtolower( $text ) );
+}
+
+function breakAt( $text, $width = 80 )
+{
+    $newTxt =  `echo '$text' | fold -w $width -s -`;
+    return str_replace( '\n', '<br/>', $newTxt );
+}
+
+function awsToTable( $aws )
+{
+    $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
+
+    $supervisors = array( __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_1' ] ), false ))
+                ,  __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_2' ] ), false ))
+            );
+    $supervisors = array_filter( $supervisors );
+
+    $tcm = array( );
+    array_push( $tcm, __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_1' ] ), false ))
+            , __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_2' ] ), false ))
+            ,  __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_3' ] ), false ))
+            , __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_4' ] ), false ))
+        );
+    $tcm = array_filter( $tcm );
+
+    $title = __ucwords__( $aws[ 'title' ]);
+    $abstract = $aws[ 'abstract' ];
+
+    $html = '<style type="text/css">
+        .email tr td { border : 1px dotted; } 
+        </style>';
+    $html .=  '<table style="width:600px;" class="email">
+        <tr>
+            <td>Speaker</td>
+            <td>' . $speaker . '</td>
+        </tr>
+        <tr>
+            <td>Supervisors</td>
+            <td>' . implode( "<br/>", $supervisors ) . '</td>
+        </tr>
+        <tr>
+            <td>Thesis Committee Members</td>
+            <td>' . implode( "<br/>", $tcm) . '</td>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td>' . $title . '</td>
+        </tr>
+        <tr>
+            <td>Abstract</td>
+            <td>' . $abstract . '</td>
+        </tr>
+            
+        </table>';
+
+    return $html;
+
+}
+
 ?>

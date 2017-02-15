@@ -39,7 +39,7 @@ if( $_POST[ 'Response' ] == 'upload' )
         else
         {
             echo printInfo( "File is uploaded sucessfully" );
-            //goBack( "user_info.php", 1 );
+            goBack( "user_info.php", 1 );
         }
     }
 }

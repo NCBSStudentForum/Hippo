@@ -1239,6 +1239,26 @@ function getSupervisors( )
     return $faculty;
 }
 
+
+/**
+    * @brief Find entry in database with given entry.
+    *
+    * @param $email
+    *
+    * @return 
+ */
+function findAnyoneWithEmail( $email )
+{
+    $res = getTableEntry( 'faculty', 'email', array( 'email' => $email ) );
+    if( ! $res )
+        $res = getTableEntry( 'supervisors', 'email', array('email' => $email));
+    if( ! $res )
+        $res = getTableEntry( 'logins', 'email', array('email' => $email));
+    return $res;
+}
+
+
+
 /**
     * @brief 
     *

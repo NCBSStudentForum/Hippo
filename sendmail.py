@@ -13,13 +13,14 @@ if len( sys.argv ) < 4:
     quit( )
 
 
-def sendMail( fromAddr, toAddr, subject, msg ):
-    msg = html2other.tomd( msg )
-    msg = MIMEText( msg )
+def sendMail( fromAddr, toAddr, subject, msghtml ):
+    """Send html email """
+    # msg = html2other.tomd( msg )
+    msg = MIMEMultipart( 'alernative' )
     msg[ 'subject' ] = subject
     msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
-
-    s = smtplib.SMTP( 'ghevar.ncbs.res.in', 587 )
+    msg.attach( MIMEText( msghtml, 'html' ) );
+    s = smtplib.SMTP( 'smtp.ncbs.res.in', 587 )
     s.set_debuglevel( 2 )
 
     success = False

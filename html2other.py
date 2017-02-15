@@ -31,7 +31,9 @@ def tomd( msg ):
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
 
     if pandoc_:
-        msg = pypandoc.convert_text( msg, 'md', format = 'html' ) 
+        msg = pypandoc.convert_text( msg, 'md', format = 'html' 
+                , extra_args = [ ]
+                )
     else:
         _logger.info( 'Trying html2text ' )
         try:
@@ -51,7 +53,7 @@ def main( ):
     outfmt = sys.argv[2]
     if outfmt == 'md':
         print( htmlfile2md( infile ) )
-    else outfmt == 'pdf':
+    elif outfmt == 'pdf':
         html2pdf( infile )
 
 

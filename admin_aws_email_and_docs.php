@@ -5,6 +5,7 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'check_access_permissions.php';
+require_once 'vendor/autoload.php';
 
 mustHaveAllOfTheseRoles( array('AWS_ADMIN' ) );
 
@@ -33,16 +34,33 @@ $whichDay = $default[ 'date' ];
 
 $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
 
+$awsText = '';
 foreach( $awses as $aws )
 {
 
+    $awsText .= "<h2></h2>";
     $user = $aws[ 'speaker' ];
     $awstext = awsToTable( $aws );
-    echo "<h2>Annual Work Seminar</h2>";
     $imgHtml = getUserPicture( $user );
-    echo "<div float=\"right\"> $imgHtml </div>";
-    echo $awstext;
+    //$awsText .= "<div float=\"right\"> $imgHtml </div>";
+    $awsText .= $awstext;
 }
+
+
+
+// Save this test and convert it to pdf.
+file_put_contents( '_aws.html', $awsText );
+
+$cmd = "python " . __DIR__ . "/html2other.py _aws.html md";
+echo "<pre> Executing $cmd </pre>";
+$awsText = `$cmd`;
+echo "<pre> $awsText </pre>";
+
+ob_start( );
+$pdf = new HTML2PDF( 'P', 'A4', 'en', true, 'UTF-8', array(5,8,10,5) );
+$pdf->WriteHTML( $awsText );
+$pdf->Output( __DIR__ . '/aws.pdf', 'F' );
+ob_end_flush( );
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

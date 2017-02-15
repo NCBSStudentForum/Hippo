@@ -23,7 +23,7 @@ $html .= '
 echo $html;
 
 echo '<h3>Annual Work Seminars</h3>';
-$html = '<table class="tasks">';
+$html = '<div class="tasks"><table class="tasks">';
 $html .= '
     <tr>
     <td>
@@ -49,7 +49,7 @@ $html .= '
     </tr>
     ';
 
-$html .= "</table>";
+$html .= "</table></div>";
 echo $html;
 
 echo '<h3>BookMyVenue</h3>';

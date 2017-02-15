@@ -468,7 +468,7 @@ function getRequestOfUser( $userid, $status = 'PENDING' )
     return fetchEntries( $stmt );
 }
 
-function getEventsOfUser( $userid, $from = '-1 days', $status = 'VALID' )
+function getEventsOfUser( $userid, $from = '-0 days', $status = 'VALID' )
 {
     global $db;
     $from = date( 'Y-m-d', strtotime( $from ));

@@ -30,7 +30,22 @@ echo userHTML( );
 echo '<h2 align="left">AWS Admin</h2>';
 
 echo '<table class="admin">';
-echo '<tr>
+echo '
+    <tr>
+    <td>Add, Update or Delete user <br>
+        <small>Type a login name and press the button.</small>
+    </td>
+        <td>
+            <form method="post" action="admin_aws_update_user.php">
+            <input id="autocomplete_user" name="login" 
+                placeholder="I will autocomplete " >
+            <button 
+                title="Add or remove speakers from AWS list"
+                name="response" value="edit">' . $symbUpdate . '</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
         <td>Manage pending requests</td>
         <td> <a href="admin_aws_manages_requests.php">Manage ' . count( $pendingRequests) . 
             ' pending requests</a> </td>

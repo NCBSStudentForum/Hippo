@@ -1,12 +1,15 @@
 {
     font-family : open-sans, droid-serif, sans-serif, Verdana;
     font-size : normal;
+    max-width : 1000px;
+    min-width : 100%;
 }
 
 :root { --background : ivory }
 
 body {
-
+    max-width : 1000px;
+    min-width : 100%;
 }
 
 h2 {
@@ -157,18 +160,15 @@ table.show_schedule th
 }
 
 table.tasks {
-    max-width : 800px;
-    min-width : 100%;
+    width : 80%;
 }
 
 table.tasks tr td 
 {
-    /*border : 0.5px dotted; */
-    min-width : 20%;
-    max-width : 50%;
+    border : 0.5px dotted; 
+    width : 50%;
     background : var(--background);
 }
-
 
 
 div.info {

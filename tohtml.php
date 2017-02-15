@@ -754,6 +754,12 @@ function __ucwords__( $text )
     return ucwords( strtolower( $text ) );
 }
 
+function breakAt( $text, $width = 80 )
+{
+    $newTxt =  `echo '$text' | fold -w $width -s -`;
+    return str_replace( '\n', '<br/>', $newTxt );
+}
+
 function awsToTable( $aws )
 {
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
@@ -777,8 +783,8 @@ function awsToTable( $aws )
         );
     $tcm = array_filter( $tcm );
 
-    $title = __ucwords__( $aws[ 'title' ] );
-    $abstract = $aws[ 'abstract' ] ;
+    $title = __ucwords__( $aws[ 'title' ]);
+    $abstract = $aws[ 'abstract' ];
 
     $html =  '<table border="1">
         <tr>

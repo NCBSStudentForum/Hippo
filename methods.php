@@ -469,3 +469,21 @@ function convertImage($originalImage, $ext, $outputImage, $quality = 9 )
     imagedestroy($imageTmp);
     return 1;
 }
+
+/**
+    * @brief Image of user,
+    *
+    * @param $user
+    *
+    * @return 
+ */
+function getUserPicture( $user )
+{
+    $picPath = $_SESSION[ 'conf' ]['user_imagedir'] . '/' . $user . '.png';
+    if( ! file_exists( $picPath ) )
+        $picPath = __DIR__ . "/data/no_image_available.png";
+        
+    $html ='<img class="login_picture" width="200px"
+        height="auto" src="' . dataURI( $picPath, 'image/png' ) . '" >';
+    return $html;
+}

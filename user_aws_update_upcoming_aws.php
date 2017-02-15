@@ -22,7 +22,6 @@ if( $_POST[ 'response' ] == 'update' )
     echo editableAWSTable( -1, $aws );
     echo '<input type="hidden", name="id" value="' . $awsId . '">';
     echo '</form>';
-
 }
 
 echo goBackToPageLink( 'user_aws.php', 'Go back' );

@@ -21,6 +21,6 @@ if( $_POST[ 'response' ] == 'update' )
     echo '</form>';
 }
 
-echo goBackToPageLink( 'user_aws.php', 'Go back' );
+echo goBackToPageLink( 'admin_aws.php', 'Go back' );
 
 ?>

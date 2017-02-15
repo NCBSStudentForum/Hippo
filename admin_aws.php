@@ -163,7 +163,21 @@ echo '
   </table>';
 
 echo "<h2>Automatic Housekeeping</h2>";
-echo doAWSHouseKeeping( );
+$badEntries = doAWSHouseKeeping( );
+if( count( $badEntries ) == 0 )
+    echo printInfo( "AWS House is in order" );
+else
+{
+    foreach( $badEntries as $aws )
+    {
+        echo alertUser( 'This entry needs your attentions' );
+        echo '<form method="post" action="admin_aws_update_upcoming_aws.php">';
+        echo dbTableToHTMLTable( 'upcoming_aws', $aws, '', 'update');
+        echo '<input type="hidden" name="id" value="' . $aws['id'] . '>';
+        echo '</form>';
+    }
+}
+    
 
 ?>
 

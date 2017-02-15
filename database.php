@@ -326,6 +326,7 @@ function doAWSHouseKeeping( )
         , $where = "status='VALID' AND date < NOW( )" 
         );
 
+    $badEntries = array( );
     $html = '';
     foreach( $oldAwsOnUpcomingTable as $aws )
     {
@@ -333,6 +334,7 @@ function doAWSHouseKeeping( )
         {
             $html .= printWarning( "This entry is incomplete" );
             $html .=  arrayToTableHTML( $aws, 'aws' );
+            array_push( $badEntries, $aws );
             continue;
         }
 
@@ -355,7 +357,7 @@ function doAWSHouseKeeping( )
 
     if( strlen( $html ) < 1 )
         $html .= printInfo( "AWS house is in order" );
-    return $html;
+    return $badEntries;
 }
 
 function getVenues( $sortby = 'total_events' )

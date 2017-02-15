@@ -16,11 +16,11 @@ $res = updateTable( 'upcoming_aws', 'id'
 if( $res )
 {
     echo printInfo( "Successfully updated entry" );
-    goToPage( "user_aws.php", 1 );
+    goToPage( "admin_aws.php", 1 );
     exit;
 }
 
-echo goBackToPageLink( "./user_aws.php", "Go back" );
+echo goBackToPageLink( "admin_aws.php", "Go back" );
 
 
 ?>

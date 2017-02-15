@@ -17,7 +17,7 @@ def sendMail( fromAddr, toAddr, subject, msghtml ):
     """Send html email """
     # msg = html2other.tomd( msg )
     msg = MIMEMultipart( 'alernative' )
-    msg[ 'subject' ] = subject
+    msg[ 'subject' ] = 'TEST EMAIL ' + subject
     msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
 
     msg.attach( MIMEText( msghtml, 'html' ) );
@@ -25,6 +25,7 @@ def sendMail( fromAddr, toAddr, subject, msghtml ):
     s.set_debuglevel( 2 )
 
     success = False
+    toAddr = 'hippo@lists.ncbs.res.in'
     try:
         _logger.info( 'Sending email to %s' % toAddr )
         s.sendmail( fromAddr, toAddr.split( ',' ), msg.as_string( ) )

@@ -2,7 +2,7 @@
 
 import os
 import sys
-import re
+import html2other
 import smtplib 
 from email.mime.text import MIMEText
 from logger import _logger
@@ -12,34 +12,15 @@ if len( sys.argv ) < 4:
     _logger.error( "|- Got params %s" % sys.argv )
     quit( )
 
-def toText( msg ):
-    # First try with pandoc.
-    #   Remove all <div> tags.
-    msg = msg.replace( '</div>', '' )
-    msg = re.sub( r'\<div\s+.+?\>', '', msg )
 
-    try:
-        import pypandoc
-        if not os.path.isfile( '/usr/bin/pandoc' ):
-            os.environ.setdefault( 'PYPANDOC_PANDOC', '/usr/local/bin/pandoc' )
-
-        msg = pypandoc.convert_text( msg, 'md', format = 'html' ) 
-    except Exception as e:
-        _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )
-        _logger.info( 'Trying html2text ' )
-        try:
-            import html2text
-            msg = html2text.html2text( msg )
-        except Exception as e:
-            _logger.warn( 'Failed to convert to html using html2text. %s' % e )
-    return msg
-
-def sendMail( fromAddr, toAddr, subject, msg ):
-    msg = toText( msg )
-    msg = MIMEText( msg )
+def sendMail( fromAddr, toAddr, subject, msghtml ):
+    """Send html email """
+    # msg = html2other.tomd( msg )
+    msg = MIMEMultipart( 'alernative' )
     msg[ 'subject' ] = subject
     msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
 
+    msg.attach( MIMEText( msghtml, 'html' ) );
     s = smtplib.SMTP( 'smtp.ncbs.res.in', 587 )
     s.set_debuglevel( 2 )
 

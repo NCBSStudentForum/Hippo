@@ -12,7 +12,7 @@ echo userHTML( );
 if( ! array_key_exists( 'login', $_POST ) )
 {
     echo printInfo( "You didn't select anyone. Going back ... " );
-    goToPage( 'admin.php', 1 );
+    goToPage( 'admin_aws.php', 1 );
     exit;
 }
 

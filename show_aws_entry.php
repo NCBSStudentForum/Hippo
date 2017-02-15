@@ -47,7 +47,9 @@ else
     {
         $user = $aws[ 'speaker' ];
         $awstext = awsToTable( $aws );
-        $imgHtml = "<div style=\"margin-left:50%\">" . getUserPicture( $user ) . "</div>";
+        $imgHtml = "<table><tr>
+                <td><div style=\"width:50%;max-width:500px;\"</div></td>
+            <td>" . getUserPicture( $user ) .  "</td></tr></table>";
         echo "<div float=\"right\"> $imgHtml </div>";
         echo $awstext;
     }

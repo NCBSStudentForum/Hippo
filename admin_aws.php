@@ -19,6 +19,7 @@ $pendingRequests = getPendingAWSRequests( );
 $(function() {
     var logins = <?php echo json_encode( $logins ); ?>;
     $( "#autocomplete_user" ).autocomplete( { source : logins }); 
+    $( "#autocomplete_user1" ).autocomplete( { source : logins }); 
 });
 </script>
 
@@ -31,20 +32,6 @@ echo '<h2 align="left">AWS Admin</h2>';
 
 echo '<table class="admin">';
 echo '
-    <tr>
-    <td>Add, Update or Delete user <br>
-        <small>Type a login name and press the button.</small>
-    </td>
-        <td>
-            <form method="post" action="admin_aws_update_user.php">
-            <input id="autocomplete_user" name="login" 
-                placeholder="I will autocomplete " >
-            <button 
-                title="Add or remove speakers from AWS list"
-                name="response" value="edit">' . $symbUpdate . '</button>
-            </form>
-        </td>
-    </tr>
     <tr>
         <td>Manage pending requests</td>
         <td> <a href="admin_aws_manages_requests.php">Manage ' . count( $pendingRequests) . 
@@ -71,31 +58,54 @@ echo '
     </tr>
   </table>';
 
-echo '<h3>Danger zone</h3>';
-echo '<strong>
-    Select a user and optionally her AWS date, you can delete an AWS entry 
-    from my database. </strong>';
+echo '<h3>Modify USER and AWS entry</h3>';
+echo '<table class="admin">';
 echo '
-    <form method="get" action="">
-    AWS speaker id <input id="autocomplete_user" name="login" type="text" />
-    and optionally select AWS date<input class="datepicker" name="date" value="" >
-    <button name="response" value="Select">Select</button>
+    <tr>
+    <td>Add, Update or Delete user <br>
+        <small>Type a login name and press the button.</small>
+    </td>
+        <td>
+            <form method="post" action="admin_aws_update_user.php">
+            <input id="autocomplete_user" name="login" 
+                placeholder="I will autocomplete " >
+            <button 
+                title="Add or remove speakers from AWS list"
+                name="response" value="edit">' . $symbUpdate . '</button>
+            </form>
+        </td>
+    </tr><tr>';
+echo '<td>
+    Enter a login and optionally AWS date and you can delete that AWS entry 
+    from my database.</td>';
+echo '<td> <form method="post" action="">';
+echo '
+    <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
+    AWS date (optional) <input class="datepicker" name="date" value="" >
+    <button name="response" value="Select">' . $symbCheck . '</button>
     </form>
+    </td>
     ';
+echo '</table>';
 
 $login = null;
 $date = null;
-if( isset( $_GET[ 'response' ] ))
+if( isset( $_POST[ 'response' ] ))
 {
-    if( $_GET[ 'response' ] == 'Select' )
+    if( $_POST[ 'response' ] == 'Select' )
     {
-        $login = $_GET[ 'login' ];
-        $date = $_GET[ 'date' ];
+        $login = $_POST[ 'login' ];
+        $date = $_POST[ 'date' ];
     }
-    else if( $_GET[ 'response' ] == 'Delete' )
+
+    else if( $_POST[ 'response' ] == 'DO_NOTHING' )
+    {
+
+    }
+    else if( $_POST[ 'response' ] == 'delete' )
     {
         echo "Deleting this AWS entry.";
-        $res = deleteAWSEntry( $_GET['speaker'], $_GET['date' ] );
+        $res = deleteAWSEntry( $_POST['speaker'], $_POST['date' ] );
         if( $res )
         {
             echo printInfo( "Successfully deleted" );
@@ -125,10 +135,11 @@ if( isset( $_GET[ 'response' ] ))
         echo '<br>';
 
         /* This forms remain on this page only */
-        echo '<form method="get" action="">
+        echo '<form method="post" action="">
             <input type="hidden" name="speaker" value="' . $speaker . '">
             <input type="hidden" name="date" value="' . $date . '" >
-            <button style=\"float:right\" name="response" value="Delete">Delete</button>
+            <button onclick="AreYouSure(this)" 
+                style=\"float:right\" name="response" >'. $symbDelete . '</button>
             </form>
             ';
     }

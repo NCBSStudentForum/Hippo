@@ -364,7 +364,7 @@ def commit_schedule( schedule ):
                 INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}') 
                 ON DUPLICATE KEY UPDATE date='{1}'
                 """.format( speaker, date ) 
-            _logger.debug( query )
+            # _logger.debug( query )
             cur.execute( query )
     db_.commit( )
     _logger.info( "Committed to database" )

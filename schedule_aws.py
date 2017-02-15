@@ -194,6 +194,16 @@ def construct_flow_graph(  ):
                 else:
                     lastDate = monthdelta( joinDate, -6 )
 
+            if speakers_[ speaker ]['title'] == 'MSC':
+                # MSc should get their first AWS after 24 months of
+                # joining.
+                _logger.info( '%s = INTPHD with 0 AWS so far' % speaker )
+                joinDate = speakers_[ speaker ]['joined_on']
+                if not joinDate:
+                    _logger.warn( "Could not find joining date" )
+                else:
+                    lastDate = monthdelta( joinDate, -12 )
+
             elif speakers_[ speaker ]['title'] in [ 'PHD', 'POSTDOC' ]:
                 joinDate = speakers_[ speaker ]['joined_on']
                 _logger.info( '%s PHD/POSTDOC with 0 AWS so far' % speaker )

@@ -340,7 +340,8 @@ function doAWSHouseKeeping( )
 
         // First copy the entry to AWS table.
         $res1 = insertOrUpdateTable( 'annual_work_seminars'
-            , array_keys( $aws ), 'title,abstract',  $aws
+            , array_diff( array_keys( $aws ), array( "status" ) )
+            , 'title,abstract',  $aws
             );
         if( $res1 )
         {
@@ -351,7 +352,10 @@ function doAWSHouseKeeping( )
                 );
         }
         else
+        {
+            array_push( $badEntries, $aws );
             $html .=  printWarning( "Could not move entry to main AWS list" );
+        }
 
     }
 

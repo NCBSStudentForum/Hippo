@@ -105,6 +105,7 @@ function AreYouSure( button )
 <?php
 
 $symbEdit = "&#9998";
+$symbUpdate = "&#x270d";
 $symbCalendar = "&#128197";
 $symbDelete = "&#10008";
 $symbCancel = "&#10008";

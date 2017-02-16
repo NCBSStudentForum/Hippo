@@ -6,6 +6,19 @@ include_once 'methods.php';
 include_once 'database.php';
 require_once 'vendor/autoload.php';
 
+function date3339($date)
+{
+    $timestamp = strtotime( $date );
+    $date = date('Y-m-d\TH:i:s', $timestamp);
+    $matches = array();
+    if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $timestamp), $matches)) {
+        $date .= $matches[1].$matches[2].':'.$matches[3];
+    } else {
+        $date .= 'Z';
+    }
+    return $date;
+}
+
 
 /**
  * NCBS google calendar.
@@ -81,20 +94,25 @@ class NCBSCalendar
         *
         * @return 
      */
-    public function getEvents( )
+    public function getEvents( $from = '-1 month' )
     {
-        //echo "Getting list of events from " . $this->calID;
-        $eventGen = $this->service()->events->listEvents( $this->calID );
+        $from = date3339( $from );
+        $opt = array( 'timeMin' => $from );
+        echo "<p>Getting list of events from date  $from </p>";
+        $eventGen = $this->service()->events->listEvents( $this->calID, $opt );
         $events = array();
         while( true ) {
-            foreach( $eventGen->getItems() as $event ) {
+            foreach( $eventGen->getItems() as $event ) 
+            {
                 array_push( $events, $event );
             }
 
             $pageToken = $eventGen->getNextPageToken();
             if ($pageToken) {
                 $optParams = array('pageToken' => $pageToken);
-                $eventGen = $this->service->events->listEvents( $this->calID,  $optParams);
+                $eventGen = $this->service->events->listEvents( 
+                    $this->calID,  $opt 
+                );
             } else {
                 break;
             }
@@ -304,7 +322,6 @@ class NCBSCalendar
 
         // Else check in calendar.
         $event = $this->service()->events->get( $this->calID, $eventId );
-        echo $event->getSummary( );
         flush(); ob_flush( );
         return $event->getId( );
 

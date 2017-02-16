@@ -5,7 +5,6 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'check_access_permissions.php';
-require_once 'vendor/autoload.php';
 
 mustHaveAllOfTheseRoles( array('AWS_ADMIN' ) );
 
@@ -39,28 +38,24 @@ foreach( $awses as $aws )
 {
 
     $awsText .= "<h2></h2>";
-    $user = $aws[ 'speaker' ];
-    $awstext = awsToTable( $aws );
-    $imgHtml = getUserPicture( $user );
-    //$awsText .= "<div float=\"right\"> $imgHtml </div>";
+    $awstext = awsToTable( $aws, $with_picture = true );
     $awsText .= $awstext;
 }
 
 
 
 // Save this test and convert it to pdf.
-file_put_contents( '_aws.html', $awsText );
+//file_put_contents( '/tmp/_aws.html', $awsText );
+//$cmd = "python " . __DIR__ . "/html2other.py /tmp/_aws.html md";
+//echo "<pre> Executing $cmd </pre>";
+//$awsText = `$cmd`;
+echo "$awsText ";
 
-$cmd = "python " . __DIR__ . "/html2other.py _aws.html md";
-echo "<pre> Executing $cmd </pre>";
-$awsText = `$cmd`;
-echo "<pre> $awsText </pre>";
-
-ob_start( );
-$pdf = new HTML2PDF( 'P', 'A4', 'en', true, 'UTF-8', array(5,8,10,5) );
-$pdf->WriteHTML( $awsText );
-$pdf->Output( __DIR__ . '/aws.pdf', 'F' );
-ob_end_flush( );
+// ob_start( );
+// $pdf = new HTML2PDF( 'P', 'A4', 'en', true, 'UTF-8', array(5,8,10,5) );
+// $pdf->WriteHTML( $awsText );
+// $pdf->Output( __DIR__ . '/aws.pdf', 'F' );
+// ob_end_flush( );
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

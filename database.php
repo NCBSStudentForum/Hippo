@@ -240,6 +240,8 @@ function initialize( )
             , url VARCHAR(300) )"
         );
 
+    // This table keeps the archive. We only move complete AWS entry in to this 
+    // table. Ideally this should not be touched manually.
     $res = $db->query( "
         create TABLE IF NOT EXISTS annual_work_seminars (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
@@ -327,13 +329,10 @@ function doAWSHouseKeeping( )
         );
 
     $badEntries = array( );
-    $html = '';
     foreach( $oldAwsOnUpcomingTable as $aws )
     {
         if( strlen( $aws[ 'title' ]) < 1 || strlen( $aws[ 'abstract' ] ) < 1)
         {
-            $html .= printWarning( "This entry is incomplete" );
-            $html .=  arrayToTableHTML( $aws, 'aws' );
             array_push( $badEntries, $aws );
             continue;
         }
@@ -347,9 +346,7 @@ function doAWSHouseKeeping( )
         {
             $res2 = deleteFromTable( 'upcoming_aws', 'speaker,date', $aws );
             if( ! $res2 )
-                $html .= printWarning( 
-                    "Could not delete entry from upcoming_aws table" 
-                );
+                array_push( $badEntries, $aws );
         }
         else
         {
@@ -358,9 +355,6 @@ function doAWSHouseKeeping( )
         }
 
     }
-
-    if( strlen( $html ) < 1 )
-        $html .= printInfo( "AWS house is in order" );
     return $badEntries;
 }
 
@@ -1550,7 +1544,10 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     foreach( $wherekeys as $wherekey )
         $stmt->bindValue( ":$wherekey", $data[$wherekey] );
 
-    return $stmt->execute( );
+    $res = $stmt->execute( );
+    if( ! $res )
+        echo "<pre>Failed to execute $query </pre>";
+    return $res;
 }
 
 

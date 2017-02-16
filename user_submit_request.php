@@ -8,7 +8,7 @@ include_once( "tohtml.php" );
 
 echo userHTML( );
 
-mustHaveAnyOfTheseRoles( array( 'USER' ) );
+mustHaveAnyOfTheseRoles( array( 'USER', 'BOOKMYVENUE_ADMIN' ) );
     
 $venues = getVenues( $sortby = 'total_events' );
 
@@ -20,7 +20,6 @@ if( ! array_key_exists( 'date', $_POST) )
 }
 
 $date = $_POST['date'];
-
 
 $day = nameOfTheDay( $date ); 
 $events = getEvents( $date );
@@ -63,12 +62,13 @@ if( array_key_exists( 'external_id', $_POST ) )
 
 <form action="user_submit_request_action.php" method="post">
 <table class="input" >
-   <!-- hide the day -->
+   <!-- The details may be on external table e.g. talks -->
    <input type="hidden" name="external_id" value="<?php echo $external_id ?>" />
+   <!-- hide the day -->
    <input type="hidden" name="date" value="<?php echo $date ?>" />
    <tr > <td>Title <p class="note_to_user">A very short description (for
          calendar )</p></td>
-         <td> <input class="user_input_text" name="title" type="text" 
+         <td> <input class="long" name="title" type="text" 
          value="<?php echo $title; ?>" > </td>
    </tr>
    <tr> <td>Description
@@ -106,11 +106,15 @@ if( array_key_exists( 'external_id', $_POST ) )
       </td>
    </tr>
    <tr>
-      <td>Repeat pattern <br>
-         <p class="note_to_user">
-            TODO: Details here.
-            <br> Valid for maximum of 6 months
-         </p>
+      <td>Is public event </td> 
+       <td>
+            <input type="radio" name="is_public_event"  value="NO" checked /> No
+            <input type="radio" name="is_public_event"  value="YES" /> Yes
+      </td>
+   </tr>
+   <tr>
+      <td>Repeat pattern 
+         <p class="note_to_user"> Valid for maximum of 6 months.  </p>
       </td> 
       <td> 
          On <input type="text" name="day_pattern" placeholder="Sun,Mon"/ >

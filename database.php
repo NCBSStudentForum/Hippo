@@ -339,13 +339,27 @@ function doAWSHouseKeeping( )
         }
 
         // First copy the entry to AWS table.
-        $res1 = insertOrUpdateTable( 'annual_work_seminars'
-            , array_diff( array_keys( $aws ), array( "status" ) )
-            , 'title,abstract',  $aws
+        // id           | int(11)       | NO   | PRI | NULL     | auto_increment 
+        // | speaker      | varchar(200)  | NO   | MUL | NULL     |                
+        // | date         | date          | NO   |     | NULL     |                
+        // | time         | time          | NO   |     | 16:00:00 |                
+        // | supervisor_1 | varchar(200)  | NO   | MUL | NULL     |                
+        // | supervisor_2 | varchar(200)  | YES  |     | NULL     |                
+        // | tcm_member_1 | varchar(200)  | YES  |     | NULL     |                
+        // | tcm_member_2 | varchar(200)  | YES  |     | NULL     |                
+        // | tcm_member_3 | varchar(200)  | YES  |     | NULL     |                
+        // | tcm_member_4 | varchar(200)  | YES  |     | NULL     |                
+        // | title        | varchar(1000) | YES  |     | NULL     |                
+        // | abstract     | text    
+        $res1 = insertIntoTable( 'annual_work_seminars'
+            , 'speaker,date,time,supervisor_1,supervisor_2' . 
+                ',tcm_member_1,tcm_member_2,tcm_member_3,tcm_member_4' . 
+                ',title,abstract', $aws 
             );
+
         if( $res1 )
         {
-            $res2 = deleteFromTable( 'upcoming_aws', 'speaker,date', $aws );
+            $res2 = deleteFromTable( 'upcoming_aws', 'id', $aws );
             if( ! $res2 )
                 array_push( $badEntries, $aws );
         }

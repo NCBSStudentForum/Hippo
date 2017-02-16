@@ -18,6 +18,7 @@ $defaults = array(
     , "strength" => 10
     , "has_skype" => "NO"
     , "openair" => "NO"
+    , "title" => ''
     );
 
 $external_id = null;
@@ -171,7 +172,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         echo '<form method="post" action="user_submit_request.php">';
 
         // Create hidden fields from defaults.
-        echo '<input type="hidden" name="title" value="' . $title . '">';
+        echo '<input type="hidden" name="title" value="' . $defaults['title' ] . '">';
         echo '<input type="hidden" name="description" 
             value="' . $defaults[ 'title' ] . '">';
         echo '<input type="hidden" name="external_id" 

@@ -8,8 +8,6 @@ mustHaveAnyOfTheseRoles( array( "USER" ) );
 
 echo userHTML( );
 
-var_dump( $_SESSION );
-
 $conf = $_SESSION[ 'conf' ];
 
 $picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION[ 'user' ] . '.png';

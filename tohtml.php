@@ -763,6 +763,7 @@ function breakAt( $text, $width = 80 )
     return str_replace( '\n', '<br/>', $newTxt );
 }
 
+
 function awsToTable( $aws )
 {
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
@@ -789,10 +790,11 @@ function awsToTable( $aws )
     $title = __ucwords__( $aws[ 'title' ]);
     $abstract = $aws[ 'abstract' ];
 
-    $html = '<style type="text/css">
-        .email { border:1px solid; } 
-        .email tr td {background-color: ivory; } 
-        </style>';
+    //$html = '<style type="text/css">
+        //.email { border:1px solid; } 
+        //.email tr td {background-color: ivory; } 
+        //</style>';
+    $html = '';
     $html .=  '<table style="width:600px;" class="email">
         <tr>
             <td>Speaker</td>
@@ -808,11 +810,11 @@ function awsToTable( $aws )
         </tr>
         <tr>
             <td>Title</td>
-            <td>' . $title . '</td>
+            <td>' . breakAt( $title ) . '</td>
         </tr>
         <tr>
             <td>Abstract</td>
-            <td>' . $abstract . '</td>
+            <td>' . breakAt( $abstract ) . '</td>
         </tr>
             
         </table>';

@@ -107,13 +107,12 @@ if( $_POST['response'] == 'edit' )
 else if( $_POST['response'] == 'cancel' )
 {
     $id = $_POST['id'];
-    $res = updateTable( 'aws_requests', 'id', array( 'status' )
-        , array( 'id' => $id, 'status' => 'CANCELLED' )
-    );
+    // Delete this request.
+    $res = deleteFromTable( 'aws_requests', 'id', array( 'id' => $id ) );
     if( $res )
     {
-        echo printInfo( 'Your request has been cancelled successfully.' );
-        goToPage( $_SERVER[ 'HTTP_REFERER' ], 2 );
+        echo printInfo( 'Your request has been deleted successfully.' );
+        goBack( );
         exit;
     }
     else
@@ -123,7 +122,7 @@ else if( $_POST['response'] == 'cancel' )
 }
 else
 {
-    echo "Unknown request";
+    echo "Unknown request " . $_POST[ 'response' ];
 }
 
 echo goBackToPageLink( "user.php", "Go back" );

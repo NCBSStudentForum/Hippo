@@ -24,8 +24,11 @@ ini_set( "error_log", "/var/log/hippo.log" );
 <title>NCBS Hippo</title>
 
 <h1><a href="index.php">NCBS Hippo</a></h1>
+<!--
 <a href="https://github.com/dilawar/ncbs-hippo" target='_blank'>Github</a>
 <a href='https://github.com/dilawar/ncbs-hippo/issues' target="_blank">Report issue</a></small>
+-->
+
 </div>
 <br />
 <br />

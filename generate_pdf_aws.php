@@ -5,6 +5,8 @@ include_once 'tohtml.php';
 
 function awsToTex( $aws, $with_picture = true )
 {
+    foreach( $aws as $key => $value )
+        $aws[ $key ] = printableCharsOnly( $value );
 
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
 

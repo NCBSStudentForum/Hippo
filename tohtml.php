@@ -884,6 +884,11 @@ function awsToTable( $aws, $with_picture = false )
 
 }
 
+function printableCharsOnly( $html )
+{
+    return preg_replace('/[\x00-\x1F\x7F]/u', '', $html );
+}
+
 function closePage( )
 {
     return "<div><a href=\"javascript:window.close();\">Close Window</a></div>";

@@ -55,6 +55,7 @@ def tomd( msg ):
             msg = html2text.html2text( msg )
         except Exception as e:
             _logger.warn( 'Failed to convert to html using html2text. %s' % e )
+    msg = msg.replace( '&', '\&' )
     return msg
 
 def toTex( infile ):

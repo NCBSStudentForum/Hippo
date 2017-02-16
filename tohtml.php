@@ -814,6 +814,97 @@ function breakAt( $text, $width = 80 )
     return str_replace( '\n', '<br/>', $newTxt );
 }
 
+function awsToTex( $aws, $with_picture = true )
+{
+
+    $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
+
+    $supervisors = array( __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_1' ] ), false ))
+                ,  __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_2' ] ), false ))
+            );
+    $supervisors = array_filter( $supervisors );
+
+    $tcm = array( );
+    array_push( $tcm, __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_1' ] ), false ))
+            , __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_2' ] ), false ))
+            ,  __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_3' ] ), false ))
+            , __ucwords__( 
+        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_4' ] ), false ))
+        );
+    $tcm = array_filter( $tcm );
+
+    $title = __ucwords__( $aws[ 'title' ]);
+    $abstract = $aws[ 'abstract' ];
+
+    // Add user image.
+    $imagefile = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . 
+        $aws['speaker'] . '.png';
+    if( ! file_exists( $imagefile ) )
+        $imagefile = __DIR__ . '/data/no_image_available.png';
+
+    $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
+
+    $head = '\begin{tikzpicture}[ every node/.style={rectangle
+        ,inner sep=1pt,node distance=5mm,text width=0.8\textwidth} ]';
+    $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
+    $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
+    $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
+    $head .= '\node[above=of title] (data) { ' .
+        '{\textbf{' . humanReadableDate( $aws[ 'date' ] ) . ', 4:00pm @ 
+            Hapus (LH1)} }};';
+
+    //$head .=  '\vfill';
+    //$head .=  '{\LARGE ' . $title . '} \\\\';
+    //$head .= '\vspace{1cm}';
+    /// Now name, supervior and 
+    //$head .= '\begin{tabular}{ll}';
+    //$head .= '\textbf{Supervisors} & ' . implode( ",", $supervisors) . '\\\\';
+    //$head .= '\textbf{Thesis Committee Members} & ' . implode( ", ", $tcm ) . '\\\\';
+    //$head .= '\end{tabular}';
+    $head .= '\end{tikzpicture}';
+
+    // Do not generate the preamble.
+    $tex = array( "\documentclass[]{article}"
+        , "\usepackage[margin=20mm,a4paper]{geometry}"
+        , "\usepackage[]{graphicx}"
+        , "\usepackage{tikz}"
+        , '\usepackage{fancyhdr}'
+        , '\linespread{1.5}'
+        , '\pagestyle{fancy}'
+        , '\pagenumbering{gobble}'
+        , '\lhead{\textbf{Annual Work Seminar}}'
+        , '\rhead{National Ceneter for Biological Sciences, Bangalore 
+                \\\\ TATA Institute of Fundamental Research, Mumbai}'
+        , '\usetikzlibrary{calc,positioning,arrows}'
+        //, '\usepackage[T1]{fontenc}'
+        , '\usepackage[utf8]{inputenc}'
+        , '\usepackage[]{lmodern}'
+        , '\begin{document}'
+        );
+
+    // Header
+    $tex[] = $head;
+
+    // Title and abstract
+    $tex[] = '{\Large ' . $abstract . '}';
+
+    $extra = '\begin{table}[ht!]';
+    $extra .= '\begin{tabular}{ll}';
+    $extra .= '\textbf{Supervisors} & ' . implode( ",", $supervisors) . '\\\\';
+    $extra .= '\textbf{Thesis Committee Members} & ' . implode( ", ", $tcm ) . '\\\\';
+    $extra .= '\end{tabular}';
+    $extra .= '\end{table}';
+
+    $tex[] = $extra;
+    $tex[] = '\end{document}';
+    return implode( "\n", $tex );
+}
+
 
 function awsToTable( $aws, $with_picture = false )
 {

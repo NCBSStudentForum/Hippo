@@ -5,8 +5,6 @@ include_once 'database.php';
 include_once 'mail.php';
 include_once 'tohtml.php';
 
-var_dump( $_POST );
-
 // Here I get both speaker and talk details. I need a function which can either 
 // insert of update the speaker table. Other to create a entry in talks table.
 

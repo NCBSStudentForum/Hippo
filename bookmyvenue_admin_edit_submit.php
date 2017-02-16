@@ -7,6 +7,16 @@ include_once( "tohtml.php" );
 
 if( strcasecmp($_POST['response'], 'submit' ) == 0 )
 {
+    // If is_public_event is set to NO then purge calendar id and event id.
+    if( $_POST[ 'is_public_event' ] == 'NO' )
+    {
+        if( strlen( $_POST[ 'calendar_event_id' ] ) > 1 )
+        {
+            $_POST[ 'calendar_id' ] = '';
+            $_POST[ 'calendar_event_id' ] = '';
+        }
+    }
+
     $res = updateTable( 'events', 'gid'
         , array( 'is_public_event', 'class', 'title', 'description', 'status' )
         , $_POST 
@@ -15,10 +25,9 @@ if( strcasecmp($_POST['response'], 'submit' ) == 0 )
     if( $res )
     {
         echo printInfo( "updated succesfully" );
-        header( 
-            "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=" 
-            .  $_POST[ 'gid' ] 
-        );
+        // TODO: may be we can call calendar API here. currently we are relying 
+        // on synchronize google calendar feature.
+        goToPage( 'bookmyvenue_admin_request_review.php', 1 );
         exit;
     }
     else

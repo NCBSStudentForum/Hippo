@@ -40,7 +40,7 @@ if( $_POST['response'] == "Review" )
         $id = $gid . '.' . $rid;
         echo "<tr>";
         echo "<td><input type=\"checkbox\" name=\"events[]\" value=\"$id\"></td>";
-        $tobefiltered = Array( 'modified_by', 'rid', 'timestamp' );
+        $tobefiltered = Array( 'modified_by', 'rid', 'timestamp', 'external_id' );
         echo "<td>" . arrayToTableHTML( $r, 'request', '', $tobefiltered ) . "</td>";
     }
     echo '</td>';

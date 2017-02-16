@@ -64,6 +64,6 @@ foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
     echo '</br>';
 }
 
-echo goBackToPageLink( "index.php", "Go back" );
+echo closePage( );
 
 ?>

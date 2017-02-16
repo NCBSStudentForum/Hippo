@@ -941,42 +941,6 @@ function publicEvents( $date, $time )
 }
 
 /**
-    * @brief Summary table for front page.
-    *
-    * @return 
- */
-function summaryTable( )
-{
-    global $db;
-    $allAWS = getAllAWS( );
-    $nspeakers = count( getAWSSpeakers( ) );
-    $nAws = count( $allAWS );
-    $awsThisYear = count( getAWSFromPast( date( 'Y-01-01' ) ) );
-    $html = '<table class="summary">';
-    $html .= "
-        <tr>
-            <td>
-            <a href=\"show_events.php\" target=\"_blank\">All Events</a>
-            </td>
-            <td>
-            <a href=\"show_aws_entry.php\" target=\"_blank\">See AWSs</a>
-            </td>
-        </tr>
-        <tr>
-            <td> <a href=\"user_aws_search.php\" target=\"_blank\">Search AWS</a> </td>
-            <td> <a href=\"community_graphs.php\" target=\"_blank\" >See community graphs</a> </td>
-            <td> <a href=\"aws_stats.php\" target=\"_blank\" >AWS Statistics </a> </td>
-        </tr>
-        <tr>
-            <td>$nAws AWSs </td>
-            <td> $nspeakers <a href=\"active_speakers.php\" target=\"_blank\" >active speakers</a></td>
-            <td> $awsThisYear AWSs so far this year </td>
-        </tr>";
-    $html .= "</table>";
-    return $html;
-}
-
-/**
     * @brief Update a group of requests. It can only modify fields which are set 
     * editable in function. 
     *

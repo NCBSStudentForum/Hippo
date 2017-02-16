@@ -439,11 +439,14 @@ td.db_table_fieldname {
 
 table.summary {
     font-size : small;
-    width : 100%;
+    min-width : 50%;
+    max-width : 500px;
+    width : 500px;
 }
 
 table.summary tr td  {
-    border : 1px dotted;
+    border : 0px dotted;
+    background-color : vars(--background);
 }
 
 table.index {

@@ -35,10 +35,13 @@ $everythingWentOk = true;
 // Find event in list of events but comparing summary.
 function findEvent( $events, $googleEvent )
 {
+    echo $googleEvent[ 'id' ];
     foreach( $events as $e )
+    {
         // Database event compared with google event summary.
-        if( $e[ 'event_id' ] == $googleEvent[ 'eventId' ] )
+        if( $e[ 'calendar_event_id' ] == $googleEvent[ 'id' ] )
             return true;
+    }
     return false;
 }
 

@@ -39,7 +39,7 @@ function awsToTex( $aws, $with_picture = true )
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     $head = '\begin{tikzpicture}[ every node/.style={rectangle
-        ,inner sep=1pt,node distance=5mm,text width=0.8\textwidth} ]';
+        ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
     $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
@@ -72,6 +72,8 @@ function awsToTex( $aws, $with_picture = true )
     // Header
     $tex[] = $head;
 
+    $tex[] = '\par';
+
     // remove html formating before converting to tex.
     file_put_contents( '/tmp/abstract.html', $abstract );
     $cmd = 'python ' . __DIR__ . '/html2other.py';
@@ -100,7 +102,6 @@ if( ! array_key_exists( 'speaker', $_GET ) )
 }
 else 
 {
-    var_dump( $_GET );
     $date = $_GET[ 'date' ];
     $speaker = $_GET[ 'speaker' ];
     $aws = getTableEntry( 'annual_work_seminars', 'date,speaker', $_GET );

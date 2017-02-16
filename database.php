@@ -767,7 +767,8 @@ function submitRequest( $request )
         $request[ 'date' ] = $day;
 
         $res = insertIntoTable( 'bookmyvenue_requests'
-            , 'gid,rid,external_id,created_by,venue,title,description,date,start_time,end_time'
+            , 'gid,rid,external_id,created_by,venue,title,description' . 
+                ',date,start_time,end_time,is_pubic_event'
             , $request 
         );
         if( ! $res )
@@ -987,7 +988,7 @@ function summaryTable( )
 function updateRequestGroup( $gid, $options )
 {
     global $db;
-    $editable = Array( "title", "description" );
+    $editable = Array( "title", "description", "is_public_event" );
     $fields = Array( );
     $placeholder = Array( );
     foreach( $options as $key => $val )

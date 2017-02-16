@@ -17,6 +17,7 @@ $defaults = array(
     , "end_time" => date( 'H:i', $roundedTimeNow + 3600 )
     , "strength" => 10
     , "has_skype" => "NO"
+    , "has_projector" => "NO"
     , "openair" => "NO"
     , "title" => ''
     );
@@ -45,6 +46,12 @@ if( $defaults[ 'has_skype' ] == 'YES' )
     $skypeYes = 'checked'; 
 else 
     $skypeNo = 'checked';
+
+$projectorYes = ''; $projectorNo = '';
+if( $defaults[ 'has_projector' ] == 'YES' )
+    $projectorYes = 'checked'; 
+else 
+    $projectorNo = 'checked';
 
 $openAirNo = ''; $openAirYes = ' ';
 if( $defaults[ 'openair' ] == 'YES' )
@@ -85,10 +92,19 @@ echo '
             value="' . $defaults[ 'strength' ] . '" /> </td>
     </tr>
     <tr>
-        <td>Do you need skype?</td>
+        <td>Do you need video-conference facility?</td>
         <td>
             <input type="radio" name="has_skype" value="NO" ' . $skypeNo . ' /> No
             <input type="radio" name="has_skype" value="YES" ' .$skypeYes . ' /> Yes
+        </td>
+    </tr>
+    <tr>
+        <td>Do you need a projector?</td>
+        <td>
+        <input type="radio" name="has_projector" 
+            value="NO" ' . $projectorNo . ' /> No
+        <input type="radio" name="has_projector" 
+                value="YES" ' .$projectorYes . ' /> Yes
         </td>
     </tr>
     <tr>
@@ -132,7 +148,8 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {
     $date = humanReadableDate( $_POST[ 'date' ] );
 
-    echo "<h3>I found following available venues for $date</h3>";
+    echo printInfo( "I found following available venues for $date" );
+    echo "<br/>";
 
     $venues = getVenues( $sortby = 'name' );
 

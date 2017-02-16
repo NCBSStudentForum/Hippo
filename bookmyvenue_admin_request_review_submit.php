@@ -76,6 +76,10 @@ if( $res )
     goToPage( "bookmyvenue_admin.php", 0 );
     exit;
 }
+else
+{
+    echo minionEmbarrassed( "I failed to send email to user " );
+}
     
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 

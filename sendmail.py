@@ -5,6 +5,7 @@ import sys
 import html2other
 import smtplib 
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from logger import _logger
 
 if len( sys.argv ) < 4:
@@ -21,7 +22,7 @@ def sendMail( fromAddr, toAddr, subject, msghtml ):
     msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
 
     msg.attach( MIMEText( msghtml, 'html' ) );
-    s = smtplib.SMTP( 'smtp.ncbs.res.in', 587 )
+    s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
     s.set_debuglevel( 2 )
 
     success = False

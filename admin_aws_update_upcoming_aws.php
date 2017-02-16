@@ -8,12 +8,10 @@ include_once 'tohtml.php';
 
 echo userHTML( );
 
-
-echo "<h3>You are updating an upcoming AWS </h3>";
-
 if( $_POST[ 'response' ] == 'update' )
 {
     $awsId = $_POST[ 'id' ];
+    echo alertUser( "You are updating AWS with id $awsId" );
     $aws = getUpcomingAWSById( $awsId );
 
     echo '<form method="post" action="admin_aws_update_upcoming_aws_submit.php">';

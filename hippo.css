@@ -405,8 +405,14 @@ table.admin td {
 
 /* paragraphs */
 
+p  {
+    max-width : 500px;
+    min-width : 100%;
+}
+
+
 p.info {
-    max-width : 800px;
+    max-width : 500px;
     min-width : 100%;
     background-color : lightyellow;
     font-size : x-small;

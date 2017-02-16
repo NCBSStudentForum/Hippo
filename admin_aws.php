@@ -163,18 +163,20 @@ echo '
   </table>';
 
 echo "<h2>Automatic Housekeeping</h2>";
+
 $badEntries = doAWSHouseKeeping( );
 if( count( $badEntries ) == 0 )
     echo printInfo( "AWS House is in order" );
 else
 {
+    // can't make two forms on same page with same action. They will merge.
+    echo alertUser( "Following entries could not be moved to main AWS list. Most
+        likely these entries have no data. You need to fix them. " 
+    );
     foreach( $badEntries as $aws )
     {
-        echo alertUser( 'This entry needs your attentions' );
-        echo '<form method="post" action="admin_aws_update_upcoming_aws.php">';
-        echo dbTableToHTMLTable( 'upcoming_aws', $aws, '', 'update');
-        echo '<input type="hidden" name="id" value="' . $aws['id'] . '>';
-        echo '</form>';
+        echo alertUser( "This AWS is incomplete." );
+        echo arrayToVerticalTableHTML( $aws, 'aws' );
     }
 }
     

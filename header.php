@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <?php 
 ob_start();
 
@@ -15,7 +17,6 @@ ini_set( "error_log", "/var/log/hippo.log" );
 
 ?>
 
-<!DOCTYPE html>
 <html>
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 

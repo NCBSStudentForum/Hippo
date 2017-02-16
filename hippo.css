@@ -305,6 +305,16 @@ table.editable_events {
     /*max-width : 90%;*/
 }
 
+table.event_sticker
+{
+    width : 100px;
+}
+
+table.event_sticker tr td
+{
+    border : 1px dotted;
+}
+
 table.editable_logins {
     min-width: 300px;
     max-width: 80%;

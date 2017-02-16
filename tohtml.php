@@ -764,7 +764,7 @@ function breakAt( $text, $width = 80 )
 }
 
 
-function awsToTable( $aws )
+function awsToTable( $aws, $with_picture = false )
 {
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
 
@@ -790,12 +790,23 @@ function awsToTable( $aws )
     $title = __ucwords__( $aws[ 'title' ]);
     $abstract = $aws[ 'abstract' ];
 
-    //$html = '<style type="text/css">
-        //.email { border:1px solid; } 
-        //.email tr td {background-color: ivory; } 
-        //</style>';
-    $html = '';
-    $html .=  '<table style="width:600px;" class="email">
+    $html = '<style type="text/css">
+        .email { border:1px solid; } 
+        .email tr td {background-color: ivory; } 
+        </style>';
+
+    $html .=  '<table style="width:600px;" class="email">';
+    if( $with_picture )
+    {
+        $html .= '<tr><td></td>';
+        $user = $aws[ 'speaker' ];
+        $imgHtml = getUserPicture( $user );
+        $html .= "<td style=\"float:right\">
+                <div float=\"right\"> $imgHtml </div>";
+        $html .= "</td></tr>";
+    }
+
+    $html .= '
         <tr>
             <td>Speaker</td>
             <td>' . $speaker . '</td>

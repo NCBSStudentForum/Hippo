@@ -173,11 +173,16 @@ else
     echo alertUser( "Following entries could not be moved to main AWS list. Most
         likely these entries have no data. You need to fix them. " 
     );
+
+    echo '<form action="./admin_aws_update_upcoming_aws.php" method="post">';
     foreach( $badEntries as $aws )
     {
         echo alertUser( "This AWS is incomplete." );
-        echo arrayToVerticalTableHTML( $aws, 'aws' );
+        echo arrayToVerticalTableHTML( $aws, 'info', '', 'status,comment' );
+        echo '<input type="hidden" name="response" value="update" />';
+        echo '<button name="id" value="' . $aws[ 'id' ] . '">Fix</button>';
     }
+    echo '</form>';
 }
     
 

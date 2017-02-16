@@ -735,6 +735,10 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
                     $text . '</textarea>
                 <script>
                     tinymce.init( { selector : "#abstract"
+                            , height : 300
+                            , theme : "modern"
+                            , plugins : [ "wordcount fullscreen table textcolor"
+                                    , "imagetools toc code" ]
                             , init_instance_callback: "insert_content"
                         } );
                     function insert_content( inst ) {

@@ -90,7 +90,7 @@ function appRootDir( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
-  echo printInfo( "Going back to page $page in $delay seconds" );
+  echo printInfo( "Going to page $page in $delay seconds" );
   $baseurl = appRootDir( );
   if( strpos( $page, "http" ) == 0 )
       $url = $page;

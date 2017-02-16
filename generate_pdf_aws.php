@@ -36,34 +36,39 @@ function awsToTex( $aws, $with_picture = true )
     $imagefile = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . 
         $aws['speaker'] . '.png';
     if( ! file_exists( $imagefile ) )
-        $imagefile = __DIR__ . '/data/no_image_available.png';
+        $imagefile = __DIR__ . '/data/null.png';
 
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
+
+    // Date and plate
+    $dateAndPlace =  humanReadableDate( $aws[ 'date' ] ) .  
+            ', 4:00pm at \textbf{Hapus (LH1)}';
+    $dateAndPlace = '\faCalendarCheckO \quad ' . $dateAndPlace;
 
     $head = '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
+    $head .= '\node[above right=of image] (schedule)  {\hfill ' . 
+                $dateAndPlace . '};';
     $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
-    $head .= '\node[above=of title] (data) { ' .
-        '{\textbf{' . humanReadableDate( $aws[ 'date' ] ) . ', 4:00pm @ 
-            Hapus (LH1)} }};';
-
     $head .= '\end{tikzpicture}';
+
 
     // Do not generate the preamble.
     $tex = array( "\documentclass[]{article}"
-        , "\usepackage[margin=20mm,a4paper]{geometry}"
+        , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
         , "\usepackage[]{graphicx}"
         , "\usepackage[]{amsmath,amssymb}"
         , "\usepackage{tikz}"
+        , "\usepackage{fontawesome}"
         , '\usepackage{fancyhdr}'
         , '\linespread{1.5}'
         , '\pagestyle{fancy}'
         , '\pagenumbering{gobble}'
-        , '\lhead{\textbf{Annual Work Seminar}}'
-        , '\rhead{National Ceneter for Biological Sciences, Bangalore 
-                \\\\ TATA Institute of Fundamental Research, Mumbai}'
+        , '\lhead{\textsc{Annual Work Seminar} }'
+        , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
+            TATA Institute of Fundamental Research, Mumbai}'
         , '\usetikzlibrary{calc,positioning,arrows}'
         //, '\usepackage[T1]{fontenc}'
         , '\usepackage[utf8]{inputenc}'
@@ -83,13 +88,15 @@ function awsToTex( $aws, $with_picture = true )
     if( strlen(trim($texAbstract)) > 10 )
         $abstract = $texAbstract;
 
+    //$tex[] = $dateAndPlace;
+
     // Title and abstract
-    $tex[] = $abstract;
+    $tex[] = '{\large ' . $abstract . '}';
 
     $extra = '\begin{table}[ht!]';
     $extra .= '\begin{tabular}{ll}';
-    $extra .= '\textbf{Supervisors} & ' . implode( ",", $supervisors) . '\\\\';
-    $extra .= '\textbf{Thesis Committee Members} & ' . implode( ", ", $tcm ) . '\\\\';
+    $extra .= '\textbf{Supervisor(s)} & ' . implode( ",", $supervisors) . '\\\\';
+    $extra .= '\textbf{Thesis Committee Member(s)} & ' . implode( ", ", $tcm ) . '\\\\';
     $extra .= '\end{tabular}';
     $extra .= '\end{table}';
 
@@ -124,7 +131,8 @@ else
 
         if( file_exists( $pdfFileUrl ) )
         {
-            echo printInfo( "Successfully genered pdf document $pdfFileUrl " );
+            echo printInfo( "Successfully genered pdf document " . 
+               basename( $pdfFileUrl ) );
             goToPage( 'download_pdf.php?filename=' .$pdfFileUrl, 0 );
         }
         else

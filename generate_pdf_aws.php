@@ -57,13 +57,13 @@ function awsToTex( $aws, $with_picture = true )
 
     // Do not generate the preamble.
     $tex = array( "\documentclass[]{article}"
-        , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
+        , "\usepackage[margin=20mm,a4paper]{geometry}"
         , "\usepackage[]{graphicx}"
         , "\usepackage[]{amsmath,amssymb}"
         , "\usepackage{tikz}"
         , "\usepackage{fontawesome}"
         , '\usepackage{fancyhdr}'
-        , '\linespread{1.5}'
+        , '\linespread{1.2}'
         , '\pagestyle{fancy}'
         , '\pagenumbering{gobble}'
         , '\lhead{\textsc{Annual Work Seminar} }'
@@ -84,7 +84,7 @@ function awsToTex( $aws, $with_picture = true )
     // remove html formating before converting to tex.
     file_put_contents( '/tmp/abstract.html', $abstract );
     $cmd = 'python ' . __DIR__ . '/html2other.py';
-    $texAbstract = `$cmd /tmp/abstract.html md`;
+    $texAbstract = `$cmd /tmp/abstract.html tex`;
     if( strlen(trim($texAbstract)) > 10 )
         $abstract = $texAbstract;
 

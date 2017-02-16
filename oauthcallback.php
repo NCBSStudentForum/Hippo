@@ -33,11 +33,11 @@ $calendar->setAccessToken( $_GET['code'] );
 $everythingWentOk = true;
 
 // Find event in list of events but comparing summary.
-function findEvent( $events, $event )
+function findEvent( $events, $googleEvent )
 {
     foreach( $events as $e )
         // Database event compared with google event summary.
-        if( $e[ 'title' ] == $event[ 'summary' ] )
+        if( $e[ 'event_id' ] == $googleEvent[ 'eventId' ] )
             return true;
     return false;
 }
@@ -70,7 +70,7 @@ if( array_key_exists( 'google_command', $_SESSION ) )
                 continue;           // We are good.
             else
             {
-                echo "<pre>Deleting event: " . $event[ 'summary' ] . "</pre>";
+                echo "<pre>Deleting event: " . $event[ 'title' ] . "</pre>";
                 $calendar->deleteEvent( $event );
                 ob_flush(); flush( );
             }

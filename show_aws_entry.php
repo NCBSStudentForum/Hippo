@@ -24,7 +24,9 @@ echo '
             <td>Select date</td>
             <td><input class="datepicker" type="text" name="date" value="' . 
                     $default[ 'date' ] . '" ></td>
-            <td><button type="submit" name="response" value="show">' . 
+            <td><button type="submit" name="response" 
+                    title="Show AWS on this day"
+                    value="show">' . 
                 $symbScan . '</button></td>
         </tr>
     </table>
@@ -39,18 +41,14 @@ $awses = array_merge( $awses, $upcoming );
 
 if( count( $awses ) < 1 )
 {
-    echo printInfo( "I could not find any AWS in my database on this day" );
+    echo alertUser( "I could not find any AWS in my database on this day" );
 }
 else 
 {
     foreach( $awses as $aws )
     {
         $user = $aws[ 'speaker' ];
-        $awstext = awsToTable( $aws );
-        $imgHtml = "<table><tr>
-                <td><div style=\"width:50%;max-width:500px;\"</div></td>
-            <td>" . getUserPicture( $user ) .  "</td></tr></table>";
-        echo "<div float=\"right\"> $imgHtml </div>";
+        $awstext = awsToTable( $aws, $with_picture = true );
         echo $awstext;
     }
 }

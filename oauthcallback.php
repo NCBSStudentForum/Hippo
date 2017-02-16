@@ -35,14 +35,20 @@ $everythingWentOk = true;
 // Find event in list of events but comparing summary.
 function findEvent( $events, $googleEvent )
 {
-    echo $googleEvent[ 'id' ];
+    $found = false;
     foreach( $events as $e )
     {
         // Database event compared with google event summary.
+        //echo "<pre>Comparing " . $e[ 'calendar_event_id' ] . " and " . 
+            //$googleEvent['id'] . "</pre><br/>" ;
+
         if( $e[ 'calendar_event_id' ] == $googleEvent[ 'id' ] )
-            return true;
+        {
+            $found = true;
+            break;
+        }
     }
-    return false;
+    return $found;
 }
 
 
@@ -51,8 +57,10 @@ if( array_key_exists( 'google_command', $_SESSION ) )
     if( $_SESSION['google_command'] == 'synchronize_all_events' )
     {
         echo printInfo( "Synchronizing google calendar ..." );
-        $publicEvents = getPublicEvents( );
+        $publicEvents = getPublicEvents( $form = 'today' );
         $total = count( $publicEvents );
+
+        // Update all public events first.
         for ($i = 0; $i < $total; $i++) 
         {
             $event = $publicEvents[ $i ];
@@ -63,18 +71,25 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         }
 
         // Now get all events from google calendar and if some of them are not 
-        // in database, remove them.
-        $eventsOnGoogleCalendar = $calendar->getEvents( );
+        // in database, remove them if they are not available locally. This 
+        // means some events have been deleted locally, they should be deleted 
+        // from calendar as well.
+        $eventsOnGoogleCalendar = $calendar->getEvents( $from = 'today' );
         $total = count( $eventsOnGoogleCalendar );
         $i = 0;
         foreach( $eventsOnGoogleCalendar as $event )
         {
             if( findEvent( $publicEvents, $event ) )
+            {
                 continue;           // We are good.
+            }
             else
             {
-                echo "<pre>Deleting event: " . $event[ 'title' ] . "</pre>";
-                $calendar->deleteEvent( $event );
+                echo "<pre> Deleting event: " . $event[ 'summary' ] . "</pre>";
+                echo $event[ 'id' ];
+                echo "</br>";
+                //$calendar->deleteEvent( $event );
+                //var_dump( $event );
                 ob_flush(); flush( );
             }
 

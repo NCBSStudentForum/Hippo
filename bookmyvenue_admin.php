@@ -20,11 +20,10 @@ if( ! requiredPrivilege( 'BOOKMYVENUE_ADMIN' ) )
 
 echo '<h2> Calendar administration </h2>';
 
-echo '<table class="show_user">
+echo '<table class="show_info">
     <tr>
     <td>
-    To synchronize public calendar make sure you are logged-in using correct 
-    google account
+    <strong>Make sure you are logged-in using correct google account </strong>
     </strong>
     </td>
         <td>
@@ -35,7 +34,7 @@ echo '<table class="show_user">
     </table>
     ';
 
-echo '<h3> Pending requests </h3>';
+echo '<h2> Pending requests </h2>';
 $requests = getPendingRequestsGroupedByGID( ); 
 
 if( count( $requests ) == 0 )
@@ -51,7 +50,7 @@ foreach( $requests as $r )
     $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
     $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
     $html .= arrayToTableHTML( $r, 'events'
-        , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' )
+        , ' ',  array( 'status', 'modified_by', 'timestamp', 'url', 'external_id' )
     );
     $html .= '</td>';
     $html .= '<td style="background:white">
@@ -65,7 +64,7 @@ echo $html;
 
 ?>
 
-<h3> Edit Upcoming Events </h3>
+<h2> Edit Upcoming Events </h2>
 <?php
 $html = '';
 $events = getEventsGrouped( $sortby = 'date' );
@@ -78,7 +77,8 @@ foreach( $events as $event )
     $html .= "<form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";
     $html .= "<tr><td>";
     $html .= arrayToTableHTML( $event, 'events', ''
-        , Array( 'eid', 'calendar_id' , 'calendar_event_id' ) 
+        , Array( 'eid', 'calendar_id' , 'calendar_event_id', 'external_id'
+                , 'gid', 'status' ) 
     );
     $html .= "</td>";
     $html .= "<td> <button name=\"response\" value=\"edit\">Edit</button></td>";

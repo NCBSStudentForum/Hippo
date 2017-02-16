@@ -88,8 +88,7 @@ if( array_key_exists( 'google_command', $_SESSION ) )
                 echo "<pre> Deleting event: " . $event[ 'summary' ] . "</pre>";
                 echo $event[ 'id' ];
                 echo "</br>";
-                //$calendar->deleteEvent( $event );
-                //var_dump( $event );
+                $calendar->deleteEvent( $event );
                 ob_flush(); flush( );
             }
 

@@ -359,11 +359,11 @@ function doAWSHouseKeeping( )
     return $badEntries;
 }
 
-function getVenues( $sortby = 'total_events' )
+function getVenues( $sortby = 'total_events DESC, id' )
 {
     global $db;
     // Sort according to total_events hosted by venue
-    $res = $db->query( "SELECT * FROM venues ORDER BY $sortby, id" );
+    $res = $db->query( "SELECT * FROM venues ORDER BY $sortby" );
     return fetchEntries( $res );
 }
 
@@ -665,7 +665,8 @@ function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
 {
     global $db;
     $stmt = $db->prepare( "SELECT * FROM events 
-        WHERE venue=:venue AND status=:status AND date=:date" );
+        WHERE venue=:venue AND status=:status AND date=:date ORDER 
+            BY date,start_time" );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':venue', $venue );

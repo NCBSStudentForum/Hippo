@@ -92,6 +92,17 @@ function eventToText( $event )
     return $html;
 }
 
+function eventToHTML( $event )
+{
+    $html = 'By <strong>' . $event['created_by'] . '</strong><br/>';
+    $html .= '<tt>';
+    $html .= __get__( $event, 'title', '' );
+    $html .= ' </tt> <br />@ <strong>' . $event['venue'] . ', ';
+    $html .= $event['start_time'] . '</strong> to </strong><strong>' . 
+        $event['end_time'] . "</strong>";
+    return $html;
+}
+
 // Return a short description of event for main page.
 function eventSummary( $event )
 {

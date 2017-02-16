@@ -60,7 +60,7 @@ if( $res1 )
             $_POST[ 'is_public_event' ] = 'YES';
 
             // Modify talk title for calendar.
-            $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . 'on \'' . 
+            $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . ' on \'' . 
                 trim( $_POST[ 'title' ] ) . "'";
 
             $res = submitRequest( $_POST );

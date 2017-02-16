@@ -40,12 +40,18 @@ foreach( $awses as $aws )
     $awsText .= "<h2></h2>";
     $awstext = awsToTable( $aws, $with_picture = true );
     $awsText .= $awstext;
+
+    $texFileName = __DIR__ . "/data/" . $aws['speaker'] . $aws['date'] . ".tex";
+    $outdir = __DIR__ . "/data";
+    $awsTeX = awsToTex( $aws );
+    file_put_contents( $texFileName, $awsTeX );
+    $res = `pdflatex --output-directory $outdir $texFileName`;
+    echo "<pre> $res </pre>";
 }
 
 
 
 // Save this test and convert it to pdf.
-//file_put_contents( '/tmp/_aws.html', $awsText );
 //$cmd = "python " . __DIR__ . "/html2other.py /tmp/_aws.html md";
 //echo "<pre> Executing $cmd </pre>";
 //$awsText = `$cmd`;

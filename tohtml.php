@@ -886,6 +886,6 @@ function awsToTable( $aws, $with_picture = false )
 
 function closePage( )
 {
-    return "<a href=\"javascript:window.close();\">Close Window</a>";
+    return "<div><a href=\"javascript:window.close();\">Close Window</a></div>";
 }
 ?>

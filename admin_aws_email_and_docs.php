@@ -41,12 +41,10 @@ foreach( $awses as $aws )
     $awstext = awsToTable( $aws, $with_picture = true );
     $awsText .= $awstext;
 
-    $texFileName = __DIR__ . "/data/" . $aws['speaker'] . $aws['date'] . ".tex";
-    $outdir = __DIR__ . "/data";
-    $awsTeX = awsToTex( $aws );
-    file_put_contents( $texFileName, $awsTeX );
-    $res = `pdflatex --output-directory $outdir $texFileName`;
-    echo "<pre> $res </pre>";
+    // Link to pdf file.
+    $awsText .= '<a target="_blank" 
+        href="generate_pdf_aws.php?speaker=' . $aws['speaker'] . 
+            '&date=' . $aws['date'] . '">Download pdf</a>';
 }
 
 

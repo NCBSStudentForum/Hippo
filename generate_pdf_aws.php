@@ -47,20 +47,13 @@ function awsToTex( $aws, $with_picture = true )
         '{\textbf{' . humanReadableDate( $aws[ 'date' ] ) . ', 4:00pm @ 
             Hapus (LH1)} }};';
 
-    //$head .=  '\vfill';
-    //$head .=  '{\LARGE ' . $title . '} \\\\';
-    //$head .= '\vspace{1cm}';
-    /// Now name, supervior and 
-    //$head .= '\begin{tabular}{ll}';
-    //$head .= '\textbf{Supervisors} & ' . implode( ",", $supervisors) . '\\\\';
-    //$head .= '\textbf{Thesis Committee Members} & ' . implode( ", ", $tcm ) . '\\\\';
-    //$head .= '\end{tabular}';
     $head .= '\end{tikzpicture}';
 
     // Do not generate the preamble.
     $tex = array( "\documentclass[]{article}"
         , "\usepackage[margin=20mm,a4paper]{geometry}"
         , "\usepackage[]{graphicx}"
+        , "\usepackage[]{amsmath,amssymb}"
         , "\usepackage{tikz}"
         , '\usepackage{fancyhdr}'
         , '\linespread{1.5}'
@@ -79,8 +72,15 @@ function awsToTex( $aws, $with_picture = true )
     // Header
     $tex[] = $head;
 
+    // remove html formating before converting to tex.
+    file_put_contents( '/tmp/abstract.html', $abstract );
+    $cmd = 'python ' . __DIR__ . '/html2other.py';
+    $texAbstract = `$cmd /tmp/abstract.html md`;
+    if( strlen(trim($texAbstract)) > 10 )
+        $abstract = $texAbstract;
+
     // Title and abstract
-    $tex[] = '{\Large ' . $abstract . '}';
+    $tex[] = $abstract;
 
     $extra = '\begin{table}[ht!]';
     $extra .= '\begin{tabular}{ll}';
@@ -94,8 +94,6 @@ function awsToTex( $aws, $with_picture = true )
     return implode( "\n", $tex );
 }
 
-
-
 if( ! array_key_exists( 'speaker', $_GET ) )
 {
     echo printInfo( 'Invalid request' );
@@ -106,6 +104,10 @@ else
     $date = $_GET[ 'date' ];
     $speaker = $_GET[ 'speaker' ];
     $aws = getTableEntry( 'annual_work_seminars', 'date,speaker', $_GET );
+    // Check in upcoming aws
+    if( ! $aws )
+        $aws = getTableEntry( 'upcoming_aws', 'date,speaker', $_GET );
+
     if( ! $aws )
         echo printInfo( "No AWS found for speaker $speaker and date $date" );
     else

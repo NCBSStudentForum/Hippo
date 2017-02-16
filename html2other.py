@@ -31,7 +31,6 @@ def reformat( msg ):
     lines = msg.split( '\n' )
     head = lines[0].split( )
     s1 = len( head[0] )
-    print s1
 
 def tomd( msg ):
     # First try with pandoc.
@@ -56,8 +55,15 @@ def tomd( msg ):
             msg = html2text.html2text( msg )
         except Exception as e:
             _logger.warn( 'Failed to convert to html using html2text. %s' % e )
+    return msg
 
-    msg = reformat( msg )
+def toTex( infile ):
+    with open( infile, 'r' ) as f:
+        msg = f.read( )
+        try:
+            msg = pypandoc.convert_text( msg, 'tex', format = 'html' )
+        except Exception as e:
+            pass
     return msg
 
 def htmlfile2md( filename ):
@@ -71,9 +77,8 @@ def main( ):
     if outfmt == 'md':
         md = htmlfile2md( infile )
         print( md )
-    elif outfmt == 'pdf':
-        html2pdf( infile )
-
+    elif outfmt == 'tex':
+        print( toTex( infile ) )
 
 if __name__ == '__main__':
     main()

@@ -315,6 +315,15 @@ function initialize( )
     return $res;
 }
 
+function getEventsOfTalkId( $talkId )
+{
+    global $db;
+    $entry = getTableEntry( 'events', 'external_id'
+        , array( 'external_id' => "talks.$talkId" ) 
+        );
+    return $entry;
+}
+
 /**
  * @brief It does the following tasks.
  *  1. Move the entruies from upcoming_aws to annual_work_seminars lists.

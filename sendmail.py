@@ -18,7 +18,7 @@ def sendMail( fromAddr, toAddr, subject, msghtml ):
     """Send html email """
     # msg = html2other.tomd( msg )
     msg = MIMEMultipart( 'alernative' )
-    msg[ 'subject' ] = 'TEST EMAIL ' + subject
+    msg[ 'subject' ] = subject
     msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
 
     msg.attach( MIMEText( msghtml, 'html' ) );

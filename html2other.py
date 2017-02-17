@@ -62,7 +62,8 @@ def toTex( infile ):
     with open( infile, 'r' ) as f:
         msg = f.read( )
         try:
-            msg = pypandoc.convert_text( msg, 'tex', format = 'html' )
+            msg = pypandoc.convert_text( msg, 'tex', format = 'html'
+                    , extra_args = [ '--parse-raw' ])
         except Exception as e:
             pass
     return msg

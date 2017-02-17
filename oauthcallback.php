@@ -56,11 +56,12 @@ if( array_key_exists( 'google_command', $_SESSION ) )
 { 
     if( $_SESSION['google_command'] == 'synchronize_all_events' )
     {
-        echo printInfo( "Synchronizing google calendar ..." );
+        echo alertUser( "Synchronizing google calendar ..." );
         $publicEvents = getPublicEvents( $form = 'today' );
         $total = count( $publicEvents );
 
         // Update all public events first.
+        echo printInfo( "Putting local update to google calendar " );
         for ($i = 0; $i < $total; $i++) 
         {
             $event = $publicEvents[ $i ];
@@ -85,8 +86,9 @@ if( array_key_exists( 'google_command', $_SESSION ) )
             }
             else
             {
-                echo "<pre> Deleting event: " . $event[ 'summary' ] . "</pre>";
-                echo $event[ 'id' ];
+                echo printInfo( "Deleting event: " . $event[ 'summary' ] . 
+                    " because this event is not found in local database " );
+                echo arrayToTableHTML( $event, 'info' );
                 echo "</br>";
                 $calendar->deleteEvent( $event );
                 ob_flush(); flush( );

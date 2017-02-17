@@ -32,6 +32,8 @@ echo '
 $whichDay = $default[ 'date' ];
 
 $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
+$upcoming = getTableEntries( 'upcoming_aws', 'date' , "date='$whichDay'" );
+$awses = array_merge( $awses, $upcoming );
 
 $awsText = '';
 foreach( $awses as $aws )

@@ -56,7 +56,7 @@ function initialize( )
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS speakers 
         ( id INT NOT NULL AUTO_INCREMENT
-            , title ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
+            , honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
             , email VARCHAR(100) 
             , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
             , middle_name VARCHAR(100)

@@ -87,7 +87,7 @@ echo printInfo(
     fields.  ");
 
 echo dbTableToHTMLTable( 'speakers', $speaker 
-    , 'title,email,homepage,first_name,middle_name,last_name,department,institute'
+    , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
     , '', 'id'
     );
 echo "<h3>Talk information</h3>" ;

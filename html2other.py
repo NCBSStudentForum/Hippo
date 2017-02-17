@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """html2markdown.py: 
 
 """
@@ -15,7 +17,11 @@ import sys
 import os
 import re
 import textwrap
-from bs4 import BeautifulSoup
+import html2text
+import pypandoc
+import string
+import codecs
+import locale
 from logger import _logger
 
 pandoc_ = True
@@ -27,10 +33,12 @@ except Exception as e:
     _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )
     pandoc_ = False
 
-def reformat( msg ):
-    lines = msg.split( '\n' )
-    head = lines[0].split( )
-    s1 = len( head[0] )
+# Wrap stdout so we can write to unicode
+# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
+
+def fix( msg ):
+    msg = msg.decode( 'ascii', 'ignore' )
+    return msg
 
 def tomd( msg ):
     # First try with pandoc.
@@ -40,14 +48,15 @@ def tomd( msg ):
         # if td:
             # td.string = "\n ".join( textwrap.wrap(td.text, 80 ))
 
-    # msg = html.text
+    msg = fix( msg )
+    msg = filter( lambda x: x in string.printable, msg )
     msg = msg.replace( '</div>', '' )
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
-
     if pandoc_:
-        msg = pypandoc.convert_text( msg, 'md', format = 'html' 
+        md = pypandoc.convert_text( msg, 'md', format = 'html' 
                 , extra_args = [ ]
                 )
+        return md.encode( 'ascii', 'ignore' )
     else:
         _logger.info( 'Trying html2text ' )
         try:
@@ -55,12 +64,12 @@ def tomd( msg ):
             msg = html2text.html2text( msg )
         except Exception as e:
             _logger.warn( 'Failed to convert to html using html2text. %s' % e )
-    msg = msg.replace( '&', '\&' )
+
     return msg
 
 def toTex( infile ):
     with open( infile, 'r' ) as f:
-        msg = f.read( )
+        msg = fix( f.read( ) )
         try:
             msg = pypandoc.convert_text( msg, 'tex', format = 'html'
                     , extra_args = [ '--parse-raw' ])
@@ -71,16 +80,26 @@ def toTex( infile ):
 def htmlfile2md( filename ):
     with open( filename, 'r' ) as f:
         text = f.read( )
-    return tomd( text )
+    md = tomd( text )
+    # Some more fixes.
+    md = md.replace( '\\', '' )
+    md = re.sub( r'\n\n+', r'\n\n', md )
+    # Style ect.
+    md = re.sub( r'{style.*?}', '', md )
+    return md
 
 def main( ):
     infile = sys.argv[1]
     outfmt = sys.argv[2]
     if outfmt == 'md':
+        print( "Converting to md" )
         md = htmlfile2md( infile )
         print( md )
     elif outfmt == 'tex':
         print( toTex( infile ) )
+    elif outfmt == "text":
+        with open( infile, 'r' ) as f:
+            print html2text.html2text( fix( f.read( ) ) )
 
 if __name__ == '__main__':
     main()

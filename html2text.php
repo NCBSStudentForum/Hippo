@@ -1,5 +1,4 @@
 <?php
-
 /************************************************************
  Library to convert HTML into an approximate text equivalent
 v2.0 update 04/03/2009 with major new functionality

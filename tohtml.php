@@ -818,6 +818,15 @@ function __ucwords__( $text )
     return ucwords( strtolower( $text ) );
 }
 
+/**
+    * @brief NOTE: Must not have any decoration. Used in sending emails. 
+    * Squirrel mail html2text may not work properly.
+    *
+    * @param $aws
+    * @param $with_picture
+    *
+    * @return 
+ */
 function awsToTable( $aws, $with_picture = false )
 {
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
@@ -844,19 +853,15 @@ function awsToTable( $aws, $with_picture = false )
     $title = __ucwords__( $aws[ 'title' ]);
     $abstract = $aws[ 'abstract' ];
 
-    $html = '<style type="text/css">
-        .email { border:1px solid; } 
-        .email tr td {background-color: ivory; } 
-        </style>';
+    // Adding css inline screw up the email view. Dont do it.
+    $html =  '<table class="email">';
 
-    $html .=  '<table style="width:800px;" class="email">';
     if( $with_picture )
     {
         $html .= '<tr><td></td>';
         $user = $aws[ 'speaker' ];
         $imgHtml = getUserPicture( $user );
-        $html .= "<td style=\"float:right\">
-                <div float=\"right\"> $imgHtml </div>";
+        $html .= "<td> <div> $imgHtml </div>";
         $html .= "</td></tr>";
     }
 
@@ -867,23 +872,17 @@ function awsToTable( $aws, $with_picture = false )
         </tr>
         <tr>
             <td>Supervisors</td>
-            <td>' . implode( "<br/>", $supervisors ) . '</td>
+            <td>' . implode( ", ", $supervisors ) . '</td>
         </tr>
         <tr>
             <td>Thesis Committee Members</td>
-            <td>' . implode( "<br/>", $tcm) . '</td>
+            <td>' . implode( ", ", $tcm) . '</td>
         </tr>
-        <tr>
-            <td>Title</td>
-            <td>' . $title . '</td>
-        </tr>
-        <tr>
-            <td>Abstract</td>
-            <td>' . $abstract . '</td>
-        </tr>
-            
         </table>';
 
+    $html .= "<br>";
+    $html .= "<div style=\"width:500px\"> $title";
+    $html .= "$abstract </div>";
     return $html;
 
 }

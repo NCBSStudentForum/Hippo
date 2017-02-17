@@ -35,31 +35,25 @@ $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
 $upcoming = getTableEntries( 'upcoming_aws', 'date' , "date='$whichDay'" );
 $awses = array_merge( $awses, $upcoming );
 
-$awsText = '';
+$template = getEmailTemplateById( 'aws_template' )['description'];
+$emailHtml = '';
+
 foreach( $awses as $aws )
 {
 
-    $awsText .= "<h2></h2>";
-    $awstext = awsToTable( $aws, $with_picture = true );
-    $awsText .= $awstext;
-
+    echo awsToTable( $aws, $with_picture = true );
+    $emailHtml .= awsToTable( $aws, false );
     // Link to pdf file.
-    $awsText .= awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
+    echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
 }
 
+$template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
+    , $template ); 
+$template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
 
-
-// Save this test and convert it to pdf.
-//$cmd = "python " . __DIR__ . "/html2other.py /tmp/_aws.html md";
-//echo "<pre> Executing $cmd </pre>";
-//$awsText = `$cmd`;
-echo "$awsText ";
-
-// ob_start( );
-// $pdf = new HTML2PDF( 'P', 'A4', 'en', true, 'UTF-8', array(5,8,10,5) );
-// $pdf->WriteHTML( $awsText );
-// $pdf->Output( __DIR__ . '/aws.pdf', 'F' );
-// ob_end_flush( );
+echo "<h2>Email </h2>";
+$md = html2Markdown( $template );
+echo "<pre> $md </pre>";
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

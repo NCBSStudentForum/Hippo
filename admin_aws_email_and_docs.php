@@ -44,9 +44,7 @@ foreach( $awses as $aws )
     $awsText .= $awstext;
 
     // Link to pdf file.
-    $awsText .= '<a target="_blank" 
-        href="generate_pdf_aws.php?speaker=' . $aws['speaker'] . 
-            '&date=' . $aws['date'] . '">Download pdf</a>';
+    $awsText .= awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
 }
 
 

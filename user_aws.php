@@ -103,6 +103,7 @@ foreach( $awses as $aws )
     echo "</form>";
     echo "<br /><br />";
     echo "</div>";
+    echo awsPdfURL( $aws['speaker' ], $aws[ 'date' ] );
 }
 
 echo goBackToPageLink( "user.php", "Go back" );

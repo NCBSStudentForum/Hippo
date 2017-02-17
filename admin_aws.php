@@ -18,6 +18,7 @@ $pendingRequests = getPendingAWSRequests( );
 <script>
 $(function() {
     var logins = <?php echo json_encode( $logins ); ?>;
+    //console.log( logins );
     $( "#autocomplete_user" ).autocomplete( { source : logins }); 
     $( "#autocomplete_user1" ).autocomplete( { source : logins }); 
 });

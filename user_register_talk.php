@@ -20,11 +20,13 @@ foreach( $speakers as $visitor )
     if( strlen( $visitor[ 'email' ] ) > 0 )
         $speakersMap[ $visitor[ 'email' ] ] = $visitor;
 
-// These must not have any empty string or null value else autocomplete won't 
-// work.
-$speakersIds = array_filter( 
-        array_map( function( $x ) { return $x['email']; }, $speakers )
-    );
+// This must not be a key => value array else autocomplete won't work. Or have 
+// any null value,
+$speakersIds = array( );
+foreach( $speakers as $x )
+    if( $x[ 'email' ] )
+        $speakersIds[] = $x[ 'email' ];
+
 $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
 $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 
@@ -36,7 +38,10 @@ $( function() {
     var speakersDict = <?php echo json_encode( $speakersMap ) ?>;
     var host = <?php echo json_encode( $faculty ); ?>;
     var logins = <?php echo json_encode( $logins ); ?>;
+
+    // These emails must not be key value array.
     var emails = <?php echo json_encode( $speakersIds ); ?>;
+    //console.log( emails );
 
     $( "#talks_host" ).autocomplete( { source : host }); 
     $( "#talks_host" ).attr( "placeholder", "autocomplete" );

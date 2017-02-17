@@ -299,7 +299,14 @@ class NCBSCalendar
     public function deleteEvent( $event )
     {
         echo printInfo( "Deleting event " . eventToText( $event ) );
-        return $this->service->events->delete( $this->calID, $event['id'] );
+        try {
+            $this->service->events->delete( $this->calID, $event['id'] );
+            return true;
+        } catch (Exception $e) {
+            echo alertUser( "Failed to delete event from calendar " . 
+                $e->getMessage( ) );
+        }
+        return false;
     }
 
 
@@ -343,10 +350,16 @@ class NCBSCalendar
             return;
         }
 
-        if( trim($event['calendar_event_id']) == '' )
-            return $this->addNewEvent( $event );
-        else
-            return $this->updateEvent( $event );
+        try {
+            if( trim($event['calendar_event_id']) == '' )
+                return $this->addNewEvent( $event );
+            else
+                return $this->updateEvent( $event );
+        } catch (Exception $e) {
+            echo alertUser( 
+                "Failed to update or add new event. " . $e->getMessage( ) 
+            );
+        }
     }
 }
 

@@ -9,7 +9,7 @@ include_once 'tohtml.php';
 // insert of update the speaker table. Other to create a entry in talks table.
 
 // Sanity check 
-if( ! ( $_POST['first_name']  && _POST[ 'institute' ] && _POST[ 'title' ] 
+if( ! ( $_POST['first_name']  && $_POST[ 'institute' ] && $_POST[ 'title' ] 
     && $_POST[ 'description' ] ) )
 {
     echo printInfo( 'Incomplete entry. Required fields: First name, last name, 
@@ -59,7 +59,7 @@ else                // Everything is fine.
                     I am redirecting you to page where you can create booking reqest
                     after exploring possible options.  "
                 );
-                goToPage( 'user_manage_talk.php', 3 );
+                goToPage( 'user_manage_talk.php', 10 );
                 exit;
             }
 
@@ -78,7 +78,7 @@ else                // Everything is fine.
                 if( $res )
                 {
                     echo printInfo( "Successfully created booking request" );
-                    goToPage( "user.php", 2 );
+                    goToPage( "user.php", 3 );
                     exit;
                 }
                 else

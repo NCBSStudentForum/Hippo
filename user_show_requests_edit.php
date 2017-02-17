@@ -13,9 +13,9 @@ $editable = Array( "title", "description" );
 
 if( strtolower($_POST['response']) == 'edit' )
 {
-    echo "<p class=\"info\"> You can only change fields: " . implode( ", ", $editable ) 
-        . " here. If you want to change some other fields, you have to delete 
-        this request a create a new one. </p>";
+    echo printInfo( "You can only change " . implode( ", ", $editable ) 
+        . " here. If you want to change other fields, you have to delete 
+        this request a create a new one." );
 
     $requests = getRequestByGroupId( $gid );
     // We only edit once request and all other in the same group should get 

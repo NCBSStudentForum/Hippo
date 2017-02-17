@@ -42,12 +42,13 @@ else                // Everything is fine.
         $_POST[ 'speaker' ] = $speakerText;
 
         $res2 = insertIntoTable( 'talks'
-            , 'host,title,speaker,description,created_by'
+            , 'host,title,speaker,description,created_by,created_on'
             , $_POST ); 
 
         if( $res2 )
         {
-            echo printInfo( "Successfully registered your talk." );
+            $talkId = $res2[ 'LAST_INSERT_ID()'];
+            echo printInfo( "Successfully registered your talk with id $talkId" );
             $startTime = $_POST[ 'start_time' ];
             $endTime = $_POST[ 'end_time' ];
             $date = $_POST[ 'end_time' ];
@@ -77,8 +78,8 @@ else                // Everything is fine.
                 }
                 else 
                 {
-                    // Else create a request.
-                    $external_id = "taks." . $res1[ 'id' ];
+                    // Else create a request with external_id as talkId.
+                    $external_id = "talks." . $talkId;
                     $_POST[ 'external_id' ] = $external_id;
                     $_POST[ 'is_public_event' ] = 'YES';
 

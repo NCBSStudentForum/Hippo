@@ -112,7 +112,7 @@ function initialize( )
             , description TEXT 
             , created_by VARCHAR(100) NOT NULL 
                 CHECK( register_by <> "" )
-            , created_on TIMESTAMP NOT NULL DEFAULT NOW( )
+            , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             , status ENUM( "CANCELLED", "INVALID", "VALID") 
                 DEFAULT "VALID"
             , PRIMARY KEY (id)

@@ -18,7 +18,8 @@ logging.basicConfig(
 _logger = logging.getLogger('hippo.sendmail')
 
 if len( sys.argv ) < 4:
-    _logger.warn( "Usage: %s TO SUBJECT MSG_FILE" % sys.argv[0] )
+    _logger.error( "Usage: %s TO SUBJECT MSG_FILE" % sys.argv[0] )
+    _logger.error( "|- Got params %s" % sys.argv )
     quit( )
 
 fromAddress = 'NCBS Hippo <noreply@ncbs.res.in>'
@@ -28,8 +29,18 @@ subject = sys.argv[2]
 _logger.debug( "Got command line params %s" % sys.argv )
 
 msg = '''Error: no text found'''
-with open( sys.argv[3], 'r' )  as f:
-    msg = html2text.html2text( f.read( ) )
+
+try:
+    with open( sys.argv[3], 'r' )  as f:
+        msg = f.read( )
+except Exception as e:
+    _logger.error( "I could not read file %s. Error was %s" % (sys.argv[3], e))
+    quit( )
+
+try:
+    msg = html2text.html2text( msg )
+except Exception as e:
+    _logger.warn( 'Failed to convert to html. Error was %s' % e )
 
 msg = MIMEText( msg )
 msg[ 'subject' ] = subject
@@ -41,8 +52,6 @@ s.set_debuglevel( 2 )
 try:
     _logger.info( 'Sending email to %s' % toAddr )
     s.sendmail( fromAddress, toAddr.split( ',' ), msg.as_string( ) )
-    # remove the mail
-    os.remove( sys.argv[3] )
 except Exception as e:
     with open( '/var/log/hippo.log', 'a' ):
         _logger.error( 'Failed to send email. Error was %s' % e )

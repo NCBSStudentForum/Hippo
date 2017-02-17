@@ -5,8 +5,6 @@ include_once './check_access_permissions.php';
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) ); 
 
-var_dump( $_POST );
-
 $res = updateTable( 'upcoming_aws', 'id', 'abstract', $_POST );
 if( $res )
 {

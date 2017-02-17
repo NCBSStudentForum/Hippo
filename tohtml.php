@@ -537,6 +537,8 @@ function dbTableToHTMLTable( $tablename
             $val .= "<script>
                 tinymce.init( { selector : '#" . $inputId . "'
                         , init_instance_callback: \"insert_content\"
+                        , plugins : [ 'code wordcount fullscreen table' ]
+                        , height : 300
                     } );
                 function insert_content( inst ) {
                     inst.setContent( '$default' );
@@ -566,7 +568,7 @@ function dbTableToHTMLTable( $tablename
     if( $button_val == 'submit' )
         $buttonSym = "&#10003";
     else if( $button_val == 'update' )
-        $buttonSym = $symbCheck;
+        $buttonSym = $symbUpdate;
 
     if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
     {

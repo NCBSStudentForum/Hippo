@@ -89,11 +89,12 @@ table.show_user tr td
 table.show_info {
     max-width : 800px;
     min-width : 100%;
+    border: 1px solid;
+    background : cyan;
 }
 
 table.show_info tr td 
 {
-    background : var(--background);
     max-width : 25%;
 }
 

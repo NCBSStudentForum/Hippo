@@ -20,11 +20,9 @@ $speaker = array(
 $whereExpr = "created_by='" . $_SESSION[ 'user' ] . "'";
 $whereExpr .= "AND status!='INVALID' ORDER BY created_on DESC";
 $talks = getTableEntries( 'talks', '', $whereExpr );
-if( count( $talks ) < 1 )
-{
-    echo printInfo( "You don't have any upcoming or unscheduled talk" );
-}
+$upcomingTalks = array( );
 
+/* Filter talk which have not been delivered yet. */
 foreach( $talks as $t )
 {
     // If talk has been delivered, then dont display.
@@ -33,6 +31,17 @@ foreach( $talks as $t )
         if( strtotime($event[ 'date' ] ) <= strtotime( 'today' ) )
             // This talk has been delivered successfully.
             continue;
+    array_push( $upcomingTalks, $t );
+}
+
+if( count( $upcomingTalks ) < 1 )
+    echo alertUser( "You don't have any upcoming talk." );
+else
+    echo alertUser( "You have following upcoming talks." );
+
+// Show upcoming talks to user. She has edit, delete or schedule them.
+foreach( $upcomingTalks as $t )
+{
 
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';
@@ -67,10 +76,15 @@ foreach( $talks as $t )
     echo '</tr></table>';
     echo '</form>';
 
-    // If event is already approved, show it here.
+    // To make sure that user dont' confuse these two table as different 
+    // talks rather than one talk and one is event/request; reduce the size 
+    // of second table.
+    echo "<div style=\"font-size:x-small\">";
     if( $event )
     {
-        echo "<strong>Above talk has been confirmed</strong>";
+        // If event is already approved, show it here.
+        echo "<strong>Above talk has been confirmed and event detail is shown 
+            below.</strong>";
         $html = arrayToTableHTML( $event, 'events', ''
             , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
             ',status,calendar_event_id,last_modified_on' );
@@ -79,10 +93,8 @@ foreach( $talks as $t )
     // Else there might be a pending request.
     else if( $request )
     {
-        echo "<strong>Booking request for above talk is pending review</strong>
-            Please note that you can not change venue, date, or time of this 
-            request; to do so you have to cancel this requst and create 
-            a fresh one.
+        echo "<strong>Shown below is the booking request pending review for 
+                above talk. </strong>
             ";
         $gid = $request[ 'gid' ];
 
@@ -102,6 +114,7 @@ foreach( $talks as $t )
         echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
         echo '</form>';
     }
+    echo "</div>";
     echo "<hr>";
     echo "<br />";
 }

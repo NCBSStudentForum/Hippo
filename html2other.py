@@ -93,7 +93,6 @@ def main( ):
     infile = sys.argv[1]
     outfmt = sys.argv[2]
     if outfmt == 'md':
-        print( "Converting to md" )
         md = htmlfile2md( infile )
         print( md )
     elif outfmt == 'tex':

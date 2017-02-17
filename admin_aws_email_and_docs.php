@@ -50,8 +50,16 @@ $upcoming = getTableEntries( 'upcoming_aws', 'date' , "date='$whichDay'" );
 $awses = array_merge( $awses, $upcoming );
 
 $template = getEmailTemplateById( 'aws_template' )['description'];
+if( ! $template )
+{
+    echo alertUser( "No template found with id: aws_template. I won't 
+        be able to generate email"
+    );
+}
+
 $emailHtml = '';
 
+$filename = "AWS_" . $whichDay;
 foreach( $awses as $aws )
 {
 
@@ -59,15 +67,21 @@ foreach( $awses as $aws )
     $emailHtml .= awsToTable( $aws, false );
     // Link to pdf file.
     echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
+    $filename .= '_' . $aws[ 'speaker' ];
 }
+$filename .= '.txt';
 
 $template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
     , $template ); 
 $template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
+echo "<pre> $template </pre>";
 
 $md = html2Markdown( $template );
 
-echo '<button onclick="ShowPlainEmail(this)" value="' . $md . '">Show Email</button>"';
+// Save the file and let the admin download it.
+file_put_contents( __DIR__ . "/data/$filename", $md);
+//echo "Saved to $filename";
+echo downloadTextFile( $filename, 'Download mail' );
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

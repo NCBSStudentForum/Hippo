@@ -860,7 +860,7 @@ function awsToTable( $aws, $with_picture = false )
     if( $with_picture )
     {
         $html .=  '<table class="email">';
-        $html .= '<tr><td></td>';
+        $html .= '<tr><td style="width:500px"></td>';
         $user = $aws[ 'speaker' ];
         $imgHtml = getUserPicture( $user );
         $html .= "<td float=\"right\"> <div> $imgHtml </div>";
@@ -868,9 +868,9 @@ function awsToTable( $aws, $with_picture = false )
         $html .= "</table>";
     }
 
-    $html .= "<p>$speaker : \"$title\" </p>";
+    $html .= "<h3>\"$title\" by $speaker </h2>";
 
-    $html .=  '<table class="email">';
+    $html .=  '<table class="email" style="width:500px;border:1px dotted">';
     $html .= '
         <tr>
             <td>Supervisors</td>
@@ -883,7 +883,8 @@ function awsToTable( $aws, $with_picture = false )
         </table>';
 
     $html .= "<br>";
-    $html .= "$abstract </div>";
+    $html .= "$abstract";
+    $html .= "</div>";
     return $html;
 
 }
@@ -904,6 +905,22 @@ function awsPdfURL( $speaker, $date )
     $url = '<div><a target="_blank" 
         href="generate_pdf_aws.php?speaker=' . $speaker . 
         '&date=' . $date . '">Download pdf</a></div>';
+    return $url;
+}
+
+/**
+    * @brief Download text file of given name. This file must exists in data 
+    * folder.
+    *
+    * @param $filename
+    * @param $msg
+    *
+    * @return 
+ */
+function downloadTextFile( $filename, $msg = 'Download file' )
+{
+    $url = '<div><a target="_blank" href="download_file.php?filename=' 
+            . $filename .  '">' . $msg .'</a></div>';
     return $url;
 }
 

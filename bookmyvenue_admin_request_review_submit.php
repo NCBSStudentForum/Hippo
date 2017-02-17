@@ -5,6 +5,8 @@ include_once "database.php";
 include_once 'tohtml.php';
 include_once 'mail.php';
 include_once 'methods.php';
+include_once 'check_access_permissions.php';
+mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 
 $whatToDo = $_POST['response'];

@@ -849,7 +849,7 @@ function awsToTable( $aws, $with_picture = false )
         .email tr td {background-color: ivory; } 
         </style>';
 
-    $html .=  '<table style="width:600px;" class="email">';
+    $html .=  '<table style="width:800px;" class="email">';
     if( $with_picture )
     {
         $html .= '<tr><td></td>';
@@ -875,11 +875,11 @@ function awsToTable( $aws, $with_picture = false )
         </tr>
         <tr>
             <td>Title</td>
-            <td>' . breakAt( $title ) . '</td>
+            <td>' . $title . '</td>
         </tr>
         <tr>
             <td>Abstract</td>
-            <td>' . breakAt( $abstract ) . '</td>
+            <td>' . $abstract . '</td>
         </tr>
             
         </table>';

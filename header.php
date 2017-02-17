@@ -108,9 +108,10 @@ function AreYouSure( button )
 <!-- load basic unicode chara -->
 <?php
 
-$symbEdit = "&#9998";
+//$symbEdit = "&#9998";              // pencil
+$symbEdit = "&#x270d";                // Writing hand
 $symbUpdate = "&#x270d";
-$symbCalendar = "&#128197";
+$symbCalendar = "&#128197";          // Does not work on chromium
 $symbDelete = "&#10008";
 $symbCancel = "&#10008";
 $symbReject = "&#10008";

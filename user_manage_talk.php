@@ -16,8 +16,9 @@ $speaker = array(
     , 'homepage' => ''
     );
 
+// Get talks only in future.
 $whereExpr = "created_by='" . $_SESSION[ 'user' ] . "'";
-$whereExpr .= "AND status!='INVALID'";
+$whereExpr .= "AND status!='INVALID' ORDER BY created_on DESC";
 $talks = getTableEntries( 'talks', '', $whereExpr );
 if( count( $talks ) < 1 )
 {
@@ -26,6 +27,12 @@ if( count( $talks ) < 1 )
 
 foreach( $talks as $t )
 {
+    // If talk has been delivered, then dont display.
+    $event = getEventsOfTalkId( $t['id'] );
+    if( $event )
+        if( strtotime($event[ 'date' ] ) <= strtotime( 'today' ) )
+            // This talk has been delivered successfully.
+            continue;
 
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';

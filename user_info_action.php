@@ -17,14 +17,13 @@ if( $res )
     // Now send an email to user.
     $info = getUserInfo( $_SESSION[ 'user' ] );
 
-    sendEmail( // arrayToVerticalTableHTML( $info, "login" )
-        "Ola"
-        , "Your details"
+    sendEmail( dbTableToHTMLTable( "logins", $info )
+        , "Your details have been updated successfully."
         , $info[ 'email' ]
         );
 
-    //goToPage( 'user.php', 0 );
-    //exit;
+    goToPage( 'user.php', 1 );
+    exit;
 }
 
 echo printWarning( "Could not update user details " );

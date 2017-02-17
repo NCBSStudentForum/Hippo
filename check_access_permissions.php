@@ -10,7 +10,7 @@ function requiredPrivilege( $role )
 
 function anyOfTheseRoles( $roles )
 {
-    if( array_key_exists( 'user', $_SESSION )
+    if( array_key_exists( 'user', $_SESSION ) )
     {
         $userRoles = getRoles( $_SESSION['user'] );
         foreach( $roles as $role )

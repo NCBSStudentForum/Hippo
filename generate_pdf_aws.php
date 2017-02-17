@@ -100,6 +100,7 @@ function awsToTex( $aws, $with_picture = true )
     //$tex[] = $dateAndPlace;
 
     // Title and abstract
+    //$tex[] = '\begin{minipage}{\textwidth} \resizebox{\textwidth}{!} {';
     $tex[] = '{\large ' . $abstract . '}';
 
     $extra = '\begin{table}[ht!]';
@@ -110,6 +111,7 @@ function awsToTex( $aws, $with_picture = true )
     $extra .= '\end{table}';
 
     $tex[] = $extra;
+    //$tex[] = '}\end{minipage}';
     $tex[] = '\end{document}';
     return implode( "\n", $tex );
 }

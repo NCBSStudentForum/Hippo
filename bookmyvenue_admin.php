@@ -45,7 +45,7 @@ foreach( $requests as $r )
     $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
     $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
     $html .= arrayToTableHTML( $r, 'events'
-        , ' ',  array( 'status', 'modified_by', 'timestamp', 'url', 'external_id' )
+        , ' ',  array( 'last_modified_on', 'status', 'modified_by', 'timestamp', 'url', 'external_id' )
     );
     $html .= '</td>';
     $html .= '<td style="background:white">
@@ -59,7 +59,7 @@ echo $html;
 
 ?>
 
-<h2> Edit Upcoming Events </h2>
+<h2>Upcoming (approved) Events </h2>
 <?php
 $html = '';
 $events = getEventsGrouped( $sortby = 'date' );
@@ -73,10 +73,11 @@ foreach( $events as $event )
     $html .= "<tr><td>";
     $html .= arrayToTableHTML( $event, 'events', ''
         , Array( 'eid', 'calendar_id' , 'calendar_event_id', 'external_id'
-                , 'gid', 'status' ) 
+                , 'gid', 'status', 'last_modified_on' ) 
     );
     $html .= "</td>";
-    $html .= "<td> <button name=\"response\" value=\"edit\">Edit</button></td>";
+    $html .= "<td> <button title=\"Edit this entry\"  name=\"response\" 
+            value=\"edit\">" . $symbEdit .  "</button></td>";
     $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";
     $html .= "<input name=\"eid\" type=\"hidden\" value=\"$eid\" />";
     $html .= "</form></tr>";

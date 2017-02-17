@@ -897,4 +897,14 @@ function closePage( )
 {
     return "<div><a href=\"javascript:window.close();\">Close Window</a></div>";
 }
+
+function awsPdfURL( $speaker, $date )
+{
+    // Link to pdf file.
+    $url = '<div><a target="_blank" 
+        href="generate_pdf_aws.php?speaker=' . $speaker . 
+        '&date=' . $date . '">Download pdf</a></div>';
+    return $url;
+}
+
 ?>

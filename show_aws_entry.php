@@ -51,9 +51,7 @@ else
         $awstext = awsToTable( $aws, $with_picture = true );
 
         // Link to pdf file.
-        $awstext .= '<a target="_blank" 
-            href="generate_pdf_aws.php?speaker=' . $aws['speaker'] . 
-            '&date=' . $aws['date'] . '">Download pdf</a>';
+        $awstext .= awsPdfURL( $aws[ 'speaker' ], $aws['date' ] );
         echo $awstext;
     }
 }

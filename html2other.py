@@ -85,7 +85,8 @@ def htmlfile2md( filename ):
     md = md.replace( '\\', '' )
     md = re.sub( r'\n\n+', r'\n\n', md )
     # Style ect.
-    md = re.sub( r'{style.*?}', '', md )
+    pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )
+    md = pat.sub( '', md )
     return md
 
 def main( ):

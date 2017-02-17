@@ -8,6 +8,20 @@ include_once 'check_access_permissions.php';
 
 mustHaveAllOfTheseRoles( array('AWS_ADMIN' ) );
 
+?>
+
+<script type="text/javascript" charset="utf-8">
+function ShowPlainEmail( button )
+{
+    var win = window.open('plain_email');
+    win.document.write( "<pre>" + button.value + "</pre>" );
+    win.select( );
+}
+</script>
+
+
+<?php
+
 $today = dbDate( 'next monday' );
 
 if( array_key_exists( 'date', $_POST ) )
@@ -51,9 +65,9 @@ $template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] )
     , $template ); 
 $template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
 
-echo "<h2>Email </h2>";
 $md = html2Markdown( $template );
-echo "<pre> $md </pre>";
+
+echo '<button onclick="ShowPlainEmail(this)" value="' . $md . '">Show Email</button>"';
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

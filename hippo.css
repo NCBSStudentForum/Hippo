@@ -12,14 +12,6 @@ body {
     min-width : 100%;
 }
 
-h1 {
-    font-size : 150%;
-}
-
-h2 {
-    font-size : 120%;
-}
-
 pre {
     display : inline;
 }

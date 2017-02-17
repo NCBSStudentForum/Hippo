@@ -80,7 +80,12 @@ else
     // Save the file and let the admin download it.
     file_put_contents( __DIR__ . "/data/$filename", $md);
     echo "<br><br>";
+    echo '<table style="width:500px;border:1px solid"><tr><td>';
     echo downloadTextFile( $filename, 'Download mail' );
+    echo "</td><td>";
+    echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
+    echo "</td></tr>";
+    echo '</table>';
 }
 
 // Only if the AWS date in future/today, allow admin to send emails.

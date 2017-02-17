@@ -16,6 +16,8 @@ if( ! ( $_POST['first_name']  && $_POST[ 'institute' ] && $_POST[ 'title' ]
     echo printInfo( 'Incomplete entry. Required fields: First name, last name, 
         institute, title and description of talk. ' );
     echo arrayToVerticalTableHTML( $_POST, 'info' );
+    echo goBackToPageLink( 'user_register_talk.php', 'Go back' );
+    exit;
 }
 else                // Everything is fine.
 {
@@ -86,11 +88,7 @@ else                // Everything is fine.
 
                     $res = submitRequest( $_POST );
                     if( $res )
-                    {
                         echo printInfo( "Successfully created booking request" );
-                        //goToPage( "user.php", 3 );
-                        //exit;
-                    }
                     else
                         echo printWarning( "Oh Snap! Failed to create booking request" );
                 }

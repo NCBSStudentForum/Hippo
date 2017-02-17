@@ -12,9 +12,6 @@ mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 
-
-echo '<h2> Calendar administration </h2>';
-
 echo '<table class="show_info">
     <tr>
     <td>
@@ -34,7 +31,8 @@ $requests = getPendingRequestsGroupedByGID( );
 
 if( count( $requests ) == 0 )
     echo printInfo( "Cool! No request is pending for review" );
-
+else
+    echo printInfo( "These requests needs your attention" );
 
 $html = '<table class="show_request">';
 foreach( $requests as $r )

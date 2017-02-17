@@ -454,6 +454,8 @@ function dbTableToHTMLTable( $tablename
         , $button_val = 'submit', $hide = ''
     )
 {
+    global $symbUpdate, $symbCheck;
+
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );
 
@@ -563,6 +565,8 @@ function dbTableToHTMLTable( $tablename
     $buttonSym = ucfirst( $button_val );
     if( $button_val == 'submit' )
         $buttonSym = "&#10003";
+    else if( $button_val == 'update' )
+        $buttonSym = $symbCheck;
 
     if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
     {
@@ -810,12 +814,6 @@ function dataURI( $filepath, $mime )
 function __ucwords__( $text )
 {
     return ucwords( strtolower( $text ) );
-}
-
-function breakAt( $text, $width = 80 )
-{
-    $newTxt =  `echo '$text' | fold -w $width -s -`;
-    return str_replace( '\n', '<br/>', $newTxt );
 }
 
 function awsToTable( $aws, $with_picture = false )

@@ -4,8 +4,11 @@ include_once 'header.php';
 include_once 'database.php';
 include_once 'mail.php';
 include_once 'tohtml.php';
-include_once './check_access_permissions.php';
+include_once 'check_access_permissions.php';
+
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
+
+echo userHTML( );
 
 
 if( ! $_POST[ 'response' ] )
@@ -16,17 +19,19 @@ if( ! $_POST[ 'response' ] )
 }
 else if( $_POST[ 'response' ] == 'delete' )
 {
+    // Delete this entry from talks.
     $res = deleteFromTable( 'talks', 'id', $_POST );
     if( $res )
     {
-        echo printInfo( 'Successfully delete entry' );
-        // Delete the request as well.
+        echo printInfo( 'Successfully deleted entry' );
+
+        // Now cancel this talk in requests, if there is any.
         updateTable( 
             'bookmyvenue_requests', 'external_id', 'status'
             , array( 'external_id' => "talks." + $_POST[ 'id' ] 
                     , 'status' => 'CANCELLED' )
             );
-        goBack( );
+        goBack( "user.php" );
         exit;
     }
     else
@@ -47,14 +52,14 @@ else if( $_POST[ 'response' ] == 'edit' )
     $talk = getTableEntry( 'talks', 'id', $_POST );
 
     echo '<form method="post" action="user_manage_talks_action_update.php">';
-    echo dbTableToHTMLTable('talks', $talk, 'host,title,description', 'update');
+    echo dbTableToHTMLTable('talks', $talk, 'class,host,title,description', 'update');
     echo '</form>';
 }
 else if( $_POST[ 'response' ] == 'schedule' )
 {
     // We are sending this to quickbook.php as GET request. Only external_id is 
     // sent to page.
-    var_dump( $_POST );
+    //var_dump( $_POST );
     $external_id = "talks." . $_POST[ 'id' ];
     $query = "&external_id=".$external_id;
     header( "Location: quickbook.php?" . $query );

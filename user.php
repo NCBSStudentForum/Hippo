@@ -40,10 +40,12 @@ $html = '<table class="show_user">';
          still edit their description (and also cancel them). </td>
       <td> <a href="user_show_events.php">Show/Edit (my) upcoming events</a></td>
    </tr>
+   <!--
    <tr>
       <td>TODO: Journal clubs.</td>
       <td> <a href="user_jc.php">My Journal Club</a> </td>
    </tr>
+   -->
    <tr>
       <td>Annual Work Seminar.</td>
       <td> 
@@ -62,23 +64,23 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
    $roles =  getRoles( $_SESSION['user'] );
 
    $html = "<table class=\"show_user\">";
-      if( in_array( "ADMIN", $roles ) )
+  if( in_array( "ADMIN", $roles ) )
       $html .= '<tr><td> All migthy ADMIN </td>
          <td><a href="admin.php">Admin</a></td> </td>
-   </tr>';
+        </tr>';
    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
-   $html .= '<tr><td>Approve/reject booking request, modify or cancel them as well.</td>
+       $html .= '<tr><td>Approve/reject booking request, modify or cancel them as well.</td>
       <td> <a href="bookmyvenue_admin.php">BookMyVenue Admin</a></td> </tr>';
-   if( in_array( "JOURNALCLUB_ADMIN", $roles ) )
-   $html .= '<tr><td>TODO: Add journal club, invite people, select papers.</td>
-      <td> <a href="journalclub_admin.php">JournalClub Admin</a></td> </tr>';
+   // if( in_array( "JOURNALCLUB_ADMIN", $roles ) )
+   //      $html .= '<tr><td>TODO: Add journal club, invite people, select papers.</td>
+   //   <td> <a href="journalclub_admin.php">JournalClub Admin</a></td> </tr>';
    if( in_array( "AWS_ADMIN", $roles ) )
-   $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
+       $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
          periodically. 
       </td>
       <td> <a href="admin_aws.php">AWS Admin</a></td> </tr>';
    $html .= "</table>";
-echo $html;
+   echo $html;
 }
 
 ?>

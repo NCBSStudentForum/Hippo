@@ -28,6 +28,9 @@ echo userHTML( );
 $calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ]
     , $_SESSION['calendar_id'] );
 
+echo alertUser( "Just a reminder, you MUST login to google-account which own the 
+    calendar " );
+
 $calendar->setAccessToken( $_GET['code'] );
 
 $everythingWentOk = true;
@@ -65,10 +68,15 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         for ($i = 0; $i < $total; $i++) 
         {
             $event = $publicEvents[ $i ];
-            if( $calendar->exists( $event ) )
-                $gevent = $calendar->updateEvent( $event );
-            else 
-                $gevent = $calendar->addNewEvent( $event );
+            try {
+                if( $calendar->exists( $event ) )
+                    $gevent = $calendar->updateEvent( $event );
+                else 
+                    $gevent = $calendar->addNewEvent( $event );
+            } catch ( Exception $e ) {
+                echo printWarning( "Failed to add or update event: " . $e->getMessage( ) );
+            }
+
         }
 
         // Now get all events from google calendar and if some of them are not 

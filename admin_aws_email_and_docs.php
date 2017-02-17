@@ -49,14 +49,6 @@ $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
 $upcoming = getTableEntries( 'upcoming_aws', 'date' , "date='$whichDay'" );
 $awses = array_merge( $awses, $upcoming );
 
-$template = getEmailTemplateById( 'aws_template' )['description'];
-if( ! $template )
-{
-    echo alertUser( "No template found with id: aws_template. I won't 
-        be able to generate email"
-    );
-}
-
 $emailHtml = '';
 
 $filename = "AWS_" . $whichDay;
@@ -69,25 +61,35 @@ foreach( $awses as $aws )
     echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
     $filename .= '_' . $aws[ 'speaker' ];
 }
+
 $filename .= '.txt';
+$template = getEmailTemplateById( 'aws_template' )['description'];
+if( ! $template )
+{
+    echo alertUser( "No template found with id: aws_template. I won't 
+        be able to generate email"
+    );
+} 
+else 
+{
+    $template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
+        , $template ); 
+    $template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
 
-$template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
-    , $template ); 
-$template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
-echo "<pre> $template </pre>";
-
-$md = html2Markdown( $template );
-
-// Save the file and let the admin download it.
-file_put_contents( __DIR__ . "/data/$filename", $md);
-//echo "Saved to $filename";
-echo downloadTextFile( $filename, 'Download mail' );
+    $md = html2Markdown( $template );
+    // Save the file and let the admin download it.
+    file_put_contents( __DIR__ . "/data/$filename", $md);
+    echo "<br><br>";
+    echo downloadTextFile( $filename, 'Download mail' );
+}
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )
 {
     echo "TODO: Allow admin to send email";
 }
+
+echo goBackToPageLink( "admin_aws.php", "Go back" );
 
 
 ?>

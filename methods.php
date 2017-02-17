@@ -480,12 +480,17 @@ function convertImage($originalImage, $ext, $outputImage, $quality = 9 )
  */
 function getUserPicture( $user )
 {
-    $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
-    if( ! file_exists( $picPath ) )
-        $picPath = __DIR__ . "/data/no_image_available.png";
+    $picPath = __DIR__ . "/data/no_image_available.png";
+    if( array_key_exists( 'conf', $_SESSION ) )
+    {
+        $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
+        if( ! file_exists( $picPath ) )
+            $picPath = __DIR__ . "/data/no_image_available.png";
+    }
         
     $html ='<img class="login_picture" width="200px"
         height="auto" src="' . dataURI( $picPath, 'image/png' ) . '" >';
+
     return $html;
 }
 

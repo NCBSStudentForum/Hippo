@@ -99,7 +99,7 @@ echo "<h3>Talk information</h3>" ;
 echo dbTableToHTMLTable( 'talks', $talk
     , 'host,coordinator,title,description'
     , ''
-    , $hide = 'id,speaker,status,created_on'
+    , $hide = 'id,speaker,status'
     );
 
 echo "<h3>Optionally create a booking request</h3>" ;

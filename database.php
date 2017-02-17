@@ -112,7 +112,7 @@ function initialize( )
             , description TEXT 
             , created_by VARCHAR(100) NOT NULL 
                 CHECK( register_by <> "" )
-            , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , created_on TIMESTAMP NOT NULL DEFAULT NOW( )
             , status ENUM( "CANCELLED", "INVALID", "VALID") 
                 DEFAULT "VALID"
             , PRIMARY KEY (id)
@@ -792,7 +792,7 @@ function submitRequest( $request )
 
         $res = insertIntoTable( 'bookmyvenue_requests'
             , 'gid,rid,external_id,created_by,venue,title,description' . 
-                ',date,start_time,end_time,is_pubic_event'
+                ',date,start_time,end_time,is_public_event'
             , $request 
         );
         if( ! $res )

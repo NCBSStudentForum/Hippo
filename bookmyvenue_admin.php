@@ -8,14 +8,9 @@ include_once "database.php";
 include_once "tohtml.php";
 include_once "check_access_permissions.php";
 
-echo userHTML( );
+mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
-if( ! requiredPrivilege( 'BOOKMYVENUE_ADMIN' ) )
-{
-    echo printWarning( "You don't have enough privileges to user this interface" );
-    goToPage( "user.php", 3 );
-    exit( 0 );
-}
+echo userHTML( );
 
 
 echo '<h2> Calendar administration </h2>';

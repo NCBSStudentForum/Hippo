@@ -3,7 +3,8 @@
 include_once 'database.php';
 include_once 'tohtml.php';
 
-function awsToTex( $aws, $with_picture = true )
+
+function awsToTex( $aws )
 {
     // First sanities the html before it can be converted to pdf.
     foreach( $aws as $key => $value )

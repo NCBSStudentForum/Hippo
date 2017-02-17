@@ -537,7 +537,8 @@ function dbTableToHTMLTable( $tablename
             $val .= "<script>
                 tinymce.init( { selector : '#" . $inputId . "'
                         , init_instance_callback: \"insert_content\"
-                        , plugins : [ 'code wordcount fullscreen table' ]
+                        , plugins : [ 'paste code wordcount fullscreen table' ]
+                        , paste_as_text : true
                         , height : 300
                     } );
                 function insert_content( inst ) {
@@ -742,10 +743,10 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
                 <script>
                     tinymce.init( { selector : "#abstract"
                             , height : 300
-                            , theme : "modern"
-                            , plugins : [ "wordcount fullscreen table textcolor"
+                            , plugins : [ "paste wordcount fullscreen table textcolor"
                                     , "imagetools toc code" ]
                             , init_instance_callback: "insert_content"
+                            , paste_as_text : true
                         } );
                     function insert_content( inst ) {
                         inst.setContent( \'' . $text . '\');

@@ -513,18 +513,12 @@ function rescheduleAWS( )
 function html2Markdown( $html )
 {
     $outfile = __DIR__ . '/data/_aws_email.html';
-    $mdfile = $outfile . ".md";
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
         $cmd = "python " . __DIR__ . "/html2other.py $outfile md ";
         $md = `$cmd`;
-        if( file_exists( $mdfile ) )
-            echo "Successfully generated email";
-        else
-            echo "Failed to generate email";
-
-        //unlink( $outfile );
+        unlink( $outfile );
         return $md;
     }
     else 

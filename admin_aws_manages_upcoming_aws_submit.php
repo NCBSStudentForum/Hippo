@@ -65,7 +65,7 @@ else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
         }
     }
 }
-else if( $_POST[ 'response' ] == 'update' )
+else if( $_POST[ 'response' ] == 'format_abstract' )
 {
     // Update the user entry
     echo printInfo( "Admin is allowed to reformat the entry. That is why only 

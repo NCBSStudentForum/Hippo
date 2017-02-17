@@ -70,7 +70,7 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
     echo '<input type="hidden", name="id" , value="' . $upcomingAWS[ 'id' ] . '"/>';
     echo '</td><td>';
-    echo '<button name="response" value="update">Update</button>';
+    echo '<button name="response" value="format_abstract">Format abstract</button>';
     echo "<br>";
     echo '<button name="response" value="Reassign">Reassign</button>';
     echo '<br>';

@@ -65,7 +65,6 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         echo alertUser( "Synchronizing google calendar ..." );
 
         $publicEvents = getPublicEvents( $form = 'today' );
-        var_dump( $publicEvents );
 
         $total = count( $publicEvents );
 

@@ -853,23 +853,25 @@ function awsToTable( $aws, $with_picture = false )
     $title = __ucwords__( $aws[ 'title' ]);
     $abstract = $aws[ 'abstract' ];
 
+    $html = "<div style=\"width:500px\">";
+
     // Adding css inline screw up the email view. Dont do it.
-    $html =  '<table class="email">';
 
     if( $with_picture )
     {
+        $html .=  '<table class="email">';
         $html .= '<tr><td></td>';
         $user = $aws[ 'speaker' ];
         $imgHtml = getUserPicture( $user );
-        $html .= "<td> <div> $imgHtml </div>";
+        $html .= "<td float=\"right\"> <div> $imgHtml </div>";
         $html .= "</td></tr>";
+        $html .= "</table>";
     }
 
+    $html .= "<p>$speaker : \"$title\" </p>";
+
+    $html .=  '<table class="email">';
     $html .= '
-        <tr>
-            <td>Speaker</td>
-            <td>' . $speaker . '</td>
-        </tr>
         <tr>
             <td>Supervisors</td>
             <td>' . implode( ", ", $supervisors ) . '</td>
@@ -881,7 +883,6 @@ function awsToTable( $aws, $with_picture = false )
         </table>';
 
     $html .= "<br>";
-    $html .= "<div style=\"width:500px\"> $title";
     $html .= "$abstract </div>";
     return $html;
 

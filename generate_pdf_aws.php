@@ -65,45 +65,21 @@ function awsToTex( $aws )
     $head .= '\end{tikzpicture}';
 
 
-    // Do not generate the preamble.
-    $tex = array( "\documentclass[]{article}"
-        , "\usepackage[margin=20mm,a4paper]{geometry}"
-        , "\usepackage[]{graphicx}"
-        , "\usepackage[]{amsmath,amssymb}"
-        , "\usepackage{tikz}"
-        , "\usepackage{fontawesome}"
-        , '\usepackage{fancyhdr}'
-        , '\linespread{1.2}'
-        , '\pagestyle{fancy}'
-        , '\pagenumbering{gobble}'
-        , '\lhead{\textsc{Annual Work Seminar} }'
-        , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
-            TATA Institute of Fundamental Research, Mumbai}'
-        , '\usetikzlibrary{calc,positioning,arrows}'
-        //, '\usepackage[T1]{fontenc}'
-        , '\usepackage[utf8]{inputenc}'
-        , '\usepackage[]{lmodern}'
-        , '\begin{document}'
-        );
 
     // Header
-    $tex[] = $head;
-
+    $tex = array( $head );
     $tex[] = '\par';
 
     // remove html formating before converting to tex.
     file_put_contents( '/tmp/abstract.html', $abstract );
     $cmd = 'python ' . __DIR__ . '/html2other.py';
     $texAbstract = `$cmd /tmp/abstract.html tex`;
+
     if( strlen(trim($texAbstract)) > 10 )
         $abstract = $texAbstract;
 
-    //$tex[] = $dateAndPlace;
-
     // Title and abstract
-    //$tex[] = '\begin{minipage}{\textwidth} \resizebox{\textwidth}{!} {';
     $tex[] = '{\large ' . $abstract . '}';
-
     $extra = '\begin{table}[ht!]';
     $extra .= '\begin{tabular}{ll}';
     $extra .= '\textbf{Supervisor(s)} & ' . implode( ",", $supervisors) . '\\\\';
@@ -112,54 +88,86 @@ function awsToTex( $aws )
     $extra .= '\end{table}';
 
     $tex[] = $extra;
-    //$tex[] = '}\end{minipage}';
-    $tex[] = '\end{document}';
     return implode( "\n", $tex );
-}
+} // Function ends.
 
-if( ! array_key_exists( 'speaker', $_GET ) )
+if( ! array_key_exists( 'date', $_GET ) )
 {
     echo printInfo( 'Invalid request' );
+    echo closePage( );
+    exit;
 }
 else 
 {
     $date = $_GET[ 'date' ];
-    $speaker = $_GET[ 'speaker' ];
-    $aws = getTableEntry( 'annual_work_seminars', 'date,speaker', $_GET );
-    // Check in upcoming aws
-    if( ! $aws )
-        $aws = getTableEntry( 'upcoming_aws', 'date,speaker', $_GET );
+    $whereExpr = "date='" . $date . "'";
+    if( array_key_exists( 'speaker', $_GET ) )
+        $whereExpr .= " AND speaker='" . $_GET[ 'speaker' ] . "'";
 
-    if( ! $aws )
-        echo printInfo( "No AWS found for speaker $speaker and date $date" );
-    else
-    {
-        $teX = awsToTex( $aws );
-        $texFileName = __DIR__ . "/data/" . $aws['speaker'] . $aws['date'] . ".tex";
-        $pdfFileUrl = __DIR__ . '/data/' . $aws[ 'speaker' ] . $aws['date'] . '.pdf';
-        $outdir = __DIR__ . "/data";
-        file_put_contents( $texFileName, $teX );
-        $res = `pdflatex --output-directory $outdir $texFileName`;
+    $awses = getTableEntries( 'annual_work_seminars', '', $whereExpr );
+    $upcomingS = getTableEntries( 'upcoming_aws', '', $whereExpr ); 
+    $awses = array_merge( $awses, $upcomingS );
+}
 
-        if( file_exists( $pdfFileUrl ) )
-        {
-            echo printInfo( "Successfully genered pdf document " . 
-               basename( $pdfFileUrl ) );
-            goToPage( 'download_pdf.php?filename=' .$pdfFileUrl, 0 );
-        }
-        else
-        {
-            echo printWarning( "Failed to genered pdf document <br>
-                This is usually due to hidden special characters 
-                in your abstract. You need to clean your entry up." );
-            echo printWarning( "Error message <small>This is only for diagnostic
-                purpose. Show it to someone who is good with LaTeX </small>" );
-            echo "<pre> $res </pre>";
-        }
+// Intialize pdf template.
+// Do not generate the preamble.
+$tex = array( "\documentclass[]{article}"
+    , "\usepackage[margin=20mm,a4paper]{geometry}"
+    , "\usepackage[]{graphicx}"
+    , "\usepackage[]{amsmath,amssymb}"
+    , "\usepackage{tikz}"
+    , "\usepackage{fontawesome}"
+    , '\usepackage{fancyhdr}'
+    , '\linespread{1.2}'
+    , '\pagestyle{fancy}'
+    , '\pagenumbering{gobble}'
+    , '\lhead{\textsc{Annual Work Seminar} }'
+    , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
+        TATA Institute of Fundamental Research, Mumbai}'
+    , '\usetikzlibrary{calc,positioning,arrows}'
+    //, '\usepackage[T1]{fontenc}'
+    , '\usepackage[utf8]{inputenc}'
+    , '\usepackage[]{lmodern}'
+    , '\begin{document}'
+    );
 
-        unlink( $texFileName );
-    }
-};
+$outfile = 'AWS_' . $date;
+foreach( $awses as $aws )
+{
+    $outfile .= '_' . $aws[ 'speaker' ];
+    $tex[] = awsToTex( $aws );
+}
+
+$tex[] = '\end{document}';
+$TeX = implode( "\n", $tex );
+//echo "<pre> $TeX </pre>";
+
+// Generate PDF now.
+$outdir = __DIR__ . "/data";
+$texFile = $outdir . '/' . $outfile . ".tex";
+$pdfFile = $outdir . '/' . $outfile . ".pdf";
+
+file_put_contents( $texFile,  $TeX );
+if( file_exists( $texFile ) )
+    $res = `pdflatex --output-directory $outdir $texFile`;
+
+if( file_exists( $pdfFile ) )
+{
+    echo printInfo( "Successfully genered pdf document " . 
+       basename( $pdfFile ) );
+    goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
+}
+else
+{
+    echo printWarning( "Failed to genered pdf document <br>
+        This is usually due to hidden special characters 
+        in your abstract. You need to clean your entry up." );
+    echo printWarning( "Error message <small>This is only for diagnostic
+        purpose. Show it to someone who is good with LaTeX </small>" );
+    echo "<pre> $res </pre>";
+}
+
+unlink( $texFile );
 
 echo "<br/>";
 echo closePage( );

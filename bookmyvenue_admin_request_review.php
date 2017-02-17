@@ -19,6 +19,13 @@ function toggleMe(source) {
 
 
 <?php
+if( ! array_key_exists( 'response', $_POST ) )
+{
+    echo printInfo( "Nothing to do here anymore" );
+    goToPage( './bookmyvenue_admin.php', 0 );
+    exit;
+}
+
 if( $_POST['response'] == "Review" )
 {
     echo '<div>';

@@ -13,6 +13,16 @@ echo alertUser( "If you can't find supervisors/TCM members in drop down menu,
     you'd have to go back and add them. The facility to do so is in your home 
     page (<tt>My Home</tt> link in top-right corner)." );
 
+echo printInfo( "<strong>DO NOT COPY/PASTE from Office/Word/Webpage/etc.</strong>
+    <p>
+    Copy/paste from many applications insert special characters which causes my 
+    system to break. If you paste from other application, select all the text and 
+    execute <strong>Format -> Clear formatting</strong> once.
+    </p>
+    " );
+
+echo "<br><br>";
+
 if( $_POST[ 'response' ] == 'update' )
 {
     $awsId = $_POST[ 'id' ];

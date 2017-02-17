@@ -9,25 +9,15 @@ include_once 'mail.php';
 
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
-function createEmailEntry( $speaker, $date )
+function notifyUserAboutUpcomingAWS( $speaker, $date )
 {
     // Now insert a entry into email database.
     $msg = getEmailTemplateById( 'aws_confirmed_notify_speaker' )[ 'description'];
     // Replace text in the template.
     $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $msg); 
     $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg ); 
-
-    // Store this to database.
-    $data = array( "recipients" => getLoginEmail( $speaker )
-        , "subject" => "We have fixed date of your next AWS"
-        , "msg" => $msg 
-        , "when_to_send" => dbDateTime( strtotime( '+1 day' ) ) 
-    );
-
-    // For debugging write to temp file.
-    file_put_contents( '/tmp/__mail_apache.html', $msg );
-    insertIntoTable( 'emails', 'recipients,subject,msg,when_to_send', $data ); 
-    return sendEmail( $data['recipients'], $data['subject'], $msg );
+    $to = getLoginEmail( $speaker ) . ',' . 'hippo@lists.ncbs.res.in';
+    return sendEmail( $to, 'ATTN! Your AWS date has been fixed', $msg );
 }
 
 if( $_POST['response'] == "Reschedule" )
@@ -53,7 +43,8 @@ else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
         if( $_POST[ 'response' ] == 'Assign' )
             rescheduleAWS( );
 
-        $res = createEmailEntry( $_POST[ 'speaker' ], $_POST[ 'date' ] );
+        // Send email to user.
+        $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ] );
         if( $res )
         {
             goToPage( "admin_aws_manages_upcoming_aws.php", 1 );

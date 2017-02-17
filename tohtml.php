@@ -229,7 +229,7 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
     else
         $background = '';
     
-    $table = "<table class=\"show_$tablename\" $background ;>";
+    $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
     $toDisplay = Array();
     $table .= "<tr>";
@@ -250,7 +250,7 @@ function arrayToTableHTML( $array, $tablename, $background = NULL, $tobefilterd 
         if( isStringAValidDate( $v ) )
             $v = humanReadableDate( $v );
 
-        $table .= "<td><div class=\"cell_content\">$v</div></td>";
+        $table .= "<td class=\"cell_content\">$v</td>";
     }
 
     $table .= "</tr></table>";
@@ -265,7 +265,7 @@ function arrayToVerticalTableHTML( $array, $tablename, $background = NULL, $tobe
     else
         $background = '';
     
-    $table = "<table class=\"show_$tablename\" $background ;>";
+    $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
     $toDisplay = Array();
     foreach( $keys as $k )
@@ -275,7 +275,7 @@ function arrayToVerticalTableHTML( $array, $tablename, $background = NULL, $tobe
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
-            $table .= "<td><div class=\"cell_content\">$array[$k]</div></td>";
+            $table .= "<td class=\"cell_content\">$array[$k]</td>";
             $table .= "</tr>";
         }
 

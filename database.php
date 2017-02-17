@@ -1320,7 +1320,7 @@ function insertIntoTable( $tablename, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( $data[$k] )
+        if( array_key_exists( $k, $data) && $data[$k] )
         {
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );

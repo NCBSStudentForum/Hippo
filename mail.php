@@ -2,36 +2,33 @@
 
 include('html2text.php');
 
-function sendEmailWithSub($msg, $sub, $to) 
+function sendEmail($msg, $sub, $to) 
 {
+    $timestamp = date( 'r', strtotime( 'now' ) );
+
     $msg .= "<p>
         This is a computer generated email, you need not reply. In case of 
         any query, please write to acadoffice@ncbs.res.in.  </p>
 
         <p>If you are not the intended recipeint of this email, please write 
         to acadoffice@ncbs.res.in . </p>
+        <br />
         ";
 
-    $msg = html2text($msg);
-    $muttfile = __DIR__ . "/muttrc";
-    $cmd="echo '$msg' | mutt -F $muttfile -s '$sub' $to";
+    $msg .= "Created on : $timestamp";
+    $msgfile = "/tmp/__msg__.html";
+
+    file_put_contents( $msgfile, $msg );
+    $to = trim( $to );
+    $cmd= __DIR__ . "/sendmail.py $to $sub $msgfile 2>&1 | tee /tmp/_sendmail.log_";
     echo( "Executing $cmd" );
-    exec( $cmd, $out);
+    $out = shell_exec( $cmd );
     return $out;
 }
 
-// function sendMail( $msg, $sub, $to )
-// {
-//     $headers[] = 'MIME-Version: 1.0';
-//     $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-// 
-//     // Additional headers
-//      $headers[] = "To: $to";
-//      $headers[] = 'From: NCBS Hippo <noreply@ncbs.res.in>';
-// 
-//      mail( $to, $sub, $msg, implode( "\r\n", $headers ) );
-// }
-
-$res = sendEmailWithSub( "testing", "Your request has been created", "dilawars@ncbs.res.in" );
+// $res = sendEmail( "testing"
+//     , "Your request has been created"
+//     , "dilawars@ncbs.res.in" 
+//     );
 
 ?>

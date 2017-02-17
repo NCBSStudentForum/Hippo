@@ -644,7 +644,7 @@ function getEventsGrouped( $sortby = NULL, $from = 'today', $status = 'VALID' )
 function getPublicEvents( $from = 'today', $status = 'VALID' )
 {
     global $db;
-    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $from = dbDate( $from );
     $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
         status=:status AND is_public_event='YES'" );
     $stmt->bindValue( ':date', $from );

@@ -65,7 +65,25 @@ else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
         }
     }
 }
-else if( $_POST[ 'response' ] == 'Clear' )
+else if( $_POST[ 'response' ] == 'update' )
+{
+    // Update the user entry
+    echo printInfo( "Admin is allowed to reformat the entry. That is why only 
+        abstract can be modified here" );
+
+    $aws = getTableEntry( 'upcoming_aws', "speaker,date", $_POST );
+    if( ! $aws )
+        echo alertUser( "Nothing to update" );
+    else
+    {
+        echo '<form method="post" action="admin_aws_manages_upcoming_aws_reformat.php">';
+        echo dbTableToHTMLTable( 'upcoming_aws', $aws, 'abstract' );
+        echo '</form>';
+    }
+}
+
+
+else if( $_POST[ 'response' ] == 'delete' )
 {
     $res = clearUpcomingAWS( $_POST[ 'speaker'], $_POST[ 'date' ] );
     if( $res )
@@ -75,6 +93,12 @@ else if( $_POST[ 'response' ] == 'Clear' )
         goToPage( "admin_aws_manages_upcoming_aws.php", 2 );
         exit;
     }
+}
+else if( $_POST[ 'response' ] == "DO_NOTHING" )
+{
+    echo printInfo( "User cancelled the previous action" );
+    goBack( );
+    exit;
 }
 else
 {

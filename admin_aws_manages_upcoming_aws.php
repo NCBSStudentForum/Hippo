@@ -68,10 +68,14 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
 
     echo '<input type="hidden", name="date" , value="' .  $upcomingAWS[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
+    echo '<input type="hidden", name="id" , value="' . $upcomingAWS[ 'id' ] . '"/>';
     echo '</td><td>';
+    echo '<button name="response" value="update">Update</button>';
+    echo "<br>";
     echo '<button name="response" value="Reassign">Reassign</button>';
-    echo "</br>";
-    echo '<button name="response" value="Clear">Clear</button>';
+    echo '<br>';
+    echo '<button onclick="AreYouSure(this)" 
+            name="response" value="delete">' . $symbCancel . '</button>';
     echo '</td></tr>';
     echo '</table>';
     echo '</form>';

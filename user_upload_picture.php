@@ -17,6 +17,12 @@ if( $_POST[ 'Response' ] == 'upload' )
 
     $tmppath = $img[ 'tmp_name' ];
 
+    if( $img['size'] > 1024 * 1024 )
+    {
+        echo printWarning( "Picture is too big. Maximum size allowed is 1MB" );
+        exit;
+    }
+
     if( ! move_uploaded_file( 
         $tmppath , sprintf( __DIR__ . '/pictures/%s', $_SESSION[ 'user' ] )
     )) {

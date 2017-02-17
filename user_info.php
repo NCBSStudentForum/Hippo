@@ -6,7 +6,6 @@ include_once( 'tohtml.php' );
 
 echo userHTML( );
 
-
 $info = getUserInfo( $_SESSION['user'] );
 
 $picPath = "./pictures/" . $_SESSION[ 'user' ] ;
@@ -30,10 +29,11 @@ echo '<table class="editable_user_picture">';
 echo '<tr><td>';
 
 if( file_exists( $picPath ) )
-    echo '<img class="login_picture" src="' . $picPath . '" >';
-else {
+    echo '<img class="login_picture" width="200px"
+        height="auto" src="' . $picPath . '" >';
+else 
+{
     echo printInfo( "I could not find your picture in my database.
-        This picture may be used in AWS notification document.
         Please upload one."
     );
 }
@@ -43,13 +43,15 @@ echo '</td><td>';
 echo '<form action="user_upload_picture.php" 
     method="post" 
     enctype="multipart/form-data">';
+
 echo '<p>
-    This picture will be used in AWS notifications. The picture will be 
-    rescaled to fit 5cm X 5cm space.  <br />
-    Please use most recent picture. Make sure picture is not too big. 
-    I will not accept any picture bigger than 5MB in size.
+    This picture will be used in AWS notifications. It will be 
+    rescaled to fit 5 cm x 5 cm space. I will not accept any picture bigger 
+    than 1MB in size.
     </p>
+    <br />
     ';
+
 echo '<input type="file" name="picture" id="picture" value="" />';
 echo '<button name="Response" value="upload">Upload</button>';
 echo '</form>';

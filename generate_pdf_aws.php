@@ -5,8 +5,17 @@ include_once 'tohtml.php';
 
 function awsToTex( $aws, $with_picture = true )
 {
+    // First sanities the html before it can be converted to pdf.
     foreach( $aws as $key => $value )
-        $aws[ $key ] = printableCharsOnly( $value );
+    {
+        // See this 
+        // http://stackoverflow.com/questions/9870974/replace-nbsp-characters-that-are-hidden-in-text
+        $value = htmlentities( $value, null, 'utf-8' );
+        $value = str_replace( '&nbsp;', '', $value );
+        $value = preg_replace( '/\s+/', ' ', $value );
+        $value = html_entity_decode( trim( $value ) );
+        $aws[ $key ] = $value;
+    }
 
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
 
@@ -137,8 +146,11 @@ else
         }
         else
         {
-            echo printWarning( "Failed to genered pdf document" );
-            echo printWarning( "Error message " );
+            echo printWarning( "Failed to genered pdf document <br>
+                This is usually due to hidden special characters 
+                in your abstract. You need to clean your entry up." );
+            echo printWarning( "Error message <small>This is only for diagnostic
+                purpose. Show it to someone who is good with LaTeX </small>" );
             echo "<pre> $res </pre>";
         }
 

@@ -13,12 +13,18 @@ $faculty = getFaculty( );
 $speakers = getTableEntries( 'speakers' );
 $logins = getTableEntries( 'logins' );
 
+//var_dump( $speakers );
+
 $speakersMap = array( );
 foreach( $speakers as $visitor )
     if( strlen( $visitor[ 'email' ] ) > 0 )
         $speakersMap[ $visitor[ 'email' ] ] = $visitor;
 
-$speakersIds = array_map( function( $x ) { return $x['email']; }, $speakers );
+// These must not have any empty string or null value else autocomplete won't 
+// work.
+$speakersIds = array_filter( 
+        array_map( function( $x ) { return $x['email']; }, $speakers )
+    );
 $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
 $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 
@@ -27,30 +33,33 @@ $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 <script type="text/javascript" charset="utf-8">
 // Autocomplete speaker.
 $( function() {
-    var speakers = <?php echo json_encode( $speakersMap ) ?>;
+    var speakersDict = <?php echo json_encode( $speakersMap ) ?>;
     var host = <?php echo json_encode( $faculty ); ?>;
     var logins = <?php echo json_encode( $logins ); ?>;
     var emails = <?php echo json_encode( $speakersIds ); ?>;
+
     $( "#talks_host" ).autocomplete( { source : host }); 
     $( "#talks_host" ).attr( "placeholder", "autocomplete" );
 
     $( "#talks_coordinator" ).autocomplete( { source : logins }); 
     $( "#talks_coordinator" ).attr( "placeholder", "autocomplete" );
 
+
     // Once email is matching we need to fill other fields.
-    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
-    $( "#speakers_email" ).autocomplete( {
-        source : emails, focus : function( ) { return false; } 
+    $( "#speakers_email" ).autocomplete( { source : emails
+        , focus : function( ) { return false; }
     }).on( 'autocompleteselect', function( e, ui ) 
         {
             var email = ui.item.value;
-            $('#speakers_first_name').val( speakers[ email ]['first_name'] );
-            $('#speakers_middle_name').val( speakers[ email ]['middle_name'] );
-            $('#speakers_last_name').val( speakers[ email ]['last_name'] );
-            $('#speakers_department').val( speakers[ email ]['department'] );
-            $('#speakers_institute').val( speakers[ email ]['institute'] );
-            $('#speakers_homepage').val( speakers[ email ]['homepage'] );
-        });
+            $('#speakers_first_name').val( speakersDict[ email ]['first_name'] );
+            $('#speakers_middle_name').val( speakersDict[ email ]['middle_name'] );
+            $('#speakers_last_name').val( speakersDict[ email ]['last_name'] );
+            $('#speakers_department').val( speakersDict[ email ]['department'] );
+            $('#speakers_institute').val( speakersDict[ email ]['institute'] );
+            $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
+        }
+    );
+    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
 });
 </script>
 

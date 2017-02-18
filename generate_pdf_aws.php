@@ -110,18 +110,18 @@ else
 }
 
 // Intialize pdf template.
-// Do not generate the preamble.
 $tex = array( "\documentclass[]{article}"
-    , "\usepackage[margin=20mm,a4paper]{geometry}"
+    , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{amsmath,amssymb}"
+    , "\usepackage[]{color}"
     , "\usepackage{tikz}"
     , "\usepackage{fontawesome}"
     , '\usepackage{fancyhdr}'
     , '\linespread{1.2}'
     , '\pagestyle{fancy}'
     , '\pagenumbering{gobble}'
-    , '\lhead{\textsc{Annual Work Seminar} }'
+    , '\lhead{\textsc{{\color{blue} Annual Work Seminar}}}'
     , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
         TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'

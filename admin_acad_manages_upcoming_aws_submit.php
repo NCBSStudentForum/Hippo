@@ -23,7 +23,7 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
 if( $_POST['response'] == "Reschedule" )
 {
     rescheduleAWS( );
-    goToPage( 'admin_aws_manages_upcoming_aws.php', 1);
+    goToPage( 'admin_acad_manages_upcoming_aws.php', 1);
     exit;
 }
 
@@ -47,7 +47,7 @@ else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
         $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ] );
         if( $res )
         {
-            goToPage( "admin_aws_manages_upcoming_aws.php", 1 );
+            goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
             exit;
         }
         else
@@ -67,7 +67,7 @@ else if( $_POST[ 'response' ] == 'format_abstract' )
         echo alertUser( "Nothing to update" );
     else
     {
-        echo '<form method="post" action="admin_aws_manages_upcoming_aws_reformat.php">';
+        echo '<form method="post" action="admin_acad_manages_upcoming_aws_reformat.php">';
         echo dbTableToHTMLTable( 'upcoming_aws', $aws, 'abstract' );
         echo '</form>';
     }
@@ -81,7 +81,7 @@ else if( $_POST[ 'response' ] == 'delete' )
     {
         rescheduleAWS( );
         echo printInfo( "Successfully cleared upcoming AWS" );
-        goToPage( "admin_aws_manages_upcoming_aws.php", 2 );
+        goToPage( "admin_acad_manages_upcoming_aws.php", 2 );
         exit;
     }
 }
@@ -96,7 +96,7 @@ else
     echo printWarning( "To Do " . $_POST[ 'response' ] );
 }
 
-echo goBackToPageLink( "admin_aws_manages_upcoming_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad_manages_upcoming_aws.php", "Go back" );
 
 ?>
 

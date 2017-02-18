@@ -19,7 +19,7 @@ if( $res )
 
     // Rerun the scheduling script every time a change is made.
     rescheduleAWS( );
-    goToPage( 'admin_aws.php', 1 );
+    goToPage( 'admin_acad.php', 1 );
     exit;
 }
 

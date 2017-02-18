@@ -14,12 +14,12 @@ if( $_POST[ 'response' ] == 'update' )
     echo alertUser( "You are updating AWS with id $awsId" );
     $aws = getUpcomingAWSById( $awsId );
 
-    echo '<form method="post" action="admin_aws_update_upcoming_aws_submit.php">';
+    echo '<form method="post" action="admin_acad_update_upcoming_aws_submit.php">';
     echo editableAWSTable( -1, $aws );
     echo '<input type="hidden", name="id" value="' . $awsId . '">';
     echo '</form>';
 }
 
-echo goBackToPageLink( 'admin_aws.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad.php', 'Go back' );
 
 ?>

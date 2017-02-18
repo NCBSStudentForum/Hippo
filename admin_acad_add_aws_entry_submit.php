@@ -24,7 +24,7 @@ if( $_POST[ 'response' ] == 'submit' )
         if( $res )
         {
             echo printInfo( "Successfully added new AWS entry" );
-            echo goToPage( "admin_aws.php",  1 );
+            echo goToPage( "admin_acad.php",  1 );
             exit;
         }
         else
@@ -32,7 +32,7 @@ if( $_POST[ 'response' ] == 'submit' )
     }
 }
 
-echo goBackToPageLink( "admin_aws_add_aws_entry.php", "Go back" );
+echo goBackToPageLink( "admin_acad_add_aws_entry.php", "Go back" );
 
 
 ?>

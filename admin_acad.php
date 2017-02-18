@@ -35,15 +35,15 @@ echo '<table class="admin">';
 echo '
     <tr>
         <td>Manage pending requests</td>
-        <td> <a href="admin_aws_manages_requests.php">Manage ' . count( $pendingRequests) . 
+        <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) . 
             ' pending requests</a> </td>
     </tr><tr>
         <td>Add AWS entry</td>
-        <td> <a href="admin_aws_add_aws_entry.php">Add AWS entry</td>
+        <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
     </tr>
     </tr><tr>
         <td>Generate emails and documents</td>
-        <td> <a href="admin_aws_email_and_docs.php">Emails and Documents</td>
+        <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
     ';
 echo '</table>';
@@ -54,7 +54,7 @@ echo '
   <table border="0" class="admin">
     <tr>
       <td>Manage upcoming AWS</td>
-      <td><a href="admin_aws_manages_upcoming_aws.php">Manage
+      <td><a href="admin_acad_manages_upcoming_aws.php">Manage
       upcoming AWSes</a></td>
     </tr>
   </table>';
@@ -67,7 +67,7 @@ echo '
         <small>Type a login name and press the button.</small>
     </td>
         <td>
-            <form method="post" action="admin_aws_update_user.php">
+            <form method="post" action="admin_acad_update_user.php">
             <input id="autocomplete_user" name="login" 
                 placeholder="I will autocomplete " >
             <button 
@@ -110,7 +110,7 @@ if( isset( $_POST[ 'response' ] ))
         if( $res )
         {
             echo printInfo( "Successfully deleted" );
-            goToPage( 'admin_aws.php', 0);
+            goToPage( 'admin_acad.php', 0);
             exit;
         }
     }
@@ -156,8 +156,8 @@ echo '
     </small>
     </td>
 
-      <td><a href="admin_aws_summary_user_wise.php">User wise</a>
-      || <a href="admin_aws_summary_date_wise.php">Date
+      <td><a href="admin_acad_summary_user_wise.php">User wise</a>
+      || <a href="admin_acad_summary_date_wise.php">Date
       wise</a></td>
     </tr>
 
@@ -175,7 +175,7 @@ else
         likely these entries have no data. You need to fix them. " 
     );
 
-    echo '<form action="./admin_aws_update_upcoming_aws.php" method="post">';
+    echo '<form action="./admin_acad_update_upcoming_aws.php" method="post">';
     foreach( $badEntries as $aws )
     {
         echo alertUser( "This AWS is incomplete." );
@@ -185,6 +185,8 @@ else
     }
     echo '</form>';
 }
+
+echo goBackToPageLink( 'user.php', 'Go back' );
     
 
 ?>

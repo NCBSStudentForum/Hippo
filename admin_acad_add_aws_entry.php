@@ -24,7 +24,7 @@ $(function() {
 // We are using a generic function to create table. We need to add user name as  
 // well.
 
-echo '<form method="post" action="admin_aws_add_aws_entry_submit.php"> ';
+echo '<form method="post" action="admin_acad_add_aws_entry_submit.php"> ';
 echo '
     <table>
     <tr>
@@ -38,7 +38,7 @@ echo '<br />';
 echo editableAWSTable( );
 echo '</form>';
 
-echo goBackToPageLink( 'admin_aws.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad.php', 'Go back' );
 exit(0);
 
 ?>

@@ -94,7 +94,7 @@ if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )
     echo "TODO: Allow admin to send email";
 }
 
-echo goBackToPageLink( "admin_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 
 ?>

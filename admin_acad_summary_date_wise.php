@@ -111,7 +111,7 @@ foreach( $datewiseAWS as $date => $awses )
         $table .= "<td> $column";
 
         /* NOONE but speaker should be able to edit his/her AWS.
-        $table .= '<form action="admin_aws_edit.php" method="post" accept-charset="utf-8">
+        $table .= '<form action="admin_acad_edit.php" method="post" accept-charset="utf-8">
                 <input type="hidden" name="speaker" value="' . $speaker . '"/>
                 <input type="hidden" name="date" value="' . $aws['date'] . '" />
                 <button name="response">Edit</button>
@@ -126,6 +126,6 @@ foreach( $datewiseAWS as $date => $awses )
 $table .= "</table>";
 echo $table;
 
-echo goBackToPageLink( "admin_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 ?>

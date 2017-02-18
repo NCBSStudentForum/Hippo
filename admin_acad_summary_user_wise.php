@@ -99,6 +99,6 @@ foreach( $awsGroupedBySpeaker as $speaker => $awses )
 $table .= "</table>";
 echo $table;
 
-echo goBackToPageLink( "admin_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 ?>

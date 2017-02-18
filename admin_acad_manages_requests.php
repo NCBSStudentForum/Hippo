@@ -24,7 +24,7 @@ foreach( $pendingRequests as $req )
                 $diff[ $key ] = Diff::compare( $aws[$key], $req[$key] );
     }
 
-    echo '<form method="post" action="admin_aws_manages_requests_submit.php">';
+    echo '<form method="post" action="admin_acad_manages_requests_submit.php">';
     echo arrayToVerticalTableHTML( $req, 'aws', ''
         , array( 'id', 'status', 'modified_on' ) 
     );
@@ -53,7 +53,7 @@ foreach( $pendingRequests as $req )
         ';
 }
 
-echo goBackToPageLink( "admin_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 ?>
 

@@ -12,7 +12,7 @@ echo userHTML( );
 if( ! array_key_exists( 'login', $_POST ) )
 {
     echo printInfo( "You didn't select anyone. Going back ... " );
-    goToPage( 'admin_aws.php', 1 );
+    goToPage( 'admin_acad.php', 1 );
     exit;
 }
 
@@ -26,12 +26,12 @@ if( ! $default )
         echo printWarning( 
             "Invalid username. I did not find anyone named " .
             $_POST[ 'login' ] . " on LDAP server" );
-        echo goBackToPageLink( 'admin_aws.php', 'Go back' );
+        echo goBackToPageLink( 'admin_acad.php', 'Go back' );
         exit;
     }
 }
 
-echo '<form method="post" action="admin_aws_update_user_submit.php">';
+echo '<form method="post" action="admin_acad_update_user_submit.php">';
 echo dbTableToHTMLTable(
     'logins', $default
     , Array( 'status', 'title', 'eligible_for_aws', 'joined_on' ) 
@@ -39,6 +39,6 @@ echo dbTableToHTMLTable(
     );
 echo '</form>';
 
-echo goBackToPageLink( 'admin_aws.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad.php', 'Go back' );
 
 ?>

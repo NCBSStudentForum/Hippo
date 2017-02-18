@@ -97,7 +97,7 @@ echo dbTableToHTMLTable( 'speakers', $speaker
     );
 echo "<h3>Talk information</h3>" ;
 echo dbTableToHTMLTable( 'talks', $talk
-    , 'host,coordinator,title,description'
+    , 'class,host,coordinator,title,description'
     , ''
     , $hide = 'id,speaker,status'
     );

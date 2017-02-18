@@ -21,7 +21,6 @@ if(!$conn)
     echo printErrorSevere("FATAL : Username or password is incorrect.");
     goToPage( 'index.php', 2 );
 }
-
 else 
 {
     echo printInfo( "Login successful" );

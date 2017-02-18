@@ -103,7 +103,10 @@ function initialize( )
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS talks 
         ( id INT NOT NULL AUTO_INCREMENT
-            , class ENUM("TALK", "THESIS_SEMINAR", "LECTURE") DEFAULT "TALK"
+            -- This will be prefixed in title of event. e.g. Thesis Seminar by
+            -- , Public Lecture by, seminar by etc.
+            , class ENUM("TALK", "SEMINAR", "THESIS_SEMINAR", "LECTURE"
+                , "INFORMAL_TALK", "PUBLIC_LECTURE" ) NOT NULL DEFAULT "TALK"
             , speaker VARCHAR(100) NOT NULL
             , host VARCHAR(100) NOT NULL
             , coordinator VARCHAR(100)

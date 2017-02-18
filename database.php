@@ -192,9 +192,10 @@ function initialize( )
             -- Sub event will be parent.children format. 
             gid INT NOT NULL -- This is group id of events.
             , eid INT NOT NULL -- This is event id in that group.
-            -- If details of this event are also stored in some other table, use 
-            -- this field. Format tablename.id e.g. talks and aws can be referred 
-            -- to here.
+            -- If some details of this event are stored in some other table, use 
+            -- this field. Value of this field is formatted as tablename.id e.g. 
+            -- talks and aws can be referred as talks.3 and annual_work_seminars.5 
+            -- here.
             , external_id VARCHAR(50) 
             -- If yes, this entry will be put on google calendar.
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO' 
@@ -217,7 +218,7 @@ function initialize( )
             , last_modified_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             , PRIMARY KEY ( gid, eid )
             , UNIQUE KEY (gid,eid,external_id)
-            , FOREIGN KEY (venue) REFERENCES venues(id)
+            -- , FOREIGN KEY (venue) REFERENCES venues(id)
             )"
         );
             
@@ -1344,7 +1345,19 @@ function insertIntoTable( $tablename, $keys, $data )
 
         $stmt->bindValue( ":$k", $value );
     }
-    $res = $stmt->execute( );
+
+    try 
+    {
+        $res = $stmt->execute( );
+    } 
+    catch (Exception $e )
+    {
+        echo minionEmbarrassed(
+            "I failed to update my database. Error was " . $e->getMessage( ) );
+        return null;
+    }
+
+
     if( $res )
     {
         // When created return the id of table else return null;

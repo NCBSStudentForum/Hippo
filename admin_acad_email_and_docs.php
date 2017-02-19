@@ -81,30 +81,25 @@ if( $default[ 'task' ] == 'This week AWS' )
     }
 
     $filename .= '.txt';
-    $template = getEmailTemplateById( 'aws_template' )['description'];
-    if( ! $template )
-    {
-        echo alertUser( "No template found with id: aws_template. I won't 
-            be able to generate email"
-        );
-    } 
-    else 
-    {
-        $template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
-            , $template ); 
-        $template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
 
-        $md = html2Markdown( $template );
-        // Save the file and let the admin download it.
-        file_put_contents( __DIR__ . "/data/$filename", $md);
-        echo "<br><br>";
-        echo '<table style="width:500px;border:1px solid"><tr><td>';
-        echo downloadTextFile( $filename, 'Download mail' );
-        echo "</td><td>";
-        echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
-        echo "</td></tr>";
-        echo '</table>';
-    }
+    $macros = array( 
+        'DATE' => humanReadableDate( $awses[0]['date'] ) 
+        ,  'EMAIL_BODY' => $emailHtml
+        );
+
+    $email = emailFromTemplate( 'aws_template', $macros );
+    $md = html2Markdown( $emails );
+
+    // Save the file and let the admin download it.
+    file_put_contents( __DIR__ . "/data/$filename", $md);
+    echo "<br><br>";
+    echo '<table style="width:500px;border:1px solid"><tr><td>';
+    echo downloadTextFile( $filename, 'Download mail' );
+    echo "</td><td>";
+    echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
+    echo "</td></tr>";
+    echo '</table>';
+
 } // This week AWS is over here.
 
 // Only if the AWS date in future/today, allow admin to send emails.

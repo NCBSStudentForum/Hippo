@@ -186,6 +186,7 @@ else
     echo '</form>';
 }
     
+echo goBackToPageLink( "user.php", "Go back" );
 
 ?>
 

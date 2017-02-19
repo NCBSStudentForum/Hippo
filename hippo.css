@@ -5,10 +5,10 @@
     min-width : 100%;
 }
 
-:root { --background : ivory }
+:root { --background : ivory; --maxwidth : 800px }
 
 body {
-    max-width : 1000px;
+    max-width : vars(--maxwidth);
     min-width : 100%;
 }
 
@@ -21,33 +21,20 @@ pre {
 }
 
 input.long {
-    min-width: 500px;
-    max-width: 100%;
+    min-width: 80%;
+    max-width: 500px;
 }
 
 
 // img.login_picture and table.editable_user_picture should co-exists.
 img.login_picture {
-    width : 20%;
     height : auto;
     max-height : 300px;
 }
 
-table.editable_user_picture 
-{
-    min-width : 500px;
-    max-width : 70%;
-}
-
-table.editable_user_picture tr td {
-    text-align: left;
-    background-color: var(--background);
-    word-wrap: break-word;
-    max-width : 80%;
-}
 
 div.header {
-    max-width : 800px;
+    max-width : vars(--maxwidth);
 }
 
 div.bottom {
@@ -71,7 +58,7 @@ table.user_float {
 }
 
 table.show_user {
-    max-width : 800px;
+    max-width : vars(--maxwidth);
     min-width : 100%;
 }
 
@@ -83,7 +70,7 @@ table.show_user tr td
 }
 
 table.show_info {
-    max-width : 800px;
+    max-width : vars(--maxwidth);
     min-width : 90%;
     border: 1px solid;
     background : cyan;
@@ -100,7 +87,7 @@ table.show_speaker tr td  {
 
 
 table.show_aws {
-    max-width : 800px;
+    max-width : vars(--maxwidth);
     min-width : 100%;
 }
 
@@ -114,7 +101,7 @@ table.show_aws tr td
 }
 
 table.show_calendar {
-    max-width : 800px;
+    max-width : vars(--maxwidth);
     min-width : 100%;
     background : var(--background);
     margin: 20px;
@@ -170,7 +157,7 @@ table.tasks tr td
 
 div.info {
     /*border : 1px solid #73AD21;*/
-    max-width : 800px;
+    max-width : vars(--maxwidth);
 }
 
 button {
@@ -240,7 +227,7 @@ table.input {
     text-align : left;
     background-color:var(--background); 
     min-width : 400px;
-    max-width : 800px; 
+    max-width : vars(--maxwidth); 
 }
 
 table.input tr td:nth-child(odd) {
@@ -313,15 +300,14 @@ table.event_sticker tr td
 }
 
 table.editable_logins {
-    min-width: 300px;
-    max-width: 80%;
+    min-width: 80%;
+    max-width: vars(--maxwidth);
 }
 
 table.editable_logins tr td {
     text-align: left;
     background-color: var(--background);
     word-wrap: break-word;
-    max-width : 70%;
 }
 
 table.editable_faculty {
@@ -428,7 +414,7 @@ p.note_to_user {
 
 div.alert_user {
    font-size : large;
-   max-width : 800px;
+   max-width : vars(--maxwidth);
    min-width : 100%;
    padding-bottom : 10px;
    background: white;

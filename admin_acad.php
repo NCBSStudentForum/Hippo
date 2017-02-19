@@ -184,8 +184,6 @@ else
 }
 
 echo goBackToPageLink( 'user.php', 'Go back' );
-    
-echo goBackToPageLink( "user.php", "Go back" );
 
 ?>
 

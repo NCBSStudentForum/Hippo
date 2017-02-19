@@ -83,7 +83,7 @@ echo '
     </tr>
     <tr>
         <td>End time </td>
-        <td><input type="text" class="timepicker" name="end_time" 
+        <td><input type="time" class="timepicker" name="end_time" 
             value="' . $defaults[ 'end_time'] . '" /> </td>
     </tr>
     <tr>

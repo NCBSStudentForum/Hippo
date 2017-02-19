@@ -37,13 +37,18 @@ $msg = verifyRequest( $_POST );
 
 if( $msg == "OK" )
 {
-    // Generate repeat pattern from days, week and month repeat patter.
-    $repeatPat = constructRepeatPattern( 
-        $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
-    );
+    // Generate repeat pattern from days, week and month repeat patter. If we 
+    // are coming here from quickbook.php, it may not be here.
+    if( array_key_exists( 'day_pattern', $_POST )
+    {
+        $repeatPat = constructRepeatPattern( 
+            $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
+            );
 
-    echo "<pre>Repeat pattern $repeatPat </pre>";
-    $_POST['repeat_pat']  = $repeatPat;
+        echo "<pre>Repeat pattern $repeatPat </pre>";
+        $_POST['repeat_pat']  = $repeatPat;
+    }
+
     $gid = submitRequest( $_POST );
 
     // Unset POST here so refresh page does not cause creation of another 
@@ -73,8 +78,8 @@ if( $msg == "OK" )
             , 'hippo@lists.ncbs.res.in'
             );
 
-        goToPage( "user.php", 1 );
-        exit;
+        //goToPage( "user.php", 1 );
+        //exit;
     }
     else
     {

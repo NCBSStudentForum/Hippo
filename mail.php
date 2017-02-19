@@ -4,6 +4,9 @@ include_once 'database.php';
 
 function sendEmail($msg, $sub, $to) 
 {
+    if( $_SESSION[ 'conf' ]['global']['send_email' ] == false )
+        return;
+
     $timestamp = date( 'r', strtotime( 'now' ) );
 
     $msg .= "

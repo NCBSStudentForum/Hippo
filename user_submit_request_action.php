@@ -39,7 +39,7 @@ if( $msg == "OK" )
 {
     // Generate repeat pattern from days, week and month repeat patter. If we 
     // are coming here from quickbook.php, it may not be here.
-    if( array_key_exists( 'day_pattern', $_POST )
+    if( array_key_exists( 'day_pattern', $_POST ) )
     {
         $repeatPat = constructRepeatPattern( 
             $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']

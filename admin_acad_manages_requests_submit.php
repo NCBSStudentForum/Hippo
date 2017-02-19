@@ -27,7 +27,7 @@ if( $_POST[ 'response' ] == 'Reject' )
             A request can not rejected without a proper reason.
             You must enter a valid reason."
         );
-        echo goBackToPageLink( "admin_aws_manages_requests.php", "Go back" );
+        echo goBackToPageLink( "admin_acad_manages_requests.php", "Go back" );
         exit;
     }
 
@@ -55,7 +55,7 @@ if( $_POST[ 'response' ] == 'Reject' )
             , $speakerInfo[ 'email' ]
         );
 
-        goToPage( "admin_aws_manages_requests.php", 1 );
+        goToPage( "admin_acad_manages_requests.php", 1 );
         exit;
     }
 }
@@ -98,7 +98,7 @@ elseif( $_POST['response'] == 'Accept' )
                 , $speakerInfo['email' ]
             );
             
-            echo goToPage( 'admin_aws_manages_requests.php', 1 );
+            echo goToPage( 'admin_acad_manages_requests.php', 1 );
             exit;
         }
     }
@@ -110,6 +110,6 @@ else
     echo printWarning( "Unknown request " . $_POST[ 'response' ] );
 }
 
-echo goBackToPageLink( "admin_aws_manages_requests.php", "Go back" );
+echo goBackToPageLink( "admin_acad_manages_requests.php", "Go back" );
 
 ?>

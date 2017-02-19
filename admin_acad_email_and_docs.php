@@ -5,7 +5,6 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'check_access_permissions.php';
-
 mustHaveAllOfTheseRoles( array('AWS_ADMIN' ) );
 
 ?>
@@ -19,8 +18,50 @@ function ShowPlainEmail( button )
 }
 </script>
 
+<script type="text/javascript">
+$(document).ready( function( ) {
+    var sel = $("#select_tasks");
+    sel.data( "prev", sel.val() );
+
+    sel.change( function( data ) {
+        var jqThis = $(this);
+        console.log( jqThis );
+        alert.window( "Howdy" );
+    });
+});
+</script>
 
 <?php
+
+/* Admin select the class of emails she needs to prepare. We remain on the same 
+ * page for these tasks.
+ */
+
+$default = array( "task" => "upcoming_aws", "date" => dbDate( 'this monday' ) );
+echo '
+    <form method="post" action="">
+    <select name="task" id="select_tasks">
+        <option value="upcoming_aws" selected>Upcoming AWS this week</option>
+        <option value="upcoming_events_week">Upcoming Events this week</option>
+        <option value="upcoming_events_today">Upcoming Events this day</option>
+    </select>
+    <input type="text" class="datepicker" placeholder = "Select date" 
+        title="Select date" value="' . $default[ 'date' ] . '" > 
+    <button type="submit" name="response" title="select">' . $symbSubmit . '</button>
+    </form>
+    ';
+
+if( array_key_exists( 'response', $_POST ) )
+{
+    foreach( $_POST as  $k => $v )
+        $default[ $k ] = $v;
+
+}
+
+print_r( $default );
+
+exit;
+
 
 $today = dbDate( 'next monday' );
 
@@ -94,7 +135,7 @@ if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )
     echo "TODO: Allow admin to send email";
 }
 
-echo goBackToPageLink( "admin_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 
 ?>

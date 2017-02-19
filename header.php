@@ -125,5 +125,6 @@ $symbReview = "&#128065";
 $symbUpload = "&#8682";
 $symbWarn = "&#9888";
 $symbCheck = "&#10003";
+$symbSubmit = $symbCheck;
 
 ?>

@@ -21,9 +21,9 @@ function sendEmail($msg, $sub, $to)
     file_put_contents( $msgfile, $msg );
     $to = trim( $to );
 
-    $cmd= __DIR__ . "/sendmail.py '$to' '$sub' '$msgfile' ";
+    $cmd= __DIR__ . "/sendmail.py \"$to\" \"$sub\" \"$msgfile\"";
     $out = exec( $cmd, $output, $ret );
-    //unlink( $msgfile );
+    unlink( $msgfile );
     return $ret;
 }
 

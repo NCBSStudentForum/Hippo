@@ -8,20 +8,26 @@ include_once 'tohtml.php';
 
 echo userHTML( );
 
-echo "<h3>You are updating your upcoming AWS </h3>";
-echo alertUser( "If you can't find supervisors/TCM members in drop down menu,
+echo "<h2>You are updating your upcoming AWS </h2>";
+
+echo alertUser( "If you can't find supervisors/TCM members in drop down list,
     you'd have to go back and add them. The facility to do so is in your home 
     page (<tt>My Home</tt> link in top-right corner)." );
 
-echo printInfo( "<strong>DO NOT COPY/PASTE from Office/Word/Webpage/etc.</strong>
+echo printInfo( 
+    '<strong>DO NOT COPY/PASTE from Office/Word/Webpage/etc.</strong>' 
+    );
+echo '
     <p>
-    Copy/paste from many applications insert special characters which causes my 
-    system to break. If you paste from other application, select all the text and 
-    execute <strong>Format -> Clear formatting</strong> once.
+    Copy/paste usually inserts special characters; they can break my PDF convertor.
+    If you paste from other application, be sure to ckick on <tt>Tools -> Source 
+    code</tt> in editor below to see what has been pasted. Remove as much formatting 
+    as you can. Ideally, you should paste plain text and format it to your heart 
+    desire.
     </p>
-    " );
+    ' ;
 
-echo "<br><br>";
+echo "<br>";
 
 if( $_POST[ 'response' ] == 'update' )
 {

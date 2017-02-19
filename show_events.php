@@ -5,7 +5,7 @@ include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
 
-// This page displays all events on campus.
+// This page displays all events on campus. Select all venues.
 $venues = getVenues( $sortby = 'id' );
 $venuesDict = array( );
 foreach( $venues as $v )
@@ -23,16 +23,10 @@ if( array_key_exists( 'date', $_GET ) )
 if( array_key_exists( 'venues', $_GET ) )
     $defaults[ 'venues' ] = implode( ',', $_GET[ 'venues' ] );
 
-$venueSelect = venuesToHTMLSelect( $venues
-    , $ismultiple = true
-    , $selectName = 'venues'
-    , $preSelected = explode( ',', $defaults['venues' ] )
-    );
 
 echo '<form action="" method="get" accept-charset="utf-8">
     <table class="info">
     <tr>
-        <td> ' . $venueSelect . ' </td>
         <td> <input type="date" class="datepicker" name="date" value="' . 
             $defaults[ 'date' ] . '" /> </td>
             <td> <button name="response" value="' . $defaults[ 'venues' ] . 
@@ -51,11 +45,11 @@ foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
         continue;
 
     echo venueToText( $venuesDict[ $venueId ] );
-    echo '<table style="border:1px dotted">';
+    echo '<table>';
     echo '<tr>';
     foreach( $events as $ev )
     {
-        echo "<td style=\"width:100px;\">";
+        echo "<td style=\"min-width:150px;max-width:300px;border:1px dotted;\">";
         echo eventToHTML( $ev );
         echo "</td>";
     }

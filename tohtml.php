@@ -134,12 +134,13 @@ function eventToText( $event )
 
 function eventToHTML( $event )
 {
-    $html = 'By <strong>' . $event['created_by'] . '</strong><br/>';
-    $html .= '<tt>';
-    $html .= __get__( $event, 'title', '' );
-    $html .= ' </tt> <br />@ <strong>' . $event['venue'] . ', ';
-    $html .= $event['start_time'] . '</strong> to </strong><strong>' . 
-        $event['end_time'] . "</strong>";
+    $startT = date( 'H:i', strtotime( $event[ 'start_time' ] ) );
+    $endT = date( 'H:i', strtotime( $event[ 'end_time' ] ) );
+
+    $html = '<tt>' .  __get__( $event, 'title', '' ) . '</tt>';
+    $html .= '<br>' . $startT . ' to ' . $endT;
+    $html .= ' </tt> @ ' . $event['venue'] . ', ';
+    $html .= '</br><small>Booked by ' . $event['created_by'] . '</small><br/>';
     return $html;
 }
 

@@ -22,7 +22,7 @@ from logger import _logger
 
 config = ConfigParser.ConfigParser( )
 thisdir = os.path.dirname( os.path.realpath( __file__ ) )
-config.read( os.path.join( '/etc', 'hippo', 'hipporc' ) )
+config.read( os.path.join( '/etc', 'hipporc' ) )
 _logger.debug( 'Read config file %s' % str( config ) )
 
 class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):

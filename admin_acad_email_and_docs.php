@@ -5,7 +5,10 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'check_access_permissions.php';
+
 mustHaveAllOfTheseRoles( array('AWS_ADMIN' ) );
+
+echo userHTML( );
 
 ?>
 
@@ -20,14 +23,7 @@ function ShowPlainEmail( button )
 
 <script type="text/javascript">
 $(document).ready( function( ) {
-    var sel = $("#select_tasks");
-    sel.data( "prev", sel.val() );
 
-    sel.change( function( data ) {
-        var jqThis = $(this);
-        console.log( jqThis );
-        alert.window( "Howdy" );
-    });
 });
 </script>
 
@@ -38,12 +34,26 @@ $(document).ready( function( ) {
  */
 
 $default = array( "task" => "upcoming_aws", "date" => dbDate( 'this monday' ) );
+$options = array( 'This week AWS', 'This week events', 'Today\'s events' );
+
+// Logic to keep the previous selected entry selected.
+if( array_key_exists( 'response', $_POST ) )
+{
+    foreach( $_POST as  $k => $v )
+    {
+        $default[ $k ] = $v;
+        if( $k == 'task' )
+            $default[ $_POST[ $k ] ] = 'selected';
+    }
+}
+
+// Construct user interface.
 echo '
-    <form method="post" action="">
-    <select name="task" id="select_tasks">
-        <option value="upcoming_aws" selected>Upcoming AWS this week</option>
-        <option value="upcoming_events_week">Upcoming Events this week</option>
-        <option value="upcoming_events_today">Upcoming Events this day</option>
+    <form method="post" action=""> <select name="task" id="list_of_tasks">';
+foreach( $options as $val )
+    echo "<option value=\"$val\" " . __get__( $default, $val, '') . 
+        "> $val </option>";
+echo '
     </select>
     <input type="text" class="datepicker" placeholder = "Select date" 
         title="Select date" value="' . $default[ 'date' ] . '" > 
@@ -51,83 +61,51 @@ echo '
     </form>
     ';
 
-if( array_key_exists( 'response', $_POST ) )
+if( $default[ 'task' ] == 'This week AWS' )
 {
-    foreach( $_POST as  $k => $v )
-        $default[ $k ] = $v;
+    $whichDay = $default[ 'date' ];
+    $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
+    $upcoming = getTableEntries( 'upcoming_aws', 'date' , "date='$whichDay'" );
+    $awses = array_merge( $awses, $upcoming );
+    $emailHtml = '';
 
-}
+    $filename = "AWS_" . $whichDay;
+    foreach( $awses as $aws )
+    {
 
-print_r( $default );
+        echo awsToTable( $aws, $with_picture = true );
+        $emailHtml .= awsToTable( $aws, false );
+        // Link to pdf file.
+        echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
+        $filename .= '_' . $aws[ 'speaker' ];
+    }
 
-exit;
+    $filename .= '.txt';
+    $template = getEmailTemplateById( 'aws_template' )['description'];
+    if( ! $template )
+    {
+        echo alertUser( "No template found with id: aws_template. I won't 
+            be able to generate email"
+        );
+    } 
+    else 
+    {
+        $template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
+            , $template ); 
+        $template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
 
-
-$today = dbDate( 'next monday' );
-
-if( array_key_exists( 'date', $_POST ) )
-    $default[ 'date' ] = $_POST[  'date' ];
-else
-    $default = array( 'date' => $today );
-
-echo '
-    <form method="post" action="">
-    <table border="0">
-        <tr>
-            <td>Select date</td>
-            <td><input class="datepicker" type="text" name="date" value="' . 
-                    $default[ 'date' ] . '" ></td>
-            <td><button type="submit" name="response" value="scan">' . 
-                $symbScan . '</button></td>
-        </tr>
-    </table>
-    </form>
-    ';
-
-$whichDay = $default[ 'date' ];
-
-$awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
-$upcoming = getTableEntries( 'upcoming_aws', 'date' , "date='$whichDay'" );
-$awses = array_merge( $awses, $upcoming );
-
-$emailHtml = '';
-
-$filename = "AWS_" . $whichDay;
-foreach( $awses as $aws )
-{
-
-    echo awsToTable( $aws, $with_picture = true );
-    $emailHtml .= awsToTable( $aws, false );
-    // Link to pdf file.
-    echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
-    $filename .= '_' . $aws[ 'speaker' ];
-}
-
-$filename .= '.txt';
-$template = getEmailTemplateById( 'aws_template' )['description'];
-if( ! $template )
-{
-    echo alertUser( "No template found with id: aws_template. I won't 
-        be able to generate email"
-    );
-} 
-else 
-{
-    $template = str_replace( '@DATE@', humanReadableDate( $awses[0]['date'] ) 
-        , $template ); 
-    $template = str_replace( '@EMAIL_BODY@', $emailHtml, $template ); 
-
-    $md = html2Markdown( $template );
-    // Save the file and let the admin download it.
-    file_put_contents( __DIR__ . "/data/$filename", $md);
-    echo "<br><br>";
-    echo '<table style="width:500px;border:1px solid"><tr><td>';
-    echo downloadTextFile( $filename, 'Download mail' );
-    echo "</td><td>";
-    echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
-    echo "</td></tr>";
-    echo '</table>';
-}
+        $md = html2Markdown( $template );
+        // Save the file and let the admin download it.
+        file_put_contents( __DIR__ . "/data/$filename", $md);
+        echo "<br><br>";
+        echo '<table style="width:500px;border:1px solid"><tr><td>';
+        echo downloadTextFile( $filename, 'Download mail' );
+        echo "</td><td>";
+        echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
+        echo "</td></tr>";
+        echo '</table>';
+    }
+} // This week AWS is over here.
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

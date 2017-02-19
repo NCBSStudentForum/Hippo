@@ -35,7 +35,7 @@ echo "<h2>Hello admin</h2>";
 
 
 echo '<h3>User management</h3>';
-echo "<table class=\"show_user\">";
+echo "<table class=\"admin\">";
 echo '
     <tr>
     <td>Add, Update or Delete user <br>
@@ -60,31 +60,30 @@ echo "</table>";
 
 echo '<h3>Email management</h3>';
 echo '
-    <table class="show_user">
-        <tr>
+    <table class="admin">
+    <tr>
         <td>
         You can see scheduled emails, canncel them or if neccessary
         , send them right away.
         </td>
-            <td>
-                <a href="admin_manages_email.php">Manage emails</a>
-            </td>
-        </tr>
-        <tr>
-            <td>Manage email templates</td>
-            <td>
-                <a href="admin_manages_email_templates.php">Manage Email template</a>
-            </td>
-        </tr>
+        <td>
+            <a href="admin_manages_email.php">Manage emails</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Manage email templates</td>
+        <td>
+            <a href="admin_manages_email_templates.php">Manage Email template</a>
+        </td>
+    </tr>
     </table>
     ';
-
 
 
 echo "<h3>Database management </h3>";
 
 echo '
-    <table class="show_user">
+    <table class="admin">
         <tr>
             <td>Add/Update faculty</td>
             <td>

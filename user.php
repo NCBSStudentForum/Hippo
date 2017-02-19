@@ -22,35 +22,41 @@ $html .= '
    </table>';
 echo $html;
 
-echo '<h3>Annual Work Seminars</h3>';
-$html = '<div class="tasks"><table class="tasks">';
-$html .= '
-    <tr>
-    <td>
-        Add/update your TCM members and supervisors. <br/>
-        <small>
-        You should do it before doing anything else with your AWS entries. 
-        Better you visit this link to see if everyone your AWS requires is in my 
-        database.</small>
+// Only show this section if user is eligible for AWS.
+$userInfo = getLoginInfo( $_SESSION[ 'user' ] );
+if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
+{
+    echo '<h3>Annual Work Seminars</h3>';
+    $html = '<div class="tasks"><table class="tasks">';
+    $html .= '
+        <tr>
+        <td>
+            Add/update your TCM members and supervisors. <br/>
+            <small>
+            You should do it before doing anything else with your AWS entries. 
+            Better you visit this link to see if everyone your AWS requires is in my 
+            database.</small>
+            </td>
+          <td> 
+             <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a> 
+          </td>
+        </tr>
+        <tr>
+        <td>
+            Annual Work Seminar <br>
+            <small> You can see your previous AWS, and check the details about upcoming 
+            AWS.  </small>
         </td>
-      <td> 
-         <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a> 
-      </td>
-    </tr>
-    <tr>
-    <td>
-        Annual Work Seminar <br>
-        <small> You can see your previous AWS, and check the details about upcoming 
-        AWS.  </small>
-    </td>
-      <td> 
-         <a href="user_aws.php">My AWS</a> 
-      </td>
-    </tr>
-    ';
+          <td> 
+             <a href="user_aws.php">My AWS</a> 
+          </td>
+        </tr>
+        ';
 
-$html .= "</table></div>";
-echo $html;
+    $html .= "</table></div>";
+    echo $html;
+}
+
 
 echo '<h3>BookMyVenue</h3>';
 

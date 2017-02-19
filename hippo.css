@@ -26,7 +26,6 @@ input.long {
 }
 
 
-// img.login_picture and table.editable_user_picture should co-exists.
 img.login_picture {
     height : auto;
     max-height : 300px;
@@ -220,8 +219,6 @@ button.submit {
     float : right;
     left-margin : 100%;
 }
-
-
 
 table.input {
     text-align : left;
@@ -445,6 +442,13 @@ table.index {
 table.index tr td {
     valign : top;
     min-width : 250px;
+}
+
+table.repeat_pat {
+    background-color : vars(--background );
+    border: 1px dotted;
+    min-width: 500px;
+    max-width : vars(--maxwidth);
 }
 
 /* SELECT 

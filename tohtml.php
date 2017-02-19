@@ -931,4 +931,38 @@ function downloadTextFile( $filename, $msg = 'Download file' )
     return $url;
 }
 
+
+/**
+    * @brief Generate a two column table for user to fill-in.
+    *
+    * @return 
+ */
+function repeatPatternTable( $className )
+{
+    $html = '<table class="' . $className . '">';
+    $html .= '<tr>
+              <td>Repeat pattern (optional) <br>
+                 <p class="note_to_user"> Valid for maximum of 6 months </p>
+              </td> 
+              <td> 
+                <table border="0">
+                <tr>
+                    <td> Every </td>
+                    <td> <input type="text" name="day_pattern" placeholder="Sun,Mon"/ > day </td>
+                </tr><tr>
+                    <td> Every </td>
+                    <td> <input type="text" name="week_pattern" placeholder="first,second"/> week </td>
+                </tr>
+                <tr>
+                    <td>For </td>
+                    <td><input type="text" name="month_pattern" placeholder="6" /> months </td>
+                </tr>
+                </table>
+              </td>
+        </tr>';
+    $html .= '</table>';
+    return $html;
+}
+
+
 ?>

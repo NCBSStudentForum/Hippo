@@ -33,7 +33,7 @@ echo printInfo(
 
 echo '
     <table border="0">
-    <form method="post" action="admin_aws_manages_upcoming_aws_submit.php">
+    <form method="post" action="admin_acad_manages_upcoming_aws_submit.php">
     <tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>
     <tr>
         <td> <input class="datepicker" type="date" name="date" value="" > </td>
@@ -57,7 +57,7 @@ foreach( $upcomingAWSs as $aws )
 
 foreach( $upcomingAwsNextWeek as $upcomingAWS )
 {
-    echo '<form action="admin_aws_manages_upcoming_aws_submit.php"
+    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
         method="post" accept-charset="utf-8">';
     echo '<table>';
     echo '<tr><td>';
@@ -93,7 +93,7 @@ if( count(  $upcomingAWSs ) > 0 )
 
 foreach( $upcomingAWSs as $aws )
 {
-    echo '<form action="admin_aws_manages_upcoming_aws_submit.php"
+    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
         method="post" accept-charset="utf-8">';
     if( strtotime( $aws['date']) != $groupDate )
     {
@@ -131,7 +131,7 @@ $header = "<tr>
     </tr>";
 echo $header;
 
-echo "<form method=\"post\" action=\"admin_aws_manages_upcoming_aws_submit.php\">";
+echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
 echo '<button type="submit" name="response" value="Reschedule">Reschedule All</button>';
 echo "</form>";
 echo '<br>';
@@ -187,7 +187,7 @@ foreach( $schedule as $upcomingAWS )
     echo "</td>";
 
     // Create a form to approve the schedule.
-    echo '<form method="post" action="admin_aws_manages_upcoming_aws_submit.php">';
+    echo '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">';
     echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
     echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
     echo '<td style="background:white;border:0px;">
@@ -199,6 +199,6 @@ foreach( $schedule as $upcomingAWS )
 }
 echo "</table>";
 
-echo goBackToPageLink( "admin_aws.php", "Go back" );
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 ?>

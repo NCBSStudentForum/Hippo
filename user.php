@@ -103,7 +103,7 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
 
    $html = "<table class=\"tasks\">";
   if( in_array( "ADMIN", $roles ) )
-      $html .= '<tr><td> All migthy ADMIN </td>
+      $html .= '<tr><td> All mighty ADMIN </td>
          <td><a href="admin.php">Admin</a></td> </td>
         </tr>';
    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )
@@ -113,10 +113,10 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
    //      $html .= '<tr><td>TODO: Add journal club, invite people, select papers.</td>
    //   <td> <a href="journalclub_admin.php">JournalClub Admin</a></td> </tr>';
    if( in_array( "AWS_ADMIN", $roles ) )
-       $html .= '<tr><td>Alpha: Schedule AWS, bug students for abstract. Send emails 
+       $html .= '<tr><td>Schedule AWS, bug students for abstract. Send emails 
          periodically. 
       </td>
-      <td> <a href="admin_aws.php">AWS Admin</a></td> </tr>';
+      <td> <a href="admin_acad.php">Academic Admin</a></td> </tr>';
    $html .= "</table>";
    echo $html;
 }

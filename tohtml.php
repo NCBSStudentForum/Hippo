@@ -743,6 +743,7 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
                 <script>
                     tinymce.init( { selector : "#abstract"
                             , height : 300
+                            , theme : "modern"
                             , plugins : [ "paste wordcount fullscreen table textcolor"
                                     , "imagetools toc code" ]
                             , init_instance_callback: "insert_content"
@@ -851,7 +852,7 @@ function awsToTable( $aws, $with_picture = false )
         );
     $tcm = array_filter( $tcm );
 
-    $title = __ucwords__( $aws[ 'title' ]);
+    $title = $aws[ 'title' ];
     $abstract = $aws[ 'abstract' ];
 
     $html = "<div style=\"width:500px\">";

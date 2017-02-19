@@ -354,13 +354,13 @@ table.request tr:nth-of-type( odd ) {
 }
 
 table.admin {
-    background : var(--background);
     width : 80%;
     min-width : 500px;
     max-width : 90%;
 }
 
 table.admin td {
+    background : var(--background);
     border : 1px dotted;
     width : 50%;
 }

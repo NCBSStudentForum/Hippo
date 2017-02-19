@@ -37,17 +37,18 @@ echo '
         <td>Manage pending requests</td>
         <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) . 
             ' pending requests</a> </td>
-    </tr><tr>
-        <td>Add AWS entry</td>
-        <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
     </tr>
     <tr>
         <td>Generate emails and documents</td>
         <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
+    <tr>
+        <td>Add AWS entry</td>
+        <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
+    </tr>
     ';
 echo '</table>';
-
+echo '<br>';
 echo '<table class="admin">';
 echo '
     <tr>

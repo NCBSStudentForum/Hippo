@@ -15,8 +15,8 @@ echo userHTML( );
 echo '<table class="show_info">
     <tr>
     <td>
-    <strong>Make sure you are logged-in using correct google account </strong>
-    </strong>
+       <strong>Make sure you are logged-in using correct google account </strong>
+        </strong>
     </td>
         <td>
             <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">

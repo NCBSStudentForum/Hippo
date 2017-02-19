@@ -59,7 +59,7 @@ echo $html;
 
 <h2>Upcoming (approved) Events </h2>
 <?php
-$html = '';
+$html = '<div style="font-size:small;">';
 $events = getEventsGrouped( $sortby = 'date' );
 
 $html .= "<table>";
@@ -82,6 +82,8 @@ foreach( $events as $event )
 }
 
 $html .= "</table>";
+$html .= "</div>";
+
 echo $html;
 
 echo goBackToPageLink( "user.php", "Go back" );

@@ -9,7 +9,7 @@ class BMVPDO extends PDO
 {
     function __construct( $host = 'localhost'  )
     {
-        $conf = parse_ini_file( '/etc/hippo/hipporc', $process_section = TRUE );
+        $conf = parse_ini_file( '/etc/hipporc', $process_section = TRUE );
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         $host = $conf['mysql']['host'];
         $port = $conf['mysql']['port'];

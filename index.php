@@ -8,7 +8,7 @@ include_once( 'calendar/calendar.php' );
 session_save_path("/tmp/");
 
 $conf = array();
-$inifile = "/etc/hippo/hipporc";
+$inifile = "/etc/hipporc";
 
 if(file_exists($inifile)) 
     $conf = parse_ini_file($inifile, $process_section = TRUE );

@@ -964,5 +964,33 @@ function repeatPatternTable( $className )
     return $html;
 }
 
+/**
+    * @brief Generate a email statement form given template id. Templte must 
+    * exits in a database table.
+    *
+    * @param $templateName
+    * @param $options
+    *
+    * @return 
+ */
+function emailFromTemplate( $templateName, $options )
+{
+    $html = '';
+
+    $template = getEmailTemplateById( $templateName )['description'];
+    if( ! $template )
+    {
+        echo alertUser( "No template found with id: aws_template. I won't 
+            be able to generate email"
+        );
+        return '';
+    } 
+    else 
+        foreach( $options as $key => $value )
+            $template = str_replace( '@' . $key . '@', $value, $template );
+
+    return $template;
+}
+
 
 ?>

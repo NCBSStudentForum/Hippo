@@ -136,6 +136,7 @@ foreach( $awses as $aws )
 {
     $outfile .= '_' . $aws[ 'speaker' ];
     $tex[] = awsToTex( $aws );
+    $tex[] = '\pagebreak';
 }
 
 $tex[] = '\end{document}';

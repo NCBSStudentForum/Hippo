@@ -256,6 +256,8 @@ table.show_requests {
 
 table.show_events {
     border: 1px dotted;
+    max-width : vars(--maxwidth);
+    min-width : 80%;
 }
 
 table.show_events tr td  {

@@ -105,7 +105,7 @@ foreach( $upcomingAWSs as $aws )
     echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
-    echo '<button name="response" value="Clear" title="Delete this entry"
+    echo '<button name="response" value="delete" title="Delete this entry"
             >' . $symbDelete . '</button>';
     echo '</td>';
     echo '</form>';

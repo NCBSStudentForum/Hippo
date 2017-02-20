@@ -64,7 +64,8 @@ if( array_key_exists( 'google_command', $_SESSION ) )
     {
         echo alertUser( "Synchronizing google calendar ..." );
 
-
+        // Get the list of public events.
+        $publicEvents = getPublicEvents( $form = 'today' );
         $total = count( $publicEvents );
 
         // Update all public events first.
@@ -91,8 +92,9 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         $total = count( $eventsOnGoogleCalendar );
         $i = 0;
 
-        // Make sure you get the list of events here. Because if a new events 
-        // was added before, it was assigned a event id in hippo database. If 
+        // Make sure you get the list of events here as well. Because if a new 
+        // events was added before, it was assigned a event id in hippo 
+        // database.
         $publicEvents = getPublicEvents( $form = 'today' );
         foreach( $eventsOnGoogleCalendar as $event )
         {

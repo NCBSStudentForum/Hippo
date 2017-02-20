@@ -58,11 +58,21 @@ echo $html;
 ?>
 
 <h2>Upcoming (approved) Events </h2>
+
 <?php
+
+echo alertUser( 'Public events will apprear first' );
+
 $html = '<div style="font-size:small;">';
 $events = getEventsGrouped( $sortby = 'date,start_time' );
 
 $html .= "<table>";
+
+// Sort events. Put public events first.
+usort( $events, function( $a, $b ) {
+                return $a[ 'is_public_event'] < $b['is_public_event']; 
+                } 
+    );
 foreach( $events as $event )
 {
     $gid = $event['gid'];

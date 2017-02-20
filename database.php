@@ -621,20 +621,21 @@ function getEvents( $from = 'today', $status = 'VALID' )
 /**
   * @brief Get the list of upcoming events grouped by gid.
  */
-function getEventsGrouped( $sortby = NULL, $from = 'today', $status = 'VALID' )
+function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
 {
     global $db;
-    if( ! $sortby )
-        $sortby = '';
-    else
-        $sortby = " ORDER BY $sortby";
+    $sortExpr = '';
+
+    $sortby = explode( ',', $sortby );
+    if( count($sortby) > 0 )
+        $sortExpr = 'ORDER BY ' . implode( ', ', $sortby);
 
     $nowTime = dbTime( 'now' );
     $from = date( 'Y-m-d', strtotime( 'today' ));
     $stmt = $db->prepare( 
         "SELECT * FROM events WHERE date >= :date 
             AND end_time >= '$nowTime'
-            AND status=:status GROUP BY gid $sortby" 
+            AND status=:status GROUP BY gid $sortExpr" 
         );
     $stmt->bindValue( ':date', $from );
     $stmt->bindValue( ':status', $status );

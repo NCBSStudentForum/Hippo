@@ -2,7 +2,10 @@
 
 echo "<footer>
     <div class=\"bottom\">
-    GNU-GPL-v3, (c) Dilawar Singh 2016-17
+    <a target=\"_blank\" 
+        href=\"https://github.com/dilawar/ncbs-hippo\" target='_blank'
+        >GNU-GPL (v3)</a>
+    (c) Dilawar Singh 2016-17
     </div>
     </footer>";
 

@@ -57,17 +57,16 @@ echo $html;
 
 ?>
 
-<h2>Upcoming (approved) Events </h2>
+<h2>Upcoming (approved) events in next 4 weeks </h2>
 
 <?php
 
 echo alertUser( 'Public events will apprear first' );
 
 $html = '<div style="font-size:small;">';
-$events = getEventsGrouped( $sortby = 'date,start_time' );
+$events = getEventsBeteen( 'today', '+4 week' );
 
 $html .= "<table>";
-
 // Sort events. Put public events first.
 usort( $events, function( $a, $b ) {
                 return $a[ 'is_public_event'] < $b['is_public_event']; 

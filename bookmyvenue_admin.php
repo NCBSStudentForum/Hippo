@@ -60,7 +60,7 @@ echo $html;
 <h2>Upcoming (approved) Events </h2>
 <?php
 $html = '<div style="font-size:small;">';
-$events = getEventsGrouped( $sortby = 'date' );
+$events = getEventsGrouped( $sortby = 'date,start_time' );
 
 $html .= "<table>";
 foreach( $events as $event )

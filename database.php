@@ -528,7 +528,7 @@ function getEventsBeteen( $from , $duration )
     $whereExpr = "date >= '$startDate' AND date <= '$endDate' ";
 
     $whereExpr .= " AND status='VALID' ";
-    return getTableEntries( 'events', 'date', $whereExpr );
+    return getTableEntries( 'events', 'date', $whereExpr, 'date,start_time' );
 }
 
 
@@ -629,14 +629,16 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 function getEvents( $from = 'today', $status = 'VALID' )
 {
     global $db;
-    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $from = dbDate( $from );
+    echo "<pre> $from </pre>";
     $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
-        status=:status" );
+        status=:status ORDER BY date,start_time " );
     $stmt->bindValue( ':date', $from );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
+
 
 /**
   * @brief Get the list of upcoming events grouped by gid.
@@ -650,14 +652,12 @@ function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
     if( count($sortby) > 0 )
         $sortExpr = 'ORDER BY ' . implode( ', ', $sortby);
 
-    $nowTime = dbTime( 'now' );
-    $from = date( 'Y-m-d', strtotime( 'today' ));
+    $nowTime = dbTime( $from );
     $stmt = $db->prepare( 
         "SELECT * FROM events WHERE date >= :date 
-            AND end_time >= '$nowTime'
             AND status=:status GROUP BY gid $sortExpr" 
         );
-    $stmt->bindValue( ':date', $from );
+    $stmt->bindValue( ':date', $nowTime );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -671,7 +671,7 @@ function getPublicEvents( $from = 'today', $status = 'VALID' )
     global $db;
     $from = dbDate( $from );
     $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
-        status=:status AND is_public_event='YES'" );
+        status=:status AND is_public_event='YES' ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $from );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );

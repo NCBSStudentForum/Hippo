@@ -6,6 +6,7 @@ include_once 'tohtml.php';
 include_once 'mail.php';
 include_once 'methods.php';
 include_once 'check_access_permissions.php';
+
 mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 
@@ -22,7 +23,7 @@ if( ! array_key_exists( 'events', $_POST ) )
 $msg = initUserMsg( );
 
 
-// If admin is rejecting then ask for confirmation.
+// If admin is rejecting and have not given any confirmation, ask for it.
 if( $whatToDo == 'REJECT' )
 {
     // If no valid response is given, rejection of request is not possible.
@@ -60,8 +61,8 @@ foreach( $events as $event )
 
     if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
     {
-        // TODO: Add this to google calendar. 
-        header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
+        // TODO: Add this to google calendar. Test it before you enable it.
+        //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
         exit;
     }
 }

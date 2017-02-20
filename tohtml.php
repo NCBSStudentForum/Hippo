@@ -153,8 +153,8 @@ function eventSummaryHTML( $event )
     $time = "$startT to $endT";
     $venue = venueSummary( $event[ 'venue'] );
 
-    $html = '<table border="0">';
-    $html .= "<tr><th colspan=\"2\">" . $event[ 'title' ] . "</th></tr>";
+    $html = "<strong>" . $event[ 'title' ] . "</strong>";
+    $html .= '<table border="0">';
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
     $html .= '</table>';

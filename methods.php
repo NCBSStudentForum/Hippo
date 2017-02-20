@@ -537,3 +537,20 @@ function html2Markdown( $html )
     else 
         return html2text( $html );
 }
+
+function saveDownloadableFile( $filename, $content )
+{
+    $filepath = __DIR__ . '/data/' . $filename;
+
+    // Remove old file.
+    if( file_exists( $filepath ) )
+        unlink( $filepath );
+
+    file_put_contents( $filepath, $content );
+    if( file_exists( $filepath ) )
+        return true;
+    else
+        echo printWarning( "Failed to save content to file $filepath" );
+
+    return false;
+}

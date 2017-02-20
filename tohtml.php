@@ -477,6 +477,7 @@ function dbTableToHTMLTable( $tablename
     )
 {
     global $symbUpdate, $symbCheck;
+    global $dbChoices;
 
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );
@@ -486,6 +487,7 @@ function dbTableToHTMLTable( $tablename
     if( is_string( $hide ) )
         $hide = explode( ",", $hide );
 
+    // Sort the schema in the same order as editable.
     foreach( $schema as $col )
     {
         $keyName = $col['Field'];
@@ -514,7 +516,24 @@ function dbTableToHTMLTable( $tablename
 
         // Genearte a select list of ENUM type class.
         $match = Array( );
-        if( preg_match( "/^enum\((.*)\)$/" , $ctype, $match ) )
+        if( preg_match( '/^varchar\((.*)\)$/', $ctype ) )
+        {
+            if( array_key_exists( $keyName, $dbChoices ) )
+            {
+                $val = "<select name=\"$keyName\">";
+                foreach( explode( ',', $dbChoices[ $keyName]) as $v )
+                {
+                    $selected = '';
+                    $v = str_replace( "'", "", $v );
+                    if( $v == $default )
+                        $selected = 'selected';
+                    $val .= "<option value=\"$v\" $selected> $v </option>";
+                }
+                $val .= "</select>";
+            }
+
+        }
+        elseif( preg_match( "/^enum\((.*)\)$/" , $ctype, $match ) )
         {
             $val = "<select name=\"$keyName\">";
             foreach( explode(",", $match[1] ) as $v )

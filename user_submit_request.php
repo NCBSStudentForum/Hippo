@@ -62,6 +62,7 @@ echo dbTableToHTMLTable( 'bookmyvenue_requests', $default
     , ''
     , $hide = 'gid,rid,external_id,modified_by,timestamp,status'
     );
+
 // I need to add repeat pattern here.
 echo "<br>";
 echo repeatPatternTable( 'repeat_pat' );

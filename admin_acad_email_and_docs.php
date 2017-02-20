@@ -55,8 +55,8 @@ foreach( $options as $val )
         "> $val </option>";
 echo '
     </select>
-    <input type="text" class="datepicker" placeholder = "Select date" 
-        title="Select date" value="' . $default[ 'date' ] . '" > 
+    <input class="datepicker" placeholder = "Select date" 
+        title="Select date" name="date" value="' . $default[ 'date' ] . '" > 
     <button type="submit" name="response" title="select">' . $symbSubmit . '</button>
     </form>
     ';
@@ -103,12 +103,11 @@ if( $default[ 'task' ] == 'This week AWS' )
 } // This week AWS is over here.
 else if( $default[ 'task' ] == 'This week events' )
 {
-    $html = printInfo( "List of events in the week starting " 
+    $html = printInfo( "List of public events for the week starting " 
         . humanReadableDate( $default[ 'date' ] ) 
         );
     $events = getEventsBeteen( $from = 'this monday', $duration = '+7 day' );
 
-    
     foreach( $events as $event )
     {
         if( $event[ 'is_public_event' ] == 'NO' )
@@ -121,9 +120,30 @@ else if( $default[ 'task' ] == 'This week events' )
 
     // Add a google calendar link
     $html .= "<br><br>";
-    $html .= "<a href=\"" . googleCaledarURL( ) . "\">Google calendar</a>";
     echo( $html );
 
+    // Generate email
+    // getEmailTemplates
+    $template = getEmailTemplateById( 'this_week_events' );
+    if( $template )
+    {
+        $email = emailFromTemplate( 'this_week_events'
+            , array( "EMAIL_BODY" => $html ) 
+            );
+        $md = html2Markdown( $email );
+        $emailFileName = 'Events_Of_Week_' .$default[ 'date' ] . '.txt';
+
+        // Save the content of email to a file and generate a link to show to 
+        // user.
+        saveDownloadableFile( $emailFileName, $md );
+        echo downloadTextFile( $emailFileName, 'Download email' );
+    }
+    else
+    {
+        echo alertUser( "No template found with id this_week_events. 
+            You should tell this to Hippo's admin" 
+            );
+    }
 }
 
 // Only if the AWS date in future/today, allow admin to send emails.
@@ -133,6 +153,5 @@ if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )
 }
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );
-
 
 ?>

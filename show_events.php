@@ -50,7 +50,7 @@ foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
     foreach( $events as $ev )
     {
         echo "<td style=\"min-width:150px;max-width:300px;border:1px dotted;\">";
-        echo eventToHTML( $ev );
+        echo eventToShortHTML( $ev );
         echo "</td>";
     }
     echo '</tr>';

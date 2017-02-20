@@ -102,11 +102,12 @@ function goToPage($page="index.php", $delay = 3)
 
 function goBackToPageLink( $url, $title = "Go back" )
 {
-    $html = "<br>";
+
+    $html = "<br><br><div class=\"goback\">";
     //$url = __get__( $_SERVER, 'HTTP_REFERER', $url );
     $html .= "<a style=\"float: left\" href=\"$url\">
             <font color=\"blue\" size=\"5\">$title</font>
-        </a>";
+        </a></div>";
     return $html;
 }
 
@@ -222,6 +223,14 @@ function humanReadableDate( $date )
         return date( 'D, M d, Y', $date );
 
     return date( 'D, M d Y', strtotime($date) );
+}
+
+function humanReadableTime( $time )
+{
+    if( is_int( $time ) )
+        return date( 'H:i A', $time );
+
+    return date( 'H:i A', strtotime($time) );
 }
 
 

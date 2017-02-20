@@ -4,6 +4,15 @@ include_once( "header.php" );
 include_once( "methods.php" );
 include_once( 'ldap.php' );
 
+// Option values for event/request.
+$dbChoices = array( 'class' =>
+        'UNKNOWN,TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
+        ',MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
+        ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
+        ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
+        ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
+    );
+
 
 class BMVPDO extends PDO 
 {
@@ -626,7 +635,6 @@ function getEvents( $from = 'today', $status = 'VALID' )
 {
     global $db;
     $from = dbDate( $from );
-    echo "<pre> $from </pre>";
     $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
         status=:status ORDER BY date,start_time " );
     $stmt->bindValue( ':date', $from );
@@ -813,7 +821,7 @@ function submitRequest( $request )
 
         $res = insertIntoTable( 'bookmyvenue_requests'
             , 'gid,rid,external_id,created_by,venue,title,description' . 
-                ',date,start_time,end_time,is_public_event'
+                ',date,start_time,end_time,is_public_event,class'
             , $request 
         );
         if( ! $res )

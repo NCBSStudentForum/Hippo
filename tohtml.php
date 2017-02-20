@@ -151,12 +151,12 @@ function eventSummaryHTML( $event )
     $startT = humanReadableTime( $event[ 'start_time' ] );
     $endT = humanReadableTime( $event[ 'end_time' ] );
     $time = "$startT to $endT";
-    $venue = $event[ 'venue'];
+    $venue = venueSummary( $event[ 'venue'] );
 
-    $html = "<h3>" . $event[ 'title' ] . "</h3>";
-    $html .= '<table border="0">';
-    $html .= "<tr><td> $venue </td></tr>";
-    $html .= "<tr><td>" . $date . ", " . $time . " </td></tr>";
+    $html = '<table border="0">';
+    $html .= "<tr><th colspan=\"2\">" . $event[ 'title' ] . "</th></tr>";
+    $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
+    $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
     $html .= '</table>';
 
     return $html;
@@ -426,6 +426,9 @@ function venuesToHTMLCheck( $groupedVenues, $grouped )
 
 function venueSummary( $venue )
 {
+    if( is_string( $venue ) )
+        $venue = getVenueById( $venue );
+
     return $venue['name'] . ' ' . $venue['building_name'] . ', ' . $venue['location'];
 }
 

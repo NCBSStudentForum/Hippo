@@ -526,6 +526,8 @@ function getEventsBeteen( $from , $duration )
     $startDate = dbDate( $from );
     $endDate = dbDate( strtotime( $duration, strtotime( $from ) ) );
     $whereExpr = "date >= '$startDate' AND date <= '$endDate' ";
+
+    $whereExpr .= " AND status='VALID' ";
     return getTableEntries( 'events', 'date', $whereExpr );
 }
 

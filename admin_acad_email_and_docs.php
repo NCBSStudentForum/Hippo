@@ -103,20 +103,26 @@ if( $default[ 'task' ] == 'This week AWS' )
 } // This week AWS is over here.
 else if( $default[ 'task' ] == 'This week events' )
 {
-    echo printInfo( "This week events" );
+    $html = printInfo( "List of events in the week starting " 
+        . humanReadableDate( $default[ 'date' ] ) 
+        );
     $events = getEventsBeteen( $from = 'this monday', $duration = '+7 day' );
+
+    
     foreach( $events as $event )
     {
         if( $event[ 'is_public_event' ] == 'NO' )
             continue;
 
         // We just need the summary of every event here.
-        echo eventSummaryHTML( $event );
+        $html .= eventSummaryHTML( $event );
+        $html .= "<br>";
     }
 
     // Add a google calendar link
-    echo "<br><br>";
-    echo "<a href=\"" . googleCaledarURL( ) . "\">Google calendar</a>";
+    $html .= "<br><br>";
+    $html .= "<a href=\"" . googleCaledarURL( ) . "\">Google calendar</a>";
+    echo( $html );
 
 }
 

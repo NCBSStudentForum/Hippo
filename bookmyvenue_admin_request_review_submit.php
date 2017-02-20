@@ -9,6 +9,7 @@ include_once 'check_access_permissions.php';
 
 mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
+echo printInfo( "Submitting request to database ..." );
 
 $whatToDo = $_POST['response'];
 $isPublic = $_POST['isPublic'];
@@ -61,9 +62,10 @@ foreach( $events as $event )
 
     if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
     {
+        echo printInfo( "<pre>TODO</pre>Sync calendar here" );
         // TODO: Add this to google calendar. Test it before you enable it.
         //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
-        exit;
+        //exit;
     }
 }
 $msg .= "</table>";

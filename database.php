@@ -148,6 +148,7 @@ function initialize( )
         CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
             gid INT NOT NULL
             , rid INT NOT NULL
+            , class VARCHAR(20) DEFAULT 'UNKNOWN' 
             , created_by VARCHAR(50) NOT NULL
             , title VARCHAR(100) NOT NULL
             , external_id VARCHAR(50) 
@@ -199,11 +200,7 @@ function initialize( )
             , external_id VARCHAR(50) 
             -- If yes, this entry will be put on google calendar.
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO' 
-            , class ENUM( 'LABMEET', 'MEETING'
-                , 'TALK', 'LECTURE', 'SEMINAR', 'AWS'
-                , 'SCHOOL' , 'CONFERENCE'
-                , 'CULTURAL', 'SPORTS', 'UNKNOWN'
-                ) DEFAULT 'UNKNOWN' 
+            , class VARCHAR(20) NOT NULL DEFAULT 'UNKNOWN' 
             , title VARCHAR(200) NOT NULL
             , description TEXT
             , date DATE NOT NULL
@@ -212,13 +209,12 @@ function initialize( )
             , start_time TIME NOT NULL
             , end_time TIME NOT NULL
             , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID' 
-            , calendar_id VARCHAR(500)
-            , calendar_event_id VARCHAR(500)
+            , calendar_id VARCHAR(200)
+            , calendar_event_id VARCHAR(200)
             , url VARCHAR(1000)
             , last_modified_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             , PRIMARY KEY ( gid, eid )
             , UNIQUE KEY (gid,eid,external_id)
-            -- , FOREIGN KEY (venue) REFERENCES venues(id)
             )"
         );
             

@@ -132,7 +132,7 @@ function eventToText( $event )
     return $html;
 }
 
-function eventToHTML( $event )
+function eventToShortHTML( $event )
 {
     $startT = date( 'H:i', strtotime( $event[ 'start_time' ] ) );
     $endT = date( 'H:i', strtotime( $event[ 'end_time' ] ) );
@@ -141,6 +141,24 @@ function eventToHTML( $event )
     $html .= '<br>' . $startT . ' to ' . $endT;
     $html .= ' </tt> @ ' . $event['venue'] . ', ';
     $html .= '</br><small>Booked by ' . $event['created_by'] . '</small><br/>';
+    return $html;
+}
+
+function eventSummaryHTML( $event )
+{
+
+    $date = humanReadableDate( $event[ 'date' ] );
+    $startT = humanReadableTime( $event[ 'start_time' ] );
+    $endT = humanReadableTime( $event[ 'end_time' ] );
+    $time = "$startT to $endT";
+    $venue = $event[ 'venue'];
+
+    $html = "<h3>" . $event[ 'title' ] . "</h3>";
+    $html .= '<table border="0">';
+    $html .= "<tr><td> $venue </td></tr>";
+    $html .= "<tr><td>" . $date . ", " . $time . " </td></tr>";
+    $html .= '</table>';
+
     return $html;
 }
 
@@ -830,7 +848,7 @@ function __ucwords__( $text )
     *
     * @return 
  */
-function awsToTable( $aws, $with_picture = false )
+function awsToHTML( $aws, $with_picture = false )
 {
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
 
@@ -991,6 +1009,17 @@ function emailFromTemplate( $templateName, $options )
 
     return $template;
 }
+
+
+function googleCaledarURL( )
+{
+
+    $url = "https://calendar.google.com/calendar/embed?";
+    $url .= "src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com";
+    $url .= "&ctz=Asia/Calcutta";
+    return $url;
+}
+
 
 
 ?>

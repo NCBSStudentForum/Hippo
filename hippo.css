@@ -47,6 +47,10 @@ div.cell_content {
     overflow : auto;
 }
 
+div.goback {
+
+}
+
 table.user_float {
     position : fixed;
     top : 1%;

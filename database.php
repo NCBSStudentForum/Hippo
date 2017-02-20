@@ -512,7 +512,25 @@ function getEventsOfUser( $userid, $from = '-0 days', $status = 'VALID' )
 
 }
 
-// Fetch entries from sqlite responses
+/**
+    * @brief Get all approved events starting from given date and duration.
+    *
+    * @param $from
+    * @param $duration
+    *
+    * @return 
+ */
+function getEventsBeteen( $from , $duration )
+{
+    global $db;
+    $startDate = dbDate( $from );
+    $endDate = dbDate( strtotime( $duration, strtotime( $from ) ) );
+    $whereExpr = "date >= '$startDate' AND date <= '$endDate' ";
+    return getTableEntries( 'events', 'date', $whereExpr );
+}
+
+
+// Fetch entries from database response object
 function fetchEntries( $res, $how = PDO::FETCH_ASSOC )
 {
     $array = Array( );
@@ -1920,6 +1938,8 @@ function getSpeakers( )
     $res = $db->query( 'SELECT * FROM speakers' );
     return fetchEntries( $res );
 }
+
+
 
 
 // Deprecated: Images are stored in ./pictures/ folder.

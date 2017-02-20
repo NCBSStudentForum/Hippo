@@ -73,8 +73,8 @@ if( $default[ 'task' ] == 'This week AWS' )
     foreach( $awses as $aws )
     {
 
-        echo awsToTable( $aws, $with_picture = true );
-        $emailHtml .= awsToTable( $aws, false );
+        echo awsToHTML( $aws, $with_picture = true );
+        $emailHtml .= awsToHTML( $aws, false );
         // Link to pdf file.
         echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
         $filename .= '_' . $aws[ 'speaker' ];
@@ -88,7 +88,7 @@ if( $default[ 'task' ] == 'This week AWS' )
         );
 
     $email = emailFromTemplate( 'aws_template', $macros );
-    $md = html2Markdown( $emails );
+    $md = html2Markdown( $email );
 
     // Save the file and let the admin download it.
     file_put_contents( __DIR__ . "/data/$filename", $md);
@@ -101,6 +101,24 @@ if( $default[ 'task' ] == 'This week AWS' )
     echo '</table>';
 
 } // This week AWS is over here.
+else if( $default[ 'task' ] == 'This week events' )
+{
+    echo printInfo( "This week events" );
+    $events = getEventsBeteen( $from = 'this monday', $duration = '+7 day' );
+    foreach( $events as $event )
+    {
+        if( $event[ 'is_public_event' ] == 'NO' )
+            continue;
+
+        // We just need the summary of every event here.
+        echo eventSummaryHTML( $event );
+    }
+
+    // Add a google calendar link
+    echo "<br><br>";
+    echo "<a href=\"" . googleCaledarURL( ) . "\">Google calendar</a>";
+
+}
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

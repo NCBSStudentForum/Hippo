@@ -8,12 +8,16 @@ date_default_timezone_set('Asia/Kolkata');
 
 function venueToText( $venue )
 {
+    if( is_string( $venue ) )
+        $venue = getVenueById( $venue );
+
     $txt = '';
     $txt .= $venue['id'] . ' ';
     $txt .= ' ' . $venue['strength'] . ' ';
     $txt .= '[' . $venue['type'] . ']' ;
     return $txt;
 }
+
 
 // Convert an integer to color.
 function toColor($n) 

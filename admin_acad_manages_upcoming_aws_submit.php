@@ -17,7 +17,7 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
     $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $msg); 
     $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg ); 
     $to = getLoginEmail( $speaker ) . ',' . 'hippo@lists.ncbs.res.in';
-    return sendEmail( $to, 'ATTN! Your AWS date has been fixed', $msg );
+    return sendEmail( $msg, 'ATTN! Your AWS date has been fixed', $to );
 }
 
 if( $_POST['response'] == "Reschedule" )

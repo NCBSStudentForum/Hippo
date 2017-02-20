@@ -103,7 +103,7 @@ if( array_key_exists( 'google_command', $_SESSION ) )
                 echo printInfo( "Deleting event: " . $event[ 'summary' ] . 
                     " because this event is not found in local database " );
                 echo "</br>";
-                //$calendar->deleteEvent( $event );
+                $calendar->deleteEvent( $event );
                 ob_flush(); flush( );
             }
 

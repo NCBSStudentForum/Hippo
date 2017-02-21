@@ -21,7 +21,6 @@ if( ! array_key_exists( 'events', $_POST ) )
     exit(0);
 }
 
-$msg = initUserMsg( );
 
 
 // If admin is rejecting and have not given any confirmation, ask for it.
@@ -37,6 +36,7 @@ if( $whatToDo == 'REJECT' )
     }
 }
 
+
 $msg .= "<p>Note the following changes to your requests </p>";
 $msg .= '<table border="0">';
 
@@ -44,45 +44,55 @@ $events = $_POST['events'];
 $userEmail = '';
 $eventGroupTitle = '';
 
-foreach( $events as $event )
+if( count( $events ) < 1 )
 {
-    $event = explode( '.', $event );
-    $gid = $event[0]; $rid = $event[1];
-
-    $eventInfo = getRequestById( $gid, $rid );
-    $eventText = eventToText( $eventInfo );
-
-    $userEmail = $eventInfo[ 'created_by' ];
-    $eventGroupTitle = $eventInfo[ 'title' ];
-
-    $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
-
-    actOnRequest( $gid, $rid, $whatToDo );
-    changeIfEventIsPublic( $gid, $rid, $isPublic );
-
-    if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
-    {
-        echo printInfo( "<pre>TODO</pre>Sync calendar here" );
-        // TODO: Add this to google calendar. Test it before you enable it.
-        //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
-        //exit;
-    }
-}
-$msg .= "</table>";
-
-$res = sendEmail( $msg
-    , "Your request for event title '$eventGroupTitle'  has been acted upon"
-    , $userEmail 
-    );
-
-if( $res )
-{
-    goToPage( "bookmyvenue_admin.php", 0 );
-    exit;
+    echo minionEmbarrassed( "I could not find an event." );
 }
 else
 {
-    echo minionEmbarrassed( "I failed to send email to user " );
+    foreach( $events as $event )
+    {
+        $event = explode( '.', $event );
+        $gid = $event[0]; $rid = $event[1];
+
+        $eventInfo = getRequestById( $gid, $rid );
+        $eventText = eventToText( $eventInfo );
+
+        $userEmail = $eventInfo[ 'created_by' ];
+        $eventGroupTitle = $eventInfo[ 'title' ];
+
+        $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
+
+        actOnRequest( $gid, $rid, $whatToDo );
+        changeIfEventIsPublic( $gid, $rid, $isPublic );
+
+        if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
+        {
+            echo printInfo( "<pre>TODO</pre>Sync calendar here" );
+            // TODO: Add this to google calendar. Test it before you enable it.
+            //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
+            //exit;
+        }
+    }
+    $msg .= "</table>";
+
+    // Append user email to front.
+    $msg = "<p>Dear " . loginToText( $events[0]['created_by' ], true ) . '</p>' . $msg;
+
+    $res = sendEmail( $msg
+        , "Your request for event title '$eventGroupTitle'  has been acted upon"
+        , $userEmail 
+        );
+
+    if( $res )
+    {
+        goToPage( "bookmyvenue_admin.php", 0 );
+        exit;
+    }
+    else
+    {
+        echo minionEmbarrassed( "I failed to send email to user " );
+    }
 }
     
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );

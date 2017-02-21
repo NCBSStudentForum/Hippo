@@ -821,7 +821,8 @@ function submitRequest( $request )
 
     $rid = 0;
     $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
-    $gid = intval($res->fetch( PDO::FETCH_ASSOC )['gid']) + 1;
+    $prevGid = $res->fetch( PDO::FETCH_ASSOC);
+    $gid = intval( $prevGid['gid'] ) + 1;
     foreach( $days as $day ) 
     {
         $rid += 1;

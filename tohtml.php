@@ -37,7 +37,7 @@ function summaryTable( )
             <a href=\"events.php\" target=\"_blank\">Table of events</a>
             </td>
             <td>
-            <a href=\"show_aws_entry.php\" target=\"_blank\">Browse AWSs</a>
+            <a href=\"aws.php\" target=\"_blank\">Browse AWSs</a>
             </td>
         </tr>
         <tr>
@@ -928,7 +928,12 @@ function awsToHTML( $aws, $with_picture = false )
     $tcm = array_filter( $tcm );
 
     $title = $aws[ 'title' ];
+    if( strlen( $title ) == 0 )
+        $title = "Not yet disclosed!";
+
     $abstract = $aws[ 'abstract' ];
+    if( strlen( $abstract ) == 0 )
+        $abstract = "Not yet disclosed!";
 
     $html = "<div style=\"width:500px\">";
 

@@ -579,7 +579,7 @@ function dbTableToHTMLTable( $tablename
             $val .= "<script>
                 tinymce.init( { selector : '#" . $inputId . "'
                         , init_instance_callback: \"insert_content\"
-                        , plugins : [ 'paste code wordcount fullscreen table' ]
+                        , plugins : [ 'image link paste code wordcount fullscreen table' ]
                         , paste_as_text : true
                         , paste_enable_default_filters: true
                         , height : 300

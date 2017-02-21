@@ -34,7 +34,7 @@ function summaryTable( )
     $html .= "
         <tr>
             <td>
-            <a href=\"show_events.php\" target=\"_blank\">Table of events</a>
+            <a href=\"events.php\" target=\"_blank\">Table of events</a>
             </td>
             <td>
             <a href=\"show_aws_entry.php\" target=\"_blank\">Browse AWSs</a>

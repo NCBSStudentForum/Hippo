@@ -868,7 +868,7 @@ function approveRequest( $gid, $rid )
 
     global $db;
     $stmt = $db->prepare( 'INSERT INTO events (
-        gid, eid, external_id, title, description, date, venue, start_time, end_time
+        gid, eid, class, external_id, title, description, date, venue, start_time, end_time
         , created_by
     ) VALUES ( 
         :gid, :eid, :external_id, :title, :description, :date, :venue, :start_time, :end_time 
@@ -876,6 +876,7 @@ function approveRequest( $gid, $rid )
     )');
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':eid', $rid );
+    $stmt->bindValue( ':class', $request[ 'class' ] );
     $stmt->bindValue( ':external_id', $request[ 'external_id'] );
     $stmt->bindValue( ':title', $request['title'] );
     $stmt->bindValue( ':description', $request['description'] );

@@ -88,9 +88,9 @@ echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
     <tr>
         <td> 
-            Register a new talk
+            Register a new talk, seminar, or a thesis seminar.
         </td><td>
-            <a href="user_register_talk.php">Register a new talk</a></td>
+            <a href="user_register_talk.php">Register talk/seminar</a></td>
         </td>
     </tr><tr>
         <td> 

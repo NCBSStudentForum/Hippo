@@ -5,12 +5,23 @@ include_once( "methods.php" );
 include_once( 'ldap.php' );
 
 // Option values for event/request.
-$dbChoices = array( 'class' =>
+$dbChoices = array( 
+    'bookmyvenue_requests.class' =>
         'UNKNOWN,TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
+    , 'events.class' =>
+        'UNKNOWN,TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
+        ',MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
+        ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
+        ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
+        ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
+    , 'talks.class' =>
+        'TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
+        ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
+        ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL'
     );
 
 
@@ -114,8 +125,7 @@ function initialize( )
         ( id INT NOT NULL AUTO_INCREMENT
             -- This will be prefixed in title of event. e.g. Thesis Seminar by
             -- , Public Lecture by, seminar by etc.
-            , class ENUM("TALK", "SEMINAR", "THESIS_SEMINAR", "LECTURE"
-                , "INFORMAL_TALK", "PUBLIC_LECTURE" ) NOT NULL DEFAULT "TALK"
+            , class VARCHAR(20) NOT NULL DEFAULT "TALK"
             , speaker VARCHAR(100) NOT NULL
             , host VARCHAR(100) NOT NULL
             , coordinator VARCHAR(100)

@@ -518,10 +518,11 @@ function dbTableToHTMLTable( $tablename
         $match = Array( );
         if( preg_match( '/^varchar\((.*)\)$/', $ctype ) )
         {
-            if( array_key_exists( $keyName, $dbChoices ) )
+            $classKey = $tablename . '.' . $keyName;
+            if( array_key_exists( $classKey, $dbChoices ) )
             {
                 $val = "<select name=\"$keyName\">";
-                foreach( explode( ',', $dbChoices[ $keyName]) as $v )
+                foreach( explode( ',', $dbChoices[ $classKey ] ) as $v )
                 {
                     $selected = '';
                     $v = str_replace( "'", "", $v );

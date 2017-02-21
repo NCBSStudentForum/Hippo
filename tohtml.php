@@ -584,11 +584,42 @@ function dbTableToHTMLTable( $tablename
                         , paste_enable_default_filters: true
                         , height : 300
                         , paste_data_images: true
-                    } );
-                function insert_content( inst ) {
-                    inst.setContent( '$default' );
-                }
-                </script>";
+                        , toolbar1 : 'undo redo | insert | stylesheet | bold italic' 
+                            + ' | alignleft aligncenter alignright alignjustify'
+                            + ' | bulllist numlist outdent indent | link image'
+                        , toolbar2 : \"imageupload\",
+                           setup: function(editor) {
+                               var inp = $('<input id=\"tinymce-uploader\" ' + 
+                                   'type=\"file\" name=\"pic\" accept=\"image/*\"' 
+                                   + ' style=\"display:none\">'
+                               );
+                                $(editor.getElement()).parent().append(inp);
+                                inp.on(\"change\",function(){
+                                    var input = inp.get(0);
+                                    var file = input.files[0];
+                                    var fr = new FileReader();
+                                    fr.onload = function() {
+                                        var img = new Image();
+                                        img.src = fr.result;
+                                        editor.insertContent('<img src=\"'+img.src+'\"/>');
+                                        inp.val('');
+                                    }
+                                    fr.readAsDataURL(file);
+                                });
+
+                                editor.addButton( 'imageupload', {
+                                    text:\"Insert image\",
+                                    icon: false,
+                                    onclick: function(e) {
+                                        inp.trigger('click');
+                                    }
+                                });
+                            }
+                        });
+                    function insert_content( inst ) {
+                        inst.setContent( '$default' );
+                    }
+            </script>";
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
            $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";

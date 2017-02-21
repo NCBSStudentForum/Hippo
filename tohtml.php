@@ -581,7 +581,9 @@ function dbTableToHTMLTable( $tablename
                         , init_instance_callback: \"insert_content\"
                         , plugins : [ 'paste code wordcount fullscreen table' ]
                         , paste_as_text : true
+                        , paste_enable_default_filters: true
                         , height : 300
+                        , paste_data_images: true
                     } );
                 function insert_content( inst ) {
                     inst.setContent( '$default' );

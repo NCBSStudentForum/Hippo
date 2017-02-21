@@ -50,6 +50,9 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
         // We construct an array with ldap entries. Some are dumplicated with 
         // different keys to make it suitable to pass to other functions as 
         // well.
+        if( $i['sn'] == 'NA' )
+            $i['sn'] = '';
+
         array_push($result
             , array(
                 "fname" => $i['givenname'][0]

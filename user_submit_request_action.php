@@ -73,8 +73,8 @@ if( $msg == "OK" )
             , $userEmail 
             );
 
-        sendEmail( $msg
-            , "A new request has been created by $userEmail"
+        sendEmail( "<p>Details are following </p>" . $msg
+            , "A booking new request has been created by $userEmail"
             , 'hippo@lists.ncbs.res.in'
             );
 

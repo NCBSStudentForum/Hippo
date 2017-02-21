@@ -58,11 +58,13 @@ if( array_key_exists( 'external_id', $_POST ) )
 
 
 $default = array( 'created_by' => $_SESSION[ 'user' ] );
+$default[ 'end_time' ] = $defaultEndTime;
+
 $default = array_merge( $default, $_POST );
 
 echo '<form method="post" action="user_submit_request_action.php">';
 echo dbTableToHTMLTable( 'bookmyvenue_requests', $default
-    , 'class,title,description,url,is_public_event' 
+    , 'class,title,description,url,is_public_event,end_time' 
     , ''
     , $hide = 'gid,rid,external_id,modified_by,timestamp,status'
     );

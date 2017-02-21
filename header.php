@@ -108,12 +108,12 @@ $symbUpdate = "&#x270d";
 $symbCalendar = "&#128197";          // Does not work on chromium
 $symbDelete = "&#10008";
 $symbCancel = "&#10008";
-$symbReject = "&#10008";
+
+$symbReject = "Reject";
+$symbApprove = "Approve";
+
 $symbScan = "&#8981";
-$symbThumbsUp = "&#128077";
 $symbThumbsDown = "&#128078";
-$symbApprove = "&#128077";
-$symbReject = "&#128078";
 $symbPerfect = "&#128076";
 //$symbReview = "&#128065";
 $symbReview = 'Review';

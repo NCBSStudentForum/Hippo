@@ -49,13 +49,7 @@ ini_set( "error_log", "/var/log/hippo.log" );
 <script type="text/javascript" src="js/jquery-timepicker-1.11.9/jquery.timepicker.js"></script>
 
 <link rel="stylesheet" type="text/css" href="js/jquery-timepicker-1.11.9/jquery.timepicker.css" />
-
-
 <script type="text/javascript" src="js/jquery-timepicker-1.11.9/lib/site.js"></script>
-
-<!--
-<link rel="stylesheet" type="text/css" href="js/jquery-timepicker-1.11.9/lib/site.css" />
--->
 
 <link href="hippo.css" rel="stylesheet" type="text/css" />
 

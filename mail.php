@@ -33,7 +33,7 @@ function sendEmail($msg, $sub, $to)
     $cmd= __DIR__ . "/sendmail.py \"$to\" \"$sub\" \"$msgfile\"";
     $out = exec( $cmd, $output, $ret );
     unlink( $msgfile );
-    return $ret;
+    return true;
 }
 
 // $res = sendEmail( "testing"

@@ -626,7 +626,7 @@ function dbTableToHTMLTable( $tablename
         else if( strcasecmp( $ctype, 'datetime' ) == 0 )
            $val = "<input class=\"datetimepicker\" name=\"$keyName\" value=\"$default\" />";
         else if( strcasecmp( $ctype, 'time' ) == 0 )
-           $val = "<input id=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
+           $val = "<input class=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
 
         // When the value is readonly. Just send the value as hidden input and 
         // display the default value.

@@ -554,3 +554,9 @@ function saveDownloadableFile( $filename, $content )
 
     return false;
 }
+
+function getConf( )
+{
+    return $_SESSION['conf'];
+}
+

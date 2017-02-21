@@ -465,7 +465,7 @@ function isMobile()
     );
 }
 
-function convertImage($originalImage, $ext, $outputImage, $quality = 9 )
+function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
 {
     // jpg, png, gif or bmp?
     if (preg_match('/jpg|jpeg/i',$ext))
@@ -558,5 +558,19 @@ function saveDownloadableFile( $filename, $content )
 function getConf( )
 {
     return $_SESSION['conf'];
+}
+
+function uploadImage( $pic, $filename )
+{
+    $tmpfile = $pic[ 'tmp_name' ];
+    $type = $pic[ 'type' ];
+    $ext = explode( '/', $type)[1];
+
+    if( strlen( count( $tmpfile ) ) < 1 )
+        return;
+
+    $conf = getConf( );
+    $picPath = $conf[ 'data' ][ 'user_imagedir' ] . '/' . $filename ;
+    return saveImageAsPNG( $tmpfile, $ext, $picPath );
 }
 

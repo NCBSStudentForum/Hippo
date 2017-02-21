@@ -83,7 +83,10 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 
 // Show speaker image here.
 
-echo '<form method="post" action="user_register_talk_action.php">';
+// Form to upload a picture
+
+echo '<form method="post" enctype="multipart/form-data" 
+        action="user_register_talk_action.php">';
 echo "<h3>Speaker details</h3>";
 echo printInfo( 
     "Email id of speaker is desirable. It helps keeping database clean 
@@ -93,10 +96,17 @@ echo printInfo(
     "<strong>First name</strong> and <strong>institute</strong> are required 
     fields.  ");
 
+echo '<table><tr>';
+echo '<td class="db_table_fieldname">Speaker picture</td><td>';
+echo '<input type="file" name="picture" id="picture" value="" />';
+echo '</td></tr></table>';
+
 echo dbTableToHTMLTable( 'speakers', $speaker 
     , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
     , '', 'id'
     );
+
+
 echo "<h3>Talk information</h3>" ;
 echo dbTableToHTMLTable( 'talks', $talk
     , 'class,host,coordinator,title,description'

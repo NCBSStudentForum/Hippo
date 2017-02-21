@@ -30,7 +30,7 @@ if( $_POST[ 'Response' ] == 'upload' )
     else
     {
         // Convert to png file and tave to $picPath
-        if ( ! convertImage( $tmppath, $ext, $picPath ) )
+        if ( ! saveImageAsPNG( $tmppath, $ext, $picPath ) )
             echo minionEmbarrassed( 
                 "I could not upload your image (allowed formats: png, jpg, bmp)!" 
             );

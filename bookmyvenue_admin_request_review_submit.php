@@ -58,7 +58,7 @@ else
         $eventInfo = getRequestById( $gid, $rid );
         $eventText = eventToText( $eventInfo );
 
-        $userEmail = $eventInfo[ 'created_by' ];
+        $userEmail = getLoginEmail(  $eventInfo[ 'created_by' ] );
         $eventGroupTitle = $eventInfo[ 'title' ];
 
         $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";

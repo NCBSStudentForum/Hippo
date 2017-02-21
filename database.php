@@ -871,7 +871,7 @@ function approveRequest( $gid, $rid )
         gid, eid, class, external_id, title, description, date, venue, start_time, end_time
         , created_by
     ) VALUES ( 
-        :gid, :eid, :external_id, :title, :description, :date, :venue, :start_time, :end_time 
+        :gid, :eid, :class, :external_id, :title, :description, :date, :venue, :start_time, :end_time 
         , :created_by
     )');
     $stmt->bindValue( ':gid', $gid );

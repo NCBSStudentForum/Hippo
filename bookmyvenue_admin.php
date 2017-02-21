@@ -34,7 +34,8 @@ if( count( $requests ) == 0 )
 else
     echo printInfo( "These requests needs your attention" );
 
-$html = '<table class="show_request">';
+$html = "<div style=\"font-size:small\">";
+$html .= '<table class="show_request">';
 foreach( $requests as $r )
 {
     $html .= '<form action="bookmyvenue_admin_request_review.php" method="post">';
@@ -43,7 +44,8 @@ foreach( $requests as $r )
     $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
     $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
     $html .= arrayToTableHTML( $r, 'events'
-        , ' ',  array( 'last_modified_on', 'status', 'modified_by', 'timestamp', 'url', 'external_id' )
+        , ' '
+        ,  'last_modified_on,status,modified_by,timestamp,url,external_id,gid,rid'
     );
     $html .= '</td>';
     $html .= '<td style="background:white">
@@ -53,6 +55,7 @@ foreach( $requests as $r )
     $html .= '</form>';
 }
 $html .= '</table>';
+$html .= "</div>";
 echo $html;
 
 ?>

@@ -9,6 +9,10 @@ include_once( "tohtml.php" );
 echo userHTML( );
 
 mustHaveAnyOfTheseRoles( array( 'USER', 'BOOKMYVENUE_ADMIN' ) );
+
+echo printInfo( '
+    Make sure you file your request under correct <tt>CLASS</tt>.
+    ' );
     
 $venues = getVenues( $sortby = 'total_events' );
 

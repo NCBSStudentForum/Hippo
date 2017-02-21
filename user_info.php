@@ -19,10 +19,7 @@ echo '<table class="">';
 echo '<tr><td>';
 
 if( file_exists( $picPath ) )
-{
-    echo '<img class="login_picture" width="200px"
-        height="auto" src="' . dataURI( $picPath, 'image/png' ) . '" >';
-}
+    echo showImage( $picPath );
 else 
 {
     echo printInfo( "I could not find your picture in my database.

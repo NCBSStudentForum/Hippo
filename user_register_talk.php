@@ -81,6 +81,8 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
     , 'created_on' => dbDateTime( 'now' )
     );
 
+// Show speaker image here.
+
 echo '<form method="post" action="user_register_talk_action.php">';
 echo "<h3>Speaker details</h3>";
 echo printInfo( 

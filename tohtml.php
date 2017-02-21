@@ -1081,6 +1081,25 @@ function googleCaledarURL( )
     return $url;
 }
 
+function showImage( $picpath )
+{
+    if( ! file_exists( $picpath ) )
+        $picpath = nullPicPath( );
 
+    $html = '<img class="login_picture" width="200px"
+        height="auto" src="' . dataURI( $picpath, 'image/png' ) . '" >';
+    return $html;
+}
+
+/**
+    * @brief Return an empty image.
+    *
+    * @return 
+ */
+function nullPicPath( )
+{
+    $conf = getConf( );
+    return $conf['global']['user_imagedir'] . '/null.png';
+}
 
 ?>

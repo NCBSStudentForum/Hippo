@@ -494,7 +494,7 @@ function getRequestOfUser( $userid, $status = 'PENDING' )
     $stmt = $db->prepare( 
         'SELECT * FROM bookmyvenue_requests WHERE created_by=:created_by 
         AND status=:status AND date >= NOW() - INTERVAL 2 DAY
-        GROUP BY gid' );
+        GROUP BY gid ORDER BY date,start_time' );
     $stmt->bindValue( ':created_by', $userid );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );

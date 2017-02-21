@@ -22,9 +22,11 @@ else
 foreach( $requests as $request )
 {
     $tobefiltered = Array( 
-        'rid', 'modified_by', 'timestamp', 'user', 'url' , 'status'
+        'gid', 'created_by', 'rid', 'modified_by', 'timestamp'
+        , 'url' , 'status', 'external_id'
     );
     $gid = $request['gid'];
+    echo "<div style=\"font-size:small;\">";
     echo "<table class=\"info\" >";
     echo "<tr>";
     echo "<td>" . arrayToTableHTML( $request, "requests", NULL, $tobefiltered );
@@ -38,6 +40,7 @@ foreach( $requests as $request )
     echo "</table>";
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
     echo '</form>';
+    echo '</div>';
 }
 
 echo goBackToPageLink( "user.php", "Go back" );

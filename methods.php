@@ -498,7 +498,7 @@ function getUserPicture( $user )
     $picPath = nullPicPath( $user );
     if( array_key_exists( 'conf', $_SESSION ) )
     {
-        if( ! file_exists( $picPath ) )
+        if( file_exists( $picPath ) )
             $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
     }
         

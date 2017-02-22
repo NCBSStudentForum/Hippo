@@ -498,8 +498,9 @@ function getUserPicture( $user )
     $picPath = nullPicPath( $user );
     if( array_key_exists( 'conf', $_SESSION ) )
     {
-        if( file_exists( $picPath ) )
-            $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
+        $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
+        if( ! file_exists( $picPath ) )
+            $picPath = nullPicPath( $user );
     }
         
     $html ='<img class="login_picture" width="200px"

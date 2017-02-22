@@ -42,7 +42,11 @@ else
 // Show upcoming talks to user. She has edit, delete or schedule them.
 foreach( $upcomingTalks as $t )
 {
-
+    // Outer table
+    echo '<table><tr><td>';
+    // Get image of speaker if available.
+    echo inlineImageOfSpeaker( $t['speaker'], $height = '100px', $width = '100px' );
+    echo '</td><td>';
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';
     echo '<tr>';
@@ -76,6 +80,10 @@ foreach( $upcomingTalks as $t )
     echo '</tr></table>';
     echo '</form>';
 
+    // Close outer table.
+    echo '</td></tr></table>';
+
+    // Now put a table showing bookmyvenue_requests/events for this talk.
     // To make sure that user dont' confuse these two table as different 
     // talks rather than one talk and one is event/request; reduce the size 
     // of second table.

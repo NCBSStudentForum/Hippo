@@ -1,61 +1,67 @@
 <?php
 
 include_once 'header.php';
-include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
+include_once 'html2text.php';
 
-// This page displays all events on campus. Select all venues.
-$venues = getVenues( $sortby = 'id' );
-$venuesDict = array( );
-foreach( $venues as $v )
-    $venuesDict[ $v[ 'id' ] ] = $v;
+echo "<h2>Browse events on a particular day</h2>";
 
-$venuesIds = array_map( function( $v ) { return $v['id']; }, $venues );
+echo printInfo( "Please select a day to see events" );
 
-$defaults = array( 'venues' => implode(',', $venuesIds)
-        , 'date' => dbDate( 'today' )
-        );
+$today = dbDate( 'next monday' );
 
-if( array_key_exists( 'date', $_GET ) )
-    $defaults[ 'date' ] = $_GET[ 'date' ];
-
-if( array_key_exists( 'venues', $_GET ) )
-    $defaults[ 'venues' ] = implode( ',', $_GET[ 'venues' ] );
-
-
-echo '<form action="" method="get" accept-charset="utf-8">
-    <table class="info">
-    <tr>
-        <td> <input type="date" class="datepicker" name="date" value="' . 
-            $defaults[ 'date' ] . '" /> </td>
-            <td> <button name="response" value="' . $defaults[ 'venues' ] . 
-                '" >' . $symbScan . '</button> </td>
-    </tr>
-    </table>
-    </form>';
-
-$calendarDate = humanReadableDate( $defaults[ 'date' ] );
-echo "<h1> Table of events on $calendarDate </h1>";
-
-foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
+$default = array( 'date' => $today );
+if( $_GET )
 {
-    $events = getEventsOnThisVenueOnThisday( $venueId, $defaults[ 'date' ] );
-    if( count( $events ) < 1 )
-        continue;
+    if( array_key_exists( 'date', $_GET ) )
+        $default[ 'date' ] = $_GET[  'date' ];
+    else
+        $default = array( 'date' => $today );
+}
 
-    echo venueToText( $venuesDict[ $venueId ] );
-    echo '<table>';
-    echo '<tr>';
-    foreach( $events as $ev )
+echo '
+    <form method="get" action="">
+    <table border="0">
+        <tr>
+            <td>Select date</td>
+            <td><input class="datepicker" type="text" name="date" value="' . 
+                    $default[ 'date' ] . '" ></td>
+            <td><button type="submit" name="response" 
+                    title="Show events on this day"
+                    value="show">' . 
+                $symbScan . '</button></td>
+        </tr>
+    </table>
+    </form>
+    ';
+
+$whichDay = $default[ 'date' ];
+
+$eventTalks = getTableEntries( 'events', 'date' , "date='$whichDay' 
+        AND external_id LIKE 'talks%'" 
+    );
+
+// Only if a event has an external_id then push it into 'talks'
+
+if( count( $eventTalks ) < 1 )
+{
+    echo alertUser( "I could not find any talk/seminar/lecture on this day 
+        in my database" );
+}
+else 
+{
+    $talkHtml = '';
+    foreach( $eventTalks as $event )
     {
-        echo "<td style=\"min-width:150px;max-width:300px;border:1px dotted;\">";
-        echo eventToShortHTML( $ev );
-        echo "</td>";
+        $talkId = explode( '.', $event[ 'external_id'])[1];
+
+        $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkId ) );
+        $eventHtml = talkToHTML( $talk, $with_picture = true );
+        // Link to pdf file.
+        $talkHtml .= $eventHtml;
     }
-    echo '</tr>';
-    echo '</table>';
-    echo '</br>';
+    echo $talkHtml;
 }
 
 echo closePage( );

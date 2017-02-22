@@ -39,6 +39,9 @@ function summaryTable( )
             <td>
             <a href=\"aws.php\" target=\"_blank\">Browse AWSs</a>
             </td>
+            <td>
+            <a href=\"events.php\" target=\"_blank\">Browse Events</a>
+            </td>
         </tr>
         <tr>
         </tr>
@@ -759,10 +762,9 @@ function loginToText( $login, $withEmail = true )
 
     // Return first name + middle name + last name.
     $name = array( );
-    foreach( array( 'first_name', 'middle_name', 'last_name' ) as $key )
-        if( array_key_exists( $key, $login ) )
-            array_push( $name, $login[ $key ] );
-
+    foreach( explode( ',', 'first_name,middle_name,last_name' ) as $key )
+        if( array_key_exists( $key, $user ) )
+            array_push( $name, $user[ $key ] );
     $text = implode( ' ', $name );
 
     if( $withEmail )
@@ -982,6 +984,34 @@ function awsToHTML( $aws, $with_picture = false )
     $html .= "</div>";
     return $html;
 
+}
+
+
+/**
+    * @brief Convert an event entry to HTML.
+    *
+    * @param $aws AWS entry.
+    * @param $with_picture Fetch entry with picture.
+    *
+    * @return 
+ */
+function talkToHTML( $talk, $with_picture = false )
+{
+
+    $speaker = __ucwords__( $talk[ 'speaker' ] );
+    $imgpath = getSpeakerPicturePath( $speaker );
+
+    $title = $talk[ 'class' ] . ' by ' . $talk[ 'speaker' ] . " on '"
+        . $talk[ 'title' ] . "'";
+
+    $html = '<div style="width:600px">';
+    $html = $title;
+    $html .= '<table border="0">';
+    $html .= '<tr><td>' . showImage( $imgpath ) . '</td><td>' . $title 
+        . '</td></tr></table>';
+    $html .= "<p>" . $talk[ 'abstract' ] . '</p>';
+    $html .= "</div>";
+    return $html;
 }
 
 function printableCharsOnly( $html )

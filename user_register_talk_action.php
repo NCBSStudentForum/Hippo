@@ -21,9 +21,7 @@ if( ! ( $_POST['first_name']  && $_POST[ 'institute' ] && $_POST[ 'title' ]
 }
 else                // Everything is fine.
 {
-    $filename = $_POST[ 'first_name' ] . $_POST[ 'middle_name' ] . 
-        $_POST[ 'last_name' ] . '.png' ;
-
+    $filename = getSpeakerPictureName( $_POST );
     if( $_FILES[ 'picture' ] )
     {
         echo "Uploading image";

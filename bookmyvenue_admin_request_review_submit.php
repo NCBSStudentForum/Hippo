@@ -37,9 +37,10 @@ if( $whatToDo == 'REJECT' )
 }
 
 
-$msg .= "<p>Note the following changes to your requests </p>";
-$msg .= '<table border="0">';
+$msg = "<p>Some changes have been made to your request. The latest entry looks
+        like the following. </p>";
 
+$msg .= '<table border="0">';
 $events = $_POST['events'];
 $userEmail = '';
 $eventGroupTitle = '';

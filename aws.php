@@ -12,10 +12,14 @@ echo printInfo( "Please select a day (MONDAY) to see the details of annual
 
 $today = dbDate( 'next monday' );
 
-if( array_key_exists( 'date', $_GET ) )
-    $default[ 'date' ] = $_GET[  'date' ];
-else
-    $default = array( 'date' => $today );
+$default = array( 'date' => $today );
+if( $_GET )
+{
+    if( array_key_exists( 'date', $_GET ) )
+        $default[ 'date' ] = $_GET[  'date' ];
+    else
+        $default = array( 'date' => $today );
+}
 
 echo '
     <form method="get" action="">

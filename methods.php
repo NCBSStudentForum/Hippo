@@ -232,9 +232,9 @@ function humanReadableDate( $date )
 function humanReadableTime( $time )
 {
     if( is_int( $time ) )
-        return date( 'H:i A', $time );
+        return date( 'h:i A', $time );
 
-    return date( 'H:i A', strtotime($time) );
+    return date( 'h:i A', strtotime($time) );
 }
 
 

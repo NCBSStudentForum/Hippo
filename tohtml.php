@@ -1001,15 +1001,24 @@ function talkToHTML( $talk, $with_picture = false )
     $speaker = __ucwords__( $talk[ 'speaker' ] );
     $imgpath = getSpeakerPicturePath( $speaker );
 
+    // Get its events for venue and date.
+    $event = getEventsOfTalkId( $talk[ 'id' ] );
+    $where = venueSummary( $event[ 'venue' ] );
+    $when = humanReadableDate( $event[ 'date' ] ) . ', ' . 
+            humanReadableTime( $event[ 'start_time'] ) . ' to ' .
+            humanReadableTime( $event[ 'end_time' ] );
+
     $title = $talk[ 'class' ] . ' by ' . $talk[ 'speaker' ] . " on '"
         . $talk[ 'title' ] . "'";
 
-    $html = '<div style="width:600px">';
-    $html = $title;
+    $html = '<div style="width:500px;text-align:justify">';
     $html .= '<table border="0">';
-    $html .= '<tr><td>' . showImage( $imgpath ) . '</td><td>' . $title 
-        . '</td></tr></table>';
-    $html .= "<p>" . $talk[ 'abstract' ] . '</p>';
+    $html .= '<tr><td>' . showImage( $imgpath, 'auto', '150px' ) . '</td>';
+    $html .= '<td><strong>' . $talk[ 'title' ] . '</strong>
+                  <br>' . $talk['speaker']  . '<br>' . $when . 
+                  '<br>' . $where . '</td></tr>';
+    $html .= '</table>';
+    $html .= "<p>" . $talk[ 'description' ] . '</p>';
     $html .= "</div>";
     return $html;
 }
@@ -1143,7 +1152,7 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
 function nullPicPath( )
 {
     $conf = getConf( );
-    return $conf['data']['user_imagedir'] . '/null.png';
+    return $conf['data']['user_imagedir'] . '/hippo.png';
 }
 
 function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')

@@ -9,7 +9,7 @@ echo "<h2>Browse events on a particular day</h2>";
 
 echo printInfo( "Please select a day to see events" );
 
-$today = dbDate( 'next monday' );
+$today = dbDate( 'today' );
 
 $default = array( 'date' => $today );
 if( $_GET )

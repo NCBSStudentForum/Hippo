@@ -24,7 +24,6 @@ else                // Everything is fine.
     $filename = $_POST[ 'first_name' ] . $_POST[ 'middle_name' ] . 
         $_POST[ 'last_name' ] . '.png' ;
 
-    print_r( $_FILES );
     if( $_FILES[ 'picture' ] )
     {
         echo "Uploading image";

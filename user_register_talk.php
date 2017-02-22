@@ -78,8 +78,8 @@ $speaker = array(
     );
 
 $talk = array( 'created_by' => $_SESSION[ 'user' ] 
-    , 'created_on' => dbDateTime( 'now' )
-    );
+            , 'created_on' => dbDateTime( 'now' )
+        );
 
 // Show speaker image here.
 
@@ -87,6 +87,7 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 
 echo '<form method="post" enctype="multipart/form-data" 
         action="user_register_talk_action.php">';
+
 echo "<h3>Speaker details</h3>";
 echo printInfo( 
     "Email id of speaker is desirable. It helps keeping database clean 

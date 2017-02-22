@@ -737,6 +737,14 @@ function arrayToSelectList( $name, $options
     return $html;
 }
 
+/**
+    * @brief Convert login to text. First name + Middle name + Last name format.
+    *
+    * @param $login
+    * @param $withEmail
+    *
+    * @return A string of length.
+ */
 function loginToText( $login, $withEmail = true )
 {
     // If only login name is give, query database to get the array. Otherwise 
@@ -749,8 +757,13 @@ function loginToText( $login, $withEmail = true )
     if( ! $user )
         return $login;
 
-    if( array_key_exists( 'first_name', $user ) )
-        $text = $user['first_name'] . ' ' . $user[ 'last_name' ];
+    // Return first name + middle name + last name.
+    $name = array( );
+    foreach( array( 'first_name', 'middle_name', 'last_name' ) as $key )
+        if( array_key_exists( $key, $login ) )
+            array_push( $name, $login[ $key ] );
+
+    $text = implode( ' ', $name );
 
     if( $withEmail )
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
@@ -1081,13 +1094,14 @@ function googleCaledarURL( )
     return $url;
 }
 
-function showImage( $picpath )
+function showImage( $picpath, $height = 'auto', $width = 'auto' )
 {
     if( ! file_exists( $picpath ) )
         $picpath = nullPicPath( );
 
-    $html = '<img class="login_picture" width="200px"
-        height="auto" src="' . dataURI( $picpath, 'image/png' ) . '" >';
+    $html = '<img class="login_picture" width="' . $width 
+            . '" height="' . $height . '" src="' 
+            . dataURI( $picpath, 'image/png' ) . '" >';
     return $html;
 }
 
@@ -1099,7 +1113,17 @@ function showImage( $picpath )
 function nullPicPath( )
 {
     $conf = getConf( );
-    return $conf['global']['user_imagedir'] . '/null.png';
+    return $conf['data']['user_imagedir'] . '/null.png';
+}
+
+function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
+{
+    $picName = str_replace( ' ', '', $speaker );
+    $picPath = getConf( )['data']['user_imagedir'] . '/' . $picName . '.png';
+    if( ! file_exists( $picPath ) )
+        $picPath = getConf( )['data']['user_imagedir'] . '/hippo.png';
+
+    return showImage( $picPath, $height, $width );
 }
 
 ?>

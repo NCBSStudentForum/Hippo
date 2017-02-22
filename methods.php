@@ -495,12 +495,11 @@ function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
 function getUserPicture( $user )
 {
     //$picPath = __DIR__ . "/data/no_image_available.png";
-    $picPath = __DIR__ . "/data/hippo.png";
+    $picPath = nullPicPath( $user );
     if( array_key_exists( 'conf', $_SESSION ) )
     {
-        $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
         if( ! file_exists( $picPath ) )
-            $picPath = __DIR__ . "/data/hippo.png";
+            $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
     }
         
     $html ='<img class="login_picture" width="200px"

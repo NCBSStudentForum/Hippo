@@ -33,7 +33,7 @@ function eventToTex( $event, $talk = null )
         $imagefile = nullPicPath( );
 
     // Add user image.
-    $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
+    $speakerImg = '\includegraphics[height=5cm]{' . $imagefile . '}';
 
     if( $talk )
     {
@@ -43,7 +43,6 @@ function eventToTex( $event, $talk = null )
         // Get speaker.
         $speakerHTML = speakerToHTML( $talk['speaker' ] );
         $speakerTex = html2Tex( $speakerHTML );
-        echo "<pre> $speakerTex </pre>";
         $speaker = $speakerTex;
     }
 
@@ -51,10 +50,9 @@ function eventToTex( $event, $talk = null )
     $head = '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image] (where)  { \hfill  ' .  $where . '};';
-    $head .= '\node[below=of where,yshift=3mm] (when)  { 
-                \hfill \faCalendarCheckO \quad ' .  $when . '};';
-    $head .= '\node[right=of image, yshift=10mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
+    $head .= '\node[above right=of image] (when)  { 
+                \hfill \faCalendarCheckO \quad ' .  $when . ', ' . $where . '};';
+    $head .= '\node[below=of when, yshift=0mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $tex = array( $head );
@@ -139,11 +137,10 @@ else
 $outfile = 'EVENTS';
 foreach( $ids as $id )
 {
-    echo printInfo( "Generating for id $id" );
+    echo printInfo( "Generating pdf for id $id" );
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
     $outfile .= '_' . $event[ 'date' ];
-
     $tex[] = eventToTex( $event, $talk );
     $tex[] = '\pagebreak';
 }

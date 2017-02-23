@@ -5,7 +5,7 @@ include_once 'database.php';
 function sendEmail($msg, $sub, $to) 
 {
 
-    if( ! array_key_exists( 'send_emails', $_SESSION[ 'conf' ]['global' ] ) )
+    if( ! array_key_exists( 'send_emails', getConf( )['global' ] ) )
     {
         echo printInfo( "Email service has not been configured." );
         error_log( "Mail service is not configured" );

@@ -48,9 +48,12 @@ $eventGroupTitle = '';
 if( count( $events ) < 1 )
 {
     echo minionEmbarrassed( "I could not find an event." );
+    echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
+    exit;
 }
 else
 {
+    $group = array( );
     foreach( $events as $event )
     {
         $event = explode( '.', $event );
@@ -58,13 +61,20 @@ else
 
         $eventInfo = getRequestById( $gid, $rid );
         $eventText = eventToText( $eventInfo );
+        array_push( $group, $eventInfo );
 
         $userEmail = getLoginEmail(  $eventInfo[ 'created_by' ] );
         $eventGroupTitle = $eventInfo[ 'title' ];
 
         $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
 
-        actOnRequest( $gid, $rid, $whatToDo );
+        try {
+            actOnRequest( $gid, $rid, $whatToDo );
+        } catch ( Exception $e ) {
+            echo printWarning( "Failed to update request: " . $e->getMessage( ) );
+            echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
+            exit;
+        }
         changeIfEventIsPublic( $gid, $rid, $isPublic );
 
         if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
@@ -78,7 +88,7 @@ else
     $msg .= "</table>";
 
     // Append user email to front.
-    $msg = "<p>Dear " . loginToText( $events[0]['created_by' ], true ) . '</p>' . $msg;
+    $msg = "<p>Dear " . loginToText( $group[0]['created_by' ], true ) . '</p>' . $msg;
 
     $res = sendEmail( $msg
         , "Your request for event title '$eventGroupTitle'  has been acted upon"

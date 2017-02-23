@@ -17,6 +17,16 @@ function displayRequest( button ) {
 
 <?php
 
+function fixHTML( $html )
+{
+    $res = $html;
+    // Replate all new line with space.
+    $res = preg_replace( "/[\r\n]+/", ' ', $res );
+    $res = str_replace( '<br />', '', $res );
+    $res = str_replace( '<br/>', '', $res );
+    $res = str_replace( '<br>', '', $res );
+    return $res;
+}
 
 /**
     * @brief Summary table for front page.
@@ -1018,7 +1028,7 @@ function talkToHTML( $talk, $with_picture = false )
                   <br>' . $talk['speaker']  . '<br>' . $when . 
                   '<br>' . $where . '</td></tr>';
     $html .= '</table>';
-    $html .= "<p>" . $talk[ 'description' ] . '</p>';
+    $html .= "<p>" . fixHTML( $talk[ 'description' ] ) . '</p>';
     $html .= "</div>";
     return $html;
 }

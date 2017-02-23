@@ -14,7 +14,7 @@ if( strtolower($_POST['response']) == 'edit' )
 {
     echo printInfo( 
         "You are editing an upcoming event. You can only modify 
-        title, description and class of the events."
+        title, description, end time and class of the events."
         );
     $events = getEventsByGroupId( $gid );
     // We only edit once request and all other in the same group should get 
@@ -22,7 +22,7 @@ if( strtolower($_POST['response']) == 'edit' )
     $event = $events[0];
     echo "<form method=\"post\" action=\"user_show_events_edit_submit.php\">";
     echo dbTableToHTMLTable( 'events', $event
-        , 'title,description,class' 
+        , 'title,description,class,end_time' 
         );
     echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\" />";
     echo "</form>";
@@ -51,4 +51,4 @@ else
     echo printWarning( "Bad response " .  $_POST['response']  );
 }
 
-echo goBackToPageLink( "user_show_event.php", "Go back");
+echo goBackToPageLink( "user_show_events.php", "Go back");

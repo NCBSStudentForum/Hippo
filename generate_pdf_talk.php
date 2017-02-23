@@ -4,7 +4,7 @@ include_once 'database.php';
 include_once 'tohtml.php';
 
 
-function eventToTex( $event )
+function eventToTex( $event, $talk = null )
 {
     // First sanities the html before it can be converted to pdf.
     foreach( $event as $key => $value )
@@ -18,48 +18,63 @@ function eventToTex( $event )
         $event[ $key ] = $value;
     }
 
-    $speaker = __ucwords__( loginToText( $event[ 'speaker' ] , false ));
+    // Crate date and plate.
+    $where = venueSummary( $event[ 'venue' ] );
+    $when = humanReadableDate( $event['date'] ) . ', ' . 
+        humanReadableTime( $event[ 'start_time' ] ) . ' to ' .
+        humanReadableTime( $event[ 'end_time' ] );
+
     $title = __ucwords__( $event[ 'title' ]);
-    $abstract = $event[ 'abstract' ];
+    $desc = $event[ 'description' ];
+    $speaker = '';
 
-    // Add user image.
-    $imagefile = getSpeakerPicturePath( $event[ 'speaker' ] );
-
+    // Prepare speaker image.
+    $imagefile = nullPicPath( );
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
-
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
+    if( $talk )
+    {
+        $title = __ucwords__( $talk['title'] );
+        $desc = __ucwords__( $talk[ 'description' ] );
+        $speaker = __ucwords__( loginToText( $talk[ 'speaker' ] , false ));
+        // Add user image.
+        $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
+    }
+
+    // Header
+    $head = '\begin{tikzpicture}[ every node/.style={rectangle
+        ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
+    $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
+    $head .= '\node[above right=of image] (where)  {\hfill ' .  $where . '};';
+    $head .= '\node[below=of where,yshift=3mm] (when)  {\hfill ' .  $when . '};';
+    $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
+    $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
+    $head .= '\end{tikzpicture}';
+    $tex = array( $head );
+
+    // Put talk class in header.
+    if( $talk )
+        $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
     // Date and plate
     $dateAndPlace =  humanReadableDate( $event[ 'date' ] ) .  
             ', 4:00pm at \textbf{Hapus (LH1)}';
     $dateAndPlace = '\faCalendarCheckO \quad ' . $dateAndPlace;
 
-    $head = '\begin{tikzpicture}[ every node/.style={rectangle
-        ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
-    $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image] (schedule)  {\hfill ' . 
-                $dateAndPlace . '};';
-    $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
-    $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
-    $head .= '\end{tikzpicture}';
 
-
-
-    // Header
-    $tex = array( $head );
     $tex[] = '\par';
 
     // remove html formating before converting to tex.
-    file_put_contents( '/tmp/abstract.html', $abstract );
+    file_put_contents( '/tmp/__event__.html', $desc );
     $cmd = 'python ' . __DIR__ . '/html2other.py';
-    $texAbstract = `$cmd /tmp/abstract.html tex`;
+    $texAbstract = `$cmd /tmp/__event__.html tex`;
 
     if( strlen(trim($texAbstract)) > 10 )
-        $abstract = $texAbstract;
+        $desc = $texAbstract;
 
     // Title and abstract
-    $tex[] = '{\large ' . $abstract . '}';
+    $tex[] = '{\large ' . $desc . '}';
     $extra = '\begin{table}[ht!]';
     $extra .= '\begin{tabular}{ll}';
     $extra .= '\end{tabular}';
@@ -69,20 +84,6 @@ function eventToTex( $event )
     return implode( "\n", $tex );
 } // Function ends.
 
-if( array_key_exists( 'date', $_GET ) )
-{
-    // Get all ids on this day.
-    $date = $_GET[ 'date' ];
-    $ids = getTableEntries( 'events', '', "date='$date' 
-            AND external_id LIKE 'talks.%'" );
-}
-else if( array_key_exists( 'id', $_GET ) )
-    $ids = array( $_GET[ 'id' ] );
-else
-{
-    echo alertUser( 'Invalid request.' );
-    exit;
-}
 
 // Intialize pdf template.
 $tex = array( "\documentclass[]{article}"
@@ -97,7 +98,6 @@ $tex = array( "\documentclass[]{article}"
     , '\linespread{1.2}'
     , '\pagestyle{fancy}'
     , '\pagenumbering{gobble}'
-    , '\lhead{\textsc{{\color{blue} TALK}}}' // This should be changed for each page.
     , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
         TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
@@ -107,22 +107,39 @@ $tex = array( "\documentclass[]{article}"
     , '\begin{document}'
     );
 
-$outfile = 'TALKS_' . $date;
 
+$ids = array( );
+if( array_key_exists( 'date', $_GET ) )
+{
+    // Get all ids on this day.
+    $date = $_GET[ 'date' ];
+    $entries = getTableEntries( 'events', '', "date='$date' 
+            AND external_id LIKE 'talks.%'" );
+
+    foreach( $entries as $entry )
+        array_push( $ids, explode( '.', $entry[ 'external_id' ] )[1] );
+}
+else if( array_key_exists( 'id', $_GET ) )
+    array_push( $ids, $_GET[ 'id' ] );
+else
+{
+    echo alertUser( 'Invalid request.' );
+    exit;
+}
+
+// Prepare TEX document.
+$outfile = 'EVENTS_ON_' . dbDate( $date );
 foreach( $ids as $id )
 {
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
 
-    $outfile .= '_' . $event[ 'speaker' ];
-    $tex[] = eventToTex( $event );
+    $tex[] = eventToTex( $event, $talk );
     $tex[] = '\pagebreak';
 }
 
 $tex[] = '\end{document}';
 $TeX = implode( "\n", $tex );
-
-echo "<pre> $TeX </pre>";
 
 // Generate PDF now.
 $outdir = __DIR__ . "/data";
@@ -143,7 +160,7 @@ else
 {
     echo printWarning( "Failed to genered pdf document <br>
         This is usually due to hidden special characters 
-        in your abstract. You need to clean your entry up." );
+        in your description. You need to clean your entry up." );
     echo printWarning( "Error message <small>This is only for diagnostic
         purpose. Show it to someone who is good with LaTeX </small>" );
     echo "<pre> $res </pre>";

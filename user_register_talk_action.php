@@ -47,9 +47,7 @@ else                // Everything is fine.
         $speakerText = loginToText( $speaker, $withEmail = False  );
         $_POST[ 'speaker' ] = $speakerText;
 
-        $res2 = insertIntoTable( 'talks'
-            , 'host,title,speaker,description,created_by,created_on'
-            , $_POST ); 
+        $res2 = addNewTalk( $_POST );
 
         if( $res2 )
         {

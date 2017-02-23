@@ -122,7 +122,8 @@ function initialize( )
 
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS talks 
-        ( id INT NOT NULL AUTO_INCREMENT
+        -- id should not be auto_increment.
+        ( id INT NOT NULL
             -- This will be prefixed in title of event. e.g. Thesis Seminar by
             -- , Public Lecture by, seminar by etc.
             , class VARCHAR(20) NOT NULL DEFAULT "TALK"
@@ -1960,6 +1961,26 @@ function getSpeakers( )
     return fetchEntries( $res );
 }
 
+/**
+    * @brief Add a new talk.
+    *
+    * @param $data
+    *
+    * @return 
+ */
+function addNewTalk( $data )
+{
+    global $db;
+    // Get the max id
+    $res = $db->query( 'SELECT MAX(id) FROM talks' );
+    $maxid = $res->fetch( PDO::FETCH_ASSOC);
+    $id = intval( $maxid['id'] ) + 1;
+
+    $data[ 'id' ] = $id;
+    return insertIntoTable( 'talks'
+        , 'id,host,title,speaker,description,created_by,created_on'
+        , $data ); 
+}
 
 
 

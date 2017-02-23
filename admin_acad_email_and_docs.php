@@ -154,6 +154,7 @@ else if( $default[ 'task' ] == 'Today\'s events' )
     echo "<h3> Events on " . humanReadableDate( $date ) . " </h3>";
     $entries = getEventsOn( $date );
     $html = '';
+    print_r( $entries );
     foreach( $entries as $entry )
     {
         if( $entry[ 'is_public_event' ] == 'YES' )

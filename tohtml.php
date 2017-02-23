@@ -183,7 +183,7 @@ function eventSummary( $event )
 
 function requestToText( $req )
 {
-    $html = 'By ' . $req['user'] . ', ';
+    $html = 'By ' . $req['created_by'] . ', ';
     $html .= $req['title'];
     $html .= ' @' . $req['venue'] . ', ';
     $html .= $req['start_time'] . ' to ' . $req['end_time'];

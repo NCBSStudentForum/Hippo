@@ -57,48 +57,54 @@ else                // Everything is fine.
             echo printInfo( "Successfully registered your talk with id $talkId" );
             $startTime = $_POST[ 'start_time' ];
             $endTime = $_POST[ 'end_time' ];
-            $date = $_POST[ 'end_time' ];
-            $venue = $_POST[ 'venue' ];
 
-            if( $venue && $startTime && $endTime && $date )
+            if( ! isBookingRequestValid( $_POST ) )
             {
-                /* Check if there is a conflict between required slot and already 
-                 * booked events or requests. If no then book else redirect user to 
-                 * a page where he can make better decisions.
-                 */
+                $date = $_POST[ 'end_time' ];
+                $venue = $_POST[ 'venue' ];
 
-                $reqs = getRequestsOnThisVenueBetweenTime( $venue, $date
-                    , $startTime, $endTime );
-                $events = getEventsOnThisVenueBetweenTime( $venue, $date
-                    , $startTime, $endTime );
-                if( $reqs || $events )
+                if( $venue && $startTime && $endTime && $date )
                 {
-                    echo printInfo( "There is already an events on $venue on $date
-                        between $startTime and $endTime. 
-                        <br />
-                        I am redirecting you to page where you can browse all venues 
-                       and create suitable booking request."
-                    );
-                    goToPage( 'user_manage_talk.php', 10 );
-                    exit;
-                }
-                else 
-                {
-                    // Else create a request with external_id as talkId.
-                    $external_id = "talks." . $talkId;
-                    $_POST[ 'external_id' ] = $external_id;
-                    $_POST[ 'is_public_event' ] = 'YES';
+                    /* Check if there is a conflict between required slot and already 
+                     * booked events or requests. If no then book else redirect user to 
+                     * a page where he can make better decisions.
+                     */
 
-                    // Modify talk title for calendar.
-                    $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . ' on \'' . 
-                        trim( $_POST[ 'title' ] ) . "'";
+                    $reqs = getRequestsOnThisVenueBetweenTime( $venue, $date
+                        , $startTime, $endTime );
+                    $events = getEventsOnThisVenueBetweenTime( $venue, $date
+                        , $startTime, $endTime );
+                    if( $reqs || $events )
+                    {
+                        echo printInfo( "There is already an events on $venue on $date
+                            between $startTime and $endTime. 
+                            <br />
+                            I am redirecting you to page where you can browse all venues 
+                           and create suitable booking request."
+                        );
+                        goToPage( 'user_manage_talk.php', 10 );
+                        exit;
+                    }
+                    else 
+                    {
+                        // Else create a request with external_id as talkId.
+                        $external_id = "talks." . $talkId;
+                        $_POST[ 'external_id' ] = $external_id;
+                        $_POST[ 'is_public_event' ] = 'YES';
 
-                    $res = submitRequest( $_POST );
-                    if( $res )
-                        echo printInfo( "Successfully created booking request" );
-                    else
-                        echo printWarning( "Oh Snap! Failed to create booking request" );
+                        // Modify talk title for calendar.
+                        $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . ' on \'' . 
+                            trim( $_POST[ 'title' ] ) . "'";
+
+                        $res = submitRequest( $_POST );
+                        if( $res )
+                            echo printInfo( "Successfully created booking request" );
+                        else
+                            echo printWarning( "Oh Snap! Failed to create booking request" );
+                    }
                 }
+                else
+                    echo printInfo( "The booking request is invalid." );
             }
         }
         else

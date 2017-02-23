@@ -604,3 +604,28 @@ function uploadImage( $pic, $filename )
     return saveImageAsPNG( $tmpfile, $ext, $picPath );
 }
 
+/**
+* @brief Check if a booking request is valid.  
+* NOTE: This function is incomplete.
+*
+* @param $request
+*
+* @return 
+ */
+function isBookingRequestValid( $request )
+{
+    $date = $request[ 'date' ];
+    $startT = $request[ 'start_time' ];
+    $endT = $request[ 'end_time' ];
+
+    if( strtotime( $endT, strtotime( $date) ) - 
+        strtotime( $startT, strtotime( $date ) ) 
+        )
+    {
+        echo printWarning( "The duration of this event is less than 15 minutes" );
+        return false;
+    }
+
+    return true;
+}
+

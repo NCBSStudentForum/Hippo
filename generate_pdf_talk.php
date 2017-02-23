@@ -29,13 +29,11 @@ function eventToTex( $event, $talk = null )
     $speaker = '';
 
     // Prepare speaker image.
-    $imagefile = nullPicPath( );
+    $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
 
     // Add user image.
-    $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
-
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     if( $talk )

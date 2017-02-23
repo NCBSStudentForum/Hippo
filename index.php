@@ -7,25 +7,6 @@ include_once( 'calendar/calendar.php' );
 
 session_save_path("/tmp/");
 
-$conf = array();
-$inifile = "/etc/hipporc";
-
-if(file_exists($inifile)) 
-    $conf = parse_ini_file($inifile, $process_section = TRUE );
-else
-{
-    echo printWarning( "Config file is not found. Can't continue" );
-    exit;
-}
-
-if(!$conf)
-{
-    $error = "Failed to read  configuartion file.";
-    header($error." I can't do anything anymore. Please wake up the admin.");
-    exit;
-}
-
-$_SESSION['conf'] = $conf;
 // If user is already authenticated, redirect him to user.php
 // NOTE: DO NOT put this block before loading configuration files.
 if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
@@ -48,13 +29,7 @@ $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
-ini_set( 'error_log', '/tmp/__hippo__.log' );
-
-/* counter */
-
-//$hit_count = (int)file_get_contents('count.txt');
-//$hit_count++;
-//file_put_contents('count.txt', $hit_count);
+ini_set( 'error_log', '/var/log/hippo.log' );
 
 $summary = summaryTable( );
 

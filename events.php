@@ -62,6 +62,10 @@ else
         $talkHtml .= $eventHtml;
     }
     echo $talkHtml;
+
+    echo '<a target="_blank" href="generate_pdf_talk.php?date=' 
+            . $default[ 'date' ] . '&id=' . $talkId . '">Download pdf</a>';
+    echo '<br>';
 }
 
 echo closePage( );

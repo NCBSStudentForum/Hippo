@@ -22,9 +22,9 @@ function fixHTML( $html )
     $res = $html;
     // Replate all new line with space.
     $res = preg_replace( "/[\r\n]+/", ' ', $res );
-    $res = str_replace( '<br />', '', $res );
-    $res = str_replace( '<br/>', '', $res );
-    $res = str_replace( '<br>', '', $res );
+    $res = str_replace( '<br />', ' ', $res );
+    $res = str_replace( '<br/>', ' ', $res );
+    $res = str_replace( '<br>', ' ', $res );
     return $res;
 }
 

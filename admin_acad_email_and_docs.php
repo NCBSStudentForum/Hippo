@@ -145,6 +145,24 @@ else if( $default[ 'task' ] == 'This week events' )
             );
     }
 }
+else if( $default[ 'task' ] == 'Today\'s events' )
+{
+    // List todays events.
+
+    // Get all ids on this day.
+    $date = $default[ 'date' ];
+    echo "<h3> Events on date " . humanReadableDate( $date ) . " </h3>";
+    $entries = getEventsOn( $date );
+    foreach( $entries as $entry )
+    {
+        if( $entry[ 'is_public_event' ] == 'YES' )
+        {
+            $talkid = explode( '.', $entry[ 'external_id' ])[1];
+            $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
+            echo talkToHTML( $talk );
+        }
+    }
+}
 
 // Only if the AWS date in future/today, allow admin to send emails.
 if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )

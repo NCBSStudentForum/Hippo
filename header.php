@@ -102,6 +102,20 @@ function AreYouSure( button )
 <!-- load basic unicode chara -->
 <?php
 
+// Always parse the config file and save it in the session.
+$inifile = '/etc/hipporc';
+if(file_exists($inifile)) 
+{
+    $conf = parse_ini_file($inifile, $process_section = TRUE );
+    $_SESSION[ 'conf' ] = $conf;
+}
+else
+{
+    echo printWarning( "Config file is not found. Can't continue" );
+    exit;
+}
+
+
 //$symbEdit = "&#9998";              // pencil
 $symbEdit = "&#x270d";                // Writing hand
 $symbUpdate = "&#x270d";

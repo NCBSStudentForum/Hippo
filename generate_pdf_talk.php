@@ -21,10 +21,9 @@ function eventToTex( $event, $talk = null )
     // Crate date and plate.
     $where = venueSummary( $event[ 'venue' ] );
     $when = humanReadableDate( $event['date'] ) . ', ' . 
-        humanReadableTime( $event[ 'start_time' ] ) . ' to ' .
-        humanReadableTime( $event[ 'end_time' ] );
+        humanReadableTime( $event[ 'start_time' ] );
 
-    $title = __ucwords__( $event[ 'title' ]);
+    $title = $event[ 'title' ];
     $desc = $event[ 'description' ];
     $speaker = '';
 
@@ -38,9 +37,14 @@ function eventToTex( $event, $talk = null )
 
     if( $talk )
     {
-        $title = __ucwords__( $talk['title'] );
+        $title = $talk['title'];
         $desc = fixHTML( $talk[ 'description' ] );
-        $speaker = __ucwords__( loginToText( $talk[ 'speaker' ] , false ));
+
+        // Get speaker.
+        $speakerHTML = speakerToHTML( $talk['speaker' ] );
+        $speakerTex = html2Tex( $speakerHTML );
+        echo "<pre> $speakerTex </pre>";
+        $speaker = $speakerTex;
     }
 
     // Header
@@ -50,7 +54,7 @@ function eventToTex( $event, $talk = null )
     $head .= '\node[above right=of image] (where)  { \hfill  ' .  $where . '};';
     $head .= '\node[below=of where,yshift=3mm] (when)  { 
                 \hfill \faCalendarCheckO \quad ' .  $when . '};';
-    $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
+    $head .= '\node[right=of image, yshift=10mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $tex = array( $head );
@@ -119,7 +123,9 @@ else if( array_key_exists( 'date', $_GET ) )
 {
     // Get all ids on this day.
     $date = $_GET[ 'date' ];
+    echo printInfo( "Events on $date" );
     $outfile = 'EVENTS_ON_' . dbDate( $date );
+    $entries = getPublicEventsOnThisDay( $date );
     foreach( $entries as $entry )
         array_push( $ids, explode( '.', $entry[ 'external_id' ] )[1] );
 }
@@ -133,6 +139,7 @@ else
 $outfile = 'EVENTS';
 foreach( $ids as $id )
 {
+    echo printInfo( "Generating for id $id" );
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
     $outfile .= '_' . $event[ 'date' ];
@@ -150,8 +157,9 @@ $texFile = $outdir . '/' . $outfile . ".tex";
 $pdfFile = $outdir . '/' . $outfile . ".pdf";
 
 file_put_contents( $texFile,  $TeX );
+$cmd = "pdflatex --output-directory $outdir $texFile";
 if( file_exists( $texFile ) )
-    $res = `pdflatex --output-directory $outdir $texFile`;
+    $res = `$cmd`;
 
 if( file_exists( $pdfFile ) )
 {
@@ -166,6 +174,7 @@ else
         in your description. You need to clean your entry up." );
     echo printWarning( "Error message <small>This is only for diagnostic
         purpose. Show it to someone who is good with LaTeX </small>" );
+    echo "Command <pre> $cmd </pre>";
     echo "<pre> $res </pre>";
 }
 

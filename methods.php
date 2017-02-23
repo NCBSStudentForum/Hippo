@@ -539,9 +539,15 @@ function rescheduleAWS( )
     return $output;
 }
 
-function html2Markdown( $html )
+function html2Markdown( $html, $strip_inline_image = false )
 {
-    $outfile = __DIR__ . '/data/_aws_email.html';
+    if( $strip_inline_image )
+    {
+        // remove img tag.
+        $html = preg_replace( '/<img[^>]+\>/i', '', $html );
+    }
+
+    $outfile = __DIR__ . '/data/_html.html';
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
@@ -552,6 +558,27 @@ function html2Markdown( $html )
     }
     else 
         return html2text( $html );
+}
+
+function html2Tex( $html, $strip_inline_image = false )
+{
+    if( $strip_inline_image )
+    {
+        // remove img tag.
+        $html = preg_replace( '/<img[^>]+\>/i', '', $html );
+    }
+
+    $outfile = __DIR__ . '/data/_html.html';
+    file_put_contents( $outfile, $html );
+    if( file_exists( $outfile ) )
+    {
+        $cmd = "python " . __DIR__ . "/html2other.py $outfile tex ";
+        $tex = `$cmd`;
+        unlink( $outfile );
+        return $tex;
+    }
+    else 
+        return html2Markdown( $html );
 }
 
 function saveDownloadableFile( $filename, $content )

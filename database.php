@@ -543,7 +543,7 @@ function getEventsBeteen( $from , $duration )
     $whereExpr = "date >= '$startDate' AND date <= '$endDate' ";
 
     $whereExpr .= " AND status='VALID' ";
-    return getTableEntries( 'events', 'date', $whereExpr, 'date,start_time' );
+    return getTableEntries( 'events', 'date,start_time', $whereExpr, 'date,start_time' );
 }
 
 

@@ -1972,7 +1972,7 @@ function addNewTalk( $data )
 {
     global $db;
     // Get the max id
-    $res = $db->query( 'SELECT MAX(id) FROM talks' );
+    $res = $db->query( 'SELECT MAX(id) AS id FROM talks' );
     $maxid = $res->fetch( PDO::FETCH_ASSOC);
     $id = intval( $maxid['id'] ) + 1;
 

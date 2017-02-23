@@ -21,11 +21,11 @@ if( ! ( $_POST['first_name']  && $_POST[ 'institute' ] && $_POST[ 'title' ]
 }
 else                // Everything is fine.
 {
-    $filename = getSpeakerPictureName( $_POST );
+    $filepath = getSpeakerPicturePath( $_POST );
     if( $_FILES[ 'picture' ] )
     {
         echo "Uploading image";
-        uploadImage( $_FILES['picture'], $filename );
+        uploadImage( $_FILES['picture'], $filepath );
     }
 
     // Insert the speaker into table. if it already exists, just update the 

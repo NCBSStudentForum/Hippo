@@ -4,10 +4,10 @@ include_once 'database.php';
 include_once 'tohtml.php';
 
 
-function awsToTex( $aws )
+function eventToTex( $event )
 {
     // First sanities the html before it can be converted to pdf.
-    foreach( $aws as $key => $value )
+    foreach( $event as $key => $value )
     {
         // See this 
         // http://stackoverflow.com/questions/9870974/replace-nbsp-characters-that-are-hidden-in-text
@@ -15,43 +15,23 @@ function awsToTex( $aws )
         $value = str_replace( '&nbsp;', '', $value );
         $value = preg_replace( '/\s+/', ' ', $value );
         $value = html_entity_decode( trim( $value ) );
-        $aws[ $key ] = $value;
+        $event[ $key ] = $value;
     }
 
-    $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
-
-    $supervisors = array( __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_1' ] ), false ))
-                ,  __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_2' ] ), false ))
-            );
-    $supervisors = array_filter( $supervisors );
-
-    $tcm = array( );
-    array_push( $tcm, __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_1' ] ), false ))
-            , __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_2' ] ), false ))
-            ,  __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_3' ] ), false ))
-            , __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_4' ] ), false ))
-        );
-    $tcm = array_filter( $tcm );
-
-    $title = __ucwords__( $aws[ 'title' ]);
-    $abstract = $aws[ 'abstract' ];
+    $speaker = __ucwords__( loginToText( $event[ 'speaker' ] , false ));
+    $title = __ucwords__( $event[ 'title' ]);
+    $abstract = $event[ 'abstract' ];
 
     // Add user image.
-    $imagefile = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . 
-        $aws['speaker'] . '.png';
+    $imagefile = getSpeakerPicturePath( $event[ 'speaker' ] );
+
     if( ! file_exists( $imagefile ) )
-        $imagefile = __DIR__ . '/data/null.png';
+        $imagefile = nullPicPath( );
 
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     // Date and plate
-    $dateAndPlace =  humanReadableDate( $aws[ 'date' ] ) .  
+    $dateAndPlace =  humanReadableDate( $event[ 'date' ] ) .  
             ', 4:00pm at \textbf{Hapus (LH1)}';
     $dateAndPlace = '\faCalendarCheckO \quad ' . $dateAndPlace;
 
@@ -82,8 +62,6 @@ function awsToTex( $aws )
     $tex[] = '{\large ' . $abstract . '}';
     $extra = '\begin{table}[ht!]';
     $extra .= '\begin{tabular}{ll}';
-    $extra .= '\textbf{Supervisor(s)} & ' . implode( ",", $supervisors) . '\\\\';
-    $extra .= '\textbf{Thesis Committee Member(s)} & ' . implode( ", ", $tcm ) . '\\\\';
     $extra .= '\end{tabular}';
     $extra .= '\end{table}';
 
@@ -113,6 +91,7 @@ $tex = array( "\documentclass[]{article}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"
+    // Old version may not work.
     , "\usepackage{fontawesome}"
     , '\usepackage{fancyhdr}'
     , '\linespread{1.2}'
@@ -129,19 +108,21 @@ $tex = array( "\documentclass[]{article}"
     );
 
 $outfile = 'TALKS_' . $date;
+
 foreach( $ids as $id )
 {
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
 
-    $outfile .= '_' . $aws[ 'speaker' ];
-    $tex[] = awsToTex( $aws );
+    $outfile .= '_' . $event[ 'speaker' ];
+    $tex[] = eventToTex( $event );
     $tex[] = '\pagebreak';
 }
 
 $tex[] = '\end{document}';
 $TeX = implode( "\n", $tex );
-//echo "<pre> $TeX </pre>";
+
+echo "<pre> $TeX </pre>";
 
 // Generate PDF now.
 $outdir = __DIR__ . "/data";

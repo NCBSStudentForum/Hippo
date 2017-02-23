@@ -47,10 +47,9 @@ else                // Everything is fine.
         $speakerText = loginToText( $speaker, $withEmail = False  );
         $_POST[ 'speaker' ] = $speakerText;
 
-        $_POST[ 'status' ] = 'VALID';
-        $res2 = insertOrUpdateTable( 'talks'
+        $res2 = insertIntoTable( 'talks'
             , 'host,title,speaker,description,created_by,created_on'
-            , 'status', $_POST ); 
+            , $_POST ); 
 
         if( $res2 )
         {
@@ -59,7 +58,7 @@ else                // Everything is fine.
             $startTime = $_POST[ 'start_time' ];
             $endTime = $_POST[ 'end_time' ];
 
-            if( ! isBookingRequestValid( $_POST ) )
+            if( isBookingRequestValid( $_POST ) )
             {
                 $date = $_POST[ 'end_time' ];
                 $venue = $_POST[ 'venue' ];

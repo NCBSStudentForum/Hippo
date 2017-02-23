@@ -206,7 +206,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         $venueT = venueToText( $venue );
         echo "<td>$venueT</td>";
-        echo '<td> <button type="submit" title="Book this venue">' . $symbThumbsUp . '</button></td>';
+        echo '<td> <button type="submit" title="Book this venue">' . $symbCheck . '</button></td>';
         echo '</form>';
         echo '</tr>';
     }

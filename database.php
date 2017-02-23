@@ -518,7 +518,7 @@ function getEventsOfUser( $userid, $from = '-0 days', $status = 'VALID' )
     $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:created_by 
         AND date >= :from
         AND status=:status
-        GROUP BY gid' );
+        GROUP BY gid ORDER BY date,start_time' );
     $stmt->bindValue( ':created_by', $userid );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':from', $from );

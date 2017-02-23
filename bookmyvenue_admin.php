@@ -57,6 +57,7 @@ foreach( $requests as $r )
 $html .= '</table>';
 $html .= "</div>";
 echo $html;
+echo goBackToPageLink( "user.php", "Go back" );
 
 ?>
 
@@ -69,12 +70,14 @@ echo alertUser( 'Public events will apprear first' );
 $html = '<div style="font-size:small;">';
 $events = getEventsBeteen( 'today', '+4 week' );
 
+
 $html .= "<table>";
 // Sort events. Put public events first.
 usort( $events, function( $a, $b ) {
                 return $a[ 'is_public_event'] < $b['is_public_event']; 
                 } 
     );
+
 foreach( $events as $event )
 {
     $gid = $event['gid'];

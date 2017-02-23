@@ -576,6 +576,15 @@ function getConf( )
     return $_SESSION['conf'];
 }
 
+/**
+    * @brief Upload a given file. If filename is not absolute path then construct 
+    * it.
+    *
+    * @param $pic Array from $_FILE['picture'], usually!
+    * @param $filename
+    *
+    * @return 
+ */
 function uploadImage( $pic, $filename )
 {
     $tmpfile = $pic[ 'tmp_name' ];
@@ -586,7 +595,12 @@ function uploadImage( $pic, $filename )
         return;
 
     $conf = getConf( );
-    $picPath = $conf[ 'data' ][ 'user_imagedir' ] . '/' . $filename ;
+    $datadir = $conf[ 'date' ][ 'user_imagedir' ];
+    if( strpos( $filename, $datadir ) !== false )
+        $picPath = $filename;
+    else
+        $picPath = $conf[ 'data' ][ 'user_imagedir' ] . '/' . $filename ;
+
     return saveImageAsPNG( $tmpfile, $ext, $picPath );
 }
 

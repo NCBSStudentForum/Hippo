@@ -151,17 +151,31 @@ else if( $default[ 'task' ] == 'Today\'s events' )
 
     // Get all ids on this day.
     $date = $default[ 'date' ];
-    echo "<h3> Events on date " . humanReadableDate( $date ) . " </h3>";
+    echo "<h3> Events on " . humanReadableDate( $date ) . " </h3>";
     $entries = getEventsOn( $date );
+    $html = '';
     foreach( $entries as $entry )
     {
         if( $entry[ 'is_public_event' ] == 'YES' )
         {
             $talkid = explode( '.', $entry[ 'external_id' ])[1];
             $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
-            echo talkToHTML( $talk );
+            echo talkToHTML( $talk, true );
+            $html .= talkToHTML( $talk, false );
         }
     }
+
+    $md = html2Markdown( $html, $strip_inline_image = true );
+    $emailFileName = 'EVENT_' . $default['date'] . '.txt';
+    saveDownloadableFile( $emailFileName, $md );
+    echo downloadTextFile( $emailFileName, 'Download email' );
+
+    echo '<br>';
+    // Link to pdf file.
+    echo '<a target="_blank" href="generate_pdf_talk.php?date=' 
+            . $default[ 'date' ] . '">Download pdf</a>';
+    echo '<br>';
+
 }
 
 // Only if the AWS date in future/today, allow admin to send emails.

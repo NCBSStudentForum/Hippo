@@ -28,6 +28,33 @@ function fixHTML( $html )
     return $res;
 }
 
+function speakerToHTML( $speaker )
+{
+    if( is_string( $speaker ) )
+    {
+        $speaker = explode( ' ', $speaker );
+        $fname = $speaker[0];
+        $lname = end( $speaker );
+        $speaker[ 'first_name' ] = $fname;
+        $speaker[ 'last_name' ] = $lname;
+        $speaker = getTableEntry( 'speakers', 'first_name,last_name', $speaker );
+    }
+
+    $name = array( );
+    foreach( explode( ',', 'first_name,middle_name,last_name' ) as $k )
+        if( $speaker[ $k ] )
+            array_push( $name, $speaker[ $k ] );
+
+    $name = implode( ' ', $name );
+
+    $html = $name;
+    if( $speaker[ 'department' ] )
+        $html .= "<small><br>" . $speaker[ 'department' ];
+
+    $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
+    return $html;
+}
+
 /**
     * @brief Summary table for front page.
     *
@@ -1015,21 +1042,31 @@ function talkToHTML( $talk, $with_picture = false )
     $event = getEventsOfTalkId( $talk[ 'id' ] );
     $where = venueSummary( $event[ 'venue' ] );
     $when = humanReadableDate( $event[ 'date' ] ) . ', ' . 
-            humanReadableTime( $event[ 'start_time'] ) . ' to ' .
-            humanReadableTime( $event[ 'end_time' ] );
+            humanReadableTime( $event[ 'start_time'] );
 
     $title = $talk[ 'class' ] . ' by ' . $talk[ 'speaker' ] . " on '"
         . $talk[ 'title' ] . "'";
 
     $html = '<div style="width:500px;text-align:justify">';
-    $html .= '<table border="0">';
-    $html .= '<tr><td>' . showImage( $imgpath, 'auto', '150px' ) . '</td>';
+    $html .= '<table border="0"><tr>';
+    if( $with_picture )
+    {
+        $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
+    }
+
     $html .= '<td><strong>' . $talk[ 'title' ] . '</strong>
-                  <br>' . $talk['speaker']  . '<br>' . $when . 
-                  '<br>' . $where . '</td></tr>';
-    $html .= '</table>';
+                <br>' . speakerToHTML( $talk['speaker'] )
+                . '<br><br> Host: ' . loginToText( $talk[ 'host' ] ) 
+                . '<br><br><small>' . $when 
+                . '<br>' . $where 
+                . '<br>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) 
+                . '</small></td>';
+    $html .= '</tr></table>';
+
     $html .= "<p>" . fixHTML( $talk[ 'description' ] ) . '</p>';
     $html .= "</div>";
+
+
     return $html;
 }
 

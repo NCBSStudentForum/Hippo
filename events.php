@@ -42,7 +42,6 @@ $eventTalks = getTableEntries( 'events', 'date' , "date='$whichDay'
     );
 
 // Only if a event has an external_id then push it into 'talks'
-
 if( count( $eventTalks ) < 1 )
 {
     echo alertUser( "I could not find any talk/seminar/lecture on this day 

@@ -37,7 +37,7 @@ function eventToTex( $event, $talk = null )
     if( $talk )
     {
         $title = __ucwords__( $talk['title'] );
-        $desc = __ucwords__( $talk[ 'description' ] );
+        $desc = fixHTML( $talk[ 'description' ] );
         $speaker = __ucwords__( loginToText( $talk[ 'speaker' ] , false ));
         // Add user image.
         $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
@@ -72,6 +72,8 @@ function eventToTex( $event, $talk = null )
 
     if( strlen(trim($texAbstract)) > 10 )
         $desc = $texAbstract;
+
+    echo "<pre> $desc </pre>";
 
     // Title and abstract
     $tex[] = '{\large ' . $desc . '}';
@@ -109,18 +111,18 @@ $tex = array( "\documentclass[]{article}"
 
 
 $ids = array( );
-if( array_key_exists( 'date', $_GET ) )
+if( array_key_exists( 'id', $_GET ) )
+{
+    array_push( $ids, $_GET[ 'id' ] );
+}
+else if( array_key_exists( 'date', $_GET ) )
 {
     // Get all ids on this day.
     $date = $_GET[ 'date' ];
-    $entries = getTableEntries( 'events', '', "date='$date' 
-            AND external_id LIKE 'talks.%'" );
-
+    $outfile = 'EVENTS_ON_' . dbDate( $date );
     foreach( $entries as $entry )
         array_push( $ids, explode( '.', $entry[ 'external_id' ] )[1] );
 }
-else if( array_key_exists( 'id', $_GET ) )
-    array_push( $ids, $_GET[ 'id' ] );
 else
 {
     echo alertUser( 'Invalid request.' );
@@ -128,11 +130,12 @@ else
 }
 
 // Prepare TEX document.
-$outfile = 'EVENTS_ON_' . dbDate( $date );
+$outfile = 'EVENTS';
 foreach( $ids as $id )
 {
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
+    $outfile .= '_' . $event[ 'date' ];
 
     $tex[] = eventToTex( $event, $talk );
     $tex[] = '\pagebreak';

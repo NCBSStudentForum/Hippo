@@ -125,6 +125,7 @@ $symbCancel = "&#10008";
 
 $symbReject = "Reject";
 $symbApprove = "Approve";
+$symbAccept = "Accept";
 
 $symbScan = "&#8981";
 $symbThumbsDown = "&#128078";

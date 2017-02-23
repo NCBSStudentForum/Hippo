@@ -111,7 +111,7 @@ function goBackToPageLink( $url, $title = "Go back" )
     //$url = __get__( $_SERVER, 'HTTP_REFERER', $url );
     $html .= "<a style=\"float: left\" href=\"$url\">
             <font color=\"blue\" size=\"5\">$title</font>
-        </a></div>";
+        </a></div><br>";
     return $html;
 }
 
@@ -601,7 +601,7 @@ function uploadImage( $pic, $filename )
         return;
 
     $conf = getConf( );
-    $datadir = $conf[ 'date' ][ 'user_imagedir' ];
+    $datadir = $conf[ 'data' ][ 'user_imagedir' ];
     if( strpos( $filename, $datadir ) !== false )
         $picPath = $filename;
     else

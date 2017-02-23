@@ -1447,7 +1447,10 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         foreach( $updatekeys as $k )
             // Update only if the new value is not empty.
             if( strlen( $data[ $k ] ) > 0 )
+            {
                 $updateExpr .= "$k=:$k,";
+                array_push( $cols, $k );
+            }
 
         // Remove last ','
         $updateExpr = rtrim( $updateExpr, "," );

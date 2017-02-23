@@ -58,16 +58,18 @@ else
 
         $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkId ) );
         $eventHtml = talkToHTML( $talk, $with_picture = true );
-        // Link to pdf file.
         $talkHtml .= $eventHtml;
     }
     echo $talkHtml;
 
+    echo '<br>';
+    // Link to pdf file.
     echo '<a target="_blank" href="generate_pdf_talk.php?date=' 
             . $default[ 'date' ] . '&id=' . $talkId . '">Download pdf</a>';
-    echo '<br>';
+
 }
 
+echo '<br><br>';
 echo closePage( );
 
 ?>

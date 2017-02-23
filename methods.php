@@ -587,7 +587,13 @@ function getConf( )
  */
 function uploadImage( $pic, $filename )
 {
+    if( ! $pic )
+        return;
+
     $tmpfile = $pic[ 'tmp_name' ];
+    if( ! $tmpfile )
+        return;
+
     $type = $pic[ 'type' ];
     $ext = explode( '/', $type)[1];
 
@@ -619,7 +625,7 @@ function isBookingRequestValid( $request )
     $endT = $request[ 'end_time' ];
 
     if( strtotime( $endT, strtotime( $date) ) - 
-        strtotime( $startT, strtotime( $date ) ) 
+        strtotime( $startT, strtotime( $date ) )  < 15
         )
     {
         echo printWarning( "The duration of this event is less than 15 minutes" );

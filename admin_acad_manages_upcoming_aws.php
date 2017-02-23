@@ -116,7 +116,7 @@ echo "<h3>Temporary assignments </h3>";
 echo '
     <p class="info"> Following table shows the best possible schedule I could 
     come up with for whole year starting today. Pressing <button 
-    disabled>' . $symbThumbsUp . '</button> will put them into upcoming
+    disabled>' . $symbAccept . '</button> will put them into upcoming
     AWS list.
     </p>';
 
@@ -192,7 +192,7 @@ foreach( $schedule as $upcomingAWS )
     echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
     echo '<td style="background:white;border:0px;">
         <button name="response" title="Confirm this slot" 
-            value="Accept" >' . $symbThumbsUp . '</button>
+            value="Accept" >' . $symbAccept . '</button>
         </td>';
     echo "</tr>";
     echo '</form>';

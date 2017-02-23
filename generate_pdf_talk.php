@@ -32,6 +32,10 @@ function eventToTex( $event, $talk = null )
     $imagefile = nullPicPath( );
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
+
+    // Add user image.
+    $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
+
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     if( $talk )
@@ -39,16 +43,15 @@ function eventToTex( $event, $talk = null )
         $title = __ucwords__( $talk['title'] );
         $desc = fixHTML( $talk[ 'description' ] );
         $speaker = __ucwords__( loginToText( $talk[ 'speaker' ] , false ));
-        // Add user image.
-        $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
     }
 
     // Header
     $head = '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image] (where)  {\hfill ' .  $where . '};';
-    $head .= '\node[below=of where,yshift=3mm] (when)  {\hfill ' .  $when . '};';
+    $head .= '\node[above right=of image] (where)  { \hfill  ' .  $where . '};';
+    $head .= '\node[below=of where,yshift=3mm] (when)  { 
+                \hfill \faCalendarCheckO \quad ' .  $when . '};';
     $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
@@ -57,11 +60,6 @@ function eventToTex( $event, $talk = null )
     // Put talk class in header.
     if( $talk )
         $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
-    // Date and plate
-    $dateAndPlace =  humanReadableDate( $event[ 'date' ] ) .  
-            ', 4:00pm at \textbf{Hapus (LH1)}';
-    $dateAndPlace = '\faCalendarCheckO \quad ' . $dateAndPlace;
-
 
     $tex[] = '\par';
 
@@ -73,16 +71,19 @@ function eventToTex( $event, $talk = null )
     if( strlen(trim($texAbstract)) > 10 )
         $desc = $texAbstract;
 
-    echo "<pre> $desc </pre>";
-
-    // Title and abstract
+    // Extra.
     $tex[] = '{\large ' . $desc . '}';
-    $extra = '\begin{table}[ht!]';
-    $extra .= '\begin{tabular}{ll}';
-    $extra .= '\end{tabular}';
-    $extra .= '\end{table}';
-
-    $tex[] = $extra;
+    if( $talk )
+    {
+        $extra = '\begin{table}[ht!]';
+        $extra .= "\begin{tabular}{ll}\n";
+        $extra .= "\\toprule\n";
+        $extra .= 'Host & ' . $talk[ 'host' ] . '\\\\';
+        $extra .= 'Coordinator & ' . $talk[ 'coordinator' ] . '\\\\';
+        $extra .= '\bottomrule \end{tabular}';
+        $extra .= '\end{table}';
+        $tex[] = $extra;
+    }
     return implode( "\n", $tex );
 } // Function ends.
 
@@ -91,6 +92,7 @@ function eventToTex( $event, $talk = null )
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
+    , "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"

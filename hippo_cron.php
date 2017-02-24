@@ -121,11 +121,11 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         }
     }
 }
-//else if( $today == dbDate( strtotime( 'this monday' ) ) )
+else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
     // Send on 10am.
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
-    //if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
@@ -162,10 +162,10 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         }
     }
 }
-//else
-//{
-    //echo printInfo( "Today is neither Friday nor monday" );
-    //ob_flush( );
-//}
+else
+{
+    echo printInfo( "Today is neither Friday nor monday" );
+    ob_flush( );
+}
 
 ?>

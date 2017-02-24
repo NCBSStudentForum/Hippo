@@ -86,9 +86,6 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 
 // Form to upload a picture
 
-echo '<form method="post" enctype="multipart/form-data" 
-        action="admin_acad_manages_speakers_action.php">';
-
 echo "<h3>Speaker details</h3>";
 echo printInfo( 
     "Email id of speaker is desirable. It helps keeping database clean 
@@ -98,6 +95,9 @@ echo printInfo(
     "<strong>First name</strong> and <strong>institute</strong> are required 
     fields.  ");
 
+echo '<form method="post" enctype="multipart/form-data" 
+        action="admin_acad_manages_speakers_action.php">';
+
 echo '<table><tr>';
 echo '<td class="db_table_fieldname">Speaker picture</td><td>';
 echo '<input type="file" name="picture" id="picture" value="" />';
@@ -105,7 +105,7 @@ echo '</td></tr></table>';
 
 echo dbTableToHTMLTable( 'speakers', $speaker 
     , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
-    , '', 'id'
+    , 'submit', 'id'
     );
 
 echo '</form>';

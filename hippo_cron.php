@@ -36,7 +36,7 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
     $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
-    if( $awayFrom > 0 && $awayFrom < 15 * 60 )
+    //if( $awayFrom > 0 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Friday. Send out emails for AWS" );
         $nextMonday = dbDate( strtotime( 'next monday' ) );
@@ -85,9 +85,24 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
         $cclist = '';
         $cclist = 'dilawar.s.rajput@gmail.com';
         $to = 'hippo@lists.ncbs.res.in';
-        $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+
+        // Extra protection. If this email has been sent before, do not send it 
+        // again.
+        $maildir = getDataDir( ) . '/_mails';
+        if( ! file_exists( $maildir ) )
+            mkdir( $maildir, 0777, true );
+
+        $archivefile = $maildir . '/' . basename($outfile) . '.email';
+        if( file_exists( $archivefile ) )
+        {
+            echo printInfo( "This email has already been sent. Doing nothing" );
+        }
+        else 
+        {
+            $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+            file_put_contents( $archivefile, "SENT" );
+        }
         ob_flush( );
-        echo "<br> Status $res ";
     }
 }
 

@@ -17,7 +17,8 @@ function mailFooter( )
 function sendEmail($msg, $sub, $to) 
 {
 
-    if( ! array_key_exists( 'send_emails', getConf( )['global' ] ) )
+    $conf = getConf( );
+    if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
     {
         echo printInfo( "Email service has not been configured." );
         error_log( "Mail service is not configured" );
@@ -43,14 +44,16 @@ function sendEmail($msg, $sub, $to)
 
 function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
-    if( ! array_key_exists( 'send_emails', getConf( )['global' ] ) )
+    $conf = getConf( );
+    if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
     {
         echo printInfo( "Email service has not been configured." );
         error_log( "Mail service is not configured" );
         return;
     }
 
-    if( getConf( )['global']['send_emails' ] == false )
+
+    if( $conf['global']['send_emails' ] == false )
     {
         echo "<br>Sending emails has been disabled in this installation";
         return;

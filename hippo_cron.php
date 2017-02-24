@@ -36,9 +36,9 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
     $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
-    if( $awayFrom > 0 && $awayFrom < 15 * 60 )
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
-        echo printInfo( "Today is Friday. Send out emails for AWS" );
+        echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
         $nextMonday = dbDate( strtotime( 'next monday' ) );
         $upcomingAws = getUpcomingAWS( $nextMonday );
         $html = '';

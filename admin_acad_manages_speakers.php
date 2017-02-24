@@ -82,11 +82,28 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
             , 'created_on' => dbDateTime( 'now' )
         );
 
-// Show speaker image here.
 
 // Form to upload a picture
 
 echo "<h3>Speaker details</h3>";
+
+echo '<form method="post" action="">';
+echo '<input id="speakers_email" name="email" type="text" value="" >';
+echo '<button type="submit" name="response" value="show">Show details</button>';
+echo '</form>';
+
+// Show speaker image here.
+if( array_key_exists( 'email', $_POST ) )
+{
+    // Show emage.
+    $speaker = $speakersMap[ $_POST['email'] ];
+    $picPath = getSpeakerPicturePath( $speaker );
+    echo showImage( $picPath );
+    echo arrayToVerticalTableHTML( $speaker, 'info' );
+}
+
+echo '<h3>Edit speaker details</h3>';
+
 echo printInfo( 
     "Email id of speaker is desirable. It helps keeping database clean 
     by avoidling duplicate entries (and make autocompletion possible).");
@@ -109,6 +126,7 @@ echo dbTableToHTMLTable( 'speakers', $speaker
     );
 
 echo '</form>';
+
 
 echo "<br/><br/>";
 echo goBackToPageLink( 'admin_acad.php', 'Go back' );

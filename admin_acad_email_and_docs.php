@@ -70,35 +70,42 @@ if( $default[ 'task' ] == 'This week AWS' )
     $emailHtml = '';
 
     $filename = "AWS_" . $whichDay;
-    foreach( $awses as $aws )
+    if( count( $awses ) < 1 )
     {
-
-        echo awsToHTML( $aws, $with_picture = true );
-        $emailHtml .= awsToHTML( $aws, false );
-        // Link to pdf file.
-        echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
-        $filename .= '_' . $aws[ 'speaker' ];
+        echo printInfo( "No AWS has been confirmed for this day" );
     }
+    else
+    {
+        foreach( $awses as $aws )
+        {
 
-    $filename .= '.txt';
+            echo awsToHTML( $aws, $with_picture = true );
+            $emailHtml .= awsToHTML( $aws, false );
+            // Link to pdf file.
+            echo awsPdfURL( $aws[ 'speaker' ], $aws[ 'date' ] );
+            $filename .= '_' . $aws[ 'speaker' ];
+        }
 
-    $macros = array( 
-        'DATE' => humanReadableDate( $awses[0]['date'] ) 
-        ,  'EMAIL_BODY' => $emailHtml
-        );
+        $filename .= '.txt';
 
-    $email = emailFromTemplate( 'aws_template', $macros );
-    $md = html2Markdown( $email );
+        $macros = array( 
+            'DATE' => humanReadableDate( $awses[0]['date'] ) 
+            ,  'EMAIL_BODY' => $emailHtml
+            );
 
-    // Save the file and let the admin download it.
-    file_put_contents( __DIR__ . "/data/$filename", $md);
-    echo "<br><br>";
-    echo '<table style="width:500px;border:1px solid"><tr><td>';
-    echo downloadTextFile( $filename, 'Download mail' );
-    echo "</td><td>";
-    echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
-    echo "</td></tr>";
-    echo '</table>';
+        $email = emailFromTemplate( 'aws_template', $macros );
+        $md = html2Markdown( $email );
+
+        // Save the file and let the admin download it.
+        file_put_contents( __DIR__ . "/data/$filename", $md);
+        echo "<br><br>";
+        echo '<table style="width:500px;border:1px solid"><tr><td>';
+        echo downloadTextFile( $filename, 'Download mail' );
+        echo "</td><td>";
+        echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
+        echo "</td></tr>";
+        echo '</table>';
+    }
 
 } // This week AWS is over here.
 else if( $default[ 'task' ] == 'This week events' )
@@ -154,7 +161,6 @@ else if( $default[ 'task' ] == 'Today\'s events' )
     echo "<h3> Events on " . humanReadableDate( $date ) . " </h3>";
     $entries = getEventsOn( $date );
     $html = '';
-    print_r( $entries );
     foreach( $entries as $entry )
     {
         if( $entry[ 'is_public_event' ] == 'YES' )
@@ -177,12 +183,6 @@ else if( $default[ 'task' ] == 'Today\'s events' )
             . $default[ 'date' ] . '">Download pdf</a>';
     echo '<br>';
 
-}
-
-// Only if the AWS date in future/today, allow admin to send emails.
-if( strtotime( 'now' ) <= strtotime( $default[ 'date' ] ) )
-{
-    echo "TODO: Allow admin to send email";
 }
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );

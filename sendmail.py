@@ -91,12 +91,14 @@ if __name__ == '__main__':
         )
     parser.add_argument('--to', '-t'
         , required = True
-        , nargs = '+'
+        , default = [ ]
+        , nargs = '+', action = 'append'
         , help = 'Recipients'
         )
     parser.add_argument('--cc', '-c'
         , required = False
-        , nargs = '+'
+        , default = [ ]
+        , nargs = '+', action = 'append'
         , help = 'CC List'
         )
     parser.add_argument('--subject', '-s'
@@ -105,8 +107,8 @@ if __name__ == '__main__':
         )
     parser.add_argument( '--attach', '-a'
         , required = False
-        , default = ''
-        , nargs = '+'
+        , default = [ ]
+        , nargs = '+', action = 'append'
         , help = 'attach these files'
         )
     class Args: pass 

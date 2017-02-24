@@ -42,7 +42,7 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
     $speakers = array( );
     $logins = array( );
 
-    $outfile = "AWS_$nextMonday_";
+    $outfile = getDataDir( ) . "AWS_$nextMonday_";
     foreach( $upcomingAws as $aws )
     {
         $html .= awsToHTML( $aws );
@@ -58,8 +58,7 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
         );
 
     $mail = emailFromTemplate( 'aws_template', $data );
-    echo html2Markdown( $mail );
-    echo $subject;
+    $textMail = html2Markdown( $mail );
 
     echo "Generating pdf";
     $script = __DIR__ . '/generate_pdf_aws.php';
@@ -79,6 +78,8 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
     }
     ob_flush( );
 
+    // Cool. Now prepare mail.
+    sendMail( $textMail, $subject, 'hippo@lists.ncbs.res.in', $pdfFile );
 }
 
 

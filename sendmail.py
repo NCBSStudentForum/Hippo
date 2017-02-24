@@ -8,51 +8,89 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from logger import _logger
 
-if len( sys.argv ) < 4:
-    _logger.error( "Usage: %s TO SUBJECT MSG_FILE" % sys.argv[0] )
-    _logger.error( "|- Got params %s" % sys.argv )
-    quit( )
+def main( args ):
+    _logger.debug( "Got command line params %s" % args )
+    fromAddr = args.sender
+    toAddr = args.to
+    subject = args.subject
 
+    msg = '''Error: no text found'''
+    try:
+        with open( args.msgfile, 'r' )  as f:
+            msg = f.read( )
+    except Exception as e:
+        _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
+        return False
 
-def sendMail( fromAddr, toAddr, subject, msghtml ):
-    """Send html email """
     # msg = html2other.tomd( msg )
     msg = MIMEMultipart( 'alernative' )
     msg[ 'subject' ] = subject
-    msg[ 'From' ] = 'NCBS Hippo <noreply@ncbs.res.in>'
+    msg[ 'From' ] = fromAddr
 
-    msg.attach( MIMEText( msghtml, 'html' ) );
+    if args.as_html:
+        msg.attach( MIMEText( msg, 'html' ) );
+    else:
+        msg.attach( MIMEText( msg, 'plain' ) );
+
+    # Now attach files.
+    for attach in args.attach:
+        print( '[INFO] Attaching file %s' % attach )
+        with open( attach, 'r' ) as f:
+            msg.attach( MIMEText( f.read() ) )
+
     s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
-    s.set_debuglevel( 2 )
+    s.set_debuglevel( 1 )
 
     success = False
     try:
         _logger.info( 'Sending email to %s' % toAddr )
-        s.sendmail( fromAddr, toAddr.split( ',' ), msg.as_string( ) )
+        s.sendmail( fromAddr, toAddr, msg.as_string( ) )
         success = True
     except Exception as e:
         with open( '/var/log/hippo.log', 'a' ):
             _logger.error( 'Failed to send email. Error was %s' % e )
 
         _logger.info( "Everything went OK. Mail sent sucessfully" )
+
     s.quit( )
     return success
 
-def main( args ):
-    _logger.debug( "Got command line params %s" % args )
-    fromAddr = 'NCBS Hippo <noreply@ncbs.res.in>'
-    toAddr = args[1]
-    subject = args[2]
-
-    msg = '''Error: no text found'''
-    try:
-        with open( args[3], 'r' )  as f:
-            msg = f.read( )
-    except Exception as e:
-        _logger.error( "I could not read file %s. Error was %s" % (args[3], e))
-        return False
-
-    return sendMail( fromAddr, toAddr, subject, msg )
-
 if __name__ == '__main__':
-    main( sys.argv )
+    import argparse
+    # Argument parser.
+    description = '''Email client'''
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--msgfile', '-f'
+        , required = True
+        , help = 'Input file containing message'
+        )
+    parser.add_argument('--as-html', '-h'
+        , required = False
+        , action = 'store_true' 
+        , default = False
+        , help = 'Send it as html. Default (false)'
+        )
+    parser.add_argument('--sender', '-f'
+        , required = False
+        , default = 'NCBS Hippo <noreply@ncbs.res.in>'
+        , help = 'From whom?'
+        )
+    parser.add_argument('--to', '-t'
+        , required = True
+        , action = 'append'
+        , help = 'Recipients'
+        )
+    parser.add_argument('--subject', '-s'
+        , required = True
+        , help = 'Subject of message'
+        )
+    parser.add_argument( '--attach', '-a'
+        , required = False
+        , default = ''
+        , action = 'append'
+        , help = 'attach these files'
+        )
+    class Args: pass 
+    args = Args()
+    parser.parse_args(namespace=args)
+    main( args )

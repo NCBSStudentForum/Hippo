@@ -27,6 +27,15 @@ function toColor($n)
     return("#".substr("000000".dechex($n),-6));
 }
 
+/**
+    * @brief Data directory for temp storage.
+    *
+    * @return 
+ */
+function getDataDir( )
+{
+    return __DIR__ . '/data/';
+}
 
 /**
     * @brief Generate a select list outof given values.

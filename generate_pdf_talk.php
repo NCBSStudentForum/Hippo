@@ -79,11 +79,12 @@ function eventToTex( $event, $talk = null )
         $extra = '\vspace{1cm}';
         $extra = '\begin{table}[ht!]';
         $extra .= "\begin{tabular}{ll}\n";
-        $extra .= "\\toprule\n";
+        //$extra .= "\\toprule\n";
         $extra .= 'Host & ' . $talk[ 'host' ] . '\\\\';
-        $extra .= 'Coordinator & ' . $talk[ 'coordinator' ] . '\\\\';
-        $extra .= '\bottomrule \end{tabular}';
-        $extra .= '\end{table}';
+        if( $talk[ 'coordinator' ] )
+            $extra .= 'Coordinator & ' . $talk[ 'coordinator' ] . '\\\\';
+        //$extra .= '\bottomrule';
+        $extra .= '\end{tabular} \end{table}';
         $tex[] = $extra;
     }
     return implode( "\n", $tex );
@@ -92,9 +93,9 @@ function eventToTex( $event, $talk = null )
 
 // Intialize pdf template.
 $tex = array( "\documentclass[]{article}"
-    , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
+    , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
-    , "\usepackage[]{booktabs}"
+    //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"

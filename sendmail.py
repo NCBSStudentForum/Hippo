@@ -46,8 +46,9 @@ def main( args ):
             data = MIMEBase( 'application', 'pdf' )
             data.set_payload( f.read( ) )
             Encoders.encode_base64( data ) 
-            data.add_header('Content-Disposition', 'attachment'
-                    , filename= os.path.basename(attach) 
+            data.add_header(
+                    'Content-Disposition', 'attachment'
+                    , filename= os.path.basename( attach )
                     )
             msg.attach(data)
 

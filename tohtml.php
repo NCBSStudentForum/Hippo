@@ -1156,7 +1156,9 @@ function emailFromTemplate( $templateName, $options )
 {
     $html = '';
 
-    $template = getEmailTemplateById( $templateName )['description'];
+    $templ = getEmailTemplateById( $templateName );
+    $template = $templ['description'];
+
     if( ! $template )
     {
         echo alertUser( "No template found with id: aws_template. I won't 
@@ -1206,9 +1208,11 @@ function nullPicPath( )
 function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
 {
     $picName = str_replace( ' ', '', $speaker );
-    $picPath = getConf( )['data']['user_imagedir'] . '/' . $picName . '.png';
+    $conf = getConf( );
+    $picPath = $conf['data']['user_imagedir'] . '/' . $picName . '.png';
+    $conf = getConf( );
     if( ! file_exists( $picPath ) )
-        $picPath = getConf( )['data']['user_imagedir'] . '/hippo.png';
+        $picPath = $conf['data']['user_imagedir'] . '/hippo.png';
 
     return showImage( $picPath, $height, $width );
 }

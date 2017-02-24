@@ -85,6 +85,7 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
             $cmd .= " -a \"$f\" ";
     }
 
+    echo "<pre> $cmd </pre>";
     $out = exec( $cmd, $output, $ret );
     unlink( $msgfile );
     return true;

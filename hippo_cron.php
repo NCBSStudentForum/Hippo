@@ -95,12 +95,9 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
             $subject .= implode( ', ', $res[ 'speakers'] );
 
-            //$cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-            //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-            //$to = 'academic@lists.ncbs.res.in';
-
-            $cclist = 'dilawar.s.rajput@gmail.com';
-            $to = 'dilawars@ncbs.res.in';
+            $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+            $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+            $to = 'academic@lists.ncbs.res.in';
 
             $mail = $res[ 'email' ];
 
@@ -135,12 +132,9 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         if( $res )
         {
             $subject .= implode( ', ', $res[ 'speakers'] );
-            //$cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-            //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-            //$to = 'academic@lists.ncbs.res.in';
-
-            $cclist = 'dilawar.s.rajput@gmail.com,hippo@lists.ncbs.res.in';
-            $to = 'dilawars@ncbs.res.in';
+            $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+            $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+            $to = 'academic@lists.ncbs.res.in';
 
             $mail = $res[ 'email' ];
 

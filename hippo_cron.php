@@ -70,8 +70,6 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         }
 
         // Cool. Now prepare mail.
-        echo "Sending out email";
-
         $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
         $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
         $to = 'academic@lists.ncbs.res.in';
@@ -83,7 +81,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             mkdir( $maildir, 0777, true );
 
         // generate md5 of email. And store it in archive.
-        $archivefile = $maildir . '/' . md5($mail) . '.email';
+        $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
         if( file_exists( $archivefile ) )
         {
             echo printInfo( "This email has already been sent. Doing nothing" );

@@ -3,6 +3,7 @@
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
+include_once 'mail.php';
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
@@ -42,7 +43,7 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
     $speakers = array( );
     $logins = array( );
 
-    $outfile = getDataDir( ) . "AWS_$nextMonday_";
+    $outfile = getDataDir( ) . "AWS_" . $nextMonday . "_";
     foreach( $upcomingAws as $aws )
     {
         $html .= awsToHTML( $aws );
@@ -54,11 +55,11 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
 
     $subject .= implode( ', ', $speakers );
     $data = array( 'EMAIL_BODY' => $html
-        , 'DATE' => humanReadableTime( $nextMonday ) 
+        , 'DATE' => humanReadableDate( $nextMonday ) 
+        , 'TIME' => '4:00 PM'
         );
 
     $mail = emailFromTemplate( 'aws_template', $data );
-    $textMail = html2Markdown( $mail );
 
     echo "Generating pdf";
     $script = __DIR__ . '/generate_pdf_aws.php';
@@ -67,20 +68,20 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
     ob_flush( );
     $res = `$cmd`;
 
-    if( file_exists( $pdffile ) )
+    if( ! file_exists( $pdffile ) )
     {
-        echo "TODO: Attach pdf in email";
-    }
-    else
-    {
-        echo printWarning( "Could not generate PDF file. No attachment." );
+        echo printWarning( "Could not generate PDF $pdffile." );
         echo $res;
+        $pdffile = '';
     }
-    ob_flush( );
 
     // Cool. Now prepare mail.
-    sendMail( $textMail, $subject, 'hippo@lists.ncbs.res.in', $pdfFile );
+    echo "Sending out email";
+    $res = sendPlainTextEmail(
+        $mail, $subject, 'dilawars@ncbs.res.in', $pdffile 
+    );
+    ob_flush( );
+    echo "<br> Status $res ";
 }
-
 
 ?>

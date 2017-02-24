@@ -27,12 +27,12 @@ function sendEmail($msg, $sub, $to)
         <p>==========================================================</p>
         ";
 
-    $msgfile = "/tmp/__msg__.html";
+    $msgfile = tempnam( '/tmp', 'hippo_temp_msg' );
 
     file_put_contents( $msgfile, $msg );
-    $to = trim( $to );
+    $to = implode( ' -t ', explode( ',', trim( $to ) ) );
 
-    $cmd= __DIR__ . "/sendmail.py \"$to\" \"$sub\" \"$msgfile\"";
+    $cmd= __DIR__ . "/sendmail.py \"$to\" \"-s $sub\" \"-i $msgfile\"";
     $out = exec( $cmd, $output, $ret );
     unlink( $msgfile );
     return true;
@@ -48,7 +48,10 @@ function sendPlainTextEmail($msg, $sub, $to, $attachment = null)
     }
 
     if( getConf( )['global']['send_emails' ] == false )
+    {
+        echo "<br>Sending emails has been disabled in this installation";
         return;
+    }
 
     $timestamp = date( 'r', strtotime( 'now' ) );
 
@@ -64,9 +67,18 @@ function sendPlainTextEmail($msg, $sub, $to, $attachment = null)
     $textMail = html2Markdown( $msg );
 
     $msgfile = tempnam( '/tmp', 'hippo_msg' );
-    file_put_contents( $msgfile, $msg );
-    $to = trim( $to );
-    $cmd= __DIR__ . "/sendmail.py \"$to\" \"$sub\" \"$msgfile\"";
+    file_put_contents( $msgfile, $textMail );
+
+    $to =  implode( ' -t ', explode( ',', trim( $to ) ) );
+
+    $cmd= __DIR__ . "/sendmail.py -t $to -s '$sub' -i '$msgfile' ";
+    if( $attachment )
+    {
+        foreach( explode( ',', $attachment ) as $f )
+            $cmd .= " -a '$f' ";
+    }
+
+    echo "<pre> $cmd </pre>";
     $out = exec( $cmd, $output, $ret );
     unlink( $msgfile );
     return true;

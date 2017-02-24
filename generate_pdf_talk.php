@@ -51,7 +51,8 @@ function eventToTex( $event, $talk = null )
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
     $head .= '\node[above right=of image] (when)  { 
-                \hfill \faCalendarCheckO \quad ' .  $when . ', ' . $where . '};';
+                    \hfill \faClockO \,' .  $when . ' 
+                        \faHome \,' . $where . '};';
     $head .= '\node[below=of when, yshift=0mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
@@ -75,6 +76,7 @@ function eventToTex( $event, $talk = null )
     $tex[] = '{\large ' . $desc . '}';
     if( $talk )
     {
+        $extra = '\vspace{1cm}';
         $extra = '\begin{table}[ht!]';
         $extra .= "\begin{tabular}{ll}\n";
         $extra .= "\\toprule\n";
@@ -105,9 +107,9 @@ $tex = array( "\documentclass[]{article}"
     , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
         TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
-    //, '\usepackage[T1]{fontenc}'
-    , '\usepackage[utf8]{inputenc}'
-    , '\usepackage[]{lmodern}'
+    //, '\usepackage[sfdefault,light]{FiraSans}'
+    , '\usepackage[]{ebgaramond}'
+    , '\usepackage[t1]{fontenc}'
     , '\begin{document}'
     );
 

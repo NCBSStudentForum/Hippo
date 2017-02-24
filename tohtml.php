@@ -1047,15 +1047,16 @@ function talkToHTML( $talk, $with_picture = false )
     $title = $talk[ 'class' ] . ' by ' . $talk[ 'speaker' ] . " on '"
         . $talk[ 'title' ] . "'";
 
-    $html = '<div style="width:500px;text-align:justify">';
+    $html = '<div style="width:550px;text-align:justify">';
     $html .= '<table border="0"><tr>';
+    $html .= '<td colspan="2"><h3>' . $talk[ 'title' ] . '</h3></td></tr>';
+    $html .= "<tr>";
     if( $with_picture )
     {
         $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
     }
 
-    $html .= '<td><strong>' . $talk[ 'title' ] . '</strong>
-                <br>' . speakerToHTML( $talk['speaker'] )
+    $html .= '<td> <br>' . speakerToHTML( $talk['speaker'] )
                 . '<br><br> Host: ' . loginToText( $talk[ 'host' ] ) 
                 . '<br><br><small>' . $when 
                 . '<br>' . $where 

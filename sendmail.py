@@ -26,7 +26,12 @@ def main( args ):
 
     # msg = html2other.tomd( msg )
     msg = MIMEMultipart( 'alernative' )
-    msg[ 'subject' ] = subject
+    msg[ 'To' ] = ",".join( args.to )
+    if args.cc:
+        msg[ 'CC' ] = ','.join( args.cc )
+        toAddr += args.cc
+
+    msg[ 'Subject' ] = subject
     msg[ 'From' ] = fromAddr
 
     if args.as_html:
@@ -46,10 +51,10 @@ def main( args ):
 
     s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
     s.set_debuglevel( 1 )
-
     success = False
     try:
         _logger.info( 'Sending email to %s' % toAddr )
+        _logger.info( '\t From %s' % fromAddr )
         s.sendmail( fromAddr, toAddr, msg.as_string( ) )
         success = True
     except Exception as e:
@@ -85,6 +90,11 @@ if __name__ == '__main__':
         , required = True
         , nargs = '+'
         , help = 'Recipients'
+        )
+    parser.add_argument('--cc', '-c'
+        , required = False
+        , nargs = '+'
+        , help = 'CC List'
         )
     parser.add_argument('--subject', '-s'
         , required = True

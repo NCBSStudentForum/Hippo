@@ -18,19 +18,21 @@ echo( "Running cron at $now" );
  */
 $today = dbDate( strtotime( 'today' ) );
 
-function generateAWSEmail( $nextMonday )
+function generateAWSEmail( $monday )
 {
 
     $result = array( );
 
-    $upcomingAws = getUpcomingAWS( $nextMonday );
+    $upcomingAws = getUpcomingAWS( $monday );
+    if( count( $upcomingAws ) < 1 )
+        return null;
+
     $html = '';
 
     $speakers = array( );
     $logins = array( );
+    $outfile = getDataDir( ) . "AWS_" . $monday . "_";
 
-
-    $outfile = getDataDir( ) . "AWS_" . $nextMonday . "_";
     foreach( $upcomingAws as $aws )
     {
         $html .= awsToHTML( $aws );
@@ -43,7 +45,7 @@ function generateAWSEmail( $nextMonday )
     $res[ 'speakers' ] = $speakers;
 
     $data = array( 'EMAIL_BODY' => $html
-        , 'DATE' => humanReadableDate( $nextMonday ) 
+        , 'DATE' => humanReadableDate( $monday ) 
         , 'TIME' => '4:00 PM'
     );
 
@@ -51,7 +53,7 @@ function generateAWSEmail( $nextMonday )
 
     echo "Generating pdf";
     $script = __DIR__ . '/generate_pdf_aws.php';
-    $cmd = "php -q -f $script date=$nextMonday";
+    $cmd = "php -q -f $script date=$monday";
     echo "Executing <pre> $cmd </pre>";
     ob_flush( );
 
@@ -69,11 +71,17 @@ function generateAWSEmail( $nextMonday )
     return $res;
 }
 
+// Extra protection. If this email has been sent before, do not send it 
+// again.
+$maildir = getDataDir( ) . '/_mails';
+if( ! file_exists( $maildir ) )
+    mkdir( $maildir, 0777, true );
+
 /*
  * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 
  * and email at 4pm.
  */
-if( $today = dbDate( strtotime( 'this friday' ) ) )
+if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
     $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
@@ -84,41 +92,75 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
         $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
 
         $res = generateAWSEmail( $nextMonday );
-
-        $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
-        $subject .= implode( ', ', $res[ 'speakers'] );
-
-        //$cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-        //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-        //$to = 'academic@lists.ncbs.res.in';
-
-        $cclist = 'dilawar.s.rajput@gmail.com';
-        $to = 'dilawars@ncbs.res.in';
-
-        // Extra protection. If this email has been sent before, do not send it 
-        // again.
-        $maildir = getDataDir( ) . '/_mails';
-        if( ! file_exists( $maildir ) )
-            mkdir( $maildir, 0777, true );
-
-        // generate md5 of email. And store it in archive.
-        $archivefile = $maildir . '/' . md5($mail) . '.email';
-        if( file_exists( $archivefile ) )
+        if( $res )
         {
-            echo printInfo( "This email has already been sent. Doing nothing" );
-        }
-        else 
-        {
+            $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
+            $subject .= implode( ', ', $res[ 'speakers'] );
+
+            //$cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+            //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+            //$to = 'academic@lists.ncbs.res.in';
+
+            $cclist = 'dilawar.s.rajput@gmail.com';
+            $to = 'dilawars@ncbs.res.in';
+
             $mail = $res[ 'email' ];
-            $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
-            echo printInfo( "Saving the mail in archive" . $archivefile );
-            file_put_contents( $archivefile, "SENT" );
+
+            // generate md5 of email. And store it in archive.
+            $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
+            if( file_exists( $archivefile ) )
+            {
+                echo printInfo( "This email has already been sent. Doing nothing" );
+            }
+            else 
+            {
+                $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+                echo printInfo( "Saving the mail in archive" . $archivefile );
+                file_put_contents( $archivefile, "SENT" );
+            }
+            ob_flush( );
         }
-        ob_flush( );
+        else
+            echo printInfo( "Its not 4pm yet" );
     }
-    else
+}
+else if( $today == dbDate( strtotime( 'this monday' ) ) )
+{
+    // Send on 10am.
+    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
-        echo printInfo( "Its not 4pm yet" );
+        echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
+        $thisMonday = dbDate( strtotime( 'this monday' ) );
+        $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
+
+        $res = generateAWSEmail( $thisMonday );
+        if( $res )
+        {
+            $subject .= implode( ', ', $res[ 'speakers'] );
+            //$cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+            //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+            //$to = 'academic@lists.ncbs.res.in';
+
+            $cclist = 'dilawar.s.rajput@gmail.com';
+            $to = 'dilawars@ncbs.res.in';
+
+            $mail = $res[ 'email' ];
+
+            // generate md5 of email. And store it in archive.
+            $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
+            if( file_exists( $archivefile ) )
+            {
+                echo printInfo( "This email has already been sent. Doing nothing" );
+            }
+            else 
+            {
+                $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+                echo printInfo( "Saving the mail in archive" . $archivefile );
+                file_put_contents( $archivefile, "SENT" );
+            }
+            ob_flush( );
+        }
     }
 }
 

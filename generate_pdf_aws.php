@@ -3,6 +3,13 @@
 include_once 'database.php';
 include_once 'tohtml.php';
 
+// This script may also be called by command line by the email bot. To make sure 
+// $_GET works whether we call it from command line or browser.
+if( $argv )
+    parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
+
+//var_dump( $_GET );
+
 
 function awsToTex( $aws )
 {
@@ -75,9 +82,11 @@ function awsToTex( $aws )
     $tex[] = '\par';
 
     // remove html formating before converting to tex.
-    file_put_contents( '/tmp/abstract.html', $abstract );
+    $tempFile = tempnam( "/tmp", "hippo_abstract" );
+    file_put_contents( $tempFile, $abstract );
     $cmd = 'python ' . __DIR__ . '/html2other.py';
-    $texAbstract = `$cmd /tmp/abstract.html tex`;
+    $texAbstract = `$cmd $tempFile tex`;
+    unlink( $tempFile );
 
     if( strlen(trim($texAbstract)) > 10 )
         $abstract = $texAbstract;
@@ -149,7 +158,15 @@ $TeX = implode( "\n", $tex );
 // Generate PDF now.
 $outdir = __DIR__ . "/data";
 $texFile = $outdir . '/' . $outfile . ".tex";
-$pdfFile = $outdir . '/' . $outfile . ".pdf";
+
+// If outfile is set in GET the use it. Otherwise create one.
+if( array_key_exists( 'texfile', $_GET) && $_GET[ 'texfile' ] )
+    $texFile = $_GET[ 'texfile' ];
+else
+    $texFile = $outdir . '/' . $outfile . ".tex";
+
+// Remove tex from the end and apped pdf.
+$pdfFile = rtrim( $texFile, 'tex' ) . 'pdf';
 
 file_put_contents( $texFile,  $TeX );
 if( file_exists( $texFile ) )
@@ -159,7 +176,10 @@ if( file_exists( $pdfFile ) )
 {
     echo printInfo( "Successfully genered pdf document " . 
        basename( $pdfFile ) );
-    goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
+
+    // This should only be visible if called from a browser.
+    if( count( $argv ) < 1 )
+        goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
 }
 else
 {

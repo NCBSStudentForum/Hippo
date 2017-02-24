@@ -1174,7 +1174,8 @@ function getLoginEmail( $login )
     $stmt = $db->prepare( "SELECT email FROM logins WHERE login=:login" );
     $stmt->bindValue( ":login", $login );
     $stmt->execute( );
-    return $stmt->fetch( PDO::FETCH_ASSOC )['email'];
+    $res = $stmt->fetch( PDO::FETCH_ASSOC );
+    return $res['email'];
 }
 
 function getRoles( $user )

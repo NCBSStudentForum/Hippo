@@ -621,8 +621,8 @@ function uploadImage( $pic, $filename )
     if( ! $tmpfile )
         return;
 
-    $type = $pic[ 'type' ];
-    $ext = explode( '/', $type)[1];
+    $type = explode( '/', $pic[ 'type' ] );
+    $ext = $type[1];
 
     if( strlen( count( $tmpfile ) ) < 1 )
         return;

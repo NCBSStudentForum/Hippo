@@ -17,22 +17,12 @@ echo( "Running cron at $now" );
  * Task 0. Get list of today's public events 
  */
 $today = dbDate( strtotime( 'today' ) );
-//$events = getPublicEventsOnThisDay( $today );
-//if( count( $events ) < 1 )
-//{
-    //echo printInfo( "No event found for today" );
-//}
-//else
-//{
-    //echo printInfo( "TODO: Prepare emails" );
-    //var_dump ( $events );
-//}
 
 /*
  * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 
  * and email at 4pm.
  */
-if( $today = dbDate( strtotime( 'this friday' ) ) )
+if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
     $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );

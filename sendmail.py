@@ -5,7 +5,9 @@ import sys
 import html2other
 import smtplib 
 from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
+from email import Encoders
 from logger import _logger
 
 def main( args ):
@@ -14,10 +16,10 @@ def main( args ):
     toAddr = args.to
     subject = args.subject
 
-    msg = '''Error: no text found'''
+    body = '';
     try:
         with open( args.msgfile, 'r' )  as f:
-            msg = f.read( )
+            body = f.read( )
     except Exception as e:
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False
@@ -28,15 +30,19 @@ def main( args ):
     msg[ 'From' ] = fromAddr
 
     if args.as_html:
-        msg.attach( MIMEText( msg, 'html' ) );
+        msg.attach( MIMEText( body, 'html' ) );
     else:
-        msg.attach( MIMEText( msg, 'plain' ) );
+        msg.attach( MIMEText( body, 'plain' ) );
 
-    # Now attach files.
+    # Now attach files Only PDF are allowed.
     for attach in args.attach:
         print( '[INFO] Attaching file %s' % attach )
-        with open( attach, 'r' ) as f:
-            msg.attach( MIMEText( f.read() ) )
+        with open( attach, 'rb' ) as f:
+            data = MIMEBase( 'application', 'pdf' )
+            data.set_payload( f.read( ) )
+            Encoders.encode_base64( data ) 
+            data.add_header('Content-Disposition', 'attachment', filename=attach)
+            msg.attach(data)
 
     s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
     s.set_debuglevel( 1 )
@@ -60,11 +66,11 @@ if __name__ == '__main__':
     # Argument parser.
     description = '''Email client'''
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--msgfile', '-f'
+    parser.add_argument('--msgfile', '-i'
         , required = True
         , help = 'Input file containing message'
         )
-    parser.add_argument('--as-html', '-h'
+    parser.add_argument('--as-html', '-H'
         , required = False
         , action = 'store_true' 
         , default = False
@@ -77,7 +83,7 @@ if __name__ == '__main__':
         )
     parser.add_argument('--to', '-t'
         , required = True
-        , action = 'append'
+        , nargs = '+'
         , help = 'Recipients'
         )
     parser.add_argument('--subject', '-s'
@@ -87,7 +93,7 @@ if __name__ == '__main__':
     parser.add_argument( '--attach', '-a'
         , required = False
         , default = ''
-        , action = 'append'
+        , nargs = '+'
         , help = 'attach these files'
         )
     class Args: pass 

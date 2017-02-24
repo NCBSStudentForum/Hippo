@@ -101,7 +101,7 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
         else 
         {
             $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
-            echo printInfo( "Saving the mail in archive" . $archivefile )
+            echo printInfo( "Saving the mail in archive" . $archivefile );
             file_put_contents( $archivefile, "SENT" );
         }
         ob_flush( );

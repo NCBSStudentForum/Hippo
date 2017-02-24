@@ -39,7 +39,7 @@ function awsToTex( $aws )
         );
     $tcm = array_filter( $tcm );
 
-    $title = __ucwords__( $aws[ 'title' ]);
+    $title = $aws[ 'title' ];
     $abstract = $aws[ 'abstract' ];
 
     // Add user image.
@@ -52,15 +52,15 @@ function awsToTex( $aws )
 
     // Date and plate
     $dateAndPlace =  humanReadableDate( $aws[ 'date' ] ) .  
-            ', 4:00pm at \textbf{Hapus (LH1)}';
-    $dateAndPlace = '\faCalendarCheckO \quad ' . $dateAndPlace;
+            ', 4:00pm \faHome \, \textbf{Haapus (LH1), ELC, NCBS}';
+    $dateAndPlace = '\faClockO \, ' . $dateAndPlace;
 
     $head = '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
     $head .= '\node[above right=of image] (schedule)  {\hfill ' . 
                 $dateAndPlace . '};';
-    $head .= '\node[right=of image] (title) { ' .  '{\LARGE ' . $title . '} };';
+    $head .= '\node[right=of image] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
 
@@ -125,9 +125,8 @@ $tex = array( "\documentclass[]{article}"
     , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
         TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
-    //, '\usepackage[T1]{fontenc}'
-    , '\usepackage[utf8]{inputenc}'
-    , '\usepackage[]{lmodern}'
+    , '\usepackage[]{ebgaramond}'
+    , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );
 

@@ -17,16 +17,57 @@ echo( "Running cron at $now" );
  * Task 0. Get list of today's public events 
  */
 $today = dbDate( strtotime( 'today' ) );
-//$events = getPublicEventsOnThisDay( $today );
-//if( count( $events ) < 1 )
-//{
-    //echo printInfo( "No event found for today" );
-//}
-//else
-//{
-    //echo printInfo( "TODO: Prepare emails" );
-    //var_dump ( $events );
-//}
+
+function generateAWSEmail( $nextMonday )
+{
+
+    $result = array( );
+
+    $upcomingAws = getUpcomingAWS( $nextMonday );
+    $html = '';
+
+    $speakers = array( );
+    $logins = array( );
+
+
+    $outfile = getDataDir( ) . "AWS_" . $nextMonday . "_";
+    foreach( $upcomingAws as $aws )
+    {
+        $html .= awsToHTML( $aws );
+        array_push( $logins, $aws[ 'speaker' ] );
+        array_push( $speakers, __ucwords__( loginToText( $aws['speaker'], false ) ) );
+    }
+
+    $outfile .= implode( "_", $logins );  // Finished generating the pdf file.
+    $pdffile = $outfile . ".pdf";
+    $res[ 'speakers' ] = $speakers;
+
+    $data = array( 'EMAIL_BODY' => $html
+        , 'DATE' => humanReadableDate( $nextMonday ) 
+        , 'TIME' => '4:00 PM'
+    );
+
+    $mail = emailFromTemplate( 'aws_template', $data );
+
+    echo "Generating pdf";
+    $script = __DIR__ . '/generate_pdf_aws.php';
+    $cmd = "php -q -f $script date=$nextMonday";
+    echo "Executing <pre> $cmd </pre>";
+    ob_flush( );
+
+    $ret = `$cmd`;
+
+    if( ! file_exists( $pdffile ) )
+    {
+        echo printWarning( "Could not generate PDF $pdffile." );
+        echo $res;
+        $pdffile = '';
+    }
+
+    $res[ 'pdffile' ] = $pdffile;
+    $res[ 'email' ] = $mail;
+    return $res;
+}
 
 /*
  * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 
@@ -40,51 +81,19 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
     {
         echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
         $nextMonday = dbDate( strtotime( 'next monday' ) );
-        $upcomingAws = getUpcomingAWS( $nextMonday );
-        $html = '';
         $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
 
-        $speakers = array( );
-        $logins = array( );
+        $res = generateAWSEmail( $nextMonday );
 
-        $outfile = getDataDir( ) . "AWS_" . $nextMonday . "_";
-        foreach( $upcomingAws as $aws )
-        {
-            $html .= awsToHTML( $aws );
-            array_push( $logins, $aws[ 'speaker' ] );
-            array_push( $speakers, __ucwords__( loginToText( $aws['speaker'], false ) ) );
-        }
-        $outfile .= implode( "_", $logins );  // Finished generating the pdf file.
-        $pdffile = $outfile . ".pdf";
+        $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
+        $subject .= implode( ', ', $res[ 'speakers'] );
 
-        $subject .= implode( ', ', $speakers );
-        $data = array( 'EMAIL_BODY' => $html
-            , 'DATE' => humanReadableDate( $nextMonday ) 
-            , 'TIME' => '4:00 PM'
-            );
+        //$cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+        //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+        //$to = 'academic@lists.ncbs.res.in';
 
-        $mail = emailFromTemplate( 'aws_template', $data );
-
-        echo "Generating pdf";
-        $script = __DIR__ . '/generate_pdf_aws.php';
-        $cmd = "php -q -f $script date=$nextMonday";
-        echo "Executing <pre> $cmd </pre>";
-        ob_flush( );
-        $res = `$cmd`;
-
-        if( ! file_exists( $pdffile ) )
-        {
-            echo printWarning( "Could not generate PDF $pdffile." );
-            echo $res;
-            $pdffile = '';
-        }
-
-        // Cool. Now prepare mail.
-        echo "Sending out email";
-
-        $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-        $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-        $to = 'academic@lists.ncbs.res.in';
+        $cclist = 'dilawar.s.rajput@gmail.com';
+        $to = 'dilawars@ncbs.res.in';
 
         // Extra protection. If this email has been sent before, do not send it 
         // again.
@@ -100,6 +109,7 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
         }
         else 
         {
+            $mail = $res[ 'email' ];
             $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
             echo printInfo( "Saving the mail in archive" . $archivefile );
             file_put_contents( $archivefile, "SENT" );

@@ -51,8 +51,7 @@ function eventToTex( $event, $talk = null )
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
     $head .= '\node[above right=of image] (when)  { 
-                    \hfill \faClockO \,' .  $when . ' 
-                        \faHome \,' . $where . '};';
+                    \hfill \faClockO \,' .  $when . ' \faHome \,' . $where . '};';
     $head .= '\node[below=of when, yshift=0mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
@@ -110,7 +109,7 @@ $tex = array( "\documentclass[]{article}"
     , '\usetikzlibrary{calc,positioning,arrows}'
     //, '\usepackage[sfdefault,light]{FiraSans}'
     , '\usepackage[]{ebgaramond}'
-    , '\usepackage[t1]{fontenc}'
+    , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );
 

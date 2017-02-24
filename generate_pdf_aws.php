@@ -40,13 +40,17 @@ function awsToTex( $aws )
     $tcm = array_filter( $tcm );
 
     $title = $aws[ 'title' ];
+    if( strlen( trim( $title ) ) < 1 )
+        $title = 'Not disclosed yet!';
+
     $abstract = $aws[ 'abstract' ];
+    if( strlen( trim( $abstract ) ) < 1 )
+        $abstract = 'Not disclosed yet!';
 
     // Add user image.
-    $imagefile = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . 
-        $aws['speaker'] . '.png';
+    $imagefile = getSpeakerPicturePath( $aws['speaker'] );
     if( ! file_exists( $imagefile ) )
-        $imagefile = __DIR__ . '/data/null.png';
+        $imagefile = nullPicPath( );
 
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 

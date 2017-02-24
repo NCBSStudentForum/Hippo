@@ -34,54 +34,61 @@ else
  */
 if( $today = dbDate( strtotime( 'this friday' ) ) )
 {
-    echo printInfo( "Today is Friday. Send out emails for AWS" );
-    $nextMonday = dbDate( strtotime( 'next monday' ) );
-    $upcomingAws = getUpcomingAWS( $nextMonday );
-    $html = '';
-    $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
-
-    $speakers = array( );
-    $logins = array( );
-
-    $outfile = getDataDir( ) . "AWS_" . $nextMonday . "_";
-    foreach( $upcomingAws as $aws )
+    // Send any time between 4pm and 4:15 pm.
+    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
+    if( $awayFrom > 0 && $awayFrom < 15 * 60 )
     {
-        $html .= awsToHTML( $aws );
-        array_push( $logins, $aws[ 'speaker' ] );
-        array_push( $speakers, __ucwords__( loginToText( $aws['speaker'], false ) ) );
+        echo printInfo( "Today is Friday. Send out emails for AWS" );
+        $nextMonday = dbDate( strtotime( 'next monday' ) );
+        $upcomingAws = getUpcomingAWS( $nextMonday );
+        $html = '';
+        $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
+
+        $speakers = array( );
+        $logins = array( );
+
+        $outfile = getDataDir( ) . "AWS_" . $nextMonday . "_";
+        foreach( $upcomingAws as $aws )
+        {
+            $html .= awsToHTML( $aws );
+            array_push( $logins, $aws[ 'speaker' ] );
+            array_push( $speakers, __ucwords__( loginToText( $aws['speaker'], false ) ) );
+        }
+        $outfile .= implode( "_", $logins );  // Finished generating the pdf file.
+        $pdffile = $outfile . ".pdf";
+
+        $subject .= implode( ', ', $speakers );
+        $data = array( 'EMAIL_BODY' => $html
+            , 'DATE' => humanReadableDate( $nextMonday ) 
+            , 'TIME' => '4:00 PM'
+            );
+
+        $mail = emailFromTemplate( 'aws_template', $data );
+
+        echo "Generating pdf";
+        $script = __DIR__ . '/generate_pdf_aws.php';
+        $cmd = "php -q -f $script date=$nextMonday";
+        echo "Executing <pre> $cmd </pre>";
+        ob_flush( );
+        $res = `$cmd`;
+
+        if( ! file_exists( $pdffile ) )
+        {
+            echo printWarning( "Could not generate PDF $pdffile." );
+            echo $res;
+            $pdffile = '';
+        }
+
+        // Cool. Now prepare mail.
+        echo "Sending out email";
+
+        $cclist = '';
+        $cclist = 'dilawar.s.rajput@gmail.com';
+        $to = 'hippo@lists.ncbs.res.in';
+        $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+        ob_flush( );
+        echo "<br> Status $res ";
     }
-    $outfile .= implode( "_", $logins );  // Finished generating the pdf file.
-    $pdffile = $outfile . ".pdf";
-
-    $subject .= implode( ', ', $speakers );
-    $data = array( 'EMAIL_BODY' => $html
-        , 'DATE' => humanReadableDate( $nextMonday ) 
-        , 'TIME' => '4:00 PM'
-        );
-
-    $mail = emailFromTemplate( 'aws_template', $data );
-
-    echo "Generating pdf";
-    $script = __DIR__ . '/generate_pdf_aws.php';
-    $cmd = "php -q -f $script date=$nextMonday";
-    echo "Executing <pre> $cmd </pre>";
-    ob_flush( );
-    $res = `$cmd`;
-
-    if( ! file_exists( $pdffile ) )
-    {
-        echo printWarning( "Could not generate PDF $pdffile." );
-        echo $res;
-        $pdffile = '';
-    }
-
-    // Cool. Now prepare mail.
-    echo "Sending out email";
-    $res = sendPlainTextEmail(
-        $mail, $subject, 'dilawars@ncbs.res.in', $pdffile 
-    );
-    ob_flush( );
-    echo "<br> Status $res ";
 }
 
 ?>

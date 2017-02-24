@@ -1764,11 +1764,19 @@ function getTentativeAWSSchedule( )
     * 
     * @return Array of upcming AWS.
  */
-function getUpcomingAWS( )
+function getUpcomingAWS( $monday = null )
 {
     global $db;
+    if( ! $monday )
+        $whereExpr = 'date > CURDATE( ) ';
+    else
+    {
+        $monday = dbDate( $monday );
+        $whereExpr = "date = '$monday'";
+    }
+
     $stmt = $db->query( 
-        "SELECT * FROM upcoming_aws WHERE date >= CURDATE() ORDER BY date" 
+        "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date" 
         );
     $stmt->execute( );
     return fetchEntries( $stmt );

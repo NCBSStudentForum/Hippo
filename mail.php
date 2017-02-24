@@ -69,7 +69,9 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     file_put_contents( $msgfile, $textMail );
 
     $to =  implode( ' -t ', explode( ',', trim( $to ) ) );
-    $cmd= __DIR__ . "/sendmail.py -t $to -s '$sub' -i '$msgfile' ";
+
+    // Use \" whenever possible. ' don't escape especial characters in bash.
+    $cmd= __DIR__ . "/sendmail.py -t $to -s \"$sub\" -i \"$msgfile\" ";
 
     if( $cclist )
     {
@@ -80,10 +82,9 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     if( $attachment )
     {
         foreach( explode( ',', $attachment ) as $f )
-            $cmd .= " -a '$f' ";
+            $cmd .= " -a \"$f\" ";
     }
 
-    echo "<pre> $cmd </pre>";
     $out = exec( $cmd, $output, $ret );
     unlink( $msgfile );
     return true;

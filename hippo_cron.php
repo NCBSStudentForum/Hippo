@@ -9,14 +9,14 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/var/log/hippo.log' );
 
-$now = dbDateTime( strtotime( "now" ) );
-error_log( "Running cron at $now" );
-echo( "Running cron at $now" );
 
-/*
- * Task 0. Get list of today's public events 
- */
-$today = dbDate( strtotime( 'today' ) );
+// Directory to store the mdsum of sent emails.
+$maildir = getDataDir( ) . '/_mails';
+if( ! file_exists( $maildir ) )
+    mkdir( $maildir, 0777, true );
+
+$now = dbDateTime( strtotime( "now" ) );
+echo( "Running cron at $now" );
 
 function generateAWSEmail( $monday )
 {
@@ -71,16 +71,14 @@ function generateAWSEmail( $monday )
     return $res;
 }
 
-// Extra protection. If this email has been sent before, do not send it 
-// again.
-$maildir = getDataDir( ) . '/_mails';
-if( ! file_exists( $maildir ) )
-    mkdir( $maildir, 0777, true );
 
 /*
  * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 
  * and email at 4pm.
  */
+$today = dbDate( strtotime( 'today' ) );
+echo printInfo( "Today is $today" );
+
 if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
@@ -114,21 +112,20 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             }
             else 
             {
+                $pdffile = $res[ 'pdffile' ];
                 $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
                 echo printInfo( "Saving the mail in archive" . $archivefile );
                 file_put_contents( $archivefile, "SENT" );
             }
             ob_flush( );
         }
-        else
-            echo printInfo( "Its not 4pm yet" );
     }
 }
-else if( $today == dbDate( strtotime( 'this monday' ) ) )
+//else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
     // Send on 10am.
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
-    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    //if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
@@ -142,7 +139,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             //$cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
             //$to = 'academic@lists.ncbs.res.in';
 
-            $cclist = 'dilawar.s.rajput@gmail.com';
+            $cclist = 'dilawar.s.rajput@gmail.com,hippo@lists.ncbs.res.in';
             $to = 'dilawars@ncbs.res.in';
 
             $mail = $res[ 'email' ];
@@ -155,7 +152,9 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             }
             else 
             {
-                $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+                $pdffile = $res[ 'pdffile' ];
+                $ret = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+                echo printInfo( "Return value $ret" );
                 echo printInfo( "Saving the mail in archive" . $archivefile );
                 file_put_contents( $archivefile, "SENT" );
             }
@@ -163,5 +162,10 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         }
     }
 }
+//else
+//{
+    //echo printInfo( "Today is neither Friday nor monday" );
+    //ob_flush( );
+//}
 
 ?>

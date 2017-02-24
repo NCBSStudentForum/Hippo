@@ -82,9 +82,9 @@ if( $today = dbDate( strtotime( 'this friday' ) ) )
         // Cool. Now prepare mail.
         echo "Sending out email";
 
-        $cclist = '';
-        $cclist = 'dilawar.s.rajput@gmail.com';
-        $to = 'hippo@lists.ncbs.res.in';
+        $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+        $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+        $to = 'academic@lists.ncbs.res.in';
 
         // Extra protection. If this email has been sent before, do not send it 
         // again.

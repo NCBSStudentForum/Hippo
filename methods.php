@@ -523,8 +523,8 @@ function getSpeakerPicturePath( $speaker )
     $conf = getConf( );
     $datadir = $conf[ 'data' ]['user_imagedir'];
     if( is_array( $speaker ) )
-        $filename = $_POST[ 'first_name' ] . $_POST[ 'middle_name' ] . 
-            $_POST[ 'last_name' ] . '.png' ;
+        $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
+            $speaker[ 'last_name' ] . '.png' ;
     else
         $filename = $speaker . '.png';
 

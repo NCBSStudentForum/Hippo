@@ -71,13 +71,13 @@ function summaryTable( )
     $html .= "
         <tr>
             <td>
-            <a href=\"events.php\" target=\"_blank\">Table of events</a>
+            <a href=\"allevents.php\" target=\"_blank\">All Events</a>
             </td>
             <td>
             <a href=\"aws.php\" target=\"_blank\">Browse AWSs</a>
             </td>
             <td>
-            <a href=\"events.php\" target=\"_blank\">Browse Events</a>
+            <a href=\"events.php\" target=\"_blank\">Browse talks/seminars</a>
             </td>
         </tr>
         <tr>

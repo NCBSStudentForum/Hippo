@@ -124,6 +124,9 @@ echo dbTableToHTMLTable( 'speakers', $speaker
     , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
     , 'submit', 'id'
     );
+echo '<button title="Delete this entry" type="submit" onclick="AreYouSure(this)"
+    name="response" value="Delete">' . $symbDelete .
+    '</button>';
 
 echo '</form>';
 

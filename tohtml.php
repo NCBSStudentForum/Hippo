@@ -48,6 +48,10 @@ function speakerToHTML( $speaker )
     $name = implode( ' ', $name );
 
     $html = $name;
+    // If there is url. create a clickable link.
+    if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
+        $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+
     if( $speaker[ 'department' ] )
         $html .= "<small><br>" . $speaker[ 'department' ];
 
@@ -1017,7 +1021,7 @@ function talkToHTML( $talk, $with_picture = false )
 {
 
     $speaker = __ucwords__( $talk[ 'speaker' ] );
-    $imgpath = getSpeakerPicturePath( $speaker );
+
 
     // Get its events for venue and date.
     $event = getEventsOfTalkId( $talk[ 'id' ] );
@@ -1030,10 +1034,13 @@ function talkToHTML( $talk, $with_picture = false )
 
     $html = '<div style="width:550px;text-align:justify">';
     $html .= '<table border="0"><tr>';
-    $html .= '<td colspan="2"><h3>' . $talk[ 'title' ] . '</h3></td></tr>';
-    $html .= "<tr>";
+    //$html .= '<th colspan="2"><font size="5">' . $talk[ 'title' ] . '</font></th>';
+    $html .= '<td colspan="2"><h1>' . $talk[ 'title' ] . '</h1></td>';
+    $html .= "</tr><tr>";
+
     if( $with_picture )
     {
+        $imgpath = getSpeakerPicturePath( $speaker );
         $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
     }
 

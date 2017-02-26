@@ -178,7 +178,7 @@ if( file_exists( $pdfFile ) )
        basename( $pdfFile ) );
 
     // This should only be visible if called from a browser.
-    if( count( $argv ) < 1 )
+    if( $argv && count( $argv ) < 1 )
         goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
 }
 else

@@ -35,7 +35,6 @@ else                // Everything is fine.
     if( $res1 )  // Sepeaker is successfully updated. Move on.
     {
         // Assign speaker id from previous query.
-        $res1[ 'id' ] = $res1[ 'LAST_INSERT_ID()' ];
         $speaker = getTableEntry( 'speakers', 'id', $res1 );
 
         // This entry may be used on public calendar. Putting email anywhere on 

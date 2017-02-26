@@ -3,6 +3,10 @@
 include_once 'database.php';
 include_once 'tohtml.php';
 
+// This script may also be called by command line by the email bot. To make sure 
+// $_GET works whether we call it from command line or browser.
+if( $argv )
+    parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
 
 function eventToTex( $event, $talk = null )
 {

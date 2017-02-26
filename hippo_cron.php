@@ -156,10 +156,19 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         }
     }
 }
-else
+
+/*
+ * Task 2. Every day at 8am, check today's event and send out an email.
+ */
+$awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
+if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
-    echo printInfo( "Today is neither Friday nor monday" );
-    ob_flush( );
+    $todaysEvents = getEventsOn( strtotime( 'today' ) );
+    if( count( $todaysEvents ) > 0 )
+    {
+        // Generate email for events.
+
+    }
 }
 
 ?>

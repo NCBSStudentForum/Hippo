@@ -43,44 +43,48 @@ echo '
         <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
     <tr>
-        <td>Add or update existing speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
-    </tr>
+    </table>';
+
+echo '<br/>';
+
+echo '<table class="admin">
     <tr>
         <td>Add AWS entry</td>
         <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
     </tr>
-    ';
-echo '</table>';
+    <tr><td>
+    Enter a login and optionally AWS date and you can delete that AWS entry 
+    from my database.</td>
+    <td> 
+    <form method="post" action="">
+    <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
+    <input class="datepicker" name="date" placeholder="date(optional)" value="" >
+    <button name="response" value="Select">' . $symbCheck . '</button>
+    </form></td>
+    </tr>
+    </table>';
+
 echo '<br>';
 echo '<table class="admin">';
 echo '
     <tr>
-    <td>Add, Update or Delete user <br>
-        <small>Type a login name and press the button.</small>
-    </td>
+        <td>Add or update existing speakers. </td>
+        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+    </tr>
+    <tr>
+        <td>Add, Update or Delete user <br>
+            <small>Type a login name and press the button.</small>
+        </td>
         <td>
             <form method="post" action="admin_acad_update_user.php">
-            <input id="autocomplete_user" name="login" 
-                placeholder="I will autocomplete " >
-            <button 
-                title="Add or remove speakers from AWS list"
-                name="response" value="edit">' . $symbUpdate . '</button>
+                <input id="autocomplete_user" name="login" 
+                    placeholder="I will autocomplete " >
+                <button title="Add or remove speakers from AWS list"
+                    name="response" value="edit">' . $symbUpdate . 
+                '</button>
             </form>
         </td>
-    </tr><tr>';
-echo '<td>
-    Enter a login and optionally AWS date and you can delete that AWS entry 
-    from my database.</td>';
-echo '<td> <form method="post" action="">';
-echo '
-    <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
-    <input class="datepicker" name="date" placeholder="date(optional)" value="" >
-    <button name="response" value="Select">' . $symbCheck . '</button>
-    </form>
-    </td>
-    ';
-echo '</table>';
+    </tr></table>';
 
 $login = null;
 $date = null;

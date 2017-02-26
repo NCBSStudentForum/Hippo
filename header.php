@@ -29,6 +29,25 @@ ini_set( "error_log", "/var/log/hippo.log" );
 <a href="https://github.com/dilawar/ncbs-hippo" target='_blank'>Github</a>
 <a href='https://github.com/dilawar/ncbs-hippo/issues' target="_blank">Report issue</a></small>
 -->
+<div style="font-size:small">
+<table class="public_links">
+    <tr>
+    <td>
+    <a href="allevents.php" target="_blank">All Events</a>
+    </td>
+    <td>
+    <a href="aws.php" target="_blank">Browse AWSs</a>
+    </td>
+    <td>
+    <a href="events.php" target="_blank">Browse talks</a>
+    </td>
+    <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td>
+    <td> <a href="community_graphs.php" target="_blank" >Community graph</a> </td>
+    <td> <a href="aws_stats.php" target="_blank" >AWS Statistics </a> </td>
+    <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td>
+    </tr>
+</table>
+</div>
 
 </div>
 <br />

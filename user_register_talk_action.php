@@ -30,11 +30,7 @@ else                // Everything is fine.
 
     // Insert the speaker into table. if it already exists, just update the 
     // values.
-    $res1 = insertOrUpdateTable( 'speakers'
-        , 'email,first_name,middle_name,last_name,department,institute,homepage'
-        , 'department,institute,homepage,email'
-        , $_POST 
-    );
+    $res1 = addOrUpdateSpeaker( $_POST );
 
     if( $res1 )  // Sepeaker is successfully updated. Move on.
     {
@@ -51,7 +47,7 @@ else                // Everything is fine.
 
         if( $res2 )
         {
-            $talkId = $res2[ 'LAST_INSERT_ID()'];
+            $talkId = $res2[ 'id'];
             echo printInfo( "Successfully registered your talk with id $talkId" );
             $startTime = $_POST[ 'start_time' ];
             $endTime = $_POST[ 'end_time' ];

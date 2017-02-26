@@ -54,7 +54,7 @@ def tomd( msg ):
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
     if pandoc_:
         md = pypandoc.convert_text( msg, 'md', format = 'html' 
-                , extra_args = [ ]
+                , extra_args = [ '--atx-headers' ]
                 )
         return md.encode( 'ascii', 'ignore' )
     else:

@@ -165,10 +165,19 @@ else if( $default[ 'task' ] == 'Today\'s events' )
     {
         if( $entry[ 'is_public_event' ] == 'YES' )
         {
+            if( ! array_key_exists( 'external_id', $entry ) )
+                continue;
+
+            if( ! $entry[ 'external_id' ] )
+                continue;
+
             $talkid = explode( '.', $entry[ 'external_id' ])[1];
             $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
-            echo talkToHTML( $talk, true );
-            $html .= talkToHTML( $talk, false );
+            if( $talk )
+            {
+                echo talkToHTML( $talk, true );
+                $html .= talkToHTML( $talk, false );
+            }
         }
     }
 

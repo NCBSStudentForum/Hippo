@@ -96,6 +96,7 @@ $tex = array( "\documentclass[]{article}"
     , "\usepackage[]{graphicx}"
     //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
+    , "\usepackage[colorlinks=true]{hyperref}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"
     // Old version may not work.

@@ -72,6 +72,14 @@ table.show_user tr td
     background : var(--background);
 }
 
+table.public_links {
+    max-width: vars(--maxwidth);
+    min-width: 80%;
+}
+table.public_links tr td {
+    font-color : gray;
+}
+
 table.show_info {
     max-width : vars(--maxwidth);
     min-width : 90%;

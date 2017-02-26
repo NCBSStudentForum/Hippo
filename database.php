@@ -73,9 +73,10 @@ function initialize( )
         'CREATE TABLE IF NOT EXISTS holidays 
             (date DATE NOT NULL PRIMARY KEY, description VARCHAR(100) NOT NULL)
         ' );
+    // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS speakers 
-        ( id INT NOT NULL AUTO_INCREMENT
+        ( id INT NOT NULL 
             , honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
             , email VARCHAR(100) 
             , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
@@ -1986,9 +1987,58 @@ function addNewTalk( $data )
     $id = intval( $maxid['id'] ) + 1;
 
     $data[ 'id' ] = $id;
-    return insertIntoTable( 'talks'
+    $res = insertIntoTable( 'talks'
         , 'id,host,title,speaker,description,created_by,created_on'
         , $data ); 
+
+    // Return the id of talk.
+    if( $res )
+        return array( "id" => $id );
+    else
+        return null;
+}
+
+/**
+    * @brief Add or update the speaker and returns the id.
+    *
+    * @param $data
+    *
+    * @return 
+ */
+function addOrUpdateSpeaker( $data )
+{
+    global $db;
+    $email = $data['email'];
+    $ret = array( );
+
+    if( $email )
+    {
+        $speaker = getTableEntry( 'speakers', 'email', array('email' => $email));
+        if( $speaker )
+        {
+            $found = true;
+            $res = updateTable( 'speakers'
+                , 'honorific,first_name,middle_name,last_name,department,institute,homepage'
+                , $data 
+            );
+
+            $ret[ 'id' ] = $speaker[ 'id' ];
+            return $ret;
+        }
+    }
+
+    // If we are here, then speaker is not found. Construct a new id.
+    $res = $db->query( 'SELECT MAX(id) AS id FROM speakers' );
+    $prevId = $res->fetch( PDO::FETCH_ASSOC);
+    $id = intval( $prevId['id'] ) + 1;
+    $data[ 'id' ] = $id;
+    $res = insertIntoTable( 'speakers'
+        , 'id,honorific,first_name,middle_name,last_name,department,institute,homepage'
+        , $data 
+        );
+
+    $ret['id'] = $id;
+    return $ret;
 }
 
 

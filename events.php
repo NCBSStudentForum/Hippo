@@ -50,13 +50,13 @@ if( count( $eventTalks ) < 1 )
 else 
 {
     $talkHtml = '';
+
     foreach( $eventTalks as $event )
     {
         $talkId = explode( '.', $event[ 'external_id'])[1];
-
         $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkId ) );
-        $eventHtml = talkToHTML( $talk, $with_picture = true );
-        $talkHtml .= $eventHtml;
+        if( $talk )
+            $talkHtml .= talkToHTML( $talk, $with_picture = true );
     }
     echo $talkHtml;
 

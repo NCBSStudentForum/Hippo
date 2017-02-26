@@ -69,8 +69,9 @@ if( $msg == "OK" )
             , $userEmail 
             );
 
+        // Send email to hippo@lists.ncbs.res.in 
         sendPlainTextEmail( "<p>Details are following </p>" . $msg
-            , "A booking new request has been created by $userEmail"
+            , "A new booking request has been created by $userEmail"
             , 'hippo@lists.ncbs.res.in'
             );
 

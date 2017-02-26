@@ -60,21 +60,18 @@ if( $msg == "OK" )
         $msg = initUserMsg( );
         $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
         $userEmail = $userInfo[ 'email' ];
-        echo printInfo( 
-            "Your request has been submitted and an emails have been sent to you
-            and to administrator for further action. 
-            " );
         $msg .= "<p>Your booking request id $gid has been created. </p>";
         $msg .= arrayToVerticalTableHTML( getRequestByGroupId( $gid )[0], 'request' );
         $msg .= "<p>You can edit/cancel the request anytime you like </p>";
 
-        sendEmail( $msg
+        sendPlainTextEmail( $msg
             , "Your booking request (id-$gid) has been recieved"
             , $userEmail 
             );
 
-        sendEmail( "<p>Details are following </p>" . $msg
-            , "A booking new request has been created by $userEmail"
+        // Send email to hippo@lists.ncbs.res.in 
+        sendPlainTextEmail( "<p>Details are following </p>" . $msg
+            , "A new booking request has been created by $userEmail"
             , 'hippo@lists.ncbs.res.in'
             );
 

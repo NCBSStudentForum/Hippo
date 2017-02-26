@@ -2,6 +2,11 @@
 
 include_once 'database.php';
 
+// Directory to store the mdsum of sent emails.
+$maildir = getDataDir( ) . '/_mails';
+if( ! file_exists( $maildir ) )
+    mkdir( $maildir, 0777, true );
+
 function mailFooter( )
 {
     return "
@@ -36,7 +41,7 @@ function sendEmail($msg, $sub, $to)
     file_put_contents( $msgfile, $msg );
     $to = implode( ' -t ', explode( ',', trim( $to ) ) );
 
-    $cmd= __DIR__ . "/sendmail.py \"$to\" \"-s $sub\" \"-i $msgfile\"";
+    $cmd= __DIR__ . "/sendmail.py -t $to \"-s $sub\" \"-i $msgfile\"";
     $out = exec( $cmd, $output, $ret );
     unlink( $msgfile );
     return true;
@@ -44,7 +49,19 @@ function sendEmail($msg, $sub, $to)
 
 function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
+
+    global $maildir;
     $conf = getConf( );
+
+    // generate md5 of email. And store it in archive.
+    $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
+    if( file_exists( $archivefile ) )
+    {
+        echo printInfo( "This email has already been sent. Doing nothing" );
+        return;
+    }
+
+
     if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
     {
         echo printInfo( "Email service has not been configured." );
@@ -87,7 +104,11 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
 
     echo "<pre> $cmd </pre>";
     $out = exec( $cmd, $output, $ret );
+
+    echo printInfo( "Saving the mail in archive" . $archivefile );
+    file_put_contents( $archivefile, "SENT" );
     unlink( $msgfile );
+
     return true;
 }
 

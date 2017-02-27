@@ -59,6 +59,9 @@ function awsToTex( $aws )
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
 
+    $imagefile = getThumbnail( $imagefile );
+    echo "Low resolution $imagefile";
+
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     // Date and plate
@@ -126,6 +129,7 @@ else
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
+    , "\usepackage[]{grffile}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"

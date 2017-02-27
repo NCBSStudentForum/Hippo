@@ -11,7 +11,7 @@ from email import Encoders
 from logger import _logger
 
 def main( args ):
-    _logger.debug( "Got command line params %s" % args )
+    _logger.debug( "Got command line params %s" % vars(args) )
     fromAddr = args.sender
     toAddr = args.to
     subject = args.subject
@@ -54,7 +54,7 @@ def main( args ):
             msg.attach(data)
 
     s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
-    s.set_debuglevel( 1 )
+    # s.set_debuglevel( 1 )
     success = False
     try:
         _logger.info( 'Sending email to %s' % toAddr )

@@ -54,7 +54,7 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     $conf = getConf( );
 
     // generate md5 of email. And store it in archive.
-    $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
+    $archivefile = $maildir . '/' . md5($sub . $msg) . '.email';
     if( file_exists( $archivefile ) )
     {
         echo printInfo( "This email has already been sent. Doing nothing" );

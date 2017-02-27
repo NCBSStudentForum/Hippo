@@ -128,7 +128,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
     error_log( "Monday 10am. Notify about AWS" );
     // Send on 10am.
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
-    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    //if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
@@ -139,14 +139,21 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         {
             echo printInfo( "Sending mail about today's AWS" );
             $subject .= implode( ', ', $res[ 'speakers'] );
+
             $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
             $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
             $to = 'academic@lists.ncbs.res.in';
+
+            $to = 'dilawars@ncbs.res.in';
+            $cclist = 'hippo@lists.ncbs.res.in,dilawar.s.rajput@gmail.com';
 
             $mail = $res[ 'email' ];
 
             // generate md5 of email. And store it in archive.
             $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
+            error_log( "Sending to $to, $cclist with subject $subject" );
+            echo( "Sending to $to, $cclist with subject $subject" );
+
             if( file_exists( $archivefile ) )
             {
                 echo printInfo( "This email has already been sent. Doing nothing" );

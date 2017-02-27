@@ -163,14 +163,57 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
  * Task 2. Every day at 8am, check today's event and send out an email.
  */
 $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
-if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+$today = dbDate( strtotime( 'today' ) );
+echo "Looking for events on $today";
+//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
-    $todaysEvents = getEventsOn( strtotime( 'today' ) );
+    $todaysEvents = getPublicEventsOnThisDay( $today );
+
+    $html = '';
     if( count( $todaysEvents ) > 0 )
     {
-        // Generate email for events.
+        foreach( $todaysEvents as $event )
+        {
+            $external_id = $event[ 'external_id' ];
+            $talkid = explode( '.', $external_id );
 
+            if( count( $talkid ) == 2 )
+            {
+                $data = array( 'id' => $talkid[1] );
+                $talk = getTableEntry( 'talks', 'id', $data );
+                if( $talk )
+                    $html .= talkToHTML( $talk );
+            }
+        }
     }
+
+    // Generate pdf now.
+    $pdffile = getDataDir( ) . "/EVENTS_$today.pdf";
+    $script = __DIR__ . '/generate_pdf_talk.php';
+    $cmd = "php -q -f $script date=$today";
+    echo "Executing <pre> $cmd </pre>";
+    $res = `$cmd`;
+
+    $attachment = '';
+    if( file_exists( $pdffile ) )
+    {
+        echo printInfo( "Successfully generated PDF file" );
+        $attachment = $pdffile;
+    }
+
+
+    // Now prepare an email to sent to mailing list.
+    $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
+    $subject = "Today's (" . humanReadableDate( $today ) . ") talks/seminars on the campus";
+    $email = emailFromTemplate( 'todays_events', $macros );
+    if( $email )
+    {
+        // Send it out.
+        echo "<pre> $email </pre>";
+        echo $subject;
+    }
+
+    ob_flush( );
 }
 
 ?>

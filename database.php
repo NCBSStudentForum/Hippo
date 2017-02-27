@@ -148,6 +148,8 @@ function initialize( )
         'CREATE TABLE IF NOT EXISTS email_templates
         ( id VARCHAR(100) NOT NULL
         , when_to_send VARCHAR(200)
+        , recipients VARCHAR(200) NOT NULL
+        , cc VARCHAR(500) 
         , description TEXT, PRIMARY KEY (id) )' 
         );
 

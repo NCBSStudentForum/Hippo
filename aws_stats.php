@@ -107,7 +107,7 @@ $(function () {
         xAxis: { min : 2010 },
         yAxis: [{ title: { text: 'AWS Count' } }, ],
         series: [{
-            name: 'AWS per year',
+            name: 'AWS this year',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,

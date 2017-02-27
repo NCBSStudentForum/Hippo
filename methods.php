@@ -6,6 +6,20 @@ include_once 'html2text.php';
 
 date_default_timezone_set('Asia/Kolkata');
 
+
+// Error code when uploading images.
+$phpFileUploadErrors = array(
+    0 => 'There is no error, the file uploaded with success',
+    1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+    2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+    3 => 'The uploaded file was only partially uploaded',
+    4 => 'No file was uploaded',
+    6 => 'Missing a temporary folder',
+    7 => 'Failed to write file to disk.',
+    8 => 'A PHP extension stopped the file upload.',
+);
+
+
 function venueToText( $venue )
 {
     if( is_string( $venue ) )
@@ -474,6 +488,16 @@ function isMobile()
     );
 }
 
+/**
+    * @brief Store image a PNG. Reduce the resolution of image.
+    *
+    * @param $originalImage
+    * @param $ext
+    * @param $outputImage
+    * @param $quality
+    *
+    * @return 
+ */
 function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
 {
     // jpg, png, gif or bmp?
@@ -486,13 +510,59 @@ function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
     else if (preg_match('/bmp/i',$ext))
         $imageTmp=imagecreatefrombmp($originalImage);
     else
-        return 0;
+        return false;
 
     // quality is a value from 0 (worst) to 10 (best)
-    imagepng($imageTmp, $outputImage, $quality);
+    $x = imagesx( $imageTmp );
+    $y = imagesy( $imageTmp );
+
+    echo "$x and $y";
+
+    // Keep the scaling.
+    $newW = 200; $newH = (int)( $newW * $y / $x );
+    $newImg = imagecreatetruecolor( $newW, $newH );
+    imagecopyresampled( $newImg, $imageTmp, 0, 0, 0, 0, $newW, $newH, $x, $y );
+
+    imagepng($newImg, $outputImage, $quality);
     imagedestroy($imageTmp);
-    return 1;
+    return true;
 }
+
+function saveImageAsJPEG($originalImage, $ext, $outputImage, $quality = 90 )
+{
+    // Keep the scaling factor of original image. User ImageMagick.
+
+    $img = new Imagick( $originalImage );
+    $w = $img->getImageWidth( );
+    $h = $img->getImageHeight( );
+    $newW = 200; $newH = (int)( $newW * $h / $w );
+    $img->resizeImage( $newW, $newH, Imagick::FILTER_GAUSSIAN, 1);
+    $img->writeImage( $outputImage );
+    $img->clear( );
+    $img->destroy( );
+    return true;
+}
+
+/**
+    * @brief Get a low resolution image of pdf files.
+    *
+    * @param $originalImage
+    *
+    * @return 
+ */
+function getThumbnail( $originalImage )
+{
+    // Keep the scaling factor of original image. User ImageMagick.
+
+    $img = new Imagick( $originalImage );
+    $img->thumbnailImage( 200, 0, Imagick::FILTER_UNDEFINED, 1);
+    $outputImage = $originalImage . "_thumbnail.jpg";
+    $img->writeImage( $outputImage );
+    $img->clear( );
+    $img->destroy( );
+    return $outputImage;
+}
+
 
 /**
     * @brief Image of user,
@@ -503,17 +573,17 @@ function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
  */
 function getUserPicture( $user )
 {
-    //$picPath = __DIR__ . "/data/no_image_available.png";
+    //$picPath = __DIR__ . "/data/no_image_available.jpg";
     $picPath = nullPicPath( $user );
     if( array_key_exists( 'conf', $_SESSION ) )
     {
-        $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.png';
+        $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.jpg';
         if( ! file_exists( $picPath ) )
             $picPath = nullPicPath( $user );
     }
         
     $html ='<img class="login_picture" width="200px"
-        height="auto" src="' . dataURI( $picPath, 'image/png' ) . '" >';
+        height="auto" src="' . dataURI( $picPath, 'image/jpg' ) . '" >';
 
     return $html;
 }
@@ -524,9 +594,9 @@ function getSpeakerPicturePath( $speaker )
     $datadir = $conf[ 'data' ]['user_imagedir'];
     if( is_array( $speaker ) )
         $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
-            $speaker[ 'last_name' ] . '.png' ;
+            $speaker[ 'last_name' ] . '.jpg' ;
     else
-        $filename = $speaker . '.png';
+        $filename = $speaker . '.jpg';
 
     $filename = str_replace( ' ', '', $filename );
     return $datadir . '/' . $filename;
@@ -643,7 +713,7 @@ function uploadImage( $pic, $filename )
     else
         $picPath = $conf[ 'data' ][ 'user_imagedir' ] . '/' . $filename ;
 
-    return saveImageAsPNG( $tmpfile, $ext, $picPath );
+    return saveImageAsJPEG( $tmpfile, $ext, $picPath );
 }
 
 /**

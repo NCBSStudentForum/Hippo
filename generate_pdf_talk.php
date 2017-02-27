@@ -99,6 +99,7 @@ function eventToTex( $event, $talk = null )
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
+    , "\usepackage[]{grffile}"
     //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[colorlinks=true]{hyperref}"

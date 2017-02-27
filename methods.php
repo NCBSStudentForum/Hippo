@@ -543,6 +543,26 @@ function saveImageAsJPEG($originalImage, $ext, $outputImage, $quality = 90 )
     return true;
 }
 
+/**
+    * @brief Get a low resolution image of pdf files.
+    *
+    * @param $originalImage
+    *
+    * @return 
+ */
+function getThumbnail( $originalImage )
+{
+    // Keep the scaling factor of original image. User ImageMagick.
+
+    $img = new Imagick( $originalImage );
+    $img->thumbnailImage( 200, 0, Imagick::FILTER_UNDEFINED, 1);
+    $outputImage = $originalImage . "_thumbnail.jpg";
+    $img->writeImage( $outputImage );
+    $img->clear( );
+    $img->destroy( );
+    return $outputImage;
+}
+
 
 /**
     * @brief Image of user,

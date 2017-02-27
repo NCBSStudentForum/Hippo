@@ -37,6 +37,7 @@ function eventToTex( $event, $talk = null )
         $imagefile = nullPicPath( );
 
     // Add user image.
+    $imagefile = getThumbnail( $imagefile );
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     if( $talk )

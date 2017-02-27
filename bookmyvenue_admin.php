@@ -72,14 +72,12 @@ $events = getEventsBeteen( 'today', '+4 week' );
 
 
 $html .= "<table>";
-// Sort events. Put public events first.
-usort( $events, function( $a, $b ) {
-                return $a[ 'is_public_event'] < $b['is_public_event']; 
-                } 
-    );
-
 foreach( $events as $event )
 {
+    // Today's event if they are passed, don't display them.
+    if( $event[ 'date' ] == dbDate( 'today' ) && $event[ 'start_time'] < dbTime( 'now' ) )
+        continue;
+
     $gid = $event['gid'];
     $eid = $event['eid'];
     $html .= "<form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";

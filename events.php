@@ -56,14 +56,16 @@ else
         $talkId = explode( '.', $event[ 'external_id'])[1];
         $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkId ) );
         if( $talk )
+        {
             $talkHtml .= talkToHTML( $talk, $with_picture = true );
+            // Link to pdf file.
+            $talkHtml.= '<a target="_blank" href="generate_pdf_talk.php?date=' 
+                    . $default[ 'date' ] . '&id=' . $talkId . '">Download pdf</a>';
+        }
     }
     echo $talkHtml;
 
     echo '<br>';
-    // Link to pdf file.
-    echo '<a target="_blank" href="generate_pdf_talk.php?date=' 
-            . $default[ 'date' ] . '&id=' . $talkId . '">Download pdf</a>';
 
 }
 

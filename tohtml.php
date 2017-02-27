@@ -1178,7 +1178,7 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
 
     $html = '<img class="login_picture" width="' . $width 
             . '" height="' . $height . '" src="' 
-            . dataURI( $picpath, 'image/png' ) . '" >';
+            . dataURI( $picpath, 'image/jpg' ) . '" >';
     return $html;
 }
 
@@ -1190,17 +1190,17 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
 function nullPicPath( )
 {
     $conf = getConf( );
-    return $conf['data']['user_imagedir'] . '/hippo.png';
+    return $conf['data']['user_imagedir'] . '/hippo.jpg';
 }
 
 function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
 {
     $picName = str_replace( ' ', '', $speaker );
     $conf = getConf( );
-    $picPath = $conf['data']['user_imagedir'] . '/' . $picName . '.png';
+    $picPath = $conf['data']['user_imagedir'] . '/' . $picName . '.jpg';
     $conf = getConf( );
     if( ! file_exists( $picPath ) )
-        $picPath = $conf['data']['user_imagedir'] . '/hippo.png';
+        $picPath = $conf['data']['user_imagedir'] . '/hippo.jpg';
 
     return showImage( $picPath, $height, $width );
 }

@@ -128,7 +128,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
     error_log( "Monday 10am. Notify about AWS" );
     // Send on 10am.
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
-    //if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
@@ -142,10 +142,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
 
             $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
             $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-
-            // NOTE: Can't send to so many cc.
             $to = 'academic@lists.ncbs.res.in';
-            $cclist = 'hospitality@ncbs.res.in';
 
             $mail = $res[ 'email' ];
 

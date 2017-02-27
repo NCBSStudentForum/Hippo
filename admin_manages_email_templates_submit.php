@@ -9,8 +9,10 @@ mustHaveAnyOfTheseRoles( array( 'ADMIN' ) );
 if( $_POST['response'] == 'edit' )
 {
     $_POST[ 'modified_on' ] = date( 'Y-m-d H:i:s', strtotime( 'now' ));
-    $res = updateTable( 'email_templates', 'id'
-        , array('when_to_send', 'description' ), $_POST
+    $res = updateTable( 'email_templates'
+        , 'id'
+        , 'when_to_send,description,cc,recipients'
+        , $_POST
     );
 
     if( $res )
@@ -30,7 +32,8 @@ else if( $_POST['response'] == 'add' )
 {
     $_POST[ 'modified_on' ] = date( 'Y-m-d H:i:s', strtotime( 'now' ));
     $res = insertIntoTable( 
-        'email_templates' , array( 'id', 'when_to_send', 'description'), $_POST 
+        'email_templates' , 'id,when_to_send,description,recipients,cc'
+        , $_POST 
         );
 
     if( $res )

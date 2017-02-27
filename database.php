@@ -544,10 +544,13 @@ function getEventsBeteen( $from , $duration )
     global $db;
     $startDate = dbDate( $from );
     $endDate = dbDate( strtotime( $duration, strtotime( $from ) ) );
-    $whereExpr = "date >= '$startDate' AND date <= '$endDate' ";
+
+    $nowTime = dbTime( 'now' );
+
+    $whereExpr = "date >= '$startDate' AND date <= '$endDate'";
 
     $whereExpr .= " AND status='VALID' ";
-    return getTableEntries( 'events', 'date,start_time', $whereExpr, 'date,start_time' );
+    return getTableEntries( 'events', 'date,start_time', $whereExpr );
 }
 
 

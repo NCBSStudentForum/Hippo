@@ -530,29 +530,16 @@ function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
 
 function saveImageAsJPEG($originalImage, $ext, $outputImage, $quality = 90 )
 {
-    // jpg, png, gif or bmp?
-    if (preg_match('/jpg|jpeg/i',$ext))
-        $imageTmp=imagecreatefromjpeg($originalImage);
-    else if (preg_match('/png/i',$ext))
-        $imageTmp=imagecreatefrompng($originalImage);
-    else if (preg_match('/gif/i',$ext))
-        $imageTmp=imagecreatefromgif($originalImage);
-    else if (preg_match('/bmp/i',$ext))
-        $imageTmp=imagecreatefrombmp($originalImage);
-    else
-        return false;
+    // Keep the scaling factor of original image. User ImageMagick.
 
-    // quality is a value from 0 (worst) to 10 (best)
-    $x = imagesx( $imageTmp );
-    $y = imagesy( $imageTmp );
-
-    // Keep the scaling.
-    $newW = 200; $newH = (int)( $newW * $y / $x );
-    $newImg = imagecreatetruecolor( $newW, $newH );
-    imagecopyresampled( $newImg, $imageTmp, 0, 0, 0, 0, $newW, $newH, $x, $y );
-
-    imagejpeg($newImg, $outputImage, $quality);
-    imagedestroy($imageTmp);
+    $img = new Imagick( $originalImage );
+    $w = $img->getImageWidth( );
+    $h = $img->getImageHeight( );
+    $newW = 200; $newH = (int)( $newW * $h / $w );
+    $img->resizeImage( $newW, $newH, Imagick::FILTER_GAUSSIAN, 1);
+    $img->writeImage( $outputImage );
+    $img->clear( );
+    $img->destroy( );
     return true;
 }
 

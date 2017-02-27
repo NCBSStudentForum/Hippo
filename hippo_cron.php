@@ -23,9 +23,12 @@ echo( "Running cron at $now" );
 function generateAWSEmail( $monday )
 {
 
-    $result = array( );
+    $res = array( );
 
     $upcomingAws = getUpcomingAWS( $monday );
+    if( ! $upcomingAws )
+        $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
+
     if( count( $upcomingAws ) < 1 )
         return null;
 
@@ -122,6 +125,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 }
 else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
+    error_log( "Monday 10am. Notify about AWS" );
     // Send on 10am.
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
@@ -129,10 +133,11 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
         $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
-
         $res = generateAWSEmail( $thisMonday );
+
         if( $res )
         {
+            echo printInfo( "Sending mail about today's AWS" );
             $subject .= implode( ', ', $res[ 'speakers'] );
             $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
             $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';

@@ -205,12 +205,19 @@ echo "Looking for events on $today";
     // Now prepare an email to sent to mailing list.
     $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
     $subject = "Today's (" . humanReadableDate( $today ) . ") talks/seminars on the campus";
+
+    $template = getEmailTemplateById( 'todays_events' );
     $email = emailFromTemplate( 'todays_events', $macros );
+
     if( $email )
     {
         // Send it out.
         echo "<pre> $email </pre>";
         echo $subject;
+        $to = $template[ 'recipients' ];
+        $ccs = $template[ 'CC' ];
+
+        echo "Send to $to and CC to $cc";
     }
 
     ob_flush( );

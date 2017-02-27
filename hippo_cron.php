@@ -142,10 +142,10 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
 
             $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
             $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-            $to = 'academic@lists.ncbs.res.in';
 
-            $to = 'dilawars@ncbs.res.in';
-            $cclist = 'hippo@lists.ncbs.res.in,dilawar.s.rajput@gmail.com';
+            // NOTE: Can't send to so many cc.
+            $to = 'academic@lists.ncbs.res.in';
+            $cclist = 'hospitality@ncbs.res.in';
 
             $mail = $res[ 'email' ];
 

@@ -16,6 +16,8 @@ if( ! file_exists( $maildir ) )
     mkdir( $maildir, 0777, true );
 
 $now = dbDateTime( strtotime( "now" ) );
+
+error_log( "Running cron job at $now" );
 echo( "Running cron at $now" );
 
 function generateAWSEmail( $monday )

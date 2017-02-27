@@ -42,7 +42,8 @@ if( $id )
 
 echo '<form method="post" action="admin_manages_email_templates_submit.php">';
 echo dbTableToHTMLTable( 'email_templates', $defaults
-    , array( 'id', 'when_to_send', 'description' ), $todo
+    , array( 'id', 'recipients', 'cc', 'when_to_send', 'description' )
+    , $todo
     );
 echo "</form>";
 

@@ -10,7 +10,10 @@ echo "<h2>Browse AWSs of a particular day</h2>";
 echo printInfo( "Please select a day (MONDAY) to see the details of annual 
     work seminars" );
 
-$today = dbDate( 'next monday' );
+if( strtotime( 'today' ) == strtotime( 'this monday' ) )
+    $today = dbDate( 'this monday' );
+else
+    $today = dbDate( 'next monday' );
 
 $default = array( 'date' => $today );
 if( $_GET )

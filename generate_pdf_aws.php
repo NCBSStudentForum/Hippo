@@ -5,7 +5,7 @@ include_once 'tohtml.php';
 
 // This script may also be called by command line by the email bot. To make sure 
 // $_GET works whether we call it from command line or browser.
-if( $argv )
+if( isset($argv) )
     parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
 
 //var_dump( $_GET );
@@ -178,7 +178,7 @@ if( file_exists( $pdfFile ) )
        basename( $pdfFile ) );
 
     // This should only be visible if called from a browser.
-    if( $argv && count( $argv ) < 1 )
+    if( ! isset($argv) )
         goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
 }
 else

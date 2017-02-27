@@ -53,13 +53,8 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     global $maildir;
     $conf = getConf( );
 
-    // generate md5 of email. And store it in archive.
-    $archivefile = $maildir . '/' . md5($sub . $msg) . '.email';
-    if( file_exists( $archivefile ) )
-    {
-        echo printInfo( "This email has already been sent. Doing nothing" );
+    if( strlen( trim( $msg ) ) < 1 )
         return;
-    }
 
 
     if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
@@ -73,6 +68,15 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     if( $conf['global']['send_emails' ] == false )
     {
         echo "<br>Sending emails has been disabled in this installation";
+        return;
+    }
+
+
+    // Check if this email has already been sent.
+    $archivefile = $maildir . '/' . md5($sub . $msg) . '.email';
+    if( file_exists( $archivefile ) )
+    {
+        echo printInfo( "This email has already been sent. Doing nothing" );
         return;
     }
 
@@ -106,7 +110,9 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     $out = exec( $cmd, $output, $ret );
 
     echo printInfo( "Saving the mail in archive" . $archivefile );
+    // generate md5 of email. And store it in archive.
     file_put_contents( $archivefile, "SENT" );
+
     unlink( $msgfile );
 
     return true;

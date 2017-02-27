@@ -5,7 +5,7 @@ include_once 'tohtml.php';
 
 // This script may also be called by command line by the email bot. To make sure 
 // $_GET works whether we call it from command line or browser.
-if( $argv )
+if( isset($argv) )
     parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
 
 //var_dump( $_GET );
@@ -58,6 +58,9 @@ function awsToTex( $aws )
     $imagefile = getSpeakerPicturePath( $aws['speaker'] );
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
+
+    $imagefile = getThumbnail( $imagefile );
+    echo "Low resolution $imagefile";
 
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
@@ -126,6 +129,7 @@ else
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=20mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
+    , "\usepackage[]{grffile}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"
@@ -178,7 +182,7 @@ if( file_exists( $pdfFile ) )
        basename( $pdfFile ) );
 
     // This should only be visible if called from a browser.
-    if( $argv && count( $argv ) < 1 )
+    if( ! isset($argv) )
         goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
 }
 else

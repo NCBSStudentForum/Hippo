@@ -6,9 +6,8 @@ echo userHTML( );
 
 $info = getUserInfo( $_SESSION['user'] );
 
-$picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . 
-    '/' . $_SESSION['user'] . '.png';
-
+$conf = getConf( );
+$picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION['user'] . '.jpg';
 
 echo alertUser( 
     "<p>Make sure your <tt>TITLE</tt>, <tt>JOINED ON</tt> and picture are 

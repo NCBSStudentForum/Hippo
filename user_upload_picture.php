@@ -10,15 +10,16 @@ echo userHTML( );
 
 $conf = getConf( );
 
-$picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION[ 'user' ] . '.png';
-
+$picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION[ 'user' ] . '.jpg';
 if( $_POST[ 'Response' ] == 'upload' )
 {
     $img = $_FILES[ 'picture' ];
 
     if( $img[ 'error' ] != UPLOAD_ERR_OK )
     {
-        echo minionEmbarrassed( "This file could not be uploaded" );
+        $errCode = $img[ 'error' ];
+        echo minionEmbarrassed( "This file could not be uploaded", $img['error'] );
+        echo printWarning( $phpFileUploadErrors[ $errCode ] );
         exit;
     }
 
@@ -30,14 +31,21 @@ if( $_POST[ 'Response' ] == 'upload' )
     else
     {
         // Convert to png file and tave to $picPath
-        if ( ! saveImageAsPNG( $tmppath, $ext, $picPath ) )
+        try {
+            $res = saveImageAsJPEG( $tmppath, $ext, $picPath );
+            if( ! $res )
+                echo minionEmbarrassed( 
+                    "I could not upload your image (allowed formats: png, jpg, bmp)!" 
+                    );
+            else
+            {
+                echo printInfo( "File is uploaded sucessfully" );
+                goBack( "user_info.php", 1 );
+            }
+        } catch (Exception $e ) {
             echo minionEmbarrassed( 
-                "I could not upload your image (allowed formats: png, jpg, bmp)!" 
-            );
-        else
-        {
-            echo printInfo( "File is uploaded sucessfully" );
-            goBack( "user_info.php", 1 );
+                "I could not upload your image. Error was "
+                , $e->getMessage( ) );
         }
     }
 }

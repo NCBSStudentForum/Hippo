@@ -5,7 +5,7 @@ include_once 'tohtml.php';
 
 // This script may also be called by command line by the email bot. To make sure 
 // $_GET works whether we call it from command line or browser.
-if( $argv )
+if( isset($argv) )
     parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
 
 function eventToTex( $event, $talk = null )
@@ -37,6 +37,7 @@ function eventToTex( $event, $talk = null )
         $imagefile = nullPicPath( );
 
     // Add user image.
+    $imagefile = getThumbnail( $imagefile );
     $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
 
     if( $talk )
@@ -98,6 +99,7 @@ function eventToTex( $event, $talk = null )
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
+    , "\usepackage[]{grffile}"
     //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[colorlinks=true]{hyperref}"
@@ -170,9 +172,8 @@ if( file_exists( $pdfFile ) )
     echo printInfo( "Successfully genered pdf document " . 
        basename( $pdfFile ) );
 
-    // Only if we call from web-browser and not from command line i.e. when 
-    // $argv is null
-    if( ! $argv )
+    // Download only if called from browser.
+    if( ! isset( $argv ) )
         goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
 }
 else

@@ -169,7 +169,11 @@ if( file_exists( $pdfFile ) )
 {
     echo printInfo( "Successfully genered pdf document " . 
        basename( $pdfFile ) );
-    goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
+
+    // Only if we call from web-browser and not from command line i.e. when 
+    // $argv is null
+    if( ! $argv )
+        goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
 }
 else
 {

@@ -173,8 +173,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
  */
 $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
 $today = dbDate( strtotime( 'today' ) );
-echo "Looking for events on $today";
-//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
     $todaysEvents = getPublicEventsOnThisDay( $today );
 
@@ -215,21 +214,54 @@ echo "Looking for events on $today";
     $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
     $subject = "Today's (" . humanReadableDate( $today ) . ") talks/seminars on the campus";
 
-    $template = getEmailTemplateById( 'todays_events' );
-    $email = emailFromTemplate( 'todays_events', $macros );
+    $template = emailFromTemplate( 'todays_events', $macros );
 
-    if( $email )
+    if( array_key_exists( 'email_body' ) && $template[ 'email_body' ] )
     {
         // Send it out.
         echo "<pre> $email </pre>";
         echo $subject;
         $to = $template[ 'recipients' ];
         $ccs = $template[ 'CC' ];
-
         echo "Send to $to and CC to $cc";
     }
 
     ob_flush( );
+}
+
+/*
+ * Task 3: Annoy AWS speaker if they have not completed their entry.
+ */
+$today = strtotime( 'today' );
+$startDay = strtotime( 'this wednesday' );
+$endDay = strtotime( 'this friday' );
+if( $today >= $startDay && $today <= $endDay ) 
+{
+    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
+    if( $awayFrom > -1 && $awayFrom < 15 )
+    {
+        // Every day 10 am. Annoy.
+        $upcomingAws = getUpcomingAWS( 'next monday' );
+        foreach( $upcomingAws as $aws )
+        {
+            if( $aws[ 'title' ] && $aws['abstract'] )
+                continue;
+
+            // Otherwise annoy
+            $subject = "Details of your upcoming AWS are incomplete, human!";
+            $to = getEmailById( $aws[ 'speaker' ] );
+
+            $macros = array( 'USER' => getUserInfo( $aws['speaker'] )
+                            , 'DATE' => humanReadableDate( $today ) 
+                        );
+            $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $data );
+
+            // Log it.
+            error_log( "AWS entry incomplete. Annoy " . $to  );
+            sendPlainTextEmail( $temp[ 'email_body', $subject, $to, $templ[ 'cc' ] );
+        }
+
+    }
 }
 
 ?>

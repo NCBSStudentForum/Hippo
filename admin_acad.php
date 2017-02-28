@@ -31,6 +31,18 @@ echo userHTML( );
 
 echo '<h2 align="left">Academic Admin</h2>';
 
+echo "<h3>Scheduling</h3>";
+echo '
+  <table border="0" class="admin">
+    <tr>
+      <td>Manage upcoming AWS</td>
+      <td><a href="admin_acad_manages_upcoming_aws.php">Manage
+      upcoming AWSes</a></td>
+    </tr>
+  </table>';
+
+echo '<h3>Edit and update</h3>';
+
 echo '<table class="admin">';
 echo '
     <tr>
@@ -143,15 +155,6 @@ if( isset( $_POST[ 'response' ] ))
     }
 }
 
-echo "<h3>Scheduling</h3>";
-echo '
-  <table border="0" class="admin">
-    <tr>
-      <td>Manage upcoming AWS</td>
-      <td><a href="admin_acad_manages_upcoming_aws.php">Manage
-      upcoming AWSes</a></td>
-    </tr>
-  </table>';
 
 echo "<h3> Information</h3>";
 echo '

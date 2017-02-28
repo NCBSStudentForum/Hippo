@@ -1093,6 +1093,12 @@ function awsPdfURL( $speaker, $date, $msg = 'Download PDF' )
  */
 function downloadTextFile( $filename, $msg = 'Download file' )
 {
+    //if( strpos( '/data/', $filename ) !== false )
+        //$filename = basename( $filename );
+
+    //if( ! file_exists( getDataDir( ) ."/$filename" ) )
+        //$msg = "File doesn't exists";
+
     $url = '<div><a target="_blank" href="download_file.php?filename=' 
             . $filename .  '">' . $msg .'</a></div>';
     return $url;

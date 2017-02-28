@@ -96,30 +96,27 @@ foreach( $awses as $aws )
 
 $table = '<table border="0" class="show_aws_summary">';
 
-$i = 0;
-foreach( $datewiseAWS as $date => $awses )
+// Iterate over weeks.
+$thisMonday = dbDate( strtotime( 'previous monday' ) );
+for ($i = 0; $i < intval(30 * $numMonths / 7); $i++) 
 {
-    $i +=1 ;
-    $printableDate = date( 'M d, Y', strtotime($date) ); 
-    $table .= "<tr> <td>$i</td> <td><small> " . $printableDate .  "</small></td>";
-    foreach( $awses as $aws )
+    $date = dbDate( strtotime( $thisMonday . " -" . $i . " week" ) );
+    $table .= "<tr> <td>$i</td> <td><small> " . humanReadableDate( $date)  .  "</small></td>";
+    if( array_key_exists( $date, $datewiseAWS) && count( $datewiseAWS[ $date ] ) > 0 )
     {
-        $speaker = $aws[ 'speaker' ];
-        $column = loginToText( $speaker ) . "<br><small> $speaker </small>";
-        $column .= "<br><small>" . $aws[ 'supervisor_1' ] . "</small>";
-        /* Add a form to edit or delete this entry */
-        $table .= "<td> $column";
-
-        /* NOONE but speaker should be able to edit his/her AWS.
-        $table .= '<form action="admin_acad_edit.php" method="post" accept-charset="utf-8">
-                <input type="hidden" name="speaker" value="' . $speaker . '"/>
-                <input type="hidden" name="date" value="' . $aws['date'] . '" />
-                <button name="response">Edit</button>
-        </form>';
-         */
-
-        $table .= "</td>";
+        foreach( $datewiseAWS[ $date ] as $aws )
+        {
+            $speaker = $aws[ 'speaker' ];
+            $column = loginToText( $speaker ) . "<br><small> $speaker </small>";
+            $column .= "<br><small>" . $aws[ 'supervisor_1' ] . "</small>";
+            /* Add a form to edit or delete this entry */
+            $table .= "<td> $column";
+            $table .= "</td>";
+        }
     }
+    else
+        $table .= "<td colspan=\"3\" style=\"color:blue\"> No AWS found </td>";
+
     $table .= "</tr>";
 }
 

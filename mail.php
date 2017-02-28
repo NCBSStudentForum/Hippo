@@ -52,6 +52,7 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     global $maildir;
     $conf = getConf( );
 
+    printInfo( "Trying to send email to $to, $cclist with subject $sub" );
     if( strlen( trim( $msg ) ) < 1 )
         return;
 
@@ -65,7 +66,7 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
 
     if( $conf['global']['send_emails' ] == false )
     {
-        echo "<br>Sending emails has been disabled in this installation";
+        echo alertUser( "<br>Sending emails has been disabled in this installation" );
         return;
     }
 
@@ -77,6 +78,8 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
         echo printInfo( "This email has already been sent. Doing nothing" );
         return;
     }
+
+    printInfo( "... preparing email" );
 
     $timestamp = date( 'r', strtotime( 'now' ) );
 
@@ -104,15 +107,14 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
             $cmd .= " -a \"$f\" ";
     }
 
-    echo "<pre> $cmd </pre>";
-    $out = exec( $cmd, $output, $ret );
+    printInfo( "<pre> $cmd </pre>" );
+    $out = `$cmd`;
+    printInfo( '... $out' );
 
     echo printInfo( "Saving the mail in archive" . $archivefile );
     // generate md5 of email. And store it in archive.
     file_put_contents( $archivefile, "SENT" );
-
     unlink( $msgfile );
-
     return true;
 }
 

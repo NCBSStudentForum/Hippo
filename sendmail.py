@@ -62,9 +62,6 @@ def main( args ):
         s.sendmail( fromAddr, toAddr, msg.as_string( ) )
         success = True
     except Exception as e:
-        with open( '/var/log/hippo.log', 'a' ):
-            _logger.error( 'Failed to send email. Error was %s' % e )
-
         _logger.info( "Everything went OK. Mail sent sucessfully" )
 
     s.quit( )

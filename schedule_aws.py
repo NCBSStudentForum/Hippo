@@ -118,7 +118,7 @@ def computeCost( speaker, slot_date, last_aws ):
     incredible large amount of time.
     """
     global g_, aws_
-    idealGap = 357
+    idealGap = 364
     nDays = ( slot_date - last_aws ).days
     nAws = len( aws_[speaker] )
 
@@ -141,15 +141,15 @@ def computeCost( speaker, slot_date, last_aws ):
             # _logger.info( "I am not scheduling AWS for this user." )
             cost = 100
         elif fromToday >  1.5 * idealGap:
-            cost = 0.0 + nAws / 10.0
+            cost = nAws / 10.0
         else:
-            cost = float( nDays - idealGap ) / idealGap 
+            cost = float( nDays - idealGap ) / idealGap  + nAws / 10.0
 
     # We multiply the weight by AWS given by this user in a way that first 2 aws
     # does not effect this weight. But later AWS has significant cost. This is
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
-    cost =  cost + max(0, nAws - 2 )
+    cost =  cost + max(0, nAws - 2.0 )
 
     # Add some random noise to make sure that we don't have same coupling of
     # speakers as before 

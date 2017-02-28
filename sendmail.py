@@ -16,6 +16,10 @@ def main( args ):
     toAddr = args.to
     subject = args.subject
 
+    if not (toAddr and subject ):
+        _logger.warn( "To toadders or subject specified. Not sending out email")
+        return -1
+
     body = '';
     try:
         with open( args.msgfile, 'r' )  as f:
@@ -24,7 +28,6 @@ def main( args ):
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False
 
-    # msg = html2other.tomd( msg )
     print( args.to )
     msg = MIMEMultipart( 'alernative' )
     msg[ 'To' ] = ",".join( args.to )

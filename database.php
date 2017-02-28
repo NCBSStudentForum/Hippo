@@ -1185,6 +1185,16 @@ function getLoginEmail( $login )
     $stmt->bindValue( ":login", $login );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
+
+    if( ! $res[ 'email' ] )
+    {
+        $info = getUserInfoFromLdap( $login );
+        if( $info )
+            $res['email'] = $info[ 'email' ];
+        else
+            $res[ 'email' ] = $login . "@ncbs.res.in";
+    }
+
     return $res['email'];
 }
 

@@ -741,3 +741,18 @@ function isBookingRequestValid( $request )
     return true;
 }
 
+/**
+    * @brief Save data file to datadir and return if saved file exists on not.
+    *
+    * @param $filename Filename.
+    * @param $text  Text to save.
+    *
+    * @return 
+ */
+function saveDataFile( $filename, $text )
+{
+    $filepath = getDataDir( ) . '/' . $filename;
+    file_put_contents( $filepath, $text );
+    return file_exists( $filepath );
+}
+

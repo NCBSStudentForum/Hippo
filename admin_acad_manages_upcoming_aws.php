@@ -116,10 +116,12 @@ foreach( $upcomingAWSs as $aws )
 }
 echo '</tr></table>';
 
+echo goBackToPageLink( "admin_acad.php", "Go back" );
+
 echo "<h3>Temporary assignments </h3>";
 echo '
     <p> Following table shows the best possible schedule I could 
-    come up with for whole year starting today. Pressing <button 
+    come up with for next 12 months starting today. Pressing <button 
     disabled>' . $symbAccept . '</button> will put them into upcoming
     AWS list.
     </p>';
@@ -138,12 +140,16 @@ echo $header;
 echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
 echo '<button type="submit" name="response" value="Reschedule">Reschedule All</button>';
 echo "</form>";
+
 echo '<br>';
 
 // This is used to group slots.
 $weekDate = $schedule[0]['date'];
+
+$csvdata = array( "Speaker,Scheduled on,Last AWS on,Days since last AWS,Total AWS so far" );
 foreach( $schedule as $upcomingAWS )
 {
+    $csvLine = '';
     // When a new group of AWS starts, create a new table.
     if( $weekDate != $upcomingAWS['date'] )
     {
@@ -173,6 +179,8 @@ foreach( $schedule as $upcomingAWS )
     $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
     $nDays = $nSecs / (3600 * 24 );
     $speakerInfo = $speaker . '<br>'. loginToText( $speaker, $withEmail = false );
+
+    $csvLine .= loginToText( $speaker, true ) . ',';
     
     echo "<tr><td>";
     echo $speakerInfo;
@@ -187,14 +195,22 @@ foreach( $schedule as $upcomingAWS )
     echo '</form>';
     echo "</td><td>";
     echo $upcomingAWS[ 'date' ];
+
+    $csvLine .= $upcomingAWS['date'] . ',';
+
     echo "</td><td>";
     echo $lastAwsDate;
+    $csvLine .= $lastAwsDate . ',';
+
     if( count( $pastAWSes) == 0 )
         echo "<br><small>Joining date</small>";
     echo "</td><td>";
     echo "<font color=\"blue\"> $nDays </font>";
+    $csvLine .= $nDays;
+
     echo "</td><td>";
     echo count( $pastAWSes);
+
     echo "</td>";
 
     // Create a form to approve the schedule.
@@ -207,9 +223,20 @@ foreach( $schedule as $upcomingAWS )
         </td>';
     echo "</tr>";
     echo '</form>';
+
+    array_push( $csvdata, $csvLine );
 }
 echo "</table>";
 
-echo goBackToPageLink( "admin_acad.php", "Go back" );
+$csvText = implode( "\n", $csvdata );
 
+$upcomingAWSScheduleFile = 'upcoming_aws_schedule.csv';
+
+$res = saveDataFile( $upcomingAWSScheduleFile, $csvText );
+
+if( $res )
+    echo downloadTextFile(  $upcomingAWSScheduleFile, "Download schedule" );
+
+echo '<br><br>';
+echo goBackToPageLink( "admin_acad.php", "Go back" );
 ?>

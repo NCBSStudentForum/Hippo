@@ -7,6 +7,9 @@ include_once 'tohtml.php';
 echo "<h2>Active AWS speakers</h2>";
 $speakers = getAWSSpeakers( $sortby = 'joined_on' );
 
+echo alertUser( "If you name is not in this list and you are suppose to give
+    AWS, kindly inform academic office." );
+
 echo ' <table class="show_speaker"> ';
 $i = 0;
 foreach( $speakers as $speaker )

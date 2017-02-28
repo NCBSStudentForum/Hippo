@@ -44,6 +44,7 @@ aws_ = defaultdict( list )
 
 # Upcoming AWS
 upcoming_aws_ = { }
+upcoming_aws_slots_ = defaultdict( list )
 
 # These speakers must give AWS.
 speakers_ = { }
@@ -99,6 +100,8 @@ def getAllAWSPlusUpcoming( ):
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ] ].append( a )
         upcoming_aws_[ a['speaker'] ] = a['date']
+        # Keep the number of slots occupied at this day.
+        upcoming_aws_slots_[ a['date'] ].append( a['speaker'] )
 
     # Now get all the previous AWSs happened so far.
     cur.execute( 'SELECT * FROM annual_work_seminars' )
@@ -256,12 +259,14 @@ def construct_flow_graph(  ):
            _logger.warn( "This date %s is holiday" % monday )
            continue
 
-        if monday in upcoming_aws_.values( ):
+        nSlots = 3
+        if monday in upcoming_aws_slots_:
+            # Check how many of these dates have been taken.
             _logger.info( 'Date %s is taken ' % monday )
-            continue 
+            nSlots -= len( upcoming_aws_slots_[ monday ] )
 
-        # For each Monday, we have 3 AWS
-        for j in range( 3 ):
+        # For each Monday, we have 3 AWS - (assigned on upcoming_aws_slots_)
+        for j in range( nSlots ):
             dateSlot = '%s,%d' % (monday, j)
             g_.add_node( dateSlot, date = monday, pos = (5, 10*(3*i + j)) )
             g_.add_edge( dateSlot, 'sink', capacity = 1, weight = 0 )

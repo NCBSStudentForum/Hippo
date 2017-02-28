@@ -20,7 +20,7 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
     return sendPlainTextEmail( $msg
         , 'ATTN! Your AWS date has been fixed'
         , $to 
-        , $msg[ 'cc' ]
+        , $templ[ 'cc' ]
         );
 }
 

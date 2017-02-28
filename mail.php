@@ -49,13 +49,11 @@ function sendEmail($msg, $sub, $to)
 
 function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
-
     global $maildir;
     $conf = getConf( );
 
     if( strlen( trim( $msg ) ) < 1 )
         return;
-
 
     if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
     {

@@ -29,9 +29,7 @@ $(function() {
 
 echo userHTML( );
 
-echo '<h2 align="left">Academic Admin</h2>';
-
-echo "<h3>Scheduling</h3>";
+echo "<h2>Schedule/manage upcoming AWS</h2>";
 echo '
   <table border="0" class="admin">
     <tr>
@@ -76,7 +74,7 @@ echo '<table class="admin">
     </tr>
     </table>';
 
-echo '<br>';
+echo '<h2>Add, update or remove AWS speakers</h2>';
 echo '<table class="admin">';
 echo '
     <tr>
@@ -156,7 +154,7 @@ if( isset( $_POST[ 'response' ] ))
 }
 
 
-echo "<h3> Information</h3>";
+echo "<h2>Information</h2>";
 echo '
   <table border="0" class="admin">
     <tr>

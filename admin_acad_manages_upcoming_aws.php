@@ -71,8 +71,8 @@ echo printInfo(
     ' );
 
 echo '
-    <table class="standout">
     <form method="post" action="admin_acad_manages_upcoming_aws_submit.php">
+    <table class="standout">
     <tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>
     <tr>
         <td> <input class="datepicker" type="date" name="date" value="" > </td>
@@ -82,8 +82,8 @@ echo '
         </td>
         <td> <button name="response" value="Assign">Assign</button> </td>
     </tr>
-    </form>
     </table>
+    </form>
     ';
 
 echo "<h3>Upcoming approved AWSs</h3>";
@@ -179,11 +179,12 @@ foreach( $schedule as $upcomingAWS )
     $intranetLink = getIntranetLink( $speaker );
     echo "<br>$intranetLink ";
     echo '<form action="admin_acad_manages_upcoming_aws_submit.php" 
-            method="get" accept-charset="utf-8">
+            method="post" accept-charset="utf-8">
           <input type="hidden" name="speaker" value="' . $speaker . '" />
           <button name="response"  value="RemoveSpeaker"
                 title="Remove this speaker from AWS speaker list" >' 
-                . $symbDelete . '</button></form>';
+                . $symbDelete . '</button>';
+    echo '</form>';
     echo "</td><td>";
     echo $upcomingAWS[ 'date' ];
     echo "</td><td>";

@@ -53,5 +53,22 @@ function mustHaveAllOfTheseRoles( $roles )
     }
 }
 
+/**
+    * @brief Check if user is logged in from intranet. FIXME: This may be a 
+    * foolproof way to do this.
+    *
+    * @return 
+ */
+function isIntranet( )
+{
+    $serverIP = explode('.',$_SERVER['SERVER_ADDR']);
+    $localIP  = explode('.',$_SERVER['REMOTE_ADDR']);
+
+    return ( 
+        ($serverIP[0] == $localIP[0]) && ($serverIP[1] == $localIP[1]) && 
+            ( in_array($serverIP[0], array('127','10','172','192') ) ) 
+    );
+}
+
 
 ?>

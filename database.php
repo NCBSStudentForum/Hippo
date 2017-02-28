@@ -1102,10 +1102,11 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 {
     global $db;
     $stmt = $db->prepare( 
-       "INSERT IGNORE INTO logins
+       "INSERT INTO logins
         (id, login, first_name, last_name, email, created_on, institute, laboffice) 
             VALUES 
-            (:id, :login, :fname, :lname, :email,  'NOW()', :institute, :laboffice)" 
+            (:id, :login, :fname, :lname, :email,  'NOW()', :institute, :laboffice)
+        ON DUPLICATE KEY UPDATE fname=:fname, lname=:lname, email=:email"
         );
 
     $institute = NULL;
@@ -1186,7 +1187,7 @@ function getLoginEmail( $login )
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
 
-    if( ! $res[ 'email' ] )
+    if( strlen( trim($res[ 'email' ]) < 1 ) )
     {
         $info = getUserInfoFromLdap( $login );
 

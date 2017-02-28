@@ -1106,7 +1106,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
         (id, login, first_name, last_name, email, created_on, institute, laboffice) 
             VALUES 
             (:id, :login, :fname, :lname, :email,  'NOW()', :institute, :laboffice)
-        ON DUPLICATE KEY UPDATE fname=:fname, lname=:lname, email=:email"
+        ON DUPLICATE KEY UPDATE first_name=:fname, last_name=:lname, email=:email"
         );
 
     $institute = NULL;

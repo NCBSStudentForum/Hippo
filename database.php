@@ -70,9 +70,13 @@ function initialize( )
 {
     global $db;
     $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS holidays 
-            (date DATE NOT NULL PRIMARY KEY, description VARCHAR(100) NOT NULL)
+        'CREATE TABLE IF NOT EXISTS holidays (
+            date DATE NOT NULL PRIMARY KEY
+            , description VARCHAR(100) NOT NULL
+            , schedule_talk_or_aws ENUM( "YES", "NO" ) DEFAULT "YES"
+        )
         ' );
+
     // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS speakers 

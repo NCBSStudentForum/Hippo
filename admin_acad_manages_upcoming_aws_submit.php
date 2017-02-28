@@ -96,7 +96,7 @@ else if( $_POST[ 'response' ] == 'delete' )
     {
         rescheduleAWS( );
         echo printInfo( "Successfully cleared upcoming AWS" );
-        goToPage( "admin_acad_manages_upcoming_aws.php", 2 );
+        goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
         exit;
     }
 }

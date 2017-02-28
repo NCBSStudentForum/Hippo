@@ -8,33 +8,27 @@ mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 
 echo userHTML( );
 
-echo '<h3>Add a holiday </h3>';
-echo '
-    <form method="get" action="">
-    <table border="0">
-    <tr>
-        <th>Select date</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td> <input type="text" name="date" class="datepicker" value="" > </td>
-        <td> <input type="text" name="description" value="" > </td>
-        <td>
-            <button type="submit" name="response" value="Add">Add</button>
-        </td>
-    </tr>
-    </table>
-    </form>
-    ';
+echo '<h3>Add a holiday or non-working day</h3>';
+
+$default = array( );
+echo '<form method="post" action="">';
+echo dbTableToHTMLTable( 'holidays'
+        , $default
+        , 'date,description,schedule_talk_or_aws'
+        , 'Add'
+    );
+echo '</form>';
 
 // Add or delete an entry.
-if( isset( $_GET[ 'response' ] ) )
+if( isset( $_POST[ 'response' ] ) )
 {
-    if( $_GET[ 'response' ] == 'Add' )
+    if( $_POST[ 'response' ] == 'Add' )
     {
-        if( $_GET['date'] && $_GET['description'] )
+        if( $_POST['date'] && $_POST['description'] )
         {
-            $res = insertIntoTable( "holidays", "date,description", $_GET );
+            $res = insertIntoTable( "holidays"
+                , "date,description,schedule_talk_or_aws"
+                , $_POST );
             if( $res )
             {
                 echo printInfo( "Added holiday successfully" );
@@ -53,9 +47,9 @@ if( isset( $_GET[ 'response' ] ) )
             exit;
         }
     }
-    elseif( $_GET[ 'response' ] == 'Delete' )
+    elseif( $_POST[ 'response' ] == 'Delete' )
     {
-        $res = deleteFromTable( 'holidays', 'date,description', $_GET );
+        $res = deleteFromTable( 'holidays', 'date,description', $_POST );
         if( $res )
         {
             echo printInfo( "Successfully deleted entry from holiday list" );
@@ -76,22 +70,20 @@ echo '<h3>List of holidays in my database</h3>';
 $holidays = getHolidays( );
 foreach( $holidays as $index => $holiday )
 {
-    echo '<form method="get" action="">';
-    echo '<table>';
+    echo '<form method="post" action="">';
+    echo '<small><table>';
     echo '<tr>';
-    echo '<td>' . ($index + 1) . '</td><td>' . arrayToTableHTML( $holiday, 'show_info' ) . '</td>';
+    echo '<td>' . ($index + 1) . '</td><td>' . arrayToTableHTML( $holiday, 'info' ) . '</td>';
     echo '<td> 
         <input type="hidden" name="date" value="' . $holiday['date'] . '" >
         <input type="hidden" name="description" value="' . $holiday['description'] . '"/>
         <button name="response" value="Delete">Delete</button> 
         </td>';
     echo '</tr>';
-    echo '</table>';
+    echo '</table></small>';
     echo '</form>';
 
 }
-
-
 
 echo goBackToPageLink( "admin.php", "Go back" );
 

@@ -73,7 +73,8 @@ def init( cur ):
     cur.execute( """SELECT * FROM holidays ORDER BY date""")
 
     for a in cur.fetchall( ):
-        holidays_[ a['date'] ] = a
+        if a[ 'schedule_talk_or_aws' ] == 'NO':
+            holidays_[ a['date'] ] = a
     _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
 
@@ -251,9 +252,9 @@ def construct_flow_graph(  ):
         monday = nextMonday + datetime.timedelta( nDays )
 
         # AWS don't care about holidays.
-        #if monday in holidays_:
-        #    _logger.warn( "This date %s is holiday" % monday )
-        #    continue
+        if monday in holidays_:
+           _logger.warn( "This date %s is holiday" % monday )
+           continue
 
         if monday in upcoming_aws_.values( ):
             _logger.info( 'Date %s is taken ' % monday )

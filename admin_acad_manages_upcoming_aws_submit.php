@@ -12,12 +12,16 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 function notifyUserAboutUpcomingAWS( $speaker, $date )
 {
     // Now insert a entry into email database.
-    $msg = getEmailTemplateById( 'aws_confirmed_notify_speaker' )[ 'description'];
+    $templ = getEmailTemplateById( 'aws_confirmed_notify_speaker' );
     // Replace text in the template.
-    $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $msg); 
-    $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg ); 
-    $to = getLoginEmail( $speaker ) . ',' . 'hippo@lists.ncbs.res.in';
-    return sendEmail( $msg, 'ATTN! Your AWS date has been fixed', $to );
+    $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $templ['description'] ); 
+    $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg );
+    $to = getLoginEmail( $speaker );
+    return sendPlainTextEmail( $msg
+        , 'ATTN! Your AWS date has been fixed'
+        , $to 
+        , $msg[ 'cc' ]
+        );
 }
 
 if( $_POST['response'] == "Reschedule" )

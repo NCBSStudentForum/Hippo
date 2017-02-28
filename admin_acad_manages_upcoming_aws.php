@@ -25,14 +25,53 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
 echo userHTML( );
 
-echo '<h3>Manually assign AWS</h3>';
 
+echo '<h3>AWS for next week</h3>';
+
+$upcomingAWSs = getUpcomingAWS( );
+$upcomingAwsNextWeek = array( );
+foreach( $upcomingAWSs as $aws )
+    if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
+        array_push( $upcomingAwsNextWeek, $aws );
+
+foreach( $upcomingAwsNextWeek as $upcomingAWS )
+{
+    echo '<div style="font-size:small">';
+    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
+        method="post" accept-charset="utf-8">';
+    echo '<table>';
+    echo '<tr><td>';
+
+    echo arrayToTableHTML( $upcomingAWS, 'aws' 
+        , '', array( 'id', 'status', 'comment' )
+    );
+
+    echo '<input type="hidden", name="date" , value="' .  $upcomingAWS[ 'date' ] . '"/>';
+    echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
+    echo '<input type="hidden", name="id" , value="' . $upcomingAWS[ 'id' ] . '"/>';
+    echo '</td><td>';
+    echo '<button name="response" value="Reassign">Reassign</button>';
+    echo "<br>";
+    echo '<button name="response" title="Edit/fromat the abstract" 
+                value="format_abstract">' . $symbEdit . '</button>';
+    echo '<br>';
+    echo '<button onclick="AreYouSure(this)" 
+            name="response" title="Remove this entry from schedule" 
+            value="delete">' . $symbCancel . '</button>';
+    echo '</td></tr>';
+    echo '</table>';
+    echo '</form>';
+    echo '</div>';
+}
+
+
+echo '<h3>Manually assign AWS</h3>';
 echo printInfo( 
     'Here you can manually assign speakers to an AWS slot After assignment,
     ' );
 
 echo '
-    <table border="0">
+    <table class="standout">
     <form method="post" action="admin_acad_manages_upcoming_aws_submit.php">
     <tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>
     <tr>
@@ -47,42 +86,7 @@ echo '
     </table>
     ';
 
-echo '<h3>AWS for next week</h3>';
-
-$upcomingAWSs = getUpcomingAWS( );
-$upcomingAwsNextWeek = array( );
-foreach( $upcomingAWSs as $aws )
-    if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
-        array_push( $upcomingAwsNextWeek, $aws );
-
-foreach( $upcomingAwsNextWeek as $upcomingAWS )
-{
-    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
-        method="post" accept-charset="utf-8">';
-    echo '<table>';
-    echo '<tr><td>';
-
-    echo arrayToVerticalTableHTML( $upcomingAWS, 'aws' 
-        , '', array( 'id', 'status', 'comment' )
-    );
-
-    echo '<input type="hidden", name="date" , value="' .  $upcomingAWS[ 'date' ] . '"/>';
-    echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
-    echo '<input type="hidden", name="id" , value="' . $upcomingAWS[ 'id' ] . '"/>';
-    echo '</td><td>';
-    echo '<button name="response" value="format_abstract">Format abstract</button>';
-    echo "<br>";
-    echo '<button name="response" value="Reassign">Reassign</button>';
-    echo '<br>';
-    echo '<button onclick="AreYouSure(this)" 
-            name="response" value="delete">' . $symbCancel . '</button>';
-    echo '</td></tr>';
-    echo '</table>';
-    echo '</form>';
-}
-
 echo "<h3>Upcoming approved AWSs</h3>";
-
 // Show the rest of entries grouped by date.
 if( count(  $upcomingAWSs ) > 0 )
 {
@@ -114,7 +118,7 @@ echo '</tr></table>';
 
 echo "<h3>Temporary assignments </h3>";
 echo '
-    <p class="info"> Following table shows the best possible schedule I could 
+    <p> Following table shows the best possible schedule I could 
     come up with for whole year starting today. Pressing <button 
     disabled>' . $symbAccept . '</button> will put them into upcoming
     AWS list.
@@ -174,6 +178,12 @@ foreach( $schedule as $upcomingAWS )
     echo $speakerInfo;
     $intranetLink = getIntranetLink( $speaker );
     echo "<br>$intranetLink ";
+    echo '<form action="admin_acad_manages_upcoming_aws_submit.php" 
+            method="get" accept-charset="utf-8">
+          <input type="hidden" name="speaker" value="' . $speaker . '" />
+          <button name="response"  value="RemoveSpeaker"
+                title="Remove this speaker from AWS speaker list" >' 
+                . $symbDelete . '</button></form>';
     echo "</td><td>";
     echo $upcomingAWS[ 'date' ];
     echo "</td><td>";

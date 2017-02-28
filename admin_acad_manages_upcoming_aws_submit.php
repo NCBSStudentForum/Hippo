@@ -72,7 +72,22 @@ else if( $_POST[ 'response' ] == 'format_abstract' )
         echo '</form>';
     }
 }
-
+else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
+{
+    $data = array( 'eligible_for_aws' => 'NO', 'login' => $_POST[ 'speaker' ] );
+    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data ); 
+    if( $res )
+    {
+        echo printInfo( 
+            "Successfully removed user from AWS list.
+            Recomputing schedule ... " 
+            );
+        ob_flush( );
+        rescheduleAWS( );
+        goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
+        exit;
+    }
+}
 
 else if( $_POST[ 'response' ] == 'delete' )
 {

@@ -152,6 +152,7 @@ table.show_schedule tr td
     background: var(--background);
 }
 
+
 table.show_schedule th
 {
     background: lightblue;
@@ -169,6 +170,17 @@ table.tasks tr td
     background : var(--background);
 }
 
+table.standout {
+    max-width : 800px;
+    min-width : 80%;
+
+}
+
+table.standout tr td
+{
+    border : 1px dotted;
+    background: lightblue;
+}
 
 div.info {
     /*border : 1px solid #73AD21;*/

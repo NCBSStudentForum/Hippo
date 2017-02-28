@@ -49,6 +49,15 @@ $awses = array_merge( $awses, $upcoming );
 if( count( $awses ) < 1 )
 {
     echo alertUser( "I could not find any AWS in my database on this day" );
+    $holiday = getTableEntry( 'holidays', 'date', array( 'date' => $whichDay ) );
+    if( $holiday )
+    {
+        echo alertUser( "May be due to following"  );
+        echo arrayToTableHTML( $holiday, 'info' );
+    }
+
+    echo printInfo( "That's all I know!" );
+    echo "<br><br>";
 }
 else 
 {

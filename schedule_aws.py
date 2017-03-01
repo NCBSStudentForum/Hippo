@@ -127,7 +127,7 @@ def computeCost( speaker, slot_date, last_aws ):
     if( nDays <= idealGap ):
         # THere is no way, anyone should get AWS before idealGap. Cost should be
         # high. Let's measure it in weeks.
-        cost = ( idealGap - nDays ) / 7
+        cost = ( idealGap - nDays ) / 7.0
     else:
         # Here we have two possibilities. Some speaker have not got their AWS
         # yet for quite a long time. Give preference to them. Reduce the cost to
@@ -149,7 +149,7 @@ def computeCost( speaker, slot_date, last_aws ):
     # does not effect this weight. But later AWS has significant cost. This is
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
-    cost =  cost + max(0, nAws - 2.0 )
+    cost =  cost + max(0, nAws - 1.5 )
 
     # Add some random noise to make sure that we don't have same coupling of
     # speakers as before 

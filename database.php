@@ -330,14 +330,14 @@ function initialize( )
             )"
         );
 
-    //$res = $db->query( "
-        //create TABLE IF NOT EXISTS logins_metadata (
-            //login VARCHAR(200) PRIMARY KEY
-            //, user_image blob NOT NULL
-            //, other_image blob
-            //, FOREIGN KEY (login) REFERENCES logins( login )
-            //)"
-        //);
+    // This table keeps login preference.
+    $res = $db->query( "
+        create TABLE IF NOT EXISTS my_aws_preference (
+            login VARCHAR(200) NOT NULL PRIMARY KEY
+            , first_preference DATE
+            , second_preference DATE
+            )"
+        );
 
     return $res;
 }

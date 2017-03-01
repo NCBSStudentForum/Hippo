@@ -9,6 +9,15 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
+// Logic to add your preference.
+if( array_key_exists( 'response', $_POST ) )
+{
+    $res = insertOrUpdateTable( 'my_aws_preference'
+        , 'login,first_preference,second_preference'
+        , 'first_preference,second_preference'
+        , $_POST 
+    );
+}
 
 echo '<div class="info">';
 $scheduledAWS = scheduledAWSInFuture( $_SESSION['user'] );
@@ -20,22 +29,38 @@ if( $scheduledAWS )
         humanReadableDate( $scheduledAWS[ 'date' ] ) . '</strong>'
     );
 }
-else if( $tempScheduleAWS )
+else 
 {
-    echo "<strong>This is a test message. This is NOT an official date, yet!</strong>";
-    echo printInfo( "&#x2620 Your AWS is most likely to be on " . 
-        humanReadableDate( $tempScheduleAWS[ 'date' ] ) );
+    if( $tempScheduleAWS )
+    {
+        echo printInfo( "&#x2620 Your AWS is most likely to be on " . 
+            humanReadableDate( $tempScheduleAWS[ 'date' ] ) );
 
-    echo printWarning( "This date is likely to change if any other speakers
-        request to change their AWS or new speakers are added." 
-    );
+        echo printWarning( "This date is likely to change if any other speakers
+            request to change their AWS or new speakers are added." 
+        );
+    }
+    else
+        echo printInfo( "You don't have any AWS scheduled in next 12 months" );
+
+    echo '<h3>You can give two preferences for your upcoming AWS date </h3>';
+    // Here user can submit preferences.
+    $prefs = getTableEntry( 'my_aws_preference', 'login'
+                    , array( 'login' => $_SESSION[ 'user' ] )
+                    );
+
+    if( $prefs )
+        echo arrayToTableHTML( $prefs, 'info' );
+
+    echo '<form method="post" action="">';
+    echo dbTableToHTMLTable( 'my_aws_preference', $prefs 
+        , 'first_preference,second_preference' );
+    echo '<input type="hidden" name="login" value="'. $_SESSION[ 'user' ] . '">';
+    echo '</form>';
 }
-else
-{
-    echo printInfo( "You don't have any AWS scheduled in next 12 months" );
-}
+
+
 echo '</div>';
-
 if( $scheduledAWS )
 {
 

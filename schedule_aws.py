@@ -126,7 +126,7 @@ def computeCost( speaker, slot_date, last_aws ):
     # weeks instead of months as time-unit.
     if( nDays <= idealGap ):
         # THere is no way, anyone should get AWS before idealGap. Cost should be
-        # high. Let's measure it in weeks.
+        # high. Let's measure it in weeks here.
         cost = ( idealGap - nDays ) / 7.0
     else:
         # Here we have two possibilities. Some speaker have not got their AWS
@@ -137,27 +137,27 @@ def computeCost( speaker, slot_date, last_aws ):
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
         if fromToday > 2.5 * idealGap:
-            # _logger.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
-            # _logger.info( "I am not scheduling AWS for this user." )
-            cost = 100
+            _logger.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
+            _logger.warn( "I am not putting a lot of cost on this assignment." )
+            _logger.warn( "This speaker should be handled manually" )
+            cost = 20.0
         elif fromToday >  1.5 * idealGap:
             cost = nAws / 10.0
         else:
-            cost = float( nDays - idealGap ) / idealGap  + nAws / 10.0
+            cost = float( nDays - idealGap ) / idealGap
 
+    # Here we add the effect of  number of previous AWS.
     # We multiply the weight by AWS given by this user in a way that first 2 aws
     # does not effect this weight. But later AWS has significant cost. This is
     # make sure that first 2 AWS are given preferences over the third or more
     # AWS users.
-    cost =  cost + max(0, nAws - 1.5 )
+    # NOTE that second aws will have 0.0 cost since nAws == 1 in this case. 3rd
+    # AWS will have nAWS 2 so there is a penalty.
+    cost =  cost + max(0, nAws - 1.0 )
 
-    # Add some random noise to make sure that we don't have same coupling of
-    # speakers as before 
-    # Not a good idea, it changes the schedule every time we run this script.
-    # cost += random.random()
-
-    # This does not work well with float.
-    return int( 100 * cost )
+    # The library function does not work well with float. Scale up by 10 and
+    # change to int.
+    return int(10*cost )
 
 # From  http://stackoverflow.com/a/3425124/1805129
 def monthdelta(date, delta):
@@ -199,9 +199,9 @@ def construct_flow_graph(  ):
                     lastDate = monthdelta( joinDate, 6 )
 
             if speakers_[ speaker ]['title'] == 'MSC':
-                # MSc should get their first AWS after 24 months of
-                # joining.
-                _logger.info( '%s = INTPHD with 0 AWS so far' % speaker )
+                # MSc should get their first AWS after 18 months of
+                # joining. Same as INTPHD
+                _logger.info( '%s = MSC BY RESEARCH with 0 AWS so far' % speaker )
                 joinDate = speakers_[ speaker ]['joined_on']
                 if not joinDate:
                     _logger.warn( "Could not find joining date" )
@@ -229,10 +229,11 @@ def construct_flow_graph(  ):
                             speaker, upcoming_aws_[ speaker ] 
                             )
                         )
-
-                # _logger.info( 'Warning: Could not find last AWS date for %s' % speaker )
-                # _logger.info( '\t I am ignoring him' )
-                # assert lastDate, "No last date found for speaker %s" % speaker 
+                continue
+            # If this speakers is MSC by research and has given AWS before, she/he
+            # need not give another.
+            elif speakers_[ speaker ]['title'] == 'MSC':
+                _logger.info( '%s is MSC and has given AWS in the past' % speaker )
                 continue
             else:
                 lastDate = aws_[speaker][-1]['date']
@@ -243,12 +244,11 @@ def construct_flow_graph(  ):
             g_.add_node( speaker, last_date = lastDate, pos = (1, 3*i) )
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
 
-    # Now add mondays for next 20 weeks.
+    # Compute totalWeeks of schedule starting today.
+    totalWeeks = int( 365 / 7.0 )
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
-
-    totalWeeks = 53
     _logger.info( "Computing for total %d weeks" % totalWeeks )
     for i in range( totalWeeks ):
         nDays = i * 7
@@ -282,7 +282,7 @@ def construct_flow_graph(  ):
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
-            addEdge( speaker, slot, 1, weight )
+            addEdge(speaker, slot, 1, weight )
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
@@ -390,6 +390,7 @@ def main( outfile ):
     global db_
     _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )
+    ans = None
     try:
         construct_flow_graph( )
         ans = schedule( )
@@ -400,7 +401,11 @@ def main( outfile ):
     except Exception as e:
         _logger.error( "Could not print schedule. %s" % e )
 
-    commit_schedule( ans )
+    if ans:
+        commit_schedule( ans )
+    else:
+        print( 'Failed to compute schedule' )
+        return -1
     try:
         write_graph( )
     except Exception as e:

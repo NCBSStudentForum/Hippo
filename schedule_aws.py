@@ -20,13 +20,15 @@ __status__           = "Development"
 import sys
 import os
 import math
-from collections import defaultdict
+import numpy as np
+from collections import defaultdict, OrderedDict
 import datetime 
+import copy
 import tempfile 
-import random
-import getpass
 from logger import _logger
 from db_connect import db_
+
+fmt_ = '%Y-%m-%d'
 
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
@@ -137,9 +139,10 @@ def computeCost( speaker, slot_date, last_aws ):
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
         if fromToday > 2.5 * idealGap:
-            _logger.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
-            _logger.warn( "I am not putting a lot of cost on this assignment." )
-            _logger.warn( "This speaker should be handled manually" )
+            # Multiple errors are logged in loop.
+            # _logger.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
+            # _logger.warn( "I am not putting a lot of cost on this assignment." )
+            # _logger.warn( "This speaker should be handled manually" )
             cost = 20.0
         elif fromToday >  1.5 * idealGap:
             cost = nAws / 10.0
@@ -330,45 +333,192 @@ def test_graph( graph ):
             _logger.info( 'Error: %s -> %s no weight assigned' % (u, v) )
     _logger.info( '\tDone testing graph' )
 
+def neighouringSlots( date, allSlots, weeks ):
+    fmt = '%Y-%m-%d'
+    d = datetime.datetime.strptime( date, fmt )
+    dates = [ d + datetime.timedelta( days = 7 * x ) for x in weeks ]
+    dates = [ datetime.datetime.strftime(x, fmt) for x in dates ]
+    slots = [ ]
+    for d in dates:
+        slots += [ '%s,%d' % (d, x) for x in range(3) ]
+
+    # Return only valid slots
+    return filter( lambda x : x in allSlots, slots )
+
+
+def potentialSpeakerToSwap( speaker, date, candidates, already_swapped = [ ]
+        , low = -21, high = 21
+        ):
+    """
+    Find good candidate to swap. Their AWS should not far from speaker
+
+    already_swapped list contains the list of speaker who are already swapped
+    with someone else.
+    """
+    global fmt_
+    
+    swapWith = [ ]
+    for speaker2, date2 in candidates.iteritems( ):
+        d2, d = [ datetime.datetime.strptime( x, fmt_ ) for x in [ date2, date] ]
+        diffDays = (d2 - d).days
+        if diffDays >= low and diffDays <= high:
+            if speaker2 in already_swapped:
+                continue
+            swapWith.append( (abs(diffDays), speaker2) )
+
+    # Return the lowest cost candidate.
+    if swapWith:
+        # Return the lowest cost candidate
+        return swapWith[0][1]
+
+    return None
+
+def swapInSchedule( a, b, schedule ):
+    """Swap speaker a with speaker b in schedule """
+    for date, speakers in schedule.iteritems( ):
+        if a in speakers:
+            speakers.remove( a )
+            speakers.append( b )
+        elif b in speakers:
+            speakers.remove( b )
+            speakers.append( a )
+
+def fresherIndex( schedule ):
+    freshers = [ ]
+    for date in sorted( schedule ):
+        speakers = schedule[ date ]
+        nFreshers = 0
+        for i, speaker in enumerate( speakers ) :
+            naws = len( aws_.get( speaker, [] ) )
+            if naws == 0: 
+                nFreshers += 1
+        freshers.append( nFreshers )
+    return np.std( freshers )
+
+def swapSpeakers( speakersA, speakersB, schedule):
+    """Swap speakersA with speakersB 
+    """
+    alreadySwapped = [ ]
+    for speaker, date in speakersA.iteritems( ):
+        swapWith = potentialSpeakerToSwap( speaker, date, speakersB, alreadySwapped )
+        if swapWith:
+            _logger.info( 'Swapping %s with %s' % ( speaker, swapWith ) )
+            alreadySwapped.append( swapWith )
+            swapInSchedule( speaker, swapWith, schedule ) 
+
+    _logger.info( "After swapping %f" % fresherIndex( schedule ) )
+    return schedule
+
+def avoidClusteringOfFreshers( schedule ):
+    """Make sure not all student are freshers. Also try to put at least 1
+    fresher.
+    """
+    global aws_, speakers_
+
+    _logger.info( "Before swapping %f" % fresherIndex( schedule ) )
+
+    # SECTION 1: SWAP two in rows which have all freshers with experienced
+    # Store speaker to move in this dict.
+    speakersToSwap = { }
+    candidates = { }
+    for date in sorted( schedule ):
+        nAws = { }
+        speakers = schedule[ date ]
+        nFreshers = 0
+        for i, speaker in enumerate( speakers ) :
+            naws = len( aws_.get( speaker, [] ) )
+            if naws == 0: 
+                nFreshers += 1
+            if nFreshers > 1:
+                speakersToSwap[ speaker ] = date
+
+        # If no of freshers are zero, I can put 1 speaker into swap list.
+        if nFreshers == 0:
+            candidates[ speakers[0] ] = date
+    schedule = swapSpeakers( speakersToSwap, candidates, schedule)
+
+    # SECTION 2: SWAP one in rows with all experienced with a fresher.
+    # Store speaker to move in this dict.
+    speakersToSwap = OrderedDict( )
+    candidates = OrderedDict( )
+    for date in sorted( schedule ):
+        nAws = { }
+        speakers = schedule[ date ]
+        nFreshers = 0
+        for i, speaker in enumerate( speakers ) :
+            naws = len( aws_.get( speaker, [] ) )
+            if naws == 0: 
+                nFreshers += 1
+            if nFreshers > 1:
+                # Take this speaker from here and put it into to swap with list.
+                candidates[ speaker ] = date
+
+        # If all of them are experienced, then I can take one of them ( to be
+        # replace by fresher) and put him/her into to be moved list.
+        if nFreshers == 0:
+            speakersToSwap[ speakers[0] ] = date
+    schedule = swapSpeakers( speakersToSwap, candidates, schedule)
+
+    return schedule
+
+
 def getMatches( res ):
+    """
+    In this case residue is date in values and not in keys. Compare with
+    getMatches
+    """
+
     result = defaultdict( list )
     for u in res:
-        if 'source' == u:
+        if u in [ 'sink', 'source']:
             continue
         for v in res[u]:
-            if 'sink' == v:
+            if v in [ 'source', 'sink' ]:
                 continue
             f = res[u][v]
             if f > 0:
-                date, slow = v.split(',')
+                date, slot = v.split(',')
                 result[date].append( u )
     return result
 
-def schedule( ):
+def computeSchedule( avoid_fresheres_on_same_day = False ):
     global g_
     _logger.info( 'Scheduling AWS now' )
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
-    res = nx.max_flow_min_cost( g_, 'source', 'sink' )
     _logger.info( '\t Computed. Getting schedules now ...' )
-    schedule = getMatches( res )
-    _logger.info( '\t ... Computed schedules.' )
-    return schedule
+    res = nx.max_flow_min_cost( g_, 'source', 'sink' )
+    sch = getMatches( res )
+    if avoid_fresheres_on_same_day:
+        _logger.info( "Trying to avoid cluster of freshers" )
+        sch = avoidClusteringOfFreshers( sch )
+        sch = avoidClusteringOfFreshers( sch )
+    return sch
 
 def print_schedule( schedule, outfile ):
     global g_, aws_
     with open( outfile, 'w' ) as f:
         f.write( "This is what is got \n" )
+
+
+    cost = 0
     for date in  sorted(schedule):
         line = "%s :" % date
+        totalFreshers = 0
         for speaker in schedule[ date ]:
             line += '%13s (%10s, %1d)' % (speaker
                 , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
                 , len( aws_[ speaker ] )
                 )
+            if len( aws_[speaker] ) == 0:
+                totalFreshers += 1
+            cost += totalFreshers
+        line += ',%d' % totalFreshers 
+
         with open( outfile, 'a' ) as f:
             f.write( '%s\n' % line )
             print( line )
+    print( 'Total freshers %d' % cost )
 
 def commit_schedule( schedule ):
     global db_
@@ -393,9 +543,9 @@ def main( outfile ):
     ans = None
     try:
         construct_flow_graph( )
-        ans = schedule( )
+        ans = computeSchedule( avoid_fresheres_on_same_day = True )
     except Exception as e:
-        _logger.warn( "Failed to schedule. %s" % e )
+        _logger.warn( "Failed to schedule. Error was %s" % e )
     try:
         print_schedule( ans, outfile )
     except Exception as e:

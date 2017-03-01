@@ -346,9 +346,8 @@ def neighouringSlots( date, allSlots, weeks ):
     return filter( lambda x : x in allSlots, slots )
 
 
-def potentialSpeakerToSwap( speaker, date, candidates, already_swapped = [ ]
-        , low = -21, high = 21
-        ):
+def potentialSpeakerToSwap( speaker, date, candidates
+        , already_swapped = [ ], low = -21, high = 21 ):
     """
     Find good candidate to swap. Their AWS should not far from speaker
 
@@ -395,12 +394,14 @@ def fresherIndex( schedule ):
         freshers.append( nFreshers )
     return np.std( freshers )
 
-def swapSpeakers( speakersA, speakersB, schedule):
+def swapSpeakers( speakersA, speakersB, schedule, low = -21, high = 21):
     """Swap speakersA with speakersB 
     """
     alreadySwapped = [ ]
     for speaker, date in speakersA.iteritems( ):
-        swapWith = potentialSpeakerToSwap( speaker, date, speakersB, alreadySwapped )
+        swapWith = potentialSpeakerToSwap( speaker, date, speakersB
+                , alreadySwapped, low, high 
+                )
         if swapWith:
             _logger.info( 'Swapping %s with %s' % ( speaker, swapWith ) )
             alreadySwapped.append( swapWith )
@@ -417,28 +418,9 @@ def avoidClusteringOfFreshers( schedule ):
 
     _logger.info( "Before swapping %f" % fresherIndex( schedule ) )
 
-    # SECTION 1: SWAP two in rows which have all freshers with experienced
-    # Store speaker to move in this dict.
-    speakersToSwap = { }
-    candidates = { }
-    for date in sorted( schedule ):
-        nAws = { }
-        speakers = schedule[ date ]
-        nFreshers = 0
-        for i, speaker in enumerate( speakers ) :
-            naws = len( aws_.get( speaker, [] ) )
-            if naws == 0: 
-                nFreshers += 1
-            if nFreshers > 1:
-                speakersToSwap[ speaker ] = date
-
-        # If no of freshers are zero, I can put 1 speaker into swap list.
-        if nFreshers == 0:
-            candidates[ speakers[0] ] = date
-    schedule = swapSpeakers( speakersToSwap, candidates, schedule)
-
-    # SECTION 2: SWAP one in rows with all experienced with a fresher.
-    # Store speaker to move in this dict.
+    # 1: SWAP one in rows with all experienced with a fresher.
+    # Store speaker to move in this dict. Freshers should not move too much
+    # therefore we do not change the default low and high parameters.
     speakersToSwap = OrderedDict( )
     candidates = OrderedDict( )
     for date in sorted( schedule ):
@@ -457,6 +439,32 @@ def avoidClusteringOfFreshers( schedule ):
         # replace by fresher) and put him/her into to be moved list.
         if nFreshers == 0:
             speakersToSwap[ speakers[0] ] = date
+    # Since we really do not want mutliple freshers on same day, we search wide
+    # for swapping. We can delay AWS of senior students.
+    schedule = swapSpeakers( speakersToSwap, candidates, schedule
+            , low = -91 , high = 28
+            )
+
+
+    # 2 : SWAP two in rows which have all freshers with experienced
+    # Store speaker to move in this dict.
+    speakersToSwap = { }
+    candidates = { }
+    for date in sorted( schedule ):
+        nAws = { }
+        speakers = schedule[ date ]
+        nFreshers = 0
+        for i, speaker in enumerate( speakers ) :
+            naws = len( aws_.get( speaker, [] ) )
+            if naws == 0: 
+                nFreshers += 1
+            if nFreshers > 1:
+                speakersToSwap[ speaker ] = date
+
+        # If no of freshers are zero, I can put 1 speaker into swap list.
+        if nFreshers == 0:
+            candidates[ speakers[0] ] = date
+
     schedule = swapSpeakers( speakersToSwap, candidates, schedule)
 
     return schedule

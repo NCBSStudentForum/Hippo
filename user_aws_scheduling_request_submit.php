@@ -20,15 +20,8 @@ if( $_POST[ 'response' ] == 'submit' )
     $updateKeys = 'created_on,reason';
 
     // check if dates are monday. If not assign next monday.
-    if( $firstPref && date( 'D', strtotime($firstPref) ) !== 'Mon' )
-        $firstPref = dbDate( 
-            strtotime( 'next monday', strtotime( $firstPref ) ) 
-            );
-
-    if( $secondPref && date( 'D', strtotime($secondPref) ) !== 'Mon' )
-        $secondPref = dbDate( 
-            strtotime( 'next monday', strtotime( $secondPref ) ) 
-            );
+    $firstPref = nextMonday( $firstPref );
+    $secondPref = nextMonday( $secondPref );
 
     if( $firstPref )
     {

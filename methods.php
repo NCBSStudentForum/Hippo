@@ -756,3 +756,23 @@ function saveDataFile( $filename, $text )
     return file_exists( $filepath );
 }
 
+/**
+    * @brief Return next monday from given date.
+    *
+    * @param $date
+    *
+    * @return 
+ */
+function nextMonday( $date )
+{
+    if( ! $date )
+        return null;
+
+    $date = dbDate( $date );
+    // check if dates are monday. If not assign next monday.
+    if( $date && date( 'D', strtotime($date) ) !== 'Mon' )
+        $date = dbDate( 
+            strtotime( 'next monday', strtotime( $date ) ) 
+            );
+    return $date;
+}

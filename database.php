@@ -344,6 +344,16 @@ function initialize( )
             )"
         );
 
+    // Slots 
+    $res = $db->query( "
+        create TABLE IF NOT EXISTS slots (
+            id VARCHAR(20) NOT NULL PRIMARY KEY
+            , date DATE NOT NULL 
+            , start_time TIME NOT NULL
+            , end_time TIME NOT NULL
+            )"
+        );
+
     return $res;
 }
 

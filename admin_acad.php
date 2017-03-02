@@ -31,6 +31,8 @@ $(function() {
 
 echo userHTML( );
 
+echo '<h1>ANNUAL WORK SEMINAR</h1>';
+
 echo "<h2>Upcoming AWS</h2>";
 echo '
   <table border="0" class="admin">
@@ -41,13 +43,13 @@ echo '
     </tr>
     <tr>
         <td>Manage AWS scheduling requests</td>
-        <td> <a href="./admin_acad_manages_scheduling_request.php">
+        <td> <a href="admin_acad_manages_scheduling_request.php">
             Manage ' . count( $pendingScheduleRequest ) .  
             ' pending scheduling requests</a> </td>
     </tr>
   </table>';
 
-echo '<h3>Edit and update</h3>';
+echo '<h2>Edit and update AWS</h2>';
 echo '<table class="admin">
     <tr>
         <td>Manage AWS edit requests</td>
@@ -173,8 +175,22 @@ echo '
             <a href="admin_acad_summary_date_wise.php">Date wise</a>
         </td>
     </tr>
-
   </table>';
+
+/* 
+ * Course work,
+ */
+echo '<h1>COURSES</h1>';
+echo '
+  <table border="0" class="admin">
+    <tr>
+        <td>Manage slots </td>
+        <td>
+            <a href="admin_acad_manages_slots.php">Manage slots</a> 
+        </td>
+    </tr>
+  </table>';
+
 
 echo "<h2>Automatic Housekeeping</h2>";
 

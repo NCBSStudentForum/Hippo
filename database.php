@@ -330,12 +330,17 @@ function initialize( )
             )"
         );
 
-    // This table keeps login preference.
+    // This table keeps request for scheduling AWS. Do not allow deleting a 
+    // request. It can be rejected or marked expired.
     $res = $db->query( "
-        create TABLE IF NOT EXISTS my_aws_preference (
-            login VARCHAR(200) NOT NULL PRIMARY KEY
+        create TABLE IF NOT EXISTS aws_scheduling_request (
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+            , created_on DATETIME NOT NULL
+            , login VARCHAR(200) NOT NULL 
             , first_preference DATE
             , second_preference DATE
+            , reason TEXT NOT NULL
+            , status ENUM( 'APPROVED', 'REJECTED', 'PENDING', 'EXPIRED' ) DEFAULT 'PENDING'
             )"
         );
 
@@ -1509,7 +1514,9 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         // When created return the id of table else return null;
         $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
         $stmt->execute( );
-        return $stmt->fetch( PDO::FETCH_ASSOC );
+        $res = $stmt->fetch( PDO::FETCH_ASSOC );
+        $res['id'] = $res[ 'LAST_INSERT_ID()' ];
+        return $res;
     }
     return null;
 }

@@ -27,29 +27,8 @@ foreach( $slots as $slot )
 $( function() {
     var slotsDict = <?php echo json_encode( $slotsMap ) ?>;
     var slots = <?php echo json_encode( $slotsId ); ?>;
-
     $( "#slot" ).autocomplete( { source : slots }); 
     $( "#slot" ).attr( "placeholder", "autocomplete" );
-
-    $( "#talks_coordinator" ).autocomplete( { source : logins }); 
-    $( "#talks_coordinator" ).attr( "placeholder", "autocomplete" );
-
-
-    // Once email is matching we need to fill other fields.
-    $( "#speakers_email" ).autocomplete( { source : emails
-        , focus : function( ) { return false; }
-    }).on( 'autocompleteselect', function( e, ui ) 
-        {
-            var email = ui.item.value;
-            $('#speakers_first_name').val( speakersDict[ email ]['first_name'] );
-            $('#speakers_middle_name').val( speakersDict[ email ]['middle_name'] );
-            $('#speakers_last_name').val( speakersDict[ email ]['last_name'] );
-            $('#speakers_department').val( speakersDict[ email ]['department'] );
-            $('#speakers_institute').val( speakersDict[ email ]['institute'] );
-            $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
-        }
-    );
-    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
 });
 </script>
 
@@ -74,7 +53,7 @@ if( array_key_exists( 'id', $_POST ) )
 
 echo '<h3>Edit slot details</h3>';
 
-echo '<form method="post" action="admin_acad_manage_slots_submit.php">';
+echo '<form method="post" action="admin_acad_manages_slots_action.php">';
 echo dbTableToHTMLTable( 'slots', $slot 
     , 'id,day,start_time,end_time', 'submit' 
     );

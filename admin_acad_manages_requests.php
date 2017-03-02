@@ -9,6 +9,7 @@ require_once 'class.Diff.php';
 echo "<h3>Manage pending requests</h3>";
 
 
+// Second review pending requests for AWS modification.
 $pendingRequests = getPendingAWSRequests( );
 foreach( $pendingRequests as $req )
 {

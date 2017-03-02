@@ -11,6 +11,8 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 $logins = getLoginIds( );
 
 $pendingRequests = getPendingAWSRequests( );
+$pendingScheduleRequest = getTableEntries( 'aws_scheduling_request'
+    , 'status', "status='PENDING'" );
 
 ?>
 
@@ -29,7 +31,7 @@ $(function() {
 
 echo userHTML( );
 
-echo "<h2>Schedule/manage upcoming AWS</h2>";
+echo "<h2>Upcoming AWS</h2>";
 echo '
   <table border="0" class="admin">
     <tr>
@@ -37,14 +39,18 @@ echo '
       <td><a href="admin_acad_manages_upcoming_aws.php">Manage
       upcoming AWSes</a></td>
     </tr>
+    <tr>
+        <td>Manage AWS scheduling requests</td>
+        <td> <a href="./admin_acad_manages_scheduling_request.php">
+            Manage ' . count( $pendingScheduleRequest ) .  
+            ' pending scheduling requests</a> </td>
+    </tr>
   </table>';
 
 echo '<h3>Edit and update</h3>';
-
-echo '<table class="admin">';
-echo '
+echo '<table class="admin">
     <tr>
-        <td>Manage pending requests</td>
+        <td>Manage AWS edit requests</td>
         <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) . 
             ' pending requests</a> </td>
     </tr>

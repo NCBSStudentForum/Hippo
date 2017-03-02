@@ -48,14 +48,13 @@ else
 
 
     // Here user can submit preferences.
-    $prefs = getTableEntry( 'aws_scheduling_request', 'login,status'
-                , array( 'login' => $_SESSION[ 'user' ]
-                , 'status' => 'PENDING' ) );
+    $prefs = getTableEntry( 'aws_scheduling_request', 'speaker,status'
+                , array( 'speaker' => $_SESSION[ 'user' ]
+                    , 'status' => 'PENDING' ) );
 
-    $approved  = getTableEntry( 'aws_scheduling_request', 'login,status'
-                , array( 'login' => $_SESSION[ 'user' ]
-                , 'status' => 'APPROVED' ) 
-            );
+    $approved  = getTableEntry( 'aws_scheduling_request', 'speaker,status'
+                , array( 'speaker' => $_SESSION[ 'user' ]
+                    , 'status' => 'APPROVED' ) );
     
     if( ! $prefs )
     {
@@ -64,11 +63,11 @@ else
             and let me know your preferred dates. I will try my best to assign you on 
             or very near to these dates but I can not promise your requested slot.
             "
-        );
+            );
 
         echo '<form method="post" action="user_aws_scheduling_request.php">';
         echo '<button type="submit">Create preference</button>';
-        echo '<input type="hidden" name="login" value="' . $_SESSION[ 'user' ] . '">';
+        echo '<input type="hidden" name="speaker" value="' . $_SESSION[ 'user' ] . '">';
         echo '</form>';
     }
     else if( $prefs[ 'status' ] == 'PENDING' )
@@ -86,8 +85,9 @@ else
         // Cancel goes directly to cancelling the request. Only non-approved 
         // requests can be cancelled.
         echo '<form method="post" action="user_aws_scheduling_request_submit.php">';
-        echo '<button name="response" title="Cancel this request" 
-                type="submit" value="cancel">' . $symbCancel . '</button>';
+        echo '<button onclick="AreYouSure(this)" 
+                name="response" title="Cancel this request" 
+                type="submit">' . $symbCancel . '</button>';
         echo '<input type="hidden" name="id" value="'. $prefs[ 'id' ].'">';
         echo '</form>';
     } 

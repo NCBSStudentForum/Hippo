@@ -9,58 +9,74 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
-// Logic to add your preference.
-if( array_key_exists( 'response', $_POST ) )
-{
-    $res = insertOrUpdateTable( 'my_aws_preference'
-        , 'login,first_preference,second_preference'
-        , 'first_preference,second_preference'
-        , $_POST 
-    );
-}
-
-echo '<div class="info">';
+echo '<div style="border:1px dotted">';
 $scheduledAWS = scheduledAWSInFuture( $_SESSION['user'] );
 $tempScheduleAWS = temporaryAwsSchedule( $_SESSION[ 'user' ] );
 if( $scheduledAWS )
 {
     echo alertUser( "
-        <strong>&#x2620 Your AWS has been scheduled on " . 
-        humanReadableDate( $scheduledAWS[ 'date' ] ) . '</strong>'
+        <font color=\"blue\">&#x2620 Your AWS has been scheduled on " . 
+        humanReadableDate( $scheduledAWS[ 'date' ] ) . '</font>'
+    );
+    echo printWarning( "
+        <x-small>
+        This date is very unlikely to change without your approval.
+        In rare events when we cancel the AWS altogether for this day (happens once 
+        or twice a year), we'll schedule you in ASAP.
+        </x-small>
+        "
     );
 }
 else 
 {
     if( $tempScheduleAWS )
     {
-        echo printInfo( "&#x2620 Your AWS is most likely to be on " . 
-            humanReadableDate( $tempScheduleAWS[ 'date' ] ) );
+        echo printInfo( "<font color=\"blue\">&#x2620 Your AWS is most likely to be on " . 
+            humanReadableDate( $tempScheduleAWS[ 'date' ] ) . "</font>" .
+            ". Once confirmed, I will notify you immediately, and once more 
+            at least 1 months in advance." );
 
-        echo printWarning( "This date is likely to change if any other speakers
-            request to change their AWS or new speakers are added." 
+        echo printWarning( 
+            "This date may change a little if any other speaker's
+            request to change their AWS is approved or new speakers are added. 
+            Once approved, this date is very unlikely to change without your approval.
+            " 
         );
     }
     else
         echo printInfo( "You don't have any AWS scheduled in next 12 months" );
 
-    echo '<h3>You can give two preferences for your upcoming AWS date </h3>';
+    echo printInfo( 
+        "If you are not happy with above tentative schedule, hurry up 
+        and let me know your preferred dates. I will try my best to assign you on 
+        or very near to these dates but I can not promise your requested slot.
+        "
+        );
+
     // Here user can submit preferences.
-    $prefs = getTableEntry( 'my_aws_preference', 'login'
+    $prefs = getTableEntry( 'aws_scheduling_request', 'login'
                     , array( 'login' => $_SESSION[ 'user' ] )
                     );
-
-    if( $prefs )
-        echo arrayToTableHTML( $prefs, 'info' );
-
-    echo '<form method="post" action="">';
-    echo dbTableToHTMLTable( 'my_aws_preference', $prefs 
-        , 'first_preference,second_preference' );
-    echo '<input type="hidden" name="login" value="'. $_SESSION[ 'user' ] . '">';
-    echo '</form>';
+    
+    if( ! $prefs )
+    {
+        echo '<form method="post" action="user_aws_scheduling_request.php">';
+        echo '<button type="submit">Create preference</button>';
+        echo '<input type="hidden" name="login" value="' . $_SESSION[ 'user' ] . '">';
+        echo '</form>';
+    }
+    else
+    {
+        echo '<form method="post" action="user_aws_scheduling_request.php">';
+        echo dbTableToHTMLTable( 'aws_scheduling_request', $prefs, '', 'edit' );
+        echo '<input type="hidden" name="login" value="'. $_SESSION[ 'user' ] . '">';
+        echo '</form>';
+    }
+    
 }
-
-
 echo '</div>';
+
+
 if( $scheduledAWS )
 {
 

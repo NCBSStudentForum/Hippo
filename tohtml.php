@@ -502,6 +502,7 @@ function dbTableToHTMLTable( $tablename
     )
 {
     global $symbUpdate, $symbCheck;
+    global $symbEdit;
     global $dbChoices;
 
     $html = "<table class=\"editable_$tablename\">";
@@ -666,10 +667,13 @@ function dbTableToHTMLTable( $tablename
     // If some fields are editable then we need a submit button as well unless 
     // user pass an empty value
     $buttonSym = ucfirst( $button_val );
+
     if( $button_val == 'submit' )
         $buttonSym = "&#10003";
     else if( $button_val == 'update' )
         $buttonSym = $symbUpdate;
+    else if( $button_val == 'edit' )
+        $buttonSym = $symbEdit;
 
     if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
     {
@@ -914,9 +918,19 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
 
 }
 
-function initUserMsg( )
+/**
+    * @brief Initialize user message.
+    *
+    * @param $user Login id of user.
+    *
+    * @return First part of the message.
+ */
+function initUserMsg( $user )
 {
-    $msg = "<p> Dear " . loginToText( $_SESSION[ 'user' ] ) . "<p>";
+    if( ! $user )
+        $user = $_SESSION[ 'user' ];
+
+    $msg = "<p> Dear " . loginToText( $user ) . "<p>";
     return $msg;
 }
 

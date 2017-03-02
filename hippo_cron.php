@@ -29,10 +29,31 @@ function generateAWSEmail( $monday )
     if( ! $upcomingAws )
         $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
 
-    if( count( $upcomingAws ) < 1 )
-        return null;
-
     $html = '';
+    if( count( $upcomingAws ) < 1 )
+    {
+        $html .= "<p>I could not find any annual work seminar 
+            scheduled on " . humanReadableDate( $monday ) . ".</p>";
+
+        $holiday = getTableEntry( 'holidays', 'date'
+                        , array( 'date' => dbDate( $monday ) )
+                    );
+        if( $holiday )
+        {
+            $html .= "<p>Most likely due to following event/holiday: " . 
+                        strtoupper( $holiday['description'] ) . ".</p>";
+
+        }
+
+        $html .= "<br><br>";
+        $html .= "<p>That's all I know! </p>";
+
+        $html .= "<br>";
+        $html .= "<p>-- NCBS Hippo</p>";
+
+        return array( "email" => $html, "speakers" => null );
+
+    }
 
     $speakers = array( );
     $logins = array( );
@@ -94,39 +115,33 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         $nextMonday = dbDate( strtotime( 'next monday' ) );
         $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
 
+        $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+        $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+        $to = 'academic@lists.ncbs.res.in';
+
+        $to = 'dilawars@ncbs.res.in';
+        $cclist = '';
+
         $res = generateAWSEmail( $nextMonday );
-        if( $res )
+        if( $res[ 'speakers'] )
         {
-            $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
+            $subject = 'Next week Annual Work Seminar (' . humanReadableDate( $nextMonday) . ') by ';
             $subject .= implode( ', ', $res[ 'speakers'] );
-
-            $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-            $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-            $to = 'academic@lists.ncbs.res.in';
-
             $mail = $res[ 'email' ];
-
-            // generate md5 of email. And store it in archive.
-            $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
-            if( file_exists( $archivefile ) )
-            {
-                echo printInfo( "This email has already been sent. Doing nothing" );
-            }
-            else 
-            {
-                $pdffile = $res[ 'pdffile' ];
-                $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
-                echo printInfo( "Saving the mail in archive" . $archivefile );
-                file_put_contents( $archivefile, "SENT" );
-            }
+            $pdffile = $res[ 'pdffile' ];
+            $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
             ob_flush( );
         }
         else
         {
-            // There is no AWS this friday.
-            $subject = 'No Annual Work Seminar is scheduled for next monday ' .
-                humanReadableDate( $nextMonday );
+            // There is no AWS this monday.
+            $subject = 'No Annual Work Seminar next week (' .
+                humanReadableDate( $nextMonday ) . ')';
 
+            $mail = $res[ 'email' ];
+            echo( "Sending to $to, $cclist with subject $subject" );
+            echo( "$mail" );
+            sendPlainTextEmail( $mail, $subject, $to, $cclist );
         }
     }
 }
@@ -142,7 +157,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
         $res = generateAWSEmail( $thisMonday );
 
-        if( $res )
+        if( $res[ 'speakers' ] )
         {
             echo printInfo( "Sending mail about today's AWS" );
             $subject .= implode( ', ', $res[ 'speakers'] );
@@ -157,20 +172,17 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
             error_log( "Sending to $to, $cclist with subject $subject" );
             echo( "Sending to $to, $cclist with subject $subject" );
-
-            if( file_exists( $archivefile ) )
-            {
-                echo printInfo( "This email has already been sent. Doing nothing" );
-            }
-            else 
-            {
-                $pdffile = $res[ 'pdffile' ];
-                $ret = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
-                echo printInfo( "Return value $ret" );
-                echo printInfo( "Saving the mail in archive" . $archivefile );
-                file_put_contents( $archivefile, "SENT" );
-            }
+            $pdffile = $res[ 'pdffile' ];
+            $ret = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
             ob_flush( );
+        }
+        else
+        {
+            // There is no AWS this monday.
+            $subject = 'No Annual Work Seminar is scheduled today : ' .
+                humanReadableDate( $nextMonday );
+            $mail = $res[ 'email' ];
+            sendPlainTextEmail( $mail, $subject, $to, $cclist );
         }
     }
 }
@@ -265,7 +277,9 @@ if( $today >= $startDay && $today <= $endDay )
 
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );
-            sendPlainTextEmail( $temp[ 'email_body', $subject, $to, $templ[ 'cc' ] );
+            sendPlainTextEmail( 
+                $temp[ 'email_body' ], $subject, $to, $templ[ 'cc' ] 
+                );
         }
 
     }

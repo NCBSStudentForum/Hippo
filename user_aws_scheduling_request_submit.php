@@ -16,8 +16,19 @@ if( $_POST[ 'response' ] == 'submit' )
     // Check if preferences are available.
     $firstPref = __get__( $_POST, 'first_preference', '' );
     $secondPref = __get__( $_POST, 'second_preference', '' );
-    $keys = 'id,login,reason';
-    $updateKeys = 'reason';
+    $keys = 'id,speaker,reason,created_on';
+    $updateKeys = 'created_on,reason';
+
+    // check if dates are monday. If not assign next monday.
+    if( $firstPref && date( 'D', strtotime($firstPref) ) !== 'Mon' )
+        $firstPref = dbDate( 
+            strtotime( 'next monday', strtotime( $firstPref ) ) 
+            );
+
+    if( $secondPref && date( 'D', strtotime($secondPref) ) !== 'Mon' )
+        $secondPref = dbDate( 
+            strtotime( 'next monday', strtotime( $secondPref ) ) 
+            );
 
     if( $firstPref )
     {
@@ -62,11 +73,10 @@ if( $_POST[ 'response' ] == 'submit' )
         }
     }
 
-    // Now update
-    //echo( "$keys AND $updateKeys " );
-    //var_dump( $_POST );
+    $res = insertOrUpdateTable(
+                'aws_scheduling_request', $keys, $updateKeys, $_POST
+            );
 
-    $res = insertOrUpdateTable( 'aws_scheduling_request', $keys, $updateKeys, $_POST );
     if( $res )
     {
         // Store id, it is needed to send email.
@@ -79,11 +89,12 @@ if( $_POST[ 'response' ] == 'submit' )
     // Create subject for email
     $subject = "Your preferences for AWS schedule  has been recieved";
 }
-else if( $_POST[ 'response' ] == 'cancel' )
+else if( $_POST[ 'response' ] == 'delete' )
 {
     $table = getTableEntry( 'aws_scheduling_request', 'id', $_POST );
-    $_POST = array_merge( $_POST, $table );
-    $_POST[ 'status' ] = 'EXPIRED';
+    if( $table )
+        $_POST = array_merge( $_POST, $table );
+    $_POST[ 'status' ] = 'CANCELLED';
 
     $res = updateTable( 'aws_scheduling_request', 'id'
                 , 'status', $_POST );
@@ -99,18 +110,20 @@ else if( $_POST[ 'response' ] == 'cancel' )
 
 if( $sendEmail )
 {
-    $to = getLoginEmail( $_POST[ 'login' ] );
-
+    $to = getLoginEmail( $_POST[ 'speaker' ] );
     $table = getTableEntry( 
         'aws_scheduling_request', 'id' , array( 'id' => $_POST[ 'id' ] ) 
         );
 
+
     if( ! $table )
+    {
         echo minionEmbarrassed( "Could not fetch your preference.." );
+    }
     else
     {
         $options = array( 
-            'USER' => loginToText( $_POST[ 'login' ] )
+            'USER' => loginToText( $_POST[ 'speaker' ] )
             , 'EMAIL_BODY' => arrayToVerticalTableHTML( $table, 'info' )
             );
         $templ = emailFromTemplate( 'user_create_request', $options );

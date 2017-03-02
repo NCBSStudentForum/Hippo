@@ -335,12 +335,12 @@ function initialize( )
     $res = $db->query( "
         create TABLE IF NOT EXISTS aws_scheduling_request (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
-            , created_on DATETIME NOT NULL
-            , login VARCHAR(200) NOT NULL 
+            , created_on DATETIME 
+            , speaker VARCHAR(200) NOT NULL 
             , first_preference DATE
             , second_preference DATE
             , reason TEXT NOT NULL
-            , status ENUM( 'APPROVED', 'REJECTED', 'PENDING', 'EXPIRED' ) DEFAULT 'PENDING'
+            , status ENUM( 'APPROVED', 'REJECTED', 'PENDING', 'CANCELLED' ) DEFAULT 'PENDING'
             )"
         );
 
@@ -1515,7 +1515,14 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
         $stmt->execute( );
         $res = $stmt->fetch( PDO::FETCH_ASSOC );
-        $res['id'] = $res[ 'LAST_INSERT_ID()' ];
+        $lastInsertId = intval( __get__($res, 'LAST_INSERT_ID()', 0 ) );
+
+        // Store the LAST_INSERT_ID if insertion happened else the id of update 
+        // execution.
+        if( $lastInsertId > 0 )
+            $res['id'] = $lastInsertId;
+        else
+            $res['id' ] = $data[ 'id' ];
         return $res;
     }
     return null;

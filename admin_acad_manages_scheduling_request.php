@@ -11,23 +11,36 @@ echo "<h3>Manage pending requests</h3>";
 // First, review request for upcoming AWS.
 $schedulingReqs = getTableEntries( 'aws_scheduling_request', 'status'
     , "status='PENDING'" );
-foreach( $schedulingReqs as $req )
+
+if( count( $schedulingReqs ) == 0 )
 {
-    echo '<form method="post" action="admin_acad_manages_requests_submit.php">';
-    echo arrayToTableHTML( $req, 'show_aws' );
-    echo '<table class="show_aws" border="0">
-        <tr style="background:white">
-            <td style="border:0px;min-width:50%;align:left;">
-            <textarea rows="3" cols="80%" name="reason" 
-                placeholder="Reason for rejection" >Reason for rejection</textarea>
-            <button type="submit" name ="response" value="Reject">Reject</button>
-            </td>
-        </tr><tr>
-            <td style="border:0px;max-width:50%;">
-                <button type="submit" name ="response" value="Accept">Accept</button>
-            </td>
-        </tr>
-    </table>';
+    echo printWarning( "No requests are left" ); 
+    echo goBack( "user_aws.php", 2 );
+    exit;
 }
+else
+{
+
+    foreach( $schedulingReqs as $req )
+    {
+        echo '<form method="post" action="admin_acad_manages_scheduling_request_submit.php">';
+        echo dbTableToHTMLTable( 'aws_scheduling_request', $req, '', '' );
+        echo '<table class="show_aws" border="0">
+            <tr style="background:white">
+                <td style="border:0px;min-width:50%;align:left;">
+                <textarea rows="3" cols="80%" name="reason" 
+                    placeholder="Reason for rejection" >Reason for rejection</textarea>
+                <button type="submit" name ="response" value="Reject">Reject</button>
+                </td>
+            </tr><tr>
+                <td style="border:0px;max-width:50%;">
+                    <button type="submit" name ="response" value="Accept">Accept</button>
+                </td>
+            </tr>
+        </table>';
+    }
+}
+
+echo goBackToPageLink( 'user_aws.php', 'Go back' );
 
 ?>

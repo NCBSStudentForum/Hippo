@@ -10,10 +10,13 @@ mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
 echo userHTML( );
 
+//var_dump( $_POST );
+
 // Start preparing email.
-$speaker = $_POST[ 'login' ];
+$speaker = $_POST[ 'speaker' ];
 $speakerInfo = getUserInfo( $speaker );
 $user = loginToText( $speaker );
+
 
 $msg = '<p>Dear ' . $user . ' </p>';
 
@@ -26,12 +29,14 @@ if( $_POST[ 'response' ] == 'Reject' )
             A request can not rejected without a proper reason.
             You must enter a valid reason."
         );
-        echo goBackToPageLink( "admin_acad_manages_requests.php", "Go back" );
+        echo goBackToPageLink( "admin_acad_manages_scheduling_request.php", "Go back" );
         exit;
     }
 
+    $rid = $_POST[ 'id' ];
+
     $res = updateTable( 
-        'aws_requests', 'id' , 'status'
+        'aws_scheduling_request', 'id' , 'status'
         , array( 'id' => $rid, 'status' => 'REJECTED' )
     );
 
@@ -39,67 +44,59 @@ if( $_POST[ 'response' ] == 'Reject' )
     {
         echo printInfo( "This request has been rejected" );
         // Now notify user.
-        $msg .= "<p>Your AWS add/edit request has been rejected </p>";
+        $msg .= "<p>Your preference for AWS dates has been rejected </p>";
         $msg .= "<p>Reason: " . $_POST[ 'reason' ] . "</p>";
         $msg .= "<p>Feel free to drop an email to hippo@lists.ncbs.res.in for
             further clarification. Please mention your request id in email.
             </p>";
 
         // Get the latest request.
-        $req = getAwsRequestById( $rid );
+        
+        $req = getTableEntry( 
+            'aws_scheduling_request', 'id', array( 'id' => $rid )
+            );
         $msg .= arrayToVerticalTableHTML( $req, "request" );
 
         sendEmail( $msg
-            , "Your AWS edit request (id:". $rid . ") has been rejected"
+            , "Your preference for AWS dates (id:". $rid . ") has been rejected"
             , $speakerInfo[ 'email' ]
         );
 
-        goToPage( "admin_acad_manages_requests.php", 1 );
+        goToPage( "admin_acad_manages_scheduling_request.php", 1 );
         exit;
     }
 }
 elseif( $_POST['response'] == 'Accept' )
 {
-    $date = $_POST[ 'date' ];
-    $aws = getMyAwsOn( $speaker, $date );
-    $req = getAwsRequestById( $rid );
+    $rid = $_POST[ 'id' ];
+    $req = getTableEntry( 'aws_scheduling_request', 'id', array( 'id' => $rid ));
+    $req['status'] = 'APPROVED';
 
-    $res = updateTable( 'annual_work_seminars'
-            , 'speaker,date' 
-            , array( 'abstract', 'title'
-                , 'supervisor_1', 'supervisor_2'
-                , 'tcm_member_1', 'tcm_member_2', 'tcm_member_3', 'tcm_member_4' 
-                )
-            , $req
-            );
-
+    $res = updateTable( 'aws_scheduling_request', 'id', 'status', $req );
     if( $res )
     {
-        $res = updateTable( 
-            'aws_requests', 'id', 'status'
-            , array( 'id' => $rid, 'status' => 'APPROVED' ) 
-        );
+        // Now recompute the schedule.
+        rescheduleAWS( );
 
-        if( $res )
-        {
-            $user = loginToText( $speaker );
-            $msg .= "<p>
-                Your edit to your AWS entry has been approved. 
-                The updated entry is following:
-                </p>";
+        $user = loginToText( $speaker );
+        $msg .= "<p>
+            Your edit to your AWS entry has been approved. 
+            The updated entry is following:
+            </p>";
 
-            // Get the latest request.
-            $req = getAwsRequestById( $rid );
-            $msg .= arrayToVerticalTableHTML( $req, "request" );
+        // Get the latest request.
+        $req = getTableEntry(
+                'aws_scheduling_request', 'id', array( 'id' => $rid )
+            );
+        $msg .= arrayToVerticalTableHTML( $req, "request" );
 
-            sendEmail( $msg
-                , "Your AWS edit request (id:$rid) has been approved"
+        sendEmail( $msg
+                , "Your AWS preference dates (id:$rid) have been approved"
                 , $speakerInfo['email' ]
             );
-            
-            echo goToPage( 'admin_acad_manages_requests.php', 1 );
-            exit;
-        }
+        
+        echo goToPage( 'admin_acad_manages_scheduling_request.php', 1 );
+        exit;
     }
     else
         echo printWarning( "Could not update the AWS table" );
@@ -109,6 +106,6 @@ else
     echo printWarning( "Unknown request " . $_POST[ 'response' ] );
 }
 
-echo goBackToPageLink( "admin_acad_manages_requests.php", "Go back" );
+echo goBackToPageLink( "admin_acad_manages_scheduling_request.php", "Go back" );
 
 ?>

@@ -56,7 +56,7 @@ $( function() {
 <?php
 
 // Logic for POST requests.
-$slot = array( 'id' => '', 'start_time' => '', 'end_time' => '' );
+$slot = array( 'id' => '', 'day' => '', 'start_time' => '', 'end_time' => '' );
 
 echo "<h2>Slot details</h2>";
 echo '<form method="post" action="">';
@@ -74,9 +74,10 @@ if( array_key_exists( 'id', $_POST ) )
 
 echo '<h3>Edit slot details</h3>';
 
-echo '<form method="post" action="admin_acad_manages_speakers_action.php">';
+echo '<form method="post" action="admin_acad_manage_slots_submit.php">';
 echo dbTableToHTMLTable( 'slots', $slot 
-    , 'id,start_time,end_time', 'submit', 'id');
+    , 'id,day,start_time,end_time', 'submit' 
+    );
 
 echo '<button title="Delete this entry" type="submit" onclick="AreYouSure(this)"
     name="response" value="Delete">' . $symbDelete .

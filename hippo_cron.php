@@ -121,6 +121,13 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             }
             ob_flush( );
         }
+        else
+        {
+            // There is no AWS this friday.
+            $subject = 'No Annual Work Seminar is scheduled for next monday ' .
+                humanReadableDate( $nextMonday );
+
+        }
     }
 }
 else if( $today == dbDate( strtotime( 'this monday' ) ) )

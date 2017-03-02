@@ -46,12 +46,6 @@ else
     else
         echo printInfo( "You don't have any AWS scheduled in next 12 months" );
 
-    echo printInfo( 
-        "If you are not happy with above tentative schedule, hurry up 
-        and let me know your preferred dates. I will try my best to assign you on 
-        or very near to these dates but I can not promise your requested slot.
-        "
-        );
 
     // Here user can submit preferences.
     $prefs = getTableEntry( 'aws_scheduling_request', 'login,status'
@@ -65,6 +59,13 @@ else
     
     if( ! $prefs )
     {
+        echo printInfo( 
+            "If you are not happy with above tentative schedule, hurry up 
+            and let me know your preferred dates. I will try my best to assign you on 
+            or very near to these dates but I can not promise your requested slot.
+            "
+        );
+
         echo '<form method="post" action="user_aws_scheduling_request.php">';
         echo '<button type="submit">Create preference</button>';
         echo '<input type="hidden" name="login" value="' . $_SESSION[ 'user' ] . '">';
@@ -72,8 +73,15 @@ else
     }
     else if( $prefs[ 'status' ] == 'PENDING' )
     {
+        echo printInfo( "You preference for AWS schedule is pending. If you have 
+            changed your mind, cancel it. After approval, you wont be able to modify 
+            this request. We usually wait for two days before approving.
+            " );
+
         echo '<form method="post" action="user_aws_scheduling_request.php">';
         echo dbTableToHTMLTable( 'aws_scheduling_request', $prefs, '', 'edit' );
+        echo '<input type="hidden" name="created_on" 
+                value="' . dbDateTime( 'now' ) . '" >';
         echo '</form>';
         // Cancel goes directly to cancelling the request. Only non-approved 
         // requests can be cancelled.

@@ -68,23 +68,30 @@ if( $_POST[ 'response' ] == 'submit' )
 
     $res = insertOrUpdateTable( 'aws_scheduling_request', $keys, $updateKeys, $_POST );
     if( $res )
+    {
+        // Store id, it is needed to send email.
+        $_POST[ 'id' ] = $res[ 'id' ];
         echo printInfo( "I have recorded your preferences." );
+    }
     else
         $sendEmail = false;
 
     // Create subject for email
-    $subject = "Your prefrerece for AWS schedule  has been recieved";
+    $subject = "Your preferences for AWS schedule  has been recieved";
 }
 else if( $_POST[ 'response' ] == 'cancel' )
 {
-    $_POST[ 'status' ] = 'EXPIRED';
     $table = getTableEntry( 'aws_scheduling_request', 'id', $_POST );
     $_POST = array_merge( $_POST, $table );
+    $_POST[ 'status' ] = 'EXPIRED';
 
     $res = updateTable( 'aws_scheduling_request', 'id'
                 , 'status', $_POST );
     if( $res )
+    {
         echo printInfo( "Sucessfully cancelled your request" );
+        $subject = "You have cancelled your AWS preference";
+    }
     else
         $sendEmail = false;
 }
@@ -95,14 +102,11 @@ if( $sendEmail )
     $to = getLoginEmail( $_POST[ 'login' ] );
 
     $table = getTableEntry( 
-        'aws_scheduling_request', 'login,status'
-        , array( 'login' => $_POST[ 'login' ], 'status' => 'PENDING' )
-    );
+        'aws_scheduling_request', 'id' , array( 'id' => $_POST[ 'id' ] ) 
+        );
 
     if( ! $table )
-    {
         echo minionEmbarrassed( "Could not fetch your preference.." );
-    }
     else
     {
         $options = array( 

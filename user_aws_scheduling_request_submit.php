@@ -63,20 +63,35 @@ if( $_POST[ 'response' ] == 'submit' )
     }
 
     // Now update
-    echo( "$keys AND $updateKeys " );
-    var_dump( $_POST );
+    //echo( "$keys AND $updateKeys " );
+    //var_dump( $_POST );
 
     $res = insertOrUpdateTable( 'aws_scheduling_request', $keys, $updateKeys, $_POST );
     if( $res )
         echo printInfo( "I have recorded your preferences." );
     else
         $sendEmail = false;
+
+    // Create subject for email
+    $subject = "Your prefrerece for AWS schedule  has been recieved";
 }
+else if( $_POST[ 'response' ] == 'cancel' )
+{
+    $_POST[ 'status' ] = 'EXPIRED';
+    $table = getTableEntry( 'aws_scheduling_request', 'id', $_POST );
+    $_POST = array_merge( $_POST, $table );
+
+    $res = updateTable( 'aws_scheduling_request', 'id'
+                , 'status', $_POST );
+    if( $res )
+        echo printInfo( "Sucessfully cancelled your request" );
+    else
+        $sendEmail = false;
+}
+
 
 if( $sendEmail )
 {
-    // Now send email.
-    $subject = "Your prefrerece for AWS schedule  has been recieved";
     $to = getLoginEmail( $_POST[ 'login' ] );
 
     $table = getTableEntry( 

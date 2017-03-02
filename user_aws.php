@@ -54,9 +54,14 @@ else
         );
 
     // Here user can submit preferences.
-    $prefs = getTableEntry( 'aws_scheduling_request', 'login'
-                    , array( 'login' => $_SESSION[ 'user' ] )
-                    );
+    $prefs = getTableEntry( 'aws_scheduling_request', 'login,status'
+                , array( 'login' => $_SESSION[ 'user' ]
+                , 'status' => 'PENDING' ) );
+
+    $approved  = getTableEntry( 'aws_scheduling_request', 'login,status'
+                , array( 'login' => $_SESSION[ 'user' ]
+                , 'status' => 'APPROVED' ) 
+            );
     
     if( ! $prefs )
     {
@@ -65,12 +70,26 @@ else
         echo '<input type="hidden" name="login" value="' . $_SESSION[ 'user' ] . '">';
         echo '</form>';
     }
-    else
+    else if( $prefs[ 'status' ] == 'PENDING' )
     {
         echo '<form method="post" action="user_aws_scheduling_request.php">';
         echo dbTableToHTMLTable( 'aws_scheduling_request', $prefs, '', 'edit' );
-        echo '<input type="hidden" name="login" value="'. $_SESSION[ 'user' ] . '">';
         echo '</form>';
+        // Cancel goes directly to cancelling the request. Only non-approved 
+        // requests can be cancelled.
+        echo '<form method="post" action="user_aws_scheduling_request_submit.php">';
+        echo '<button name="response" title="Cancel this request" 
+                type="submit" value="cancel">' . $symbCancel . '</button>';
+        echo '<input type="hidden" name="id" value="'. $prefs[ 'id' ].'">';
+        echo '</form>';
+    } 
+
+    if( $approved )
+    {
+        echo '<strong>You already have a request below.
+            Notice that request is only effective when its <tt>STATUS</tt> has 
+            changed to <tt>APPROVED</tt>. </strong>';
+        echo arrayToTableHTML( $approved, 'info' );
     }
     
 }

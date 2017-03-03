@@ -69,6 +69,6 @@ echo '</form>';
 
 
 echo "<br/><br/>";
-echo goBackToPageLink( 'admin_acad_manage_slots.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad.php', 'Go back' );
 
 ?>

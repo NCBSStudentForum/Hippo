@@ -1300,4 +1300,27 @@ function slotTable( )
 
 }
 
+function coursesTable( )
+{
+    $courses = getTableEntries( 'courses' );
+    $html = '<table border="1">';
+    foreach( $courses as $c )
+    {
+        $instructors = array( );
+        foreach( $c as $k => $v )
+            if( $v && strpos( $k, 'instructor_') !== false )
+                $instructors[] = $v;
+
+        $html .= "<tr>";
+        $html .= "<td>" . $c[ 'id' ] . "</td>";
+        $html .= "<td>" . $c[ 'credits' ] . "</td>";
+        $html .= "<td>" . $c[ 'name' ] . "</td>";
+        $html .= "<td>" . implode(',', $instructors) . "</td>";
+        $html .= "</tr>";
+
+    }
+    $html .= '</table>';
+    return $html;
+}
+
 ?>

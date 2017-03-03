@@ -355,6 +355,34 @@ function initialize( )
             )"
         );
 
+    // Courses 
+    $res = $db->query( "
+        create TABLE IF NOT EXISTS courses  (
+            id VARCHAR(20) NOT NULL PRIMARY KEY
+            , credits INT NOT NULL DEFAULT 3
+            , name VARCHAR(100) NOT NULL
+            , description TEXT
+            , instructor_1 VARCHAR(50) NOT NULL -- primary instructor.
+            , instructor_2 VARCHAR(50) 
+            , instructor_3 VARCHAR(50) 
+            , instructor_4 VARCHAR(50) 
+            , instructor_5 VARCHAR(50) 
+            , instructor_6 VARCHAR(50) 
+            , comment VARCHAR(100)
+            )"
+        );
+
+    // Timetable 
+    $res = $db->query( "
+        create TABLE IF NOT EXISTS course_timetable  (
+            course VARCHAR(20) NOT NULL 
+            , start_date DATE NOT NULL
+            , end_date DATE NOT NULL
+            , slot VARCHAR(5) NOT NULL
+            , PRIMARY KEY (course,start_date)
+            ) "
+        );
+
     return $res;
 }
 

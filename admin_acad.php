@@ -189,6 +189,12 @@ echo '
             <a href="admin_acad_manages_slots.php">Manage slots</a> 
         </td>
     </tr>
+    <tr>
+        <td>Manage courses </td>
+        <td>
+            <a href="admin_acad_manages_courses.php">Manage courses</a> 
+        </td>
+    </tr>
   </table>';
 
 

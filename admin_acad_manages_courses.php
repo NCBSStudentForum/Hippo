@@ -10,7 +10,7 @@ include_once 'methods.php';
 echo userHTML( );
 
 // Javascript.
-$courses = getTableEntries( 'courses' );
+$courses = getTableEntries( 'courses_metadata' );
 
 $instructors = array();
 foreach( getFaculty( ) as $fac )
@@ -65,7 +65,7 @@ echo '<h3>Add/Edit course details</h3>';
 echo '<form method="post" action="admin_acad_manages_courses_action.php">';
 
 
-echo dbTableToHTMLTable( 'courses', $course 
+echo dbTableToHTMLTable( 'courses_metadata', $course 
     , 'id,credits,name,description,instructor_1,instructor_2,instructor_3' 
         . ',instructor_4,instructor_5,instructor_6' 
         . ',comment'

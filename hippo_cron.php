@@ -119,9 +119,6 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
         $to = 'academic@lists.ncbs.res.in';
 
-        $to = 'dilawars@ncbs.res.in';
-        $cclist = '';
-
         $res = generateAWSEmail( $nextMonday );
         if( $res[ 'speakers'] )
         {

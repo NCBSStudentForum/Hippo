@@ -536,9 +536,15 @@ function dbTableToHTMLTable( $tablename
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
         $inputId = $tablename . "_" . $keyName;
-        $val = "<input class=\"editable\"
-            name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
-            />";
+
+        // DIRTY HACK: If value is already a html entity then don't use a input 
+        // tag. Currently only '<select></select> is supported
+        if( preg_match( '#<select.*?>(.*?)</select>#', $default ) )
+            $val = $default;
+        else
+            $val = "<input class=\"editable\"
+                name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
+                />";
 
         // Genearte a select list of ENUM type class.
         $match = Array( );

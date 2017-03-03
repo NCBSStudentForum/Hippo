@@ -178,6 +178,13 @@ table.standout tr td
     background: lightblue;
 }
 
+table.timetable {
+}
+
+table.timetable tr td {
+    /*border: 1px dotted;*/
+}
+
 div.info {
     /*border : 1px solid #73AD21;*/
     max-width : vars(--maxwidth);

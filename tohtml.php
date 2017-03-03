@@ -1227,4 +1227,77 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
     return showImage( $picPath, $height, $width );
 }
 
+/**
+    * @brief Convert slots to a HTML table.
+    *
+    * @return 
+ */
+function slotTable( )
+{
+    $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
+    $html = '<table class="timetable">';
+
+    // Generate columns. Each one is 15 min long. Starting from 9am to 6:00pm
+    $maxCols = ( 18 - 9 ) * 4;
+
+    $html .= "<tr>";
+    for ($i = -1; $i < $maxCols; $i++)
+        $html .= "<th width=\"15px\"></th>";
+    $html .= "</tr>";
+
+    // each day is row.
+    foreach( $days as $day )
+    {
+        $html .= "<tr>";
+
+
+        $html .= "<tr> <td>$day</td> ";
+
+        for ($i = 0; $i < $maxCols; $i++)
+        {
+            $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
+
+            // Check which slot is here.
+            $slot = getTableEntry( 'slots', 'day,start_time', 
+                        array( "day" => strtoupper( $day )
+                        , 'start_time' => $slotTime  
+                    ));
+            if( $slot )
+            {
+                $duration = strtotime( $slot[ 'end_time' ] )  - 
+                                strtotime( $slot[ 'start_time' ] );
+                $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
+                    humanReadableTime(  $slot[ 'end_time' ] );
+                $id = $slot[ 'id' ];
+                $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
+                $html .= "<td style=\"background:lightblue\" colspan=\"$ncols\">
+                        $id <br> <small> <tt>$text</tt> </small> </td>";
+
+                // Increase $i by ncols - 1. 1 is increased by loop.
+                $i += $ncols - 1;
+            }
+            else
+            {
+                $html .= "<td></td>";
+            }
+
+            //echo "$i,";
+        }
+        $html .= "</tr>";
+        //foreach( $slots as $s )
+        //{
+        //    $duration = strtotime( $s[ 'end_time' ] )  - strtotime( $s[ 'start_time' ] );
+        //    $id = $s[ 'id' ];
+        //    $ncols = intval( $duration / 60 / 15); // Each column is 15 minutes.
+        //    $html .= "<td colspan=\"$ncols\"> $id </td>";
+        //}
+        //$html .= "</tr>";
+    }
+
+    $html .= '</table>';
+
+    return $html;
+
+}
+
 ?>

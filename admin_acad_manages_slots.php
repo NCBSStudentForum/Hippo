@@ -37,11 +37,14 @@ $( function() {
 // Logic for POST requests.
 $slot = array( 'id' => '', 'day' => '', 'start_time' => '', 'end_time' => '' );
 
+echo slotTable( );
+
 echo "<h2>Slot details</h2>";
 echo '<form method="post" action="">';
 echo '<input id="slot" name="id" type="text" value="" >';
 echo '<button type="submit" name="response" value="show">Show details</button>';
 echo '</form>';
+
 
 // Show speaker image here.
 if( array_key_exists( 'id', $_POST ) )

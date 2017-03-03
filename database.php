@@ -347,11 +347,11 @@ function initialize( )
     // Slots 
     $res = $db->query( "
         create TABLE IF NOT EXISTS slots (
-            id VARCHAR(20) NOT NULL 
+            id VARCHAR(20) NOT NULL PRIMARY KEY
             , day ENUM( 'MON','TUE','WED','THU','FRI','SAT') NOT NULL
             , start_time TIME NOT NULL
             , end_time TIME NOT NULL
-            , PRIMARY KEY (day,start_time,end_time)
+            , UNIQUE KEY (day,start_time,end_time)
             )"
         );
 

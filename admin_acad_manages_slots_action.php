@@ -21,7 +21,11 @@ else if( $_POST['response'] == 'delete' )
     if( strlen($_POST[ 'id' ]) > 0 )
         $res = deleteFromTable( 'slots', 'id', $_POST );
     if( $res )
+    {
         echo printInfo( "Successfully deleted entry" );
+        goBack( 'admin_acad_manages_slots.php', 0 );
+        exit;
+    }
     else
         echo minionEmbarrassed( "Failed to delete speaker from database" );
 }
@@ -34,7 +38,11 @@ else   // update
         );
 
     if( $res )
+    {
         echo printInfo( 'Updated/Inserted slot' );
+        goBack( 'admin_acad_manages_slots.php', 0 );
+        exit;
+    }
 }
 
 echo goBackToPageLink( 'admin_acad_manages_slots.php', 'Go back' );

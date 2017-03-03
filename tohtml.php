@@ -1303,7 +1303,7 @@ function slotTable( )
 function coursesTable( )
 {
     $courses = getTableEntries( 'courses' );
-    $html = '<table border="1">';
+    $html = '<table class="show_aws">';
     foreach( $courses as $c )
     {
         $instructors = array( );
@@ -1315,7 +1315,7 @@ function coursesTable( )
         $html .= "<td>" . $c[ 'id' ] . "</td>";
         $html .= "<td>" . $c[ 'credits' ] . "</td>";
         $html .= "<td>" . $c[ 'name' ] . "</td>";
-        $html .= "<td>" . implode(',', $instructors) . "</td>";
+        $html .= "<td>" . implode('<br>', $instructors) . "</td>";
         $html .= "</tr>";
 
     }

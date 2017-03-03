@@ -181,7 +181,14 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             , $_POST[ 'start_time' ], $_POST[ 'end_time' ]
             );
 
-        if( count( $events ) > 0 || count( $reqs ) )
+        $nEvent = 0;
+        if( $events )
+            $nEvent += count( $events );
+        if( $reqs )
+            $nEvent += count( $reqs );
+
+        // If there is already any request or event on this venue, do not book.
+        if( $nEvent > 0 )
             continue;
 
         // Now construct a table and form

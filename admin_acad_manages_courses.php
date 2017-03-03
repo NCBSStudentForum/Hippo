@@ -32,8 +32,8 @@ $( function() {
     var instructors = <?php echo json_encode( $instructors ); ?>;
     $( "#course" ).autocomplete( { source : courses }); 
     $( "#course" ).attr( "placeholder", "autocomplete" );
-    $( "input[id^=courses_instructor]" ).autocomplete( { source : instructors }); 
-    $( "input[id^=courses_instructor]" ).attr( "placeholder", "autocomplete" );
+    $( "input[id^=courses_metadata_instructor]" ).autocomplete( { source : instructors }); 
+    $( "input[id^=courses_metadata_instructor]" ).attr( "placeholder", "autocomplete" );
 });
 </script>
 

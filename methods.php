@@ -782,3 +782,25 @@ function slotGroupId( $id )
     // Remove the last character, rest if group id.
     return substr( $id, 0, -1 );
 }
+
+/**
+    * @brief Get semester name of given date.
+    *
+    * @param $date
+    *
+    * @return 'VASANT' or 'MONSOON' depending on date.
+ */
+function getSemester( $date )
+{
+    $month = intval( date( 'm', strtotime( $date) ) );
+    if( $month > 0 && $month < 7 )
+        return 'VASANT';
+    else
+        return 'MONSOON';
+
+}
+
+function getCurrentSemester( )
+{
+    return getSemester( 'today' );
+}

@@ -377,12 +377,13 @@ function initialize( )
     // Instance of courses.
     $res = $db->query( "
         create TABLE IF NOT EXISTS courses (
-            , id VARCHAR(30) PRIMARY KEY
-            , semester ENUM( 'MONSOON', 'VASANT') NOT NULL 
+             -- Combination of course code, semester and year
+            id VARCHAR(30) PRIMARY KEY
+            , semester ENUM( 'MONSOON', 'VASANT') NOT NULL
             , course_id VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
-            , PRIMARY KEY( semester,course_id)
+            , UNIQUE KEY( semester,course_id)
             )" );
         
 
@@ -2133,6 +2134,24 @@ function addOrUpdateSpeaker( $data )
     return $ret;
 }
 
+function getSemesterCourses( $year, $sem )
+{
+    $sDate = dbDate( strtotime( "$year-01-01" ) );
+    $eDate = dbDate( strtotime( "$year-07-31" ) );
+
+    if( $sem == 'MONSOON' )
+    {
+        $sDate = dbDate( strtotime( "$year-07-01" ) );
+        $eDate = dbDate( strtotime( "$year-12-31" ) );
+    }
+
+    global $db;
+    $res = $db->query( "SELECT * FROM courses WHERE 
+                    start_date >= '$sDate' AND end_date <= '$eDate' " );
+
+    return fetchEntries( $res );
+}
+
 
 
 // Deprecated: Images are stored in ./pictures/ folder.
@@ -2142,6 +2161,8 @@ function addOrUpdateSpeaker( $data )
 //     * @param $user
 //     *
 //     * @return 
+
+
 //  */
 // function getUserPicuture( $user ) 
 // {

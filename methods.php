@@ -776,3 +776,9 @@ function nextMonday( $date )
             );
     return $date;
 }
+
+function slotGroupId( $id )
+{
+    // Remove the last character, rest if group id.
+    return substr( $id, 0, -1 );
+}

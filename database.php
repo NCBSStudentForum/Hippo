@@ -347,17 +347,19 @@ function initialize( )
     // Slots 
     $res = $db->query( "
         create TABLE IF NOT EXISTS slots (
-            id VARCHAR(20) NOT NULL PRIMARY KEY
+            id VARCHAR(4) NOT NULL
+            , groupid INT NOT NULL
             , day ENUM( 'MON','TUE','WED','THU','FRI','SAT') NOT NULL
             , start_time TIME NOT NULL
             , end_time TIME NOT NULL
             , UNIQUE KEY (day,start_time,end_time)
+            , PRIMARY KEY (id,groupid)
             )"
         );
 
-    // Courses 
+    // list of courses.
     $res = $db->query( "
-        create TABLE IF NOT EXISTS courses  (
+        create TABLE IF NOT EXISTS courses_metadata  (
             id VARCHAR(20) NOT NULL PRIMARY KEY
             , credits INT NOT NULL DEFAULT 3
             , name VARCHAR(100) NOT NULL
@@ -369,8 +371,20 @@ function initialize( )
             , instructor_5 VARCHAR(50) 
             , instructor_6 VARCHAR(50) 
             , comment VARCHAR(100)
-            )"
-        );
+            )
+        ");
+
+    // Instance of courses.
+    $res = $db->query( "
+        create TABLE IF NOT EXISTS courses (
+            semester VARCHAR(20) NOT NULL 
+            , course_id VARCHAR(20) NOT NULL
+            , start_date DATE NOT NULL
+            , end_date DATE NOT NULL
+            , PRIMARY KEY( semester,course_id)
+            )" );
+        
+
 
     // Timetable 
     $res = $db->query( "

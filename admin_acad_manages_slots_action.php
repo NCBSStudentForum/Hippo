@@ -31,8 +31,12 @@ else if( $_POST['response'] == 'delete' )
 }
 else   // update
 {
+    // Get group id of slot.
+    $gid = slotGroupId( $_POST['id'] );
+    $_POST[ 'groupid' ] = $gid;
+
     $res = insertOrUpdateTable( 'slots'
-            , 'id,day,start_time,end_time'
+            , 'id,groupid,day,start_time,end_time'
             , 'day,start_time,end_time'
             , $_POST 
         );

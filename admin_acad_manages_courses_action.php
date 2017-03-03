@@ -19,7 +19,7 @@ else if( $_POST['response'] == 'delete' )
     // used in previous page. In most cases, user is likely to use autocomplete 
     // feature.
     if( strlen($_POST[ 'id' ]) > 0 )
-        $res = deleteFromTable( 'courses', 'id', $_POST );
+        $res = deleteFromTable( 'courses_metadata', 'id', $_POST );
     if( $res )
     {
         echo printInfo( "Successfully deleted entry" );
@@ -31,7 +31,7 @@ else if( $_POST['response'] == 'delete' )
 }
 else   // update
 {
-    $res = insertOrUpdateTable( 'courses'
+    $res = insertOrUpdateTable( 'courses_metadata'
             , 'id,credits,name,description,instructor_1,instructor_2,instructor_3,instructor_4,instructor_5,instructor_6,comment'
             , 'credits,name,description,instructor_1,instructor_2,instructor_3,instructor_4,instructor_5,instructor_6,comment'
             , $_POST 

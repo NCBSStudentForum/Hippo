@@ -184,18 +184,21 @@ echo '<h1>COURSES</h1>';
 echo '
   <table border="0" class="admin">
     <tr>
-        <td>Manage slots </td>
+        <td>Manage courses and slots </td>
         <td>
             <a href="admin_acad_manages_slots.php">Manage slots</a> 
-        </td>
-    </tr>
-    <tr>
-        <td>Manage courses </td>
-        <td>
+            <br>
             <a href="admin_acad_manages_courses.php">Manage courses</a> 
         </td>
     </tr>
-  </table>';
+    <tr>
+        <td>Manage this sememster courses </td>
+        <td>
+            <a href="admin_acad_manages_current_courses.php">Manage running courses</a> 
+        </td>
+    </tr>
+  </table>
+  ';
 
 
 echo "<h2>Automatic Housekeeping</h2>";

@@ -1302,7 +1302,7 @@ function slotTable( )
 
 function coursesTable( )
 {
-    $courses = getTableEntries( 'courses' );
+    $courses = getTableEntries( 'courses_metadata' );
     $html = '<table class="show_aws">';
     foreach( $courses as $c )
     {

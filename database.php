@@ -377,7 +377,8 @@ function initialize( )
     // Instance of courses.
     $res = $db->query( "
         create TABLE IF NOT EXISTS courses (
-            semester VARCHAR(20) NOT NULL 
+            , id VARCHAR(30) PRIMARY KEY
+            , semester ENUM( 'MONSOON', 'VASANT') NOT NULL 
             , course_id VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL

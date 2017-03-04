@@ -59,7 +59,7 @@ echo "<form id=\"add_supervisor\" method=\"post\"
     action=\"user_update_supervisor_submit.php\">";
 echo "<br>";
 
-echo "<p> Except URL, all fields are mandatory</p>";
+echo "<p> Except <tt>URL</tt>, and <tt>MIDDLE NAME</tt>, all fields are mandatory</p>";
 echo dbTableToHTMLTable( "supervisors"
     , $defaults = Array( )
     , $editables = "email,first_name,middle_name,last_name,affiliation,url"

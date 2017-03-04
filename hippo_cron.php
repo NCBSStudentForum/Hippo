@@ -32,20 +32,21 @@ function generateAWSEmail( $monday )
     $html = '';
     if( count( $upcomingAws ) < 1 )
     {
+        $html .= "<p>Greetings</p>";
         $html .= "<p>I could not find any annual work seminar 
-            scheduled on " . humanReadableDate( $monday ) . ".</p>";
+                scheduled on " . humanReadableDate( $monday ) . ".</p>";
 
         $holiday = getTableEntry( 'holidays', 'date'
-                        , array( 'date' => dbDate( $monday ) )
-                    );
+                        , array( 'date' => dbDate( $monday ) ) );
+
         if( $holiday )
         {
-            $html .= "<p>Most likely due to following event/holiday: " . 
-                        strtoupper( $holiday['description'] ) . ".</p>";
+            $html .= "<p>It is most likely due to following event/holiday: " . 
+                        strtoupper( $holiday['description'] ) ".</p>";
 
         }
 
-        $html .= "<br><br>";
+        $html .= "<br>";
         $html .= "<p>That's all I know! </p>";
 
         $html .= "<br>";
@@ -169,6 +170,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
             error_log( "Sending to $to, $cclist with subject $subject" );
             echo( "Sending to $to, $cclist with subject $subject" );
+
             $pdffile = $res[ 'pdffile' ];
             $ret = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
             ob_flush( );
@@ -176,7 +178,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         else
         {
             // There is no AWS this monday.
-            $subject = 'No Annual Work Seminar is scheduled today : ' .
+            $subject = 'No Annual Work Seminar today : ' .
                 humanReadableDate( $nextMonday );
             $mail = $res[ 'email' ];
             sendPlainTextEmail( $mail, $subject, $to, $cclist );

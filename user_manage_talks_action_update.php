@@ -14,7 +14,7 @@ if( ! $_POST[ 'response' ] )
     goToPage( "user_manage_talk.php", 0 );
     exit;
 }
-else if( $_POST[ 'response' ] == 'update' )
+else if( $_POST[ 'response' ] == 'submit' )
 {
     $res = updateTable( 'talks', 'id', 'class,host,title,description', $_POST );
     if( $res )
@@ -26,6 +26,9 @@ else if( $_POST[ 'response' ] == 'update' )
     else
         echo printWarning( "Failed to update the talk " );
 }
+else
+    echo printInfo( "Unknown operation " . $_POST[ 'response' ] );
+    
 
 echo goBackToPageLink( 'user_manage_talk.php', "Go back" );
 exit;

@@ -104,8 +104,9 @@ function loginForm()
 
 function sanitiesForTinyMCE( $text )
 {
-    $text = preg_replace( "/\r\n|\r|\n/", "<br/>", $text );
-    $text = str_replace( "'", "\'", $text );
+    //$text = preg_replace( "/\r\n|\r|\n/", "<br/>", $text );
+    //$text = str_replace( "'", "\'", $text );
+    $text = htmlspecialchars_decode( $text );
     return $text;
 }
 
@@ -608,11 +609,12 @@ function dbTableToHTMLTable( $tablename
             // a sticky situation.
             
             $default = sanitiesForTinyMCE( $default );
-
+            $default = htmlspecialchars_decode( $default );
 
             $val = "<textarea class=\"editable\" \
-                id=\"$inputId\" name=\"$keyName\" > $default </textarea>";
+                id=\"$inputId\" name=\"$keyName\" >" . $default . "</textarea>";
 
+            // Either use CKEDITOR or tinymce.
             if( $useCKEditor )
                 $val .= "<script> CKEDITOR.replace( '$inputId' ); </script>";
             else
@@ -620,7 +622,7 @@ function dbTableToHTMLTable( $tablename
                  $val .= "<script>
                      tinymce.init( { selector : '#" . $inputId . "'
                              , init_instance_callback: \"insert_content\"
-                             , plugins : [ 'image link paste code wordcount fullscreen table' ]
+                             , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
                              , paste_as_text : true
                              , paste_enable_default_filters: false
                              , height : 300
@@ -628,7 +630,6 @@ function dbTableToHTMLTable( $tablename
                              , cleanup : false
                              , verify_html : false
                              , cleanup_on_startup : false
-                             , element_format : 'html'
                              , toolbar1 : 'undo redo | insert | stylesheet | bold italic' 
                                  + ' | alignleft aligncenter alignright alignjustify'
                                  + ' | bulllist numlist outdent indent | link image'
@@ -646,7 +647,9 @@ function dbTableToHTMLTable( $tablename
                                          fr.onload = function() {
                                              var img = new Image();
                                              img.src = fr.result;
-                                             editor.insertContent('<img src=\"'+img.src+'\"/>');
+                                             editor.insertContent(
+                                                 '<img src=\"'+img.src+'\"/><br/>'
+                                             );
                                              inp.val('');
                                          }
                                          fr.readAsDataURL(file);
@@ -661,6 +664,7 @@ function dbTableToHTMLTable( $tablename
                                      });
                                  }
                              });
+
                          function insert_content( inst ) {
                              inst.setContent( '$default' );
                          }

@@ -52,7 +52,7 @@ else if( $_POST[ 'response' ] == 'edit' )
     $talk = getTableEntry( 'talks', 'id', $_POST );
 
     echo '<form method="post" action="user_manage_talks_action_update.php">';
-    echo dbTableToHTMLTable('talks', $talk, 'class,host,title,description', 'update');
+    echo dbTableToHTMLTable('talks', $talk, 'class,host,title,description', 'submit');
     echo '</form>';
 }
 else if( $_POST[ 'response' ] == 'schedule' )

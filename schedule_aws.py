@@ -134,10 +134,9 @@ def computeCost( speaker, slot_date, last_aws ):
     # If nDays is less than idealGap than cost function grows very fast. Use
     # weeks instead of months as time-unit.
     if( nDays <= idealGap ):
-        # THere is no way, anyone should get AWS before idealGap. Cost should be
-        # high. Let's measure it in days here.
+        # THere is no way, anyone should get AWS before idealGap. Return None so
+        # that caller need not draw any edge.
         return None
-        # cost = 1000
     else:
         # Here we have two possibilities. Some speaker have not got their AWS
         # yet for quite a long time. Give preference to them. Reduce the cost to
@@ -220,7 +219,7 @@ def construct_flow_graph(  ):
                 if not joinDate:
                     _logger.warn( "Could not find joining date" )
                 else:
-                    lastDate = monthdelta( joinDate, 6 )
+                    lastDate = monthdelta( joinDate, -6 )
 
             if speakers_[ speaker ]['title'] == 'MSC':
                 # MSc should get their first AWS after 18 months of
@@ -230,7 +229,7 @@ def construct_flow_graph(  ):
                 if not joinDate:
                     _logger.warn( "Could not find joining date" )
                 else:
-                    lastDate = monthdelta( joinDate, 6 )
+                    lastDate = monthdelta( joinDate, -6 )
 
             elif speakers_[ speaker ]['title'] in [ 'PHD', 'POSTDOC' ]:
                 joinDate = speakers_[ speaker ]['joined_on']

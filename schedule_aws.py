@@ -4,18 +4,21 @@
 
 Query the database and schedule AWS.
 
-"""
-from __future__ import print_function 
+TODO:
+    Add summary of policy here.
 
+"""
+
+from __future__ import print_function 
     
-__author__           = "Me"
-__copyright__        = "Copyright 2016, Me"
+__author__           = "Dilawar Singh"
+__copyright__        = "Copyright 2016, Dilawar singh <dilawars@ncbs.res.in>"
 __credits__          = ["NCBS Bangalore"]
 __license__          = "GNU GPL"
 __version__          = "1.0.0"
-__maintainer__       = "Me"
-__email__            = ""
-__status__           = "Development"
+__maintainer__       = "Dilawra Singh"
+__email__            = "dilawars@ncbs.res.in"
+__status__           = "Development/Production"
 
 import sys
 import os
@@ -27,6 +30,7 @@ import copy
 import tempfile 
 from logger import _logger
 from db_connect import db_
+import networkx as nx
 
 fmt_ = '%Y-%m-%d'
 
@@ -34,8 +38,7 @@ cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
 sys.path.insert(0, networkxPath )
 
-import networkx as nx
-print( 'Using networkx from %s' % nx.__file__ )
+_logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Started on %s' % datetime.date.today( ) )
 
@@ -55,7 +58,10 @@ speakers_ = { }
 holidays_ = {}
 
 def init( cur ):
-    """Create a temporaty table for scheduling AWS"""
+    """
+    Create a temporaty table for scheduling AWS
+    """
+
     global db_, speakers_
     global holidays_
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
@@ -66,7 +72,8 @@ def init( cur ):
             ''' 
         )
     db_.commit( )
-    cur.execute( """
+    cur.execute( 
+        """
         SELECT * FROM logins WHERE eligible_for_aws='YES' AND status='ACTIVE'
         ORDER BY login 
         """
@@ -173,6 +180,17 @@ def monthdelta(date, delta):
     return dt
 
 def construct_flow_graph(  ):
+    """This is the most critical section of this task. It is usually good if
+    flow graph is constructed to honor policy as much as possible rather than
+    fixing the solution later.
+
+    One important scheduling aim is to minimize number of freshers on the same
+    day. Ideally no more than 1 freshers should be allowed on same day. This can
+    be achieved by modifying the solution later : swapping freshers with
+    experienced speaker from other days. We avoid that by drawing two edges 
+    from freshers to a 'date' i.e. maximum of 2 slots can be filled by freshers.
+    For others we let them fill all three slots.
+    """
     global g_
     global aws_
     global speakers_
@@ -182,16 +200,18 @@ def construct_flow_graph(  ):
     g_.add_node( 'sink', pos = (10, 10) )
 
     lastDate = None
+    freshers = set( )
     for i, speaker in enumerate( speakers_ ):
         # Last entry is most recent
         if speaker not in aws_.keys( ):
-            # We are here because this speaker has not given any AWS yet. If
-            # this user has PHD/POSTDOC, or INTPHD title. We create  a dummy
-            # last date to bring her into potential speakers.
+            # We are here because this speaker has not given any AWS yet. 
+            freshers.add( speaker )
 
+            # If this user has PHD/POSTDOC, or INTPHD title. We create  a dummy
+            # last date to bring her into potential speakers.
             # First make sure, I have their date of joining. Otherwise I
-            # can't continue. For INTPHD assign their first AWS after 18
-            # months. For PHD and POSTDOC, it should be after 12 months.
+            # can't continue. For MSc By Research/INTPHD assign their first AWS 
+            # after 18 months. For PHD and POSTDOC, it should be after 12 months.
             if speakers_[ speaker ]['title'] == 'INTPHD':
                 # InPhd should get their first AWS after 15 months of
                 # joining.
@@ -278,16 +298,32 @@ def construct_flow_graph(  ):
     
     # Now for each student, add potential edges.
     idealGap = 357
+
+    # Keep edges from freshers to dates here. We allow maximum of 2 out of 3
+    # slots to be taken by freshers (maximum ).
+    freshersDate = defaultdict( list )
     for speaker in speakers_:
         if speaker not in g_.nodes( ):
             _logger.info( 'Nothing for user %s' % speaker )
             continue
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
+        
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
             if weight:
-                addEdge(speaker, slot, 1, weight )
+                # If the speaker is fresher, do not draw edges to all three 
+                # slots. Draw just one but make sure that they get this slot. We
+                # reduce the cost to almost zero.
+                if speaker in freshers:
+                    # Let two freshers take maximum of two slots on same day.
+                    if freshersDate.get(speaker, []).count( date ) < 2:
+                        addEdge(speaker, slot, 1, 0 )
+                        # This date is taken by this fresher.
+                        freshersDate[ speaker ].append( date )
+                else:
+                    addEdge(speaker, slot, 1, weight )
+                    
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
@@ -413,8 +449,14 @@ def swapSpeakers( speakersA, speakersB, schedule, low = -21, high = 21):
     return schedule
 
 def avoidClusteringOfFreshers( schedule ):
-    """Make sure not all student are freshers. Also try to put at least 1
+    """
+    Make sure not all student are freshers. Also try to put at least 1
     fresher.
+
+    THIS FUNCTION IS DEPRECATED.:
+    We almost achieved same assignment by drawing at most 2 edges from fresheres
+    to same date.
+
     """
     global aws_, speakers_
 
@@ -491,7 +533,7 @@ def getMatches( res ):
                 result[date].append( u )
     return result
 
-def computeSchedule( avoid_fresheres_on_same_day = False ):
+def computeSchedule( ):
     global g_
     _logger.info( 'Scheduling AWS now' )
     test_graph( g_ )
@@ -499,10 +541,6 @@ def computeSchedule( avoid_fresheres_on_same_day = False ):
     _logger.info( '\t Computed. Getting schedules now ...' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
     sch = getMatches( res )
-    if avoid_fresheres_on_same_day:
-        _logger.info( "Trying to avoid cluster of freshers" )
-        sch = avoidClusteringOfFreshers( sch )
-        sch = avoidClusteringOfFreshers( sch )
     return sch
 
 def print_schedule( schedule, outfile ):
@@ -553,7 +591,7 @@ def main( outfile ):
     ans = None
     try:
         construct_flow_graph( )
-        ans = computeSchedule( avoid_fresheres_on_same_day = True )
+        ans = computeSchedule( )
     except Exception as e:
         _logger.warn( "Failed to schedule. Error was %s" % e )
     try:

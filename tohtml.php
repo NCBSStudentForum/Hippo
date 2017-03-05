@@ -104,8 +104,8 @@ function loginForm()
 
 function sanitiesForTinyMCE( $text )
 {
-    //$text = preg_replace( "/\r\n|\r|\n/", "<br/>", $text );
-    //$text = str_replace( "'", "\'", $text );
+    $text = preg_replace( "/\r\n|\r|\n/", " ", $text );
+    $text = str_replace( "'", "\'", $text );
     $text = htmlspecialchars_decode( $text );
     return $text;
 }
@@ -609,7 +609,6 @@ function dbTableToHTMLTable( $tablename
             // a sticky situation.
             
             $default = sanitiesForTinyMCE( $default );
-            $default = htmlspecialchars_decode( $default );
 
             $val = "<textarea class=\"editable\" \
                 id=\"$inputId\" name=\"$keyName\" >" . $default . "</textarea>";
@@ -648,7 +647,7 @@ function dbTableToHTMLTable( $tablename
                                              var img = new Image();
                                              img.src = fr.result;
                                              editor.insertContent(
-                                                 '<img src=\"'+img.src+'\"/><br/>'
+                                                 '<img src=\"' + img.src + '\"/><br/>'
                                              );
                                              inp.val('');
                                          }

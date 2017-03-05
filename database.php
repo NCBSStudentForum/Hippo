@@ -2111,6 +2111,7 @@ function addOrUpdateSpeaker( $data )
         {
             $found = true;
             $res = updateTable( 'speakers'
+                , 'email,first_name,last_name'
                 , 'honorific,first_name,middle_name,last_name,department,institute,homepage'
                 , $data 
             );

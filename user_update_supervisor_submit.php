@@ -9,8 +9,9 @@ if( trim( $_POST[ 'email'] ) && trim( $_POST[ 'first_name' ] ) )
 {
 
     $res = insertOrUpdateTable( 'supervisors'
-        , 'email,first_name,last_name,affiliation,url'
-        , 'email', $_POST 
+        , 'email,first_name,middle_name,last_name,affiliation,url'
+        , 'first_name,middle_name,last_name,affiliation,url'
+        , $_POST 
     );
 
     if( $res )

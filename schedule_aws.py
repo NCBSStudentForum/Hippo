@@ -128,8 +128,9 @@ def computeCost( speaker, slot_date, last_aws ):
     # weeks instead of months as time-unit.
     if( nDays <= idealGap ):
         # THere is no way, anyone should get AWS before idealGap. Cost should be
-        # high. Let's measure it in weeks here.
-        cost = ( idealGap - nDays ) / 7.0
+        # high. Let's measure it in days here.
+        return None
+        # cost = 1000
     else:
         # Here we have two possibilities. Some speaker have not got their AWS
         # yet for quite a long time. Give preference to them. Reduce the cost to
@@ -285,7 +286,8 @@ def construct_flow_graph(  ):
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
-            addEdge(speaker, slot, 1, weight )
+            if weight:
+                addEdge(speaker, slot, 1, weight )
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):

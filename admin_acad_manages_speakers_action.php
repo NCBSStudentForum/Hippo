@@ -31,8 +31,9 @@ else if( $_POST['response'] == 'delete' )
 else   // update
 {
     $imgpath = getSpeakerPicturePath( $_POST );
+
     if( $_FILES && array_key_exists( 'picture', $_FILES ) )
-    $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
+        $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
 
     if( ! $res )
         echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );

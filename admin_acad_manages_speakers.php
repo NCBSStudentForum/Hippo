@@ -96,10 +96,13 @@ echo '</form>';
 if( array_key_exists( 'email', $_POST ) )
 {
     // Show emage.
-    $speaker = $speakersMap[ $_POST['email'] ];
-    $picPath = getSpeakerPicturePath( $speaker );
-    echo showImage( $picPath );
-    echo arrayToVerticalTableHTML( $speaker, 'info' );
+    if( array_key_exists( 'email', $_POST ) )
+    {
+        $speaker = $speakersMap[ $_POST['email'] ];
+        $picPath = getSpeakerPicturePath( $speaker );
+        echo showImage( $picPath );
+        echo arrayToVerticalTableHTML( $speaker, 'info' );
+    }
 }
 
 echo '<h3>Edit speaker details</h3>';

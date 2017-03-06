@@ -536,6 +536,11 @@ function saveImageAsJPEG($originalImage, $ext, $outputImage, $quality = 90 )
     $h = $img->getImageHeight( );
     $newW = 200; $newH = (int)( $newW * $h / $w );
     $img->resizeImage( $newW, $newH, Imagick::FILTER_GAUSSIAN, 1);
+
+    // Remove the old one.
+    if( file_exists( $outputImage ) )
+        unlink( $outputImage );
+
     $img->writeImage( $outputImage );
     if( file_exists( $outputImage ) )
     {
@@ -697,17 +702,17 @@ function getConf( )
 function uploadImage( $pic, $filename )
 {
     if( ! $pic )
-        return;
+        return false;
 
     $tmpfile = $pic[ 'tmp_name' ];
     if( ! $tmpfile )
-        return;
+        return false;
 
     $type = explode( '/', $pic[ 'type' ] );
     $ext = $type[1];
 
     if( strlen( count( $tmpfile ) ) < 1 )
-        return;
+        return false;
 
     $conf = getConf( );
     $datadir = $conf[ 'data' ][ 'user_imagedir' ];

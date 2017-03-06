@@ -16,7 +16,10 @@ if( ! $_POST[ 'response' ] )
 }
 else if( $_POST[ 'response' ] == 'submit' )
 {
-    $res = updateTable( 'talks', 'id', 'class,host,title,description', $_POST );
+    $res = updateTable( 'talks', 'id'
+                , 'class,host,coordinator,title,description'
+                , $_POST 
+            );
     if( $res )
     {
         echo printInfo( 'Successfully updated entry' );

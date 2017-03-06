@@ -31,6 +31,14 @@ else if( $_POST[ 'response' ] == 'delete' )
             , array( 'external_id' => "talks." + $_POST[ 'id' ] 
                     , 'status' => 'CANCELLED' )
             );
+
+        // Cancel confirmed event if any.
+        updateTable( 
+            'events', 'external_id', 'status'
+            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
+                    , 'status' => 'CANCELLED' )
+            );
+        
         goBack( "user.php" );
         exit;
     }
@@ -52,7 +60,9 @@ else if( $_POST[ 'response' ] == 'edit' )
     $talk = getTableEntry( 'talks', 'id', $_POST );
 
     echo '<form method="post" action="user_manage_talks_action_update.php">';
-    echo dbTableToHTMLTable('talks', $talk, 'class,host,title,description', 'submit');
+    echo dbTableToHTMLTable('talks', $talk
+        , 'class,coordinator,host,title,description'
+        , 'submit');
     echo '</form>';
 }
 else if( $_POST[ 'response' ] == 'schedule' )

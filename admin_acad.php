@@ -70,24 +70,15 @@ echo '<table class="admin">
         <td>Add AWS entry</td>
         <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
     </tr>
-    <tr><td>
-    Enter a login and optionally AWS date and you can delete that AWS entry 
-    from my database.</td>
-    <td> 
-    <form method="post" action="">
-    <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
-    <input class="datepicker" name="date" placeholder="date(optional)" value="" >
-    <button name="response" value="Select">' . $symbCheck . '</button>
-    </form></td>
-    </tr>
-    </table>';
-
-echo '<h2>Add, update or remove AWS speakers</h2>';
-echo '<table class="admin">';
-echo '
     <tr>
-        <td>Add or update speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+        <td> Enter a login and optionally AWS date and you can delete that AWS entry 
+        from my database.</td>
+        <td> <form method="post" action="">
+            <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
+            <input class="datepicker" name="date" placeholder="date(optional)" value="" >
+            <button name="response" value="Select">' . $symbCheck . '</button>
+            </form>
+        </td>
     </tr>
     <tr>
         <td>Add, Update a student (AWS) <br>
@@ -102,7 +93,21 @@ echo '
                 '</button>
             </form>
         </td>
-    </tr></table>';
+    </tr>
+    </table>';
+
+echo '<h2>Manage talks and seminars</h2>';
+echo '<table class="admin">';
+echo '
+    <tr>
+        <td>Manage talks and seminars. </td>
+        <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
+    </tr>
+    <tr>
+        <td>Add or update speakers. </td>
+        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+    </tr>
+    </table>';
 
 $login = null;
 $date = null;

@@ -20,7 +20,7 @@ function displayRequest( button ) {
 
 <?php
 
-function fixHTML( $html )
+function fixHTML( $html, $strip_inline_image = false )
 {
     $res = $html;
     // Replate all new line with space.
@@ -28,6 +28,11 @@ function fixHTML( $html )
     $res = str_replace( '<br />', ' ', $res );
     $res = str_replace( '<br/>', ' ', $res );
     $res = str_replace( '<br>', ' ', $res );
+
+    // remove img tag if user wants.
+    if( $strip_inline_image )
+        $res = preg_replace( '/<img[^>]+\>/i', '', $res );
+
     return $res;
 }
 

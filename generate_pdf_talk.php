@@ -69,6 +69,7 @@ function eventToTex( $event, $talk = null )
     $tex[] = '\par';
 
     file_put_contents( '/tmp/desc.html', $desc );
+
     $texDesc = html2Tex( $desc ); 
     if( strlen(trim($texDesc)) > 10 )
         $desc = $texDesc;

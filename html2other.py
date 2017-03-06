@@ -71,17 +71,27 @@ def tomd( msg ):
 
 def fixInlineImage( msg ):
     """Convert inline images to given format and change the includegraphics text
-    accordingly """
+    accordingly.
+
+    Surround each image with \includewrapfig environment.
+    """
     pat = re.compile( r'data:image/(.+?);base64,(.+?\=\=)')
     for m in pat.finditer( msg ):
-        _logger.info( 'Found one inline image' )
         outfmt = m.group( 1 )
         data = m.group( 2 )
         fp = tempfile.NamedTemporaryFile( delete = False, suffix='.'+outfmt )
         fp.write( base64.b64decode( data ) )
-        msg = msg.replace( m.group(0), fp.name )
         fp.close( )
+        # Replace the inline image with file name.
+        msg = msg.replace( m.group(0), fp.name )
 
+    # And wrap all includegraphics around by wrapfig
+    msg = re.sub( r'(\\includegraphics.+?width\=(.+?)([\],]).+?})'
+            , r'\n\\begin{wrapfigure}{R}{\2}\n \1 \n \\end{wrapfigure}'
+            , msg, flags = re.DOTALL 
+            )
+
+    return msg
 
 def toTex( infile ):
     with open( infile, 'r' ) as f:
@@ -89,10 +99,12 @@ def toTex( infile ):
         try:
             msg = pypandoc.convert_text( msg, 'tex', format = 'html'
                     , extra_args = [ '--parse-raw' ])
+            msg = fixInlineImage( msg )
+            return msg
         except Exception as e:
             pass
-    msg = fixInlineImage( msg )
-    return msg
+
+    return 'Failed to convert to TeX %s' % e 
 
 def htmlfile2md( filename ):
     with open( filename, 'r' ) as f:

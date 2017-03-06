@@ -2,8 +2,11 @@
 
 include_once 'methods.php';
 include_once 'database.php';
-include_once 'tohtml.php';
 
+$useCKEditor = false;
+
+if( $useCKEditor )
+    echo '<script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>';
 ?>
 
 <script>
@@ -100,8 +103,9 @@ function loginForm()
 
 function sanitiesForTinyMCE( $text )
 {
-    $text = preg_replace( "/\r\n|\r|\n/", "<br/>", $text );
+    $text = preg_replace( "/\r\n|\r|\n/", " ", $text );
     $text = str_replace( "'", "\'", $text );
+    $text = htmlspecialchars_decode( $text );
     return $text;
 }
 
@@ -504,6 +508,7 @@ function dbTableToHTMLTable( $tablename
     global $symbUpdate, $symbCheck;
     global $symbEdit;
     global $dbChoices;
+    global $useCKEditor;
 
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );
@@ -605,53 +610,65 @@ function dbTableToHTMLTable( $tablename
             
             $default = sanitiesForTinyMCE( $default );
 
-
             $val = "<textarea class=\"editable\" \
-                id=\"$inputId\" name=\"$keyName\" > $default </textarea>";
-            $val .= "<script>
-                tinymce.init( { selector : '#" . $inputId . "'
-                        , init_instance_callback: \"insert_content\"
-                        , plugins : [ 'image link paste code wordcount fullscreen table' ]
-                        , paste_as_text : true
-                        , paste_enable_default_filters: true
-                        , height : 300
-                        , paste_data_images: true
-                        , toolbar1 : 'undo redo | insert | stylesheet | bold italic' 
-                            + ' | alignleft aligncenter alignright alignjustify'
-                            + ' | bulllist numlist outdent indent | link image'
-                        , toolbar2 : \"imageupload\",
-                           setup: function(editor) {
-                               var inp = $('<input id=\"tinymce-uploader\" ' + 
-                                   'type=\"file\" name=\"pic\" accept=\"image/*\"' 
-                                   + ' style=\"display:none\">'
-                               );
-                                $(editor.getElement()).parent().append(inp);
-                                inp.on(\"change\",function(){
-                                    var input = inp.get(0);
-                                    var file = input.files[0];
-                                    var fr = new FileReader();
-                                    fr.onload = function() {
-                                        var img = new Image();
-                                        img.src = fr.result;
-                                        editor.insertContent('<img src=\"'+img.src+'\"/>');
-                                        inp.val('');
-                                    }
-                                    fr.readAsDataURL(file);
-                                });
+                id=\"$inputId\" name=\"$keyName\" >" . $default . "</textarea>";
 
-                                editor.addButton( 'imageupload', {
-                                    text:\"Insert image\",
-                                    icon: false,
-                                    onclick: function(e) {
-                                        inp.trigger('click');
-                                    }
-                                });
-                            }
-                        });
-                    function insert_content( inst ) {
-                        inst.setContent( '$default' );
-                    }
-            </script>";
+            // Either use CKEDITOR or tinymce.
+            if( $useCKEditor )
+                $val .= "<script> CKEDITOR.replace( '$inputId' ); </script>";
+            else
+            {
+                 $val .= "<script>
+                     tinymce.init( { selector : '#" . $inputId . "'
+                             , init_instance_callback: \"insert_content\"
+                             , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
+                             , paste_as_text : true
+                             , paste_enable_default_filters: false
+                             , height : 300
+                             , paste_data_images: true
+                             , cleanup : false
+                             , verify_html : false
+                             , cleanup_on_startup : false
+                             , toolbar1 : 'undo redo | insert | stylesheet | bold italic' 
+                                 + ' | alignleft aligncenter alignright alignjustify'
+                                 + ' | bulllist numlist outdent indent | link image'
+                             , toolbar2 : \"imageupload\",
+                                setup: function(editor) {
+                                    var inp = $('<input id=\"tinymce-uploader\" ' + 
+                                        'type=\"file\" name=\"pic\" accept=\"image/*\"' 
+                                        + ' style=\"display:none\">'
+                                    );
+                                     $(editor.getElement()).parent().append(inp);
+                                     inp.on(\"change\",function(){
+                                         var input = inp.get(0);
+                                         var file = input.files[0];
+                                         var fr = new FileReader();
+                                         fr.onload = function() {
+                                             var img = new Image();
+                                             img.src = fr.result;
+                                             editor.insertContent(
+                                                 '<img src=\"' + img.src + '\"/><br/>'
+                                             );
+                                             inp.val('');
+                                         }
+                                         fr.readAsDataURL(file);
+                                     });
+
+                                     editor.addButton( 'imageupload', {
+                                         text:\"Insert image\",
+                                         icon: false,
+                                         onclick: function(e) {
+                                             inp.trigger('click');
+                                         }
+                                     });
+                                 }
+                             });
+
+                         function insert_content( inst ) {
+                             inst.setContent( '$default' );
+                         }
+                 </script>";
+            }
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
            $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";

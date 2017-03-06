@@ -37,7 +37,7 @@ foreach( $talks as $t )
 if( count( $upcomingTalks ) < 1 )
     echo alertUser( "You don't have any upcoming talk." );
 else
-    echo alertUser( "You have following upcoming talks." );
+    echo alertUser( "Following upcoming talks were created by you." );
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 foreach( $upcomingTalks as $t )
@@ -61,6 +61,7 @@ foreach( $upcomingTalks as $t )
     $event = getTableEntry( 'events', 'external_id,status'
         , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status' => 'VALID' )
         );
+
     $request = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
         , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status'  => 'PENDING' )
         );

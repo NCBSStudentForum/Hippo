@@ -86,7 +86,8 @@ else                // Everything is fine.
                         $_POST[ 'is_public_event' ] = 'YES';
 
                         // Modify talk title for calendar.
-                        $_POST[ 'title' ] = "Talk by " . $_POST[ 'speaker' ] . ' on \'' . 
+                        $_POST[ 'title' ] = $_POST['class'] . " by " . 
+                            $_POST[ 'speaker' ] . ' on \'' . 
                             trim( $_POST[ 'title' ] ) . "'";
 
                         $res = submitRequest( $_POST );

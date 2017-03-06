@@ -136,7 +136,7 @@ function initialize( )
             , host VARCHAR(100) NOT NULL
             , coordinator VARCHAR(100)
             -- Since this has to be unique key, this cannot be very large.
-            , title VARCHAR(200) NOT NULL
+            , title VARCHAR(500) NOT NULL
             , description TEXT 
             , created_by VARCHAR(100) NOT NULL 
                 CHECK( register_by <> "" )
@@ -612,8 +612,8 @@ function getEventsBeteen( $from , $duration )
     $nowTime = dbTime( 'now' );
 
     $whereExpr = "date >= '$startDate' AND date <= '$endDate'";
-
     $whereExpr .= " AND status='VALID' ";
+
     return getTableEntries( 'events', 'date,start_time', $whereExpr );
 }
 
@@ -1563,8 +1563,9 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         );
     }
 
-    // This is MYSQL specific.
-    if( $res )
+    // This is MYSQL specific. Only try this if table has an AUTO_INCREMENT 
+    // id field.
+    if( array_key_exists( 'id', $data) && $res )
     {
         // When created return the id of table else return null;
         $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
@@ -2111,6 +2112,7 @@ function addOrUpdateSpeaker( $data )
         {
             $found = true;
             $res = updateTable( 'speakers'
+                , 'email,first_name,last_name'
                 , 'honorific,first_name,middle_name,last_name,department,institute,homepage'
                 , $data 
             );

@@ -659,7 +659,7 @@ function html2Tex( $html, $strip_inline_image = false )
 
     if( file_exists( $outfile ) )
     {
-        $cmd = "python " . __DIR__ . "/html2other.py $outfile tex ";
+        $cmd = __DIR__ . "/html2other.py $outfile tex ";
         $tex = `$cmd`;
         unlink( $outfile );
     }

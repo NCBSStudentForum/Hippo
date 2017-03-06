@@ -509,6 +509,7 @@ function dbTableToHTMLTable( $tablename
     global $symbUpdate, $symbCheck;
     global $symbEdit;
     global $dbChoices;
+    global $useCKEditor;
 
     $html = "<table class=\"editable_$tablename\">";
     $schema = getTableSchema( $tablename );

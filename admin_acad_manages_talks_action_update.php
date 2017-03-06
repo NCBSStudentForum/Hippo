@@ -23,7 +23,7 @@ else if( $_POST[ 'response' ] == 'submit' )
     if( $res )
     {
         echo printInfo( 'Successfully updated entry' );
-        echo goToPage( 'admin_aws_manages_talks.php' , 0 );
+        echo goToPage( 'admin_acad_manages_talks.php' , 0 );
         exit;
     }
     else

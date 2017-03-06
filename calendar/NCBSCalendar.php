@@ -181,7 +181,10 @@ class NCBSCalendar
         // Now update the summary and description of event. Changing time is not
         // allowed in any case.
         $gevent->setSummary( $event['title' ] );
-        $gevent->setDescription( $event['description'] );
+
+        $gevent->setDescription( 
+                fixHTML( $event['description'], $strip_inline_image = true )
+                );
         $gevent->setHtmlLink( $event['url'] );
         
         $startTimeUTC = strtotime( 

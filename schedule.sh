@@ -21,8 +21,8 @@ set -o nounset                              # Treat unset variables as an error
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ -f /opt/rh/python27/enable ]; then
-    source /opt/rh/python27/enable 
-fi
+#if [ -f /opt/rh/python27/enable ]; then
+#    source /opt/rh/python27/enable 
+#fi
 
 python2.7  $DIR/schedule_aws.py

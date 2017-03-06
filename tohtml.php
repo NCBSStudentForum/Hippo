@@ -20,18 +20,17 @@ function displayRequest( button ) {
 
 <?php
 
-function fixHTML( $html, $strip_inline_image = false )
+function fixHTML( $html, $strip_tags = false )
 {
     $res = $html;
+    if( $strip_tags )
+        $res = strip_tags(  $res, '<br><p><a><strong><tt>' );
     // Replate all new line with space.
     $res = preg_replace( "/[\r\n]+/", ' ', $res );
     $res = str_replace( '<br />', ' ', $res );
     $res = str_replace( '<br/>', ' ', $res );
     $res = str_replace( '<br>', ' ', $res );
 
-    // remove img tag if user wants.
-    if( $strip_inline_image )
-        $res = preg_replace( '/<img[^>]+\>/i', '', $res );
 
     return $res;
 }

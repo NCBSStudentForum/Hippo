@@ -1563,8 +1563,9 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         );
     }
 
-    // This is MYSQL specific.
-    if( $res )
+    // This is MYSQL specific. Only try this if table has an AUTO_INCREMENT 
+    // id field.
+    if( array_key_exists( 'id', $data) && $res )
     {
         // When created return the id of table else return null;
         $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );

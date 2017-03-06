@@ -68,11 +68,7 @@ function eventToTex( $event, $talk = null )
 
     $tex[] = '\par';
 
-    // remove html formating before converting to tex.
-    file_put_contents( '/tmp/__event__.html', $desc );
-    $cmd = 'python ' . __DIR__ . '/html2other.py';
-    $texAbstract = `$cmd /tmp/__event__.html tex`;
-
+    $texAbstract = html2Tex( $desc ); 
     if( strlen(trim($texAbstract)) > 10 )
         $desc = $texAbstract;
 

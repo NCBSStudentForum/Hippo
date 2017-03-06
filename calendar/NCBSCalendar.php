@@ -4,6 +4,7 @@ set_include_path( '..' );
 include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
+include_once 'tohtml.php';
 require_once 'vendor/autoload.php';
 
 function date3339($date)
@@ -251,6 +252,10 @@ class NCBSCalendar
         $startTime = $startTime - $this->offset;
         $endTime = strtotime( $event['date'] . ' ' . $event[ 'end_time' ] );
         $endTime = $endTime - $this->offset;
+
+        // We need to clean up the description. 
+        // A. Remove inline images. And put only first paragram.
+        $event[ 'description' ] = fixHTML( $event[ 'description' ], true );
 
         $entry = array(
                      "summary" => $event['title']

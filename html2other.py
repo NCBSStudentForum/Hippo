@@ -6,7 +6,7 @@
     
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh"
-__credits__          = ["NCBS Bangalore"]
+_credits__          = ["NCBS Bangalore"]
 __license__          = "GNU GPL"
 __version__          = "1.0.0"
 __maintainer__       = "Dilawar Singh"
@@ -75,7 +75,7 @@ def fixInlineImage( msg ):
 
     Surround each image with \includewrapfig environment.
     """
-    pat = re.compile( r'data:image/(.+?);base64,(.+?\=\=)')
+    pat = re.compile( r'data:image/(.+?);base64,(.+?\=)', re.DOTALL )
     for m in pat.finditer( msg ):
         outfmt = m.group( 1 )
         data = m.group( 2 )
@@ -100,11 +100,9 @@ def toTex( infile ):
             msg = pypandoc.convert_text( msg, 'tex', format = 'html'
                     , extra_args = [ '--parse-raw' ])
             msg = fixInlineImage( msg )
-            return msg
         except Exception as e:
-            pass
-
-    return 'Failed to convert to TeX %s' % e 
+            msg = 'Failed to convert to TeX %s' % e 
+    return msg
 
 def htmlfile2md( filename ):
     with open( filename, 'r' ) as f:

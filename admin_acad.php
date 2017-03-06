@@ -86,11 +86,11 @@ echo '<h2>Add, update or remove AWS speakers</h2>';
 echo '<table class="admin">';
 echo '
     <tr>
-        <td>Add or update existing speakers. </td>
+        <td>Add or update speakers. </td>
         <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
     </tr>
     <tr>
-        <td>Add, Update or Delete user <br>
+        <td>Add, Update a student (AWS) <br>
             <small>Type a login name and press the button.</small>
         </td>
         <td>

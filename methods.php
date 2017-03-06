@@ -531,16 +531,20 @@ function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
 function saveImageAsJPEG($originalImage, $ext, $outputImage, $quality = 90 )
 {
     // Keep the scaling factor of original image. User ImageMagick.
-
     $img = new Imagick( $originalImage );
     $w = $img->getImageWidth( );
     $h = $img->getImageHeight( );
     $newW = 200; $newH = (int)( $newW * $h / $w );
     $img->resizeImage( $newW, $newH, Imagick::FILTER_GAUSSIAN, 1);
     $img->writeImage( $outputImage );
-    $img->clear( );
-    $img->destroy( );
-    return true;
+    if( file_exists( $outputImage ) )
+    {
+        $img->clear( );
+        $img->destroy( );
+        return true;
+    }
+    else
+        return false;
 }
 
 /**
@@ -641,23 +645,22 @@ function html2Markdown( $html, $strip_inline_image = false )
 
 function html2Tex( $html, $strip_inline_image = false )
 {
+    // remove img tag if user wants.
     if( $strip_inline_image )
-    {
-        // remove img tag.
         $html = preg_replace( '/<img[^>]+\>/i', '', $html );
-    }
 
-    $outfile = __DIR__ . '/data/_html.html';
+    $outfile = tempnam( '/tmp', 'html2tex' );
     file_put_contents( $outfile, $html );
+
     if( file_exists( $outfile ) )
     {
         $cmd = "python " . __DIR__ . "/html2other.py $outfile tex ";
         $tex = `$cmd`;
         unlink( $outfile );
-        return $tex;
     }
-    else 
-        return html2Markdown( $html );
+    else
+        $tex = 'FILE NOT FOUND';
+    return $tex;
 }
 
 function saveDownloadableFile( $filename, $content )

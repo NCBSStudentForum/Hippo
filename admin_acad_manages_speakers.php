@@ -105,8 +105,12 @@ if( array_key_exists( 'email', $_POST ) )
 echo '<h3>Edit speaker details</h3>';
 
 echo printInfo( 
-    "Email id of speaker is desirable. It helps keeping database clean 
-    by avoidling duplicate entries (and make autocompletion possible).");
+    "Email id of speaker is very desirable but not neccessary. <br>
+    <small>
+        It helps keeping database clean and makes autocompletion possible.
+    </small>
+    "
+    );
 
 echo printInfo( 
     "<strong>First name</strong> and <strong>institute</strong> are required 

@@ -68,9 +68,10 @@ function eventToTex( $event, $talk = null )
 
     $tex[] = '\par';
 
-    $texAbstract = html2Tex( $desc ); 
-    if( strlen(trim($texAbstract)) > 10 )
-        $desc = $texAbstract;
+    file_put_contents( '/tmp/desc.html', $desc );
+    $texDesc = html2Tex( $desc ); 
+    if( strlen(trim($texDesc)) > 10 )
+        $desc = $texDesc;
 
     // Extra.
     $tex[] = '{\large ' . $desc . '}';
@@ -87,7 +88,10 @@ function eventToTex( $event, $talk = null )
         $extra .= '\end{tabular} \end{table}';
         $tex[] = $extra;
     }
-    return implode( "\n", $tex );
+
+    $texText = implode( "\n", $tex );
+    return $texText;
+
 } // Function ends.
 
 
@@ -95,6 +99,7 @@ function eventToTex( $event, $talk = null )
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
+    , "\usepackage[]{wrapfig}"
     , "\usepackage[]{grffile}"
     //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
@@ -183,7 +188,7 @@ else
     echo "<pre> $res </pre>";
 }
 
-unlink( $texFile );
+//unlink( $texFile );
 
 echo "<br/>";
 echo closePage( );

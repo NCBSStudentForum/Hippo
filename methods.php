@@ -645,11 +645,9 @@ function html2Markdown( $html, $strip_inline_image = false )
 
 function html2Tex( $html, $strip_inline_image = false )
 {
+    // remove img tag if user wants.
     if( $strip_inline_image )
-    {
-        // remove img tag.
         $html = preg_replace( '/<img[^>]+\>/i', '', $html );
-    }
 
     $outfile = tempnam( '/tmp', 'html2tex' );
     file_put_contents( $outfile, $html );
@@ -658,10 +656,11 @@ function html2Tex( $html, $strip_inline_image = false )
     {
         $cmd = "python " . __DIR__ . "/html2other.py $outfile tex ";
         $tex = `$cmd`;
-        //unlink( $outfile );
+        unlink( $outfile );
     }
-    else 
-        return html2Markdown( $html );
+    else
+        $tex = 'FILE NOT FOUND';
+    return $tex;
 }
 
 function saveDownloadableFile( $filename, $content )

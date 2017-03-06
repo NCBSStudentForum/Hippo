@@ -146,8 +146,8 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
     error_log( "Monday 10am. Notify about AWS" );
-    // Send on 10am.
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
+    // Send on 8am.
+    $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
@@ -155,14 +155,15 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
         $res = generateAWSEmail( $thisMonday );
 
+        $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+        $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+        $to = 'academic@lists.ncbs.res.in';
+
         if( $res[ 'speakers' ] )
         {
             echo printInfo( "Sending mail about today's AWS" );
             $subject .= implode( ', ', $res[ 'speakers'] );
 
-            $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-            $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-            $to = 'academic@lists.ncbs.res.in';
 
             $mail = $res[ 'email' ];
 

@@ -19,6 +19,7 @@ $speaker = array(
 // Get talks only in future.
 $whereExpr = "status!='INVALID' ORDER BY created_on DESC";
 $talks = getTableEntries( 'talks', '', $whereExpr );
+
 $upcomingTalks = array( );
 
 /* Filter talk which have not been delivered yet. */
@@ -34,9 +35,9 @@ foreach( $talks as $t )
 }
 
 if( count( $upcomingTalks ) < 1 )
-    echo alertUser( "You don't have any upcoming talk." );
+    echo alertUser( "There is no upcoming talk/seminar." );
 else
-    echo alertUser( "Following upcoming talks were created by you." );
+    echo alertUser( "Following upcoming talks are available." );
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 foreach( $upcomingTalks as $t )

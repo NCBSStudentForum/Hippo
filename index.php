@@ -26,7 +26,6 @@ $_SESSION[ 'calendar_id'] =
     'd2jud2r7bsj0i820k0f6j702qo@group.calendar.google.com'; 
 
 $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
-
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/var/log/hippo.log' );

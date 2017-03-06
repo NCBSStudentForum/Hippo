@@ -99,7 +99,6 @@ $( function() {
 } );
 
 </script>
-<!-- CKEDIR -->
 <script src="tinymce/js/tinymce/tinymce.min.js"></script>
 
 <!-- confirm on delete -->

@@ -21,6 +21,8 @@ import html2text
 import pypandoc
 import string
 import codecs
+import tempfile
+import base64
 import locale
 from logger import _logger
 
@@ -67,6 +69,20 @@ def tomd( msg ):
 
     return msg
 
+def fixInlineImage( msg ):
+    """Convert inline images to given format and change the includegraphics text
+    accordingly """
+    pat = re.compile( r'data:image/(.+?);base64,(.+?\=\=)')
+    for m in pat.finditer( msg ):
+        _logger.info( 'Found one inline image' )
+        outfmt = m.group( 1 )
+        data = m.group( 2 )
+        fp = tempfile.NamedTemporaryFile( delete = False, suffix='.'+outfmt )
+        fp.write( base64.b64decode( data ) )
+        msg = msg.replace( m.group(0), fp.name )
+        fp.close( )
+
+
 def toTex( infile ):
     with open( infile, 'r' ) as f:
         msg = fix( f.read( ) )
@@ -75,6 +91,7 @@ def toTex( infile ):
                     , extra_args = [ '--parse-raw' ])
         except Exception as e:
             pass
+    msg = fixInlineImage( msg )
     return msg
 
 def htmlfile2md( filename ):

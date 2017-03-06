@@ -2,7 +2,6 @@
 
 include_once 'methods.php';
 include_once 'database.php';
-include_once 'tohtml.php';
 
 $useCKEditor = false;
 

@@ -32,11 +32,14 @@ else   // update
 {
     $imgpath = getSpeakerPicturePath( $_POST );
     if( $_FILES && array_key_exists( 'picture', $_FILES ) )
-        uploadImage( $_FILES[ 'picture' ], $imgpath );
+    $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
+
+    if( ! $res )
+        echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );
 
     $res = insertOrUpdateTable( 'speakers'
-            , 'email,title,first_name,middle_name,last_name,department,homepage,institute'
-            , 'title,first_name,middle_name,last_name,department,homepage,institute'
+            , 'honorific,email,first_name,middle_name,last_name,department,homepage,institute'
+            , 'honorific,first_name,middle_name,last_name,department,homepage,institute'
             , $_POST 
         );
 

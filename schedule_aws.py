@@ -51,6 +51,9 @@ aws_ = defaultdict( list )
 upcoming_aws_ = { }
 upcoming_aws_slots_ = defaultdict( list )
 
+# AWS scheduling requests are kept in this dict.
+aws_scheduling_requests_ = {}
+
 # These speakers must give AWS.
 speakers_ = { }
 
@@ -121,6 +124,12 @@ def getAllAWSPlusUpcoming( ):
         # Sort a list in place.
         aws_[a].sort( key = lambda x : x['date'] )
         # print( a, [ x['date'] for x in aws_[a] ] )
+
+    # Select all aws scheduling requests which have been approved.
+    cur.execute( "SELECT * FROM aws_scheduling_request WHERE status='APPROVED'" )
+    for a in cur.fetchall( ):
+        aws_scheduling_requests_[ a[ 'speaker' ] ] = a
+
 
 def computeCost( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes
@@ -302,6 +311,10 @@ def construct_flow_graph(  ):
     # slots to be taken by freshers (maximum ).
     freshersDate = defaultdict( list )
     for speaker in speakers_:
+        preferences = aws_scheduling_requests_.get( speaker, [] )
+        if preferences:
+            _logger.info( "%s has preferences %s " % (preferences) )
+
         if speaker not in g_.nodes( ):
             _logger.info( 'Nothing for user %s' % speaker )
             continue
@@ -309,6 +322,7 @@ def construct_flow_graph(  ):
         
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
+            print( type(date), date )
             weight = computeCost( speaker, date, prevAWSDate )
             if weight:
                 # If the speaker is fresher, do not draw edges to all three 
@@ -316,12 +330,23 @@ def construct_flow_graph(  ):
                 # reduce the cost to almost zero.
                 if speaker in freshers:
                     # Let two freshers take maximum of two slots on same day.
+                    # The weight should be low but not lower than user
+                    # preference.
                     if freshersDate.get(speaker, []).count( date ) < 2:
-                        addEdge(speaker, slot, 1, 0 )
+                        addEdge(speaker, slot, 1, 5 )
                         # This date is taken by this fresher.
                         freshersDate[ speaker ].append( date )
                 else:
                     addEdge(speaker, slot, 1, weight )
+
+                # Honour user preferences..
+                if preferences:
+                    first = preferences.get( 'first_preference', None )
+                    second = preferences.get( 'second_preference', None )
+                    if first and date == first:
+                        addEdge(speaker, slot, 1, 0 )
+                    if second and date == date:
+                        addEdge(speaker, slot, 1, 2 )
                     
     _logger.info( 'Constructed flow graph' )
 

@@ -13,6 +13,12 @@ echo userHTML( );
 //var_dump( $_POST );
 
 // Start preparing email.
+if( ! $_POST )
+{
+    echo goBackToPageLink( "user.php", "Go back" );
+    exit;
+}
+
 $speaker = $_POST[ 'speaker' ];
 $speakerInfo = getUserInfo( $speaker );
 $user = loginToText( $speaker );

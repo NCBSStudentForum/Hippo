@@ -123,11 +123,7 @@ function appRootDir( )
  */
 function appURL( )
 {
-    return sprintf(
-        "%s://%s/hippo",
-        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-        $_SERVER['SERVER_NAME']);
-
+    return 'https://ncbs.res.in/hippo';
 }
 
 /* Go to a page relative to base dir. */

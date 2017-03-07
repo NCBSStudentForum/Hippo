@@ -606,7 +606,7 @@ function dbTableToHTMLTable( $tablename
             }
             $val .= "</select>";
         }
-        else if( strpos( $ctype, 'TEXT' ) !== false ) // TEXT or MEDIUMTEXT
+        else if( strpos( strtolower($ctype), 'text' ) !== false ) // TEXT or MEDIUMTEXT
         {
             // NOTE: name and id should be same of ckeditor to work properly.
             // Sometimes we have two fileds with same name in two tables, thats 

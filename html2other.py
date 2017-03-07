@@ -75,7 +75,9 @@ def fixInlineImage( msg ):
 
     Surround each image with \includewrapfig environment.
     """
-    pat = re.compile( r'data:image/(.+?);base64,(.+?\=)', re.DOTALL )
+
+    # Sometime we loose = in the end.
+    pat = re.compile( r'\{data:image/(.+?);base64,(.+?\=?\})', re.DOTALL )
     for m in pat.finditer( msg ):
         outfmt = m.group( 1 )
         data = m.group( 2 )
@@ -83,7 +85,7 @@ def fixInlineImage( msg ):
         fp.write( base64.b64decode( data ) )
         fp.close( )
         # Replace the inline image with file name.
-        msg = msg.replace( m.group(0), fp.name )
+        msg = msg.replace( m.group(0), "{%s}" % fp.name )
 
     # And wrap all includegraphics around by wrapfig
     msg = re.sub( r'(\\includegraphics.+?width\=(.+?)([\],]).+?})'

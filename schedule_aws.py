@@ -113,7 +113,7 @@ def getAllAWSPlusUpcoming( ):
         aws_[ a[ 'speaker' ] ].append( a )
         upcoming_aws_[ a['speaker'].lower( ) ] = a['date']
         # Keep the number of slots occupied at this day.
-        upcoming_aws_slots_[ a['date'].lower() ].append( a['speaker'] )
+        upcoming_aws_slots_[ a['date'] ].append( a['speaker'] )
 
     # Now get all the previous AWSs happened so far.
     cur.execute( 'SELECT * FROM annual_work_seminars' )

@@ -1296,8 +1296,13 @@ function slotTable( )
                 $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
                     humanReadableTime(  $slot[ 'end_time' ] );
                 $id = $slot[ 'id' ];
+                $bgColor = 'lightblue';
+
+                if( ! is_numeric( $id[0] ) )
+                    $bgColor = 'red';
+
                 $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
-                $html .= "<td style=\"background:lightblue\" colspan=\"$ncols\">
+                $html .= "<td style=\"background:$bgColor\" colspan=\"$ncols\">
                         $id <br> <small> <tt>$text</tt> </small> </td>";
 
                 // Increase $i by ncols - 1. 1 is increased by loop.

@@ -187,6 +187,12 @@ def monthdelta(date, delta):
     dt = date.replace(day=d,month=m, year=y)
     return dt
 
+def diffInDays( date1, date2, absolute = False ):
+    ndays = ( date1 - date2 ).days
+    if absolute:
+        ndays = abs( ndays )
+    return ndays
+
 def construct_flow_graph(  ):
     """This is the most critical section of this task. It is usually good if
     flow graph is constructed to honor policy as much as possible rather than
@@ -311,18 +317,17 @@ def construct_flow_graph(  ):
     # slots to be taken by freshers (maximum ).
     freshersDate = defaultdict( list )
     for speaker in speakers_:
-        preferences = aws_scheduling_requests_.get( speaker, [] )
+        preferences = aws_scheduling_requests_.get( speaker, {} )
         if preferences:
-            _logger.info( "%s has preferences %s " % (preferences) )
+            _logger.info( "%s has preferences %s " % (speaker,preferences) )
 
         if speaker not in g_.nodes( ):
             _logger.info( 'Nothing for user %s' % speaker )
             continue
+
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
-        
         for slot in slots:
             date = g_.node[ slot ][ 'date' ]
-            print( type(date), date )
             weight = computeCost( speaker, date, prevAWSDate )
             if weight:
                 # If the speaker is fresher, do not draw edges to all three 
@@ -343,10 +348,16 @@ def construct_flow_graph(  ):
                 if preferences:
                     first = preferences.get( 'first_preference', None )
                     second = preferences.get( 'second_preference', None )
-                    if first and date == first:
-                        addEdge(speaker, slot, 1, 0 )
-                    if second and date == date:
-                        addEdge(speaker, slot, 1, 2 )
+                    if first:
+                        ndays = diffInDays(date, first, True)
+                        if ndays <= 14:
+                            _logger.info( 'Using first preference for %s' % speaker )
+                            addEdge(speaker, slot, 1, 0 + ndays / 7 )
+                    if second:
+                        ndays = diffInDays(date, second, True) 
+                        if ndays <= 14:
+                            _logger.info( 'Using second preference for %s' % speaker )
+                            addEdge(speaker, slot, 1, 2 + ndays / 7 )
                     
     _logger.info( 'Constructed flow graph' )
 

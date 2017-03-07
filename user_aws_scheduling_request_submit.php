@@ -66,6 +66,8 @@ if( $_POST[ 'response' ] == 'submit' )
         }
     }
 
+    $updateKeys .= ',status';
+    $_POST[ 'status' ] = 'PENDING';
     $res = insertOrUpdateTable(
                 'aws_scheduling_request', $keys, $updateKeys, $_POST
             );

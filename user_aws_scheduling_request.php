@@ -21,10 +21,13 @@ if( ! __get__( $_POST, 'created_on', null ) )
 if( ! __get__( $_POST, 'speaker', null ) )
     $_POST[ 'speaker' ] = $_SESSION[ 'user' ];
 
-// 
+// Check if this user already has a preference.
+$prefs = getTableEntry( 'aws_scheduling_request', 'speaker', $_POST );
+$prefs = array_merge( $prefs, $_POST );
+
 echo '<form method="post" action="user_aws_scheduling_request_submit.php">';
 echo dbTableToHTMLTable( 'aws_scheduling_request'
-        , $_POST, 'first_preference,second_preference,reason'
+        , $prefs, 'first_preference,second_preference,reason'
         , 'submit' 
     );
 

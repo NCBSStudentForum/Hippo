@@ -137,7 +137,7 @@ function initialize( )
             , coordinator VARCHAR(100)
             -- Since this has to be unique key, this cannot be very large.
             , title VARCHAR(500) NOT NULL
-            , description TEXT 
+            , description MEDIUMTEXT 
             , created_by VARCHAR(100) NOT NULL 
                 CHECK( register_by <> "" )
             , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -283,7 +283,7 @@ function initialize( )
             , tcm_member_3 VARCHAR( 200 ) -- optional 
             , tcm_member_4 VARCHAR( 200 ) -- optional
             , title VARCHAR( 1000 )
-            , abstract TEXT
+            , abstract MEDIUMTEXT
             , FOREIGN KEY (speaker) REFERENCES logins(login)
             , UNIQUE KEY (speaker, date)
             , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
@@ -303,7 +303,7 @@ function initialize( )
             , tcm_member_3 VARCHAR( 200 ) 
             , tcm_member_4 VARCHAR( 200 ) 
             , title VARCHAR( 1000 )
-            , abstract TEXT
+            , abstract MEDIUMTEXT
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
             , comment TEXT 
             , FOREIGN KEY (speaker) REFERENCES logins(login)
@@ -324,7 +324,7 @@ function initialize( )
             , tcm_member_4 VARCHAR( 200 ) -- optional
             , scheduled_on DATE 
             , title VARCHAR( 1000 )
-            , abstract TEXT
+            , abstract MEDIUMTEXT
             , status ENUM( 'PENDING', 'APPROVED', 'REJECTED', 'INVALID', 'CANCELLED' ) DEFAULT 'PENDING'
             , modidfied_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )"

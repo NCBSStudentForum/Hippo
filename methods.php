@@ -639,7 +639,7 @@ function html2Markdown( $html, $strip_inline_image = false )
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
-        $cmd = "python " . __DIR__ . "/html2other.py $outfile md ";
+        $cmd = __DIR__ . "/html2other.py $outfile md ";
         $md = `$cmd`;
         unlink( $outfile );
         return $md;

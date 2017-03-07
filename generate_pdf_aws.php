@@ -87,7 +87,7 @@ function awsToTex( $aws )
     // remove html formating before converting to tex.
     $tempFile = tempnam( "/tmp", "hippo_abstract" );
     file_put_contents( $tempFile, $abstract );
-    $cmd = 'python ' . __DIR__ . '/html2other.py';
+    $cmd = __DIR__ . '/html2other.py';
     $texAbstract = `$cmd $tempFile tex`;
     unlink( $tempFile );
 

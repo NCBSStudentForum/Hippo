@@ -20,7 +20,8 @@ if( $res )
     // Now send an email to user.
     $info = getUserInfo( $_SESSION[ 'user' ] );
 
-    sendEmail( arrayToVerticalTableHTML( $info, "details" )
+    sendPlainTextEmail( 
+        arrayToVerticalTableHTML( $info, "details" )
         , "Your details have been updated successfully."
         , $info[ 'email' ]
         );

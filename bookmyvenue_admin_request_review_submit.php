@@ -90,7 +90,7 @@ else
     // Append user email to front.
     $msg = "<p>Dear " . loginToText( $group[0]['created_by' ], true ) . '</p>' . $msg;
 
-    $res = sendEmail( $msg
+    $res = sendPlainTextEmail( $msg
         , "Your request for event title '$eventGroupTitle'  has been acted upon"
         , $userEmail 
         );

@@ -82,7 +82,7 @@ def init( cur ):
         """
         )
     for a in cur.fetchall( ):
-        speakers_[ a['login'] ] = a
+        speakers_[ a['login'].lower() ] = a
     cur.execute( """SELECT * FROM holidays ORDER BY date""")
 
     for a in cur.fetchall( ):
@@ -111,14 +111,14 @@ def getAllAWSPlusUpcoming( ):
     cur.execute( 'SELECT * FROM upcoming_aws' )
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ] ].append( a )
-        upcoming_aws_[ a['speaker'] ] = a['date']
+        upcoming_aws_[ a['speaker'].lower( ) ] = a['date']
         # Keep the number of slots occupied at this day.
-        upcoming_aws_slots_[ a['date'] ].append( a['speaker'] )
+        upcoming_aws_slots_[ a['date'].lower() ].append( a['speaker'] )
 
     # Now get all the previous AWSs happened so far.
     cur.execute( 'SELECT * FROM annual_work_seminars' )
     for a in cur.fetchall( ):
-        aws_[ a[ 'speaker' ] ].append( a )
+        aws_[ a[ 'speaker' ].lower() ].append( a )
 
     for a in aws_:
         # Sort a list in place.
@@ -128,7 +128,7 @@ def getAllAWSPlusUpcoming( ):
     # Select all aws scheduling requests which have been approved.
     cur.execute( "SELECT * FROM aws_scheduling_request WHERE status='APPROVED'" )
     for a in cur.fetchall( ):
-        aws_scheduling_requests_[ a[ 'speaker' ] ] = a
+        aws_scheduling_requests_[ a[ 'speaker' ].lower( ) ] = a
 
 
 def computeCost( speaker, slot_date, last_aws ):

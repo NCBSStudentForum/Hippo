@@ -34,7 +34,9 @@ $(document).ready( function( ) {
  */
 
 $default = array( "task" => "upcoming_aws", "date" => dbDate( 'this monday' ) );
-$options = array( 'This week AWS', 'This week events', 'Today\'s events' );
+$options = array( 
+    'This week AWS', 'This week events', 'Today\'s events'
+    );
 
 // Logic to keep the previous selected entry selected.
 if( array_key_exists( 'response', $_POST ) )
@@ -60,6 +62,10 @@ echo '
     <button type="submit" name="response" title="select">' . $symbSubmit . '</button>
     </form>
     ';
+
+// Fill subject of potential email here.
+$subject = '';
+$templ = null;
 
 if( $default[ 'task' ] == 'This week AWS' )
 {
@@ -93,14 +99,14 @@ if( $default[ 'task' ] == 'This week AWS' )
             ,  'EMAIL_BODY' => $emailHtml
             );
 
-        $email = emailFromTemplate( 'aws_template', $macros );
-        $md = html2Markdown( $email );
+        $templ = emailFromTemplate( 'aws_template', $macros );
+        $md = html2Markdown( $templ[ 'email_body' ] );
 
         // Save the file and let the admin download it.
         file_put_contents( __DIR__ . "/data/$filename", $md);
         echo "<br><br>";
         echo '<table style="width:500px;border:1px solid"><tr><td>';
-        echo downloadTextFile( $filename, 'Download mail' );
+        echo downloadTextFile( $filename, 'Download email' );
         echo "</td><td>";
         echo awsPdfURL( '', $whichDay, 'All AWS PDF' );
         echo "</td></tr>";
@@ -125,36 +131,28 @@ else if( $default[ 'task' ] == 'This week events' )
         $html .= "<br>";
     }
 
-    // Add a google calendar link
+    echo $html;
+
     $html .= "<br><br>";
-    echo( $html );
 
     // Generate email
     // getEmailTemplates
-    $template = getEmailTemplateById( 'this_week_events' );
-    if( $template )
-    {
-        $email = emailFromTemplate( 'this_week_events'
-            , array( "EMAIL_BODY" => $html ) 
-            );
-        $md = html2Markdown( $email );
-        $emailFileName = 'Events_Of_Week_' .$default[ 'date' ] . '.txt';
+    $templ = emailFromTemplate( 'this_week_events'
+        , array( "EMAIL_BODY" => $html ) 
+        );
+    $md = html2Markdown( $templ[ 'email_body'] );
+    $emailFileName = 'Events_Of_Week_' .$default[ 'date' ] . '.txt';
 
-        // Save the content of email to a file and generate a link to show to 
-        // user.
-        saveDownloadableFile( $emailFileName, $md );
-        echo downloadTextFile( $emailFileName, 'Download email' );
-    }
-    else
-    {
-        echo alertUser( "No template found with id this_week_events. 
-            You should tell this to Hippo's admin" 
-            );
-    }
+    // Save the content of email to a file and generate a link to show to 
+    // user.
+    saveDownloadableFile( $emailFileName, $md );
+    echo downloadTextFile( $emailFileName, 'Download email' );
 }
 else if( $default[ 'task' ] == 'Today\'s events' )
 {
     // List todays events.
+
+    $templ = array( );
 
     // Get all ids on this day.
     $date = $default[ 'date' ];
@@ -163,26 +161,54 @@ else if( $default[ 'task' ] == 'Today\'s events' )
     $html = '';
     foreach( $entries as $entry )
     {
-        if( $entry[ 'is_public_event' ] == 'YES' )
-        {
-            if( ! array_key_exists( 'external_id', $entry ) )
-                continue;
+        if( $entry[ 'is_public_event' ] == 'NO' )
+            continue;
 
-            if( ! $entry[ 'external_id' ] )
-                continue;
+        if( ! array_key_exists( 'external_id', $entry ) )
+            continue;
 
-            $talkid = explode( '.', $entry[ 'external_id' ])[1];
-            $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
-            if( $talk )
-            {
-                echo talkToHTML( $talk, true );
-                $html .= talkToHTML( $talk, false );
-            }
-        }
+        if( ! $entry[ 'external_id' ] )
+            continue;
+
+        $talkid = explode( '.', $entry[ 'external_id' ])[1];
+        $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
+        if( ! $talk )
+            continue;
+
+        echo talkToHTML( $talk, true );
+
+        $talkHTML = talkToHTML( $talk, false );
+
+        $subject = $talk[ 'class' ] . " by " . $talk['speaker'] . ' on ' .
+            humanReadableDate( $entry[ 'date' ] );
+
+        echo "<pre> $subject </pre>";
+
+        $md = html2Markdown( $talkHTML, true );
+
+        $templ = emailFromTemplate(
+            "this_event"
+            , array( 'EMAIL_BODY' => $md, 'DATE' => humanReadableDate( $date) )
+            );
+
+        $templ = htmlspecialchars( json_encode( $templ ) );
+        echo '
+            <form method="post" action="admin_acad_send_email.php">
+                <button type="submit">Send email</button>
+                <input type="hidden" name="subject" value="'. $subject . '" >
+                <input type="hidden" name="template" value="'. $templ . '" >
+            </form>'
+            ;
+
+
+        $html .= $talkHTML;
     }
 
     $md = html2Markdown( $html, $strip_inline_image = true );
+
+
     $emailFileName = 'EVENT_' . $default['date'] . '.txt';
+
     saveDownloadableFile( $emailFileName, $md );
     echo downloadTextFile( $emailFileName, 'Download email' );
 
@@ -190,7 +216,9 @@ else if( $default[ 'task' ] == 'Today\'s events' )
     // Link to pdf file.
     echo '<a target="_blank" href="generate_pdf_talk.php?date=' 
             . $default[ 'date' ] . '">Download pdf</a>';
-    echo '<br>';
+
+
+    echo '<br><br>';
 
 }
 

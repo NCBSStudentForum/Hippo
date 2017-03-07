@@ -186,8 +186,8 @@ function eventSummaryHTML( $event )
     $time = "$startT to $endT";
     $venue = venueSummary( $event[ 'venue'] );
 
-    $html = "<strong>" . $event[ 'title' ] . "</strong>";
-    $html .= '<table border="0">';
+    $html = "<h1>" . $event[ 'title' ] . "</h1>";
+    $html .= '<table class="show_events">';
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
     $html .= '</table>';
@@ -1237,24 +1237,21 @@ function repeatPatternTable( $className )
  */
 function emailFromTemplate( $templateName, $options )
 {
-    $html = '';
-    $res = array( );
-
     $templ = getEmailTemplateById( $templateName );
-    $template = $templ['description'];
+    $desc = $templ['description'];
 
-    if( ! $template )
+    if( ! $desc )
     {
         echo alertUser( "No template found with id: aws_template. I won't 
             be able to generate email"
         );
         return '';
     } 
-    else 
-        foreach( $options as $key => $value )
-            $template = str_replace( '@' . $key . '@', $value, $template );
 
-    $templ[ 'email_body' ] = $template;
+    foreach( $options as $key => $value )
+        $desc = str_replace( "@$key@", $value, $desc );
+
+    $templ[ 'email_body' ] = $desc;
     return $templ;
 }
 

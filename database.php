@@ -374,7 +374,7 @@ function initialize( )
             )
         ");
 
-    // Instance of courses.
+    // Instance of running courses.
     $res = $db->query( "
         create TABLE IF NOT EXISTS courses (
              -- Combination of course code, semester and year
@@ -383,7 +383,8 @@ function initialize( )
             , course_id VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
-            , UNIQUE KEY( semester,course_id)
+            , slot VARCHAR(4) 
+            , UNIQUE KEY(semester,course_id)
             )" );
         
 

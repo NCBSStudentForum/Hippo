@@ -67,37 +67,58 @@ echo goBackToPageLink( "user.php", "Go back" );
 
 echo alertUser( 'Public events will apprear first' );
 
-$html = '<div style="font-size:small;">';
 $events = getEventsBeteen( 'today', '+4 week' );
 
-
-$html .= "<table>";
-foreach( $events as $event )
+$publicEvents = array( );
+$nonPublicEvents = array( );
+foreach( $events as $e )
 {
-    // Today's event if they are passed, don't display them.
-    if( $event[ 'date' ] == dbDate( 'today' ) && $event[ 'start_time'] < dbTime( 'now' ) )
-        continue;
-
-    $gid = $event['gid'];
-    $eid = $event['eid'];
-    $html .= "<form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";
-    $html .= "<tr><td>";
-    $html .= arrayToTableHTML( $event, 'events', ''
-        , Array( 'eid', 'calendar_id' , 'calendar_event_id', 'external_id'
-                , 'gid', 'status', 'last_modified_on' ) 
-    );
-    $html .= "</td>";
-    $html .= "<td> <button title=\"Edit this entry\"  name=\"response\" 
-            value=\"edit\">" . $symbEdit .  "</button></td>";
-    $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";
-    $html .= "<input name=\"eid\" type=\"hidden\" value=\"$eid\" />";
-    $html .= "</form></tr>";
+    if( $e[ 'is_public_event' ] == 'YES' )
+    {
+        //var_dump( $e );
+        $publicEvents[] = $e;
+    }
+    else
+        $nonPublicEvents[] = $e;
 }
 
-$html .= "</table>";
-$html .= "</div>";
+$events = $publicEvents + $nonPublicEvents;
 
-echo $html;
+if( count( $events ) > 0 )
+{
+    $html = '<div style="font-size:small;">';
+    $event = $events[0];
+    $html .= "<table class=\"show_events\">";
+
+    $tofilter = 'eid,calendar_id,calendar_event_id' .  
+        ',external_id,gid,status,last_modified_on';
+
+    $html .= arrayHeaderRow( $event, 'show_events', $tofilter );
+
+    foreach( $events as $event )
+    {
+        // Today's event if they are passed, don't display them.
+        if( $event[ 'date' ] == dbDate( 'today' ) && $event[ 'start_time'] < dbTime( 'now' ) )
+            continue;
+
+        $gid = $event['gid'];
+        $eid = $event['eid'];
+        $html .= "<tr><form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";
+        $html .= "<td>";
+        $html .= arrayToRowHTML( $event, 'events', $tofilter );
+        $html .= "</td>";
+
+        $html .= "<td> <button title=\"Edit this entry\"  name=\"response\" 
+                value=\"edit\">" . $symbEdit .  "</button></td>";
+        $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";
+        $html .= "<input name=\"eid\" type=\"hidden\" value=\"$eid\" />";
+        $html .= "</td></form></tr>";
+    }
+
+    $html .= "</table>";
+    $html .= "</div>";
+    echo $html;
+}
 
 echo goBackToPageLink( "user.php", "Go back" );
 

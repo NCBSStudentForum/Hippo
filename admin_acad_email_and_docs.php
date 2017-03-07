@@ -179,16 +179,11 @@ else if( $default[ 'task' ] == 'Today\'s events' )
 
         $talkHTML = talkToHTML( $talk, false );
 
-        $subject = $talk[ 'class' ] . " by " . $talk['speaker'] . ' on ' .
+        $subject = __ucwords__( $talk[ 'class' ] ) . " by " . $talk['speaker'] . ' on ' .
             humanReadableDate( $entry[ 'date' ] );
 
-        echo "<pre> $subject </pre>";
-
-        $md = html2Markdown( $talkHTML, true );
-
         $templ = emailFromTemplate(
-            "this_event"
-            , array( 'EMAIL_BODY' => $md, 'DATE' => humanReadableDate( $date) )
+            "this_event" , array( 'EMAIL_BODY' => $talkHTML ) 
             );
 
         $templ = htmlspecialchars( json_encode( $templ ) );
@@ -199,7 +194,6 @@ else if( $default[ 'task' ] == 'Today\'s events' )
                 <input type="hidden" name="template" value="'. $templ . '" >
             </form>'
             ;
-
 
         $html .= $talkHTML;
     }

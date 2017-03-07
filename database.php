@@ -162,8 +162,9 @@ function initialize( )
         'CREATE TABLE IF NOT EXISTS emails
         ( id INT NOT NULL AUTO_INCREMENT
             , recipients VARCHAR(1000) NOT NULL
+            , cc VARCHAR(200) 
             , subject VARCHAR(1000) NOT NULL
-            , msg TEXT NOT NULL
+            , email_body TEXT NOT NULL
             , when_to_send DATETIME NOT NULL
             , status ENUM( "PENDING", "SENT", "FAILED", "CANCELLED" ) DEFAULT "PENDING"
             , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP

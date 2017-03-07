@@ -1133,15 +1133,27 @@ function talkToHTML( $talk, $with_picture = false )
         $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
     }
 
-    $html .= '<td> <br>' . speakerToHTML( $talk['speaker'] )
-                . '<br><br> Host: ' . loginToText( $talk[ 'host' ] ) 
-                . '<br><br><small>' . $when 
-                . '<br>' . $where 
-                . '<br>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) 
-                . '</small></td>';
+    $html .= '<td> <br>' . speakerToHTML( $talk['speaker'] );
+
+    // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
+    if( $talk['class'] == 'THESIS SEMINAR' )
+        $html .= '<br><br> Supervisor: ' . loginToText( $talk[ 'host' ] );
+    else
+        $html .= '<br><br> Host: ' . loginToText( $talk[ 'host' ] );
+
+    $html .= '<br><div style="font-size:small">';
+    $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where 
+                . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
+    $html .= '</td></tr><tr><td>';
+    $html .= '<a target="_blank" href="' . appURL( ) .'/events.php?date=' 
+                . $event[ 'date' ] . '" >Permanent link</a>';
+    $html .= '</td></tr></table>';
+    $html .= '</div>';
+    $html .= '</td>';
     $html .= '</tr></table>';
 
     $html .= "<p>" . fixHTML( $talk[ 'description' ] ) . '</p>';
+
     $html .= "</div>";
 
 

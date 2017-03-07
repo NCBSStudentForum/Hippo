@@ -115,6 +115,21 @@ function appRootDir( )
    return  'https://ncbs.res.in/hippo';
 }
 
+/**
+    * @brief From 
+    * http://stackoverflow.com/questions/2820723/how-to-get-base-url-with-php
+    *
+    * @return 
+ */
+function appURL( )
+{
+    return sprintf(
+        "%s://%s/hippo",
+        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+        $_SERVER['SERVER_NAME']);
+
+}
+
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {

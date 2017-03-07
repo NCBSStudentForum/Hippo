@@ -1145,8 +1145,8 @@ function talkToHTML( $talk, $with_picture = false )
     $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where 
                 . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
     $html .= '</td></tr><tr><td>';
-    $html .= '<a target="_blank" href="' . appURL( ) .'/events.php?date=' 
-                . $event[ 'date' ] . '" >Permanent link</a>';
+    $html .= '<a target="_blank" href="' . appURL( ) .'events.php?date=' 
+                . $event[ 'date' ] . '">Permanent link</a>';
     $html .= '</td></tr></table>';
     $html .= '</div>';
     $html .= '</td>';

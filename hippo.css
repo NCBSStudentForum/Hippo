@@ -162,7 +162,7 @@ table.tasks {
 table.tasks tr td 
 {
     border : 0.5px dotted; 
-    width : 50%;
+    max-width : 70%;
     background : var(--background);
 }
 

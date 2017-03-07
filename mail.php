@@ -85,7 +85,7 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
 
     $msg .= mailFooter( );
 
-    $textMail = html2Markdown( $msg );
+    $textMail = html2Markdown( $msg, $strip_inline_image = true );
 
     $msgfile = tempnam( '/tmp', 'hippo_msg' );
     file_put_contents( $msgfile, $textMail );

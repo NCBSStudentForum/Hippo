@@ -353,7 +353,7 @@ function readOnlyEventLineHTML( $date, $venueid )
  */
 function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
 {
-    $row = '';
+    $row = '<tr>';
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ',', $tobefilterd );
     
@@ -363,7 +363,6 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
         if( ! in_array( $k, $tobefilterd ) )
             array_push( $toDisplay, $array[$k] );
 
-    $row .= "<tr>";
     foreach( $toDisplay as $v )
     {
         if( isStringAValidDate( $v ) )
@@ -421,10 +420,10 @@ function arrayToTableHTML( $array, $tablename, $background = ''
     $keys = array_keys( $array );
     $toDisplay = Array();
     $table .= "<tr>";
-    $table = arrayHeaderRow( $array, $tablename, $tobefilterd );
-    $table .= "</tr><tr>";
+    $table .= arrayHeaderRow( $array, $tablename, $tobefilterd );
+    $table .= "</tr>";
     $table .= arrayToRowHTML( $array, $tablename, $tobefilterd );
-    $table .= "</tr></table>";
+    $table .= "</table>";
     return $table;
 }
 

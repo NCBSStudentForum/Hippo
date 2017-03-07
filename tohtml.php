@@ -342,6 +342,70 @@ function readOnlyEventLineHTML( $date, $venueid )
     return $html;
 }
 
+/**
+    * @brief Convert each array to a single HTML row.
+    *
+    * @param $array
+    * @param $tablename
+    * @param $tobefilterd
+    *
+    * @return 
+ */
+function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
+{
+    $row = '';
+    if( is_string( $tobefilterd ) )
+        $tobefilterd = explode( ',', $tobefilterd );
+    
+    $keys = array_keys( $array );
+    $toDisplay = Array();
+    foreach( $keys as $k )
+        if( ! in_array( $k, $tobefilterd ) )
+            array_push( $toDisplay, $array[$k] );
+
+    $row .= "<tr>";
+    foreach( $toDisplay as $v )
+    {
+        if( isStringAValidDate( $v ) )
+            $v = humanReadableDate( $v );
+
+        $row .= "<td><div class=\"cell_content\">$v</div></td>";
+    }
+
+    $row  .= "</tr>";
+    return $row;
+
+}
+
+/**
+    * @brief Convert an array to HTML header row. Only th fields are used.
+    *
+    * @param $array
+    * @param $tablename
+    * @param $tobefilterd
+    *
+    * @return 
+ */
+function arrayHeaderRow( $array, $tablename, $tobefilterd )
+{
+    $hrow = '';
+    $keys = array_keys( $array );
+    $toDisplay = Array();
+    $hrow .= "<tr>";
+
+    if( is_string( $tobefilterd ) )
+        $tobefilterd = explode( ',', $tobefilterd );
+
+    foreach( $keys as $k )
+        if( ! in_array( $k, $tobefilterd ) )
+        {
+            $kval = prettify( $k );
+            $label = strtoupper( $kval );
+            $hrow .= "<th class=\"db_table_fieldname\">$label</th>";
+        }
+
+    return $hrow;
+}
 
 // Convert an array to HTML
 function arrayToTableHTML( $array, $tablename, $background = ''
@@ -357,25 +421,9 @@ function arrayToTableHTML( $array, $tablename, $background = ''
     $keys = array_keys( $array );
     $toDisplay = Array();
     $table .= "<tr>";
-    foreach( $keys as $k )
-        if( ! in_array( $k, $tobefilterd ) )
-        {
-            $kval = prettify( $k );
-            $label = strtoupper( $kval );
-            $table .= "<th class=\"db_table_fieldname\">$label</th>";
-
-            array_push( $toDisplay, $array[$k] );
-        }
-
+    $table = arrayHeaderRow( $array, $tablename, $tobefilterd );
     $table .= "</tr><tr>";
-    foreach( $toDisplay as $v )
-    {
-        if( isStringAValidDate( $v ) )
-            $v = humanReadableDate( $v );
-
-        $table .= "<td><div class=\"cell_content\">$v</div></td>";
-    }
-
+    $table .= arrayToRowHTML( $array, $tablename, $tobefilterd );
     $table .= "</tr></table>";
     return $table;
 }

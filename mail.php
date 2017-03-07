@@ -19,34 +19,6 @@ function mailFooter( )
 }
 
 
-function sendEmail($msg, $sub, $to) 
-{
-
-    $conf = getConf( );
-    if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
-    {
-        echo printInfo( "Email service has not been configured." );
-        error_log( "Mail service is not configured" );
-        return;
-    }
-
-    if( $_SESSION[ 'conf' ]['global']['send_emails' ] == false )
-        return;
-
-    $timestamp = date( 'r', strtotime( 'now' ) );
-
-    $msg .= mailFooter( );
-    $msgfile = tempnam( '/tmp', 'hippo_temp_msg' );
-
-    file_put_contents( $msgfile, $msg );
-    $to = implode( ' -t ', explode( ',', trim( $to ) ) );
-
-    $cmd= __DIR__ . "/sendmail.py -t $to \"-s $sub\" \"-i $msgfile\"";
-    $out = exec( $cmd, $output, $ret );
-    unlink( $msgfile );
-    return true;
-}
-
 function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
     global $maildir;

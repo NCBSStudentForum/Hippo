@@ -1210,29 +1210,64 @@ function downloadTextFile( $filename, $msg = 'Download file' )
     *
     * @return 
  */
+// <td>Repeat pattern for recurrent events <br> (optional) <br>
+//     <p class="note_to_user"> Valid for maximum of 6 months </p>
+//     </td> 
 function repeatPatternTable( $className )
 {
     $html = '<table class="' . $className . '">';
+    $html .= '<tr> <th colspan="3">Recurrent events (optional) </th></tr>
+            <tr>
+                <th>On following days</th><th>On these weeks</th><th>For these many months</th>
+            </tr>
+            <tr>
+                <td> <input type="text" name="day_pattern" placeholder="Sun,Mon"/ > </td>
+                <td> <input type="text" name="week_pattern" placeholder="first,second etc."/></td>
+                <td><input type="text" name="month_pattern" placeholder="6" /></td>
+            </tr>';
+    $html .= "</table>";
+    $html .= '<table class="' . $className . '">';
+    $html .= '<tr><th colspan="3"> Examples:  </th></tr>';
+    $html .= '<tr><td colspan="3"> Every saturday, every week
+                , for 3 months  </td></tr>';
     $html .= '<tr>
-              <td>Repeat pattern (optional) <br>
-                 <p class="note_to_user"> Valid for maximum of 6 months </p>
-              </td> 
-              <td> 
-                <table border="0">
-                <tr>
-                    <td> Every </td>
-                    <td> <input type="text" name="day_pattern" placeholder="Sun,Mon"/ > day </td>
-                </tr><tr>
-                    <td> Every </td>
-                    <td> <input type="text" name="week_pattern" placeholder="first,second"/> week </td>
-                </tr>
-                <tr>
-                    <td>For </td>
-                    <td><input type="text" name="month_pattern" placeholder="6" /> months </td>
-                </tr>
-                </table>
-              </td>
-        </tr>';
+                <td>
+                    <input disabled value="Sat">
+                </td>
+                <td>
+                    <input disabled value="">
+                </td>
+                <td>
+                    <input disabled value="3">
+                </td>
+              </tr>';
+    $html .= '<tr><td colspan="3"> Every monday and thursday, every week
+                , for 5 months  </td></tr>';
+    $html .= '<tr>
+                <td>
+                    <input disabled value="Mon,Thu">
+                </td>
+                <td>
+                    <input disabled value="">
+                </td>
+                <td>
+                    <input disabled value="5">
+                </td>
+              </tr>';
+    $html .= '<tr><td colspan="3"> Every Tuesday, first and third week
+                , for 4 months </td></tr>';
+    $html .= '<tr>
+                <td>
+                    <input disabled value="Tue">
+                </td>
+                <td>
+                    <input disabled value="first,third">
+                </td>
+                <td>
+                    <input disabled value="4">
+                </td>
+              </tr>';
+
     $html .= '</table>';
     return $html;
 }

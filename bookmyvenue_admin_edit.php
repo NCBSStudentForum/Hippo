@@ -16,6 +16,8 @@ if( strcasecmp($_POST['response'], 'edit' ) == 0 )
     // Get a representative event of this group.
     $event = getEventsById( $gid, $eid );
     echo printInfo( "Chaging following event $gid . $eid " );
+    echo arrayToTableHTML( $event, 'events' );
+    echo "<br><br>";
     echo '<form method="post" action="bookmyvenue_admin_edit_submit.php">';
     echo dbTableToHTMLTable( 'events'
         , $defaults = $event

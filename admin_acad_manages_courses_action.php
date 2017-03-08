@@ -34,7 +34,7 @@ else if( $_POST['response'] == 'delete' )
 else if ( $_POST[ 'response' ] == 'Add' ) 
 {
     echo printInfo( "Adding a new course in current course list" );
-    if( $strlen( $_POST[ 'id' ] ) > 0 )
+    if( strlen( $_POST[ 'id' ] ) > 0 )
     {
         $res = insertIntoTable( 
             'courses_metadata'

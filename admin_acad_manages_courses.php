@@ -43,7 +43,10 @@ $( function() {
 $course = array( 'id' => '', 'day' => '', 'start_time' => '', 'end_time' => '' );
 
 echo "<h2>Courses</h2>";
+
 echo coursesTable( );
+
+$buttonVal = 'Add';
 
 echo '<form method="post" action="">';
 echo '<input id="course" name="id" type="text" value="" >';
@@ -57,7 +60,10 @@ if( array_key_exists( 'id', $_POST ) )
     // Show emage.
     $course = __get__( $coursesMap, $_POST['id'], null );
     if( $course )
+    {
         echo arrayToVerticalTableHTML( $course, 'course' );
+        $buttonVal = 'Update';
+    }
 }
 
 echo '<h3>Add/Edit course details</h3>';
@@ -69,7 +75,7 @@ echo dbTableToHTMLTable( 'courses_metadata', $course
     , 'id,credits,name,description,instructor_1,instructor_2,instructor_3' 
         . ',instructor_4,instructor_5,instructor_6' 
         . ',comment'
-    , 'submit' 
+    , $buttonVal
     );
 
 echo '<button title="Delete this entry" type="submit" onclick="AreYouSure(this)"

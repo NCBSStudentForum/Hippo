@@ -19,34 +19,42 @@ else if( $_POST['response'] == 'delete' )
     // used in previous page. In most cases, user is likely to use autocomplete 
     // feature.
     if( strlen($_POST[ 'id' ]) > 0 )
-        $res = deleteFromTable( 'courses_metadata', 'id', $_POST );
-    if( $res )
     {
-        echo printInfo( "Successfully deleted entry" );
-        goBack( 'admin_acad_manages_current_courses.php', 0 );
-        exit;
+        $res = deleteFromTable( 'courses_metadata', 'id', $_POST );
+        if( $res )
+        {
+            echo printInfo( "Successfully deleted entry" );
+            goBack( 'admin_acad_manages_current_courses.php', 0 );
+            exit;
+        }
+        else
+            echo minionEmbarrassed( "Failed to delete speaker from database" );
     }
-    else
-        echo minionEmbarrassed( "Failed to delete speaker from database" );
 }
 else if ( $_POST[ 'response' ] == 'Add' ) 
 {
     echo printInfo( "Adding a new course in current course list" );
-    $res = insertIntoTable( 
-        'courses_metadata'
-        , 'id,name,credits,description' 
-            .  ',instructor_1,instructor_2,instructor_3'
-            . ',instructor_4,instructor_5,instructor_6,comment'
-        , $_POST 
-        );
-
-    if( ! $res )
-        echo printWarning( "Could not add course to list" );
-    else
+    if( $strlen( $_POST[ 'id' ] ) > 0 )
     {
-        goBack( 'admin_acad_manages_current_courses.php', 0 );
-        exit;
+        $res = insertIntoTable( 
+            'courses_metadata'
+            , 'id,name,credits,description' 
+                .  ',instructor_1,instructor_2,instructor_3'
+                . ',instructor_4,instructor_5,instructor_6,comment'
+            , $_POST 
+            );
+
+        if( ! $res )
+            echo printWarning( "Could not add course to list" );
+        else
+        {
+            goBack( 'admin_acad_manages_current_courses.php', 0 );
+            exit;
+        }
     }
+    else
+        echo printWarning( "Could ID can not be empty" );
+    
 
 }
 else if ( $_POST[ 'response' ] == 'Update' ) 

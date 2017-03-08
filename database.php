@@ -361,7 +361,7 @@ function initialize( )
     // list of courses.
     $res = $db->query( "
         create TABLE IF NOT EXISTS courses_metadata  (
-            id VARCHAR(20) NOT NULL PRIMARY KEY
+            id VARCHAR(8) NOT NULL PRIMARY KEY
             , credits INT NOT NULL DEFAULT 3
             , name VARCHAR(100) NOT NULL
             , description TEXT

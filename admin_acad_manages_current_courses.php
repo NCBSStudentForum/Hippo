@@ -40,13 +40,14 @@ $year = date( 'Y', strtotime( 'today' ) );
 $sem = getCurrentSemester( );
 $runningCourses = getSemesterCourses( $year, $sem );
 
+echo printInfo( "Current semester is $sem, $year" );
 foreach( $runningCourses as $course )
 {
     $course[ 'name' ] = $coursesMap[ $course[ 'course_id' ] ];
     echo arrayToTableHTML( $course, 'course', '', '', 'id' );
 }
 
-echo "<h2>Add a new course </h2>";
+echo "<h2>Assign a course to current sememster</h2>";
 
 
 echo '<form method="post" action="admin_acad_manages_courses_action.php">';

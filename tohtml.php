@@ -999,7 +999,7 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
     *
     * @return First part of the message.
  */
-function initUserMsg( $user )
+function initUserMsg( $user = null )
 {
     if( ! $user )
         $user = $_SESSION[ 'user' ];

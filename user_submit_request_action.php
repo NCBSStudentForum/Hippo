@@ -57,9 +57,10 @@ if( $msg == "OK" )
 
     if( $gid > 0 )
     {
-        $msg = initUserMsg( );
         $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
         $userEmail = $userInfo[ 'email' ];
+        $msg = initUserMsg( $_SESSION[ 'user' ] );
+
         $msg .= "<p>Your booking request id $gid has been created. </p>";
         $msg .= arrayToVerticalTableHTML( getRequestByGroupId( $gid )[0], 'request' );
         $msg .= "<p>You can edit/cancel the request anytime you like </p>";

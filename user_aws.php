@@ -21,8 +21,8 @@ if( $scheduledAWS )
     echo printWarning( "
         <x-small>
         This date is very unlikely to change without your approval.
-        In rare events when we cancel the AWS altogether for this day (happens once 
-        or twice a year), we'll schedule you in ASAP.
+        In rare case if we cancel the AWS altogether for this day (happens once 
+        or twice a year), we'll schedule you to nearest possible available slot.
         </x-small>
         "
     );
@@ -33,18 +33,22 @@ else
     {
         echo printInfo( "<font color=\"blue\">&#x2620 Your AWS is most likely to be on " . 
             humanReadableDate( $tempScheduleAWS[ 'date' ] ) . "</font>" .
-            ". Once confirmed, I will notify you immediately, and once more 
-            at least 1 months in advance." );
+            ".<br>Once confirmed, I will notify you immediately, 
+            and once more, at least 28 days in advance." );
 
         echo printWarning( 
             "This date may change a little if any other speaker's
             request to change their AWS is approved or new speakers are added. 
-            Once approved, this date is very unlikely to change without your approval.
+            After approval, this date is very unlikely to change without your consent.
             " 
         );
     }
     else
-        echo printInfo( "You don't have any AWS scheduled in next 12 months" );
+        echo printInfo( 
+            "You don't have any AWS scheduled in next 12 months. This happens if 
+            you already given 3 AWS or more. If this is not the case, you should 
+            write to academic office.
+        " );
 
 
     // Here user can submit preferences.
@@ -59,9 +63,10 @@ else
     if( ! $prefs )
     {
         echo printInfo( 
-            "If you are not happy with above tentative schedule, hurry up 
+            "If you can not make it on this date, hurry up 
             and let me know your preferred dates. I will try my best to assign you on 
-            or very near to these dates but I can not promise your requested slot.
+            or very near to these dates. Make sure you are available near these dates 
+            as well (+/- 2 weeks).
             "
             );
 

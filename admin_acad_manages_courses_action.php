@@ -19,7 +19,7 @@ else if( $_POST['response'] == 'delete' )
     // used in previous page. In most cases, user is likely to use autocomplete 
     // feature.
     if( strlen($_POST[ 'id' ]) > 0 )
-        $res = deleteFromTable( 'courses', 'id', $_POST );
+        $res = deleteFromTable( 'courses_metadata', 'id', $_POST );
     if( $res )
     {
         echo printInfo( "Successfully deleted entry" );
@@ -32,17 +32,13 @@ else if( $_POST['response'] == 'delete' )
 else if ( $_POST[ 'response' ] == 'Add' ) 
 {
     echo printInfo( "Adding a new course in current course list" );
-    $sem = getSemester( $_POST[ 'start_date' ] );
-    $year = date( 'Y', strtotime( $_POST[ 'start_date' ] ) ); 
-    $cid = "$year-$sem-" . $_POST[ 'course_id' ];
-
-    $_POST[ 'semester' ] = $sem;
-
     $res = insertIntoTable( 
-        'courses'
-        , 'id,course_id,semester,start_date,end_date,slot'
+        'courses_metadata'
+        , 'id,name,credits,description' 
+            .  ',instructor_1,instructor_2,instructor_3'
+            . ',instructor_4,instructor_5,instructor_6,comment'
         , $_POST 
-    );
+        );
 
     if( ! $res )
         echo printWarning( "Could not add course to list" );
@@ -53,10 +49,14 @@ else if ( $_POST[ 'response' ] == 'Add' )
     }
 
 }
-else   // update
+else if ( $_POST[ 'response' ] == 'Update' ) 
 {
-    $res = updateTable( 'courses', 'id,course_id'
-                , 'start_date,end_date,slot', $_POST 
+    $res = updateTable( 'courses_metadata'
+            , 'id'
+            , 'name,credits,description' 
+                .  ',instructor_1,instructor_2,instructor_3'
+                . ',instructor_4,instructor_5,instructor_6,comment'
+            , $_POST 
             );
 
     if( $res )
@@ -67,7 +67,7 @@ else   // update
     }
 }
 
-echo goBackToPageLink( 'admin_acad_manages_current_courses.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad_manages_courses.php', 'Go back' );
 
 
 ?>

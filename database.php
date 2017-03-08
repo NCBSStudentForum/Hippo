@@ -164,7 +164,7 @@ function initialize( )
             , recipients VARCHAR(1000) NOT NULL
             , cc VARCHAR(200) 
             , subject VARCHAR(1000) NOT NULL
-            , email_body TEXT NOT NULL
+            , msg TEXT NOT NULL
             , when_to_send DATETIME NOT NULL
             , status ENUM( "PENDING", "SENT", "FAILED", "CANCELLED" ) DEFAULT "PENDING"
             , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -829,7 +829,7 @@ function getSemester( $date )
  */
 function getYear( $date )
 {
-    return date( 'Y', dbDate( $date ) );
+    return date( 'Y', strtotime( $date ) );
 }
 
 function getCurrentYear( )

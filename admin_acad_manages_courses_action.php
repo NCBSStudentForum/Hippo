@@ -10,7 +10,7 @@ include_once 'tohtml.php';
 if( $_POST['response'] == 'DO_NOTHING' )
 {
     echo printInfo( "User said do nothing.");
-    goBack( "admin_acad_manages_current_courses.php", 0 );
+    goBack( "admin_acad_manages_courses.php", 0 );
     exit;
 }
 else if( $_POST['response'] == 'delete' )
@@ -18,13 +18,14 @@ else if( $_POST['response'] == 'delete' )
     // We may or may not get email here. Email will be null if autocomplete was 
     // used in previous page. In most cases, user is likely to use autocomplete 
     // feature.
+
     if( strlen($_POST[ 'id' ]) > 0 )
     {
         $res = deleteFromTable( 'courses_metadata', 'id', $_POST );
         if( $res )
         {
             echo printInfo( "Successfully deleted entry" );
-            goBack( 'admin_acad_manages_current_courses.php', 0 );
+            goBack( 'admin_acad_manages_courses.php', 0 );
             exit;
         }
         else
@@ -48,7 +49,7 @@ else if ( $_POST[ 'response' ] == 'Add' )
             echo printWarning( "Could not add course to list" );
         else
         {
-            goBack( 'admin_acad_manages_current_courses.php', 0 );
+            goBack( 'admin_acad_manages_courses.php', 0 );
             exit;
         }
     }
@@ -70,7 +71,7 @@ else if ( $_POST[ 'response' ] == 'Update' )
     if( $res )
     {
         echo printInfo( 'Updated course' );
-        goBack( 'admin_acad_manages_current_courses.php', 0 );
+        goBack( 'admin_acad_manages_courses.php', 0 );
         exit;
     }
 }

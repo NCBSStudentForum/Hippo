@@ -819,7 +819,35 @@ function getSemester( $date )
 
 }
 
+
+/**
+    * @brief Get current year.
+    *
+    * @param $date
+    *
+    * @return 
+ */
+function getYear( $date )
+{
+    return date( 'Y', dbDate( $date ) );
+}
+
+function getCurrentYear( )
+{
+    return getYear( 'today' );
+}
+
+
 function getCurrentSemester( )
 {
     return getSemester( 'today' );
+}
+
+function getCourseInstanceId( $courseId, $sem = null, $year = null )
+{
+    if( ! $sem )
+        $sem = getCurrentSemester( );
+    if( ! $year )
+        $year = getCurrentYear( );
+    return "$courseId-$sem-$year";
 }

@@ -189,7 +189,11 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         // If there is already any request or event on this venue, do not book.
         if( $nEvent > 0 )
+        {
+            echo alertUser( "Venue " . $venue[ 'id' ] . " is taken." .
+                " $nEvent booking requests or events are pending" );
             continue;
+        }
 
         // Now construct a table and form
         echo '<tr>';

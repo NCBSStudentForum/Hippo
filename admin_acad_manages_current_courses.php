@@ -12,6 +12,7 @@ echo userHTML( );
 $sem = getCurrentSemester( );
 $year = getCurrentYear( );
 
+$action = 'Add';
 
 // Get the list of all courses. Admin will be asked to insert a course into 
 // database.
@@ -37,9 +38,8 @@ $runningCourseIds = array_map(
 $( function() {
     var coursesDict = <?php echo json_encode( $coursesMap ) ?>;
     var courses = <?php echo json_encode( $runningCourseIds ); ?>;
-    $( "#course" ).autocomplete( { source : courses }); 
-    $( "#course" ).attr( "placeholder", "autocomplete" );
-    $( "input[id^=courses_metadata_instructor]" ).attr( "placeholder", "autocomplete" );
+    $( "#running_course" ).autocomplete( { source : courses }); 
+    $( "#running_course" ).attr( "placeholder", "autocomplete" );
 });
 
 </script>
@@ -48,11 +48,13 @@ $( function() {
 
 // Array to hold runnig course.
 $default = array( 'course_id' => $courseIdsSelect );
-if( $_POST && array_key_exists( 'course', $_POST ) )
+if( $_POST && array_key_exists( 'running_course', $_POST ) )
 {
-    $default[ 'id' ] = $_POST[ 'id' ];
-    $runningCourse = getCourseInstanceId( $default[ 'id' ] );
+    $runningCourse = getTableEntry( 'courses', 'id'
+                            , array( 'id' =>  $_POST[ 'running_course' ] ) 
+                        );
     $default = array_merge( $default, $runningCourse );
+    $action = 'Edit';
 }
 
 
@@ -61,6 +63,7 @@ echo "<h2>Courses running these days</h2>";
 echo printInfo( "Current semester is $sem, $year" );
 
 echo '<div style="font-size:small">';
+
 foreach( $runningCourses as $course )
     echo arrayToTableHTML( $course, 'info', '', '', 'id' );
 
@@ -71,14 +74,19 @@ echo '<form method="post" action="#">';
 echo '<table class="">';
 echo '<tr>
         <td>
-            <input id="course" type="text" >
+            <input id="running_course" name="running_course" type="text" >
         </td>
         <td>
             <button name="response" value="search" style="float:left" >' . 
                 $symbScan . '</button>
         </td>
     </tr>';
-echo '<input type="hidden" name="id" value="' . $course['course_id'] . '">';
+
+// If a course has been selected then add its id to a hidden field. This entry 
+// in invalid when adding a new course to current semester courses.
+if( $action != 'Add' )
+    echo '<input type="hidden" name="id" value="' . $course['course_id'] . '">';
+
 echo '</table>';
 
 echo '</form>';
@@ -93,9 +101,14 @@ echo '<form method="post" action="admin_acad_manages_current_courses_action.php"
 // We will figure out the semester by start_date .
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'course_id,start_date,end_date', 'Add' 
+    , 'course_id,start_date,end_date', $action 
     , 'semester'
     );
+
+if( $action == 'Edit' )
+    echo '<button name="response" onclick="AreYouSure(this)">' . 
+            $symbDelete . '</button>';
+
 echo '</form>';
 
 

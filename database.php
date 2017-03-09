@@ -817,7 +817,7 @@ function getEventsOnThisVenueBetweenTime( $venue, $date
     $stmt = $db->prepare( 
         "SELECT * FROM events
         WHERE venue=:venue AND status=:status AND date=:date 
-            AND ( start_time >= :start_time OR end_time <= :end_time )
+            AND ( start_time >= :start_time AND end_time <= :end_time )
         "
     );
     $stmt->bindValue( ':date', $date );
@@ -849,7 +849,7 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
     $stmt = $db->prepare( 
         "SELECT * FROM bookmyvenue_requests 
         WHERE venue=:venue AND status=:status AND date=:date
-            AND ( start_time >= :start_time OR end_time <= :end_time )
+            AND ( start_time >= :start_time AND end_time <= :end_time )
         " );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':start_time', $start_time );

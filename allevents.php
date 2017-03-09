@@ -47,25 +47,25 @@ echo '<form action="" method="get" accept-charset="utf-8">
 $calendarDate = humanReadableDate( $defaults[ 'date' ] );
 echo "<h1> Table of events on $calendarDate </h1>";
 
-foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
-{
-    $events = getEventsOnThisVenueOnThisday( $venueId, $defaults[ 'date' ] );
-    if( count( $events ) < 1 )
-        continue;
+//foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
+$events = getEventsOn( $defaults['date' ] );
+echo '<table width="200px">';
+echo '<tr>';
 
-    echo venueToText( $venuesDict[ $venueId ] );
-    echo '<table>';
-    echo '<tr>';
-    foreach( $events as $ev )
-    {
-        echo "<td style=\"min-width:150px;max-width:300px;border:1px dotted;\">";
-        echo eventToShortHTML( $ev );
-        echo "</td>";
-    }
-    echo '</tr>';
-    echo '</table>';
-    echo '</br>';
+$count = 0;
+foreach( $events as $ev )
+{
+    $count += 1;
+    if( $count % 7 == 0 )
+        echo "</tr><tr>";
+    echo "<td style=\"min-width:150px;max-width:300px;border:1px dotted;\">";
+    echo eventToShortHTML( $ev );
+    echo "</td>";
 }
+
+echo '</tr>';
+echo '</table>';
+echo '</br>';
 
 echo closePage( );
 

@@ -445,11 +445,10 @@ p.note_to_user {
 }
 
 div.alert_user {
-   font-size : large;
    max-width : vars(--maxwidth);
    min-width : 100%;
    padding-bottom : 10px;
-   background: white;
+   color : blue;
 }
 
 td.db_table_fieldname {
@@ -484,6 +483,11 @@ table.repeat_pat {
     border: 1px dotted;
     min-width: 500px;
     max-width : vars(--maxwidth);
+}
+
+table.repeat_pat tr td  {
+    min-width: 200px;
+    max-width : 30%;
 }
 
 /* SELECT 

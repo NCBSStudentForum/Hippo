@@ -1216,23 +1216,15 @@ function downloadTextFile( $filename, $msg = 'Download file' )
 //     </td> 
 function repeatPatternTable( $className )
 {
-    $html = '<table class="' . $className . '">';
-    $html .= '<tr> <th colspan="3">Recurrent events (optional) </th></tr>
-            <tr>
-                <th>On following days</th><th>On these weeks</th><th>For these many months</th>
-            </tr>
-            <tr>
-                <td> <input type="text" name="day_pattern" placeholder="Sun,Mon"/ > </td>
-                <td> <input type="text" name="week_pattern" placeholder="first,second etc."/></td>
-                <td><input type="text" name="month_pattern" placeholder="6" /></td>
-            </tr>';
-    $html .= "</table>";
+    $html = '<h4>RECURRENT EVENTS (optional)</h4>';
+
+    $html .= "<p style=\"color:blue\">Some examples of recurrent events.</p>";
+
+    $html .= "<div style=\"font-size:small\">";
     $html .= '<table class="' . $className . '">';
-    $html .= '<tr><th colspan="3"> Examples:  </th></tr>';
-    $html .= '<tr><td colspan="3"> Every saturday, every week
-                , for 3 months  </td></tr>';
-    $html .= '<tr>
-                <td>
+    $html .= '<tr><td> Every saturday, every week
+                , for 3 months  </td>';
+    $html .= '<td>
                     <input disabled value="Sat">
                 </td>
                 <td>
@@ -1242,10 +1234,9 @@ function repeatPatternTable( $className )
                     <input disabled value="3">
                 </td>
               </tr>';
-    $html .= '<tr><td colspan="3"> Every monday and thursday, every week
-                , for 5 months  </td></tr>';
-    $html .= '<tr>
-                <td>
+    $html .= '<tr><td> Every monday and thursday, every week
+                , for 5 months  </td>';
+    $html .= '<td>
                     <input disabled value="Mon,Thu">
                 </td>
                 <td>
@@ -1255,10 +1246,9 @@ function repeatPatternTable( $className )
                     <input disabled value="5">
                 </td>
               </tr>';
-    $html .= '<tr><td colspan="3"> Every Tuesday, first and third week
-                , for 4 months </td></tr>';
-    $html .= '<tr>
-                <td>
+    $html .= '<tr><td> Every Tuesday, first and third week
+                , for 4 months </td>';
+    $html .= '<td>
                     <input disabled value="Tue">
                 </td>
                 <td>
@@ -1270,6 +1260,17 @@ function repeatPatternTable( $className )
               </tr>';
 
     $html .= '</table>';
+    $html .= "</div>";
+
+    $html .= "<br>";
+    $html .= '<table class="' . $className . '">';
+    $html .= ' <tr>
+                <td> <p style="color:blue">Your recurrent pattern here </p></td>
+                <td> <input type="text" name="day_pattern" / > </td>
+                <td> <input type="text" name="week_pattern" /></td>
+                <td><input type="text" name="month_pattern" placeholder="6" /></td>
+            </tr>';
+    $html .= "</table>";
     return $html;
 }
 

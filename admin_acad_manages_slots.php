@@ -10,7 +10,7 @@ include_once 'methods.php';
 echo userHTML( );
 
 // Javascript.
-$slots = getTableEntries( 'slots' );
+$slots = getTableEntries( 'slots', 'groupid' );
 
 //var_dump( $speakers );
 

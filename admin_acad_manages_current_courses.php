@@ -20,6 +20,26 @@ $allCourses = getTableEntries( 'courses_metadata' );
 $coursesId = array_map( function( $x ) { return $x['id']; }, $allCourses );
 $coursesMap = array( );
 
+$slots = getTableEntries( 'slots', 'groupid' );
+$slotMap = array();
+foreach( $slots as $s )
+{
+    $slotGroupId = $s[ 'groupid' ];
+    if( ! array_key_exists( $slotGroupId, $slotMap ) )
+        $slotMap[ $slotGroupId ] = $slotGroupId .  ' (' . $s['day'] . ':' 
+                                . humanReadableTime( $s[ 'start_time' ] )
+                                . '-' . humanReadableTime( $s['end_time'] ) 
+                                . ')';
+    else
+        $slotMap[ $slotGroupId ] .= ' (' . $s['day'] . ':' 
+                                . humanReadableTime( $s[ 'start_time' ] )
+                                . '-' . humanReadableTime( $s['end_time'] ) 
+                                . ')';
+}
+
+$slotSelect = arrayToSelectList( 'slot', array_keys($slotMap), $slotMap );
+echo $slotSelect;
+
 foreach( $allCourses as $c )
     $coursesMap[ $c[ 'id' ] ] = $c[ 'name' ];
 

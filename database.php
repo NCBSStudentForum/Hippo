@@ -789,7 +789,7 @@ function getEventsOn( $day, $status = 'VALID')
 {
     global $db;
     $stmt = $db->prepare( "SELECT * FROM events 
-        WHERE status=:status AND date = :date" );
+        WHERE status=:status AND date = :date ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $day );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );

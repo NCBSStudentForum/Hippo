@@ -809,6 +809,17 @@ function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief get overlapping requests or events.
+    *
+    * @param $venue
+    * @param 
+    * @param $start_time
+    * @param 
+    * @param $status
+    *
+    * @return 
+ */
 function getEventsOnThisVenueBetweenTime( $venue, $date
     , $start_time, $end_time
    ,  $status = 'VALID' )
@@ -817,7 +828,10 @@ function getEventsOnThisVenueBetweenTime( $venue, $date
     $stmt = $db->prepare( 
         "SELECT * FROM events
         WHERE venue=:venue AND status=:status AND date=:date 
-            AND ( start_time >= :start_time AND end_time <= :end_time )
+        AND ( (start_time < :start_time AND end_time > :start_time )
+              OR ( start_time < :end_time AND end_time > :end_time )
+              OR ( start_time >= :start_time AND end_time <= :end_time )
+            )
         "
     );
     $stmt->bindValue( ':date', $date );
@@ -849,7 +863,10 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
     $stmt = $db->prepare( 
         "SELECT * FROM bookmyvenue_requests 
         WHERE venue=:venue AND status=:status AND date=:date
-            AND ( start_time >= :start_time AND end_time <= :end_time )
+        AND ( (start_time < :start_time AND end_time > :start_time )
+              OR ( start_time < :end_time AND end_time > :end_time )
+              OR ( start_time >= :start_time AND end_time <= :end_time )
+            )
         " );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':start_time', $start_time );

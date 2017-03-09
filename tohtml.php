@@ -742,11 +742,11 @@ function dbTableToHTMLTable( $tablename
     // user pass an empty value
     $buttonSym = ucfirst( $button_val );
 
-    if( $button_val == 'submit' )
+    if( strtolower($button_val) == 'submit' )
         $buttonSym = "&#10003";
-    else if( $button_val == 'update' )
+    else if( strtolower( $button_val ) == 'update' )
         $buttonSym = $symbUpdate;
-    else if( $button_val == 'edit' )
+    else if( strtolower( $button_val ) == 'edit' )
         $buttonSym = $symbEdit;
 
     if( count( $editables ) > 0 && strlen( $button_val ) > 0 )

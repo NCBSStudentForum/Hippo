@@ -90,7 +90,6 @@ function generateAWSEmail( $monday )
     if( ! file_exists( $pdffile ) )
     {
         echo printWarning( "Could not generate PDF $pdffile." );
-        echo $res;
         $pdffile = '';
     }
 
@@ -110,7 +109,7 @@ echo printInfo( "Today is $today" );
 if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
-    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '4:30 pm' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
@@ -128,7 +127,8 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             $subject .= implode( ', ', $res[ 'speakers'] );
             $mail = $res[ 'email' ];
             $pdffile = $res[ 'pdffile' ];
-            $res = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+
+            $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, $pdffile );
             ob_flush( );
         }
         else

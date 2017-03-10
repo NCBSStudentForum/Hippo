@@ -22,7 +22,7 @@ function feedDate( $date )
     return humanReadableDate( $date );
 }
 
-$events = getPublicEvents( 'today', 'VALID', 7 );
+$events = getPublicEvents( 'today', 'VALID', 60 );
 
 $feed =  '<rss version="2.0">
     <channel>';

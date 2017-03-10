@@ -43,6 +43,10 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     <td> <a href="aws_stats.php" target="_blank" >AWS Statistics </a> </td>
     <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td>
     <td> <a href="howto.php" target="_blank" >HOWTO</a></td>
+    <td> <a href="rss.php" target="_blank" >
+            <img src="data/feed-icon-14x14.2168a573d0d4.png" 
+                alt="Subscribe to public events">
+            </a></td>
     </tr>
 </table>
 </div>

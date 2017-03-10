@@ -27,7 +27,7 @@ $events = getPublicEvents( 'today', 'VALID', 60 );
 $feed =  '<rss version="2.0">
     <channel>';
 
-$feed .= "<title>Events over next 7 days</title>";
+$feed .= "<title>Events over next 60 days</title>";
 $feed .= "<link>" . appURL( ) . "</link>";
 $feed .= "<description>NCB events list </description>";
 foreach( $events as $e )

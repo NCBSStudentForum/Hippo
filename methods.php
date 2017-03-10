@@ -1,5 +1,6 @@
 <?php 
 
+include_once 'header.php';
 include_once 'display_content.php';
 include_once 'logger.php' ;
 include_once 'html2text.php';

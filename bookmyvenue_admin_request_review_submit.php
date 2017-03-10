@@ -85,6 +85,7 @@ else
             //exit;
         }
     }
+
     $msg .= "</table>";
 
     // Append user email to front.

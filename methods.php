@@ -20,14 +20,17 @@ $phpFileUploadErrors = array(
 );
 
 
-function venueToText( $venue )
+function venueToText( $venue, $show_strength = true )
 {
     if( is_string( $venue ) )
         $venue = getVenueById( $venue );
 
     $txt = '';
     $txt .= $venue['id'] . ' ';
-    $txt .= ' ' . $venue['strength'] . ' ';
+
+    if( $show_strength )
+        $txt .= ' ' . $venue['strength'] . ' ';
+
     $txt .= '[' . $venue['type'] . ']' ;
     return $txt;
 }

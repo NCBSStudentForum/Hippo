@@ -46,6 +46,14 @@ def main( args ):
     # Now attach files Only PDF are allowed.
     for attach in args.attach:
         print( '[INFO] Attaching file %s' % attach )
+        if not os.path.exists( attach ):
+            continue 
+
+        # if filesize is more than 1 MB, ignore it.
+        filesize = os.path.getsize( attach ) >> 20
+        if filesize > 1.0:
+            continue
+
         with open( attach, 'rb' ) as f:
             data = MIMEBase( 'application', 'pdf' )
             data.set_payload( f.read( ) )

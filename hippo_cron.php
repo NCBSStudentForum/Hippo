@@ -145,7 +145,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 }
 else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
-    error_log( "Monday 10am. Notify about AWS" );
+    error_log( "Monday 8am. Notify about AWS" );
     // Send on 8am.
     $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
@@ -228,7 +228,6 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
         $attachment = $pdffile;
     }
 
-
     // Now prepare an email to sent to mailing list.
     $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
     $subject = "Today's (" . humanReadableDate( $today ) . ") talks/seminars on the campus";
@@ -238,11 +237,9 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     if( array_key_exists( 'email_body' ) && $template[ 'email_body' ] )
     {
         // Send it out.
-        echo "<pre> $email </pre>";
-        echo $subject;
         $to = $template[ 'recipients' ];
         $ccs = $template[ 'CC' ];
-        echo "Send to $to and CC to $cc";
+        sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
     }
 
     ob_flush( );

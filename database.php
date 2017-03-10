@@ -1,6 +1,5 @@
 <?php
 
-include_once( "header.php" );
 include_once( "methods.php" );
 include_once( 'ldap.php' );
 
@@ -753,13 +752,16 @@ function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
 /**
     * @brief Get the list of upcoming events.
  */
-function getPublicEvents( $from = 'today', $status = 'VALID' )
+function getPublicEvents( $from = 'today', $status = 'VALID', $ndays = 1 )
 {
     global $db;
     $from = dbDate( $from );
+    $end = dbDate( strtotime( $from . " +$ndays day" ) );
     $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
+        date <= :end_date AND
         status=:status AND is_public_event='YES' ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $from );
+    $stmt->bindValue( ':end_date', $end );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );

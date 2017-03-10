@@ -42,7 +42,7 @@ function generateAWSEmail( $monday )
         if( $holiday )
         {
             $html .= "<p>It is most likely due to following event/holiday: " . 
-                        strtoupper( $holiday['description'] ) ".</p>";
+                        strtoupper( $holiday['description'] ) . ".</p>";
 
         }
 

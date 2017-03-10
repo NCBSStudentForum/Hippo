@@ -578,7 +578,7 @@ function getThumbnail( $originalImage )
     // Keep the scaling factor of original image. User ImageMagick.
 
     $img = new Imagick( $originalImage );
-    $img->thumbnailImage( 200, 0, Imagick::FILTER_UNDEFINED, 1);
+    $img->thumbnailImage( 200, 0 );
     $outputImage = $originalImage . "_thumbnail.jpg";
     $img->writeImage( $outputImage );
     $img->clear( );

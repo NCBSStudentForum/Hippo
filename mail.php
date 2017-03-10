@@ -24,6 +24,12 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     global $maildir;
     $conf = getConf( );
 
+    if( ! is_string( $msg ) )
+    {
+        error_log( "Email msg is not in string format" );
+        return;
+    }
+
     printInfo( "Trying to send email to $to, $cclist with subject $sub" );
     if( strlen( trim( $msg ) ) < 1 )
         return;

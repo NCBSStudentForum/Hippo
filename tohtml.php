@@ -162,7 +162,9 @@ function eventToText( $event )
     $html .= '';
     $html .= __get__( $event, 'title', '' );
     $html .= ' @' . $event['venue'] . ', ';
-    $html .= $event['start_time'] . ' to ' . $event['end_time'];
+    $html .= humanReadableDate( $event['date'] );
+    $html .= ', ' . humanReadableTime( $event['start_time'] ) 
+                . ' to ' . humanReadableTime( $event['end_time'] ) ;
     return $html;
 }
 

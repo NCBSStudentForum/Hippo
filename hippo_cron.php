@@ -1,5 +1,6 @@
 <?php
 
+include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
@@ -275,7 +276,7 @@ if( $today >= $startDay && $today <= $endDay )
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );
             sendPlainTextEmail( 
-                $temp[ 'email_body' ], $subject, $to, $templ[ 'cc' ] 
+                $templ[ 'email_body' ], $subject, $to, $templ[ 'cc' ] 
                 );
         }
 

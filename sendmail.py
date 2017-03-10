@@ -31,6 +31,7 @@ def main( args ):
     print( args.to )
     msg = MIMEMultipart( 'alernative' )
     msg[ 'To' ] = ",".join( args.to )
+
     if args.cc:
         msg[ 'CC' ] = ','.join( args.cc )
         toAddr += args.cc

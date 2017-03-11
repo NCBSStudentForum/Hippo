@@ -901,7 +901,7 @@ function submitRequest( $request )
     $repeatPat = __get__( $request, 'repeat_pat', '' );
 
     if( strlen( $repeatPat ) > 0 )
-        $days = repeatPatToDays( $repeatPat );
+        $days = repeatPatToDays( $repeatPat, $request[ 'date' ] );
     else 
         $days = Array( $request['date'] );
 

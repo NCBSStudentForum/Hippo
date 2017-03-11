@@ -326,7 +326,7 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
       , "fst" => 0, "snd" => 1, "thrd" => 3, "frth" => 3
    );
 
-   $daypat = trim( $daypat )l
+   $daypat = trim( $daypat );
    if( strlen( $daypat ) == 0 )
        return '';
 

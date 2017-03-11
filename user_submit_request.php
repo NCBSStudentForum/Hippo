@@ -12,8 +12,8 @@ mustHaveAnyOfTheseRoles( array( 'USER', 'BOOKMYVENUE_ADMIN' ) );
 
 echo alertUser( '
     <tt>IS PUBLIC EVENT</tt> set to <tt>YES</tt> means that this event 
-    will be visible to whole world. For examples, AWS, public talks and lectures needs 
-    this option set to <tt>YES</tt>.
+    will be visible to whole world. For examples, AWS, public talks and lectures 
+    need this option set to <tt>YES</tt>.
     ' );
     
 $venues = getVenues( $sortby = 'total_events' );

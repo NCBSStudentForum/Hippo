@@ -60,12 +60,12 @@ else
     $openAirNo = 'checked';
 
 
-//echo alertUser(
-    //'A powerful booking interface (not mobile friendly) is recommended 
-    //if you need to explore other events/dates/venues before booking.
-    //<a href="bookmyvenue_browse.php">TAKE ME THERE</a>
-    //'
-    //);
+echo alertUser(
+    'A powerful booking interface is also available 
+    if you need to explore other events/dates/venues 
+    <a href="bookmyvenue_browse.php">TAKE ME THERE</a>
+    '
+    );
 
 echo '<br />';
 echo '<table style="min-width:300px;max-width:500px",border="0">';
@@ -118,7 +118,8 @@ echo '
         <td></td>
         <td style="text-align:right">
         <button title="Scan for venues" 
-            name="Response" value="scan">' .  $symbScan . '</button>
+            style="font-size:large" name="Response" value="scan">
+                Show me <br> available venues</button>
         </td>
     </tr>
     ';

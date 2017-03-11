@@ -186,7 +186,7 @@ function __get__( $arr, $what, $default = NULL )
     *
     * @return List of dates generated from this pattern. 
  */
-function repeatPatToDays( $pat )
+function repeatPatToDays( $pat, $start_day = 'today' )
 {
     if( trim($pat) == '' )
         return;
@@ -213,10 +213,7 @@ function repeatPatToDays( $pat )
 
     // Get the base day which is Sunday. If today is not sunday then previous
     // Sunday must be taken into account.
-    if( date('w', strtotime( 'today' ) ) == 0 )
-        $baseDay = date( 'Y-m-d', strtotime( 'today' ) );
-    else
-        $baseDay = date( 'Y-m-d', strtotime( "previous Sunday" ));
+    $baseDay = dbDate( strtotime( 'last sunday', strtotime( $start_day) ) );
 
     // Now fill the dates for given pattern.
     $dates = Array( );
@@ -329,12 +326,13 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
       , "fst" => 0, "snd" => 1, "thrd" => 3, "frth" => 3
    );
 
-   if( ! trim( $daypat ) )
+   $daypat = trim( $daypat )l
+   if( strlen( $daypat ) == 0 )
        return '';
 
    $repeatPat = '';
    $daypat = str_replace( ",", " ", $daypat );
-   $weekpat = str_replace( ",", " ", $weekpat );
+   $weekpat = str_replace( ",", " ", trim( $weekpat ) );
 
    $days = array_map( function( $day ) {
       return date('w', strtotime( $day ) ); }, explode( " ", $daypat )

@@ -8,15 +8,23 @@ mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 
 echo userHTML( );
 
-$default = array( );
-$action = 'Add';
+$action = 'add';
 
 $faculty = getFaculty( );
 $facultyMap = array( );
+$default = array( );
+
 foreach( $faculty as $fac )
     $facultyMap[ $fac[ 'email' ] ] = $fac;
 
+echo "<h2>Add a new faculty or update existing faculty </h3>";
+
 $facultyEmails = array_keys( $facultyMap );
+echo printInfo( '
+    If email is not found in database, you may add a faculty, otherwise
+    you can update an existing faculty. You can also add instructor of given 
+    course.
+    ' );
 
 ?>
 
@@ -35,35 +43,29 @@ echo '<form method="post" action="">
     <button type="submit" name="response" value="search">Search</button>
     </form>';
 
-if( array_key_exists( 'response', $_POST ) )
+if( $_POST && array_key_exists( 'response', $_POST ) )
 {
-    $faculty = getTableEntry( 'faculty', 'email', array( 'email' => $_POST['faculty_email'] ) );
-    $default = array_merge( $default, $faculty );
-    $action = 'Update';
+    $faculty = getTableEntry( 'faculty', 'email'
+                    , array( 'email' => $_POST['faculty_email'] ) 
+                );
+    if( $faculty )
+    {
+        $default = array_merge( $default, $faculty );
+        $action = 'submit';
+    }
 }
 
 echo '<br/><br/>';
+
+$default[ 'modified_on' ] = dbDateTime( 'now' );
 
 echo '<form method="post" action="admin_manages_faculty_submit.php">';
 echo dbTableToHTMLTable( 'faculty'
     , $default
     , array( 'email', 'first_name', 'middle_name', 'last_name'
-    , 'status', 'affiliation', 'url' ), $action
+    , 'status', 'affiliation', 'url', 'institute' ), $action
 );
 echo "</form>";
-
-
-
-echo "<h3>Update existing faculty</h3>";
-
-//foreach( $faculty as $fac )
-//{
-//    echo '<form method="post" action="admin_manages_faculty_submit.php">';
-//    echo dbTableToHTMLTable( 'faculty', $fac
-//        ,  array( 'first_name', 'middle_name', 'last_name'
-//        , 'status', 'url', 'affiliation' ), 'edit' );
-//    echo '</form>';
-//}
 
 echo goBackToPageLink( "admin.php", "Go back" );
 

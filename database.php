@@ -261,11 +261,13 @@ function initialize( )
             , first_name VARCHAR( 200 ) NOT NULL
             , middle_name VARCHAR(200)
             , last_name VARCHAR( 200 ) 
+            , affiliation ENUM ( 'NCBS', 'INSTEM', 'OTHER' ) DEFAULT 'INSTEM'
             , status ENUM ( 'ACTIVE', 'INACTIVE', 'INVALID' ) DEFAULT 'ACTIVE'
-            , affiliation VARCHAR( 1000 ) NOT NULL DEFAULT 'NCBS Bangalore'
+            , institute VARCHAR( 100 )
+            , url VARCHAR(300) 
             , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
             , modified_on DATETIME NOT NULL
-            , url VARCHAR(300) )"
+            )"
         );
 
     // This table keeps the archive. We only move complete AWS entry in to this 
@@ -1372,7 +1374,10 @@ function getAwsOfSpeaker( $speaker )
 function getSupervisors( )
 {
     global $db;
+    // First get all faculty members 
     $faculty = getFaculty( $status = 'ACTIVE' );
+
+    // And then all supervisors.
     $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
     $stmt->execute( );
     $supervisors = fetchEntries( $stmt );
@@ -1763,11 +1768,12 @@ function temporaryAwsSchedule( $speaker )
 function getFaculty( $status = '', $order_by = 'first_name' )
 {
     global $db;
-    $query = 'SELECT * FROM faculty ';
+    $query = 'SELECT * FROM faculty';
+    $whereExpr = " WHERE affiliation != 'OTHER' ";
     if( $status )
-        $query .= " WHERE status=:status ";
+        $query .= " $whereExpr AND status=:status ";
     else
-        $query .= " WHERE status != 'INACTIVE' ";
+        $query .= " $whereExpr AND status != 'INACTIVE' ";
 
     if( $order_by )
         $query .= " ORDER BY  '$order_by' ";

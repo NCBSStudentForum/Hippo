@@ -6,7 +6,7 @@ include_once "check_access_permissions.php";
 
 mustHaveAnyOfTheseRoles( array( 'ADMIN', 'AWS_ADMIN' ) );
 
-if( $_POST['response'] == 'edit' )
+if( $_POST['response'] == 'submit' )
 {
     $_POST[ 'modified_on' ] = date( 'Y-m-d H:i:s', strtotime( 'now' ));
     $res = updateTable( 'faculty', 'email'
@@ -17,7 +17,7 @@ if( $_POST['response'] == 'edit' )
     if( $res )
     {
         echo printInfo( 'Successfully updated faculty' );
-        goToPage( $_SERVER[ "HTTP_REFERER" ], 1 );
+        goBack( 'admin_manages_faculty.php', 1 );
         exit;
     }
     else

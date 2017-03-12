@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once 'header.php';
 include_once 'methods.php';
@@ -11,10 +11,12 @@ if( $useCKEditor )
 ?>
 
 <script>
-function displayEvent( button ) {
+function displayEvent( button )
+{
     alert( button.value );
 };
-function displayRequest( button ) {
+function displayRequest( button )
+{
     alert( button.value );
 };
 </script>
@@ -70,7 +72,7 @@ function speakerToHTML( $speaker )
 /**
     * @brief Summary table for front page.
     *
-    * @return 
+    * @return
  */
 function summaryTable( )
 {
@@ -91,20 +93,20 @@ function summaryTable( )
 
 function loginForm()
 {
-  $conf = $_SESSION['conf'];
-  /* Check if ldap server is alive. */
-  $table = "";
-  $table .= '<form action="login.php" method="post">';
-  $table .= '<table class="login_main">';
-  $table .= '<tr><td><small>NCBS/InSTEM Username
-        <br><tt>(without @ncbs.res.in etc. )</tt> </small> </td></tr> ';
-  $table .= '<tr><td><input type="text" name="username" id="username" /> </td></tr>';
-  $table .= '<tr><td><small>Password</small></td></tr>';
-  $table .= '<tr><td> <input type="password"  name="pass" id="pass"> </td></tr>';
-  $table .= '<tr><td> <input style="float: right" type="submit" name="response" value="Login" /> </td></tr>';
-  $table .= '</table>';
-  $table .= '</form>';
-  return $table;
+    $conf = $_SESSION['conf'];
+    /* Check if ldap server is alive. */
+    $table = "";
+    $table .= '<form action="login.php" method="post">';
+    $table .= '<table class="login_main">';
+    $table .= '<tr><td><small>NCBS/InSTEM Username
+              <br><tt>(without @ncbs.res.in etc. )</tt> </small> </td></tr> ';
+    $table .= '<tr><td><input type="text" name="username" id="username" /> </td></tr>';
+    $table .= '<tr><td><small>Password</small></td></tr>';
+    $table .= '<tr><td> <input type="password"  name="pass" id="pass"> </td></tr>';
+    $table .= '<tr><td> <input style="float: right" type="submit" name="response" value="Login" /> </td></tr>';
+    $table .= '</table>';
+    $table .= '</form>';
+    return $table;
 }
 
 function sanitiesForTinyMCE( $text )
@@ -131,7 +133,7 @@ function prettify( $string )
     *
     * @param $requests
     *
-    * @return 
+    * @return
  */
 function requestsToHTMLReviewForm( $requests )
 {
@@ -143,12 +145,12 @@ function requestsToHTMLReviewForm( $requests )
         $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
         $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
         $html .= arrayToTableHTML( $r, 'events'
-            , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' ) 
-        );
+                                   , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' )
+                                 );
         $html .= '</td>';
         $html .= '<td style="background:white">
-                        <button name="response" value="Review">Review</button>
-                </td>';
+                 <button name="response" value="Review">Review</button>
+                 </td>';
         $html .= '</tr>';
     }
     $html .= '</table>';
@@ -164,8 +166,8 @@ function eventToText( $event )
     $html .= __get__( $event, 'title', '' );
     $html .= ' @' . $event['venue'] . ', ';
     $html .= humanReadableDate( $event['date'] );
-    $html .= ', ' . humanReadableTime( $event['start_time'] ) 
-                . ' to ' . humanReadableTime( $event['end_time'] ) ;
+    $html .= ', ' . humanReadableTime( $event['start_time'] )
+             . ' to ' . humanReadableTime( $event['end_time'] ) ;
     return $html;
 }
 
@@ -205,11 +207,11 @@ function eventSummary( $event )
     $html = '<table class=\"event_summary\">';
     $html .= '<tr><td><small>WHEN</small></td><td>' .  date( 'l M d, Y', strtotime($event['date']));
     $html .= date('H:i', strtotime($event['start_time']))  . ' to ' .
-            date( 'H:i', strtotime(  $event['end_time'])) . '</td></tr>';
+             date( 'H:i', strtotime(  $event['end_time'])) . '</td></tr>';
 
     $html .= '<tr><td><small>WHERE</small></td><td>'.  $event['venue'] . "</td></tr>";
     $html .= '<tr><td><small>WHAT</small></td><td>' . $event['title']
-            . "</td></tr>";
+             . "</td></tr>";
     $html .= "</table>";
     return $html;
 }
@@ -225,7 +227,7 @@ function requestToText( $req )
     return $html;
 }
 
-// $day and $hour are used to check if at this day and hour  this venue is 
+// $day and $hour are used to check if at this day and hour  this venue is
 // booked or have pending requests.
 function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 {
@@ -235,20 +237,20 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
     $html .= "<tr><td colspan=\"$section\"> $tableTime </td></tr>";
 
     $html .= "<tr>";
-    for( $i = 0; $i < $section; $i++) 
+    for( $i = 0; $i < $section; $i++)
     {
         $stepT = $i * 60 / $section;
         $segTime = strtotime( "+ $stepT minutes", $hour );
         $segDateTime = strtotime( $day . ' ' . date('H:i', $segTime ));
 
-        // Check  for events at this venue. If non, then display + (addEvent) 
+        // Check  for events at this venue. If non, then display + (addEvent)
         // button else show that this timeslot has been booked.
-        
+
         $events = eventsAtThisVenue( $venue, $day, $segTime );
         $requests = requestsForThisVenue( $venue, $day, $segTime );
 
-        // If there is a public event at this time, change the color of all 
-        // button at all venues. Thats clue to user that something else has been 
+        // If there is a public event at this time, change the color of all
+        // button at all venues. Thats clue to user that something else has been
         // approved at this time.
         $is_public_event = '';
         if( count( publicEvents( $day, $segTime ) ) > 0 )
@@ -267,8 +269,8 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 
             $html .= "</td>";
             // And the hidden elements to carry the values to the action page.
-            $html .= '<input type="hidden" name="start_time" value="'. 
-                dbTime($segTime) . '">';
+            $html .= '<input type="hidden" name="start_time" value="'.
+                     dbTime($segTime) . '">';
             $html .= '<input type="hidden" name="date" value="'. $day . '">';
             $html .= '<input type="hidden" name="venue" value="'. $venue . '">';
             $html .= "</form>";
@@ -280,20 +282,20 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
                 $msg = '';
                 foreach( $events as $e )
                     $msg .= eventToText( $e );
-                $html .= "<td><button class=\"display_event\" 
-                value=\"$msg\" onclick=\"displayEvent(this)\"></button></td>";
+                $html .= "<td><button class=\"display_event\"
+                         value=\"$msg\" onclick=\"displayEvent(this)\"></button></td>";
             }
             elseif( count( $requests ) > 0 )
             {
                 $msg = '';
                 foreach( $requests as $r )
                     $msg .= requestToText( $r );
-                $html .= "<td><button class=\"display_request\" 
-                value=\"$msg\" onclick=\"displayRequest(this)\"></button></td>";
+                $html .= "<td><button class=\"display_request\"
+                         value=\"$msg\" onclick=\"displayRequest(this)\"></button></td>";
             }
         }
     }
-    $html .= "</tr></table>"; 
+    $html .= "</tr></table>";
     return $html;
 }
 
@@ -303,15 +305,15 @@ function eventLineHTML( $date, $venueid, $start = '8:00', $end = '18:00' )
     $venue = getVenueById( $venueid );
     $html = '<table class="eventline">';
     $startDay = $start;
-    $dt = 60; 
+    $dt = 60;
     $html .= "<tr>";
     $html .= "<td><div style=\"width:100px\">$venueid</div></td>";
     $duration = ( strtotime( $end ) - strtotime( $start ) ) / 3600;
-    for( $i = 0; $i < $duration; $i++ ) 
+    for( $i = 0; $i < $duration; $i++ )
     {
         $stepT = $i * $dt;
         $segTime = strtotime( $startDay ) + 60 * $stepT;
-        // Each hour has 15 minutes segment. For each segment hourToHTMLTable 
+        // Each hour has 15 minutes segment. For each segment hourToHTMLTable
         // create a block.
         $html .= "<td>" . hourToHTMLTable( $date, $segTime, $venueid, 4 ) . "</td>";
     }
@@ -353,14 +355,14 @@ function readOnlyEventLineHTML( $date, $venueid )
     * @param $tablename
     * @param $tobefilterd
     *
-    * @return 
+    * @return
  */
 function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
 {
     $row = '<tr>';
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ',', $tobefilterd );
-    
+
     $keys = array_keys( $array );
     $toDisplay = Array();
     foreach( $keys as $k )
@@ -387,7 +389,7 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
     * @param $tablename
     * @param $tobefilterd
     *
-    * @return 
+    * @return
  */
 function arrayHeaderRow( $array, $tablename, $tobefilterd )
 {
@@ -412,14 +414,14 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd )
 
 // Convert an array to HTML
 function arrayToTableHTML( $array, $tablename, $background = ''
-    , $tobefilterd = Array() )
+                           , $tobefilterd = Array() )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
 
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ',', $tobefilterd );
-    
+
     $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
     $toDisplay = Array();
@@ -433,7 +435,7 @@ function arrayToTableHTML( $array, $tablename, $background = ''
 
 // Convert an array to HTML table (vertical)
 function arrayToVerticalTableHTML( $array, $tablename
-    , $background = NULL, $tobefilterd = '' )
+                                   , $background = NULL, $tobefilterd = '' )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
@@ -442,7 +444,7 @@ function arrayToVerticalTableHTML( $array, $tablename
 
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ",", $tobefilterd );
-    
+
     $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
     $toDisplay = Array();
@@ -487,7 +489,7 @@ function venuesToCheckButtons( $venues )
     $html = "<table>";
     foreach( $venues as $venue )
     {
-        $html .= '<tr><td><input type="radio" name="venue[]" value="' . $venue['id'] 
+        $html .= '<tr><td><input type="radio" name="venue[]" value="' . $venue['id']
             . '">' . $venue['id'] .  "</td></tr>";
     }
     $html .= "</table>";
@@ -544,7 +546,7 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
 
 
 /**
-    * @brief Convert a database table schema to HTML table to user to 
+    * @brief Convert a database table schema to HTML table to user to
     * edit/update.
     *
     * @param $tablename Name of table (same as database)
@@ -556,9 +558,9 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     * @return  An html table. You need to wrap it in a form.
  */
 function dbTableToHTMLTable( $tablename
-        , $defaults=Array(), $editables = '' 
-        , $button_val = 'submit', $hide = ''
-    )
+                             , $defaults=Array(), $editables = ''
+                                     , $button_val = 'submit', $hide = ''
+                           )
 {
     global $symbUpdate, $symbCheck;
     global $symbEdit;
@@ -590,21 +592,21 @@ function dbTableToHTMLTable( $tablename
             $readonly = False;
 
         // Add row to table
-        $html .= "<tr><td class=\"db_table_fieldname\"> " . 
-            strtoupper(prettify( $keyName )) . "</td>";
+        $html .= "<tr><td class=\"db_table_fieldname\"> " .
+                 strtoupper(prettify( $keyName )) . "</td>";
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
         $inputId = $tablename . "_" . $keyName;
 
-        // DIRTY HACK: If value is already a html entity then don't use a input 
+        // DIRTY HACK: If value is already a html entity then don't use a input
         // tag. Currently only '<select></select> is supported
         if( preg_match( '#<select.*?>(.*?)</select>#', $default ) )
             $val = $default;
         else
             $val = "<input class=\"editable\"
-                name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
-                />";
+                   name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
+                   />";
 
         // Genearte a select list of ENUM type class.
         $match = Array( );
@@ -657,12 +659,12 @@ function dbTableToHTMLTable( $tablename
             }
             $val .= "</select>";
         }
-        else if( strpos( strtolower($ctype), 'text' ) !== false ) // TEXT or MEDIUMTEXT
+        else if( strpos( strtolower($ctype), 'text' ) !== false )     // TEXT or MEDIUMTEXT
         {
             // NOTE: name and id should be same of ckeditor to work properly.
-            // Sometimes we have two fileds with same name in two tables, thats 
+            // Sometimes we have two fileds with same name in two tables, thats
             // a sticky situation.
-            
+
             $default = sanitiesForTinyMCE( $default );
 
             $val = "<textarea class=\"editable\" \
@@ -673,66 +675,66 @@ function dbTableToHTMLTable( $tablename
                 $val .= "<script> CKEDITOR.replace( '$inputId' ); </script>";
             else
             {
-                 $val .= "<script>
-                     tinymce.init( { selector : '#" . $inputId . "'
-                             , init_instance_callback: \"insert_content\"
-                             , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
-                             , paste_as_text : true
-                             , paste_enable_default_filters: false
-                             , height : 300
-                             , paste_data_images: true
-                             , cleanup : false
-                             , verify_html : false
-                             , cleanup_on_startup : false
-                             , toolbar1 : 'undo redo | insert | stylesheet | bold italic' 
-                                 + ' | alignleft aligncenter alignright alignjustify'
-                                 + ' | bulllist numlist outdent indent | link image'
-                             , toolbar2 : \"imageupload\",
-                                setup: function(editor) {
-                                    var inp = $('<input id=\"tinymce-uploader\" ' + 
-                                        'type=\"file\" name=\"pic\" accept=\"image/*\"' 
-                                        + ' style=\"display:none\">'
-                                    );
-                                     $(editor.getElement()).parent().append(inp);
-                                     inp.on(\"change\",function(){
-                                         var input = inp.get(0);
-                                         var file = input.files[0];
-                                         var fr = new FileReader();
-                                         fr.onload = function() {
-                                             var img = new Image();
-                                             img.src = fr.result;
-                                             editor.insertContent(
-                                                 '<img src=\"' + img.src + '\"/><br/>'
-                                             );
-                                             inp.val('');
-                                         }
-                                         fr.readAsDataURL(file);
-                                     });
+                $val .= "<script>
+                        tinymce.init( { selector : '#" . $inputId . "'
+                        , init_instance_callback: \"insert_content\"
+                        , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
+                        , paste_as_text : true
+                        , paste_enable_default_filters: false
+                        , height : 300
+                        , paste_data_images: true
+                        , cleanup : false
+                        , verify_html : false
+                        , cleanup_on_startup : false
+                        , toolbar1 : 'undo redo | insert | stylesheet | bold italic'
+                        + ' | alignleft aligncenter alignright alignjustify'
+                        + ' | bulllist numlist outdent indent | link image'
+                        , toolbar2 : \"imageupload\",
+                        setup: function(editor) {
+                        var inp = $('<input id=\"tinymce-uploader\" ' +
+                        'type=\"file\" name=\"pic\" accept=\"image/*\"'
+                        + ' style=\"display:none\">'
+                        );
+                        $(editor.getElement()).parent().append(inp);
+                        inp.on(\"change\",function(){
+                        var input = inp.get(0);
+                        var file = input.files[0];
+                        var fr = new FileReader();
+                        fr.onload = function() {
+                        var img = new Image();
+                        img.src = fr.result;
+                        editor.insertContent(
+                        '<img src=\"' + img.src + '\"/><br/>'
+                        );
+                        inp.val('');
+                    }
+                        fr.readAsDataURL(file);
+                    });
 
-                                     editor.addButton( 'imageupload', {
-                                         text:\"Insert image\",
-                                         icon: false,
-                                         onclick: function(e) {
-                                             inp.trigger('click');
-                                         }
-                                     });
-                                 }
-                             });
+                        editor.addButton( 'imageupload', {
+                        text:\"Insert image\",
+                        icon: false,
+                        onclick: function(e) {
+                        inp.trigger('click');
+                    }
+                    });
+                    }
+                    });
 
-                         function insert_content( inst ) {
-                             inst.setContent( '$default' );
-                         }
-                 </script>";
+                        function insert_content( inst ) {
+                        inst.setContent( '$default' );
+                    }
+                        </script>";
             }
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
-           $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";
+            $val = "<input class=\"datepicker\" name=\"$keyName\" value=\"$default\" />";
         else if( strcasecmp( $ctype, 'datetime' ) == 0 )
-           $val = "<input class=\"datetimepicker\" name=\"$keyName\" value=\"$default\" />";
+            $val = "<input class=\"datetimepicker\" name=\"$keyName\" value=\"$default\" />";
         else if( strcasecmp( $ctype, 'time' ) == 0 )
-           $val = "<input class=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
+            $val = "<input class=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
 
-        // When the value is readonly. Just send the value as hidden input and 
+        // When the value is readonly. Just send the value as hidden input and
         // display the default value.
         if( $readonly )
             $val = "<input type=\"hidden\" name=\"$keyName\" value=\"$default\"/>$default";
@@ -742,7 +744,7 @@ function dbTableToHTMLTable( $tablename
         $html .= "</tr>";
     }
 
-    // If some fields are editable then we need a submit button as well unless 
+    // If some fields are editable then we need a submit button as well unless
     // user pass an empty value
     $buttonSym = ucfirst( $button_val );
 
@@ -756,8 +758,8 @@ function dbTableToHTMLTable( $tablename
     if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
-        $html .= "<button style=\"float:right\" value=\"$button_val\" 
-            title=\"$button_val\" name=\"response\">" . $buttonSym . "</button>";
+        $html .= "<button style=\"float:right\" value=\"$button_val\"
+                 title=\"$button_val\" name=\"response\">" . $buttonSym . "</button>";
         $html .= "</td></tr>";
     }
     $html .= "</table>";
@@ -765,12 +767,12 @@ function dbTableToHTMLTable( $tablename
 }
 
 /**
-    * @brief Deprecated: Convert an event to an editable table. 
+    * @brief Deprecated: Convert an event to an editable table.
     *
     * @param $event
     * @param $editables
     *
-    * @return 
+    * @return
  */
 function eventToEditableTableHTML( $event, $editables = Array( ) )
 {
@@ -803,18 +805,18 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     *
     * @param $name Name of the select list.
     * @param $options Options to populate.
-    * @param $display Search fo text for each option here if not then prettify 
+    * @param $display Search fo text for each option here if not then prettify
     * the option and show to user.
-    * @param $multiple_select If true then allow user to select multiple 
+    * @param $multiple_select If true then allow user to select multiple
     * entries.
     * @param $selected If not '' then select this one by default.
     *
-    * @return HTML <select> 
+    * @return HTML <select>
  */
 function arrayToSelectList( $name, $options
-    , $display = array(), $multiple_select = FALSE 
-    , $selected = ''
-)
+                            , $display = array(), $multiple_select = FALSE
+                                    , $selected = ''
+                          )
 {
     $html = '';
     if( ! $multiple_select )
@@ -822,7 +824,7 @@ function arrayToSelectList( $name, $options
         $html .= "<select class=\"$name\" name=\"$name\">";
         $html .= "<option selected value=\"\">-- Select one --</option>";
     }
-    else 
+    else
     {
         $html .= "<select class=\"$name\" multiple size=\"4\" name=\"$name\">";
         $html .= "<option selected disabled>-- Select multiple --</option>";
@@ -835,9 +837,9 @@ function arrayToSelectList( $name, $options
         if( $option == $selected )
             $selectText = " selected";
 
-        $html .= "<option value=\"$option\" $selectText >" 
-            .  __get__( $display, $option, prettify( $option ) ) 
-            . "</option>";
+        $html .= "<option value=\"$option\" $selectText >"
+                 .  __get__( $display, $option, prettify( $option ) )
+                 . "</option>";
     }
 
     $html .= "</select>";
@@ -854,7 +856,7 @@ function arrayToSelectList( $name, $options
  */
 function loginToText( $login, $withEmail = true )
 {
-    // If only login name is give, query database to get the array. Otherwise 
+    // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )
         $user = getUserInfo( $login );
@@ -886,24 +888,24 @@ function loginToText( $login, $withEmail = true )
     *
     * @param User login.
     *
-    * @return 
+    * @return
  */
 function getIntranetLink( $login )
 {
-    $html = "<font style=\"font-size:x-small\"><a 
-        href=\"https://intranet.ncbs.res.in/people-search?name=$login\"
-        target=\"_blank\">Show on intranet</a></font>"
-        ;
+    $html = "<font style=\"font-size:x-small\"><a
+            href=\"https://intranet.ncbs.res.in/people-search?name=$login\"
+            target=\"_blank\">Show on intranet</a></font>"
+            ;
     return $html;
 }
 
 /**
-    * @brief Return a AWS table which is editable by user. When $default array 
-    * is present, use it to construct the table. Else query the AWS table. 
-    * Passing array is useful when AWS is coming from some other table such as 
+    * @brief Return a AWS table which is editable by user. When $default array
+    * is present, use it to construct the table. Else query the AWS table.
+    * Passing array is useful when AWS is coming from some other table such as
     * upcoming_aws etc.
     *
-    * @return  A editable table with submit button. 
+    * @return  A editable table with submit button.
  */
 function editableAWSTable( $awsId = -1,  $default = NULL )
 {
@@ -918,46 +920,49 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
     {
         array_push( $supervisorIds, $supervisor['email'] );
         $supervisorText[ $supervisor['email'] ] = $supervisor['first_name']
-            .  ' ' . $supervisor[ 'last_name' ] ;
+                .  ' ' . $supervisor[ 'last_name' ] ;
     }
 
     $html = "<table class=\"input\">";
     $text = sanitiesForTinyMCE( __get__( $default, 'abstract', '' ));
     $html .= '
-        <tr>
-            <td>Title</td>
-            <td><input type="text" class="long" name="title" value="' 
-                . __get__( $default, 'title', '') . '" /></td>
-        </tr>
-        <tr>
-            <td>Abstract </td>
-            <td>
-                <textarea class="editable" id="abstract" name="abstract">' . 
-                    $text . '</textarea>
-                <script>
-                    tinymce.init( { selector : "#abstract"
-                            , height : 300
-                            , theme : "modern"
-                            , plugins : [ "paste wordcount fullscreen table textcolor"
-                                    , "imagetools toc code" ]
-                            , init_instance_callback: "insert_content"
-                            , paste_as_text : true
-                        } );
-                    function insert_content( inst ) {
-                        inst.setContent( \'' . $text . '\');
-                    }
-                </script>
-            </td>
-        </tr>';
+             <tr>
+             <td>Title</td>
+             <td><input type="text" class="long" name="title" value="'
+             . __get__( $default, 'title', '') . '" /></td>
+             </tr>
+             <tr>
+             <td>Abstract </td>
+             <td>
+             <textarea class="editable" id="abstract" name="abstract">' .
+             $text . '</textarea>
+             <script>
+             tinymce.init( { selector : "#abstract"
+             , height : 300
+             , theme : "modern"
+             , plugins : [ "paste wordcount fullscreen table textcolor"
+             , "imagetools toc code" ]
+             , init_instance_callback: "insert_content"
+             , paste_as_text : true
+         } );
+             function insert_content( inst ) {
+             inst.setContent( \'' . $text . '\');
+         }
+             </script>
+             </td>
+             </tr>';
 
     for( $i = 1; $i <= 2; $i++ )
     {
         $name = "supervisor_$i";
         $selected = __get__( $default, $name, "" );
         $html .= '
-            <tr>
-            <td>Supervisor ' . $i . '<br></td>
-            <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected );
+                 <tr>
+                 <td>Supervisor ' . $i . '<br></td>
+                 <td>' . arrayToSelectList(
+                     $name, $supervisorIds , $supervisorText
+                     , FALSE, $selected
+                 );
 
         $html .= '</td> </tr>';
     }
@@ -966,31 +971,31 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
         $name = "tcm_member_$i";
         $selected = __get__( $default, $name, "" );
         $html .= '
-            <tr>
-            <td>Thesis Committee Member ' . $i . '<br></td>
-            <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected) 
-            . '</td>';
+                 <tr>
+                 <td>Thesis Committee Member ' . $i . '<br></td>
+                 <td>' . arrayToSelectList( $name, $supervisorIds , $supervisorText, FALSE, $selected)
+                 . '</td>';
         $html .= '</tr>';
 
     }
     $html .= '
-        <tr>
-            <td>Date</td>
-            <td><input class="datepicker"  name="date" value="' . 
-                __get__($default, 'date', '' ) . '" readonly ></td>
-        </tr>
-        <tr>
-            <td>Time</td>
-            <td><input class="timepicker" name="time" value="16:00" readonly/></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input  name="awsid" type="hidden" value="' . $awsId . '"  />
-                <button class="submit" name="response" value="submit">Submit</button>
-            </td>
-        </tr>
-        ';
+             <tr>
+             <td>Date</td>
+             <td><input class="datepicker"  name="date" value="' .
+             __get__($default, 'date', '' ) . '" readonly ></td>
+             </tr>
+             <tr>
+             <td>Time</td>
+             <td><input class="timepicker" name="time" value="16:00" readonly/></td>
+             </tr>
+             <tr>
+             <td></td>
+             <td>
+             <input  name="awsid" type="hidden" value="' . $awsId . '"  />
+             <button class="submit" name="response" value="submit">Submit</button>
+             </td>
+             </tr>
+             ';
     $html .= "</table>";
     return $html;
 
@@ -1015,7 +1020,7 @@ function initUserMsg( $user = null )
 function dataURI( $filepath, $mime )
 {
     $contents = file_get_contents($filepath);
-    $base64   = base64_encode($contents); 
+    $base64   = base64_encode($contents);
     return ('data:' . $mime . ';base64,' . $base64);
 }
 
@@ -1025,35 +1030,35 @@ function __ucwords__( $text )
 }
 
 /**
-    * @brief NOTE: Must not have any decoration. Used in sending emails. 
+    * @brief NOTE: Must not have any decoration. Used in sending emails.
     * Squirrel mail html2text may not work properly.
     *
     * @param $aws
     * @param $with_picture
     *
-    * @return 
+    * @return
  */
 function awsToHTML( $aws, $with_picture = false )
 {
     $speaker = __ucwords__( loginToText( $aws[ 'speaker' ] , false ));
 
-    $supervisors = array( __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_1' ] ), false ))
-                ,  __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'supervisor_2' ] ), false ))
-            );
+    $supervisors = array( __ucwords__(
+                              loginToText( findAnyoneWithEmail( $aws[ 'supervisor_1' ] ), false ))
+                          ,  __ucwords__(
+                              loginToText( findAnyoneWithEmail( $aws[ 'supervisor_2' ] ), false ))
+                        );
     $supervisors = array_filter( $supervisors );
 
     $tcm = array( );
-    array_push( $tcm, __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_1' ] ), false ))
-            , __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_2' ] ), false ))
-            ,  __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_3' ] ), false ))
-            , __ucwords__( 
-        loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_4' ] ), false ))
-        );
+    array_push( $tcm, __ucwords__(
+                    loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_1' ] ), false ))
+                , __ucwords__(
+                    loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_2' ] ), false ))
+                ,  __ucwords__(
+                    loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_3' ] ), false ))
+                , __ucwords__(
+                    loginToText( findAnyoneWithEmail( $aws[ 'tcm_member_4' ] ), false ))
+              );
     $tcm = array_filter( $tcm );
 
     $title = $aws[ 'title' ];
@@ -1083,15 +1088,15 @@ function awsToHTML( $aws, $with_picture = false )
 
     $html .=  '<table class="email" style="width:500px;border:1px dotted">';
     $html .= '
-        <tr>
-            <td>Supervisors</td>
-            <td>' . implode( ", ", $supervisors ) . '</td>
-        </tr>
-        <tr>
-            <td>Thesis Committee Members</td>
-            <td>' . implode( ", ", $tcm) . '</td>
-        </tr>
-        </table>';
+             <tr>
+             <td>Supervisors</td>
+             <td>' . implode( ", ", $supervisors ) . '</td>
+             </tr>
+             <tr>
+             <td>Thesis Committee Members</td>
+             <td>' . implode( ", ", $tcm) . '</td>
+             </tr>
+             </table>';
 
     $html .= "<br>";
     $html .= "$abstract";
@@ -1107,7 +1112,7 @@ function awsToHTML( $aws, $with_picture = false )
     * @param $aws AWS entry.
     * @param $with_picture Fetch entry with picture.
     *
-    * @return 
+    * @return
  */
 function talkToHTML( $talk, $with_picture = false )
 {
@@ -1118,11 +1123,11 @@ function talkToHTML( $talk, $with_picture = false )
     // Get its events for venue and date.
     $event = getEventsOfTalkId( $talk[ 'id' ] );
     $where = venueSummary( $event[ 'venue' ] );
-    $when = humanReadableDate( $event[ 'date' ] ) . ', ' . 
+    $when = humanReadableDate( $event[ 'date' ] ) . ', ' .
             humanReadableTime( $event[ 'start_time'] );
 
     $title = $talk[ 'class' ] . ' by ' . $talk[ 'speaker' ] . " on '"
-        . $talk[ 'title' ] . "'";
+             . $talk[ 'title' ] . "'";
 
     $html = '<div style="width:550px;text-align:justify">';
     $html .= '<table border="0"><tr>';
@@ -1145,11 +1150,11 @@ function talkToHTML( $talk, $with_picture = false )
         $html .= '<br><br> Host: ' . loginToText( $talk[ 'host' ] );
 
     $html .= '<br><div style="font-size:small">';
-    $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where 
-                . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
+    $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where
+             . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
     $html .= '</td></tr><tr><td>';
-    $html .= '<a target="_blank" href="' . appURL( ) .'events.php?date=' 
-                . $event[ 'date' ] . '">Permanent link</a>';
+    $html .= '<a target="_blank" href="' . appURL( ) .'events.php?date='
+             . $event[ 'date' ] . '">Permanent link</a>';
     $html .= '</td></tr></table>';
     $html .= '</div>';
     $html .= '</td>';
@@ -1180,31 +1185,31 @@ function awsPdfURL( $speaker, $date, $msg = 'Download PDF' )
         $get .= "&speaker=$speaker";
 
     // Link to pdf file.
-    $url = '<div><a target="_blank" href="generate_pdf_aws.php?' . 
-        $get . '">' . $msg . '</a></div>';
+    $url = '<div><a target="_blank" href="generate_pdf_aws.php?' .
+           $get . '">' . $msg . '</a></div>';
 
     return $url;
 }
 
 /**
-    * @brief Download text file of given name. This file must exists in data 
+    * @brief Download text file of given name. This file must exists in data
     * folder.
     *
     * @param $filename
     * @param $msg
     *
-    * @return 
+    * @return
  */
 function downloadTextFile( $filename, $msg = 'Download file' )
 {
     //if( strpos( '/data/', $filename ) !== false )
-        //$filename = basename( $filename );
+    //$filename = basename( $filename );
 
     //if( ! file_exists( getDataDir( ) ."/$filename" ) )
-        //$msg = "File doesn't exists";
+    //$msg = "File doesn't exists";
 
-    $url = '<div><a target="_blank" href="download_file.php?filename=' 
-            . $filename .  '">' . $msg .'</a></div>';
+    $url = '<div><a target="_blank" href="download_file.php?filename='
+           . $filename .  '">' . $msg .'</a></div>';
     return $url;
 }
 
@@ -1212,11 +1217,11 @@ function downloadTextFile( $filename, $msg = 'Download file' )
 /**
     * @brief Generate a two column table for user to fill-in.
     *
-    * @return 
+    * @return
  */
 // <td>Repeat pattern for recurrent events <br> (optional) <br>
 //     <p class="note_to_user"> Valid for maximum of 6 months </p>
-//     </td> 
+//     </td>
 function repeatPatternTable( $className )
 {
     $html = '<h4>RECURRENT EVENTS (optional)</h4>';
@@ -1226,41 +1231,41 @@ function repeatPatternTable( $className )
     $html .= "<div style=\"font-size:small\">";
     $html .= '<table class="' . $className . '">';
     $html .= '<tr><td> Every saturday, every week
-                , for 3 months  </td>';
+             , for 3 months  </td>';
     $html .= '<td>
-                    <input disabled value="Sat">
-                </td>
-                <td>
-                    <input disabled value="">
-                </td>
-                <td>
-                    <input disabled value="3">
-                </td>
-              </tr>';
+             <input disabled value="Sat">
+             </td>
+             <td>
+             <input disabled value="">
+             </td>
+             <td>
+             <input disabled value="3">
+             </td>
+             </tr>';
     $html .= '<tr><td> Every monday and thursday, every week
-                , for 5 months  </td>';
+             , for 5 months  </td>';
     $html .= '<td>
-                    <input disabled value="Mon,Thu">
-                </td>
-                <td>
-                    <input disabled value="">
-                </td>
-                <td>
-                    <input disabled value="5">
-                </td>
-              </tr>';
+             <input disabled value="Mon,Thu">
+             </td>
+             <td>
+             <input disabled value="">
+             </td>
+             <td>
+             <input disabled value="5">
+             </td>
+             </tr>';
     $html .= '<tr><td> Every Tuesday, first and third week
-                , for 4 months </td>';
+             , for 4 months </td>';
     $html .= '<td>
-                    <input disabled value="Tue">
-                </td>
-                <td>
-                    <input disabled value="first,third">
-                </td>
-                <td>
-                    <input disabled value="4">
-                </td>
-              </tr>';
+             <input disabled value="Tue">
+             </td>
+             <td>
+             <input disabled value="first,third">
+             </td>
+             <td>
+             <input disabled value="4">
+             </td>
+             </tr>';
 
     $html .= '</table>';
     $html .= "</div>";
@@ -1268,23 +1273,23 @@ function repeatPatternTable( $className )
     $html .= "<br>";
     $html .= '<table class="' . $className . '">';
     $html .= ' <tr>
-                <td> <p style="color:blue">Your recurrent pattern here </p></td>
-                <td> <input type="text" name="day_pattern" / > </td>
-                <td> <input type="text" name="week_pattern" /></td>
-                <td><input type="text" name="month_pattern" placeholder="6" /></td>
-            </tr>';
+             <td> <p style="color:blue">Your recurrent pattern here </p></td>
+             <td> <input type="text" name="day_pattern" / > </td>
+             <td> <input type="text" name="week_pattern" /></td>
+             <td><input type="text" name="month_pattern" placeholder="6" /></td>
+             </tr>';
     $html .= "</table>";
     return $html;
 }
 
 /**
-    * @brief Generate a email statement form given template id. Templte must 
+    * @brief Generate a email statement form given template id. Templte must
     * exits in a database table.
     *
     * @param $templateName
     * @param $options
     *
-    * @return 
+    * @return
  */
 function emailFromTemplate( $templateName, $options )
 {
@@ -1293,14 +1298,14 @@ function emailFromTemplate( $templateName, $options )
 
     if( ! $desc )
     {
-        echo alertUser( "No template found with id: aws_template. I won't 
-            be able to generate email"
-        );
+        echo alertUser( "No template found with id: aws_template. I won't
+                        be able to generate email"
+                      );
         return '';
-    } 
+    }
 
     foreach( $options as $key => $value )
-        $desc = str_replace( "@$key@", $value, $desc );
+    $desc = str_replace( "@$key@", $value, $desc );
 
     $templ[ 'email_body' ] = $desc;
     return $templ;
@@ -1321,8 +1326,8 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
     if( ! file_exists( $picpath ) )
         $picpath = nullPicPath( );
 
-    $html = '<img class="login_picture" width="' . $width 
-            . '" height="' . $height . '" src="' 
+    $html = '<img class="login_picture" width="' . $width
+            . '" height="' . $height . '" src="'
             . dataURI( $picpath, 'image/jpg' ) . '" >';
     return $html;
 }
@@ -1330,7 +1335,7 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
 /**
     * @brief Return an empty image.
     *
-    * @return 
+    * @return
  */
 function nullPicPath( )
 {
@@ -1353,7 +1358,7 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
 /**
     * @brief Convert slots to a HTML table.
     *
-    * @return 
+    * @return
  */
 function slotTable( )
 {
@@ -1381,16 +1386,16 @@ function slotTable( )
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
 
             // Check which slot is here.
-            $slot = getTableEntry( 'slots', 'day,start_time', 
-                        array( "day" => strtoupper( $day )
-                        , 'start_time' => $slotTime  
-                    ));
+            $slot = getTableEntry( 'slots', 'day,start_time',
+                                   array( "day" => strtoupper( $day )
+                                          , 'start_time' => $slotTime
+                                        ));
             if( $slot )
             {
-                $duration = strtotime( $slot[ 'end_time' ] )  - 
-                                strtotime( $slot[ 'start_time' ] );
+                $duration = strtotime( $slot[ 'end_time' ] )  -
+                            strtotime( $slot[ 'start_time' ] );
                 $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
-                    humanReadableTime(  $slot[ 'end_time' ] );
+                        humanReadableTime(  $slot[ 'end_time' ] );
                 $id = $slot[ 'id' ];
                 $bgColor = 'lightblue';
 
@@ -1399,7 +1404,7 @@ function slotTable( )
 
                 $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
                 $html .= "<td style=\"background:$bgColor\" colspan=\"$ncols\">
-                        $id <br> <small> <tt>$text</tt> </small> </td>";
+                         $id <br> <small> <tt>$text</tt> </small> </td>";
 
                 // Increase $i by ncols - 1. 1 is increased by loop.
                 $i += $ncols - 1;
@@ -1436,8 +1441,8 @@ function coursesTable( )
     {
         $instructors = array( );
         foreach( $c as $k => $v )
-            if( $v && strpos( $k, 'instructor_') !== false )
-                $instructors[] = $v;
+        if( $v && strpos( $k, 'instructor_') !== false )
+            $instructors[] = $v;
 
         $html .= "<tr>";
         $html .= "<td>" . $c[ 'id' ] . "</td>";

@@ -96,12 +96,6 @@ function isIntranet( )
     $isIntranet = ($serverIP[0] == $localIP[0]) && ($serverIP[1] == $localIP[1]) && 
         ( in_array($localIP[0], array('127','10','172','192') ) );
 
-    if( ! $isIntranet )
-        echo alertUser( 
-            "Outside access is not allowed to view this page. Please login 
-            first to see this page.  " 
-        );
-
     return $isIntranet;
 }
 

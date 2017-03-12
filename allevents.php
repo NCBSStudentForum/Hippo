@@ -7,7 +7,7 @@ include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
 // Show it only if accessed from intranet or user have logged in.
-if( ! (isIntranet( ) || $_SESSION[ 'AUTHENTICATED' ] ) )
+if( ! (isIntranet( ) || isAuthenticated( ) ) )
 {
     echo printWarning( "To access this page, either use Intranet or log-in first" );
     echo closePage( );

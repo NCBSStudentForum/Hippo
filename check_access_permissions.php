@@ -1,6 +1,14 @@
 <?php
 
-include_once( 'database.php' );
+include_once 'database.php' ;
+
+function isAuthenticated( )
+{
+    if( array_key_exists( 'AUTHENTICATED', $_SESSION ) )
+        if( $_SESSION[ 'AUTHENTICATED' ] )
+            return true;
+    return false;
+}
 
 function requiredPrivilege( $role ) 
 {
@@ -53,6 +61,25 @@ function mustHaveAllOfTheseRoles( $roles )
     }
 }
 
+
+// Get the IP address of user.
+function getRealIpAddr()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+    {
+        $ip=$_SERVER['HTTP_CLIENT_IP'];
+    }
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+    {
+        $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    else
+    {
+        $ip=$_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
 /**
     * @brief Check if user is logged in from intranet. FIXME: This may be a 
     * foolproof way to do this.
@@ -62,14 +89,20 @@ function mustHaveAllOfTheseRoles( $roles )
 function isIntranet( )
 {
     $serverIP = explode('.',$_SERVER['SERVER_ADDR']);
-    $localIP  = explode('.',$_SERVER['REMOTE_ADDR']);
-    echo printInfo( "Login from " . $_SERVER[ 'REMOTE_ADDR' ] );
-    //var_dump( $serverIP );
+    $localIP  = explode( '.', getRealIpAddr( ) );
 
-    return ( 
-        ($serverIP[0] == $localIP[0]) && ($serverIP[1] == $localIP[1]) && 
-            ( in_array($localIP[0], array('127','10','172','192') ) ) 
+    echo alertUser( "Accessing page from IP address: " . implode('.', $localIP));
+
+    $isIntranet = ($serverIP[0] == $localIP[0]) && ($serverIP[1] == $localIP[1]) && 
+        ( in_array($localIP[0], array('127','10','172','192') ) );
+
+    if( ! $isIntranet )
+        echo alertUser( 
+            "Outside access is not allowed to view this page. Please login 
+            first to see this page.  " 
         );
+
+    return $isIntranet;
 }
 
 

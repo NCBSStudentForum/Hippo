@@ -27,6 +27,7 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     if( ! is_string( $msg ) )
     {
         error_log( "Email msg is not in string format" );
+        echo printInfo( 'Email msg not in string format' );
         return;
     }
 

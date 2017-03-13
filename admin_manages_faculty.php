@@ -77,12 +77,12 @@ echo goBackToPageLink( "admin.php", "Go back" );
 
 echo '<h2>List of active faculty</h2>';
 
-$hide = 'created_on,modified_on,status';
+$hide = 'created_on,modified_on,status,middle_name';
 
 echo '<div style="font-size:small">';
 echo '<table class="show_info">';
 
-$faculty = getTableEntries( 'faculty', 'affiliation', "status='ACTIVE'");
+$faculty = getTableEntries( 'faculty', 'first_name,affiliation', "status='ACTIVE'");
 echo arrayHeaderRow( $faculty[0], 'info', $hide );
 foreach( $faculty as $fac )
     echo arrayToRowHTML( $fac, 'info', $hide );

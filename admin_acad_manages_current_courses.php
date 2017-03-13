@@ -38,7 +38,6 @@ foreach( $slots as $s )
 }
 
 $slotSelect = arrayToSelectList( 'slot', array_keys($slotMap), $slotMap );
-echo $slotSelect;
 
 foreach( $allCourses as $c )
     $coursesMap[ $c[ 'id' ] ] = $c[ 'name' ];
@@ -119,9 +118,10 @@ echo "<h2>Assign a course to current sememster or edit a running course </h2>";
 echo '<form method="post" action="admin_acad_manages_current_courses_action.php">';
 
 // We will figure out the semester by start_date .
+$default[ 'slot' ] = $slotSelect;
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'course_id,start_date,end_date', $action 
+    , 'course_id,start_date,end_date,slot', $action 
     , 'semester'
     );
 

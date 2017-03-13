@@ -16,7 +16,7 @@ $html .= '
    <tr>
       <td>
       See and edit (most of) your details. <small>This is one time task. If 
-      you suppose to give AWS, please visit it check all details.
+      you suppose to give AWS, please visit and check all details.
       </small>
       </td>
       <td> 
@@ -47,9 +47,9 @@ if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
         <tr>
         <td>
             List of your Annual Work Seminar <br>
-            <small> You can see your previous AWSs, update them. You can check 
-            the details about upcoming AWS and give preferred date for upcoming
-            AWS.  </small>
+            <small> You can see your previous AWSs and update them. You can check 
+            the details about upcoming AWS and provide preferred dates.
+           </small>
         </td>
           <td> 
              <a href="user_aws.php">My AWS</a> 
@@ -67,13 +67,14 @@ echo '<h3>BookMyVenue</h3>';
 $html = '<table class="tasks">';
 $html .= '<tr>
     <td>Browse available venues to submit a booking request
-    <small>On top-right corner <tt>QuickBook</tt> is a simpler interface to 
-    do the same. You can use any. This interface is has more details. </small>
+    <small>On top-right corner <strong><tt>QuickBook</tt></strong> is a
+    simpler interface to do booking. You can use either. 
+    This interface shows more details. </small>
     </td>
       <td> <a href="bookmyvenue_browse.php">Browse and book a venue</a> </td>
    </tr>
    <tr>
-   <td>You can see your unapproved requests, modify their description, and 
+   <td>You can see your unapproved requests. You can modify their description, and 
         cancel them if neccessary.
       </td>
       <td> <a href="user_show_requests.php">My booking requests</a> </td>

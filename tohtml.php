@@ -1117,8 +1117,7 @@ function awsToHTML( $aws, $with_picture = false )
 function talkToHTML( $talk, $with_picture = false )
 {
 
-    $speaker = __ucwords__( $talk[ 'speaker' ] );
-
+    $speaker = $talk[ 'speaker' ] ;
 
     // Get its events for venue and date.
     $event = getEventsOfTalkId( $talk[ 'id' ] );

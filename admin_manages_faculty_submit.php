@@ -49,6 +49,16 @@ else if( $_POST['response'] == 'add' )
         exit;
     }
 }
+else if( $_POST['response'] == 'delete' )
+{
+    $res = deleteFromTable( 'faculty', 'email', $_POST );
+    if( $res )
+        echo printInfo( "Successfully deteleted faculty" );
+    else
+        echo minionEmbarrassed( "Failed to delete entry from table" );
+
+}
+
 else
 {
     echo printWarning( "Unknown response code from server " . $_POST[ 'response' ]
@@ -57,5 +67,6 @@ else
     exit;
 }
 
+echo goBackToPageLink( 'admin_manages_faculty.php', 'Go back' );
 
 ?>

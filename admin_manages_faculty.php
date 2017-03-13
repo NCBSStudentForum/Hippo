@@ -65,8 +65,28 @@ echo dbTableToHTMLTable( 'faculty'
     , array( 'email', 'first_name', 'middle_name', 'last_name'
     , 'status', 'affiliation', 'url', 'institute' ), $action
 );
+
+// If we are updating, do give an delete button.
+if( $action == 'submit' )
+    echo '<button type="submit" name="response" value="delete">' . 
+            $symbDelete . '</button>';
+
 echo "</form>";
 
 echo goBackToPageLink( "admin.php", "Go back" );
+
+echo '<h2>List of active faculty</h2>';
+
+$hide = 'created_on,modified_on,status';
+
+echo '<div style="font-size:small">';
+echo '<table class="show_info">';
+
+$faculty = getTableEntries( 'faculty', 'affiliation', "status='ACTIVE'");
+echo arrayHeaderRow( $faculty[0], 'info', $hide );
+foreach( $faculty as $fac )
+    echo arrayToRowHTML( $fac, 'info', $hide );
+echo '</table>';
+echo '</div>';
 
 ?>

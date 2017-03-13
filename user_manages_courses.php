@@ -37,10 +37,13 @@ $default = array( 'student_id' => $_SESSION[ 'user' ]
                 , 'course_id' => $courseSelect
                 );
 
-echo dbTableToHTMLTable(
-    'course_registration', $default, 'course_id,type' 
-    , 'submit', 'last_modified_on,grade,grade_is_given_on'
-    );
+echo '<form method="post" action="admin_acad_manages_action.php">';
+echo dbTableToHTMLTable( 'course_registration'
+                        , $default
+                        , 'course_id,type' 
+                        , 'submit', 'last_modified_on,grade,grade_is_given_on'
+                      );
+echo '</form>';
 
 echo goBackToPageLink( "user.php", "Go back" );
 

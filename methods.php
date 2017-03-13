@@ -842,7 +842,6 @@ function getCurrentYear( )
     return getYear( 'today' );
 }
 
-
 function getCurrentSemester( )
 {
     return getSemester( 'today' );

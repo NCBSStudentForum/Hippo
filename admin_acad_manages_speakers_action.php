@@ -28,7 +28,7 @@ else if( $_POST['response'] == 'delete' )
     else
         echo minionEmbarrassed( "Failed to delete speaker from database" );
 }
-else   // update
+else if( $_POST['response'] == 'submit' )
 {
     $imgpath = getSpeakerPicturePath( $_POST );
 
@@ -45,10 +45,14 @@ else   // update
         );
 
     if( $res )
-    {
         echo printInfo( 'Updated/Inserted speaker' );
-    }
+    else
+        echo printInfo( "Failed to update/insert speaker" );
 
+}
+else   
+{
+    echo alertUser( "Unknown/unsupported operation " . $_POST[ 'response' ] );
 }
 
 echo goBackToPageLink( 'admin_acad_manages_speakers.php', 'Go back' );

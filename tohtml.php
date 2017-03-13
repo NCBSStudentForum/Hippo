@@ -178,7 +178,7 @@ function eventToShortHTML( $event )
 
     $html = '<tt>' .  __get__( $event, 'title', '' ) . '</tt>';
     $html .= '<br>' . $startT . ' to ' . $endT;
-    $html .= ' </tt> @ ' . $event['venue'] . ', ';
+    $html .= ' </tt> @ <strong>' . $event['venue'] . '</strong>, ';
     $html .= '</br><small>Booked by ' . $event['created_by'] . '</small><br/>';
     return $html;
 }

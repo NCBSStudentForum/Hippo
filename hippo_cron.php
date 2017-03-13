@@ -109,7 +109,7 @@ echo printInfo( "Today is $today" );
 if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
-    $awayFrom = strtotime( 'now' ) - strtotime( '4:30 pm' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
@@ -146,11 +146,11 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 }
 else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
-    error_log( "Monday 8am. Notify about AWS" );
     // Send on 8am.
     $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
+        error_log( "Monday 8am. Notify about AWS" );
         echo printInfo( "Today is Monday 10am. Send out emails for AWS" );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
         $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
@@ -165,11 +165,8 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             echo printInfo( "Sending mail about today's AWS" );
             $subject .= implode( ', ', $res[ 'speakers'] );
 
+            $mail = $res[ 'email' ]['email_body'];
 
-            $mail = $res[ 'email' ];
-
-            // generate md5 of email. And store it in archive.
-            $archivefile = $maildir . '/' . md5($subject . $mail) . '.email';
             error_log( "Sending to $to, $cclist with subject $subject" );
             echo( "Sending to $to, $cclist with subject $subject" );
 
@@ -181,8 +178,8 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         {
             // There is no AWS this monday.
             $subject = 'No Annual Work Seminar today : ' .
-                humanReadableDate( $nextMonday );
-            $mail = $res[ 'email' ];
+                            humanReadableDate( $nextMonday );
+            $mail = $res[ 'email' ]['email_body'];
             sendPlainTextEmail( $mail, $subject, $to, $cclist );
         }
     }

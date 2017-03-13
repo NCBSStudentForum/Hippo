@@ -2,6 +2,8 @@
 include_once 'header.php';
 include_once 'methods.php';
 
+echo '<div class="howto">';
+
 echo '<h2>Login</h2>';
 
 echo '
@@ -122,6 +124,7 @@ echo "<p>All the booked events can be viewed
     href=\"https://www.ncbs.res.in/hippo/allevents.php\">by clicking here</a>
     </p>" ;
 
+echo '</div>';
 echo "<p>TODO .. A lot here </p>";
 
 ?>

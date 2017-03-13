@@ -200,8 +200,9 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
         foreach( $todaysEvents as $event )
         {
             $external_id = $event[ 'external_id' ];
-            $talkid = explode( '.', $external_id );
 
+            // External id has the format TALKS.TALK_ID
+            $talkid = explode( '.', $external_id );
             if( count( $talkid ) == 2 )
             {
                 $data = array( 'id' => $talkid[1] );
@@ -210,37 +211,40 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
                     $html .= talkToHTML( $talk );
             }
         }
+
+        // Generate pdf now.
+        $pdffile = getDataDir( ) . "/EVENTS_$today.pdf";
+        $script = __DIR__ . '/generate_pdf_talk.php';
+        $cmd = "php -q -f $script date=$today";
+        echo "Executing <pre> $cmd </pre>";
+        $res = `$cmd`;
+
+        $attachment = '';
+        if( file_exists( $pdffile ) )
+        {
+            echo printInfo( "Successfully generated PDF file" );
+            $attachment = $pdffile;
+        }
+
+        // Now prepare an email to sent to mailing list.
+        $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
+        $subject = "Today's (" . humanReadableDate( $today ) . ") events ";
+
+        $template = emailFromTemplate( 'todays_events', $macros );
+
+        if( array_key_exists( 'email_body', $template ) && $template[ 'email_body' ] )
+        {
+            // Send it out.
+            $to = $template[ 'recipients' ];
+            $ccs = $template[ 'CC' ];
+            $msg = $template[ 'email_body' ];
+            sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
+        }
+
+        ob_flush( );
     }
-
-    // Generate pdf now.
-    $pdffile = getDataDir( ) . "/EVENTS_$today.pdf";
-    $script = __DIR__ . '/generate_pdf_talk.php';
-    $cmd = "php -q -f $script date=$today";
-    echo "Executing <pre> $cmd </pre>";
-    $res = `$cmd`;
-
-    $attachment = '';
-    if( file_exists( $pdffile ) )
-    {
-        echo printInfo( "Successfully generated PDF file" );
-        $attachment = $pdffile;
-    }
-
-    // Now prepare an email to sent to mailing list.
-    $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
-    $subject = "Today's (" . humanReadableDate( $today ) . ") talks/seminars on the campus";
-
-    $template = emailFromTemplate( 'todays_events', $macros );
-
-    if( array_key_exists( 'email_body' ) && $template[ 'email_body' ] )
-    {
-        // Send it out.
-        $to = $template[ 'recipients' ];
-        $ccs = $template[ 'CC' ];
-        sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
-    }
-
-    ob_flush( );
+    else
+        error_log( "No event found on day " . $today );
 }
 
 /*
@@ -279,5 +283,6 @@ if( $today >= $startDay && $today <= $endDay )
 
     }
 }
+
 
 ?>

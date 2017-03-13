@@ -421,8 +421,8 @@ table.admin td {
 /* paragraphs */
 
 p  {
-    max-width : 500px;
     min-width : 100%;
+    max-width : 500px;
 }
 
 
@@ -443,6 +443,7 @@ p.note_to_user {
     color : grey;
     max-width : 80%;
 }
+
 
 div.alert_user {
    max-width : var(--maxwidth);
@@ -494,4 +495,16 @@ table.repeat_pat tr td  {
  */
 select.supervisors {
     min-width : 300px;
+}
+
+
+ul {
+    width : 500px;
+    text-align: justify;
+}
+
+
+p.howto {
+    width : 500px;
+    text-align: justify;
 }

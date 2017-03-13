@@ -5,22 +5,63 @@ include_once 'methods.php';
 echo '<h2>Login</h2>';
 
 echo '
-    <p>
+    <ul>
+    <li>
     Use your NCBS or InStem login id to login. If it is your first time,
     you will be taken to a page to review your profile. Kindly 
     <tt>review/edit</tt> your details.
     If you are suppose to give Annual Work Seminar (AWS), you 
     <strong>must</strong> double check all entries. In case of discrepency, 
     write email to Academic Office.
-    </p>
-    <p>
+    </li>
+    <li>
     You top-right corner, there is a box where shortcut links are provided. Any 
     time you feel lost, click on <tt>MyHome</tt> link to go to your home.
-    Whatever you can do using Hippo is listed on this page.
-    </p> ' ;
+    Whatever you can do with Hippo are listed on this page.
+    </li>
+    </ul>
+    ' ;
 
+echo '<h2>How to book a public talk, lecture or seminar?</h2>';
+
+echo "<ul>
+    <li> Keep the image and email id of speaker handy. You can continue without 
+    them also but they are very useful for preparing documents. At least, we'd strongly
+    recommend that you array image of speaker (at least 5cm X 5cm).
+    Email of speaker is never  publicly displayed.
+    </li>
+    <li>
+    After login to <a href=\"https://ncbs.res.in/hippo\">Hippo</a> , go to 
+   <tt>Register talk/seminar</tt> to fill details. First
+   section is for speaker, second is for talk. Third (optional) contains 
+   scheduling information. If there is already some event on your selected
+   date/venue, booking will be ignored but talk will be registered. You can
+   schedule it later by visiting <tt>Manage my talks</tt> link.
+    </li>
+
+    <li>
+    If venue is available on given date and time, both talk and venue will be
+    booked pending approval.  After approval, you can see your event <a href=\"https://ncbs.res.in/hippo/events.php\">Here</a>. It will also appear on calendar and emails will be sent
+    to appropriate mailing lists at appropriate times.
+    </li>
+    </ul>";
+
+echo '<h3> Editing/updating/scheduling talks</h3>';
+echo "<ul>
+    <li>
+   Go to 'My Home' and click on 'Manage my talks'. You will see al
+l upcoming
+   talks registered by you. You can click on 'edit' button to edit th
+e
+   description and title.
+    </li>
+    <li>
+    If it is not already scheduled, you can schedule it by clicking on 'Calendar' button.
+    </li>
+    
+    </ul>";
+    
 echo '<h2>How to create a booking request?</h2>';
-
 echo "
     <ul>
         <li>

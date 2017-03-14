@@ -32,9 +32,7 @@ if( $_POST[ 'response' ] == 'submit' )
 }
 else if( $_POST[ 'response' ] == 'drop' )
 {
-    // Drop this course.
-    echo printInfo( "Dropping course " . $_POST[ 'course_id' ] );
-    $_POST[ 'student_id' ] = $_SESSION[ 'user' ];
+    // Drop this course for given user.
     $res = deleteFromTable( 'course_registration'
                         , 'student_id,semester,year,course_id'
                         , $_POST ); 

@@ -22,16 +22,10 @@ foreach( $venues as $v )
 
 $venuesIds = array_map( function( $v ) { return $v['id']; }, $venues );
 
-$defaults = array( 'venues' => implode(',', $venuesIds)
-        , 'date' => dbDate( 'today' )
-        );
+$defaults = array( 'date' => dbDate( 'today' ));
 
 if( array_key_exists( 'date', $_GET ) )
     $defaults[ 'date' ] = $_GET[ 'date' ];
-
-if( array_key_exists( 'venues', $_GET ) )
-    $defaults[ 'venues' ] = implode( ',', $_GET[ 'venues' ] );
-
 
 echo '<form action="" method="get" accept-charset="utf-8">
     <table class="info">

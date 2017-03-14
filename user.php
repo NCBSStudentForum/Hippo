@@ -32,7 +32,10 @@ $thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
 echo '<table class="tasks">';
 
 echo  '<tr>
-        <td>Manage course for semester (' . $thisSem . ') </td>
+        <td>
+            Manage course for semester (' . $thisSem . ')
+                <small> You can register/deregister for current courses.
+        </td>
         <td>
             <a href="user_manages_courses.php">My current courses</a> 
         </td>

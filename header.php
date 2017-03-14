@@ -30,18 +30,19 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <table class="public_links">
     <tr>
     <td>
-    <a href="allevents.php" target="_blank">All Events</a>
+    <a href="allevents.php" target="_blank">All bookings</a>
     </td>
     <td>
-    <a href="aws.php" target="_blank">Browse AWSs</a>
+    <a href="aws.php" target="_blank">AWSs</a>
     </td>
     <td>
-    <a href="events.php" target="_blank">Browse talks</a>
+    <a href="events.php" target="_blank">Talks</a>
     </td>
     <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td>
     <td> <a href="community_graphs.php" target="_blank" >Community graph</a> </td>
-    <td> <a href="aws_stats.php" target="_blank" >AWS Statistics </a> </td>
-    <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td>
+    <td> <a href="aws_stats.php" target="_blank" >Statistics </a> </td>
+    <!-- <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td> -->
+    <td> <a href="courses.php" target="_blank" >Courses</a></td>
     <td> <a href="howto.php" target="_blank" >HOWTO</a></td>
     <td> <a href="rss.php" target="_blank" >
             <img src="data/feed-icon-14x14.2168a573d0d4.png" 

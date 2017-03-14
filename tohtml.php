@@ -815,9 +815,10 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     * @return HTML <select>
  */
 function arrayToSelectList( $name, $options
-                            , $display = array(), $multiple_select = FALSE
-                                    , $selected = ''
-                          )
+        , $display = array()
+        , $multiple_select = FALSE
+        , $selected = ''
+    )
 {
     $html = '';
     if( ! $multiple_select )

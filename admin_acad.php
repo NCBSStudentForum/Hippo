@@ -191,15 +191,21 @@ echo '
     <tr>
         <td>Manage courses and slots </td>
         <td>
-            <a href="admin_acad_manages_slots.php">Manage slots</a> 
-            <br>
-            <a href="admin_acad_manages_courses.php">Manage courses</a> 
+            <a href="admin_acad_manages_slots.php">Slots</a> 
+            <a href="admin_acad_manages_courses.php">Courses</a> 
         </td>
     </tr>
+    <tr> </tr>
     <tr>
         <td>Manage this sememster courses </td>
         <td>
             <a href="admin_acad_manages_current_courses.php">Manage running courses</a> 
+        </td>
+    </tr>
+    <tr>
+        <td>Manage registration, submit grades </td>
+        <td>
+            <a href="admin_acad_manages_enrollments.php">Manage Enrollment</a> 
         </td>
     </tr>
   </table>

@@ -8,6 +8,7 @@ AWS scheduler cum even manager for NCBS.
 - mysql 
 - python-pypandoc, pandoc (>=1.12) or python-html2text
 - sudo pip install mysql-connector-python-rf
+- pandoc >= 1.19.2.1
 
 # Apache behind proxy
 

@@ -19,15 +19,44 @@ $runningCourses = array( );
 foreach( getSemesterCourses( $year, $sem ) as $rc )
     $runningCourses[ $rc[ 'course_id' ] ] = $rc;
 
-
 echo '<h1>Course enrollment</h1>';
-
 
 echo alertUser( "
     <strong>Policy for dropping a course </strong> 
     <br>  Upto 30 days from starting of course, you are free to drop a course. 
     After that, you need to write to your course instructor and academic office.
     " );
+
+// Running course this semester.
+$courseMap = array( );
+$options = array( );
+foreach( $runningCourses as $c )
+{
+    $cid = $c[ 'course_id' ];
+    $options[] = $cid ;
+    $courseMap[ $cid ] = $cid . ' - ' . getCourseName( $cid );
+}
+
+$courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
+
+echo "<h2>Registration form</h2>";
+
+$default = array( 'student_id' => $_SESSION[ 'user' ] 
+                , 'semester' => $sem
+                , 'year' => $year
+                , 'registered_on' => dbDate( 'now' )
+                , 'course_id' => $courseSelect
+                );
+
+
+echo '<form method="post" action="user_manages_courses_action.php">';
+echo dbTableToHTMLTable( 'course_registration'
+                        , $default
+                        , 'course_id,type' 
+                        , 'submit'
+                        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
+                      );
+echo '</form>';
 
 $tofilter = 'student_id';
 
@@ -81,43 +110,6 @@ echo '</tr></table>';
 echo '</div>';
 
 
-// Running course this semester.
-$runningCourses = getSemesterCourses( $year, $sem );
-
-$courseMap = array( );
-$options = array( );
-foreach( $runningCourses as $c )
-{
-    $cid = $c[ 'course_id' ];
-    $options[] = $cid ;
-    $courseMap[ $cid ] = $cid . ' - ' . getCourseName( $cid );
-}
-
-$courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
-
-echo "<h2>Registration form</h2>";
-//echo printInfo( 
-    //"To register for a course, select it from drop-down list,
-    //select a type (<tt>CREDIT</tt> or <tt>AUDIT</tt> and press submit button 
-    //<button disabled>" . $symbSubmit . "</button>"
-    //);
-
-$default = array( 'student_id' => $_SESSION[ 'user' ] 
-                , 'semester' => $sem
-                , 'year' => $year
-                , 'registered_on' => dbDate( 'now' )
-                , 'course_id' => $courseSelect
-                );
-
-
-echo '<form method="post" action="user_manages_courses_action.php">';
-echo dbTableToHTMLTable( 'course_registration'
-                        , $default
-                        , 'course_id,type' 
-                        , 'submit'
-                        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
-                      );
-echo '</form>';
 
 echo goBackToPageLink( "user.php", "Go back" );
 

@@ -320,6 +320,13 @@ table.editable_events {
     /*max-width : 90%;*/
 }
 
+table.editable_course_registration {
+    text-align : left;
+    background-color:var(--background); 
+    border : 1px dotted;
+    /*max-width : 90%;*/
+}
+
 table.event_sticker
 {
     width : 100px;

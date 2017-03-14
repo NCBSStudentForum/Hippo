@@ -22,7 +22,11 @@ $sem = getCurrentSemester( );
 $courses = getSemesterCourses( $year, $sem );
 
 echo '<table border="1">';
-echo '<tr><th>Course</td><td>Total enrollments</td>';
+echo '<tr><th>Course</td><th>All Enrollments</th>';
+
+echo alertUser(
+    "Click on the button to see the list of enrolled students" 
+    );
 
 $enrollments = array( );
 foreach( $courses as $c )
@@ -54,18 +58,25 @@ echo closePage( );
 
 if( $_POST )
 {
-    echo '<table class="show_info">';
+    echo '<h3>Enrollment for course ' . $cid . '</h3>';
+
+    $table = '<table class="show_info">';
     $count = 0;
     $cid = $_POST[ 'course_id'];
-    echo '<h3>Enrollment for course ' . $cid . '</h3>';
     foreach( $enrollments[$cid]  as $r )
     {
         $count += 1;
         $studentId = $r[ 'student_id' ];
         $login = loginToText( $studentId );
-        echo '<tr><td>' . $count . '</td><td>' . $login . '</td></tr>';
+        $table .= '<tr>';
+        $table .= '<td>' . $count . '</td><td>' . $login . '</td>';
+        $table .= '<td>' . $r[ 'type' ] . "</td>";
+        $table .= '</tr>';
     }
-    echo '</table>';
+
+    $table .= '</table>';
+    echo $table;
+
     echo closePage( );
 }
 

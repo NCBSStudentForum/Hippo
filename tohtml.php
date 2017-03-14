@@ -1457,4 +1457,23 @@ function coursesTable( )
     return $html;
 }
 
+/**
+    * @brief Create a select list with default value selected.
+    *
+    * @param $default
+    *
+    * @return 
+ */
+function gradeSelect( $name, $default = 'X' )
+{
+    if( strlen( $default ) == 0 )
+        $default = 'X';
+
+    $select = arrayToSelectList( 
+            $name
+            , array( 'A+', 'A', 'B+', 'B', 'C+', 'C', 'F', 'X' )
+            , array( ), false, $default
+        );
+    return $select;
+}
 ?>

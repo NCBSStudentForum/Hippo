@@ -40,9 +40,16 @@ if( $_POST[ 'response' ] == 'submit' )
                 , $_POST );
 
     if( $res )
-        echo printInfo( "You have successfully registered for the couse" );
+    {
+        echo printInfo( "You are successfully registered for the course" );
+        goBack( 'user_manages_courses.php', 1 );
+        exit;
+    }
     else
+    {
         echo minionEmbarrassed( "Failed to register you for the course." );
+        echo printWarning( "Most likely you are already registered for this course" );
+    }
     
 }
 else if( $_POST[ 'response' ] == 'drop' )

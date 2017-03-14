@@ -32,8 +32,7 @@ echo '<form action="" method="get" accept-charset="utf-8">
     <tr>
         <td> <input type="date" class="datepicker" name="date" value="' . 
             $defaults[ 'date' ] . '" /> </td>
-            <td> <button name="response" value="' . $defaults[ 'venues' ] . 
-                '" >' . $symbScan . '</button> </td>
+            <td> <button name="response">' . $symbScan . '</button> </td>
     </tr>
     </table>
     </form>';

@@ -402,6 +402,25 @@ function initialize( )
             ) "
         );
 
+    // course registration. 
+    $res = $db->query( "
+        create TABLE IF NOT EXISTS course_registration  (
+             student_id VARCHAR(50) NOT NULL 
+            , semester ENUM ( 'MONSOON', 'VASANT' ) NOT NULL
+            , year VARCHAR(5) NOT NULL
+            -- CHECK contraints are ignored by MYSQL.
+            , course_id VARCHAR(8) NOT NULL CHECK ( course_id <> '' )
+            , type ENUM( 'AUDIT', 'CREDIT' ) NOT NULL DEFAULT 'CREDIT'
+            , status ENUM ( 'VALID', 'INVLALID', 'DROPPED' ) NOT NULL DEFAULT 'VALID'
+            , registered_on DATETIME NOT NULL
+            , last_modified_on DATETIME
+            , grade VARCHAR(2) 
+            , grade_is_given_on DATETIME  -- Do not show till feedback is given.
+            , UNIQUE KEY (student_id,course_id,type)
+            , PRIMARY KEY (student_id,semester,year,course_id)
+            ) "
+        );
+
     return $res;
 }
 
@@ -1474,7 +1493,7 @@ function insertIntoTable( $tablename, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( array_key_exists( $k, $data) && $data[$k] )
+        if( array_key_exists( $k, $data) && strlen($data[$k]) > 0 )
         {
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );
@@ -2163,6 +2182,12 @@ function addOrUpdateSpeaker( $data )
     return $ret;
 }
 
+function getCourseName( $cid )
+{
+    $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
+    return $c['name'];
+}
+
 function getSemesterCourses( $year, $sem )
 {
     $sDate = dbDate( strtotime( "$year-01-01" ) );
@@ -2181,23 +2206,12 @@ function getSemesterCourses( $year, $sem )
     return fetchEntries( $res );
 }
 
+function getMyCourses( $sem, $year, $user  )
+{
+    $whereExpr = "semester='$sem' AND year='$year' AND student_id='$user'";
+    return getTableEntries( 'course_registration', 'status', $whereExpr );
+}
 
 
-// Deprecated: Images are stored in ./pictures/ folder.
-// /**
-//     * @brief Get user data from logins_metadata table. 
-//     *
-//     * @param $user
-//     *
-//     * @return 
-
-
-//  */
-// function getUserPicuture( $user ) 
-// {
-//     global $db;
-//     $res = $db->query( "SELECT user_image FROM logins_metadata 
-//         WHERE login='$user'" );
-//     return $res->fetch( PDO::FETCH_ASSOC ); // } 
 ?>
 

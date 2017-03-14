@@ -26,6 +26,20 @@ $html .= '
    </table>';
 echo $html;
 
+echo "<h3> Manage course </h3>";
+
+$thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
+echo '<table class="tasks">';
+
+echo  '<tr>
+        <td>Manage course for semester (' . $thisSem . ') </td>
+        <td>
+            <a href="user_manages_courses.php">My current courses</a> 
+        </td>
+        </tr>';
+
+echo '</table>';
+
 // Only show this section if user is eligible for AWS.
 $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
 if( $userInfo[ 'eligible_for_aws' ] == 'YES' )

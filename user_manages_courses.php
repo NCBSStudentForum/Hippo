@@ -20,7 +20,7 @@ foreach( getSemesterCourses( $year, $sem ) as $rc )
     $runningCourses[ $rc[ 'course_id' ] ] = $rc;
 
 
-echo '<h3>Registered courses </h3>';
+echo '<h1>Course enrollment</h1>';
 
 
 echo alertUser( "
@@ -39,7 +39,9 @@ echo '<tr>';
 $action = 'drop';
 $count = 0;
 
-echo printInfo( "You are registered for following courses." );
+if( count( $myCourses ) > 0 )
+    echo "<h2>You are registered for following courses </h2>";
+
 foreach( $myCourses as $c )
 {
     $count += 1;
@@ -93,7 +95,13 @@ foreach( $runningCourses as $c )
 
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
 
-echo "<h3>Register for selected course </h3>";
+echo "<h2>Registration form</h2>";
+//echo printInfo( 
+    //"To register for a course, select it from drop-down list,
+    //select a type (<tt>CREDIT</tt> or <tt>AUDIT</tt> and press submit button 
+    //<button disabled>" . $symbSubmit . "</button>"
+    //);
+
 $default = array( 'student_id' => $_SESSION[ 'user' ] 
                 , 'semester' => $sem
                 , 'year' => $year
@@ -106,7 +114,8 @@ echo '<form method="post" action="user_manages_courses_action.php">';
 echo dbTableToHTMLTable( 'course_registration'
                         , $default
                         , 'course_id,type' 
-                        , 'submit', 'last_modified_on,grade,grade_is_given_on'
+                        , 'submit'
+                        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
                       );
 echo '</form>';
 

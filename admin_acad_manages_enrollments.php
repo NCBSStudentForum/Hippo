@@ -35,9 +35,9 @@ $taskSelect = arrayToSelectList( 'task'
                 , array( ), false, $taskSelected
         );
 
-echo '<h2>Enrollement</h2>';
-echo '<form method="post" action="">';
-echo "<table>
+
+echo '<h2>Enrollement</h2>'; echo '<form method="post" action="">'; echo
+"<table>
     <tr>
         <th>Select courses</th>
         <th>Task</th>
@@ -60,6 +60,10 @@ if( $_POST )
     $_POST[ 'semester' ] = $sem;
     $_POST[ 'year' ] = $year;
 
+    $enrollments = getTableEntries( 'course_registration'
+        , 'student_id', whereExpr( 'semester,year,course_id', $_POST  )
+        );
+
     if( $_POST[ 'task' ] == '' )
     {
         echo printWarning( "No task is selected" );
@@ -67,10 +71,6 @@ if( $_POST )
     else if( $_POST[ 'task' ] == 'Change enrollment' )
     {
         echo printInfo( "Changing enrollment" );
-
-        $enrollments = getTableEntries( 'course_registration'
-            , 'student_id', whereExpr( 'semester,year,course_id', $_POST  )
-            );
 
         echo '<table>';
         foreach( $enrollments as $enrol )
@@ -98,6 +98,30 @@ if( $_POST )
         else
         {
             echo printInfo( "Grading for course " . $_POST[ 'course_id' ] );
+            echo '<form method="post" 
+                    action="admin_acad_manages_enrollments_action.php">';
+            echo '<table>';
+
+            $ids = array( );
+            $grades = array( );
+            foreach( $enrollments as $enrol )
+            {
+                echo '<tr><td>';
+                echo arrayToTableHTML( $enrol, 'enrollment', ''
+                    , 'registered_on,last_modified_on,status,grade_is_given_on' );
+                echo "</td>";
+                echo "<td>" . gradeSelect( $enrol['student_id'], $enrol[ 'grade' ] ) . "</td>";
+                echo '</tr>';
+                $ids[ ] =  $enrol[ 'student_id' ];
+            }
+
+            echo '<input type="hidden" name="course_id" value="' . $enrol['course_id'] . '" >';
+            echo '<input type="hidden" name="year" value="' . $enrol[ 'year'] . '" >';
+            echo '<input type="hidden" name="semester" value="' . $enrol['semester'] . '" >';
+            echo '<input type="hidden" name="student_ids" value="' . implode(',', $ids) . '" >';
+            echo '<tr><td></td><td><button name="response" value="grade">Assign</button></td></tr>';
+            echo '</table>';
+            echo '</form>';
         }
     }
     else

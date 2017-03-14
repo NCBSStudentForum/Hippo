@@ -1424,6 +1424,25 @@ function findAnyoneWithEmail( $email )
 }
 
 
+/**
+    * @brief Generate a where expression.
+    *
+    * @param $keys
+    * @param $data
+    *
+    * @return 
+ */
+function whereExpr( $keys, $data )
+{
+    $whereExpr = array( );
+    $keys = explode( ',', $keys );
+
+    foreach( $keys as $k )
+        $whereExpr[] = "$k='" . $data[ $k] . "'";
+
+    return implode( ' AND ', $whereExpr );
+
+}
 
 /**
     * @brief 
@@ -1439,7 +1458,8 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     global $db;
     $query = "SELECT * FROM $tablename";
 
-    if( strlen( $where ) > 0 )
+
+    if( is_string( $where) && strlen( $where ) > 0 )
         $query .= " WHERE $where ";
 
     if( $orderby )

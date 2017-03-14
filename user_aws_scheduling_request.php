@@ -1,6 +1,4 @@
 <?php
-
-include_once 'header.php';
 include_once 'database.php';
 include_once 'mail.php';
 include_once 'tohtml.php';
@@ -23,6 +21,9 @@ if( ! __get__( $_POST, 'speaker', null ) )
 
 // Check if this user already has a preference.
 $prefs = getTableEntry( 'aws_scheduling_request', 'speaker', $_POST );
+if( ! $prefs )
+    $prefs = array( );
+
 $prefs = array_merge( $prefs, $_POST );
 
 echo '<form method="post" action="user_aws_scheduling_request_submit.php">';

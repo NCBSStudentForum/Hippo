@@ -303,11 +303,12 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
 function eventLineHTML( $date, $venueid, $start = '8:00', $end = '18:00' )
 {
     $venue = getVenueById( $venueid );
+    $venueText = venueSummary( $venueid );
     $html = '<table class="eventline">';
     $startDay = $start;
     $dt = 60;
     $html .= "<tr>";
-    $html .= "<td><div style=\"width:100px\">$venueid</div></td>";
+    $html .= "<td><div style=\"width:100px\">$venueText</div></td>";
     $duration = ( strtotime( $end ) - strtotime( $start ) ) / 3600;
     for( $i = 0; $i < $duration; $i++ )
     {

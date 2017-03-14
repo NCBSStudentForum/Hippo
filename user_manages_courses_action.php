@@ -45,7 +45,7 @@ if( $_POST[ 'response' ] == 'submit' )
         echo minionEmbarrassed( "Failed to register you for the course." );
     
 }
-if( $_POST[ 'response' ] == 'drop' )
+else if( $_POST[ 'response' ] == 'drop' )
 {
     // Drop this course.
     echo printInfo( "Dropping course " . $_POST[ 'course_id' ] );

@@ -408,7 +408,8 @@ function initialize( )
              student_id VARCHAR(50) NOT NULL 
             , semester ENUM ( 'MONSOON', 'VASANT' ) NOT NULL
             , year VARCHAR(5) NOT NULL
-            , course_id VARCHAR(8) NOT NULL
+            -- CHECK contraints are ignored by MYSQL.
+            , course_id VARCHAR(8) NOT NULL CHECK ( course_id <> '' )
             , type ENUM( 'AUDIT', 'CREDIT' ) NOT NULL DEFAULT 'CREDIT'
             , status ENUM ( 'VALID', 'INVLALID', 'DROPPED' ) NOT NULL DEFAULT 'VALID'
             , registered_on DATETIME NOT NULL
@@ -1492,7 +1493,7 @@ function insertIntoTable( $tablename, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( array_key_exists( $k, $data) && $data[$k] )
+        if( array_key_exists( $k, $data) && strlen($data[$k]) > 0 )
         {
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );

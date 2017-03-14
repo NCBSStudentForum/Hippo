@@ -47,8 +47,8 @@ foreach( $courses as $c )
         <td> ' . $cid . ' - ' . $course[ 'name' ] . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
-        <td> <button name="response" value="show_enrollment">' 
-                . count( $registrations ) . '</button></td>
+        <td>' . count( $registrations ) . '</td><td>
+            <button name="response" value="show_enrollment">Show list</button></td>
         </form>';
     echo '</tr>';
 }
@@ -58,11 +58,12 @@ echo closePage( );
 
 if( $_POST )
 {
+
+    $cid = $_POST[ 'course_id'];
     echo '<h3>Enrollment for course ' . $cid . '</h3>';
 
-    $table = '<table class="show_info">';
+    $table = '<table class="show_events">';
     $count = 0;
-    $cid = $_POST[ 'course_id'];
     foreach( $enrollments[$cid]  as $r )
     {
         $count += 1;
@@ -75,8 +76,12 @@ if( $_POST )
     }
 
     $table .= '</table>';
-    echo $table;
 
+    echo '<div style="font-size:small">';
+    echo $table;
+    echo '</div>';
+
+    echo '<br>';
     echo closePage( );
 }
 

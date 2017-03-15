@@ -1356,6 +1356,24 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
     return showImage( $picPath, $height, $width );
 }
 
+function getSlotAtThisTime( $day, $slot_time, $slots = null )
+{
+    if( ! $slots )
+        $slots = getTableEntries( 'slots' );
+
+    $slot = null;
+    foreach( $slots as $s )
+    {
+        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
+        {
+            if( dbTime( $s[ 'start_time' ]) == $slot_time )
+                return $s;
+        }
+    }
+
+    return $slot;
+}
+
 /**
     * @brief Convert slots to a HTML table.
     *
@@ -1374,23 +1392,18 @@ function slotTable( $width = "15px" )
         $html .= "<th width=\" " . $width . "\"></th>";
     $html .= "</tr>";
 
+    // Check which slot is here.
+    $slots = getTableEntries('slots' );
     // each day is row.
     foreach( $days as $day )
     {
         $html .= "<tr>";
-
-
         $html .= "<tr> <td>$day</td> ";
 
         for ($i = 0; $i < $maxCols; $i++)
         {
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
-
-            // Check which slot is here.
-            $slot = getTableEntry( 'slots', 'day,start_time',
-                                   array( "day" => strtoupper( $day )
-                                          , 'start_time' => $slotTime
-                                        ));
+            $slot = getSlotAtThisTime( $day, $slotTime, $slots );
             if( $slot )
             {
                 $duration = strtotime( $slot[ 'end_time' ] )  -
@@ -1408,24 +1421,13 @@ function slotTable( $width = "15px" )
                          $id <br> <small> <tt>$text</tt> </small> </td>";
 
                 // Increase $i by ncols - 1. 1 is increased by loop.
-                $i += $ncols - 1;
+                if( $ncols > 1 )
+                    $i += $ncols - 1;
             }
             else
-            {
                 $html .= "<td></td>";
-            }
-
-            //echo "$i,";
         }
         $html .= "</tr>";
-        //foreach( $slots as $s )
-        //{
-        //    $duration = strtotime( $s[ 'end_time' ] )  - strtotime( $s[ 'start_time' ] );
-        //    $id = $s[ 'id' ];
-        //    $ncols = intval( $duration / 60 / 15); // Each column is 15 minutes.
-        //    $html .= "<td colspan=\"$ncols\"> $id </td>";
-        //}
-        //$html .= "</tr>";
     }
 
     $html .= '</table>';

@@ -92,7 +92,7 @@ function isIntranet( )
     $serverIP = explode('.',$_SERVER['SERVER_ADDR']);
     $localIP  = explode( '.', getRealIpAddr( ) );
 
-    echo alertUser( "Accessing page from IP address: " . implode('.', $localIP));
+    //echo alertUser( "Accessing page from IP address: " . implode('.', $localIP));
 
     $isIntranet = ($serverIP[0] == $localIP[0]) 
                         && ($serverIP[1] == $localIP[1])

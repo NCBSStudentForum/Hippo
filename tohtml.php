@@ -1361,7 +1361,7 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
     *
     * @return
  */
-function slotTable( )
+function slotTable( $width = "15px" )
 {
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
     $html = '<table class="timetable">';
@@ -1371,7 +1371,7 @@ function slotTable( )
 
     $html .= "<tr>";
     for ($i = -1; $i < $maxCols; $i++)
-        $html .= "<th width=\"15px\"></th>";
+        $html .= "<th width=\" " . $width . "\"></th>";
     $html .= "</tr>";
 
     // each day is row.

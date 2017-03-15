@@ -13,7 +13,6 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
 }
 
 
-
 echo "<h2>Enrollement table for this semester courses</h2>";
 
 $year = getCurrentYear( );
@@ -27,6 +26,8 @@ echo '<tr><th>Course</td><th>All Enrollments</th>';
 echo alertUser(
     "Click on the button to see the list of enrolled students" 
     );
+
+echo slotTable( );
 
 $enrollments = array( );
 foreach( $courses as $c )

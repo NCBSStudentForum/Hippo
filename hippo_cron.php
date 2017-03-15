@@ -301,23 +301,42 @@ if( $today >= $startDay && $today <= $endDay )
  * and email to person who booked it.
  */
 {
-    echo printInfo( "Checking for recurrent events expiring in 7 days" );
     $awayFrom = strtotime( 'now' ) - strtotime( '1:00 pm' );
-    //if( $awayFrom > -1 && $awayFrom < 15 )
+    if( $awayFrom > -1 && $awayFrom < 15 )
     {
+        echo printInfo( "Checking for recurrent events expiring in 7 days" );
         // Get all events which are grouped.
         $groupEvents = getActiveRecurrentEvents( 'today' );
         foreach( $groupEvents as $gid => $events )
         {
-            $dates = array_map( function( $x ) { return $x['date']; }, $events );
-            $lastValidEvent = end( $dates );
-            if( strtotime( $today ) == strtotime( $lastValidEvent ) + 7 * 24 * 3600 )
+            $e = end( $events );
+            $lastEventOn = $e[ 'date' ];
+
+            $createdBy = $e[ 'created_by' ];
+
+            $eventHtml = arrayToVerticalTableHTML( $e, 'event' );
+
+            $template = emailFromTemplate( 'event_expiring'
+                    , array( 'USER' => loginToText( $createdBy ) 
+                        , 'EVENT_BODY' => $eventHtml ) 
+                    );
+            $to = getLoginEmail( $createdBy );
+            $cclist = $template[ 'CC' ];
+            $title = $e['title'];
+
+            if( strtotime( $today ) == strtotime( $lastEventOn ) + 7 * 24 * 3600 )
             {
                 echo printInfo( "This group is expiring in next 7 days. " );
+                $subject = "Your recurrent booking '$title' is expiring in 7 days";
+                sendPlainTextEmail( $template[ 'email_body' ]
+                    , $subject, $to, $cclist );
             }
-            if( strtotime( $today ) == strtotime( $lastValidEvent ) + 24 * 3600 )
+            if( strtotime( $today ) == strtotime( $lastEventOn ) + 24 * 3600 )
             {
                 echo printInfo( "This group is expiring in next 1 day" );
+                $subject = "Your recurrent booking '$title' is expiring tomorrow";
+                sendPlainTextEmail( $template[ 'email_body' ]
+                    , $subject, $to, $cclist );
             }
         }
     }

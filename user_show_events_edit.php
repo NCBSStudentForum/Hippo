@@ -30,14 +30,32 @@ if( strtolower($_POST['response']) == 'edit' )
 
 else if( strtolower($_POST['response']) == 'delete' )
 {
-    $res = changeStatusOfEventGroup( $_POST['gid'], $_SESSION['user'], 'CANCELLED' );
+    $eid = trim( $_POST[ 'eid' ] );
+
+    $gText = "$gid . $eid";
+
+    if( ! $eid )
+        $res = updateTable( 'events', 'gid,created_by', 'status',
+                        array( 'gid' => $gid, 'created_by' => $_SESSION[ 'user'] 
+                                , 'status' => 'CANCELLED' 
+                            )
+                        );
+    else
+        $res = updateTable( 'events', 'gid,eid,created_by', 'status',
+                        array( 'gid' => $gid, 'created_by' => $_SESSION[ 'user'] 
+                                , 'status' => 'CANCELLED' 
+                                , 'eid' => $eid
+                            )
+                        );
+
     if( $res )
     {
-        echo printInfo( "Successfully cancelled event" );
-        goToPage( "user_show_events.php", 0 );
+        echo printInfo( "Successfully cancelled event $gText" );
+        //goToPage( "user_show_events.php", 0 );
+        //exit;
     }
     else
-        echo printWarning( "Could not cancel event " . $_POST['gid'] );
+        echo printWarning( "Could not cancel event $gText" );
 
 }
 else if( $_POST['response'] == "DO_NOTHING" )

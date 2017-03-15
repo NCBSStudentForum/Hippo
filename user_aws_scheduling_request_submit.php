@@ -11,6 +11,9 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
 $sendEmail = true;
 
+// Speaker is the current user.
+$_POST[ 'speaker' ] = $_SESSION[ 'user' ];
+
 if( $_POST[ 'response' ] == 'submit' )
 {
     // Check if preferences are available.

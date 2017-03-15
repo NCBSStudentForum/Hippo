@@ -44,6 +44,7 @@ if( $_POST['response'] == "Review" )
     echo '<form method="post" action="bookmyvenue_admin_request_review_submit.php">';
     echo '<table class="show_events">';
     $childrenId = 0;
+
     foreach( $requests as $r )
     {
         $rid = $r['rid'];
@@ -53,7 +54,16 @@ if( $_POST['response'] == "Review" )
         echo "<td><input type=\"checkbox\" name=\"events[]\" value=\"$id\"></td>";
         $tobefiltered = Array( 'status', 'modified_by', 'rid', 'timestamp', 'external_id' );
         echo "<td>" . arrayToTableHTML( $r, 'request', '', $tobefiltered ) . "</td>";
+
     }
+
+    $yesChecked = '';
+    $noChecked = '';
+    if( $requests[0][ 'is_public_event' ] == 'YES' )
+        $yesChecked = 'checked';
+    else
+        $noChecked = 'checked';
+
     echo '</td>';
     echo "</tr> </table>";
 
@@ -65,11 +75,13 @@ if( $_POST['response'] == "Review" )
     echo '</div>';
 
     echo '<table style="border:1px;position:"relative";"> ';
+
+
     echo "<tr> 
             <!-- Here we create the button to submit requests -->
             <td> Suitable for public google-calendar 
-                <input name=\"isPublic\" value=\"YES\" type=\"radio\" />Yes
-                <input name=\"isPublic\" value=\"NO\" type=\"radio\" checked />No
+                <input name=\"isPublic\" value=\"YES\" type=\"radio\" $yesChecked />Yes
+                <input name=\"isPublic\" value=\"NO\" type=\"radio\" $noChecked />No
                 </td>
             </tr>
             <tr>

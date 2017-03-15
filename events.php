@@ -37,7 +37,7 @@ echo '
     ';
 
 $whichDay = $default[ 'date' ];
-$eventTalks = getTableEntries( 'events', 'date' , "date='$whichDay' 
+$eventTalks = getTableEntries( 'events', 'date,start_time' , "date='$whichDay' 
         AND status='VALID' AND external_id LIKE 'talks%'" 
     );
 

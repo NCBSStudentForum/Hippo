@@ -297,5 +297,30 @@ if( $today >= $startDay && $today <= $endDay )
     }
 }
 
+/* Everyday at 1pm check for recurrent events. On 7 days before last events send 
+ * and email to person who booked it.
+ */
+{
+    echo printInfo( "Checking for recurrent events expiring in 7 days" );
+    $awayFrom = strtotime( 'now' ) - strtotime( '1:00 pm' );
+    //if( $awayFrom > -1 && $awayFrom < 15 )
+    {
+        // Get all events which are grouped.
+        $groupEvents = getActiveRecurrentEvents( 'today' );
+        foreach( $groupEvents as $gid => $events )
+        {
+            $dates = array_map( function( $x ) { return $x['date']; }, $events );
+            $lastValidEvent = end( $dates );
+            if( strtotime( $today ) == strtotime( $lastValidEvent ) + 7 * 24 * 3600 )
+            {
+                echo printInfo( "This group is expiring in next 7 days. " );
+            }
+            if( strtotime( $today ) == strtotime( $lastValidEvent ) + 24 * 3600 )
+            {
+                echo printInfo( "This group is expiring in next 1 day" );
+            }
+        }
+    }
+}
 
 ?>

@@ -2233,6 +2233,37 @@ function getMyCourses( $sem, $year, $user  )
     return getTableEntries( 'course_registration', 'status', $whereExpr );
 }
 
+/**
+    * @brief Get all active recurrent events from today.
+    *
+    * @param $day
+    *
+    * @return 
+ */
+function getActiveRecurrentEvents( $day )
+{
+    global $db;
+
+    $from = dbDate( $day );
+
+    // We get gid of events which are still valid.
+    $res = $db->query( "SELECT gid FROM events WHERE 
+                            date >= '$from' AND status='VALID'" );
+    $gids = fetchEntries( $res );
+
+    $upcomingRecurrentEvents = array( );
+    foreach( $gids as $gid )
+    {
+        $gid = $gid[ 'gid' ];
+
+        // Must order by date.
+        $gEvents = getTableEntries( 'events', 'date', "gid='$gid'" );
+        if( count( $gEvents ) > 1 )
+            $upcomingRecurrentEvents[ $gid ] = $gEvents;
+    }
+
+    return $upcomingRecurrentEvents;
+}
 
 ?>
 

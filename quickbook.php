@@ -9,6 +9,7 @@ mustHaveAnyOfTheseRoles( array( "USER" ) );
 
 echo userHTML( );
 
+
 $roundedTimeNow = round( time( ) / (15 * 60) ) * (15 * 60 );
 
 $defaults = array( 
@@ -30,10 +31,17 @@ if( array_key_exists( 'external_id', $_GET ) )
     $tableName = $expr[ 0 ];
     $id = $expr[ 1 ];
     $entry = getTableEntry( $tableName, 'id', array( "id" => $id ) );
-    echo printInfo( "Scheduling for a following talk" );
-    echo arrayToTableHTML( $entry, 'talk', '', 'id,status,date,time,venue,venue' );
+    echo printInfo( "Scheduling for the following talk" );
+    echo arrayToTableHTML( $entry, 'events', '', 'id,status,date,time,venue,venue' );
     $defaults = array_merge( $defaults, $entry );
 }
+else
+    echo alertUser(
+        'A powerful booking interface is also available 
+        if you need to explore other events/dates/venues 
+        <a href="bookmyvenue_browse.php">TAKE ME THERE</a>
+        '
+        );
 
 // Since we come back to this page again and again, we reuse the previous values 
 // provided by user.
@@ -60,12 +68,6 @@ else
     $openAirNo = 'checked';
 
 
-echo alertUser(
-    'A powerful booking interface is also available 
-    if you need to explore other events/dates/venues 
-    <a href="bookmyvenue_browse.php">TAKE ME THERE</a>
-    '
-    );
 
 echo '<br />';
 echo '<table style="min-width:300px;max-width:500px",border="0">';
@@ -138,7 +140,7 @@ if( count( $publicEvents ) > 0 )
         selected date" );
     foreach( $publicEvents as $event )
         echo arrayToTableHTML( $event, 'events', ''
-        , array( 'gid', 'eid', 'description', 'status', 'is_public_event'
+            , array( 'gid', 'eid', 'description', 'status', 'is_public_event'
             , 'external_id'
             , 'calendar_id', 'calendar_event_id', 'last_modified_on' 
             )

@@ -47,17 +47,14 @@ if( $msg == "OK" )
             $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
             );
 
-        echo "<pre>Repeat pattern $repeatPat </pre>";
+        if( $repeatPat )
+            echo "<pre>Repeat pattern $repeatPat </pre>";
         $_POST['repeat_pat']  = $repeatPat;
     }
 
     $gid = submitRequest( $_POST );
 
-    // Unset POST here so refresh page does not cause creation of another 
-    // request.
-    $_POST = array( );
-
-    if( $gid > 0 )
+    if( $gid )
     {
         $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
         $userEmail = $userInfo[ 'email' ];

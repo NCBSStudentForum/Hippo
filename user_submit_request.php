@@ -65,12 +65,13 @@ $default[ 'end_time' ] = $defaultEndTime;
 $default = array_merge( $default, $_POST );
 
 echo '<form method="post" action="user_submit_request_action.php">';
-echo dbTableToHTMLTable( 'bookmyvenue_requests', $default
-    , 'class,title,description,url,is_public_event,end_time' 
-    , ''
-    , $hide = 'gid,rid,external_id,modified_by,timestamp,status'
-    );
-
+echo dbTableToHTMLTable( 'bookmyvenue_requests'
+        , $default
+        , 'class,title,description,url,is_public_event,end_time' 
+        , ''
+        , $hide = 'gid,rid,external_id,modified_by,timestamp,status'
+        );
+echo '<input type="hidden" name="external_id" value="' . $external_id . '" >';
 // I need to add repeat pattern here.
 echo "<br>";
 echo repeatPatternTable( 'repeat_pat' );

@@ -182,17 +182,27 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             , $_POST[ 'start_time' ], $_POST[ 'end_time' ]
             );
 
-        $nEvent = 0;
+        $all = array( );
         if( $events )
-            $nEvent += count( $events );
+            $all = array_merge( $all, $events );
         if( $reqs )
-            $nEvent += count( $reqs );
+            $all = array_merge( $all, $reqs );
 
         // If there is already any request or event on this venue, do not book.
-        if( $nEvent > 0 )
+        if( count( $all ) > 0 )
         {
-            echo alertUser( "Venue " . $venue[ 'id' ] . " is taken." .
-                " $nEvent booking requests or events are pending" );
+            echo '<tr><td colspan="2">';
+            echo alertUser( "Venue " . $venue[ 'id' ] . " is taken " .
+                    " by following booking requests/events" 
+                );
+
+            echo '<div style="font-size:x-small">';
+            foreach( $all as $r )
+                echo arrayToTableHTML( $r, 'info', ''
+                        , 'is_public_event,url,description,gid,rid,external_id,modified_by,timestamp'
+                    );
+            echo '</div>';
+            echo '</td></tr>';
             continue;
         }
 

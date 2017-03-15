@@ -66,10 +66,16 @@ else
         $userEmail = getLoginEmail(  $eventInfo[ 'created_by' ] );
         $eventGroupTitle = $eventInfo[ 'title' ];
 
-        $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
 
         try {
-            actOnRequest( $gid, $rid, $whatToDo );
+            $res = actOnRequest( $gid, $rid, $whatToDo );
+            if( $res )
+                $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
+            else
+                $msg .= "<tr><td> $eventText </td><td> is not 
+                            approved due to clash with another event/request on 
+                            this venue and slot </td>";
+
         } catch ( Exception $e ) {
             echo printWarning( "Failed to update request: " . $e->getMessage( ) );
             echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );

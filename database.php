@@ -943,6 +943,18 @@ function submitRequest( $request )
         $request[ 'rid' ] = $rid;
         $request[ 'date' ] = $day;
 
+        $collideWith = checkCollision( $request );
+        $hide = 'rid,external_id,description,is_public_event,url,modified_by';
+        if( $collideWith )
+        {
+            echo '<div style="font-size:x-small">';
+            echo alertUser( 'Collision with following event/request' );
+            foreach( $collideWith as $ev )
+                echo arrayToTableHTML( $ev, 'events', $hide );
+            echo '</div>';
+            continue;
+        }
+
         $res = insertIntoTable( 'bookmyvenue_requests'
             , 'gid,rid,external_id,created_by,venue,title,description' . 
                 ',date,start_time,end_time,is_public_event,class'
@@ -968,8 +980,43 @@ function increaseEventHostedByVenueByOne( $venueId )
 }
 
 /**
+    * @brief check for collision.
+    *
+    * @param $resques
+    *
+    * @return 
+ */
+function checkCollision( $request )
+{
+
+    // Make sure this request is not clashing with another event or request.
+    $events = getEventsOnThisVenueBetweenTime( 
+        $request[ 'venue' ] , $request[ 'date' ] 
+        , $request[ 'start_time' ], $request[ 'end_time' ]
+        );
+    $reqs = getRequestsOnThisVenueBetweenTime( 
+        $request[ 'venue' ] , $request[ 'date' ] 
+        , $request[ 'start_time' ], $request[ 'end_time' ]
+        );
+
+    $all = array();
+    if( $events )
+        $all = array_merge( $all, $events );
+
+    if( $reqs )
+        $all = array_merge( $all, $reqs );
+
+    if( count( $all ) > 0 )
+        return $all;
+
+    return false;
+}
+
+/**
     * @brief Create a new event in dateabase. The group id and event id of event 
-    * is same as group id (gid) and rid of request which created it.
+    * is same as group id (gid) and rid of request which created it. If there is 
+    * alreay a event or request pending which collides with this request, REJECT 
+    * it.
     *
     * @param $gid
     * @param $rid
@@ -979,8 +1026,18 @@ function increaseEventHostedByVenueByOne( $venueId )
 function approveRequest( $gid, $rid )
 {
     $request = getRequestById( $gid, $rid );
-
     global $db;
+
+    $collideWith = checkCollision( $request );
+    if( ! $collideWith )
+    {
+        echo alertUser( "Following request is colliding with another 
+            event or request. Rejecting it.." );
+        echo arrayToTableHTML( $collideWith, 'request' );
+        rejectRequest( $gid, $rid );
+        return false;
+    }
+
     $stmt = $db->prepare( 'INSERT INTO events (
         gid, eid, class, external_id, title, description, date, venue, start_time, end_time
         , created_by
@@ -1005,9 +1062,10 @@ function approveRequest( $gid, $rid )
         changeRequestStatus( $gid, $rid, 'APPROVED' );
         // And update the count of number of events hosted by this venue.
         increaseEventHostedByVenueByOne( $request['venue'] );
+        return true;
     }
 
-    return $res;
+    return false;
 }
 
 function rejectRequest( $gid, $rid )

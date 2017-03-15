@@ -86,11 +86,12 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
             $cmd .= " -a \"$f\" ";
     }
 
-    printInfo( "<pre> $cmd </pre>" );
     $out = `$cmd`;
-    printInfo( '... $out' );
 
-    echo printInfo( "Saving the mail in archive" . $archivefile );
+    error_log( "<pre> $cmd </pre>" );
+    error_log( '... $out' );
+    error_log( "Saving the mail in archive" . $archivefile );
+
     // generate md5 of email. And store it in archive.
     file_put_contents( $archivefile, "SENT" );
     unlink( $msgfile );

@@ -301,8 +301,9 @@ if( $today >= $startDay && $today <= $endDay )
  * and email to person who booked it.
  */
 {
+    $today = 'today';
     $awayFrom = strtotime( 'now' ) - strtotime( '1:00 pm' );
-    if( $awayFrom > -1 && $awayFrom < 15 )
+    //if( $awayFrom > -1 && $awayFrom < 15 )
     {
         echo printInfo( "Checking for recurrent events expiring in 7 days" );
         // Get all events which are grouped.
@@ -321,20 +322,20 @@ if( $today >= $startDay && $today <= $endDay )
                         , 'EVENT_BODY' => $eventHtml ) 
                     );
             $to = getLoginEmail( $createdBy );
-            $cclist = $template[ 'CC' ];
+            $cclist = $template[ 'cc' ];
             $title = $e['title'];
 
             if( strtotime( $today ) == strtotime( $lastEventOn ) + 7 * 24 * 3600 )
             {
-                echo printInfo( "This group is expiring in next 7 days. " );
                 $subject = "Your recurrent booking '$title' is expiring in 7 days";
+                echo printInfo( $subject );
                 sendPlainTextEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }
-            if( strtotime( $today ) == strtotime( $lastEventOn ) + 24 * 3600 )
+            if( strtotime( $today ) == strtotime( $lastEventOn ) + 1 * 3600 )
             {
-                echo printInfo( "This group is expiring in next 1 day" );
                 $subject = "Your recurrent booking '$title' is expiring tomorrow";
+                echo printInfo( $subject );
                 sendPlainTextEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }

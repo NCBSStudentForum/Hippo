@@ -27,7 +27,7 @@ else
     {
         $gid = $group['gid'];
         echo '<form method="post" action="user_show_events_edit.php">';
-        echo "<table class=\"show_info\">";
+        echo "<table style=\"width:600px\">";
         echo "<tr><td> <strong>Group id $gid </strong>";
         echo "<button name=\"response\" title=\"Cancel this event\" 
                 onclick=\"AreYouSure(this)\" >Cancel Group</button>

@@ -12,6 +12,9 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+echo '<h2>Slots </h2>';
+echo alertUser( "These are proposed slots. They are not official yet and subject
+    to change" );
 echo slotTable( );
 
 
@@ -23,7 +26,7 @@ $sem = getCurrentSemester( );
 $courses = getSemesterCourses( $year, $sem );
 
 echo '<table border="1">';
-echo '<tr><th>Course</td><th>All Enrollments</th>';
+echo '<tr><th>Course</th><th>Slot</th><th>All Enrollments</th>';
 
 echo alertUser(
     "Click on the button to see the list of enrolled students" 
@@ -49,6 +52,7 @@ foreach( $courses as $c )
         <td> ' . $cid . ' - ' . $course[ 'name' ] . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
+        <td>' . $c[ 'slot' ] . '</td>
         <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">Show list</button></td>
         </form>';

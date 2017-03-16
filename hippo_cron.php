@@ -303,7 +303,7 @@ if( $today >= $startDay && $today <= $endDay )
 {
     $today = 'today';
     $awayFrom = strtotime( 'now' ) - strtotime( '1:00 pm' );
-    //if( $awayFrom > -1 && $awayFrom < 15 )
+    if( $awayFrom > -1 && $awayFrom < 15 )
     {
         echo printInfo( "Checking for recurrent events expiring in 7 days" );
         // Get all events which are grouped.

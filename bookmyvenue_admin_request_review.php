@@ -51,7 +51,7 @@ if( $_POST['response'] == "Review" )
         // use this id to get back the gid and rid in next form. 
         $id = $gid . '.' . $rid;
         echo "<tr>";
-        echo "<td><input type=\"checkbox\" name=\"events[]\" value=\"$id\"></td>";
+        echo "<td><input type=\"checkbox\" name=\"events[]\" value=\"$id\" checked></td>";
         $tobefiltered = Array( 'status', 'modified_by', 'rid', 'timestamp', 'external_id' );
         echo "<td>" . arrayToTableHTML( $r, 'request', '', $tobefiltered ) . "</td>";
 
@@ -67,15 +67,17 @@ if( $_POST['response'] == "Review" )
     echo '</td>';
     echo "</tr> </table>";
 
-    echo "<input name=\"request[]\" type=\"checkbox\" 
+    echo "<input name=\"request[]\" type=\"checkbox\" checked
         onclick=\"toggleMe(this)\" />Select all</td>
         ";
 
-    echo "<br /> <br />";
+    echo printWarning( 
+                "Be sure to select some entries before taking any action." 
+            );
+    echo "<br />";
     echo '</div>';
 
     echo '<table style="border:1px;position:"relative";"> ';
-
 
     echo "<tr> 
             <!-- Here we create the button to submit requests -->

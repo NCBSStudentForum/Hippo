@@ -54,10 +54,6 @@ function findEvent( $events, $googleEvent )
 
     return $found;
 }
-
-
-
-
 if( array_key_exists( 'google_command', $_SESSION ) )
 { 
     if( $_SESSION['google_command'] == 'synchronize_all_events' )

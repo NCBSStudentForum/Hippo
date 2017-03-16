@@ -855,3 +855,12 @@ function isPublicEvent( $event )
 {
     return ( $event[ 'is_public_event' ] == 'YES' );
 }
+
+function splitName( $name )
+{
+    $result = array();
+    $name = explode( ' ', $name );
+    $result[ 'first_name' ] = $name[ 0 ];
+    $result[ 'last_name' ] = end( $name );
+    return $result;
+}

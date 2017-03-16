@@ -981,13 +981,13 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
              $text . '</textarea>
              <script>
              tinymce.init( { selector : "#abstract"
-             , height : 300
-             , theme : "modern"
-             , plugins : [ "paste wordcount fullscreen table textcolor"
-             , "imagetools toc code" ]
-             , init_instance_callback: "insert_content"
-             , paste_as_text : true
-         } );
+                     , height : 300
+                     , theme : "modern"
+                     , plugins : [ "paste wordcount fullscreen table textcolor"
+                     , "imagetools toc code" ]
+                     , init_instance_callback: "insert_content"
+                     , paste_as_text : true
+                 } );
              function insert_content( inst ) {
              inst.setContent( \'' . $text . '\');
          }

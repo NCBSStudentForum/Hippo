@@ -123,11 +123,24 @@ else if( $default[ 'task' ] == 'This week events' )
 
     foreach( $events as $event )
     {
+        // We just need the summary of every event here.
+        //$html .= eventSummaryHTML( $event );
+        
         if( $event[ 'is_public_event' ] == 'NO' )
             continue;
 
+        $externalId = $event[ 'external_id'];
+        if( ! $externalId )
+            continue;
+
+        $id = explode( '.', $externalId)[1];
+        if( intval( $id ) < 0 )
+            continue;
+
+        $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
+
         // We just need the summary of every event here.
-        $html .= eventSummaryHTML( $event );
+        $html .= talkSummaryHTML( $talk );
         $html .= "<br>";
     }
 

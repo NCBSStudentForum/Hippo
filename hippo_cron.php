@@ -146,8 +146,8 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 }
 else if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
-    // Send on 8am.
-    $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
+    // Send on 10 am about AWS
+    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         error_log( "Monday 8am. Notify about AWS" );
@@ -182,6 +182,58 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             $mail = $res[ 'email' ]['email_body'];
             sendPlainTextEmail( $mail, $subject, $to, $cclist );
         }
+    }
+
+    // Send on 8am about this week events.
+    $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    {
+        error_log( "Monday 8am. Notify about this week events." );
+        echo printInfo( "Today is Monday 8am. Send out emails for week events." );
+        $thisMonday = dbDate( strtotime( 'this monday' ) );
+        $subject = 'This week events (' . humanReadableDate( $thisMonday) . ') by ';
+
+        $cclist = '';
+        $to = 'academic@lists.ncbs.res.in';
+
+        $html = "<p>Greetings!</p>";
+
+        $html .= printInfo( "List of events for the week starting " 
+            . humanReadableDate( $thisMonday );
+        );
+        $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
+
+        foreach( $events as $event )
+        {
+            if( $event[ 'is_public_event' ] == 'NO' )
+                continue;
+
+            $externalId = $event[ 'external_id'];
+            if( ! $externalId )
+                continue;
+
+            $id = explode( '.', $externalId)[1];
+            if( intval( $id ) < 0 )
+                continue;
+
+            $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
+
+            // We just need the summary of every event here.
+            $html .= eventSummaryHTML( $event, $talk );
+            $html .= "<br>";
+        }
+
+        echo $html;
+
+        $html .= "<br><br>";
+
+        // Generate email
+        // getEmailTemplates
+        $templ = emailFromTemplate( 'this_week_events'
+            , array( "EMAIL_BODY" => $html ) 
+        );
+        $md = html2Markdown( $templ[ 'email_body'] );
+        sendPlainTextEmail( $md, $subject, $to, $cclist );
     }
 }
 

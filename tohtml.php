@@ -187,16 +187,27 @@ function eventToShortHTML( $event )
     return $html;
 }
 
-function eventSummaryHTML( $event )
+function eventSummaryHTML( $event, $talk = null)
 {
-
     $date = humanReadableDate( $event[ 'date' ] );
     $startT = humanReadableTime( $event[ 'start_time' ] );
     $endT = humanReadableTime( $event[ 'end_time' ] );
     $time = "$startT to $endT";
     $venue = venueSummary( $event[ 'venue'] );
 
+    $host = $event[ 'host' ];
+
     $html = "<h1>" . $event[ 'title' ] . "</h1>";
+    $html .= '<table class="show_events">';
+
+    if( $talk )
+    {
+        $speaker = $talk[ 'speaker' ];
+        $html .= "<tr><td> Host </td><td>" . loginToText( $talk[ 'host' ] ) ."</td></tr>";
+        $html .= "<tr><td> Coordinator </td><td>" .
+                     loginToText( $talk[ 'coordinator' ] ) ."</td></tr>";
+    }
+
     $html .= '<table class="show_events">';
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";

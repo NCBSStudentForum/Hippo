@@ -25,19 +25,22 @@ $upcomingTalks = array( );
 /* Filter talk which have not been delivered yet. */
 foreach( $talks as $t )
 {
-    // If talk has been delivered, then dont display.
+    // If talk has been delivered more than 12 hours ago, then do not display 
+    // them.
     $event = getEventsOfTalkId( $t['id'] );
     if( $event )
-        if( strtotime($event[ 'date' ] ) <= strtotime( 'today' ) )
+        if( strtotime($event[ 'date' ] ) <= strtotime( 'today' ) - 12 * 3600 )
             // This talk has been delivered successfully.
             continue;
+
     array_push( $upcomingTalks, $t );
 }
 
 if( count( $upcomingTalks ) < 1 )
     echo alertUser( "You don't have any upcoming talk." );
 else
-    echo alertUser( "Following upcoming talks were created by you." );
+    echo alertUser( "Following talks were created by you. You can only see upcoming
+    talks and talks delivered less than 12 hours ago." );
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 foreach( $upcomingTalks as $t )

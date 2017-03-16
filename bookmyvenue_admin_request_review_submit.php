@@ -69,12 +69,18 @@ else
 
         try {
             $res = actOnRequest( $gid, $rid, $whatToDo );
+
+            if( $whatToDo == 'APPROVE' )
+                $status = 'APPROVED';
+            else
+                $status = $whatToDo . 'ED';
+
             if( $res )
-                $msg .= "<tr><td> $eventText </td><td>". $whatToDo ."ED</td></tr>";
+                $msg .= "<tr><td> $eventText </td><td>". $status ."</td></tr>";
             else
                 $msg .= "<tr><td> $eventText </td><td> is not 
                             approved due to clash with another event/request on 
-                            this venue and slot </td>";
+                            this venue/slot </td>";
 
         } catch ( Exception $e ) {
             echo printWarning( "Failed to update request: " . $e->getMessage( ) );
@@ -98,8 +104,9 @@ else
     $msg = "<p>Dear " . loginToText( $group[0]['created_by' ], true ) . '</p>' . $msg;
 
     $res = sendPlainTextEmail( $msg
-        , "Your request for event title '$eventGroupTitle'  has been acted upon"
+        , "Your request '$eventGroupTitle'  has been acted upon by " . $_SESSION['user']
         , $userEmail 
+        , 'hippo@lists.ncbs.res.in'
         );
 
     if( $res )
@@ -108,9 +115,7 @@ else
         exit;
     }
     else
-    {
         echo minionEmbarrassed( "I failed to send email to user " );
-    }
 }
     
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );

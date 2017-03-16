@@ -27,8 +27,9 @@ $_SESSION[ 'calendar_id'] =
 
 $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 ini_set( 'date.timezone', 'Asia/Kolkata' );
-ini_set( 'log_errors', 1 );
-ini_set( 'error_log', '/var/log/hippo.log' );
+//ini_set( 'log_errors', 1 );
+//ini_set( 'display_errors', 1 );
+//ini_set( 'error_log', '/var/log/hippo.log' );
 
 $summary = summaryTable( );
 

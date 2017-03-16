@@ -132,8 +132,8 @@ else if( array_key_exists( 'date', $_GET ) )
 {
     // Get all ids on this day.
     $date = $_GET[ 'date' ];
+    echo "Found date $date" )
     echo printInfo( "Events on $date" );
-    $outfile = 'EVENTS_ON_' . dbDate( $date );
     $entries = getPublicEventsOnThisDay( $date );
     foreach( $entries as $entry )
         array_push( $ids, explode( '.', $entry[ 'external_id' ] )[1] );
@@ -146,6 +146,7 @@ else
 
 // Prepare TEX document.
 $outfile = 'EVENTS';
+echo printInfo( "Following events " . implode( ', ', $ids );
 foreach( $ids as $id )
 {
     echo printInfo( "Generating pdf for id $id" );
@@ -164,6 +165,7 @@ $outdir = __DIR__ . "/data";
 $texFile = $outdir . '/' . $outfile . ".tex";
 $pdfFile = $outdir . '/' . $outfile . ".pdf";
 
+unlink( $pdfFile );
 file_put_contents( $texFile,  $TeX );
 $cmd = "pdflatex --output-directory $outdir $texFile";
 if( file_exists( $texFile ) )

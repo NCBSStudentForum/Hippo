@@ -58,14 +58,19 @@ function speakerToHTML( $speaker )
     $name = implode( ' ', $name );
 
     $html = $name;
+
     // If there is url. create a clickable link.
-    if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
-        $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+    if( $speaker )
+    {
+        if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
+            $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
 
-    if( $speaker[ 'department' ] )
-        $html .= "<small><br>" . $speaker[ 'department' ];
+        if( $speaker[ 'department' ] )
+            $html .= "<small><br>" . $speaker[ 'department' ];
 
-    $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
+        $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
+    }
+
     return $html;
 }
 

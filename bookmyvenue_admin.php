@@ -69,20 +69,20 @@ echo alertUser( 'Public events will apprear first' );
 
 $events = getEventsBeteen( 'today', '+4 week' );
 
-$publicEvents = array( );
-$nonPublicEvents = array( );
-foreach( $events as $e )
-{
-    if( $e[ 'is_public_event' ] == 'YES' )
-    {
-        //var_dump( $e );
-        $publicEvents[] = $e;
-    }
-    else
-        $nonPublicEvents[] = $e;
-}
+//$publicEvents = array( );
+//$nonPublicEvents = array( );
+//foreach( $events as $e )
+//{
+//    if( $e[ 'is_public_event' ] == 'YES' )
+//    {
+//        //var_dump( $e );
+//        $publicEvents[] = $e;
+//    }
+//    else
+//        $nonPublicEvents[] = $e;
+//}
 
-$events = $publicEvents + $nonPublicEvents;
+//$events = $publicEvents + $nonPublicEvents;
 
 if( count( $events ) > 0 )
 {
@@ -91,7 +91,7 @@ if( count( $events ) > 0 )
     $html .= "<table class=\"show_events\">";
 
     $tofilter = 'eid,calendar_id,calendar_event_id' .  
-        ',external_id,gid,status,last_modified_on';
+        ',external_id,gid,last_modified_on';
 
     $html .= arrayHeaderRow( $event, 'show_events', $tofilter );
 

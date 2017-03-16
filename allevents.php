@@ -40,7 +40,6 @@ echo '<form action="" method="get" accept-charset="utf-8">
 $calendarDate = humanReadableDate( $defaults[ 'date' ] );
 echo "<h1> Table of events on $calendarDate </h1>";
 
-//foreach( explode( ",", $defaults[ 'venues' ]) as $venueId )
 $events = getEventsOn( $defaults['date' ] );
 echo '<table width="250px">';
 echo '<tr>';

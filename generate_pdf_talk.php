@@ -135,9 +135,17 @@ else if( array_key_exists( 'date', $_GET ) )
     $date = $_GET[ 'date' ];
     echo "Found date $date";
     echo printInfo( "Events on $date" );
+    
+    // Not all public events but only talks.
     $entries = getPublicEventsOnThisDay( $date );
     foreach( $entries as $entry )
-        array_push( $ids, explode( '.', $entry[ 'external_id' ] )[1] );
+    {
+        $eid = explode( '.', $entry[ 'external_id' ] );
+
+        // Only from table talks.
+        if( $eid[0] == 'talks' && intval( $eid[1] ) > 0 )
+            array_push( $ids, $eid[1] );
+    }
 }
 else
 {

@@ -1,5 +1,10 @@
 <?php
 
+/* We use this interface for booking venue. We may also come here from manage 
+ * talks page. If a user creates a talk and we come here for a booking; we use 
+ * the external_id _GET variable.
+ */
+
 include_once 'database.php';
 include_once 'methods.php';
 include_once 'tohtml.php';
@@ -32,7 +37,7 @@ if( array_key_exists( 'external_id', $_GET ) )
     $id = $expr[ 1 ];
     $entry = getTableEntry( $tableName, 'id', array( "id" => $id ) );
     echo printInfo( "Scheduling for the following talk" );
-    echo arrayToTableHTML( $entry, 'events', '', 'id,status,date,time,venue,venue' );
+    echo arrayToTableHTML( $entry, 'events', '', 'id,status,date,time,venue' );
     $defaults = array_merge( $defaults, $entry );
 }
 else
@@ -220,6 +225,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             value="' . $external_id . '">';
         // Insert all information into form.
         echo '<input type="hidden" name="date" value="' . $defaults[ 'date' ] . '" >';
+        echo '<input type="hidden" name="class" value="' . $defaults[ 'class' ] . '" >';
 
         echo '<input type="hidden" 
             name="start_time" value="' . $defaults[ 'start_time' ] . '" >';

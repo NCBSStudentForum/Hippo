@@ -190,7 +190,7 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
  */
 $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
 $today = dbDate( strtotime( 'today' ) );
-if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
     $todaysEvents = getPublicEventsOnThisDay( $today );
 

@@ -855,3 +855,15 @@ function getCourseInstanceId( $courseId, $sem = null, $year = null )
         $year = getCurrentYear( );
     return "$courseId-$sem-$year";
 }
+
+/**
+    * @brief Check if given event is a public event.
+    *
+    * @param $event
+    *
+    * @return 
+ */
+function isPublicEvent( $event )
+{
+    return ( $event[ 'is_public_event' ] == 'YES' );
+}

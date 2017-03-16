@@ -74,7 +74,7 @@ else                // Everything is fine.
                             I am redirecting you to page where you can browse all venues 
                            and create suitable booking request."
                         );
-                        goToPage( 'user_manage_talk.php', 10 );
+                        goToPage( 'bookmyvenue_browse.php', 5 );
                         exit;
                     }
                     else 
@@ -85,7 +85,7 @@ else                // Everything is fine.
                         $_POST[ 'is_public_event' ] = 'YES';
 
                         // Modify talk title for calendar.
-                        $_POST[ 'title' ] = $_POST['class'] . " by " . 
+                        $_POST[ 'title' ] = __ucwords__( $_POST['class'] ) . " by " . 
                             $_POST[ 'speaker' ] . ' on \'' . 
                             trim( $_POST[ 'title' ] ) . "'";
 

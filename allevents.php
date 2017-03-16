@@ -46,16 +46,20 @@ echo '<table width="250px">';
 echo '<tr>';
 
 $count = 0;
+
+$eventWidth = 150;
+$maxEventsInLine = intval( 900 / $eventWidth );
 foreach( $events as $ev )
 {
-    if( $count % 7 == 0 )
+    if( $count % $maxEventsInLine == 0 )
         echo "</tr><tr>";
 
     $background = '';
     if( isPublicEvent( $ev ) )
         $background = "red";
 
-    echo "<td style=\"background:$background;min-width:150px;max-width:300px;border:1px dotted;\">";
+    $width = $eventWidth . "px";
+    echo "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
     echo eventToShortHTML( $ev );
     echo "</td>";
 

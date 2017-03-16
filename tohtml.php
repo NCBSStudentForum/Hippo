@@ -175,7 +175,6 @@ function eventToShortHTML( $event )
 {
     $startT = date( 'H:i', strtotime( $event[ 'start_time' ] ) );
     $endT = date( 'H:i', strtotime( $event[ 'end_time' ] ) );
-
     $html = '<tt>' .  __get__( $event, 'title', '' ) . '</tt>';
     $html .= '<br>' . $startT . ' to ' . $endT;
     $html .= ' </tt> @ <strong>' . $event['venue'] . '</strong>, ';

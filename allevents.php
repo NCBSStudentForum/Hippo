@@ -51,7 +51,12 @@ foreach( $events as $ev )
     $count += 1;
     if( $count % 7 == 0 )
         echo "</tr><tr>";
-    echo "<td style=\"min-width:150px;max-width:300px;border:1px dotted;\">";
+
+    $background = '';
+    if( isPublicEvent( $ev ) )
+        $background = "red";
+
+    echo "<td style=\"background:$background;min-width:150px;max-width:300px;border:1px dotted;\">";
     echo eventToShortHTML( $ev );
     echo "</td>";
 }

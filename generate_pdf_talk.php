@@ -124,6 +124,7 @@ $tex = array( "\documentclass[]{article}"
 
 
 $ids = array( );
+$date = null;
 if( array_key_exists( 'id', $_GET ) )
 {
     array_push( $ids, $_GET[ 'id' ] );
@@ -132,7 +133,7 @@ else if( array_key_exists( 'date', $_GET ) )
 {
     // Get all ids on this day.
     $date = $_GET[ 'date' ];
-    echo "Found date $date" )
+    echo "Found date $date";
     echo printInfo( "Events on $date" );
     $entries = getPublicEventsOnThisDay( $date );
     foreach( $entries as $entry )
@@ -146,13 +147,13 @@ else
 
 // Prepare TEX document.
 $outfile = 'EVENTS';
-echo printInfo( "Following events " . implode( ', ', $ids );
+$outfile .= '_' . $date;
+echo printInfo( "Following events " . implode( ', ', $ids ) );
 foreach( $ids as $id )
 {
     echo printInfo( "Generating pdf for id $id" );
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
-    $outfile .= '_' . $event[ 'date' ];
     $tex[] = eventToTex( $event, $talk );
     $tex[] = '\pagebreak';
 }
@@ -173,8 +174,7 @@ if( file_exists( $texFile ) )
 
 if( file_exists( $pdfFile ) )
 {
-    echo printInfo( "Successfully genered pdf document " . 
-       basename( $pdfFile ) );
+    echo printInfo( "PDF is successfully generated: " . basename( $pdfFile ) );
 
     // Download only if called from browser.
     if( ! isset( $argv ) )
@@ -184,14 +184,15 @@ else
 {
     echo printWarning( "Failed to genered pdf document <br>
         This is usually due to hidden special characters 
-        in your description. You need to clean your entry up." );
+        in your text. You need to cleanupyour entry." );
+
     echo printWarning( "Error message <small>This is only for diagnostic
         purpose. Show it to someone who is good with LaTeX </small>" );
     echo "Command <pre> $cmd </pre>";
     echo "<pre> $res </pre>";
 }
 
-//unlink( $texFile );
+unlink( $texFile );
 
 echo "<br/>";
 echo closePage( );

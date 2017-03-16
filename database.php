@@ -801,7 +801,8 @@ function getPublicEventsOnThisDay( $date = 'today', $status = 'VALID' )
     global $db;
     $from = date( 'Y-m-d', strtotime( 'today' ));
     $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date AND 
-        status=:status AND is_public_event='YES'" );
+        status=:status AND is_public_event='YES' ORDER BY date,start_time" 
+        );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );

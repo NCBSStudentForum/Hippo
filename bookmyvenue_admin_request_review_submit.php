@@ -98,6 +98,12 @@ else
     // Append user email to front.
     $msg = "<p>Dear " . loginToText( $group[0]['created_by' ], true ) . '</p>' . $msg;
 
+    if( $whatToDo == 'REJECT' && $_POST[ 'reason' ] )
+    {
+        $msg .= "<p>Following reason was given by admin </p>";
+        $msg .= $_POST[ 'reason' ];
+    }
+
     $res = sendPlainTextEmail( $msg
         , "Your request '$eventGroupTitle'  has been acted upon by " . $_SESSION['user']
         , $userEmail 

@@ -140,7 +140,7 @@ else if( $default[ 'task' ] == 'This week events' )
         $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
 
         // We just need the summary of every event here.
-        $html .= talkSummaryHTML( $talk );
+        $html .= eventSummaryHTML( $event, $talk );
         $html .= "<br>";
     }
 

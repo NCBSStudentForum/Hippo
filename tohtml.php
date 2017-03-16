@@ -195,8 +195,6 @@ function eventSummaryHTML( $event, $talk = null)
     $time = "$startT to $endT";
     $venue = venueSummary( $event[ 'venue'] );
 
-    $host = $event[ 'host' ];
-
     $html = "<h1>" . $event[ 'title' ] . "</h1>";
     $html .= '<table class="show_events">';
 
@@ -208,7 +206,6 @@ function eventSummaryHTML( $event, $talk = null)
                      loginToText( $talk[ 'coordinator' ] ) ."</td></tr>";
     }
 
-    $html .= '<table class="show_events">';
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
     $html .= '</table>';

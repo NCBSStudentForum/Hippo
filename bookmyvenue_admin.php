@@ -65,10 +65,9 @@ echo goBackToPageLink( "user.php", "Go back" );
 
 <?php
 
-echo alertUser( 'Public events will apprear first' );
-
 $events = getEventsBeteen( 'today', '+4 week' );
 
+//echo alertUser( 'Public events will apprear first' );
 //$publicEvents = array( );
 //$nonPublicEvents = array( );
 //foreach( $events as $e )

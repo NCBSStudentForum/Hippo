@@ -889,6 +889,35 @@ function loginToText( $login, $withEmail = true )
     return $text;
 }
 
+function loginToHTML( $login, $withEmail = true )
+{
+    // If only login name is give, query database to get the array. Otherwise
+    // assume that an array has been given to use.
+    if( is_string( $login ) )
+        $user = getUserInfo( $login );
+    else
+        $user = $login;
+
+    if( ! $user )
+        return $login;
+
+    // Return first name + middle name + last name.
+    $name = array( );
+    foreach( explode( ',', 'first_name,middle_name,last_name' ) as $key )
+        if( array_key_exists( $key, $user ) )
+            array_push( $name, $user[ $key ] );
+    $text = implode( ' ', $name );
+
+    if( $withEmail )
+        if( array_key_exists( 'email', $user) && $user[ 'email' ] )
+            $text = "<a href=\"mailto:" . $user['email'] . "\"> $text </a>";
+
+    if( strlen( trim($text) ) < 1 )
+        return $login;
+
+    return $text;
+}
+
 /**
     * @brief Get link from intranet.
     *
@@ -1150,9 +1179,9 @@ function talkToHTML( $talk, $with_picture = false )
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )
-        $html .= '<br><br> Supervisor: ' . loginToText( $talk[ 'host' ] );
+        $html .= '<br><br> Supervisor: ' . loginToHTML( $talk[ 'host' ] );
     else
-        $html .= '<br><br> Host: ' . loginToText( $talk[ 'host' ] );
+        $html .= '<br><br> Host: ' . loginToHTML( $talk[ 'host' ] );
 
     $html .= '<br><div style="font-size:small">';
     $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where

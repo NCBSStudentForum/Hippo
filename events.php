@@ -7,11 +7,10 @@ include_once 'html2text.php';
 
 echo "<h2>Browse events on a particular day</h2>";
 
-echo printInfo( "Please select a day to see events" );
-
 $today = dbDate( 'today' );
 
 $default = array( 'date' => $today );
+
 if( $_GET )
 {
     if( array_key_exists( 'date', $_GET ) )
@@ -29,8 +28,7 @@ echo '
                     $default[ 'date' ] . '" ></td>
             <td><button type="submit" name="response" 
                     title="Show events on this day"
-                    value="show">' . 
-                $symbScan . '</button></td>
+                    value="show">Show me</button></td>
         </tr>
     </table>
     </form>

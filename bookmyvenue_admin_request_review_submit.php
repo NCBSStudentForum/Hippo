@@ -75,12 +75,7 @@ else
             else
                 $status = $whatToDo . 'ED';
 
-            if( $res )
-                $msg .= "<tr><td> $eventText </td><td>". $status ."</td></tr>";
-            else
-                $msg .= "<tr><td> $eventText </td><td> is not 
-                            approved due to clash with another event/request on 
-                            this venue/slot </td>";
+            $msg .= "<tr><td> $eventText </td><td>". $status ."</td></tr>";
 
         } catch ( Exception $e ) {
             echo printWarning( "Failed to update request: " . $e->getMessage( ) );

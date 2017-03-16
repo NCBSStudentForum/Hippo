@@ -195,7 +195,7 @@ function repeatPatToDays( $pat, $start_day = 'today' )
     $days = $exploded[0];
     // These are absolute indices of days.
     if( $days == "*" )
-        $days = "0/1/2/3/4/5/6";
+        $days = "Sun/Mon/Tue/Wed/Thu/Fri/Sat";
 
     $weeks = __get__( $exploded, 1, "*" );
 
@@ -204,7 +204,7 @@ function repeatPatToDays( $pat, $start_day = 'today' )
         $durationInMonths = 6;
 
     if( $weeks == "*" )
-        $weeks = "0/1/2/3";
+        $weeks = "first/second/third/fourth/fifth";
 
     $weeks = explode( "/", $weeks );
     $days = explode( "/", $days );
@@ -213,25 +213,27 @@ function repeatPatToDays( $pat, $start_day = 'today' )
 
     // Get the base day which is Sunday. If today is not sunday then previous
     // Sunday must be taken into account.
-    $baseDay = dbDate( strtotime( 'last sunday', strtotime( $start_day) ) );
+    $baseDay = dbDate( strtotime( $start_day  ) );
 
     // Now fill the dates for given pattern.
     $dates = Array( );
-    for( $i = 0; $i < 12;  $i ++ ) // Iterate of maximum duration.
+
+    $thisMonth = date( 'F', strtotime( $baseDay ) );
+    for( $i = 0; $i < $durationInMonths;  $i ++ ) // Iterate of maximum duration.
+    {
+        $month = date( "F Y", strtotime( "+" . "$i months", strtotime($baseDay) ) );
         foreach( $weeks as $w )
+        {
             foreach( $days as $d )
             {
-                $nday = (28 * $i) + (7 * intval($w)) + intval($d);
-                $date = date( 'Y-m-d', strtotime( $baseDay . '+ ' . $nday . ' days ') );
-                // Cool, if this day is more than $durationInMonths away, then
-                // stop.
-                $interval = date_diff( date_create($date), date_create($baseDay));
-                $diffMonth = $interval->format( '%m' );
-                if( $diffMonth < $durationInMonths )
-                    array_push( $dates, $date );
-                else
-                    return $dates;
+                $strDate = "$w $d  $month";
+                $date = dbDate( strtotime( $strDate ) );
+                if( strtotime( $date ) > strtotime( 'now' ) )
+                    if( ! in_array( $date, $dates ) )
+                        array_push( $dates, $date );
             }
+        }
+    }
 
     return $dates;
 }
@@ -320,11 +322,6 @@ function getNumDaysInBetween( $startDate, $endDate )
  */
 function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
 {
-   $weekNum = Array( 
-      "first" => 0, "second" => 1, "third" => 2, "fourth" => 3 
-      , "1st" => 0, "2nd" => 1, "3rd" => 3, "4th" => 3
-      , "fst" => 0, "snd" => 1, "thrd" => 3, "frth" => 3
-   );
 
    $daypat = trim( $daypat );
    if( strlen( $daypat ) == 0 )
@@ -335,23 +332,14 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
    $weekpat = str_replace( ",", " ", trim( $weekpat ) );
 
    $days = array_map( function( $day ) {
-      return date('w', strtotime( $day ) ); }, explode( " ", $daypat )
+      return date('D', strtotime( $day ) ); }, explode( " ", $daypat )
    );
+
    $days = implode( "/", $days );
 
-   $weeks = Array();
-   if( $weekpat )
-   {
-      foreach( explode(" ", $weekpat ) as $w )
-      {
-         if( array_key_exists( $w, $weekNum ) )
-            array_push( $weeks, $weekNum[$w] );
-      }
-   }
-
-   $weeks = implode( "/", $weeks );
-   if( ! $weeks )
-       $weeks = '0/1/2/3';
+   $weeks = $weekpat;
+   if( strlen( $weeks ) < 1 )
+       $weeks = 'first/second/third/fourth/fifth';
 
    return "$days,$weeks,$durationInMonths";
 }

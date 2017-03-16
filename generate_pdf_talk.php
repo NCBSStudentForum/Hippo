@@ -155,7 +155,8 @@ else
 
 // Prepare TEX document.
 $outfile = 'EVENTS';
-$outfile .= '_' . $date;
+if( $date )
+    $outfile .= '_' . $date;
 echo printInfo( "Following events " . implode( ', ', $ids ) );
 foreach( $ids as $id )
 {
@@ -164,6 +165,7 @@ foreach( $ids as $id )
     $event = getEventsOfTalkId( $id );
     $tex[] = eventToTex( $event, $talk );
     $tex[] = '\pagebreak';
+    $outfile .= "_$id";
 }
 
 $tex[] = '\end{document}';
@@ -184,6 +186,9 @@ if( file_exists( $pdfFile ) )
 {
     echo printInfo( "PDF is successfully generated: " . basename( $pdfFile ) );
 
+    // Remove tex file.
+    unlink( $texFile );
+
     // Download only if called from browser.
     if( ! isset( $argv ) )
         goToPage( 'download_pdf.php?filename=' .$pdfFile, 0 );
@@ -200,7 +205,6 @@ else
     echo "<pre> $res </pre>";
 }
 
-unlink( $texFile );
 
 echo "<br/>";
 echo closePage( );

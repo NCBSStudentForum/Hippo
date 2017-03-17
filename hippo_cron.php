@@ -98,6 +98,22 @@ function generateAWSEmail( $monday )
     return $res;
 }
 
+/* Task 0. Send email to hippo mailing list that Hippo is alive.
+ */
+$today = dbDate( strtotime( 'today' ) );
+if( $today == dbDate( strtotime( 'this friday' ) ) )
+{
+    // Send any time between 4pm and 4:15 pm.
+    $awayFrom = strtotime( 'now' ) - strtotime( '7:00 am' );
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    {
+        $day = humanReadableDate( $today );
+        sendPlainTextEmail( "<p>Hippo is alive on $day </p>"
+            , "Hippo status on $day"
+            , 'hippo@lists.ncbs.res.in'
+            );
+    }
+}
 
 /*
  * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 

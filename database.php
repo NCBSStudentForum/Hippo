@@ -2246,7 +2246,7 @@ function addOrUpdateSpeaker( $data )
             );
 
             $ret[ 'email' ] = $speaker[ 'email' ];
-            return getTableEntry( 'speaker', 'email', $speaker) ;
+            return getTableEntry( 'speakers', 'email', $speaker) ;
         }
     }
 

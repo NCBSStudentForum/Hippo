@@ -1259,9 +1259,10 @@ function updateEvent( $gid, $eid, $options )
 }
 
 // Create user if does not exists and fill information form LDAP server.
-function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
+function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
 {
     global $db;
+
     $stmt = $db->prepare( 
        "INSERT INTO logins
         (id, login, first_name, last_name, email, created_on, institute, laboffice) 
@@ -1275,12 +1276,13 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
         $institute = 'NCBS Bangalore';
 
     //var_dump( $ldapInfo );
+    $email = $userid . "@" . $type . ".res.in";
 
     $stmt->bindValue( ':login', $userid );
     $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));
     $stmt->bindValue( ':fname', __get__( $ldapInfo, "first_name", NULL ));
     $stmt->bindValue( ':lname', __get__( $ldapInfo, "last_name", NULL ));
-    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', NULL ));
+    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', $email ));
     $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', NULL ));
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );

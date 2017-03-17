@@ -27,7 +27,7 @@ if( strcasecmp($_POST['response'], 'submit' ) == 0 )
         echo printInfo( "updated succesfully" );
         // TODO: may be we can call calendar API here. currently we are relying 
         // on synchronize google calendar feature.
-        goToPage( 'bookmyvenue_admin_request_review.php', 1 );
+        goToPage( 'bookmyvenue_admin.php', 1 );
         exit;
     }
     else

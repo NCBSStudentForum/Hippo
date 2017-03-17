@@ -90,8 +90,10 @@ if( count( $events ) > 0 )
     $html .= "<table class=\"show_events\">";
 
     $tofilter = 'eid,calendar_id,calendar_event_id' .  
-        ',external_id,gid,last_modified_on';
+        ',external_id,gid,last_modified_on,url';
 
+
+    // Add extra field to create one last row.
     $html .= arrayHeaderRow( $event, 'show_events', $tofilter );
 
     foreach( $events as $event )
@@ -103,15 +105,15 @@ if( count( $events ) > 0 )
         $gid = $event['gid'];
         $eid = $event['eid'];
         $html .= "<tr><form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";
-        $html .= "<td>";
-        $html .= arrayToRowHTML( $event, 'events', $tofilter );
-        $html .= "</td>";
-
-        $html .= "<td> <button title=\"Edit this entry\"  name=\"response\" 
+        $event[ 'edit' ] = "<td> <button title=\"Edit this entry\"  name=\"response\" 
                 value=\"edit\">" . $symbEdit .  "</button></td>";
+
+        $html .= arrayToRowHTML( $event, 'events', $tofilter );
+
         $html .= "<input name=\"gid\" type=\"hidden\" value=\"$gid\" />";
         $html .= "<input name=\"eid\" type=\"hidden\" value=\"$eid\" />";
-        $html .= "</td></form></tr>";
+        $html .= "</td></form>";
+        $html .= "</tr>";
     }
 
     $html .= "</table>";

@@ -90,7 +90,7 @@ if( count( $events ) > 0 )
     $html .= "<table class=\"show_events\">";
 
     $tofilter = 'eid,calendar_id,calendar_event_id' .  
-        ',external_id,gid,last_modified_on,url';
+        ',external_id,gid,last_modified_on,status,url';
 
 
     // Add extra field to create one last row.

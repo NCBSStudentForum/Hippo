@@ -31,6 +31,17 @@ function verifyRequest( $request )
         return "No venue found in your request. If you think this is a bug, 
            please write to hippo@lists.ncbs.res.in " ;
     }
+
+    if( strlen( $request[ 'title' ] ) < 1 )
+    {
+        return "Title can not be empty";
+    }
+
+    if( strtotime( $request[ 'date' ] ) >= strtotime( 'now' ) + 60 * 24 * 3600 )
+    {
+        return "You can not book more than 60 days in advance";
+    }
+
     return "OK";
 }
 

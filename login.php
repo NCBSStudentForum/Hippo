@@ -12,11 +12,13 @@ $pass = $_POST['pass'];
 $_SESSION['AUTHENTICATED'] = FALSE;
 
 /* continue */
+$type = 'ncbs';
 $conn = imap_open( "{imap.ncbs.res.in:993/ssl/readonly}INBOX", $ldap, $pass, OP_HALFOPEN );
 if( ! $conn )
+{
    $conn = imap_open( "{mail.instem.res.in:993/ssl/readonly}INBOX", $ldap, $pass, OP_HALFOPEN );
-    //if( ! $conn )
-       //$conn = imap_open( "{mail.ccamp.res.in:993/ssl/readonly}INBOX", $ldap, $pass, OP_HALFOPEN );
+   $type = 'instem';
+}
 
 
 if(!$conn) 
@@ -34,7 +36,7 @@ else
     $ldapInfo = getUserInfoFromLdap( $ldap );
 
     // In any case, create a entry in database.
-    createUserOrUpdateLogin( $ldap, $ldapInfo );
+    createUserOrUpdateLogin( $ldap, $ldapInfo, $type );
 
     if( !$ldapInfo )
     {

@@ -341,7 +341,7 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
    if( strlen( $weeks ) < 1 )
        $weeks = 'first/second/third/fourth/fifth';
 
-   return "$days,$weeks,$durationInMonths";
+     return "$days,$weeks,$durationInMonths";
 }
 
 /**

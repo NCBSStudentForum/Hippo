@@ -2245,23 +2245,17 @@ function addOrUpdateSpeaker( $data )
                 , $data 
             );
 
-            $ret[ 'id' ] = $speaker[ 'id' ];
-            return $ret;
+            $ret[ 'email' ] = $speaker[ 'email' ];
+            return getTableEntry( 'speaker', 'email', $speaker) ;
         }
     }
 
     // If we are here, then speaker is not found. Construct a new id.
-    $res = $db->query( 'SELECT MAX(id) AS id FROM speakers' );
-    $prevId = $res->fetch( PDO::FETCH_ASSOC);
-    $id = intval( $prevId['id'] ) + 1;
-    $data[ 'id' ] = $id;
     $res = insertIntoTable( 'speakers'
-        , 'id,honorific,first_name,middle_name,last_name,department,institute,homepage'
+        , 'email,honorific,first_name,middle_name,last_name,department,institute,homepage'
         , $data 
         );
-
-    $ret['id'] = $id;
-    return $ret;
+    return getTableEntry( 'speakers', 'first_name,last_name', $data );
 }
 
 function getCourseName( $cid )

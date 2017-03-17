@@ -29,13 +29,10 @@ else                // Everything is fine.
 
     // Insert the speaker into table. if it already exists, just update the 
     // values.
-    $res1 = addOrUpdateSpeaker( $_POST );
+    $speaker = addOrUpdateSpeaker( $_POST );
 
-    if( $res1 )  // Sepeaker is successfully updated. Move on.
+    if( $speaker )  // Sepeaker is successfully updated. Move on.
     {
-        // Assign speaker id from previous query.
-        $speaker = getTableEntry( 'speakers', 'id', $res1 );
-
         // This entry may be used on public calendar. Putting email anywhere on 
         // public domain is allowed.
         $speakerText = loginToText( $speaker, $withEmail = False  );

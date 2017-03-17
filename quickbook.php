@@ -136,6 +136,12 @@ echo '</table>';
 
 $date = __get__( $_POST, 'date', dbDate(strtotime( 'today' )) );
 
+if( strtotime( $date ) >= strtotime( 'today' ) + 60 * 24 * 3600 )
+{
+    echo alertUser( "You can not book more than 60 days in advance" );
+    exit;
+}
+
 // Get list of public events on user request day and show them to him. So he can 
 // decides if some other timeslot should be used.
 $publicEvents = getPublicEventsOnThisDay( $date );

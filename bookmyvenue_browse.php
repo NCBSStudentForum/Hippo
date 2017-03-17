@@ -106,14 +106,14 @@ echo "<h3>Step 3: Press <button disabled>+</button> to book your venue.
 
 echo "<table border=\"1\" style=\"table-layout:fixed;width:100%;\">
     <tr><td><button class=\"display_request\"></button>
-        Someone can alreay created a booking request (pending approval). You 
+        Someone has already created a booking request (pending approval). You 
         CANNOT book at this slot.
     </td>
     <td><button class=\"display_event\"></button>
         This slot has already been booked. You CANNOT book at this slot. </td>
     <td><button class=\"display_event_with_public_event\"></button>
         There is a public event at this slot at some other venue.
-        You can book at this slot. </td>
+        This is just for your information. </td>
     </tr>
    </table>
        ";

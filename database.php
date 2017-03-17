@@ -79,8 +79,7 @@ function initialize( )
     // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS speakers 
-        ( id INT NOT NULL 
-            , honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
+        ( honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
             , email VARCHAR(100) 
             , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
             , middle_name VARCHAR(100)
@@ -88,7 +87,6 @@ function initialize( )
             , department VARCHAR(500)
             , institute VARCHAR(1000) NOT NULL CHECK( institute <> "" )
             , homepage VARCHAR(500)
-            , PRIMARY KEY (id)
             , UNIQUE KEY (email,first_name,last_name)
         )' );
 
@@ -1708,7 +1706,9 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
             $res['id' ] = $data[ 'id' ];
         return $res;
     }
-    return null;
+    else
+
+    return $res;
 }
 
 /**

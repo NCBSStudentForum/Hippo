@@ -43,7 +43,6 @@ $( function() {
 
     // These emails must not be key value array.
     var emails = <?php echo json_encode( $speakersIds ); ?>;
-    //console.log( emails );
 
     $( "#talks_host" ).autocomplete( { source : host }); 
     $( "#talks_host" ).attr( "placeholder", "autocomplete" );
@@ -66,6 +65,7 @@ $( function() {
             $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
         }
     );
+    $('#speakers_email').val( email );
     $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
 });
 </script>

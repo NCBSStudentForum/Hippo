@@ -141,8 +141,10 @@ $date = __get__( $_POST, 'date', dbDate(strtotime( 'today' )) );
 $publicEvents = getPublicEventsOnThisDay( $date );
 if( count( $publicEvents ) > 0 )
 {
-    echo alertUser( "FYI. Following public events are happening on the campus on 
-        selected date" );
+    echo "<div style=\"font-size:small\">";
+    echo alertUser( "Following public events are scheduled on the campus on 
+        selected date" 
+    );
     foreach( $publicEvents as $event )
         echo arrayToTableHTML( $event, 'events', ''
             , array( 'gid', 'eid', 'description', 'status', 'is_public_event'
@@ -150,6 +152,8 @@ if( count( $publicEvents ) > 0 )
             , 'calendar_id', 'calendar_event_id', 'last_modified_on' 
             )
         );
+
+    echo "</div>";
 }
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )

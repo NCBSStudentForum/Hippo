@@ -47,13 +47,15 @@ if( $msg == "OK" )
         // Only lab-meet and JC are allowed more than 12 months. For others its 
         // 6 months max.
         $nMonths = intval( $_POST[ 'month_pattern' ] );
-        if( $_POST[ 'class' ] == 'LABMEET' || $_POST[ 'class' ] = 'JOURNAL CLUB' )
+        if( $_POST[ 'class' ] == 'LAB MEETING' || $_POST[ 'class' ] = 'JOURNAL CLUB' )
            if( $nMonths > 12 )
                 $nMonths = 12;
         else
             if( $nMonths > 6 )
                 $nMonths = 6;
 
+
+        $_POST[ 'month_pattern'] = "$nMonths";
 
         $repeatPat = constructRepeatPattern( 
             $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']

@@ -427,7 +427,7 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd )
 
 // Convert an array to HTML
 function arrayToTableHTML( $array, $tablename, $background = ''
-                           , $tobefilterd = Array() )
+        , $tobefilterd = '', $header = true )
 {
     if( $background )
         $background = "style=\"background:$background;\"";
@@ -438,9 +438,12 @@ function arrayToTableHTML( $array, $tablename, $background = ''
     $table = "<table class=\"show_$tablename\" $background>";
     $keys = array_keys( $array );
     $toDisplay = Array();
-    $table .= "<tr>";
-    $table .= arrayHeaderRow( $array, $tablename, $tobefilterd );
-    $table .= "</tr>";
+    if( $header )
+    {
+        $table .= "<tr>";
+        $table .= arrayHeaderRow( $array, $tablename, $tobefilterd );
+        $table .= "</tr>";
+    }
     $table .= arrayToRowHTML( $array, $tablename, $tobefilterd );
     $table .= "</table>";
     return $table;

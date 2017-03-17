@@ -199,8 +199,9 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         $html = "<p>Greetings!</p>";
 
         $html .= printInfo( "List of events for the week starting " 
-            . humanReadableDate( $thisMonday );
-        );
+                    . humanReadableDate( $thisMonday ) 
+                );
+
         $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
 
         foreach( $events as $event )

@@ -41,8 +41,20 @@ if( $msg == "OK" )
 {
     // Generate repeat pattern from days, week and month repeat patter. If we 
     // are coming here from quickbook.php, it may not be here.
+
     if( array_key_exists( 'day_pattern', $_POST ) )
     {
+        // Only lab-meet and JC are allowed more than 12 months. For others its 
+        // 6 months max.
+        $nMonths = intval( $_POST[ 'month_pattern' ] );
+        if( $_POST[ 'class' ] == 'LABMEET' || $_POST[ 'class' ] = 'JOURNAL CLUB' )
+           if( $nMonths > 12 )
+                $nMonths = 12;
+        else
+            if( $nMonths > 6 )
+                $nMonths = 6;
+
+
         $repeatPat = constructRepeatPattern( 
             $_POST['day_pattern'], $_POST['week_pattern'] , $_POST['month_pattern']
             );

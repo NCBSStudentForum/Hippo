@@ -14,6 +14,8 @@ __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
 import sys
+reload( sys )
+sys.setdefaultencoding( 'utf-8' )
 import os
 import re
 import textwrap

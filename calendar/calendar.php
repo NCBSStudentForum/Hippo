@@ -13,10 +13,17 @@ include_once( 'tohtml.php' );
  */
 function calendarURL( ) 
 {
+    return 'https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta';
+}
+
+function calendarIFrame( ) 
+{
     return '
-        <iframe src="https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        <iframe src="' . calendarURL() . '" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
     ';
 }
+
+
 
 function addEventToGoogleCalendar($calendar_name, $event, $client )
 {

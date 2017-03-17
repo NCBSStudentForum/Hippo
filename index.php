@@ -42,7 +42,7 @@ echo '</tr>';
 echo "</table>";
 echo "</td></tr>";
 echo '<div class="public_calendar">';
-echo calendarURL( );
+echo calendarIFrame( );
 echo '</div>';
 
 echo "<br><br>";

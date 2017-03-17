@@ -5,17 +5,6 @@ include_once( 'database.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
 
-/**
- * @brief Return link to calendar.
- * TODO: This must be specified by admin later.
- *
- * @return 
- */
-function calendarURL( ) 
-{
-    return 'https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta';
-}
-
 function calendarIFrame( ) 
 {
     return '

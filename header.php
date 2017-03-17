@@ -2,7 +2,18 @@
 
 <?php 
 ob_start();
-include_once './calendar/calendar.php';
+
+/**
+ * @brief Return link to calendar.
+ * TODO: This must be specified by admin later.
+ *
+ * @return 
+ */
+function calendarURL( ) 
+{
+    return 'https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta';
+}
+
 
 if(!isset($_SESSION)) 
     session_start();

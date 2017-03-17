@@ -38,11 +38,32 @@ else if( $_POST['response'] == 'submit' )
     if( ! $res )
         echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );
 
-    $res = insertOrUpdateTable( 'speakers'
-            , 'honorific,email,first_name,middle_name,last_name,department,homepage,institute'
-            , 'honorific,first_name,middle_name,last_name,department,homepage,institute'
-            , $_POST 
-        );
+    $res = null;
+    if( $_POST[ 'email' ] )
+        $whereKey = 'email';
+    else
+        $whereKey = 'first_name,last_name';
+
+    $speaker = getTableEntry( 'speakers', $whereKey, $_POST );
+
+    if( $speaker )
+    {
+        // Update the entry
+        $res = updateTable( 'speakers', $whereKey
+                    , 'honorific,first_name,middle_name,last_name,' .
+                        'department,homepage,institute'
+                    , $_POST
+                );
+    }
+    else
+    {
+        // Insert a new entry.
+        $res = insertIntoTable( 'speakers'
+                    , 'honorific,email,first_name,middle_name,last_name,' .
+                        'department,homepage,institute'
+                    , $_POST 
+                );
+    }
 
     if( $res )
         echo printInfo( 'Updated/Inserted speaker' );

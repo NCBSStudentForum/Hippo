@@ -68,13 +68,13 @@ else
 
 
         try {
-            $res = actOnRequest( $gid, $rid, $whatToDo );
 
             if( $whatToDo == 'APPROVE' )
                 $status = 'APPROVED';
             else
                 $status = $whatToDo . 'ED';
 
+            $res = actOnRequest( $gid, $rid, $whatToDo );
             $msg .= "<tr><td> $eventText </td><td>". $status ."</td></tr>";
 
         } catch ( Exception $e ) {
@@ -98,25 +98,21 @@ else
     // Append user email to front.
     $msg = "<p>Dear " . loginToText( $group[0]['created_by' ], true ) . '</p>' . $msg;
 
-    if( $whatToDo == 'REJECT' && $_POST[ 'reason' ] )
+    if( $whatToDo == 'REJECT' && strlen( $_POST[ 'reason' ] ) > 5 )
     {
         $msg .= "<p>Following reason was given by admin </p>";
         $msg .= $_POST[ 'reason' ];
     }
 
+    error_log( "<pre> $msg </pre>" );
     $res = sendPlainTextEmail( $msg
         , "Your request '$eventGroupTitle'  has been acted upon by " . $_SESSION['user']
         , $userEmail 
         , 'hippo@lists.ncbs.res.in'
         );
 
-    if( $res )
-    {
-        goToPage( "bookmyvenue_admin.php", 0 );
-        exit;
-    }
-    else
-        echo minionEmbarrassed( "I failed to send email to user " );
+    goToPage( "bookmyvenue_admin.php", 1 );
+    exit;
 }
     
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );

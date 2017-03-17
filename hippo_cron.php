@@ -229,7 +229,8 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             if( ! $externalId )
                 continue;
 
-            $id = explode( '.', $externalId)[1];
+            $id = explode( '.', $externalId);
+            $id = $id[1];
             if( intval( $id ) < 0 )
                 continue;
 

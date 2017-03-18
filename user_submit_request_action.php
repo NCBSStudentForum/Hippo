@@ -57,14 +57,13 @@ if( $msg == "OK" )
     {
         // Only lab-meet and JC are allowed more than 12 months. For others its 
         // 6 months max.
-        $nMonths = intval( $_POST[ 'month_pattern' ] );
+        $nMonths = intval( __get__( 'month_pattern', $_POST, 6) );
         if( $_POST[ 'class' ] == 'LAB MEETING' || $_POST[ 'class' ] == 'JOURNAL CLUB MEETING' )
            if( $nMonths > 12 )
                 $nMonths = 12;
         else
             if( $nMonths > 6 )
                 $nMonths = 6;
-
 
         $_POST[ 'month_pattern'] = "$nMonths";
 
@@ -74,6 +73,7 @@ if( $msg == "OK" )
 
         if( $repeatPat )
             echo "<pre>Repeat pattern $repeatPat </pre>";
+
         $_POST['repeat_pat']  = $repeatPat;
     }
 
@@ -100,8 +100,8 @@ if( $msg == "OK" )
             , 'hippo@lists.ncbs.res.in'
             );
 
-        //goToPage( "user.php", 1 );
-        //exit;
+        goToPage( "user.php", 1 );
+        exit;
     }
     else
     {

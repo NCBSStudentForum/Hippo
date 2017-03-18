@@ -100,7 +100,7 @@ if( $msg == "OK" )
             , 'hippo@lists.ncbs.res.in'
             );
 
-        goToPage( "user.php", 1 );
+        goToPage( "user.php", 2 );
         exit;
     }
     else

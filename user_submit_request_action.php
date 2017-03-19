@@ -11,41 +11,6 @@ include_once "database.php" ;
 include_once "mail.php";
 include_once 'tohtml.php';
 
-// verify the request.
-function verifyRequest( $request )
-{
-    if( ! isset( $request ) )
-        return "Empty request";
-
-    // Check the end_time must be later than start_time .
-    // At least 15 minutes event
-    if( strtotime( $request['end_time'] ) - strtotime( $request['start_time'] ) < 900 )
-    {
-        $msg = "The event must be at least 15 minute long";
-        $msg .= " Start time " . $request[ 'start_time' ] . " to end time " .
-            $request[ 'end_time' ];
-        return $msg;
-    }
-    if( ! isset( $request['venue'] ) )
-    {
-        return "No venue found in your request. If you think this is a bug, 
-           please write to hippo@lists.ncbs.res.in " ;
-    }
-
-    if( strlen( $request[ 'title' ] ) < 1 )
-    {
-        return "Title can not be empty";
-    }
-
-    if( strtotime( $request[ 'date' ] ) >= strtotime( 'now' ) + 60 * 24 * 3600 )
-    {
-        return "You can not book more than 60 days in advance";
-    }
-
-    return "OK";
-}
-
-
 $msg = verifyRequest( $_POST );
 
 if( $msg == "OK" )

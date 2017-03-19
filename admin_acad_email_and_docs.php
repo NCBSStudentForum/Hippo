@@ -6,7 +6,7 @@ include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'check_access_permissions.php';
 
-mustHaveAllOfTheseRoles( array('AWS_ADMIN' ) );
+mustHaveAllOfTheseRoles( array('AWS_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 
@@ -29,13 +29,14 @@ $(document).ready( function( ) {
 
 <?php
 
-/* Admin select the class of emails she needs to prepare. We remain on the same 
+/* 
+ * Admin select the class of emails she needs to prepare. We remain on the same 
  * page for these tasks.
  */
 
 $default = array( "task" => "upcoming_aws", "date" => dbDate( 'this monday' ) );
 $options = array( 
-    'This week AWS', 'This week events', 'Today\'s events'
+    'Today\'s events', 'This week AWS', 'This week events'
     );
 
 // Logic to keep the previous selected entry selected.
@@ -50,8 +51,7 @@ if( array_key_exists( 'response', $_POST ) )
 }
 
 // Construct user interface.
-echo '
-    <form method="post" action=""> <select name="task" id="list_of_tasks">';
+echo '<form method="post" action=""> <select name="task" id="list_of_tasks">';
 foreach( $options as $val )
     echo "<option value=\"$val\" " . __get__( $default, $val, '') . 
         "> $val </option>";
@@ -195,8 +195,12 @@ else if( $default[ 'task' ] == 'Today\'s events' )
         $subject = __ucwords__( $talk[ 'class' ] ) . " by " . $talk['speaker'] . ' on ' .
             humanReadableDate( $entry[ 'date' ] );
 
+        $hostInstitite = emailInstitute( $talk[ 'host' ] );
         $templ = emailFromTemplate(
-            "this_event" , array( 'EMAIL_BODY' => $talkHTML ) 
+            "this_event" 
+            , array( 'EMAIL_BODY' => $talkHTML
+                    , 'HOST_INSTITUTE' => strtoupper( $hostInstitite )
+                ) 
             );
 
         $templ = htmlspecialchars( json_encode( $templ ) );

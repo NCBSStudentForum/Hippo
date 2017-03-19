@@ -220,7 +220,8 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
         if( file_exists( $pdffile ) )
         {
             echo printInfo( "Successfully generated PDF file" );
-            $attachment = $pdffile;
+            // DO NOT SEND attachment.
+            //$attachment = $pdffile;
         }
 
         // Now prepare an email to sent to mailing list.

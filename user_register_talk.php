@@ -92,9 +92,10 @@ echo '<form method="post" enctype="multipart/form-data"
         action="user_register_talk_action.php">';
 
 echo "<h3>Speaker details</h3>";
-echo printInfo( 
-    "Email id of speaker is desirable. It helps keeping database clean 
-    by avoidling duplicate entries (and make autocompletion possible).");
+echo alertUser( 
+    "Email id of speaker is desirable. It helps in keeping database clean 
+    by avoidling duplicate entries. It also makes autocompletion possible.
+    ");
 
 echo printInfo( 
     "<strong>First name</strong> and <strong>institute</strong> are required 

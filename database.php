@@ -910,6 +910,7 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
 function submitRequest( $request )
 {
     global $db;
+
     if( ! array_key_exists( 'user', $_SESSION ) )
     {
         echo printErrorSevere( "Error: I could not determine the name of user" );
@@ -2210,7 +2211,7 @@ function addNewTalk( $data )
 
     $data[ 'id' ] = $id;
     $res = insertIntoTable( 'talks'
-        , 'id,host,title,speaker,description,created_by,created_on'
+        , 'id,host,class,title,speaker,description,created_by,created_on'
         , $data ); 
 
     // Return the id of talk.

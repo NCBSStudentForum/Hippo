@@ -900,3 +900,25 @@ function verifyRequest( $request )
     return "OK";
 }
 
+/**
+    * @brief Detect host institute from Email id. It could be either NCBS or 
+    * INSTEM.
+    *
+    * @param $email
+    *
+    * @return 
+ */
+function emailInstitute( $email )
+{
+    $inst = explode( "@", $email );
+    $inst = end( $inst );
+
+    if( 'instem.res.in' == trim( $inst ) )
+        return 'Institute for Stem Cell Biology and Regenerative Medicine';
+    else if( 'ccamp.res.in' == trim( $inst ) )
+        return 'Center for Cellular and Molecular Platforms';
+
+    return 'National Center For Biological Sciences';
+
+}
+

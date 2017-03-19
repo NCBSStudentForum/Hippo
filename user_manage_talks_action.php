@@ -32,14 +32,14 @@ else if( $_POST[ 'response' ] == 'delete' )
                     , 'status' => 'CANCELLED' )
             );
 
-        // Cancel confirmed event if any.
+        // Cancel confirmed event associated with this talk if any.
         updateTable( 
             'events', 'external_id', 'status'
             , array( 'external_id' => "talks." + $_POST[ 'id' ] 
                     , 'status' => 'CANCELLED' )
             );
         
-        goBack( "user.php" );
+        goBack( "user.php", 1 );
         exit;
     }
     else

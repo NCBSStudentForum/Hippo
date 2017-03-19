@@ -2211,7 +2211,7 @@ function addNewTalk( $data )
 
     $data[ 'id' ] = $id;
     $res = insertIntoTable( 'talks'
-        , 'id,host,class,title,speaker,description,created_by,created_on'
+        , 'id,host,class,coordinator,title,speaker,description,created_by,created_on'
         , $data ); 
 
     // Return the id of talk.

@@ -39,7 +39,8 @@ $today = dbDate( strtotime( 'today' ) );
 /*
  * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 
  * and email at 4pm.
- */
+*/
+
 $today = dbDate( strtotime( 'today' ) );
 echo printInfo( "Today is $today" );
 

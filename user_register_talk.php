@@ -49,7 +49,7 @@ $( function() {
     $( "#talks_host" ).autocomplete( { source : host }); 
     $( "#talks_host" ).attr( "placeholder", "autocomplete" );
 
-    $( "#talks_coordinator" ).autocomplete( { source : logins }); 
+    $( "#talks_coordinator" ).autocomplete( { source : logins.concat( host ) }); 
     $( "#talks_coordinator" ).attr( "placeholder", "autocomplete" );
 
 

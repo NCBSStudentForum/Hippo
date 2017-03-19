@@ -1,11 +1,91 @@
 <?php
 
 include_once 'database.php';
+include_once 'tohtml.php';
+include_once 'methods.php';
 
 // Directory to store the mdsum of sent emails.
 $maildir = getDataDir( ) . '/_mails';
 if( ! file_exists( $maildir ) )
     mkdir( $maildir, 0777, true );
+
+function generateAWSEmail( $monday )
+{
+
+    $res = array( );
+
+    $upcomingAws = getUpcomingAWS( $monday );
+    if( ! $upcomingAws )
+        $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
+
+    $html = '';
+    if( count( $upcomingAws ) < 1 )
+    {
+        $html .= "<p>Greetings</p>";
+        $html .= "<p>I could not find any annual work seminar 
+                scheduled on " . humanReadableDate( $monday ) . ".</p>";
+
+        $holiday = getTableEntry( 'holidays', 'date'
+                        , array( 'date' => dbDate( $monday ) ) );
+
+        if( $holiday )
+        {
+            $html .= "<p>It is most likely due to following event/holiday: " . 
+                        strtoupper( $holiday['description'] ) . ".</p>";
+
+        }
+
+        $html .= "<br>";
+        $html .= "<p>That's all I know! </p>";
+
+        $html .= "<br>";
+        $html .= "<p>-- NCBS Hippo</p>";
+
+        return array( "email" => $html, "speakers" => null );
+
+    }
+
+    $speakers = array( );
+    $logins = array( );
+    $outfile = getDataDir( ) . "AWS_" . $monday . "_";
+
+    foreach( $upcomingAws as $aws )
+    {
+        $html .= awsToHTML( $aws );
+        array_push( $logins, $aws[ 'speaker' ] );
+        array_push( $speakers, __ucwords__( loginToText( $aws['speaker'], false ) ) );
+    }
+
+    $outfile .= implode( "_", $logins );  // Finished generating the pdf file.
+    $pdffile = $outfile . ".pdf";
+    $res[ 'speakers' ] = $speakers;
+
+    $data = array( 'EMAIL_BODY' => $html
+        , 'DATE' => humanReadableDate( $monday ) 
+        , 'TIME' => '4:00 PM'
+    );
+
+    $mail = emailFromTemplate( 'aws_template', $data );
+
+    echo "Generating pdf";
+    $script = __DIR__ . '/generate_pdf_aws.php';
+    $cmd = "php -q -f $script date=$monday";
+    echo "Executing <pre> $cmd </pre>";
+    ob_flush( );
+
+    $ret = `$cmd`;
+
+    if( ! file_exists( $pdffile ) )
+    {
+        echo printWarning( "Could not generate PDF $pdffile." );
+        $pdffile = '';
+    }
+
+    $res[ 'pdffile' ] = $pdffile;
+    $res[ 'email' ] = $mail;
+    return $res;
+}
+
 
 function mailFooter( )
 {

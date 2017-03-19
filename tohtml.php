@@ -1153,9 +1153,9 @@ function awsToHTML( $aws, $with_picture = false )
 
 
 /**
-    * @brief Convert an event entry to HTML.
+    * @brief Convert an event entry to HTML. 
     *
-    * @param $aws AWS entry.
+    * @param $talk Talk/event entry.
     * @param $with_picture Fetch entry with picture.
     *
     * @return
@@ -1164,14 +1164,18 @@ function talkToHTML( $talk, $with_picture = false )
 {
 
     $speaker = $talk[ 'speaker' ] ;
+    $hostEmail = $talk[ 'host' ];
+
+    $hostInstitite = emailInstitute( $hostEmail );
 
     // Get its events for venue and date.
     $event = getEventsOfTalkId( $talk[ 'id' ] );
+
     $where = venueSummary( $event[ 'venue' ] );
     $when = humanReadableDate( $event[ 'date' ] ) . ', ' .
             humanReadableTime( $event[ 'start_time'] );
 
-    $title = $talk[ 'class' ] . ' by ' . $talk[ 'speaker' ] . " on '"
+    $title = __ucwords__($talk[ 'class' ]) . ' by ' . $talk[ 'speaker' ] . " on '"
              . $talk[ 'title' ] . "'";
 
     $html = '<div style="width:550px;text-align:justify">';
@@ -1199,7 +1203,7 @@ function talkToHTML( $talk, $with_picture = false )
              . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
     $html .= '</td></tr><tr><td>';
     $html .= '<a target="_blank" href="' . appURL( ) .'events.php?date='
-             . $event[ 'date' ] . '">Permanent link</a>';
+                 . $event[ 'date' ] . '">Permanent link</a>';
     $html .= '</td></tr></table>';
     $html .= '</div>';
     $html .= '</td>';
@@ -1208,7 +1212,6 @@ function talkToHTML( $talk, $with_picture = false )
     $html .= "<p>" . fixHTML( $talk[ 'description' ] ) . '</p>';
 
     $html .= "</div>";
-
 
     return $html;
 }

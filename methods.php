@@ -915,12 +915,10 @@ function verifyRequest( $request )
  */
 function emailInstitute( $email )
 {
-    $inst = explode( "@", $email );
-    $inst = end( $inst );
 
-    if( 'instem.res.in' == trim( $inst ) )
+    if( strpos( $email, 'instem.res.in' ) !== false )
         return 'Institute for Stem Cell Biology and Regenerative Medicine';
-    else if( 'ccamp.res.in' == trim( $inst ) )
+    else if( strpos( $email, 'ccamp.res.in' ) !== false )
         return 'Center for Cellular and Molecular Platforms';
 
     $res = 'National Center For Biological Sciences';

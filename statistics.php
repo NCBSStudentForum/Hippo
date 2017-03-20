@@ -5,8 +5,10 @@
 include_once 'header.php';
 include_once 'database.php';
 
+
+$upto = dbDate( 'tomorrow' );
 $requests = getTableEntries( 'bookmyvenue_requests', 'date'
-                , "date >= '2017-02-28'" );
+                , "date >= '2017-02-28' AND date < '$upto'" );
 $nApproved = 0;
 $nRejected = 0;
 $nCancelled = 0;
@@ -19,8 +21,6 @@ $firstDate = $requests[0]['date'];
 $lastDate = end( $requests )['date'];
 $timeInterval = strtotime( $lastDate ) - strtotime( $firstDate );
 
-// rate per day.
-$rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
 
 foreach( $requests as $r )
 {
@@ -53,11 +53,13 @@ foreach( $requests as $r )
 // Venue usage timne.
 $events = getTableEntries( 'events', 'date', 'date
 $venueUsageTime = array( );
+// rate per day.
+$rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
 
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
     <tr> <td>Rate of requests (per day)</td> <td>" 
-            .  number_format( $rateOfRequests, 2) . "</td> </tr>
+            .   $rateOfRequests . "</td> </tr>
     <tr> <td>Approved requests</td> <td> $nApproved </td> </tr>
     <tr> <td>Pending requests</td> <td> $nPending </td> </tr>
     <tr> <td>Rejected requests</td> <td> $nRejected </td> </tr>
@@ -411,7 +413,9 @@ $(function () {
 });
 </script>
 
-<h1>Booking requests since March 01, 2017</h1>
+<h1>Booking requests between <?php
+    echo humanReadableDate( 'march 01, 2017') ?> 
+    and <?php echo humanReadableDate( $upto ); ?></h1>
 
 <?php 
 echo $bookingTable;

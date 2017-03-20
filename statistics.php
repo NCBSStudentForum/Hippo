@@ -151,30 +151,12 @@ $(function( ) {
 
     Highcharts.chart('venues_plot', {
 
-        title: {
-            text: 'Usage pattern of venues'
-        },
-
-        yAxis: {
-            title: {
-                text: 'Time in hours'
-            }
-        },
-
-        xAxis : {
-            categories : venues
-        },
-
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-        },
-
-        series: [{
-            name: 'Venue usage',
-            data: venueUsage,
-        }], 
+        chart : { type : 'column' },
+        title: { text: 'Venue usage in hours' },
+        yAxis: { title: { text: 'Time in hours' } },
+        xAxis : { categories : venues }, 
+        legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+        series: [{ name: 'Venue usage', data: venueUsage, }], 
     });
 
 });
@@ -447,7 +429,10 @@ echo $bookingTable;
 <h3></h3>
 <div id="container3" style="width:100%; height:400px;"></div>
 
-<h1>Venues </h1>
+<h1>Venue usage between <?php
+    echo humanReadableDate( 'march 01, 2017') ?> 
+    and <?php echo humanReadableDate( $upto ); ?></h1>
+
 <h3></h3>
 <div id="venues_plot" style="width:100%; height:400px;"></div>
 

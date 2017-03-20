@@ -48,13 +48,28 @@ foreach( $requests as $r )
     }
 
 }
-
-
-// Venue usage timne.
-$events = getTableEntries( 'events', 'date', 'date
-$venueUsageTime = array( );
 // rate per day.
 $rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
+
+
+/*
+ * Venue usage timne.
+ */
+$events = getTableEntries( 'events', 'date'
+                , "status='VALID' AND date >= '2017-02-28' AND date < '$upto'" );
+$venueUsageTime = array( );
+foreach( $events as $e )
+{
+    $time = (strtotime( $e[ 'end_time' ] ) - strtotime( $e[ 'start_time' ] ) ) / 3600.0;
+    $venue = $e[ 'venue' ];
+    if( ! array_key_exists( $venue, $venueUsageTime ) )
+        $venueUsageTime[ $venue ] = $time;
+    else
+        $venueUsageTime[ $venue ] += $time;
+}
+
+$venues = array_keys( $venueUsageTime );
+$venueUsage = array_values( $venueUsageTime );
 
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
@@ -123,37 +138,45 @@ $(function () {
             pointPadding: 0,
             groupPadding: 0,
             pointPlacement: 'between'
-        }, 
-    ] });
+        },] 
+    });
 });
 </script>
 
 <script type="text/javascript" charset="utf-8">
-highcharts.chart('venues_plot', {
+$(function( ) { 
 
     var venueUsage = <?php echo json_encode( $venueUsage ); ?>;
     var venues = <?php echo json_encode( $venues ); ?>;
 
-    title: {
-        text: 'Usage pattern of venues'
-    },
+    Highcharts.chart('venues_plot', {
 
-    yAxis: {
         title: {
-            text: 'Time in hours'
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
+            text: 'Usage pattern of venues'
+        },
 
-    series: [{
-        name: 'Venue usage',
-        data: venueUsage,
-        pointPlacement: 'between'
-    }, 
+        yAxis: {
+            title: {
+                text: 'Time in hours'
+            }
+        },
+
+        xAxis : {
+            categories : venues
+        },
+
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+
+        series: [{
+            name: 'Venue usage',
+            data: venueUsage,
+        }], 
+    });
+
 });
 
 </script>
@@ -428,7 +451,7 @@ echo $bookingTable;
 <h3></h3>
 <div id="venues_plot" style="width:100%; height:400px;"></div>
 
-<h1>Annual Work Seminars</h1>;
+<h1>Annual Work Seminars</h1>
 <h3></h3>
 <div id="container0" style="width:100%; height:400px;"></div>
 

@@ -172,8 +172,8 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         $templ = emailFromTemplate( 'this_week_events'
             , array( "EMAIL_BODY" => $html ) 
         );
-        $md = html2Markdown( $templ[ 'email_body'] );
-        sendPlainTextEmail( $md, $subject, $to, $cclist );
+
+        sendPlainTextEmail( $templ[ 'email_body'], $subject, $to, $cclist );
     }
 }
 

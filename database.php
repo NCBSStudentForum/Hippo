@@ -545,7 +545,7 @@ function getRequestsGroupedByGID( $status  )
 {
     global $db;
     $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests 
-        WHERE status=:status ORDER BY date,start_time GROUP BY gid' );
+        WHERE status=:status  GROUP BY gid ORDER BY date,start_time' );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );

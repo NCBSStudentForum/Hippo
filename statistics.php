@@ -377,7 +377,7 @@ $(function () {
 });
 </script>
 
-<h1>Booking requests</h1>
+<h1>Booking requests since March 01, 2017</h1>
 
 <?php 
 echo $bookingTable;

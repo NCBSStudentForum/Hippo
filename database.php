@@ -544,7 +544,8 @@ function getPendingRequestsGroupedByGID( )
 function getRequestsGroupedByGID( $status  )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE status=:status GROUP BY gid' );
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests 
+        WHERE status=:status ORDER BY date,start_time GROUP BY gid' );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
     return fetchEntries( $stmt );

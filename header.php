@@ -52,7 +52,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     </td>
     <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td>
     <td> <a href="community_graphs.php" target="_blank" >Community graph</a> </td>
-    <td> <a href="aws_stats.php" target="_blank" >Statistics </a> </td>
+    <td> <a href="statistics.php" target="_blank" >Statistics </a> </td>
     <!-- <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td> -->
     <td> <a href="courses.php" target="_blank" >Courses</a></td>
     <td> <a href="<?php echo calendarURL();?>" target="_blank" >Calendar</a></td>

@@ -30,16 +30,30 @@ if( strtolower($_POST['response']) == 'edit' )
 
 else if( strtolower($_POST['response']) == 'delete' )
 {
-    $eid = trim( $_POST[ 'eid' ] );
-
+    $eid = __get__( $_POST, 'eid', null );
     $gText = "$gid . $eid";
 
+    $res = null;
     if( ! $eid )
-        $res = updateTable( 'events', 'gid,created_by', 'status',
-                        array( 'gid' => $gid, 'created_by' => $_SESSION[ 'user'] 
-                                , 'status' => 'CANCELLED' 
-                            )
-                        );
+    {
+        // Cancel the whole group.
+        // Get group events which are in future.
+        $createdBy = $_SESSION[ 'user' ];
+        $events = getTableEntries( 'events', 'date,start_time' 
+                    , "gid='$gid' AND created_by='$createdBy' AND date >= NOW()"
+                    );
+
+
+        foreach( $events as $e )
+        {
+            $res = updateTable( 'events', 'gid,eid,created_by', 'status',
+                            array( 'gid' => $gid, 'eid' => $e['eid']
+                            , 'created_by' => $_SESSION[ 'user'] 
+                            , 'status' => 'CANCELLED' 
+                        )
+                    );
+        }
+    }
     else
         $res = updateTable( 'events', 'gid,eid,created_by', 'status',
                         array( 'gid' => $gid, 'created_by' => $_SESSION[ 'user'] 

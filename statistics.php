@@ -74,7 +74,7 @@ $venueUsage = array_values( $venueUsageTime );
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
     <tr> <td>Rate of requests (per day)</td> <td>" 
-            .   $rateOfRequests . "</td> </tr>
+            .   number_format( $rateOfRequests, 2 ) . "</td> </tr>
     <tr> <td>Approved requests</td> <td> $nApproved </td> </tr>
     <tr> <td>Pending requests</td> <td> $nPending </td> </tr>
     <tr> <td>Rejected requests</td> <td> $nRejected </td> </tr>

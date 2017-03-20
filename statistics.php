@@ -14,6 +14,7 @@ $nPending = 0;
 $nOther = 0;
 $timeForAction = array( );
 
+
 $firstDate = $requests[0]['date'];
 $lastDate = end( $requests )['date'];
 $timeInterval = strtotime( $lastDate ) - strtotime( $firstDate );
@@ -47,6 +48,11 @@ foreach( $requests as $r )
     }
 
 }
+
+
+// Venue usage timne.
+$events = getTableEntries( 'events', 'date', 'date
+$venueUsageTime = array( );
 
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
@@ -117,7 +123,35 @@ $(function () {
             pointPlacement: 'between'
         }, 
     ] });
+});
+</script>
 
+<script type="text/javascript" charset="utf-8">
+highcharts.chart('venues_plot', {
+
+    var venueUsage = <?php echo json_encode( $venueUsage ); ?>;
+    var venues = <?php echo json_encode( $venues ); ?>;
+
+    title: {
+        text: 'Usage pattern of venues'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Time in hours'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    series: [{
+        name: 'Venue usage',
+        data: venueUsage,
+        pointPlacement: 'between'
+    }, 
 });
 
 </script>
@@ -385,6 +419,10 @@ echo $bookingTable;
 
 <h3></h3>
 <div id="container3" style="width:100%; height:400px;"></div>
+
+<h1>Venues </h1>
+<h3></h3>
+<div id="venues_plot" style="width:100%; height:400px;"></div>
 
 <h1>Annual Work Seminars</h1>;
 <h3></h3>

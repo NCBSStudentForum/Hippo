@@ -186,7 +186,8 @@ function initialize( )
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO'
             , url VARCHAR( 1000 )
             , modified_by VARCHAR(50) -- Who modified the request last time.
-            , timestamp TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
+            , last_modified_on DATETIME
+            , timestamp DATETIME
             , PRIMARY KEY (gid, rid) 
             , UNIQUE KEY (gid,rid,external_id)
             )
@@ -237,7 +238,8 @@ function initialize( )
             , calendar_id VARCHAR(200)
             , calendar_event_id VARCHAR(200)
             , url VARCHAR(1000)
-            , last_modified_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , timestamp DATETIME NOT NULL
+            , last_modified_on DATETIME
             , PRIMARY KEY ( gid, eid )
             , UNIQUE KEY (gid,eid,external_id)
             )"
@@ -694,7 +696,7 @@ function changeRequestStatus( $gid, $rid, $status )
 {
     global $db;
     $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET 
-        status=:status WHERE gid=:gid AND rid=:rid"
+        status=:status,last_modified_on=NOW() WHERE gid=:gid AND rid=:rid"
     );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
@@ -956,16 +958,19 @@ function submitRequest( $request )
             continue;
         }
 
+        $request[ 'timestamp' ] = dbDateTime( 'now' );
         $res = insertIntoTable( 'bookmyvenue_requests'
             , 'gid,rid,external_id,created_by,venue,title,description' . 
-                ',date,start_time,end_time,is_public_event,class'
+                ',date,start_time,end_time,timestamp,is_public_event,class'
             , $request 
         );
+
         if( ! $res )
         {
             echo printWarning( "Could not submit request id $gid" );
             return 0;
         }
+
     }
     return $gid;
 }
@@ -1041,10 +1046,10 @@ function approveRequest( $gid, $rid )
 
     $stmt = $db->prepare( 'INSERT INTO events (
         gid, eid, class, external_id, title, description, date, venue, start_time, end_time
-        , created_by
+        , created_by, last_modified_on
     ) VALUES ( 
         :gid, :eid, :class, :external_id, :title, :description, :date, :venue, :start_time, :end_time 
-        , :created_by
+        , :created_by, NOW()
     )');
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':eid', $rid );

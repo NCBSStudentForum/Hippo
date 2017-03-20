@@ -104,7 +104,7 @@ $(function () {
 
     Highcharts.chart('container3', {
         chart: { type: 'column' },
-        title: { text: 'Time taken to act on booking requets' },
+        title: { text: 'Approval/rejection time - event start time' },
         xAxis: { min : -100, max: 100 },
         yAxis: [{ title: { text: 'Number of requests' } }, ],
         series: [{

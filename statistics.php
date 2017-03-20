@@ -8,7 +8,7 @@ include_once 'database.php';
 
 $upto = dbDate( 'tomorrow' );
 $requests = getTableEntries( 'bookmyvenue_requests', 'date'
-                , "date >= '2017-02-28' AND date < '$upto'" );
+                , "date >= '2017-02-28' AND date <= '$upto'" );
 $nApproved = 0;
 $nRejected = 0;
 $nCancelled = 0;

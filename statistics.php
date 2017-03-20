@@ -129,10 +129,11 @@ $(function () {
     Highcharts.chart('container3', {
         chart: { type: 'column' },
         title: { text: 'Approval/rejection time - event start time' },
-        xAxis: { min : -100, max: 100 },
+        //xAxis: { min : -10, max: 30 },
         yAxis: [{ title: { text: 'Number of requests' } }, ],
         series: [{
-            name: 'Time taken to act on booking requests',
+            name: 'Time taken (in hours). Negative value means request was approved '
+                 + ' after event started.',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,

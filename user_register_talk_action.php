@@ -71,8 +71,9 @@ else                // Everything is fine.
                             I am redirecting you to page where you can browse all venues 
                            and create suitable booking request."
                         );
-                        goToPage( 'bookmyvenue_browse.php', 5 );
-                        exit;
+                        echo alertUser( "You can book a slot for this talk later" 
+                            . " by visiting 'Manage my talks' link in your homepage. "
+                            );
                     }
                     else 
                     {
@@ -83,8 +84,7 @@ else                // Everything is fine.
 
                         // Modify talk title for calendar.
                         $_POST[ 'title' ] = __ucwords__( $_POST['class'] ) . " by " . 
-                            $_POST[ 'speaker' ] . ' on \'' . 
-                            trim( $_POST[ 'title' ] ) . "'";
+                            $_POST[ 'speaker' ] . ' on \'' . $_POST[ 'title' ] . "'";
 
                         $res = submitRequest( $_POST );
                         if( $res )

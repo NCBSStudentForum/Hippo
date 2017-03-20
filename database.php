@@ -1117,10 +1117,12 @@ function eventsAtThisVenue( $venue, $date, $time )
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
     $stmt = $db->prepare( 'SELECT * FROM events WHERE 
-        date=:date AND venue=:venue AND start_time <= :time AND end_time > :time' );
+        status=:status AND date=:date AND 
+        venue=:venue AND start_time <= :time AND end_time > :time' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
     $stmt->bindValue( ':venue', $venue );
+    $stmt->bindValue( ':status', 'VALID' );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

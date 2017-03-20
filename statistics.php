@@ -5,7 +5,8 @@
 include_once 'header.php';
 include_once 'database.php';
 
-$requests = getTableEntries( 'bookmyvenue_requests', 'date' );
+$requests = getTableEntries( 'bookmyvenue_requests', 'date'
+                , "date >= '2017-02-28'" );
 $nApproved = 0;
 $nRejected = 0;
 $nCancelled = 0;

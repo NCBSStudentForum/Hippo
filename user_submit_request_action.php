@@ -42,6 +42,7 @@ if( $msg == "OK" )
         $_POST['repeat_pat']  = $repeatPat;
     }
 
+    $_POST['timestamp']  = dbDateTime( 'now' );
     $gid = submitRequest( $_POST );
 
     if( $gid )

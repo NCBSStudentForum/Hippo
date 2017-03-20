@@ -29,7 +29,7 @@ else
         echo '<form method="post" action="user_show_events_edit.php">';
         echo "<table style=\"width:600px\">";
         echo "<tr><td> <strong>Group id $gid </strong>";
-        echo "<button name=\"response\" title=\"Cancel this event\" 
+        echo "<button name=\"response\" title=\"Cancel this group\" 
                 onclick=\"AreYouSure(this)\" >Cancel Group</button>
                 ";
         echo "<button title=\"Edit this event\" name=\"response\" 
@@ -38,7 +38,8 @@ else
         echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
         echo '</form>';
 
-        $events = getTableEntries( 'events', 'date,start_time', "gid='$gid'" );
+        $events = getTableEntries( 'events', 'date,start_time'
+                        , "gid='$gid' AND date >= NOW()" );
         foreach( $events as $event )
         {
             if( $event[ 'status' ] != 'VALID' )

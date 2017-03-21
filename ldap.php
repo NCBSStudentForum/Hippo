@@ -28,7 +28,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
         return NULL;
     }
 
-    $ds = ldap_connect($ldap_ip) or die( "Could not connect to $ldap_ip" );
+    $ds = ldap_connect($ldap_ip);
     $r = ldap_bind($ds); // or die( "Can't bind to $ldap_ip" );
     if( ! $r )
     {
@@ -50,7 +50,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
         // We construct an array with ldap entries. Some are dumplicated with 
         // different keys to make it suitable to pass to other functions as 
         // well.
-        if( $i['sn'] == 'NA' )
+        if( trim( $i['sn'] ) == 'NA' )
             $i['sn'] = '';
 
         array_push($result

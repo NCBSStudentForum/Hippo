@@ -1365,9 +1365,10 @@ function getLoginEmail( $login )
         createUserOrUpdateLogin( $login, $info );
 
         if( $info )
-            $res['email'] = $info[ 'email' ];
-        else
-            $res[ 'email' ] = $login . "@ncbs.res.in";
+            $res['email'] = __get__($info, 'email', $info[ 'alternative_email']);
+
+        if( ! $res[ 'email' ] )
+            $res[ 'email' ] = $_SESSION[ 'email' ]
     }
 
     return $res['email'];

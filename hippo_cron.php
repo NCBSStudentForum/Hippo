@@ -121,15 +121,16 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
             sendPlainTextEmail( $mail, $subject, $to, $cclist );
         }
     }
-
-    // Send on 8am about this week events.
-    $awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
+}
+else if( $today == dbDate( strtotime( 'this sunday' ) ) )
+{
+    // Send on 7pm about this week events.
+    $awayFrom = strtotime( 'now' ) - strtotime( '7:00 pm' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
-        error_log( "Monday 8am. Notify about this week events." );
-        echo printInfo( "Today is Monday 8am. Send out emails for week events." );
+        echo printInfo( "Today is Sunday 7pm. Send out emails for week events." );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
-        $subject = 'This week events (' . humanReadableDate( $thisMonday) . ') by ';
+        $subject = 'Events over this starting ' . humanReadableDate( $today);
 
         $cclist = '';
         $to = 'academic@lists.ncbs.res.in';

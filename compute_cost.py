@@ -19,16 +19,19 @@ import math
 
 __fmt__ = '%Y-%m-%d'
 
+def parabola( x0, offset, x ):
+    ys = offset + offset * (x-x0) ** 2.0
+    return ys
+
 def computeCost( slot_date, lastDate, nAWS ):
     ndays = ( slot_date - lastDate ).days 
     nyears = ndays / 365.0
     cost = 0
     if ndays < 365.0:
-        cost = 20
+        cost = 15
     else:
-        cost = 3 * nyears 
-        if nAWS > 1:
-            cost +=  (4 * nAWS) * math.exp( - nyears ) - 1.0
+        cost = parabola( nAWS, nAWS + 1, nyears ) 
+
     return int(10 * cost)
 
 def random_date(start, end):
@@ -43,6 +46,7 @@ def random_date(start, end):
 
 def test( ):
     import pylab
+    pylab.style.use( 'ggplot' )
     # Generate random test data.
     start = datetime.datetime.strptime( '2017-03-18', __fmt__ )
     end = datetime.datetime.strptime( '2021-03-18', __fmt__  )

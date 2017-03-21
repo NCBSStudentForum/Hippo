@@ -6,18 +6,24 @@ include_once( "database.php" );
 include_once( "ldap.php" );
 
 $conf = $_SESSION['conf'];
-$ldap = $_POST['username'];
+$login = $_POST['username'];
+
+// If user use @instem.ncbs.res.in or @ncbs.res.in, ignore it.
+$ldap = explode( '@', $login)[0];
+
 $pass = $_POST['pass'];
 
 $_SESSION['AUTHENTICATED'] = FALSE;
 
 /* continue */
 $type = 'ncbs';
+$email = "$ldap@ncbs.res.in";
 $conn = imap_open( "{imap.ncbs.res.in:993/ssl/readonly}INBOX", $ldap, $pass, OP_HALFOPEN );
 if( ! $conn )
 {
    $conn = imap_open( "{mail.instem.res.in:993/ssl/readonly}INBOX", $ldap, $pass, OP_HALFOPEN );
    $type = 'instem';
+   $email = "$ldap@instem.res.in";
 }
 
 
@@ -32,6 +38,7 @@ else
     imap_close( $conn );
     $_SESSION['AUTHENTICATED'] = TRUE;
     $_SESSION['user'] = $ldap;
+    $_SESSION['email'] = $email;
 
     $ldapInfo = getUserInfoFromLdap( $ldap );
 

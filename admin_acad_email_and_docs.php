@@ -196,6 +196,7 @@ else if( $default[ 'task' ] == 'Today\'s events' )
             humanReadableDate( $entry[ 'date' ] );
 
         $hostInstitite = emailInstitute( $talk[ 'host' ] );
+
         $templ = emailFromTemplate(
             "this_event" 
             , array( 'EMAIL_BODY' => $talkHTML

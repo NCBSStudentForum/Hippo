@@ -155,7 +155,9 @@ def computeCost( speaker, slot_date, last_aws ):
         # than something is wrong with user. Ignore this profile and emit a
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
-        return compute_cost.computeCost( slot_date, last_aws, nAws )
+        cost = compute_cost.computeCost( slot_date, last_aws, nAws )
+        print( speaker, slot_date, cost )
+        return cost
 
 # From  http://stackoverflow.com/a/3425124/1805129
 def monthdelta(date, delta):

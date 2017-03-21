@@ -19,18 +19,17 @@ import math
 
 __fmt__ = '%Y-%m-%d'
 
-def computeCost( currentDate, lastDate, nAWS ):
-    ndays = ( lastDate - currentDate ).days 
-    maxAWS = 6
+def computeCost( slot_date, lastDate, nAWS ):
+    ndays = ( slot_date - lastDate ).days 
     nyears = ndays / 365.0
-    if ndays < 365.0 or nAWS >= maxAWS:
-        cost = 20.0
+    cost = 0
+    if ndays < 365.0:
+        cost = 20
     else:
         cost = 3 * nyears 
         if nAWS > 1:
-            cost +=  ((2 * nAWS) ** 2) * math.exp( - nyears ) 
-
-    return int( 10 * max( 0, cost ))
+            cost +=  (2 * nAWS) * math.exp( - nyears ) 
+    return int(10 * cost)
 
 def random_date(start, end):
     """
@@ -52,7 +51,7 @@ def test( ):
         for i in range( 5 * 54 ):
             date = start + datetime.timedelta( days = i * 7 )
             xval.append( (date - start).days / 365.0 )
-            yval.append( computeCost( start, date, naws ) )
+            yval.append( computeCost( date, start, naws ) )
         pylab.xlabel( 'Year' )
         pylab.ylabel( 'Cost' )
         pylab.plot( xval, yval, alpha = 0.7, label = '%s' % naws )

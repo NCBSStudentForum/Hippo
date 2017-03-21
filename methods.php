@@ -919,13 +919,12 @@ function verifyRequest( $request )
 function emailInstitute( $email )
 {
 
-    if( strpos( $email, 'instem.res.in' ) !== false )
-        return 'Institute for Stem Cell Biology and Regenerative Medicine';
-    else if( strpos( $email, 'ccamp.res.in' ) !== false )
-        return 'Center for Cellular and Molecular Platforms';
-
     $res = 'National Center For Biological Sciences';
-    $res .= '<br>TATA INSTITUTE OF FUNDAMENTAL RESEARCH';
+    $res .= ' (TATA INSTITUTE OF FUNDAMENTAL RESEARCH )';
+    if( strpos( $email, 'instem.res.in' ) !== false )
+        $res .= '<br> and, Institute for Stem Cell Biology and Regenerative Medicine';
+    else if( strpos( $email, 'ccamp.res.in' ) !== false )
+        $res .= '<br> and, Center for Cellular and Molecular Platforms';
     return $res;
 }
 

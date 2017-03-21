@@ -906,8 +906,8 @@ function loginToText( $login, $withEmail = true )
         return $login;
 
     // If honorific exits in login/speaker; then prefix it.
-    if( array_key_exists( 'honorific', $login ) )
-        $text = trim( $login[ 'honorific' ] . ' ' . $text );
+    if( is_array( $user) && array_key_exists( 'honorific', $user ) )
+        $text = trim( $user[ 'honorific' ] . ' ' . $text );
 
     return $text;
 }

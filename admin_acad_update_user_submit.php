@@ -16,6 +16,16 @@ $res = updateTable( 'logins', 'login', $toUpdate, $_POST );
 if( $res )
 {
     echo printInfo( "Successfully updated : " . implode(',', $toUpdate)  );
+    if( $_POST[ 'eligible_for_aws' ] == 'YES' )
+    {
+        $login = $_POST[ 'login' ];
+        $msg .= initUserMsg( $login );
+        $msg .= "<p>Your name has been added to the list of AWS spakers. 
+            If this is a mistake, please contact academic office </p>";
+        $subject = "Your name has been added to AWS list";
+        $to = getLoginEmail( $login );
+        sendPlainTextEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+    }
 
     // Rerun the scheduling script every time a change is made.
     rescheduleAWS( );

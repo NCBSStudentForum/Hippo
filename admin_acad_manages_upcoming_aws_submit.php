@@ -87,6 +87,18 @@ else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
             Recomputing schedule ... " 
             );
         ob_flush( );
+        // Send email to speaker.
+        $subject = "Your name has been removed from AWS list";
+        $msg = "<p>Dear " . loginToText( $_POST[ 'speaker' ] ) . " </p>";
+        $msg .= "<p> 
+            Your name has been removed from the list of potential AWS 
+            speaker. If this is a mistake, please write to Academic Office. 
+            </p>";
+
+        $to = getLoginEmail( $_POST[ 'speaker' ] );
+        sendPlainTextEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+
+        // And reschedule AWS entry.
         rescheduleAWS( );
         goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
         exit;

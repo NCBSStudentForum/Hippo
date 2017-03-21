@@ -31,6 +31,7 @@ import tempfile
 from logger import _logger
 from db_connect import db_
 import networkx as nx
+import compute_cost
 
 fmt_ = '%Y-%m-%d'
 
@@ -154,29 +155,7 @@ def computeCost( speaker, slot_date, last_aws ):
         # than something is wrong with user. Ignore this profile and emit a
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
-        if fromToday > 2.5 * idealGap:
-            # Multiple errors are logged in loop.
-            # _logger.warn( '%s has not given AWS for %d days' % ( speaker, fromToday) )
-            # _logger.warn( "I am not putting a lot of cost on this assignment." )
-            # _logger.warn( "This speaker should be handled manually" )
-            cost = 20.0
-        elif fromToday >  1.5 * idealGap:
-            cost = nAws / 10.0
-        else:
-            cost = float( nDays - idealGap ) / idealGap
-
-    # Here we add the effect of  number of previous AWS.
-    # We multiply the weight by AWS given by this user in a way that first 2 aws
-    # does not effect this weight. But later AWS has significant cost. This is
-    # make sure that first 2 AWS are given preferences over the third or more
-    # AWS users.
-    # NOTE that second aws will have 0.0 cost since nAws == 1 in this case. 3rd
-    # AWS will have nAWS 2 so there is a penalty.
-    cost =  cost + max(0, nAws - 1.0 )
-
-    # The library function does not work well with float. Scale up by 10 and
-    # change to int.
-    return int(10*cost )
+        return compute_cost.computeCost( slot_date, last_aws, nAws )
 
 # From  http://stackoverflow.com/a/3425124/1805129
 def monthdelta(date, delta):

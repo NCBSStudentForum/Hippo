@@ -15,21 +15,22 @@ import sys
 import os
 import random
 import datetime
+import math
 
 __fmt__ = '%Y-%m-%d'
 
 def computeCost( currentDate, lastDate, nAWS ):
     ndays = ( lastDate - currentDate ).days 
-    maxAWS = 5
+    maxAWS = 6
     nyears = ndays / 365.0
-    if ndays < 365.0 or nAWS > maxAWS:
-        return int( 100 * 20.0 )
+    if ndays < 365.0 or nAWS >= maxAWS:
+        cost = 20.0
+    else:
+        cost = 3 * nyears 
+        if nAWS > 1:
+            cost +=  2 * nAWS  * math.exp( - nyears ) - 0.75
 
-    cost = 3 * nyears 
-    if nAWS > 2:
-        cost += 3 * (maxAWS - nAWS)  - (20.0/nAWS) * ( nyears - 1)
-
-    return int( 100 * max( 0, cost ))
+    return int( 10 * max( 0, cost ))
 
 def random_date(start, end):
     """
@@ -46,9 +47,9 @@ def test( ):
     # Generate random test data.
     start = datetime.datetime.strptime( '2017-03-18', __fmt__ )
     end = datetime.datetime.strptime( '2021-03-18', __fmt__  )
-    for naws in range( 0, 5 ):
+    for naws in range( 0, 6 ):
         xval, yval = [ ], [ ]
-        for i in range( 5* 54 ):
+        for i in range( 5 * 54 ):
             date = start + datetime.timedelta( days = i * 7 )
             xval.append( (date - start).days / 365.0 )
             yval.append( computeCost( start, date, naws ) )

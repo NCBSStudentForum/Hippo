@@ -10,6 +10,68 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
 echo userHTML( );
 
+// Javascript.
+$faculty = getFaculty( );
+$speakers = getTableEntries( 'speakers' );
+$logins = getTableEntries( 'logins' );
+
+//var_dump( $speakers );
+
+$speakersMap = array( );
+foreach( $speakers as $visitor )
+    if( strlen( $visitor[ 'email' ] ) > 0 )
+        $speakersMap[ $visitor[ 'email' ] ] = $visitor;
+
+// This must not be a key => value array else autocomplete won't work. Or have 
+// any null value,
+$speakersIds = array( );
+foreach( $speakers as $x )
+    if( $x[ 'email' ] )
+        $speakersIds[] = $x[ 'email' ];
+
+$faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
+$logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
+
+?>
+
+<script type="text/javascript" charset="utf-8">
+// Autocomplete speaker.
+$( function() {
+    var speakersDict = <?php echo json_encode( $speakersMap ) ?>;
+    var host = <?php echo json_encode( $faculty ); ?>;
+    var logins = <?php echo json_encode( $logins ); ?>;
+
+    // These emails must not be key value array.
+    var emails = <?php echo json_encode( $speakersIds ); ?>;
+    //console.log( emails );
+
+    $( "#talks_host" ).autocomplete( { source : host }); 
+    $( "#talks_host" ).attr( "placeholder", "autocomplete" );
+
+    $( "#talks_coordinator" ).autocomplete( { source : logins.concat( host ) }); 
+    $( "#talks_coordinator" ).attr( "placeholder", "autocomplete" );
+
+
+    // Once email is matching we need to fill other fields.
+    $( "#speakers_email" ).autocomplete( { source : emails
+        , focus : function( ) { return false; }
+    }).on( 'autocompleteselect', function( e, ui ) 
+        {
+            var email = ui.item.value;
+            $('#speakers_first_name').val( speakersDict[ email ]['first_name'] );
+            $('#speakers_middle_name').val( speakersDict[ email ]['middle_name'] );
+            $('#speakers_last_name').val( speakersDict[ email ]['last_name'] );
+            $('#speakers_department').val( speakersDict[ email ]['department'] );
+            $('#speakers_institute').val( speakersDict[ email ]['institute'] );
+            $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
+        }
+    );
+    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
+});
+</script>
+
+
+<?php
 
 if( ! $_POST[ 'response' ] )
 {
@@ -53,8 +115,9 @@ else if( $_POST[ 'response' ] == 'DO_NOTHING' )
 }
 else if( $_POST[ 'response' ] == 'edit' )
 {
-    echo printInfo( "Here you can only change the host, title and description
-        of the talk." );
+    echo alertUser( "Here you can change the host, coordinator, title and 
+                description of the talk." 
+                );
 
     $id = $_POST[ 'id' ];
     $talk = getTableEntry( 'talks', 'id', $_POST );

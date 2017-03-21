@@ -22,7 +22,7 @@ if( $msg == "OK" )
     {
         // Only lab-meet and JC are allowed more than 12 months. For others its 
         // 6 months max.
-        $nMonths = intval( __get__( 'month_pattern', $_POST, 6) );
+        $nMonths = intval( __get__( $_POST, 'month_pattern', 6) );
         if( $_POST[ 'class' ] == 'LAB MEETING' || $_POST[ 'class' ] == 'JOURNAL CLUB MEETING' )
            if( $nMonths > 12 )
                 $nMonths = 12;

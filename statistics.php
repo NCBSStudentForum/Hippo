@@ -8,7 +8,7 @@ include_once 'database.php';
 
 $upto = dbDate( 'tomorrow' );
 $requests = getTableEntries( 'bookmyvenue_requests', 'date'
-                , "date >= '2017-02-28' AND date < '$upto'" );
+                , "date >= '2017-02-28' AND date <= '$upto'" );
 $nApproved = 0;
 $nRejected = 0;
 $nCancelled = 0;
@@ -74,7 +74,7 @@ $venueUsage = array_values( $venueUsageTime );
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
     <tr> <td>Rate of requests (per day)</td> <td>" 
-            .   $rateOfRequests . "</td> </tr>
+            .   number_format( $rateOfRequests, 2 ) . "</td> </tr>
     <tr> <td>Approved requests</td> <td> $nApproved </td> </tr>
     <tr> <td>Pending requests</td> <td> $nPending </td> </tr>
     <tr> <td>Rejected requests</td> <td> $nRejected </td> </tr>
@@ -129,10 +129,11 @@ $(function () {
     Highcharts.chart('container3', {
         chart: { type: 'column' },
         title: { text: 'Approval/rejection time - event start time' },
-        xAxis: { min : -100, max: 100 },
+        //xAxis: { min : -10, max: 30 },
         yAxis: [{ title: { text: 'Number of requests' } }, ],
         series: [{
-            name: 'Time taken to act on booking requests',
+            name: 'Time taken (in hours). Negative value means request was approved '
+                 + ' after event started.',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,

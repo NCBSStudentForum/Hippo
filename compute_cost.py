@@ -28,7 +28,7 @@ def computeCost( slot_date, lastDate, nAWS ):
     else:
         cost = 3 * nyears 
         if nAWS > 1:
-            cost +=  (2 * nAWS) * math.exp( - nyears ) 
+            cost +=  (4 * nAWS) * math.exp( - nyears ) - 1.0
     return int(10 * cost)
 
 def random_date(start, end):
@@ -52,10 +52,10 @@ def test( ):
             date = start + datetime.timedelta( days = i * 7 )
             xval.append( (date - start).days / 365.0 )
             yval.append( computeCost( date, start, naws ) )
-        pylab.xlabel( 'Year' )
+        pylab.xlabel( 'Gap in years between slot and last AWS' )
         pylab.ylabel( 'Cost' )
-        pylab.plot( xval, yval, alpha = 0.7, label = '%s' % naws )
-        pylab.legend( )
+        pylab.plot( xval, yval, alpha = 0.7, label = '#AWS = %d' % naws )
+        pylab.legend( framealpha = 0.4, fontsize = 8 )
 
     pylab.savefig( "%s.png" % sys.argv[0] )
 

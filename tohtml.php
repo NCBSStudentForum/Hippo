@@ -872,7 +872,7 @@ function arrayToSelectList( $name, $options
 }
 
 /**
-    * @brief Convert login to text. First name + Middle name + Last name format.
+    * @brief Convert login/speaker to text. First name + Middle name + Last name format.
     *
     * @param $login
     * @param $withEmail
@@ -904,6 +904,10 @@ function loginToText( $login, $withEmail = true )
 
     if( strlen( trim($text) ) < 1 )
         return $login;
+
+    // If honorific exits in login/speaker; then prefix it.
+    if( array_key_exists( 'honorific', $login ) )
+        $text = trim( $login[ 'honorific' ] . ' ' . $text );
 
     return $text;
 }

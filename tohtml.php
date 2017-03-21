@@ -38,6 +38,13 @@ function fixHTML( $html, $strip_tags = false )
     return $res;
 }
 
+/**
+    * @brief Generate SPEAKER HTML with homepage and link.
+    *
+    * @param $speaker
+    *
+    * @return 
+ */
 function speakerToHTML( $speaker )
 {
     if( is_string( $speaker ) )
@@ -50,6 +57,7 @@ function speakerToHTML( $speaker )
         $speaker = getTableEntry( 'speakers', 'first_name,last_name', $speaker );
     }
 
+    // Get name of the speaker.
     $name = array( );
     foreach( explode( ',', 'first_name,middle_name,last_name' ) as $k )
         if( $speaker[ $k ] )
@@ -57,6 +65,7 @@ function speakerToHTML( $speaker )
 
     $name = implode( ' ', $name );
 
+    // Start preparing speaker HTML.
     $html = $name;
 
     // If there is url. create a clickable link.
@@ -1166,6 +1175,7 @@ function talkToHTML( $talk, $with_picture = false )
     $speaker = $talk[ 'speaker' ] ;
     $hostEmail = $talk[ 'host' ];
 
+    // Either NCBS or InSTEM.
     $hostInstitite = emailInstitute( $hostEmail );
 
     // Get its events for venue and date.

@@ -22,6 +22,16 @@ function feedDate( $date )
     return humanReadableDate( $date );
 }
 
+function todayTomorrow( $date, $venue )
+{
+    if( strtotime( $date ) == strtotime( 'today' ) )
+        return "Today @ $venue";
+    else if( strtotime( $date ) <= (strtotime( 'today' ) + 24 * 3600 ) )
+        return "Tomorrow @ $venue";
+
+    return "@ $venue";
+}
+
 $events = getPublicEvents( 'today', 'VALID', 60 );
 
 $feed =  '<rss version="2.0">
@@ -37,17 +47,23 @@ foreach( $events as $e )
             continue;
 
     $feed .= "<item>";
-    $feed .= "<title>" . $e[ 'title'] . "</title>";
+
+    $date =  feedDate( $e[ 'date' ] );
+
+    $feed .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
+                    $e[ 'title'] . "</title>";
 
     $feed .= "<link> https://ncbs.res.in/hippo/events.php?date=" . $e['date'] . 
                 "</link>";
+
     $feed .= "<description>" 
                     .  feedDate( $e[ 'date' ] ) . ", " 
                     . humanReadableTime( $e['start_time' ] ) 
                     .  " to " . humanReadableTime( $e[ 'end_time' ] )
                     . ', ' . venueText( $e[ 'venue' ], false )
                     . "</description>";
-    $feed .= "<pubDate> " . date( 'r', strtotime('now') ) . "</pubDate>";
+
+    $feed .= "<pubDate> " . date( 'r', strtotime($e['date'] . ' ' . $e['start_time'] ) ) . "</pubDate>";
     $feed .= "</item>";
 }
 

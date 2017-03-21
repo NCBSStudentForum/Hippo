@@ -5,6 +5,7 @@ include_once 'check_access_permissions.php' ;
 include_once 'tohtml.php' ;
 include_once 'database.php' ;
 include_once 'methods.php';
+include_once 'mail.php';
 
 
 echo userHTML( );
@@ -19,7 +20,7 @@ if( $res )
     if( $_POST[ 'eligible_for_aws' ] == 'YES' )
     {
         $login = $_POST[ 'login' ];
-        $msg .= initUserMsg( $login );
+        $msg = initUserMsg( $login );
         $msg .= "<p>Your name has been added to the list of AWS spakers. 
             If this is a mistake, please contact academic office </p>";
         $subject = "Your name has been added to AWS list";

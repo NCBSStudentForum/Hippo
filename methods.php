@@ -897,10 +897,10 @@ function verifyRequest( $request )
         return "You can not book more than 60 days in advance";
     }
 
-    if( strtotime( $request[ 'date' ] ) < strtotime( 'now' ) )
-    {
-        return "You can not create request in past";
-    }
+    //if( strtotime( $request[ 'date' ]. ' ' . $request[ 'start_time'] ) < strtotime( 'now' ) )
+    //{
+        //return "You can not create request in past";
+    //}
 
     return "OK";
 }

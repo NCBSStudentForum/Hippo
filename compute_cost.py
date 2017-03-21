@@ -28,7 +28,7 @@ def computeCost( currentDate, lastDate, nAWS ):
     else:
         cost = 3 * nyears 
         if nAWS > 1:
-            cost +=  3 * nAWS  * math.exp( - nyears ) 
+            cost +=  (3 * nAWS) ** 1.5  * math.exp( - nyears ) 
 
     return int( 10 * max( 0, cost ))
 

@@ -45,7 +45,7 @@ function mustHaveAnyOfTheseRoles( $roles )
     else
     {
         echo printWarning( "You don't have permission to access this page" );
-        goToPage( "index.php", 0 );
+        goToPage( "index.php", 3 );
         exit( 0 );
     }
 }
@@ -57,7 +57,7 @@ function mustHaveAllOfTheseRoles( $roles )
     else
     {
         echo printWarning( "You don't have permission to access this page" );
-        goToPage( "index.php", 0 );
+        goToPage( "index.php", 3 );
         exit( 0 );
     }
 }

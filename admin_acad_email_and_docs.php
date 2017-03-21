@@ -6,7 +6,7 @@ include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'check_access_permissions.php';
 
-mustHaveAllOfTheseRoles( array('AWS_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
+mustHaveAnyOfTheseRoles( array('AWS_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 

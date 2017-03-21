@@ -28,17 +28,17 @@ echo '<h2>How to book a public talk, lecture or seminar?</h2>';
 
 echo "<ul>
     <li> Keep the image and email id of speaker handy. You can continue without 
-    them also but they are very useful for preparing documents. At least, we'd strongly
-    recommend that you array image of speaker (at least 5cm X 5cm).
+    them also but they are very useful for preparing documents. We strongly
+    recommend that you arrange image of speaker (at least 5cm X 5cm).
     Email of speaker is never  publicly displayed.
     </li>
     <li>
     After login to <a href=\"https://ncbs.res.in/hippo\">Hippo</a> , go to 
-   <tt>Register talk/seminar</tt> to fill details. First
+   <tt>Register talk/seminar</tt> and fill details. First
    section is for speaker, second is for talk. Third (optional) contains 
    scheduling information. If there is already some event on your selected
    date/venue, booking will be ignored but talk will be registered. You can
-   schedule it later by visiting <tt>Manage my talks</tt> link.
+       schedule it later by visiting <tt>Manage my talks</tt> link.
     </li>
 
     <li>
@@ -51,10 +51,8 @@ echo "<ul>
 echo '<h3> Editing/updating/scheduling talks</h3>';
 echo "<ul>
     <li>
-   Go to 'My Home' and click on 'Manage my talks'. You will see al
-l upcoming
-   talks registered by you. You can click on 'edit' button to edit th
-e
+   Go to 'My Home' and click on 'Manage my talks'. You will see all upcoming
+   talks registered by you. You can click on 'edit' button to edit the
    description and title.
     </li>
     <li>
@@ -72,22 +70,21 @@ echo "
 
         <li>
         You will be asked for date, start time, and end time.  And other optional
-        information. click on 'Scan' <button disabled>" . $symbScan . "</button>
-        (Lens icon) to see the 
-        available venues for given date/time.
+        information. click on <button disabled>Show me available venues</button>
+        to see the available venues for given date/time.
         </li>
 
         <li>
         Press <button disabled>" . $symbCheck . "</button> in front of your 
             preferred venue, you will be
-            asked to fill details for your booking. Please make sure you fill it under
+            asked for details of your booking. Please make sure you fill it under
             the right <tt>CLASS</tt> (e.g. <tt>THESIS SEMINAR, LAB MEETING, TALK</tt>
             etc. ).
         </li>
 
         <li>
         Once a request is made, your slot/venue is blocked and an email has been 
-        sent your way. If you are importing NCBS emails into other email accounts 
+        sent your way. If you are importing work emails into other email accounts 
         such as google, do check your spam folder.
         </li>
 

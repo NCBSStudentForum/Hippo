@@ -54,6 +54,8 @@ if( count( $events ) < 1 )
 else
 {
     $group = array( );
+    $userEmail = getLoginEmail(  $events[0][ 'created_by' ] );
+
     foreach( $events as $event )
     {
         $event = explode( '.', $event );
@@ -63,9 +65,7 @@ else
         $eventText = eventToText( $eventInfo );
         array_push( $group, $eventInfo );
 
-        $userEmail = getLoginEmail(  $eventInfo[ 'created_by' ] );
         $eventGroupTitle = $eventInfo[ 'title' ];
-
 
         try {
 
@@ -98,7 +98,9 @@ else
     // Append user email to front.
     $msg = "<p>Dear " . loginToText( $group[0]['created_by' ], true ) . '</p>' . $msg;
 
+    // Name of the admin to append to the email.
     $admin = getLoginEmail( $_SESSION[ 'user' ] );
+
     if( $whatToDo == 'REJECT' && strlen( $_POST[ 'reason' ] ) > 5 )
     {
         $msg .= "<p>Following reason was given by $admin </p>";

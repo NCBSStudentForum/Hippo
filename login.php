@@ -48,7 +48,9 @@ else
     createUserOrUpdateLogin( $ldap, $ldapInfo, $type );
 
     // Update email id.
-    $res = updateTable( 'logins', 'login', 'email', array( 'email' => $email ));
+    $res = updateTable( 'logins', 'login', 'email'
+                , array( 'login' => $ldap, 'email' => $email )
+            );
 
     // If user title is unspecified then redirect him/her to edit user info
     $userInfo = getUserInfo( $ldap );

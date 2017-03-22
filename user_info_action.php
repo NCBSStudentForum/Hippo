@@ -5,13 +5,13 @@ include_once 'database.php';
 include_once 'mail.php';
 include_once 'tohtml.php';
 
-$res = updateTable( "logins", "login"
-    , Array( 
-        "valid_until", "title", "laboffice"
-        , 'joined_on' , 'alternative_email' 
-        , "first_name", "last_name"
-        )
-    , $_POST 
+// Not all login can be queried from ldap. Let user edit everything.
+$res = updateTable( 
+        "logins"
+        , "login"
+        , "valid_until,first_name,last_name,title" . 
+             ",laboffice,joined_on,alternative_email"
+        , $_POST 
     );
 
 if( $res )

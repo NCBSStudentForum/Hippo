@@ -1288,9 +1288,6 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     if( count( $ldapInfo ) > 0 ) 
         $institute = 'NCBS Bangalore';
 
-    //var_dump( $ldapInfo );
-    $email = $_SESSION[ 'email' ];
-
     $stmt->bindValue( ':login', $userid );
     $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));
     $stmt->bindValue( ':fname', __get__( $ldapInfo, "first_name", NULL ));

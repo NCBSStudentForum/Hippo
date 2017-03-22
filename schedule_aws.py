@@ -156,7 +156,7 @@ def computeCost( speaker, slot_date, last_aws ):
         # warning.
         fromToday = (datetime.date.today( ) - last_aws).days
         cost = compute_cost.computeCost( slot_date, last_aws, nAws )
-        print( speaker, slot_date, cost )
+        # print( speaker, slot_date, cost )
         return cost
 
 # From  http://stackoverflow.com/a/3425124/1805129

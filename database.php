@@ -1277,11 +1277,11 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
         $ldapInfo[ 'last_name' ] = '';
 
     $stmt = $db->prepare( 
-       "INSERT INTO logins
+       "INSERT IGNORE INTO logins
         (id, login, first_name, last_name, email, created_on, institute, laboffice) 
             VALUES 
             (:id, :login, :fname, :lname, :email,  NOW(), :institute, :laboffice)
-        ON DUPLICATE KEY UPDATE first_name=:fname, last_name=:lname, email=:email"
+        "
         );
 
     $institute = NULL;

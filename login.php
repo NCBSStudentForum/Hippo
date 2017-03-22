@@ -37,6 +37,7 @@ else
 {
     echo printInfo( "Login successful" );
     imap_close( $conn );
+
     $_SESSION['AUTHENTICATED'] = TRUE;
     $_SESSION['user'] = $ldap;
     $_SESSION['email'] = $email;
@@ -46,13 +47,8 @@ else
     // In any case, create a entry in database.
     createUserOrUpdateLogin( $ldap, $ldapInfo, $type );
 
-    if( !$ldapInfo )
-    {
-        echo printWarning( "Could not query LDAP server" );
-        goToPage( "user.php", 0 );
-        exit( 0 );
-    }
-
+    // Update email id.
+    $res = updateTable( 'logins', 'login', 'email', array( 'email' => $email ));
 
     // If user title is unspecified then redirect him/her to edit user info
     $userInfo = getUserInfo( $ldap );

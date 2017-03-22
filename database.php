@@ -1270,6 +1270,9 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
 {
     global $db;
 
+    if( ! $ldapInfo )
+        return null;
+
     if( $ldapInfo[ 'last_name' ] == 'NA' )
         $ldapInfo[ 'last_name' ] = '';
 
@@ -1372,9 +1375,6 @@ function getLoginEmail( $login )
             $alternativeEmail = __get__( $info, 'alternative_email', '' );
             $res['email'] = __get__( $info, 'email', $alternativeEmail );
         }
-
-        if( ! $res[ 'email' ] )
-            $res[ 'email' ] = $_SESSION[ 'email' ];
     }
 
     return $res['email'];

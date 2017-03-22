@@ -9,7 +9,8 @@ $conf = $_SESSION['conf'];
 $login = $_POST['username'];
 
 // If user use @instem.ncbs.res.in or @ncbs.res.in, ignore it.
-$ldap = explode( '@', $login)[0];
+$ldap = explode( '@', $login);
+$ldap = $ldap[0];
 
 $pass = $_POST['pass'];
 

@@ -54,14 +54,17 @@ if( count( $events ) < 1 )
 else
 {
     $group = array( );
-    $userEmail = getLoginEmail(  $events[0][ 'created_by' ] );
 
     foreach( $events as $event )
     {
         $event = explode( '.', $event );
         $gid = $event[0]; $rid = $event[1];
 
+
+        // Get event info from gid and rid of event as passed to $_POST.
         $eventInfo = getRequestById( $gid, $rid );
+        $userEmail = getLoginEmail(  $eventInfo[ 'created_by' ] );
+
         $eventText = eventToText( $eventInfo );
         array_push( $group, $eventInfo );
 

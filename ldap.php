@@ -51,7 +51,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
         // different keys to make it suitable to pass to other functions as 
         // well.
         if( trim( $i['sn'][0] ) == 'NA' )
-            $i['sn'] = '';
+            $i['sn'][0] = '';
 
         array_push($result
             , array(

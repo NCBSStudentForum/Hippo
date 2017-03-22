@@ -1270,6 +1270,9 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
 {
     global $db;
 
+    if( $ldapInfo[ 'last_name' ] == 'NA' )
+        $ldapInfo[ 'last_name' ] = '';
+
     $stmt = $db->prepare( 
        "INSERT INTO logins
         (id, login, first_name, last_name, email, created_on, institute, laboffice) 
@@ -1283,7 +1286,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
         $institute = 'NCBS Bangalore';
 
     //var_dump( $ldapInfo );
-    $email = $userid . "@" . $type . ".res.in";
+    $email = $_SESSION[ 'email' ];
 
     $stmt->bindValue( ':login', $userid );
     $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));

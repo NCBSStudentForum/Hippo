@@ -1270,8 +1270,6 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
 {
     global $db;
 
-    if( ! $ldapInfo )
-        return null;
 
     if( $ldapInfo[ 'last_name' ] == 'NA' )
         $ldapInfo[ 'last_name' ] = '';
@@ -1292,7 +1290,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));
     $stmt->bindValue( ':fname', __get__( $ldapInfo, "first_name", NULL ));
     $stmt->bindValue( ':lname', __get__( $ldapInfo, "last_name", NULL ));
-    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', $email ));
+    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', $_SESSION['email'] ));
     $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', NULL ));
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );
@@ -1363,7 +1361,7 @@ function getLoginEmail( $login )
     if( strlen( trim($res[ 'email' ]) < 1 ) )
     {
         $info = getUserInfoFromLdap( $login );
-        if( $info && $info['email'] )
+        if( $info && array_key_exists( 'email', $info) && $info['email'] )
         {
             // Update user in database.
             createUserOrUpdateLogin( $login, $info );

@@ -1363,17 +1363,14 @@ function getLoginEmail( $login )
     if( strlen( trim($res[ 'email' ]) < 1 ) )
     {
         $info = getUserInfoFromLdap( $login );
-
-        // Update user in database.
-        createUserOrUpdateLogin( $login, $info );
-
-        if( $info )
+        if( $info && $info['email'] )
         {
+            // Update user in database.
+            createUserOrUpdateLogin( $login, $info );
             $alternativeEmail = __get__( $info, 'alternative_email', '' );
             $res['email'] = __get__( $info, 'email', $alternativeEmail );
         }
     }
-
     return $res['email'];
 }
 

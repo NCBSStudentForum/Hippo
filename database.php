@@ -1365,7 +1365,10 @@ function getLoginEmail( $login )
         createUserOrUpdateLogin( $login, $info );
 
         if( $info )
-            $res['email'] = __get__($info, 'email', $info[ 'alternative_email']);
+        {
+            $alternativeEmail = __get__( $info, 'alternative_email', '' );
+            $res['email'] = __get__( $info, 'email', $alternativeEmail );
+        }
 
         if( ! $res[ 'email' ] )
             $res[ 'email' ] = $_SESSION[ 'email' ];

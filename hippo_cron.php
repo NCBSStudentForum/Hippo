@@ -296,17 +296,20 @@ if( $today >= $startDay && $today <= $endDay )
  */
 {
     $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '1:00 pm' );
-    if( $awayFrom > -1 && $awayFrom < 15 )
+    //$awayFrom = strtotime( 'now' ) - strtotime( '1:00 pm' );
+    //if( $awayFrom > -1 && $awayFrom < 15 )
     {
         echo printInfo( "Checking for recurrent events expiring in 7 days" );
         error_log( "Checking for recurrent events expirings in future" );
         // Get all events which are grouped.
         $groupEvents = getActiveRecurrentEvents( 'today' );
+
         foreach( $groupEvents as $gid => $events )
         {
             $e = end( $events );
             $lastEventOn = $e[ 'date' ];
+
+            echo "<p>Group id $gid, last event $lastEventOn</p>";
 
             $createdBy = $e[ 'created_by' ];
 
@@ -321,20 +324,25 @@ if( $today >= $startDay && $today <= $endDay )
             $cclist = $template[ 'cc' ];
             $title = $e['title'];
 
-            if( strtotime( $today ) == strtotime( $lastEventOn ) + 7 * 24 * 3600 )
+
+            if( strtotime( $today ) == (strtotime( $lastEventOn ) + 7 * 24 * 3600) )
             {
                 $subject = "Your recurrent booking '$title' is expiring in 7 days";
                 echo printInfo( $subject );
                 sendPlainTextEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }
-
-            if( strtotime( $today ) == strtotime( $lastEventOn ) + 1 * 3600 )
+            else if( strtotime( $today ) == (strtotime( $lastEventOn ) + 1 * 3600) )
             {
                 $subject = "Your recurrent booking '$title' is expiring tomorrow";
                 echo printInfo( $subject );
                 sendPlainTextEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
+            }
+            else if( strtotime( $today ) == strtotime( $lastEventOn ) )
+            {
+                $subject = "Your recurrent booking '$title' is expiring today";
+                echo( $subject );
             }
         }
     }

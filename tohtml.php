@@ -909,7 +909,7 @@ function loginToText( $login, $withEmail = true )
     if( is_array( $user) && array_key_exists( 'honorific', $user ) )
         $text = trim( $user[ 'honorific' ] . ' ' . $text );
 
-    return $text;
+    return fixName( $text );
 }
 
 function loginToHTML( $login, $withEmail = true )

@@ -92,9 +92,9 @@ function eventToTex( $event, $talk = null )
         $extra = '\begin{table}[ht!]';
         $extra .= "\begin{tabular}{ll}\n";
         //$extra .= "\\toprule\n";
-        $extra .= 'Host & ' . $talk[ 'host' ] . '\\\\';
+        $extra .= 'Host & ' . fixName( $talk[ 'host' ] ) . '\\\\';
         if( $talk[ 'coordinator' ] )
-            $extra .= 'Coordinator & ' . $talk[ 'coordinator' ] . '\\\\';
+            $extra .= 'Coordinator & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
         //$extra .= '\bottomrule';
         $extra .= '\end{tabular} \end{table}';
         $tex[] = $extra;

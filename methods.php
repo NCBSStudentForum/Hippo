@@ -935,3 +935,18 @@ function emailInstitute( $email, $format = 'html' )
     return $res;
 }
 
+/**
+    * @brief Removed duplicates and turn into UCWord.
+    *
+    * @param $name
+    *
+    * @return 
+ */
+function fixName( $name )
+{
+    $arrName = array_unique( explode( ' ', $name ) );
+    $name = implode( ' ', $arrName );
+    return __ucwords__( $name );
+}
+
+

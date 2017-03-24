@@ -916,15 +916,22 @@ function verifyRequest( $request )
     *
     * @return 
  */
-function emailInstitute( $email )
+function emailInstitute( $email, $format = 'html' )
 {
 
-    $res = 'National Center For Biological Sciences';
-    $res .= ' (TATA INSTITUTE OF FUNDAMENTAL RESEARCH )';
+    $res = 'National Center For Biological Sciences, Bangalore (TIFR Mumbai)';
+
+    if( $format == 'html' )
+        $break = '<br>';
+    else if( $format == 'latex' )
+        $break = '\linebreak ';
+    else
+        $break = '\n';
+
     if( strpos( $email, 'instem.res.in' ) !== false )
-        $res .= '<br> and, Institute for Stem Cell Biology and Regenerative Medicine';
+        $res .= $break . 'Institute for Stem Cell Biology and Regenerative Medicine, Bangalore';
     else if( strpos( $email, 'ccamp.res.in' ) !== false )
-        $res .= '<br> and, Center for Cellular and Molecular Platforms';
+        $res .= $break . 'Center for Cellular and Molecular Platforms, Bangalore';
     return $res;
 }
 

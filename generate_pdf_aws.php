@@ -139,8 +139,8 @@ $tex = array( "\documentclass[]{article}"
     , '\pagestyle{fancy}'
     , '\pagenumbering{gobble}'
     , '\lhead{\textsc{{\color{blue} Annual Work Seminar}}}'
-    , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
-        TATA Institute of Fundamental Research, Mumbai}'
+    //, '\rhead{National Center for Biological Sciences, Bangalore \\linebreak
+        //TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
     , '\usepackage[]{ebgaramond}'
     , '\usepackage[T1]{fontenc}'
@@ -152,6 +152,10 @@ foreach( $awses as $aws )
 {
     $outfile .= '_' . $aws[ 'speaker' ];
     $tex[] = awsToTex( $aws );
+
+    // If speaker has instem id, put InSTEM as well in header.
+    $inst = emailInstitute( getLoginEmail( $aws[ 'speaker' ] ), "latex" );
+    $tex[] .= '\rhead{ \textsc { ' . $inst . '}}';
     $tex[] = '\pagebreak';
 }
 

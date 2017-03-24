@@ -896,7 +896,9 @@ function loginToText( $login, $withEmail = true )
     foreach( explode( ',', 'first_name,middle_name,last_name' ) as $key )
         if( array_key_exists( $key, $user ) )
             array_push( $name, $user[ $key ] );
+
     $text = implode( ' ', $name );
+    $text = fixName( $text );
 
     if( $withEmail )
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
@@ -909,7 +911,7 @@ function loginToText( $login, $withEmail = true )
     if( is_array( $user) && array_key_exists( 'honorific', $user ) )
         $text = trim( $user[ 'honorific' ] . ' ' . $text );
 
-    return fixName( $text );
+    return $text;
 }
 
 function loginToHTML( $login, $withEmail = true )
@@ -938,7 +940,7 @@ function loginToHTML( $login, $withEmail = true )
     if( strlen( trim($text) ) < 1 )
         return $login;
 
-    return $text;
+    return fixName( $text );
 }
 
 /**

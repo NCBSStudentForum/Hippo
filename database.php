@@ -433,6 +433,15 @@ function getEventsOfTalkId( $talkId )
     return $entry;
 }
 
+function getBookingRequestOfTalkId( $talkId )
+{
+    global $db;
+    $entry = getTableEntry( 'bookmyvenue_requests', 'external_id'
+        , array( 'external_id' => "talks.$talkId" ) 
+        );
+    return $entry;
+}
+
 /**
  * @brief It does the following tasks.
  *  1. Move the entruies from upcoming_aws to annual_work_seminars lists.

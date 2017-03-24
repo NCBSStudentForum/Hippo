@@ -889,7 +889,7 @@ function loginToText( $login, $withEmail = true )
         $user = $login;
 
     if( ! $user )
-        return $login;
+        return fixName( $login );
 
     // Return first name + middle name + last name.
     $name = array( );

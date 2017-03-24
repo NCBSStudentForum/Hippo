@@ -950,3 +950,10 @@ function fixName( $name )
 }
 
 
+function talkToEventTitle( $talk )
+{
+    $title = __ucwords__( $talk[ 'class' ] ) . " by " . fixName( $talk[ 'speaker' ] );
+    $title .= " on '" . $talk[ 'title' ] . "'";
+    return $title;
+}
+

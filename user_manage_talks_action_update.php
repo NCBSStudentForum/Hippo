@@ -23,6 +23,29 @@ else if( $_POST[ 'response' ] == 'submit' )
     if( $res )
     {
         echo printInfo( 'Successfully updated entry' );
+        // Now update the related event as wel.
+        $event = getEventsOfTalkId( $_POST[ 'id' ] );
+        $tableName = 'events';
+        if( ! $event )
+        {
+            $event = getBookingRequestOfTalkId( $_POST[ 'id' ] );
+            $tableName = 'bookmyvenue_requests';
+        }
+
+        if( $event )
+        {
+            $res = updateTable( $tableName, 'external_id'
+                            , 'title,description'
+                            , array( 'external_id' => "talks." . $_POST[ 'id' ] 
+                                , 'title' => talkToEventTitle( $_POST )
+                                , 'description' => $_POST[ 'description' ]
+                            )
+                );
+
+            if( $res )
+                echo printInfo( "Successfully updated associtated event" );
+        }
+
         echo goToPage( 'user_manage_talk.php' , 0 );
         exit;
     }

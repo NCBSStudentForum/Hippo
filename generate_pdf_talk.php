@@ -51,6 +51,7 @@ function eventToTex( $event, $talk = null )
         $speaker = $speakerTex;
     }
 
+
     // Header
     $head = '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
@@ -65,6 +66,15 @@ function eventToTex( $event, $talk = null )
     // Put talk class in header.
     if( $talk )
         $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
+
+    // Put institute of host in header as well
+    $inst = emailInstitute( $talk[ 'host' ], "latex" );
+    echo "<pre> $inst </pre>";
+
+    if( $inst )
+        $tex[ ] = '\rhead{\textsc{' . $inst. '}}';
+
+
 
     $tex[] = '\par';
 
@@ -96,7 +106,10 @@ function eventToTex( $event, $talk = null )
 } // Function ends.
 
 
+///////////////////////////////////////////////////////////////////////////////
 // Intialize pdf template.
+//////////////////////////////////////////////////////////////////////////////
+// Institute 
 $tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"

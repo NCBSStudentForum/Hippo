@@ -8,7 +8,7 @@ include_once 'database.php';
 include_once 'check_access_permissions.php';
 require_once './calendar/NCBSCalendar.php';
 
-mustHaveAllOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
+mustHaveAnyOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
 
 ?>
 

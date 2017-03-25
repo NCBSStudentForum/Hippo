@@ -42,7 +42,9 @@ else if( $_POST[ 'response' ] == 'Delete' )
 }
 else
 {
-    $toUpdate = array( 'roles', 'title', 'joined_on', 'eligible_for_aws', 'status' );
+    $toUpdate = array( 'roles', 'title', 'joined_on', 'eligible_for_aws'
+                , 'laboffice',  'status', 'valid_until', 'alternative_email' 
+            );
     $res = updateTable( 'logins', 'login', $toUpdate, $_POST ); 
     if( $res )
     {

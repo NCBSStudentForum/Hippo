@@ -38,7 +38,10 @@ if( ! $default )
 echo '<form method="post" action="admin_add_update_user_submit.php">';
 echo dbTableToHTMLTable(
     'logins', $default
-    , Array( 'roles', 'status', 'title', 'eligible_for_aws', 'joined_on' ) 
+    , Array( 'alternative_email', 'roles', 'status'
+                , 'title', 'eligible_for_aws', 'joined_on'
+                , 'valid_until' , 'laboffice'
+            ) 
     , $buttonVal
     );
 

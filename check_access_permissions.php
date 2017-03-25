@@ -41,7 +41,7 @@ function allOfTheseRoles( $roles )
 function mustHaveAnyOfTheseRoles( $roles )
 {
     if( anyOfTheseRoles( $roles ) ) 
-        return( 0 );
+        return true;
     else
     {
         echo printWarning( "You don't have permission to access this page" );
@@ -53,7 +53,7 @@ function mustHaveAnyOfTheseRoles( $roles )
 function mustHaveAllOfTheseRoles( $roles )
 {
     if( allOfTheseRoles( $roles ) ) 
-        return( 0 );
+        return true;
     else
     {
         echo printWarning( "You don't have permission to access this page" );

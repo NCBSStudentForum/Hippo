@@ -115,6 +115,7 @@ foreach( $thesisSeminars as $ts )
     {
         $nSecs = strtotime( $date ) - strtotime( $login[ 'joined_on' ] );
         $nYears = $nSecs / (365.24 * 24 * 3600 );
+
         // If nYears is more than 15, something is really wrong with this data.
         if( $nYears < 15 )
             $yearsToGraduate[ ] = array( $nYears, 0 );

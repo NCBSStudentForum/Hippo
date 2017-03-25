@@ -90,9 +90,12 @@ $timeSpent = array( );
 foreach( $logins as $login )
 {
     $jDate =  $login[ 'joined_on' ];
+    $endDate = $login[ 'valid_until' ];
+    if( ! $endDate )
+        $endDate = 'today';
     if( $jDate )
     {
-        $nSecs = strtotime( 'today' ) - strtotime( $jDate );
+        $nSecs = strtotime( $endDate ) - strtotime( $jDate );
         $nYears = $nSecs / (365.24 * 24 * 3600 );
         $timeSpent[ ] = array( $nYears, 0 );
     }

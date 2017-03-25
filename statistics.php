@@ -16,7 +16,6 @@ $nPending = 0;
 $nOther = 0;
 $timeForAction = array( );
 
-
 $firstDate = $requests[0]['date'];
 $lastDate = end( $requests )['date'];
 $timeInterval = strtotime( $lastDate ) - strtotime( $firstDate );
@@ -46,8 +45,8 @@ foreach( $requests as $r )
         $time = $time / 3600.0;
         array_push( $timeForAction, array($time, 1) ); 
     }
-
 }
+
 // rate per day.
 $rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
 
@@ -57,15 +56,19 @@ $rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
  */
 $events = getTableEntries( 'events', 'date'
                 , "status='VALID' AND date >= '2017-02-28' AND date < '$upto'" );
+
 $venueUsageTime = array( );
+// How many events, as per class.
+$eventsByClass = array( );
+
 foreach( $events as $e )
 {
     $time = (strtotime( $e[ 'end_time' ] ) - strtotime( $e[ 'start_time' ] ) ) / 3600.0;
     $venue = $e[ 'venue' ];
-    if( ! array_key_exists( $venue, $venueUsageTime ) )
-        $venueUsageTime[ $venue ] = $time;
-    else
-        $venueUsageTime[ $venue ] += $time;
+
+    $venueUsageTime[ $venue ] = __get__( $venueUsageTime, $venue, 0.0 ) + $time;
+    $eventsByClass[ $e[ 'class' ] ] = __get__( $eventsByClass, $e['class'], 0 )
+                                            + 1;
 }
 
 $venues = array_keys( $venueUsageTime );
@@ -73,13 +76,12 @@ $venueUsage = array_values( $venueUsageTime );
 
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
-    <tr> <td>Rate of requests (per day)</td> <td>" 
+    <tr> <td>Rate of booking (# per day)</td> <td>" 
             .   number_format( $rateOfRequests, 2 ) . "</td> </tr>
     <tr> <td>Approved requests</td> <td> $nApproved </td> </tr>
-    <tr> <td>Pending requests</td> <td> $nPending </td> </tr>
     <tr> <td>Rejected requests</td> <td> $nRejected </td> </tr>
+    <tr> <td>Pending requests</td> <td> $nPending </td> </tr>
     <tr> <td>Cancelled by user</td> <td> $nCancelled </td> </tr>
-    <tr> <td>Other</td> <td> $nOther </td> </tr>
     </table>";
 
 ?>
@@ -158,6 +160,25 @@ $(function( ) {
         xAxis : { categories : venues }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
         series: [{ name: 'Venue usage', data: venueUsage, }], 
+    });
+
+});
+</script>
+
+<script type="text/javascript" charset="utf-8">
+$(function( ) { 
+
+    var eventsByClass = <?php echo json_encode( array_values( $eventsByClass) ); ?>;
+    var cls = <?php echo json_encode( array_keys( $eventsByClass) ); ?>;
+
+    Highcharts.chart('events_class', {
+
+        chart : { type : 'column' },
+        title: { text: 'Event distribution by class' },
+        yAxis: { title: { text: 'Number of events' } },
+        xAxis : { categories : cls }, 
+        legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+        series: [{ name: 'Total events by class', data: eventsByClass, }], 
     });
 
 });
@@ -436,6 +457,9 @@ echo $bookingTable;
 
 <h3></h3>
 <div id="venues_plot" style="width:100%; height:400px;"></div>
+
+<h3></h3>
+<div id="events_class" style="width:100%; height:400px;"></div>
 
 <h1>Annual Work Seminars</h1>
 <h3></h3>

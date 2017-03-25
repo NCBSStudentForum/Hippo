@@ -230,11 +230,11 @@ $(function () {
 
     Highcharts.chart('timeSpent', {
         chart: { type: 'column' },
-        title: { text: 'Years spent by students on campus' },
+        title: { text: 'Years spent by students on campus (-1 is incomplete entry)' },
         xAxis: { min : -1, max: 10 },
         yAxis: [{ title: { text: '# Students' } }, ],
         series: [{
-            name: '# Years (-1 is incomplete entry)',
+            name: '# Years ',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,
@@ -290,10 +290,10 @@ $(function () {
     Highcharts.chart('timeToGraduate', {
         chart: { type: 'column' },
         xAxis: { min : -1 },
-        title: { text: 'Years to graduate' },
+        title: { text: 'Years to graduate (-1 is incomplete entry)' },
         yAxis: [{ title: { text: '#Students' } }, ],
         series: [{
-            name: '# Years (-1 is incomplete entry)',
+            name: '# Years ',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,

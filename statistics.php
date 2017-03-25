@@ -96,6 +96,8 @@ foreach( $logins as $login )
         $nYears = $nSecs / (365.24 * 24 * 3600 );
         $timeSpent[ ] = array( $nYears, 0 );
     }
+    else
+        $timeSpent[ ] = array( -1, 0 );
 }
 
 $yearsToGraduate = array( );
@@ -110,8 +112,15 @@ foreach( $thesisSeminars as $ts )
     {
         $nSecs = strtotime( $date ) - strtotime( $login[ 'joined_on' ] );
         $nYears = $nSecs / (365.24 * 24 * 3600 );
-        $yearsToGraduate[ ] = array( $nYears, 0 );
+        // If nYears is more than 15, something is really wrong with this data.
+        if( $nYears < 15 )
+            $yearsToGraduate[ ] = array( $nYears, 0 );
+        else                // Invalid entry
+            $yearsToGraduate[ ] = array( -1, 0 );
+        
     }
+    else
+        $yearsToGraduate[ ] = array( -1, 0 );
 }
 
 
@@ -221,11 +230,11 @@ $(function () {
 
     Highcharts.chart('timeSpent', {
         chart: { type: 'column' },
-        title: { text: 'Years spent by student on campus' },
-        xAxis: { min : 0, max: 10 },
-        yAxis: [{ title: { text: 'Years spent by student on campus' } }, ],
+        title: { text: 'Years spent by students on campus' },
+        xAxis: { min : -1, max: 10 },
+        yAxis: [{ title: { text: '# Students' } }, ],
         series: [{
-            name: '# Students',
+            name: '# Years (-1 is incomplete entry)',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,
@@ -280,10 +289,11 @@ $(function () {
 
     Highcharts.chart('timeToGraduate', {
         chart: { type: 'column' },
+        xAxis: { min : -1 },
         title: { text: 'Years to graduate' },
-        yAxis: [{ title: { text: 'Years spent to graduate' } }, ],
+        yAxis: [{ title: { text: '#Students' } }, ],
         series: [{
-            name: '# Students',
+            name: '# Years (-1 is incomplete entry)',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,
@@ -324,7 +334,7 @@ $(function( ) {
     Highcharts.chart('events_class', {
 
         chart : { type : 'column' },
-        title: { text: 'Event distribution by class' },
+        title: { text: 'Event distribution by categories' },
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },

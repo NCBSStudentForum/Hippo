@@ -2355,5 +2355,21 @@ function getLoginByName( $name )
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
+function getSpeakerByName( $name )
+{
+    global $db;
+    $name = explode( ' ', $name );
+    $fname = $name[ 0 ];
+    $lname = end( $name );
+
+    $mname = '';
+    if( count( $name ) > 2 )
+        $mname = $name[1];
+
+    $res = $db->query( "SELECT * FROM speakers WHERE
+        first_name='$fname' AND middle_name='$mname' AND last_name='$lname'" );
+    return $res->fetch( PDO::FETCH_ASSOC );
+}
+
 ?>
 

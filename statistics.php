@@ -110,7 +110,8 @@ foreach( $thesisSeminars as $ts )
     $id = $ts[ 'id' ];
     $event = getEventsOfTalkId( $id );
     $date = $event[ 'date' ];
-    $login = getLoginByName( $speaker );
+    $speakerInfo = getSpekearByName( $speaker );
+    $login = getTableEntry( 'logins', 'email', $speakerInfo );
     if( $login )
     {
         $nSecs = strtotime( $date ) - strtotime( $login[ 'joined_on' ] );

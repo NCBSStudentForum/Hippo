@@ -2337,5 +2337,23 @@ function getActiveRecurrentEvents( $day )
     return $upcomingRecurrentEvents;
 }
 
+/**
+    * @brief Get login from logins table when name is given.
+    *
+    * @param $name
+    *
+    * @return 
+ */
+function getLoginByName( $name )
+{
+    global $db;
+    $name = explode( ' ', $name );
+    $fname = $name[ 0 ];
+    $lname = end( $name );
+    $res = $db->query( "SELECT * FROM logins WHERE
+        first_name='$fname' AND last_name='$lname'" );
+    return $res->fetch( PDO::FETCH_ASSOC );
+}
+
 ?>
 

@@ -20,7 +20,6 @@ $firstDate = $requests[0]['date'];
 $lastDate = end( $requests )['date'];
 $timeInterval = strtotime( $lastDate ) - strtotime( $firstDate );
 
-
 foreach( $requests as $r )
 {
     if( $r[ 'status' ] == 'PENDING' )
@@ -49,7 +48,6 @@ foreach( $requests as $r )
 
 // rate per day.
 $rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
-
 
 /*
  * Venue usage timne.
@@ -83,6 +81,39 @@ $bookingTable = "<table border='1'>
     <tr> <td>Pending requests</td> <td> $nPending </td> </tr>
     <tr> <td>Cancelled by user</td> <td> $nCancelled </td> </tr>
     </table>";
+
+// Now get all the Thesis Seminar.
+$thesisSeminars = getTableEntries( 'talks', 'class', "class='THESIS SEMINAR'" );
+$logins = getLogins( );
+
+$timeSpent = array( );
+foreach( $logins as $login )
+{
+    $jDate =  $login[ 'joined_on' ];
+    if( $jDate )
+    {
+        $nSecs = strtotime( 'today' ) - strtotime( $jDate );
+        $nYears = $nSecs / (365.24 * 24 * 3600 );
+        $timeSpent[ ] = array( $nYears, 0 );
+    }
+}
+
+$yearsToGraduate = array( );
+foreach( $thesisSeminars as $ts )
+{
+    $speaker = $ts[ 'speaker' ];
+    $id = $ts[ 'id' ];
+    $event = getEventsOfTalkId( $id );
+    $date = $event[ 'date' ];
+    $login = getLoginByName( $speaker );
+    if( $login )
+    {
+        $nSecs = strtotime( $date ) - strtotime( $login[ 'joined_on' ] );
+        $nYears = $nSecs / (365.24 * 24 * 3600 );
+        $yearsToGraduate[ ] = array( $nYears, 0 );
+    }
+}
+
 
 ?>
 
@@ -145,6 +176,125 @@ $(function () {
     });
 });
 </script>
+
+<!-- Plot distribution of years student spend -->
+<script type="text/javascript" charset="utf-8">
+$(function () {
+    
+    var data = <?php echo json_encode( $timeSpent ); ?>;
+
+    /**
+     * Get histogram data out of xy data
+     * @param   {Array} data  Array of tuples [x, y]
+     * @param   {Number} step Resolution for the histogram
+     * @returns {Array}       Histogram data
+     */
+    function histogram(data, step) {
+        var histo = {},
+            x,
+            i,
+            arr = [];
+
+        // Group down
+        for (i = 0; i < data.length; i++) {
+            x = Math.floor(data[i][0] / step) * step;
+            if (!histo[x]) {
+                histo[x] = 0;
+            }
+            histo[x]++;
+        }
+
+        // Make the histo group into an array
+        for (x in histo) {
+            if (histo.hasOwnProperty((x))) {
+                arr.push([parseFloat(x), histo[x]]);
+            }
+        }
+
+        // Finally, sort the array
+        arr.sort(function (a, b) {
+            return a[0] - b[0];
+        });
+
+        return arr;
+    }
+
+    Highcharts.chart('timeSpent', {
+        chart: { type: 'column' },
+        title: { text: 'Years spent by student on campus' },
+        xAxis: { min : 0, max: 10 },
+        yAxis: [{ title: { text: 'Years spent by student on campus' } }, ],
+        series: [{
+            name: '# Students',
+            type: 'column',
+            data: histogram(data, 1),
+            pointPadding: 0,
+            groupPadding: 0,
+            pointPlacement: 'between'
+        },] 
+    });
+});
+</script>
+
+<!-- Plot distribution of years student take to graduate -->
+<script type="text/javascript" charset="utf-8">
+$(function () {
+    
+    var data = <?php echo json_encode( $yearsToGraduate ); ?>;
+
+    /**
+     * Get histogram data out of xy data
+     * @param   {Array} data  Array of tuples [x, y]
+     * @param   {Number} step Resolution for the histogram
+     * @returns {Array}       Histogram data
+     */
+    function histogram(data, step) {
+        var histo = {},
+            x,
+            i,
+            arr = [];
+
+        // Group down
+        for (i = 0; i < data.length; i++) {
+            x = Math.floor(data[i][0] / step) * step;
+            if (!histo[x]) {
+                histo[x] = 0;
+            }
+            histo[x]++;
+        }
+
+        // Make the histo group into an array
+        for (x in histo) {
+            if (histo.hasOwnProperty((x))) {
+                arr.push([parseFloat(x), histo[x]]);
+            }
+        }
+
+        // Finally, sort the array
+        arr.sort(function (a, b) {
+            return a[0] - b[0];
+        });
+
+        return arr;
+    }
+
+    Highcharts.chart('timeToGraduate', {
+        chart: { type: 'column' },
+        title: { text: 'Years to graduate' },
+        yAxis: [{ title: { text: 'Years spent to graduate' } }, ],
+        series: [{
+            name: '# Students',
+            type: 'column',
+            data: histogram(data, 1),
+            pointPadding: 0,
+            groupPadding: 0,
+            pointPlacement: 'between'
+        },] 
+    });
+});
+</script>
+
+
 
 <script type="text/javascript" charset="utf-8">
 $(function( ) { 
@@ -461,7 +611,19 @@ echo $bookingTable;
 <h3></h3>
 <div id="events_class" style="width:100%; height:400px;"></div>
 
-<h1>Annual Work Seminars</h1>
+<h1>Academic statistics </h1>
+
+<p class="warn">
+The goodness of following two histograms depends on the correctness of the joining date
+in my database. The years to graduation is computed by substracting joining 
+date from thesis seminar date. </p>
+
+<h3>Time spent on campus</h3>
+<div id="timeSpent" style="width:100%; height:400px;"></div>
+
+<h3>Years to Graduate</h3>
+<div id="timeToGraduate" style="width:100%; height:400px;"></div>
+
 <h3></h3>
 <div id="container0" style="width:100%; height:400px;"></div>
 

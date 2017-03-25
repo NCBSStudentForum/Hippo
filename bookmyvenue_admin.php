@@ -8,7 +8,7 @@ include_once "database.php";
 include_once "tohtml.php";
 include_once "check_access_permissions.php";
 
-mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
+mustHaveAnyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 

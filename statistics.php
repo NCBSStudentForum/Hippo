@@ -41,7 +41,7 @@ foreach( $requests as $r )
     {
         $time = strtotime( $r['date'] . ' ' . $r[ 'start_time' ] ) 
                     - strtotime( $r['last_modified_on'] );
-        $time = $time / 3600.0;
+        $time = $time / (24 * 3600.0);
         array_push( $timeForAction, array($time, 1) ); 
     }
 }
@@ -110,7 +110,7 @@ foreach( $thesisSeminars as $ts )
     $id = $ts[ 'id' ];
     $event = getEventsOfTalkId( $id );
     $date = $event[ 'date' ];
-    $speakerInfo = getSpekearByName( $speaker );
+    $speakerInfo = getSpeakerByName( $speaker );
     $login = getTableEntry( 'logins', 'email', $speakerInfo );
     if( $login )
     {
@@ -175,12 +175,13 @@ $(function () {
 
     Highcharts.chart('container3', {
         chart: { type: 'column' },
-        title: { text: 'Approval/rejection time - event start time' },
+        title: { text: 'Approval/rejection time - event start time. ' +
+                        ' Negative value means request was approved after event was started. '
+                },
         //xAxis: { min : -10, max: 30 },
         yAxis: [{ title: { text: 'Number of requests' } }, ],
         series: [{
-            name: 'Time taken (in hours). Negative value means request was approved '
-                 + ' after event started.',
+            name: '# Requests',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,

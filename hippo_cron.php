@@ -130,7 +130,7 @@ else if( $today == dbDate( strtotime( 'this sunday' ) ) )
     {
         echo printInfo( "Today is Sunday 7pm. Send out emails for week events." );
         $thisMonday = dbDate( strtotime( 'this monday' ) );
-        $subject = 'Events over this starting ' . humanReadableDate( $today);
+        $subject = 'This week ( ' . humanReadableDate( $thisMonday) . ' ) events ';
 
         $cclist = '';
         $to = 'academic@lists.ncbs.res.in';

@@ -27,6 +27,10 @@ echo '<table class="tasks">
         <td>Generate emails and documents</td>
         <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
+    <tr>
+        <td>Add or update speakers. </td>
+        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+    </tr>
     </table>
     ';
 

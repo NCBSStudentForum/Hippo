@@ -905,6 +905,16 @@ function verifyRequest( $request )
         return $error;
     }
 
+    if( "UNKNOWN" == $request[ 'class' ] )
+    {
+        $error = "
+            You did not select appropriate <tt>CLASS</tt> for your booking
+            request. By default it is set to <tt>UNKNOWN</tt> which is not 
+            acceptable.
+            ";
+        return $error;
+    }
+
     return "OK";
 }
 

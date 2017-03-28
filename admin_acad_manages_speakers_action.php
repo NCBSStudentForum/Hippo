@@ -1,7 +1,7 @@
 <?php
 
 include_once 'check_access_permissions.php';
-mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN', 'ADMIN' ) );
+mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN', 'AWS_ADMIN', 'ADMIN' ) );
 
 include_once 'methods.php';
 include_once 'database.php';

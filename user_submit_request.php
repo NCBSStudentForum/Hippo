@@ -15,6 +15,8 @@ echo alertUser( '
     visible to whole world. For examples, AWS, public talks and lectures 
     need this option set to <tt>YES</tt>.
     ' );
+
+echo alertUser( "Make sure to select proper <tt>CLASS</tt> for your booking." );
     
 $venues = getVenues( $sortby = 'total_events' );
 

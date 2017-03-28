@@ -82,7 +82,9 @@ else
 {
     echo printWarning( "There was an error in request" );
     echo printWarning( $msg );
-    echo goBackToPageLink( "user.php", "Go back" );
+    echo alertUser( "Complete entry is following" );
+    echo arrayToVerticalTableHTML( $_POST, "request" );
+    echo goBackToPageLink( "quickbook.php", "Go back" );
     exit;
 }
 

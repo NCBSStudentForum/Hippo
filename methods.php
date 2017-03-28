@@ -580,15 +580,15 @@ function getThumbnail( $originalImage )
     *
     * @return 
  */
-function getUserPicture( $user, $deafult = 'hippo' )
+function getUserPicture( $user, $default = 'null' )
 {
     //$picPath = __DIR__ . "/data/no_image_available.jpg";
-    $picPath = nullPicPath( $user, $default );
+    $picPath = nullPicPath( );
     if( array_key_exists( 'conf', $_SESSION ) )
     {
         $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.jpg';
         if( ! file_exists( $picPath ) )
-            $picPath = nullPicPath( $user, $default );
+            $picPath = nullPicPath( );
     }
         
     $html ='<img class="login_picture" width="200px"

@@ -1403,10 +1403,10 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
     *
     * @return
  */
-function nullPicPath( )
+function nullPicPath( $default = 'null' )
 {
     $conf = getConf( );
-    return $conf['data']['user_imagedir'] . '/hippo.jpg';
+    return $conf['data']['user_imagedir'] . '/' . $default . '.jpg' ;
 }
 
 function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
@@ -1416,7 +1416,7 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
     $picPath = $conf['data']['user_imagedir'] . '/' . $picName . '.jpg';
     $conf = getConf( );
     if( ! file_exists( $picPath ) )
-        $picPath = $conf['data']['user_imagedir'] . '/hippo.jpg';
+        $picPath = $conf['data']['user_imagedir'] . '/null.jpg';
 
     return showImage( $picPath, $height, $width );
 }

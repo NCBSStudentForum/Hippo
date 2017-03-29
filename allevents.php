@@ -1,3 +1,4 @@
+<meta http-equiv="refresh" content="60">
 <?php
 
 include_once 'header.php';

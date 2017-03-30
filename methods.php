@@ -574,33 +574,38 @@ function getThumbnail( $originalImage )
 
 
 /**
-    * @brief Image of user,
+    * @brief Image of login.
     *
     * @param $user
     *
     * @return 
  */
+function getLoginPicturePath( $login )
+{
+    $picPath = nullPicPath( );
+    $conf = getConf( );
+    $picPath = $conf['data']['user_imagedir'] . '/' . $login . '.jpg';
+    if( ! file_exists( $picPath ) )
+        $picPath = nullPicPath( );
+
+    return $picPath;
+}
+
 function getUserPicture( $user, $default = 'null' )
 {
-    //$picPath = __DIR__ . "/data/no_image_available.jpg";
-    $picPath = nullPicPath( );
-    if( array_key_exists( 'conf', $_SESSION ) )
-    {
-        $picPath = $_SESSION[ 'conf' ]['data']['user_imagedir'] . '/' . $user . '.jpg';
-        if( ! file_exists( $picPath ) )
-            $picPath = nullPicPath( );
-    }
-        
+    $picPath = getLoginPicturePath( $user );
     $html ='<img class="login_picture" width="200px"
         height="auto" src="' . dataURI( $picPath, 'image/jpg' ) . '" >';
 
     return $html;
 }
 
+
 function getSpeakerPicturePath( $speaker )
 {
     $conf = getConf( );
     $datadir = $conf[ 'data' ]['user_imagedir'];
+
     if( is_string( $speaker ) )
         $speaker = splitName( $speaker );
 
@@ -863,13 +868,13 @@ function isPublicEvent( $event )
 function splitName( $name )
 {
     $result = array();
-    $name = preg_replace( '/(Dr|Prof|Mr\w?)\s*/', '', $name );
+    $name = preg_replace( '/^(Dr|Prof|Mr\w?)\s*/', '', $name );
 
     $name = explode( ' ', $name );
     $result[ 'first_name' ] = $name[ 0 ];
     $result[ 'last_name' ] = end( $name );
 
-    if( count( $name ) > 2 )
+    if( count( $name ) == 3 )
         $result[ 'middle_name' ] = $name[1];
 
     return $result;

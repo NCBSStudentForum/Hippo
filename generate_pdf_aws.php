@@ -55,9 +55,7 @@ function awsToTex( $aws )
         $abstract = 'Not disclosed yet!';
 
     // Add user image.
-    $imagefile = getSpeakerPicturePath( $aws['speaker'] );
-    if( ! file_exists( $imagefile ) )
-        $imagefile = nullPicPath( );
+    $imagefile = getLoginPicturePath( $aws['speaker'] );
 
     $imagefile = getThumbnail( $imagefile );
     echo "Low resolution $imagefile";

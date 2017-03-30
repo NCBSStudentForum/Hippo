@@ -50,13 +50,7 @@ function speakerToHTML( $speaker )
     
     if( is_string( $speaker ) )
     {
-        // Remove Dr. Prof. Mr. Mrs. etc from name.
-        $speaker = preg_replace( '/(Dr|Prof|Mr\w?)\s*/', '', $speaker );
-        $speaker = explode( ' ', $speaker );
-        $fname = $speaker[0];
-        $lname = end( $speaker );
-        $speaker[ 'first_name' ] = $fname;
-        $speaker[ 'last_name' ] = $lname;
+        $speaker = splitName( $speaker );
         $speaker = getTableEntry( 'speakers', 'first_name,last_name', $speaker );
     }
 

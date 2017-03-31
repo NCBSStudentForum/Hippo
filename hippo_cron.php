@@ -279,7 +279,7 @@ if( $today >= $startDay && $today <= $endDay )
             $macros = array( 'USER' => getUserInfo( $aws['speaker'] )
                             , 'DATE' => humanReadableDate( $today ) 
                         );
-            $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $data );
+            $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $macros );
 
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );

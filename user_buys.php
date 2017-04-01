@@ -17,17 +17,40 @@ $myBids = getTableEntries(
             , "created_by='$user' AND status='VALID' "
         );
 
+
 $bidsById = array( );
 if( count( $myBids ) > 0 )
 {
     echo ' <h2>My bids </h2> ';
+    echo printInfo( 'Click on <button disabled>' . $symbEdit . '</button> to
+                    change the value of bid or to withdraw. '
+                );
+
     foreach( $myBids as $bid )
     {
         $bidsById[ $bid['item_id' ] ] = $bid;
-        echo arrayToTableHTML( $bid, 'info', ''
-                , 'created_by'
-            );
+
+        echo ' <table border="0">';
+        echo '<tr><td>';
+        echo ' <form action="" method="post" accept-charset="utf-8">';
+        echo arrayToTableHTML( $bid, 'info', '' , 'created_by');
+        echo '</td><td>';
+        echo ' <input type="hidden" name="id" value=" ' . $bid[ 'id' ] . '" />';
+        echo ' <button title="Edit this bid" 
+                    name="response" value="EditBid">' . $symbEdit .' </button> ';
+        echo '</form>';
+        echo '</table>';
     }
+}
+
+// Edit the bid.
+if( 'EditBid' == __get__( $_POST, 'response', '' ) )
+{
+    // Create entry for editing bid.
+    $bidEntry = getTableEntry( 'nilami_bids', 'id', $_POST );
+    echo ' <form action="user_buys_action.php" method="post" accept-charset="utf-8">';
+    echo dbTableToHTMLTable('nilami_bids', $bidEntry, 'bid,status', 'Update Bid');
+    echo '</form>';
 }
 
 echo ' <h2>Items for selling </h2>';
@@ -57,6 +80,7 @@ echo '<table border="0">';
 foreach( $entries as $et )
 {
     echo '<tr><td>';
+
     $et[ 'owner' ] = getLoginEmail( $et[ 'created_by' ] );
     echo arrayToTableHTML( $et, 'info', ''
             , 'last_updated_on,created_by,status'
@@ -71,12 +95,24 @@ foreach( $entries as $et )
     if( array_key_exists( $et['id'], $bidsById ) )
         $extra = 'disabled';
 
-    echo $extra;
-
     echo ' <td> <button name="response" value="bid" ' . $extra . '>Bid</td> </td> ';
     echo '</form>';
 
     echo '</tr>';
+
+    $itemId = $et[ 'id' ];
+    $allBids = getTableEntries( 'nilami_bids', 'bid'
+                    , "item_id='$itemId' AND status='VALID'" 
+                );
+    // Add another row of bids.
+    if( count( $allBids ) > 0 )
+    {
+        echo "<tr>";
+        echo "<td> This item has following bids : ";
+        foreach( $allBids as $bid )
+            echo "$symbRupee " . $bid['bid'] . "(" . $bid[ 'created_by' ] . ') ';
+        echo "</tr>";
+    }
 }
 echo '</table>';
 echo '</div>';

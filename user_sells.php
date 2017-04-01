@@ -40,6 +40,10 @@ if( count( $entries ) > 0 )
 
     echo "<table>";
 
+    echo printInfo( 'Click on <button disabled> ' . $symbEdit . "</button> to " 
+                . "change the status to <tt>SOLD</tt> or to withdraw the item."
+            );
+
     foreach( $entries as $ent )
     {
         echo "<tr><td>";
@@ -52,6 +56,21 @@ if( count( $entries ) > 0 )
         echo '<button name="response" value="Edit">' . $symbEdit . '</td>';
         echo "</td></tr>";
         echo '</form>';
+
+        // Add new row when bid is available.
+        $itemId = $ent[ 'id' ];
+        $allBids = getTableEntries( 'nilami_bids', 'bid'
+                            , "item_id='$itemId' AND status='VALID'" 
+                        );
+        // Add another row of bids.
+        if( count( $allBids ) > 0 )
+        {
+            echo "<tr>";
+            echo "<td> We have following bids : ";
+            foreach( $allBids as $bid )
+                echo "$symbRupee " . $bid['bid'] . "(" . $bid[ 'created_by' ] . ') ';
+            echo "</tr>";
+        }
     }
     echo "</table>";
 

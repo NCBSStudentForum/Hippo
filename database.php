@@ -949,6 +949,20 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
     return fetchEntries( $stmt );
 }
 
+/**
+    * @brief Get number of entries of a given column.
+    *
+    * @param $tablename
+    * @param $column
+    *
+    * @return 
+ */
+function getNumberOfEntries( $tablename, $column = 'id' )
+{
+    global $db;
+    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    return $res->fetch( PDO::FETCH_ASSOC );
+}
 
 /**
     * @brief Sunmit a request for review.

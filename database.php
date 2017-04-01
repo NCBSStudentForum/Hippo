@@ -457,12 +457,14 @@ function initialize( )
             id INT PRIMARY KEY 
             , title VARCHAR(100) NOT NULL
             , type ENUM( 'SHARE', '1BHK', '2BHK', '3BHK', 'STUDIO', 'PALACE' ) NOT NULL
-            , created_by VARCHAR(50) NOT NULL -- Email of owner
-            , created_on DATETIME NOT NULL -- timestamp
             , address VARCHAR( 200 ) NOT NULL
             , description MEDIUMTEXT
             , status ENUM( 'AVAILABLE', 'TAKEN', 'INVALID' ) DEFAULT 'AVAILABLE'
             , owner_contact VARCHAR(200) NOT NULL
+            , rent INT NOT NULL
+            , advance INT NOT NULL DEFAULT '0'
+            , created_by VARCHAR(50) NOT NULL -- Email of owner
+            , created_on DATETIME NOT NULL -- timestamp
             , last_modified_on DATETIME
             )" 
         );

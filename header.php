@@ -173,5 +173,6 @@ $symbWarn = "&#9888";
 $symbCheck = "&#10003";
 $symbSubmit = $symbCheck;
 $symbUpdate = $symbCheck;
+$symbRupee = '&#8377';
 
 ?>

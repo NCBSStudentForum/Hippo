@@ -23,7 +23,7 @@ else                // Everything is fine.
     $filepath = getSpeakerPicturePath( $_POST );
     if( $_FILES[ 'picture' ] )
     {
-        echo "Uploading image";
+        echo "Uploading image ... ";
         uploadImage( $_FILES['picture'], $filepath );
     }
 
@@ -35,7 +35,7 @@ else                // Everything is fine.
     {
         // This entry may be used on public calendar. Putting email anywhere on 
         // public domain is allowed.
-        $speakerText = loginToText( $speaker, $withEmail = False  );
+        $speakerText = loginToText( $speaker, $withEmail = false, $autofix = false );
         $_POST[ 'speaker' ] = $speakerText;
 
         $res2 = addNewTalk( $_POST );

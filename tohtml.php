@@ -891,7 +891,7 @@ function arrayToSelectList( $name, $options
     *
     * @return A string of length.
  */
-function loginToText( $login, $withEmail = true )
+function loginToText( $login, $withEmail = true, $autofix = true )
 {
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
@@ -910,7 +910,9 @@ function loginToText( $login, $withEmail = true )
             array_push( $name, $user[ $key ] );
 
     $text = implode( ' ', $name );
-    $text = fixName( $text );
+
+    if( $autofix )
+        $text = fixName( $text );
 
     if( $withEmail )
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
@@ -1190,6 +1192,7 @@ function talkToHTML( $talk, $with_picture = false )
 {
 
     $speaker = $talk[ 'speaker' ] ;
+
     $hostEmail = $talk[ 'host' ];
 
     // Either NCBS or InSTEM.

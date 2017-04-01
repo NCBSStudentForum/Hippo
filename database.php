@@ -424,7 +424,7 @@ function initialize( )
     // Nilami store 
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS nilami_items (
-            id VARCHAR(20) PRIMARY KEY
+            id INT NOT NULL PRIMARY KEY
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
             , item_name VARCHAR(300) NOT NULL
@@ -433,15 +433,16 @@ function initialize( )
             , status ENUM( 'AVAILABLE', 'SOLD', 'WITHDRAWN' ) DEFAULT 'AVAILABLE'
             , last_updated_on DATETIME 
             , contact_info VARCHAR(20)
+            , tags VARCHAR(100) -- tags must be separated by comma or space.
             , comment VARCHAR(200)
             )" 
         );
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS nilami_bids (
-            id VARCHAR(20) PRIMARY KEY 
+            id INT PRIMARY KEY 
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
-            , item_id VARCHAR(20) NOT NULL
+            , item_id INT NOT NULL
             , bid INT NOT NULL DEFAULT -1 
             , status ENUM( 'VALID', 'WITHDRAWN' ) DEFAULT 'VALID'
             , contact_info VARCHAR(20)

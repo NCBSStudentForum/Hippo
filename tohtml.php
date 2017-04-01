@@ -1156,7 +1156,7 @@ function awsToHTML( $aws, $with_picture = false )
         $html .= "</table>";
     }
 
-    $html .= "<h3>\"$title\" by $speaker </h2>";
+    $html .= "<h1 class=\"aws\">$speaker on '$title' </h1>";
 
     $html .=  '<table class="email" style="width:500px;border:1px dotted">';
     $html .= '

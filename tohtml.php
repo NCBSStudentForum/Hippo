@@ -199,8 +199,10 @@ function requestToShortHTML( $request )
     $html = '<tt>' .  __get__( $request, 'title', '' ) . ' (' . $request['class'] . ')</tt>';
     $html .= '<br>' . $startT . ' to ' . $endT;
     $html .= ' </tt> @ <strong>' . $request['venue'] . '</strong>, ';
-    $html .= '</br><small>Requested by ' . $request['created_by'] . '</small><br/>';
-    $html .= '</br><small>Created on ' . $request['timestamp'] . '</small><br/>';
+    $html .= '</br><small>Requested by ' . $request['created_by'] . '</small>';
+    $html .= '<br><small>Created on: ' . humanReadableDate( $request['timestamp']) .
+                    ' ' . humanReadableTime( $request['timestamp'] ) .
+                    '</small><br/>';
     return $html;
 }
 

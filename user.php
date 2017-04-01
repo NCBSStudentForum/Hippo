@@ -127,6 +127,18 @@ echo '<table class="tasks">
     </form>
     </table>';
 
+// Nilami store.
+echo "<h3>Sell and buy</h3>";
+echo '<table class="tasks">
+   <form action="user_register_talk.php" method="post">
+   <tr>
+       <td> <a href="user_sells.php">Sell</a></td> </td>
+       <td> <a href="user_buy.php">Buy</a></td> </td>
+   </tr>
+   </form>
+   </table>';
+
+
 if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
 , 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) ) 
 )

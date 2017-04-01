@@ -428,10 +428,12 @@ function initialize( )
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
             , item_name VARCHAR(300) NOT NULL
-            , description TEXT 
+            , description MEDIUMTEXT 
             , price INT NOT NULL DEFAULT -1 
             , status ENUM( 'AVAILABLE', 'SOLD', 'WITHDRAWN' ) DEFAULT 'AVAILABLE'
+            , last_updated_on DATETIME 
             , contact_info VARCHAR(20)
+            , comment VARCHAR(200)
             )" 
         );
     $res = $db->query( "
@@ -443,6 +445,7 @@ function initialize( )
             , bid INT NOT NULL DEFAULT -1 
             , status ENUM( 'VALID', 'WITHDRAWN' ) DEFAULT 'VALID'
             , contact_info VARCHAR(20)
+            , FOREIGN KEY (id) REFERENCES nilami_items(id)
             )" 
         );
 

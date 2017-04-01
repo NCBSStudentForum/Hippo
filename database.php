@@ -546,7 +546,10 @@ function getVenueById( $venueid )
 
 function getPendingRequestsOnThisDay( $date )
 {
-    return null;
+    $requests = getTableEntries( 'bookmyvenue_requests', 'date,start_time'
+            , "date='$date' AND status='PENDING'"
+        );
+    return $requests;
 }
 
 // Get all requests which are pending for review.

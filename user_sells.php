@@ -10,6 +10,13 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
 echo userHTML( );
 
+// Create an entry.
+$default = array( 'created_by' => $_SESSION[ 'user' ] 
+                , 'created_on' => dbDateTime( strtotime( 'now' ) )
+                );
+echo dbTableToHTMLTable( 'nilami_items', $default 
+        , 'item_name,description,price,contact_info,comment,tags'
+    );
 
 
 echo goBackToPageLink( "user.php", "Go back" );

@@ -447,6 +447,7 @@ function initialize( )
             , status ENUM( 'VALID', 'WITHDRAWN' ) DEFAULT 'VALID'
             , contact_info VARCHAR(20)
             , FOREIGN KEY (id) REFERENCES nilami_items(id)
+            , UNIQUE KEY (created_by,item_id) 
             )" 
         );
 

@@ -421,6 +421,33 @@ function initialize( )
             ) "
         );
 
+    // Nilami store 
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS nilami_items (
+            id VARCHAR(20) PRIMARY KEY
+            , created_by VARCHAR(50) NOT NULL -- Email of owner
+            , created_on DATETIME NOT NULL -- timestamp
+            , item_name VARCHAR(300) NOT NULL
+            , description TEXT 
+            , price INT NOT NULL DEFAULT -1 
+            , status ENUM( 'AVAILABLE', 'SOLD', 'WITHDRAWN' ) DEFAULT 'AVAILABLE'
+            , contact_info VARCHAR(20)
+            )" 
+        );
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS nilami_bids (
+            id VARCHAR(20) PRIMARY KEY 
+            , created_by VARCHAR(50) NOT NULL -- Email of owner
+            , created_on DATETIME NOT NULL -- timestamp
+            , item_id VARCHAR(20) NOT NULL
+            , bid INT NOT NULL DEFAULT -1 
+            , status ENUM( 'VALID', 'WITHDRAWN' ) DEFAULT 'VALID'
+            , contact_info VARCHAR(20)
+            )" 
+        );
+
+
+
     return $res;
 }
 

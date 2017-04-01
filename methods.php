@@ -159,9 +159,13 @@ function goBackToPageLink( $url, $title = "Go back" )
     *
     * @return 
  */
-function goBack( $default = 'index.php', $delay = 0 )
+function goBack( $default = '', $delay = 0 )
 {
-    $url = __get__( $_SERVER, 'HTTP_REFERER', $default );
+    if( ! $default )
+        $url = __get__( $_SERVER, 'HTTP_REFERER', 'index.php' );
+    else
+        $url = $default;
+
     goToPage( $url, $delay );
 }
 
@@ -982,3 +986,15 @@ function talkToEventTitle( $talk )
     return $title;
 }
 
+/**
+    * @brief Fix tags.
+    *
+    * @param $tags
+    *
+    * @return 
+ */
+function fixTags( $tags )
+{
+    $tags = preg_replace( '/([;]+\s*|[,]+\s*|\s+)/', ',', $tags );
+    return $tags;
+}

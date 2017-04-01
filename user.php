@@ -133,7 +133,7 @@ echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
    <tr>
        <td> <a href="user_sells.php">Sell</a></td> </td>
-       <td> <a href="user_buy.php">Buy</a></td> </td>
+       <td> <a href="user_buys.php">Buy</a></td> </td>
    </tr>
    </form>
    </table>';

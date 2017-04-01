@@ -451,7 +451,41 @@ function initialize( )
             )" 
         );
 
+    // TOLET.
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS apartments (
+            id INT PRIMARY KEY 
+            , title VARCHAR(100) NOT NULL
+            , type ENUM( 'SHARE', '1BHK', '2BHK', '3BHK', 'STUDIO', 'PALACE' ) NOT NULL
+            , created_by VARCHAR(50) NOT NULL -- Email of owner
+            , created_on DATETIME NOT NULL -- timestamp
+            , address VARCHAR( 200 ) NOT NULL
+            , description MEDIUMTEXT
+            , status ENUM( 'AVAILABLE', 'TAKEN', 'INVALID' ) DEFAULT 'AVAILABLE'
+            , owner_contact VARCHAR(200) NOT NULL
+            , last_modified_on DATETIME
+            )" 
+        );
 
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS apartment_comments (
+                id INT PRIMARY KEY AUTO_INCREMENT
+                , login VARCHAR(20)
+                , apartment_id INT NOT NULL
+                , comment VARCHAR(500) NOT NULL
+                , timestamp DATETIME
+            )" 
+        );
+
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS alerts (
+            login VARCHAR(50) NOT NULL
+            , on_table VARCHAR(50) NOT NULL
+            , on_field VARCHAR(50) NOT NULL
+            , value VARCHAR(50) NOT NULL
+            , UNIQUE KEY (login,on_table,on_field,value)
+        )" 
+        );
 
     return $res;
 }

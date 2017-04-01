@@ -68,7 +68,6 @@ $from = dbDate( strtotime( 'now' ) - 30 * 24 * 3600 );
 
 // Get all entries from the nilami items which do not belong to current user. 
 $where = "created_by!='$user' AND status='AVAILABLE' AND created_on='$from'";
-$where = "status='AVAILABLE' AND created_on>'$from'";
 $where .= " AND ( tags LIKE '%$tags%' OR item_name LIKE '%$tags%' ) ";
 $entries = getTableEntries( 'nilami_items', 'created_on DESC' , $where );
 

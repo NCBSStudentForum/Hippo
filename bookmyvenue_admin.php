@@ -51,8 +51,14 @@ foreach( $requests as $r )
     // Hide some buttons to send information to next page.
     $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
     $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
+
+    // If a request is coming from talk, use different background.
+    $color = 'white';
+    if( strpos( $r[ 'external_id'], 'talks.' ) !== false )
+        $color = 'yellow';
+
     $html .= arrayToTableHTML( $r, 'events'
-        , ' '
+        , $color
         ,  'last_modified_on,status,modified_by,timestamp,url,external_id,gid,rid'
     );
     $html .= '</td>';

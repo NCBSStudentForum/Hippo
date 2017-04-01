@@ -44,15 +44,14 @@ echo "<h1> Table of events on $calendarDate </h1>";
 $events = getEventsOn( $defaults['date' ] );
 
 // Get requests are well.
-$requests = getPublicEventsOnThisDay( $defaults[ 'date' ] );
+$requests = getPendingRequestsOnThisDay( $defaults[ 'date' ] );
 
-echo '<table width="250px">';
-echo '<tr>';
 
 $count = 0;
-
 $eventWidth = 150;
 $maxEventsInLine = intval( 900 / $eventWidth );
+echo '<table width="250px">';
+echo '<tr>';
 foreach( $events as $ev )
 {
     if( $count % $maxEventsInLine == 0 )
@@ -66,13 +65,36 @@ foreach( $events as $ev )
     echo "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
     echo eventToShortHTML( $ev );
     echo "</td>";
-
     $count += 1;
 }
-
 echo '</tr>';
 echo '</table>';
 echo '</br>';
+
+echo "<h2>Following booking requests are pending approval </h2>";
+echo printInfo( "NOTE TO SECURITY: Use your dicretion for issuing key for these." );
+$count = 0;
+$eventWidth = 150;
+$maxEventsInLine = intval( 900 / $eventWidth );
+echo '<table width="250px">';
+echo '<tr>';
+foreach( $requests as $ev )
+{
+    if( $count % $maxEventsInLine == 0 )
+        echo "</tr><tr>";
+
+    $background = '';
+    $width = $eventWidth . "px";
+    echo "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
+    echo requestToShortHTML( $ev );
+    echo "</td>";
+    $count += 1;
+}
+echo '</tr>';
+echo '</table>';
+echo '</br>';
+
+
 
 echo closePage( );
 

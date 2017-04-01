@@ -42,6 +42,10 @@ $calendarDate = humanReadableDate( $defaults[ 'date' ] );
 echo "<h1> Table of events on $calendarDate </h1>";
 
 $events = getEventsOn( $defaults['date' ] );
+
+// Get requests are well.
+$requests = getPublicEventsOnThisDay( $defaults[ 'date' ] );
+
 echo '<table width="250px">';
 echo '<tr>';
 

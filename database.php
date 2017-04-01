@@ -544,6 +544,10 @@ function getVenueById( $venueid )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getPendingRequestsOnThisDay( $date )
+{
+    return null;
+}
 
 // Get all requests which are pending for review.
 function getPendingRequestsGroupedByGID( )

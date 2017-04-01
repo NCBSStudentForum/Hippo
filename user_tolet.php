@@ -62,6 +62,55 @@ if( count( $myAlerts ) > 0 )
     echo '</tr></table>';
 }
 
+// Show all apartments.
+echo ' <h2>My TO-LET listing </h2> ';
+$action = 'Add New';
+
+$myApartments = getTableEntries( 'apartments', 'created_on DESC'
+            , "status='AVAILABLE' AND created_by='$user' " 
+        );
+
+echo '<div style="font-size:small;">';
+echo '<table border="0">';
+foreach( $myApartments as $apt )
+{
+    echo '<tr>';
+    echo ' <form method="post" action=""> ';
+    echo '<td>' . arrayToTableHTML( $apt, 'info', ''
+                    , 'status,last_modified_on,created_by'  ) . '</td>';
+    echo ' <td>
+            <button name="response" value="Edit Entry" > ' . $symbEdit . '
+        </button> </td> ';
+    echo '<input type="hidden" name="id" value="' . $apt[ 'id' ] . '" />';
+    echo ' </form> ';
+    echo '</tr>';
+}
+    
+echo '</table>';
+echo '</div>';
+
+
+$default = array(  'created_by' => $_SESSION[ 'user' ]
+        , 'created_on' => dbDateTime( 'now' )
+    );
+
+// If edit button is pressed.
+if( 'Edit Entry' == __get__( $_POST, 'response', '' ) )
+{
+    $default = getTableEntry( 'apartments', 'id', $_POST );
+    $default[ 'last_modified_on' ] = dbDateTime( 'now' );
+    $action = 'Update Entry';
+}
+
+// Fill a new form.
+echo '<div style="font-size:small;">';
+echo ' <form method="post" action="user_tolet_action.php">';
+echo dbTableToHTMLTable( 'apartments', $default 
+        , 'title,type,address,description,owner_contact,rent,advance'
+        , $action
+        );
+echo '</form>';
+echo '</div>';
 
 echo goBackToPageLink( "user.php", "Go back" );
 

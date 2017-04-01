@@ -199,8 +199,10 @@ function requestToShortHTML( $request )
     $html = '<tt>' .  __get__( $request, 'title', '' ) . ' (' . $request['class'] . ')</tt>';
     $html .= '<br>' . $startT . ' to ' . $endT;
     $html .= ' </tt> @ <strong>' . $request['venue'] . '</strong>, ';
-    $html .= '</br><small>Requested by ' . $request['created_by'] . '</small><br/>';
-    $html .= '</br><small>Created on ' . $request['timestamp'] . '</small><br/>';
+    $html .= '</br><small>Requested by ' . $request['created_by'] . '</small>';
+    $html .= '<br><small>Created on: ' . humanReadableDate( $request['timestamp']) .
+                    ' ' . humanReadableTime( $request['timestamp'] ) .
+                    '</small><br/>';
     return $html;
 }
 
@@ -889,7 +891,7 @@ function arrayToSelectList( $name, $options
     *
     * @return A string of length.
  */
-function loginToText( $login, $withEmail = true )
+function loginToText( $login, $withEmail = true, $autofix = true )
 {
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
@@ -908,7 +910,9 @@ function loginToText( $login, $withEmail = true )
             array_push( $name, $user[ $key ] );
 
     $text = implode( ' ', $name );
-    $text = fixName( $text );
+
+    if( $autofix )
+        $text = fixName( $text );
 
     if( $withEmail )
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
@@ -1154,7 +1158,7 @@ function awsToHTML( $aws, $with_picture = false )
         $html .= "</table>";
     }
 
-    $html .= "<h3>\"$title\" by $speaker </h2>";
+    $html .= "<h1 class=\"aws\">$speaker on '$title' </h1>";
 
     $html .=  '<table class="email" style="width:500px;border:1px dotted">';
     $html .= '
@@ -1188,6 +1192,7 @@ function talkToHTML( $talk, $with_picture = false )
 {
 
     $speaker = $talk[ 'speaker' ] ;
+
     $hostEmail = $talk[ 'host' ];
 
     // Either NCBS or InSTEM.

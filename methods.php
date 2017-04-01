@@ -611,11 +611,12 @@ function getSpeakerPicturePath( $speaker )
 
     if( is_array( $speaker ) )
         $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
-            $speaker[ 'last_name' ] . '.jpg' ;
+                    $speaker[ 'last_name' ] . '.jpg' ;
     else
         $filename = $speaker . '.jpg';
 
     $filename = str_replace( ' ', '', $filename );
+
     return $datadir . '/' . $filename;
 }
 
@@ -868,7 +869,7 @@ function isPublicEvent( $event )
 function splitName( $name )
 {
     $result = array();
-    $name = preg_replace( '/^(Dr|Prof|Mr\w?)\s*/', '', $name );
+    $name = preg_replace( '/^(Dr|Prof|Mr|Mrs)\s*/', '', $name );
 
     $name = explode( ' ', $name );
     $result[ 'first_name' ] = $name[ 0 ];

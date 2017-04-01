@@ -5,15 +5,12 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 
-echo "<h2>Browse AWSs of a particular day</h2>";
-
-echo printInfo( "Please select a day (MONDAY) to see the details of annual 
-    work seminars" );
-
 if( strtotime( 'today' ) == strtotime( 'this monday' ) )
     $today = dbDate( 'this monday' );
 else
     $today = dbDate( 'next monday' );
+
+echo "<h2>Annual Work Seminars on " . humanReadableDate( $today ) . " </h2>";
 
 $default = array( 'date' => $today );
 if( $_GET )
@@ -28,7 +25,7 @@ echo '
     <form method="get" action="">
     <table border="0">
         <tr>
-            <td>Select date</td>
+            <td>Select a Monday</td>
             <td><input class="datepicker" type="text" name="date" value="' . 
                     $default[ 'date' ] . '" ></td>
             <td><button type="submit" name="response" 
@@ -39,6 +36,8 @@ echo '
     </table>
     </form>
     ';
+
+echo '<br><br>';
 
 $whichDay = $default[ 'date' ];
 

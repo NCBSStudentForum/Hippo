@@ -56,6 +56,32 @@ if( $_POST[ 'response' ] == 'Update' )
     if( $res )
     {
         echo printInfo( "Successfully updated your item in nilami store" );
+        // Now notify all users who have bid of it.
+        $itemId = $_POST[ 'id' ];
+        $bids = getTableEntries( 'nilami_bids', 'bids'
+                        , "item_id='$itemId' AND status='VALID'"
+                    );
+
+        if( count( $bids ) > 0 )
+        {
+            echo "Notifying the bidder about the status change";
+            foreach( $bids as $bid )
+            {
+                $bidder = $bid[ 'created_by' ];
+                $item = getTableEntry( 'nilami_items', 'id', array( 'id' => $itemId ) );
+
+                $to = getLoginEmail( $bidder );
+                $msg = initUserMsg( $bidder );
+                $subject = 'Some changes have been made to the item you bid for ';
+                $msg .= "<p> The current entry looks like the following </p>";
+                $msg .= arrayToVerticalTableHTML( $item, 'info' );
+                $msg .= "<p>I thought I let you know. </p>";
+
+                sendPlainTextEmail( $msg, $subject, $to );
+            }
+
+        }
+        
         echo goBack( "user_sells.php", 0 );
         exit;
     }

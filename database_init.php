@@ -379,12 +379,12 @@ function initialize( $db  )
             )" 
         );
     $res = $db->query( "
-        CREATE TABLE IF NOT EXISTS nilami_bids (
+        CREATE TABLE IF NOT EXISTS nilami_offer (
             id INT PRIMARY KEY 
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
             , item_id INT NOT NULL
-            , bid INT NOT NULL DEFAULT -1 
+            , offer INT NOT NULL DEFAULT -1 
             , status ENUM( 'VALID', 'WITHDRAWN', 'EXPIRED' ) DEFAULT 'VALID'
             , contact_info VARCHAR(20)
             , FOREIGN KEY (id) REFERENCES nilami_items(id)

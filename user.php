@@ -132,7 +132,7 @@ echo "<h3>Community services</h3>";
 echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
    <tr>
-        <td>Sel or put bids on items available. </td>
+        <td>Put a notification for selling or create an offer. </td>
         <td> <a href="user_sells.php">Sell</a> and <a href="user_buys.php">Buy</a></td>
     </tr><tr>
         <td> You can browse available TO-LET entries.

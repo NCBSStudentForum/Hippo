@@ -6,7 +6,10 @@ include_once "database.php";
 include_once 'tohtml.php';
 include_once 'mail.php';
 include_once 'check_access_permissions.php';
+ ?>
 
+
+<?php
 
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
@@ -28,32 +31,55 @@ if( $_POST[ 'response' ] == 'New Alert' )
 
 
 }
-else if( $_POST[ 'response' ] == 'Add New' ) // Add new apartment
+else if( $_POST[ 'response' ] == 'Add new listing' ) // Add new apartment
 {
     echo printInfo( "Creating a new apartment listing" );
     $aptId = getNumberOfEntries( 'apartments', 'id' );
     $_POST[ 'id' ] = intval( $aptId[ 'id' ] ) + 1;
     $res = insertIntoTable( 'apartments'
-            , 'id,title,type,created_by,created_on,address,description' 
+            , 'id,open_vacancies,type,created_by,created_on,address,description' 
                 . ',owner_contact,rent,advance' 
             , $_POST 
             );
     if( $res )
     {
         echo printInfo( 'A new apartment listing has been added' );
-        echo goBack( 'user_tolet.php', 1 );
-        exit;
+
+        //Now send alerts.
+        $aptType = $_POST[ 'type' ];
+        $alerts = getTableEntries( 'alerts', 'value'
+                , "value='$aptType' AND on_table='apartments' AND on_field='type'"
+            );
+
+        echo printInfo( "Sending alerts to subcriber. Total " . count( $alerts ));
+        foreach( $alerts as $alt )
+        {
+            $subject = 'A new apartment listing has been created';
+            $msg = initUserMsg( $alt['login'] );
+            $to = getLoginEmail( $alt[ 'login' ] );
+
+            $apt = getTableEntry( 'apartments', 'id', $_POST );
+            $msg .= arrayToVerticalTableHTML( $apt, 'info' );
+            $msg .= "<p> You recieved this message because it matches one of the 
+                alert you have created on TO-LET services </p>";
+
+            echo printInfo( "Sending apartment alert to $to " );
+            sendPlainTextEmail( $msg, $subject, $to );
+        }
+
+        //echo goBack( 'user_tolet.php', 1 );
+        //exit;
     }
     else
         echo minionEmbarrassed( 'Failed to insert apartment entry' );
 }
-else if( $_POST[ 'response' ] == 'Update Entry' ) // Update apartment entry.
+else if( $_POST[ 'response' ] == 'Update listing' ) // Update apartment entry.
 {
     echo printInfo( "Updatng apartment listing" );
     $res = updateTable( 'apartments'
                 , 'id' 
-                , 'title,type,created_by,created_on,address,description' 
-                . ',owner_contact,rent,advance' 
+                , 'type,open_vacancies,address,description' 
+                . ',owner_contact,rent,advance,status' 
             , $_POST 
             );
     if( $res )

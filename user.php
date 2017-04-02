@@ -135,10 +135,15 @@ echo '<table class="tasks">
         <td> You can put an item of sell or put bids on items available. </td>
         <td> <a href="user_sells.php">Sell</a> and <a href="user_buys.php">Buy</a></td>
     </tr><tr>
+        <td> You can browse available TO-LET entries.
+        </td>
+       <td> <a href="user_browse_tolet.php">Browse TO-LET list</a></td> </td>
+   </tr>
+    </tr><tr>
         <td>You can create alert so when a new entry is created you recieve an 
             email alert. You can also create an entry avaible for renting.
         </td>
-       <td> <a href="user_tolet.php">TO-LET List</a></td> </td>
+       <td> <a href="user_tolet.php">My TO-LET</a></td> </td>
    </tr>
    </form>
    </table>';

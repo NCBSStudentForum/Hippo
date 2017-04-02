@@ -37,23 +37,16 @@ $user = $_SESSION[ 'user' ];
 
 // All alerts.
 $allAlerts = getTableEntries( 'alerts' );
-
 $count = array( );
 foreach( $allAlerts as $alert )
     $count[ $alert[ 'value' ] ] = 1 + __get__( $count, $alert['value'], 0 );
-
-echo '<strong>Total alerts for <tt>TO-LET</tt> </strong>';
-echo ' <table border="1"> <tr> ';
-foreach( $count as $val => $num )
-    echo " <td> <tt>$val</tt>  $num</td> ";
-echo '</tr> </table>';
 
 $apartmentTypes = array( 'SHARE', '1BHK', '2BHK', '3BHK', 'STUDIO', 'PALACE' );
 $apartmentSelect = arrayToSelectList( 'value', $apartmentTypes );
 
 
 // Create alerts.
-echo " <h2>My alerts</h2> ";
+echo " <h2>My alerts on apartment types</h2> ";
 $where = "login='$user' AND on_table='apartments' AND  on_field='type'";
 $myAlerts = getTableEntries( 'alerts', 'login', $where );
 

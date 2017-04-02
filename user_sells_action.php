@@ -58,7 +58,7 @@ if( $_POST[ 'response' ] == 'Update' )
         echo printInfo( "Successfully updated your item in nilami store" );
         // Now notify all users who have bid of it.
         $itemId = $_POST[ 'id' ];
-        $bids = getTableEntries( 'nilami_bids', 'bids'
+        $bids = getTableEntries( 'nilami_bids', 'bid'
                         , "item_id='$itemId' AND status='VALID'"
                     );
 

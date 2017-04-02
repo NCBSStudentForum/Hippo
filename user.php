@@ -34,7 +34,7 @@ echo '<table class="tasks">';
 echo  '<tr>
         <td>
             Manage course for semester (' . $thisSem . ')
-                <small> You can register/deregister for current courses.
+                <small>Register/deregister for current courses.
         </td>
         <td>
             <a href="user_manages_courses.php">My current courses</a> 
@@ -64,7 +64,7 @@ if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
         <tr>
         <td>
             List of your Annual Work Seminar <br>
-            <small> You can see your previous AWSs and update them. You can check 
+            <small> See your previous AWSs and update them. Check 
             the details about upcoming AWS and provide preferred dates.
            </small>
         </td>
@@ -132,7 +132,7 @@ echo "<h3>Community services</h3>";
 echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
    <tr>
-        <td> You can put an item of sell or put bids on items available. </td>
+        <td>Sel or put bids on items available. </td>
         <td> <a href="user_sells.php">Sell</a> and <a href="user_buys.php">Buy</a></td>
     </tr><tr>
         <td> You can browse available TO-LET entries.
@@ -140,8 +140,8 @@ echo '<table class="tasks">
        <td> <a href="user_browse_tolet.php">Browse TO-LET list</a></td> </td>
    </tr>
     </tr><tr>
-        <td>You can create alert so when a new entry is created you recieve an 
-            email alert. You can also create an entry avaible for renting.
+        <td>Create email-alerts so that when a new entry is created you recieve 
+        notification. Or create a TO-LET entry.
         </td>
        <td> <a href="user_tolet.php">My TO-LET</a></td> </td>
    </tr>

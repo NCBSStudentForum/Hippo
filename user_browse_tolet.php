@@ -35,6 +35,18 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
 echo userHTML( );
 $user = $_SESSION[ 'user' ];
 
+// All alerts.
+$allAlerts = getTableEntries( 'alerts' );
+$count = array( );
+foreach( $allAlerts as $alert )
+    $count[ $alert[ 'value' ] ] = 1 + __get__( $count, $alert['value'], 0 );
+
+echo '<strong>Total alerts for <tt>TO-LET</tt> </strong>';
+echo ' <table border="1"> <tr> ';
+foreach( $count as $val => $num )
+    echo " <td> <tt>$val</tt>  $num</td> ";
+echo '</tr> </table>';
+
 
 // Show all apartments.
 echo ' <h2>All available TO-LET listing </h2> ';

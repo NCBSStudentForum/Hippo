@@ -133,7 +133,8 @@ echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
    <tr>
         <td>Put a notification for selling or create an offer. </td>
-        <td> <a href="user_sells.php">Sell</a> and <a href="user_buys.php">Buy</a></td>
+        <td> <a href="user_sells.php">Sell</a> and 
+             <a href="user_buys.php">Put an offer</a></td>
     </tr><tr>
         <td> You can browse available TO-LET entries.
         </td>

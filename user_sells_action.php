@@ -19,7 +19,7 @@ if( count( explode( ',', $_POST[ 'tags' ] ) ) < 1 )
 }
 
 // Create a new entry.
-if( $_POST[ 'response' ] == 'submit' )
+if( $_POST[ 'response' ] == 'Add' )
 {
     //var_dump( $_POST );
     echo printInfo( "Creating a new entry" );
@@ -87,6 +87,10 @@ if( $_POST[ 'response' ] == 'Update' )
     }
     else
         echo minionEmbarrassed( "Could not update your entry." );
+}
+else
+{
+    echo printInfo( "Unknown response : " . $_POST[ 'response' ] );
 }
 
 

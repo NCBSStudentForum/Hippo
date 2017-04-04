@@ -97,12 +97,17 @@ echo '</form>';
 if( array_key_exists( 'email', $_POST ) )
 {
     // Show emage.
-    if( array_key_exists( 'email', $_POST ) )
+    if( __get__( $_POST, 'email', '' ) )
     {
-        $speaker = $speakersMap[ $_POST['email'] ];
-        $picPath = getSpeakerPicturePath( $speaker );
-        echo showImage( $picPath );
-        echo arrayToVerticalTableHTML( $speaker, 'info' );
+        $speaker = __get__( $speakersMap, $_POST['email'], '' );
+        if( $speaker )
+        {
+            $picPath = getSpeakerPicturePath( $speaker );
+            echo showImage( $picPath );
+            echo arrayToVerticalTableHTML( $speaker, 'info' );
+        }
+        else
+            echo alertUser( "No speaker is found for entry : " . $_POST[ 'email' ] );
     }
 }
 

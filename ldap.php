@@ -19,28 +19,41 @@ function serviceping($host, $port=389, $timeout=1)
     }
 }
 
-function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
+function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in", $ports = "389,18288" )
 {
     $base_dn = 'dc=ncbs,dc=res,dc=in';
-    if( 0 == serviceping( $ldap_ip, 389, 2 ) )
-    {
-        echo "Could not connect to LDAP server. Timeout ... ";
-        return NULL;
-    }
+    $ports = array_map( function( $x) { return intval($x); }, explode(',', $ports ));
 
-    $ds = ldap_connect($ldap_ip);
-    $r = ldap_bind($ds); // or die( "Can't bind to $ldap_ip" );
-    if( ! $r )
+    // Search on all ports.
+    $info = array( 'count' => 0 );
+    foreach( $ports as $port )
     {
-        echo printWarning( "LDAP binding failed. TODO: Ask user to edit details " );
-        return null;
-    }
 
-    $sr = ldap_search($ds, $base_dn, "uid=$ldap");
-    $info = ldap_get_entries($ds, $sr);
+        if( 0 == serviceping( $ldap_ip, $port, 2 ) )
+        {
+            echo alertUser( "Could not connect to $ldap_ip : $port . Timeout ... " );
+            return NULL;
+        }
+
+        $ds = ldap_connect($ldap_ip, $port );
+        $r = ldap_bind($ds); 
+        if( ! $r )
+        {
+            echo printWarning( "LDAP binding failed. TODO: Ask user to edit details " );
+            return null;
+        }
+
+        $sr = ldap_search($ds, $base_dn, "uid=$ldap");
+        $info = ldap_get_entries($ds, $sr);
+
+        if( $info[ 'count' ] > 0  )
+        {
+            echo printInfo( "Got your profile details from $ldap_ip:$port" );
+            break;
+        }
+    }
 
     $result = array();
-
     for( $s=0; $s < $info['count']; $s++)
     {
         $i = $info[$s];

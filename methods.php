@@ -881,6 +881,8 @@ function splitName( $name )
 
     if( count( $name ) == 3 )
         $result[ 'middle_name' ] = $name[1];
+    else
+        $result[ 'middle_name' ] = '';
 
     return $result;
 }

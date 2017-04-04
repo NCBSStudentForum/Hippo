@@ -32,11 +32,13 @@ else if( $_POST['response'] == 'submit' )
 {
     $imgpath = getSpeakerPicturePath( $_POST );
 
-    if( $_FILES && array_key_exists( 'picture', $_FILES ) )
+    if( array_key_exists( 'picture', $_FILES ) && $_FILES[ 'picture' ]['name'] )
+    {
+        echo printInfo( "Uploading speaker image .. " );
         $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
-
-    if( ! $res )
-        echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );
+        if( ! $res )
+            echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );
+    }
 
     $res = null;
     if( $_POST[ 'email' ] )

@@ -96,6 +96,7 @@ if( $default[ 'task' ] == 'This week AWS' )
 
         $macros = array( 
             'DATE' => humanReadableDate( $awses[0]['date'] ) 
+            , 'TIME' => humanReadableTime( strtotime('4:00 pm') )
             ,  'EMAIL_BODY' => $emailHtml
             );
 

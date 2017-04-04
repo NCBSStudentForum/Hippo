@@ -958,7 +958,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     $stmt->bindValue( ':id', __get__( $ldapInfo, "uid", NULL ));
     $stmt->bindValue( ':fname', __get__( $ldapInfo, "first_name", NULL ));
     $stmt->bindValue( ':lname', __get__( $ldapInfo, "last_name", NULL ));
-    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', $_SESSION['email'] ));
+    $stmt->bindValue( ':email', __get__( $ldapInfo, 'email', NULL ));
     $stmt->bindValue( ':laboffice', __get__( $ldapInfo, 'laboffice', NULL ));
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );

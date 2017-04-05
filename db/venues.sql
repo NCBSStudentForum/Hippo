@@ -258,6 +258,18 @@ REPLACE INTO venues (
             , suitable_for_conference, has_skype 
         )
         VALUES ( 
+            'Simon Center Ground Floor', 'Simon Center Ground Floor', 'NCBS'
+            , 'ELC', '0', 'NCBS'
+            , 'MEETING ROOT', '20', 'YES'
+            , 'NO', 'NO' 
+        );
+REPLACE INTO venues (
+            id, name, institute
+            , building_name, floor, location
+            , type, strength , has_projector
+            , suitable_for_conference, has_skype 
+        )
+        VALUES ( 
             'SLC Colonnade', 'SLC Colonnade', 'NCBS'
             , 'SLC', '2', 'NCBS'
             , 'OPEN AIR', '150', 'NO'

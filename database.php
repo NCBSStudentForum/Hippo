@@ -1938,14 +1938,11 @@ function addNewTalk( $data )
  */
 function addOrUpdateSpeaker( $data )
 {
-    global $db;
-    $ret = array( );
     if( __get__( $data, 'id', 0 ) > 0 )
     {
         $speaker = getTableEntry( 'speakers', 'id', $data );
         if( $speaker )
         {
-            $found = true;
             $res = updateTable(
                 'speakers', 'id'
                 , 'honorific,email,first_name,middle_name,last_name,department,institute,homepage'

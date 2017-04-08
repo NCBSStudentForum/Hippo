@@ -65,6 +65,8 @@ $( function() {
             $('#speakers_department').val( speakersDict[ email ]['department'] );
             $('#speakers_institute').val( speakersDict[ email ]['institute'] );
             $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
+            $('#speakers_id').val( speakersDict[ email ]['id'] );
+            $('#talks_speaker_id').val( speakersDict[ email ]['id'] );
         }
     );
     $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
@@ -108,7 +110,7 @@ echo '</td></tr></table>';
 
 echo dbTableToHTMLTable( 'speakers', $speaker 
     , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
-    , '', 'id'
+    , ''
     );
 
 

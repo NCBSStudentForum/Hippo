@@ -806,7 +806,8 @@ function dbTableToHTMLTable( $tablename
         // When the value is readonly. Just send the value as hidden input and
         // display the default value.
         if( $readonly )
-            $val = "<input type=\"hidden\" name=\"$keyName\" value=\"$default\"/>$default";
+            $val = "<input type=\"hidden\" id=\"$inputId\"
+                    name=\"$keyName\" value=\"$default\"/>$default";
 
 
         $html .= "<td>" . $val . "</td>";
@@ -1212,15 +1213,20 @@ function awsToHTML( $aws, $with_picture = false )
 
 }
 
-function speakerName( $speakerArr )
+function speakerName( $speaker )
 {
-    $name = $speakerArr[ 'honorific' ];
-    $name .= ' ' . $speakerArr[ 'first_name' ];
+    if( is_string( $speaker ) )
+        $speaker = getTableEntry( 'speakers', 'id'
+                        , array( 'id' => $speaker )
+                    );
 
-    if( __get__( $speakerArr, 'middle_name', '' ) )
-        $name .= ' ' . $speakerArr[ 'middle_name' ];
+    $name = $speaker[ 'honorific' ];
+    $name .= ' ' . $speaker[ 'first_name' ];
 
-    $name .= ' ' . $speakerArr[ 'last_name' ];
+    if( __get__( $speaker, 'middle_name', '' ) )
+        $name .= ' ' . $speaker[ 'middle_name' ];
+
+    $name .= ' ' . $speaker[ 'last_name' ];
     return $name;
 }
 

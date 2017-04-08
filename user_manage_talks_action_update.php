@@ -20,6 +20,7 @@ else if( $_POST[ 'response' ] == 'submit' )
                 , 'class,host,coordinator,title,description'
                 , $_POST 
             );
+
     if( $res )
     {
         echo printInfo( 'Successfully updated entry' );

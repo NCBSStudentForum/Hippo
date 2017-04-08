@@ -11,12 +11,14 @@ echo userHTML( );
 mustHaveAnyOfTheseRoles( array( 'USER', 'BOOKMYVENUE_ADMIN' ) );
 
 echo printInfo( '
-    Set option <tt>IS PUBLIC EVENT</tt>  to <tt>YES</tt> if it should be
-    visible to whole world. For examples, AWS, public talks and lectures 
-    need this option set to <tt>YES</tt>.
+    To make your event visible on NCBS Google calendar, Set option 
+    <tt>IS PUBLIC EVENT</tt>  to <tt>YES</tt>.
     ' );
 
-echo alertUser( "Make sure to select proper <tt>CLASS</tt> for your booking." );
+echo alertUser(
+    "Make sure to select proper <tt>CLASS</tt> for your booking. Your 
+    request will be rejected if it is filed under wront <tt>CLASS</tt>
+    " );
     
 $venues = getVenues( $sortby = 'total_events' );
 

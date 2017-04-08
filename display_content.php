@@ -18,7 +18,7 @@ function printWarning($msg)
 
 function printInfo( $msg )
 {
-    $info ="<p class=\"info\"><font size=\"4\" >".$msg."<br></font></p>";
+    $info ="<p class=\"info\">".$msg."<br></p>";
     error_log( $msg );
     return $info;
 }

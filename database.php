@@ -24,6 +24,29 @@ $dbChoices = array(
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL'
     );
 
+/**
+    * @brief Return a sorted array out of choices.
+    *
+    * @param $choices
+    * @param $key
+    * @param $default
+    * @param $sorted
+    *
+    * @return 
+ */
+function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorted = true )
+{
+    $choicesSplit = explode( ',', __get__( $choices, $key, '' ) );
+
+    if( $sorted )
+        sort( $choicesSplit );
+
+    // Remove the default one and add the default at the front.
+    $results = array_diff( $choicesSplit, array( $default ) );
+    array_unshift( $results, $default );
+    return $results;
+}
+
 
 class BMVPDO extends PDO 
 {

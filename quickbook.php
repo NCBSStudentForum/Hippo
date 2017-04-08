@@ -29,6 +29,7 @@ $defaults = array(
     );
 
 $external_id = null;
+
 if( array_key_exists( 'external_id', $_GET ) )
 {
     $external_id = $_GET[ 'external_id' ];
@@ -41,12 +42,20 @@ if( array_key_exists( 'external_id', $_GET ) )
     $defaults = array_merge( $defaults, $entry );
 }
 else
-    echo alertUser(
-        'A powerful booking interface is also available 
-        if you need to explore other events/dates/venues 
-        <a href="bookmyvenue_browse.php">TAKE ME THERE</a>
-        '
+{
+    // Display these messages if $_GET is not used.
+    echo '<div style="font-size:x-small">';
+    echo printInfo( 'A powerful booking interface is also available 
+        if you need to explore other events/dates/venues  before booking. 
+        <a href="bookmyvenue_browse.php">TAKE ME THERE</a> ' );
+    echo '</div>';
+
+    echo alertUser( 
+        'NOTICE: This interface is not for booking talks/seminar. 
+        Please use <a href="user_register_talk.php">this interface</a>
+            '
         );
+}
 
 // Since we come back to this page again and again, we reuse the previous values 
 // provided by user.

@@ -56,6 +56,15 @@ else if( $_POST['response'] == 'submit' )
                         'department,homepage,institute'
                     , $_POST
                 );
+
+        // Update all talks speaker entries.
+        $sid = $_POST[ 'id' ];
+        $res = updateTable( 'talks', 'speaker_id', 'speaker'
+            , array( 'speaker_id' => $sid, 'speaker' => speakerName( $sid ) )
+            );
+        if( $res )
+            echo printInfo( " .. updated related talks as well " );
+        
     }
     else
     {

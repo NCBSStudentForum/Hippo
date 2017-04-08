@@ -1910,7 +1910,7 @@ function addNewTalk( $data )
 
     $data[ 'id' ] = $id;
     $res = insertIntoTable( 'talks'
-        , 'id,host,class,coordinator,title,speaker,description,created_by,created_on'
+        , 'id,host,class,coordinator,title,speaker,speaker_id,description,created_by,created_on'
         , $data ); 
 
     // Return the id of talk.
@@ -1930,32 +1930,33 @@ function addNewTalk( $data )
 function addOrUpdateSpeaker( $data )
 {
     global $db;
-    $email = $data['email'];
     $ret = array( );
-
-    if( $email )
+    if( __get__( $data, 'id', 0 ) > 0 )
     {
-        $speaker = getTableEntry( 'speakers', 'email', array('email' => $email));
+        $speaker = getTableEntry( 'speakers', 'id', $data );
         if( $speaker )
         {
             $found = true;
-            $res = updateTable( 'speakers'
-                , 'email,first_name,last_name'
-                , 'honorific,first_name,middle_name,last_name,department,institute,homepage'
+            $res = updateTable(
+                'speakers', 'id'
+                , 'honorific,email,first_name,middle_name,last_name,department,institute,homepage'
                 , $data 
             );
-
-            $ret[ 'email' ] = $speaker[ 'email' ];
-            return getTableEntry( 'speakers', 'email', $speaker) ;
+            return getTableEntry( 'speakers', 'id', $speaker) ;
         }
     }
 
     // If we are here, then speaker is not found. Construct a new id.
+    $res = getNumberOfEntries( 'speakers', 'id' );
+    $numRows = intval( __get__( $res, 'id', 0 ) );
+    $data[ 'id' ] = $numRows + 1;
     $res = insertIntoTable( 'speakers'
-        , 'email,honorific,first_name,middle_name,last_name,department,institute,homepage'
+        , 'id,email,honorific,first_name,middle_name,last_name,'
+            . 'department,institute,homepage'
         , $data 
         );
-    return getTableEntry( 'speakers', 'first_name,last_name', $data );
+
+    return getTableEntry( 'speakers', 'email,first_name,middle_name,last_name', $data );
 }
 
 function getCourseName( $cid )

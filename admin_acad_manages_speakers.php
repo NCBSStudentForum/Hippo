@@ -2,6 +2,7 @@
 
 include_once 'header.php';
 include_once 'check_access_permissions.php';
+
 mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
 
 include_once 'database.php';
@@ -133,7 +134,7 @@ echo '</td></tr></table>';
 
 echo dbTableToHTMLTable( 'speakers', $speaker 
     , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
-    , 'submit', 'id'
+    , 'submit'
     );
 echo '<button title="Delete this entry" type="submit" onclick="AreYouSure(this)"
     name="response" value="Delete">' . $symbDelete .

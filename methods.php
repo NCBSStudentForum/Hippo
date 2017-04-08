@@ -618,7 +618,7 @@ function getSpeakerPicturePath( $speaker )
         // If image exists by speaker id then return that else go back to old 
         // model where emails are saved by name of the speaker.
         if( __get__( $speaker, 'id', '' ) )
-            return $filenameById;
+            return $datadir . '/' . $speaker[ 'id' ] . '.jpg';
 
         $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
                     $speaker[ 'last_name' ] . '.jpg' ;
@@ -630,6 +630,10 @@ function getSpeakerPicturePath( $speaker )
     return $datadir . '/' . $filename;
 }
 
+function getSpeakerPicturePathById( $id )
+{
+    return getSpeakerPicturePath( array( "id" => $id ) );
+}
 
 /**
     * @brief Reschedule AWS.

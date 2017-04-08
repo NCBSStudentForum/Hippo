@@ -48,7 +48,8 @@ foreach( $upcomingTalks as $t )
     // Outer table
     echo '<table><tr><td>';
     // Get image of speaker if available.
-    echo inlineImageOfSpeaker( $t['speaker'], $height = '100px', $width = '100px' );
+
+    echo inlineImageOfSpeaker( $t['speaker_id'], $height = '100px', $width = '100px' );
     echo '</td><td>';
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';

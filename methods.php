@@ -618,11 +618,7 @@ function getSpeakerPicturePath( $speaker )
         // If image exists by speaker id then return that else go back to old 
         // model where emails are saved by name of the speaker.
         if( __get__( $speaker, 'id', '' ) )
-        {
-            $filenameById = $datadir . '/' . $speaker[ 'id' ] . '.jpg';
-            if( file_exists( $filenameById ) )
-                return $filenameById;
-        }
+            return $filenameById;
 
         $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
                     $speaker[ 'last_name' ] . '.jpg' ;

@@ -591,7 +591,7 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
 function getNumberOfEntries( $tablename, $column = 'id' )
 {
     global $db;
-    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    $res = $db->query( "SELECT COUNT($column) AS $column FROM $tablename" );
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
@@ -1956,7 +1956,7 @@ function addOrUpdateSpeaker( $data )
         , $data 
         );
 
-    return getTableEntry( 'speakers', 'email,first_name,middle_name,last_name', $data );
+    return getTableEntry( 'speakers', 'id', $data );
 }
 
 function getCourseName( $cid )

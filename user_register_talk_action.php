@@ -22,16 +22,16 @@ if( ! ( $_POST['first_name']  && $_POST[ 'institute' ] && $_POST[ 'title' ]
 }
 else                // Everything is fine.
 {
-    $filepath = getSpeakerPicturePath( $_POST );
+    // Insert the speaker into table. if it already exists, just update.
+    $speaker = addOrUpdateSpeaker( $_POST );
+    $filepath = getSpeakerPicturePath( $speaker );
+
     if( $_FILES[ 'picture' ] )
     {
-        echo "Uploading image ... ";
+        echo "Uploading image ( $filepath ) ... ";
         uploadImage( $_FILES['picture'], $filepath );
     }
 
-    // Insert the speaker into table. if it already exists, just update the 
-    // values.
-    $speaker = addOrUpdateSpeaker( $_POST );
 
     if( $speaker )  // Sepeaker is successfully updated. Move on.
     {
@@ -39,7 +39,6 @@ else                // Everything is fine.
         // public domain is allowed.
         $speakerText = loginToText( $speaker, $withEmail = false, $autofix = false );
         $_POST[ 'speaker' ] = $speakerText;
-
         $res2 = addNewTalk( $_POST );
 
         if( $res2 )

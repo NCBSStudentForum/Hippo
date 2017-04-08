@@ -1423,7 +1423,7 @@ function nullPicPath( $default = 'null' )
     return $conf['data']['user_imagedir'] . '/' . $default . '.jpg' ;
 }
 
-function inlineImageOfSpeaker( $speakerid, $height = 'auto', $width = 'auto')
+function inlineImageOfSpeaker( $id, $height = 'auto', $width = 'auto')
 {
     $picPath = getSpeakerPicturePathById( $id );
     return showImage( $picPath, $height, $width );

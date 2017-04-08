@@ -632,7 +632,9 @@ function getSpeakerPicturePath( $speaker )
 
 function getSpeakerPicturePathById( $id )
 {
-    return getSpeakerPicturePath( array( "id" => $id ) );
+    $conf = getConf( );
+    $datadir = $conf[ 'data' ]['user_imagedir'];
+    return $datadir . '/' . $id . '.jpg';
 }
 
 /**

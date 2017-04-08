@@ -38,6 +38,37 @@ function fixHTML( $html, $strip_tags = false )
     return $res;
 }
 
+function speakerIdToHTML( $id )
+{
+    $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $id ) );
+
+    // Get name of the speaker.
+    $name = array( );
+    foreach( explode( ',', 'honorific,first_name,middle_name,last_name' ) as $k )
+        if( $speaker[ $k ] )
+            array_push( $name, $speaker[ $k ] );
+
+    $name = implode( ' ', $name );
+
+    // Start preparing speaker HTML.
+    $html = $name;
+
+    // If there is url. create a clickable link.
+    if( $speaker )
+    {
+        if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
+            $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+
+        if( $speaker[ 'department' ] )
+            $html .= "<small><br>" . $speaker[ 'department' ];
+
+        $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
+    }
+
+    return $html;
+
+}
+
 /**
     * @brief Generate SPEAKER HTML with homepage and link.
     *
@@ -1181,6 +1212,18 @@ function awsToHTML( $aws, $with_picture = false )
 
 }
 
+function speakerName( $speakerArr )
+{
+    $name = $speakerArr[ 'honorific' ];
+    $name .= ' ' . $speakerArr[ 'first_name' ];
+
+    if( __get__( $speakerArr, 'middle_name', '' ) )
+        $name .= ' ' . $speakerArr[ 'middle_name' ];
+
+    $name .= ' ' . $speakerArr[ 'last_name' ];
+    return $name;
+}
+
 
 /**
     * @brief Convert an event entry to HTML. 
@@ -1193,7 +1236,10 @@ function awsToHTML( $aws, $with_picture = false )
 function talkToHTML( $talk, $with_picture = false )
 {
 
-    $speaker = $talk[ 'speaker' ] ;
+    $speakerId = $talk[ 'speaker_id' ];
+    $speakerArr = getTableEntry( 'speakers', 'id', array( 'id' => $speakerId ) );
+
+    $speakerName = speakerName( $speakerArr );
 
     $hostEmail = $talk[ 'host' ];
 
@@ -1207,22 +1253,21 @@ function talkToHTML( $talk, $with_picture = false )
     $when = humanReadableDate( $event[ 'date' ] ) . ', ' .
             humanReadableTime( $event[ 'start_time'] );
 
-    $title = __ucwords__($talk[ 'class' ]) . ' by ' . $talk[ 'speaker' ] . " on '"
+    $title = __ucwords__($talk[ 'class' ]) . ' by ' . $speakerName . " on '"
              . $talk[ 'title' ] . "'";
 
     $html = '<div style="width:550px;text-align:justify">';
     $html .= '<table border="0"><tr>';
-    //$html .= '<th colspan="2"><font size="5">' . $talk[ 'title' ] . '</font></th>';
     $html .= '<td colspan="2"><h1>' . $talk[ 'title' ] . '</h1></td>';
     $html .= "</tr><tr>";
 
     if( $with_picture )
     {
-        $imgpath = getSpeakerPicturePath( $speaker );
+        $imgpath = getSpeakerPicturePath( $speakerId );
         $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
     }
 
-    $html .= '<td> <br>' . speakerToHTML( $talk['speaker'] );
+    $html .= '<td> <br>' . speakerIdToHTML( $speakerId );
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )

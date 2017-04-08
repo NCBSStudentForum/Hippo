@@ -440,7 +440,6 @@ p  {
 p.info {
     min-width : 90%;
     max-width : 500px;
-    font-size : x-small;
 }
 
 p.warn {

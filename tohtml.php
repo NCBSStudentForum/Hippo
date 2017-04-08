@@ -652,7 +652,9 @@ function dbTableToHTMLTable( $tablename
             if( array_key_exists( $classKey, $dbChoices ) )
             {
                 $val = "<select name=\"$keyName\">";
-                foreach( explode( ',', $dbChoices[ $classKey ] ) as $v )
+                $choices = getChoicesFromGlobalArray( $dbChoices, $classKey );
+
+                foreach( $choices as $k => $v )
                 {
                     $selected = '';
                     $v = str_replace( "'", "", $v );

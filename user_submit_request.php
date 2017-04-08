@@ -10,7 +10,7 @@ echo userHTML( );
 
 mustHaveAnyOfTheseRoles( array( 'USER', 'BOOKMYVENUE_ADMIN' ) );
 
-echo alertUser( '
+echo printInfo( '
     Set option <tt>IS PUBLIC EVENT</tt>  to <tt>YES</tt> if it should be
     visible to whole world. For examples, AWS, public talks and lectures 
     need this option set to <tt>YES</tt>.

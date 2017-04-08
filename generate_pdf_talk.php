@@ -46,7 +46,7 @@ function eventToTex( $event, $talk = null )
         $desc = fixHTML( $talk[ 'description' ] );
 
         // Get speaker.
-        $speakerHTML = speakerToHTML( $talk['speaker' ] );
+        $speakerHTML = speakerIdToHTML( $talk['speaker_id' ] );
         $speakerTex = html2Tex( $speakerHTML );
         $speaker = $speakerTex;
     }

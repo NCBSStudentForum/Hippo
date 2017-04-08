@@ -591,8 +591,16 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
 function getNumberOfEntries( $tablename, $column = 'id' )
 {
     global $db;
-    $res = $db->query( "SELECT COUNT($column) AS $column FROM $tablename" );
+    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
     return $res->fetch( PDO::FETCH_ASSOC );
+}
+
+function getUniqueFieldValue( $tablename, $column = 'id' )
+{
+    global $db;
+    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return __get__( $res, $column , 0 );
 }
 
 /**
@@ -1237,6 +1245,7 @@ function getTableEntry( $tablename, $whereKeys, $data )
     $where = array( );
     foreach( $whereKeys as $key )
         array_push( $where,  "$key=:$key" );
+
     $where = implode( " AND ", $where );
 
     $query = "SELECT * FROM $tablename WHERE $where";
@@ -1947,9 +1956,9 @@ function addOrUpdateSpeaker( $data )
     }
 
     // If we are here, then speaker is not found. Construct a new id.
-    $res = getNumberOfEntries( 'speakers', 'id' );
-    $numRows = intval( __get__( $res, 'id', 0 ) );
-    $data[ 'id' ] = $numRows + 1;
+    $id = getUniqueFieldValue( 'speakers', 'id' );
+    $uid = intval( $id ) + 1;
+    $data[ 'id' ] = $uid;
     $res = insertIntoTable( 'speakers'
         , 'id,email,honorific,first_name,middle_name,last_name,'
             . 'department,institute,homepage'

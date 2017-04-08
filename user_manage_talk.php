@@ -54,7 +54,13 @@ foreach( $upcomingTalks as $t )
     echo '<form method="post" action="user_manage_talks_action.php">';
     echo '<table border="0">';
     echo '<tr>';
-    echo arrayToTableHTML( $t, 'info', '', 'created_by,status');
+
+    echo '<div style="font:small">';
+    echo arrayToTableHTML( $t, 'info', ''
+                , 'speaker_id,created_by,status'
+            );
+    echo '</div>';
+
     echo '</tr><tr>';
     echo '
         <input type="hidden" name="id" value="' . $t[ 'id' ] . '" />

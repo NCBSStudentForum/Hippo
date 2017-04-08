@@ -18,8 +18,8 @@ else if( $_POST['response'] == 'delete' )
     // We may or may not get email here. Email will be null if autocomplete was 
     // used in previous page. In most cases, user is likely to use autocomplete 
     // feature.
-    if( strlen($_POST[ 'email' ]) > 0 )
-        $res = deleteFromTable( 'speakers', 'email', $_POST );
+    if( strlen($_POST[ 'id' ]) > 0 )
+        $res = deleteFromTable( 'speakers', 'id', $_POST );
     else
         $res = deleteFromTable( 'speakers', 'first_name,last_name,institute', $_POST );
 
@@ -34,17 +34,17 @@ else if( $_POST['response'] == 'submit' )
 
     if( array_key_exists( 'picture', $_FILES ) && $_FILES[ 'picture' ]['name'] )
     {
-        echo printInfo( "Uploading speaker image .. " );
+        echo printInfo( "Uploading speaker image to $imgpath .. " );
         $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
         if( ! $res )
             echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );
     }
 
     $res = null;
-    if( $_POST[ 'email' ] )
-        $whereKey = 'email';
+    if( __get__( $_POST, 'id', 0 ) > 0 )
+        $whereKey = 'id';
     else
-        $whereKey = 'first_name,last_name';
+        $whereKey = 'first_name,middle_name,last_name';
 
     $speaker = getTableEntry( 'speakers', $whereKey, $_POST );
 
@@ -52,7 +52,7 @@ else if( $_POST['response'] == 'submit' )
     {
         // Update the entry
         $res = updateTable( 'speakers', $whereKey
-                    , 'honorific,first_name,middle_name,last_name,' .
+                    , 'honorific,email,first_name,middle_name,last_name,' .
                         'department,homepage,institute'
                     , $_POST
                 );
@@ -60,11 +60,14 @@ else if( $_POST['response'] == 'submit' )
     else
     {
         // Insert a new entry.
+        $speakerId = getUniqueFieldValue( 'speakers', 'id' );
+        $_POST[ 'id' ] = intval( $speakerId ) + 1;
+
         $res = insertIntoTable( 'speakers'
-                    , 'honorific,email,first_name,middle_name,last_name,' .
+                    , 'id,honorific,email,first_name,middle_name,last_name,' .
                         'department,homepage,institute'
                     , $_POST 
-                );
+                    );
     }
 
     if( $res )

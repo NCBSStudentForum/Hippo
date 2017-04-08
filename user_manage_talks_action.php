@@ -86,22 +86,25 @@ else if( $_POST[ 'response' ] == 'delete' )
     if( $res )
     {
         echo printInfo( 'Successfully deleted entry' );
-
         // Now cancel this talk in requests, if there is any.
-        updateTable( 
-            'bookmyvenue_requests', 'external_id', 'status'
-            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
-                    , 'status' => 'CANCELLED' )
+        $res = updateTable( 
+            'bookmyvenue_requests', 'external_id', 'status,last_modified_on'
+            , array( 'external_id' => "talks." . $_POST[ 'id' ] 
+                    , 'status' => 'CANCELLED' 
+                    , 'last_modified_on' => dbDateTime( 'now' )
+                )
             );
 
         // Cancel confirmed event associated with this talk if any.
-        updateTable( 
-            'events', 'external_id', 'status'
-            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
-                    , 'status' => 'CANCELLED' )
+        $res = updateTable( 
+            'events', 'external_id', 'status,last_modified_on'
+            , array( 'external_id' => "talks." . $_POST[ 'id' ] 
+                        , 'status' => 'CANCELLED' 
+                        , 'last_modified_on' => dbDateTime( 'now' )
+                    )
             );
         
-        goBack( "user.php", 1 );
+        goBack( "user_manage_talk.php", 1 );
         exit;
     }
     else

@@ -15,8 +15,6 @@ $faculty = getFaculty( );
 $speakers = getTableEntries( 'speakers' );
 $logins = getTableEntries( 'logins' );
 
-//var_dump( $speakers );
-
 $speakersMap = array( );
 foreach( $speakers as $visitor )
     if( strlen( $visitor[ 'email' ] ) > 0 )

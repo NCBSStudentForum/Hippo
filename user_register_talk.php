@@ -92,12 +92,12 @@ echo '<form method="post" enctype="multipart/form-data"
         action="user_register_talk_action.php">';
 
 echo "<h3>Speaker details</h3>";
-echo alertUser( 
+echo printInfo( 
     "Email id of speaker is desirable. It helps in keeping database clean 
     by avoidling duplicate entries. It also makes autocompletion possible.
     ");
 
-echo printInfo( 
+echo alertUser( 
     "<strong>First name</strong> and <strong>institute</strong> are required 
     fields.  ");
 
@@ -120,12 +120,11 @@ echo dbTableToHTMLTable( 'talks', $talk
     );
 
 echo "<h3>Optionally create a booking request</h3>" ;
-echo printInfo( 
-    "
-    $symbWarn I may not be able to book if there is aleady any pending 
+echo printInfo( "
+    $symbWarn I may not be able to book the venue if there is already a pending 
     booking request at your preferred venue/slot. In any case,
-    you can book later by clicking on <strong>Manage my talks</strong> in 
-    your HOME page.
+    you can book later by clicking on <strong>Manage my talks</strong> in your 
+    HOME page.
     <br />
     "
     );

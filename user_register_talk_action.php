@@ -12,8 +12,10 @@ include_once 'tohtml.php';
 if( ! ( $_POST['first_name']  && $_POST[ 'institute' ] && $_POST[ 'title' ] 
     && $_POST[ 'description' ] ) )
 {
-    echo printInfo( 'Incomplete entry. Required fields: First name, last name, 
-        institute, title and description of talk. ' );
+    echo alertUser( 
+        'Incomplete entry. Required fields: First name, last name, 
+        institute, title and description of talk. '
+        );
     echo arrayToVerticalTableHTML( $_POST, 'info' );
     echo goBackToPageLink( 'user_register_talk.php', 'Go back' );
     exit;

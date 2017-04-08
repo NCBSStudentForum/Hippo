@@ -7,7 +7,7 @@ include_once 'ldap.php';
 // Option values for event/request.
 $dbChoices = array( 
     'bookmyvenue_requests.class' =>
-        'UNKNOWN,TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
+        'UNKNOWN,TALK,INFORMAL TALK' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
@@ -44,7 +44,7 @@ function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorte
     // Remove the default one and add the default at the front.
     $results = array_diff( $choicesSplit, array( $default ) );
     array_unshift( $results, $default );
-    return $results;
+    return array_unique( $results );
 }
 
 

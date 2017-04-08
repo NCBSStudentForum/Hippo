@@ -81,8 +81,9 @@ class BMVPDO extends PDO
 
 // Construct the PDO
 $db = new BMVPDO( "localhost" );
-initialize( $db  );
 
+// And initiaze the database.
+initialize( $db  );
 
 
 function getEventsOfTalkId( $talkId )

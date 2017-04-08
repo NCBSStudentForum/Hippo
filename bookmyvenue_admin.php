@@ -28,6 +28,10 @@ echo '<table class="tasks">
         <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
     <tr>
+        <td>Manage talks and seminars. </td>
+        <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
+    </tr>
+    <tr>
         <td>Add or update speakers. </td>
         <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
     </tr>

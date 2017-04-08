@@ -19,7 +19,8 @@ function initialize( $db  )
     // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
     $res = $db->query( 
         'CREATE TABLE IF NOT EXISTS speakers 
-        ( honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
+        (   id INT NOT NULL PRIMARY KEY
+            , honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
             , email VARCHAR(100) 
             , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
             , middle_name VARCHAR(100)
@@ -69,7 +70,8 @@ function initialize( $db  )
             -- This will be prefixed in title of event. e.g. Thesis Seminar by
             -- , Public Lecture by, seminar by etc.
             , class VARCHAR(20) NOT NULL DEFAULT "TALK"
-            , speaker VARCHAR(100) NOT NULL
+            , speaker VARCHAR(100) NOT NULL -- This can change a little.
+            , speaker_id INT NOT NULL
             , host VARCHAR(100) NOT NULL
             , coordinator VARCHAR(100)
             -- Since this has to be unique key, this cannot be very large.

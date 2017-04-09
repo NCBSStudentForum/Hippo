@@ -610,21 +610,19 @@ function getSpeakerPicturePath( $speaker )
     $conf = getConf( );
     $datadir = $conf[ 'data' ]['user_imagedir'];
 
-    if( is_string( $speaker ) )
+    if( is_int( $speaker ) && intval( $speaker ) > 0 )
+        $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $speaker ) );
+
+    else if( is_string( $speaker ) )
         $speaker = splitName( $speaker );
 
-    if( is_array( $speaker ) )
-    {
-        // If image exists by speaker id then return that else go back to old 
-        // model where emails are saved by name of the speaker.
-        if( __get__( $speaker, 'id', '' ) )
-            return $datadir . '/' . $speaker[ 'id' ] . '.jpg';
+    // If image exists by speaker id then return that else go back to old 
+    // model where emails are saved by name of the speaker.
+    if( intval( __get__( $speaker, 'id', 0 ) )  > 0 )
+        return $datadir . '/' . $speaker[ 'id' ] . '.jpg';
 
-        $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
-                    $speaker[ 'last_name' ] . '.jpg' ;
-    }
-    else
-        $filename = $speaker . '.jpg';
+    $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
+                $speaker[ 'last_name' ] . '.jpg' ;
 
     $filename = str_replace( ' ', '', $filename );
     return $datadir . '/' . $filename;

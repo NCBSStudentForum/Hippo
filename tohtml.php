@@ -47,7 +47,6 @@ function fixHTML( $html, $strip_tags = false )
  */
 function speakerToHTML( $speaker )
 {
-    assert( $speaker, "Empty speaker" );
     if( ! $speaker )
         return alertUser( "Error: Speaker not found" );
 

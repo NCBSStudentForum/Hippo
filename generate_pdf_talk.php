@@ -189,7 +189,9 @@ $outdir = __DIR__ . "/data";
 $texFile = $outdir . '/' . $outfile . ".tex";
 $pdfFile = $outdir . '/' . $outfile . ".pdf";
 
-unlink( $pdfFile );
+if( file_exists( $pdfFile ) )
+    unlink( $pdfFile );
+
 file_put_contents( $texFile,  $TeX );
 $cmd = "pdflatex --output-directory $outdir $texFile";
 if( file_exists( $texFile ) )

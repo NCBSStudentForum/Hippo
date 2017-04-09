@@ -1215,7 +1215,7 @@ function awsToHTML( $aws, $with_picture = false )
 
 function speakerName( $speaker )
 {
-    if( is_string( $speaker ) )
+    if( is_int( $speaker ) )                        // Got an id.
         $speaker = getTableEntry( 'speakers', 'id'
                         , array( 'id' => $speaker )
                     );
@@ -1242,10 +1242,22 @@ function speakerName( $speaker )
 function talkToHTML( $talk, $with_picture = false )
 {
 
-    $speakerId = $talk[ 'speaker_id' ];
-    $speakerArr = getTableEntry( 'speakers', 'id', array( 'id' => $speakerId ) );
+    $speakerId = intval( $talk[ 'speaker_id' ] );
+    // If speaker id is > 0, then use it to fetch the entry. If not use the 
+    // speaker name. There was a design problem in the begining, some speakers 
+    // do not have unique id but only email. This has to be fixed.
+    if( $speakerId > 0 )
+    {
+        $speakerArr = getTableEntry( 'speakers', 'id', array( 'id' => $speakerId ) );
+        $speakerName = speakerName( $speakerId );
+    }
+    else
+    {
+        $speakerArr = getSpeakerByName( $talk[ 'speaker' ] );
+        $speakerName = speakerName( $speakerArr );
+        //echo "<pre> $speakerName </pre>";
+    }
 
-    $speakerName = speakerName( $speakerArr );
 
     $hostEmail = $talk[ 'host' ];
 
@@ -1273,7 +1285,13 @@ function talkToHTML( $talk, $with_picture = false )
         $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
     }
 
-    $html .= '<td> <br>' . speakerIdToHTML( $speakerId );
+    // Speaker info
+    if( $speakerId > 0 )
+        $speakerHMTL = speakerIdToHTML( $speakerId );
+    else
+        $speakerHMTL = speakerToHTML( $speakerArr );
+
+    $html .= '<td> <br>' . $speakerHMTL ;
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )

@@ -38,37 +38,6 @@ function fixHTML( $html, $strip_tags = false )
     return $res;
 }
 
-function speakerIdToHTML( $id )
-{
-    $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $id ) );
-
-    // Get name of the speaker.
-    $name = array( );
-    foreach( explode( ',', 'honorific,first_name,middle_name,last_name' ) as $k )
-        if( $speaker[ $k ] )
-            array_push( $name, $speaker[ $k ] );
-
-    $name = implode( ' ', $name );
-
-    // Start preparing speaker HTML.
-    $html = $name;
-
-    // If there is url. create a clickable link.
-    if( $speaker )
-    {
-        if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
-            $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
-
-        if( $speaker[ 'department' ] )
-            $html .= "<small><br>" . $speaker[ 'department' ];
-
-        $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
-    }
-
-    return $html;
-
-}
-
 /**
     * @brief Generate SPEAKER HTML with homepage and link.
     *
@@ -78,12 +47,9 @@ function speakerIdToHTML( $id )
  */
 function speakerToHTML( $speaker )
 {
-    
-    if( is_string( $speaker ) )
-    {
-        $speaker = splitName( $speaker );
-        $speaker = getTableEntry( 'speakers', 'first_name,last_name', $speaker );
-    }
+    assert( $speaker, "Empty speaker" );
+    if( ! $speaker )
+        return alertUser( "Error: Speaker not found" );
 
     // Get name of the speaker.
     $name = array( );
@@ -110,6 +76,20 @@ function speakerToHTML( $speaker )
 
     return $html;
 }
+
+/**
+    * @brief Convert a speaker to HTML based on its ID. Make sure it is > 0.
+    *
+    * @param $id
+    *
+    * @return 
+ */
+function speakerIdToHTML( $id )
+{
+    $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $id ) );
+    return speakerToHTML( $speaker );
+}
+
 
 /**
     * @brief Summary table for front page.
@@ -1243,6 +1223,7 @@ function talkToHTML( $talk, $with_picture = false )
 {
 
     $speakerId = intval( $talk[ 'speaker_id' ] );
+
     // If speaker id is > 0, then use it to fetch the entry. If not use the 
     // speaker name. There was a design problem in the begining, some speakers 
     // do not have unique id but only email. This has to be fixed.

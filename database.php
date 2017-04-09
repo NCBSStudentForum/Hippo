@@ -2048,16 +2048,22 @@ function getLoginByName( $name )
 function getSpeakerByName( $name )
 {
     global $db;
-    $name = explode( ' ', $name );
-    $fname = $name[ 0 ];
-    $lname = end( $name );
 
-    $mname = '';
-    if( count( $name ) > 2 )
-        $mname = $name[1];
+    $name = splitName( $name );
+    $fname = $name[ 'first_name' ];
+    $mname = $name[ 'middle_name' ];
+    $lname = $name[ 'last_name' ];
 
-    $res = $db->query( "SELECT * FROM speakers WHERE
-        first_name='$fname' AND middle_name='$mname' AND last_name='$lname'" );
+    // WHERE condition.
+    $where = array( "first_name='$fname'" );
+    if( $lname )
+        $where[] =  "last_name='$lname'";
+
+    if( $mname )
+        $where[] = "middle_name='$mname'";
+    $whereExpr = implode( ' AND ', $where );
+
+    $res = $db->query( "SELECT * FROM speakers WHERE $whereExpr " );
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 

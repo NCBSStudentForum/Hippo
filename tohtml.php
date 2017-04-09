@@ -1472,11 +1472,19 @@ function nullPicPath( $default = 'null' )
     return $conf['data']['user_imagedir'] . '/' . $default . '.jpg' ;
 }
 
-function inlineImageOfSpeaker( $id, $height = 'auto', $width = 'auto')
+function inlineImageOfSpeakerId( $id, $height = 'auto', $width = 'auto')
 {
     $picPath = getSpeakerPicturePathById( $id );
     return showImage( $picPath, $height, $width );
 }
+
+function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
+{
+    $picPath = getSpeakerPicturePath( $speaker );
+    return showImage( $picPath, $height, $width );
+}
+
+
 
 function getSlotAtThisTime( $day, $slot_time, $slots = null )
 {

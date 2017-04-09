@@ -37,20 +37,25 @@ foreach( $talks as $t )
 if( count( $upcomingTalks ) < 1 )
     echo alertUser( "There is no upcoming talk/seminar." );
 else
-    echo alertUser( "Following upcoming talks are available." );
+    echo printInfo( "Following upcoming talks are available." );
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 foreach( $upcomingTalks as $t )
 {
     // Outer table
     echo '<table><tr><td>';
+
     // Get image of speaker if available.
-    echo inlineImageOfSpeaker( $t['speaker'], $height = '100px', $width = '100px' );
+    if( intval( $t['speaker_id'] ) > 0 )
+        echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
+    else
+        echo inlineImageOfSpeaker( $t['speaker'], $height = '100px', $width = '100px' );
+
     echo '</td><td>';
     echo '<form method="post" action="admin_acad_manages_talks_action.php">';
     echo '<table border="0">';
     echo '<tr>';
-    echo arrayToTableHTML( $t, 'info', '', '');
+    echo arrayToTableHTML( $t, 'info', '', 'speaker_id');
     echo '</tr><tr>';
     echo '
         <input type="hidden" name="id" value="' . $t[ 'id' ] . '" />

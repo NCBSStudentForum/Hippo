@@ -39,7 +39,7 @@ else if( $_POST[ 'response' ] == 'delete' )
                     , 'status' => 'CANCELLED' )
             );
         
-        goBack( "user.php" );
+        goBack( );
         exit;
     }
     else
@@ -48,7 +48,7 @@ else if( $_POST[ 'response' ] == 'delete' )
 else if( $_POST[ 'response' ] == 'DO_NOTHING' )
 {
     echo printInfo( "User said NO!" );
-    goBack( $default = 'admin_acad.php' );
+    goBack( 'admin_acad.php' );
     exit;
 }
 else if( $_POST[ 'response' ] == 'edit' )

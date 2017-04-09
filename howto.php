@@ -27,10 +27,10 @@ echo '
 echo '<h2>How to book a public talk, lecture or seminar?</h2>';
 
 echo "<ul>
-    <li> Keep the image and email id of speaker handy. You can continue without 
-    them also but they are very useful for preparing documents. We strongly
-    recommend that you arrange image of speaker (at least 5cm X 5cm).
-    Email of speaker is never  publicly displayed.
+    <li> Keep the photo and email id of speaker handy. You can continue without 
+    them but they are very useful for preparing documents. We strongly
+    recommend that you arrange photo and email id of speaker. Email of speaker 
+    is never  publicly displayed.
     </li>
     <li>
     After login to <a href=\"https://ncbs.res.in/hippo\">Hippo</a> , go to 
@@ -38,8 +38,8 @@ echo "<ul>
    section is for speaker, second is for talk. Third (optional) contains 
    scheduling information. If there is already some event on your selected
    date/venue, booking will be ignored but talk will be registered. You can
-       schedule it later by visiting <tt>Manage my talks</tt> link.
-    </li>
+   schedule it later by visiting <tt>Manage my talks</tt> link.
+   </li>
 
     <li>
     If venue is available on given date and time, both talk and venue will be
@@ -61,7 +61,7 @@ echo "<ul>
     
     </ul>";
     
-echo '<h2>How to create a booking request?</h2>';
+echo '<h2>How to create a general booking request?</h2>';
 echo "
     <ul>
         <li>
@@ -85,12 +85,12 @@ echo "
         <li>
         Once a request is made, your slot/venue is blocked and an email has been 
         sent your way. If you are importing work emails into other email accounts 
-        such as google, do check your spam folder.
+        such as google, please  check your spam folder also.
         </li>
 
         <li>
         Wait for someone from Hippo admins to confirm your request.
-        You will also receive confirmation email after approval/disapproval.
+        You will receive confirmation/rejection email after approval/disapproval.
         </li>
 
         <li>
@@ -118,10 +118,50 @@ echo '
 
 echo "<p>All the booked events can be viewed 
     <a target=\"_blank\" 
-    href=\"https://www.ncbs.res.in/hippo/allevents.php\">by clicking here</a>
+    href=\"https://www.ncbs.res.in/hippo/allevents.php\">here</a>
     </p>" ;
 
+echo '<h1> No so frequently asked questions </h1> ';
+echo ' <h2> How AWS schedule is computed? </h2> ';
+echo '
+    The AWS schedule is computed by network-flow methods. For each available slot,
+    we draw an edge from every speaker and put a cost on this edge. The cost is 
+    minimum of the slot is roughly 1 year away from the last date at which speaker 
+    gave her AWS. Now the problem is to select edges such that this cost is minimized 
+    i.e. all speakers give their AWS exactly 1 year after the joining or after their
+    last AWS date. This is the general idea but what we do it more complicated that 
+    this. Following policy is enforced.
+
+    <ul>
+    <li> All Ph.D/Int. PhD/Post.Doc are eligible for AWS. Everyone gets same weightage
+    no matter where they are registered.
+    </li>
+    <li> Int.Phd. gets their fist AWS after 15 months, M.Sc. by research after 18 months (and only 1 ), and  everyone else gets it after 12 months.
+    </li>
+    <li> First 2 AWS are given most weightage i.e. they are most likely to come after
+    an ideal gap of 12-13 months. Later AWS will be come at progressively slower
+    rate (since we have more speakers than slots).
+    </li>
+    <li>
+    No speaker is likely to get more than 5 AWS.
+    </li>
+    <li> The AWS admin can override any of the above and schedule AWS in any arbitrary
+         manner.
+    </li>
+    </ul>
+
+    Prodiving technical details of implementation is beyond the scope of this note. 
+    However following image shows the cost function. The different curve represents
+    the cost function of speaker with different number of given AWSs.
+
+    <img src="compute_cost.py.png" style="width:500px;" >
+
+    ';
+
 echo '</div>';
+
+
+
 echo "<p>TODO .. A lot here </p>";
 
 ?>

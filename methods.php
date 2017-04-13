@@ -332,12 +332,19 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
        return '';
 
    $repeatPat = '';
-   $daypat = str_replace( ",", " ", $daypat );
+   $daypat = trim( str_replace( ",", " ", $daypat ));
+
    $weekpat = str_replace( ",", " ", trim( $weekpat ) );
 
-   $days = array_map( function( $day ) {
-      return date('D', strtotime( $day ) ); }, explode( " ", $daypat )
-   );
+   $daysArr = array( );
+   foreach( explode( " ", $daypat ) as $day )
+       if( strlen( $day ) == 3 )
+           $daysArr[] = $day;
+       else
+           echo alertUser( "Day $day is not 3 letter long. Ignored .. " );
+
+   $days = array_map( function( $day ) { return date('D', strtotime( $day ) ); }
+                            , $daysArr );
 
    $days = implode( "/", $days );
 

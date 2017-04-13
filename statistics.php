@@ -131,67 +131,6 @@ foreach( $thesisSeminars as $ts )
 
 ?>
 
-<!-- Plot here -->
-<script type="text/javascript" charset="utf-8">
-$(function () {
-    
-    var data = <?php echo json_encode( $timeForAction ); ?>;
-
-    /**
-     * Get histogram data out of xy data
-     * @param   {Array} data  Array of tuples [x, y]
-     * @param   {Number} step Resolution for the histogram
-     * @returns {Array}       Histogram data
-     */
-    function histogram(data, step) {
-        var histo = {},
-            x,
-            i,
-            arr = [];
-
-        // Group down
-        for (i = 0; i < data.length; i++) {
-            x = Math.floor(data[i][0] / step) * step;
-            if (!histo[x]) {
-                histo[x] = 0;
-            }
-            histo[x]++;
-        }
-
-        // Make the histo group into an array
-        for (x in histo) {
-            if (histo.hasOwnProperty((x))) {
-                arr.push([parseFloat(x), histo[x]]);
-            }
-        }
-
-        // Finally, sort the array
-        arr.sort(function (a, b) {
-            return a[0] - b[0];
-        });
-
-        return arr;
-    }
-
-    Highcharts.chart('container3', {
-        chart: { type: 'column' },
-        title: { text: 'Approval/rejection time - event start time. ' +
-                        ' Negative value means request was approved after event was started. '
-                },
-        //xAxis: { min : -10, max: 30 },
-        yAxis: [{ title: { text: 'Number of requests' } }, ],
-        series: [{
-            name: '# Requests',
-            type: 'column',
-            data: histogram(data, 1),
-            pointPadding: 0,
-            groupPadding: 0,
-            pointPlacement: 'between'
-        },] 
-    });
-});
-</script>
-
 <!-- Plot distribution of years student spend -->
 <script type="text/javascript" charset="utf-8">
 $(function () {
@@ -613,9 +552,6 @@ $(function () {
 <?php 
 echo $bookingTable;
 ?>
-
-<h3></h3>
-<div id="container3" style="width:100%; height:400px;"></div>
 
 <h1>Venue usage between <?php
     echo humanReadableDate( 'march 01, 2017') ?> 

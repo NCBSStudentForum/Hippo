@@ -332,10 +332,9 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
        return '';
 
    $repeatPat = '';
+
+   // Day pattern.
    $daypat = trim( str_replace( ",", " ", $daypat ));
-
-   $weekpat = str_replace( ",", " ", trim( $weekpat ) );
-
    $daysArr = array( );
    foreach( explode( " ", $daypat ) as $day )
        if( strlen( $day ) == 3 )
@@ -348,9 +347,13 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
 
    $days = implode( "/", $days );
 
-   $weeks = $weekpat;
-   if( strlen( $weeks ) < 1 )
+   // Week pattern.
+   $weekpat = str_replace( ",", " ", trim( $weekpat ) );
+   $weekArr = explode( ' ', $weekpat );
+   if( count( $weekArr ) < 1 )
        $weeks = 'first/second/third/fourth/fifth';
+   else
+       $weeks = implode( '/', $weekArr );
 
      return "$days,$weeks,$durationInMonths";
 }

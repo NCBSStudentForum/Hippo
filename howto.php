@@ -129,7 +129,8 @@ echo "<p>All the booked events can be viewed
     href=\"https://www.ncbs.res.in/hippo/allevents.php\">here</a>
     </p>" ;
 
-echo '<h1> No so frequently asked questions </h1> ';
+echo '<h1> Infrequently asked questions. </h1> ';
+
 echo ' <h2> How is AWS schedule computed? </h2> ';
 echo '
     The AWS schedule is computed by network-flow methods. For each available slot,

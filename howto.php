@@ -24,6 +24,13 @@ echo '
     </ul>
     ' ;
 
+
+echo "<h2>How do I book my/a thesis seminar? </h2>";
+echo "
+    See the section below. While booking, select the talk <tt>CLASS</tt> to 
+    <tt>THESIS SEMINAR </tt>.
+    ";
+
 echo '<h2>How to book a public talk, lecture or seminar?</h2>';
 
 echo "<ul>
@@ -47,6 +54,7 @@ echo "<ul>
     to appropriate mailing lists at appropriate times.
     </li>
     </ul>";
+
 
 echo '<h3> Editing/updating/scheduling talks</h3>';
 echo "<ul>
@@ -122,7 +130,7 @@ echo "<p>All the booked events can be viewed
     </p>" ;
 
 echo '<h1> No so frequently asked questions </h1> ';
-echo ' <h2> How AWS schedule is computed? </h2> ';
+echo ' <h2> How is AWS schedule computed? </h2> ';
 echo '
     The AWS schedule is computed by network-flow methods. For each available slot,
     we draw an edge from every speaker and put a cost on this edge. The cost is 

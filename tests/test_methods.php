@@ -11,7 +11,7 @@ include_once( 'methods.php' );
 //$pat = repeatPatToDays( $pat, '2017-04-11' );
 //var_dump( $pat );
 //print( "\nTest 2 </br> \n" );
-$pat = constructRepeatPattern( "Sun,Wed", "first", "2" );
+$pat = constructRepeatPattern( "Mon,W", "", "2" );
 print_r( $pat );
 print_r( repeatPatToDays( $pat, dbDate('today') ) );
 

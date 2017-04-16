@@ -17,7 +17,11 @@ if( strcasecmp($_POST['response'], 'submit' ) == 0 )
         }
     }
 
-    $res = updateTable( 'events', 'gid'
+    $where = 'gid,eid';
+    if( "Yes" == $_POST['update_all'] )
+        $where = 'gid';
+
+    $res = updateTable( 'events', $where
         , array( 'is_public_event', 'class', 'title', 'description', 'status' )
         , $_POST 
     );

@@ -25,6 +25,12 @@ if( strcasecmp($_POST['response'], 'edit' ) == 0 )
             'status', 'class', 'is_public_event'
             , 'title', 'description'
         ));
+
+    // Let admin select the whole group.
+    echo 'Update all events in this series? 
+        <input type="radio" name="update_all" value="Yes" > Yes
+        <input type="radio" name="update_all" value="No" checked > No
+        ';
     echo "</form>";
 }
 

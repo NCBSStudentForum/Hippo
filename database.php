@@ -2010,7 +2010,8 @@ function getActiveRecurrentEvents( $day )
 
     // We get gid of events which are still valid.
     $res = $db->query( "SELECT gid FROM events WHERE 
-                            date >= '$from' AND status='VALID'" );
+                date >= '$from' AND status='VALID' ORDER BY date" 
+            );
     $gids = fetchEntries( $res );
 
     $upcomingRecurrentEvents = array( );
@@ -2020,6 +2021,9 @@ function getActiveRecurrentEvents( $day )
 
         // Must order by date.
         $gEvents = getTableEntries( 'events', 'date', "gid='$gid'" );
+
+        // Definately there has to be more than 1 event in group to be qualified 
+        // as group event.
         if( count( $gEvents ) > 1 )
             $upcomingRecurrentEvents[ $gid ] = $gEvents;
     }

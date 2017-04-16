@@ -50,10 +50,7 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
         $info = ldap_get_entries($ds, $sr);
 
         if( $info[ 'count' ] > 0  )
-        {
-            echo "Got your profile details from $ldap_ip:$port";
             break;
-        }
     }
 
     $result = array();
@@ -62,12 +59,17 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
         $i = $info[$s];
 
         //var_dump( $i );
-        $laboffice = $i['profilelaboffice'][0];
+        $laboffice = __get__( $i, 'profilelaboffice', array( 'NA') );
+        $joinedOn = __get__( $i, 'profiledateofjoin', array( 'NA' ) );
+
         // We construct an array with ldap entries. Some are dumplicated with 
         // different keys to make it suitable to pass to other functions as 
         // well.
         if( trim( $i['sn'][0] ) == 'NA' )
             $i['sn'][0] = '';
+
+        $profileId = __get__( $i, 'profileidentification', array( -1 ) );
+        $profileidentification = $profileId[0];
 
         array_push($result
             , array(
@@ -75,11 +77,11 @@ function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
                 , "first_name" => $i['givenname'][0]
                 , "lname" => $i['sn'][0]
                 , "last_name" => $i['sn'][0]
-                , "uid" => $i['profileidentification'][0]
-                , "id" => $i['profileidentification'][0]
+                , "uid" => $profileidentification
+                , "id" => $profileidentification
                 , "email" => $i['mail'][0]
-                , "laboffice" => $laboffice
-                , "joined_on" => $i['profiledateofjoin'][0]
+                , "laboffice" => $laboffice[0]
+                , "joined_on" => $joinedOn[0]
             )
         );
     }

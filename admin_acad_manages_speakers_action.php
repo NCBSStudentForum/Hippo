@@ -30,10 +30,11 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'submit' )
 {
-    $imgpath = getSpeakerPicturePath( $_POST );
+    $sid = $_POST[ 'id' ];
 
     if( array_key_exists( 'picture', $_FILES ) && $_FILES[ 'picture' ]['name'] )
     {
+        $imgpath = getSpeakerPicturePath( $sid );
         echo printInfo( "Uploading speaker image to $imgpath .. " );
         $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
         if( ! $res )
@@ -58,7 +59,6 @@ else if( $_POST['response'] == 'submit' )
                 );
 
         // Update all talks speaker entries.
-        $sid = $_POST[ 'id' ];
         $res = updateTable( 'talks', 'speaker_id', 'speaker'
             , array( 'speaker_id' => $sid, 'speaker' => speakerName( $sid ) )
             );

@@ -1194,7 +1194,8 @@ function awsToHTML( $aws, $with_picture = false )
 
 function speakerName( $speaker )
 {
-    if( is_int( $speaker ) )                        // Got an id.
+    // NOTE: Do not use is_int here. 
+    if( is_numeric( $speaker ) )                        // Got an id.
         $speaker = getTableEntry( 'speakers', 'id'
                         , array( 'id' => $speaker )
                     );

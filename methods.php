@@ -620,8 +620,12 @@ function getSpeakerPicturePath( $speaker )
     $conf = getConf( );
     $datadir = $conf[ 'data' ]['user_imagedir'];
 
-    if( is_int( $speaker ) && intval( $speaker ) > 0 )
-        $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $speaker ) );
+    if( is_numeric( $speaker ) && intval( $speaker ) > 0 )
+    {
+        // The speaker may not be inserted in database yet. Just return the 
+        // image by id.
+        return $datadir . '/' . $speaker . '.jpg';
+    }
 
     else if( is_string( $speaker ) )
         $speaker = splitName( $speaker );
@@ -933,9 +937,13 @@ function verifyRequest( $request )
         return "Title can not be empty";
     }
 
-    if( strtotime( $request[ 'date' ] ) >= strtotime( 'now' ) + 60 * 24 * 3600 )
+    // Let admin override this condition.
+    if( ! anyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN' ) ) )
     {
-        return "You can not book more than 60 days in advance";
+        if( strtotime( $request[ 'date' ] ) >= strtotime( 'now' ) + 60 * 24 * 3600 )
+        {
+            return "You can not book more than 60 days in advance";
+        }
     }
 
     if( strtotime( $request[ 'date' ]. ' ' . $request[ 'start_time'] ) < strtotime( 'now' ) )

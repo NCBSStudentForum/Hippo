@@ -280,10 +280,10 @@ function getRequestOfUser( $userid, $status = 'PENDING' )
     return fetchEntries( $stmt );
 }
 
-function getEventsOfUser( $userid, $from = '-0 days', $status = 'VALID' )
+function getEventsOfUser( $userid, $from = 'today', $status = 'VALID' )
 {
     global $db;
-    $from = date( 'Y-m-d', strtotime( $from ));
+    $from = dbDate( $from );
     $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:created_by 
         AND date >= :from
         AND status=:status

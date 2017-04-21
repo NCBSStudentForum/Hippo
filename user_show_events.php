@@ -25,6 +25,9 @@ else
 
     foreach( $groups as $group )
     {
+        if( count( $events ) < 1 )
+            continue;
+
         $gid = $group['gid'];
         echo '<form method="post" action="user_show_events_edit.php">';
         echo "<table style=\"width:600px\">";

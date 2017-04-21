@@ -25,7 +25,7 @@ echo '
     ' ;
 
 
-echo "<h2>How do I book my/a thesis seminar? </h2>";
+echo "<h2>How do I book my thesis seminar? </h2>";
 echo "
     See the section below. While booking, select the talk <tt>CLASS</tt> to 
     <tt>THESIS SEMINAR </tt>.

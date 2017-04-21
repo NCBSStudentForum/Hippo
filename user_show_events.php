@@ -25,8 +25,6 @@ else
 
     foreach( $groups as $group )
     {
-        if( count( $events ) < 1 )
-            continue;
 
         $gid = $group['gid'];
         echo '<form method="post" action="user_show_events_edit.php">';
@@ -41,8 +39,13 @@ else
         echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
         echo '</form>';
 
+        $today = dbDate( 'today' );
         $events = getTableEntries( 'events', 'date,start_time'
-                        , "gid='$gid' AND date >= NOW()" );
+                        , "gid='$gid' AND date >= '$today' AND status='VALID' " );
+
+        if( count( $events ) < 1 )
+            continue;
+
         foreach( $events as $event )
         {
             if( $event[ 'status' ] != 'VALID' )

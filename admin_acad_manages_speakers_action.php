@@ -30,8 +30,50 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'submit' )
 {
-    $sid = $_POST[ 'id' ];
+    // If there is not speaker id, then  create a new speaker.
+    $sid = __get__( $_POST, 'id', -1 );
+    $res = null;
 
+    if( $sid < 0 )  // Insert a new enetry.
+    {
+        // Insert a new entry.
+        $speakerId = getUniqueFieldValue( 'speakers', 'id' );
+        $_POST[ 'id' ] = intval( $speakerId ) + 1;
+        $sid = $_POST[ 'id' ];
+        $res = insertIntoTable( 'speakers'
+                    , 'id,honorific,email,first_name,middle_name,last_name,' .
+                        'department,homepage,institute'
+                    , $_POST 
+                    );
+    }
+    else // Update the speaker.
+    {
+        if( __get__( $_POST, 'id', 0 ) > 0 )
+            $whereKey = 'id';
+        else
+            $whereKey = 'first_name,middle_name,last_name';
+
+        $speaker = getTableEntry( 'speakers', $whereKey, $_POST );
+        if( $speaker )
+        {
+            // Update the entry
+            $res = updateTable( 'speakers', $whereKey
+                , 'honorific,email,first_name,middle_name,last_name,' .
+                'department,homepage,institute'
+                , $_POST
+            );
+
+            // Update all talks speaker entries.
+            $res = updateTable( 'talks', 'speaker_id', 'speaker'
+                , array( 'speaker_id' => $sid, 'speaker' => speakerName( $sid ) )
+            );
+            if( $res )
+                echo printInfo( " .. updated related talks as well " );
+
+        }
+    }
+
+    // After inserting new speaker, upload his/her image.
     if( array_key_exists( 'picture', $_FILES ) && $_FILES[ 'picture' ]['name'] )
     {
         $imgpath = getSpeakerPicturePath( $sid );
@@ -39,44 +81,6 @@ else if( $_POST['response'] == 'submit' )
         $res = uploadImage( $_FILES[ 'picture' ], $imgpath );
         if( ! $res )
             echo minionEmbarrassed( "Could not upload speaker image to $imgpath" );
-    }
-
-    $res = null;
-    if( __get__( $_POST, 'id', 0 ) > 0 )
-        $whereKey = 'id';
-    else
-        $whereKey = 'first_name,middle_name,last_name';
-
-    $speaker = getTableEntry( 'speakers', $whereKey, $_POST );
-
-    if( $speaker )
-    {
-        // Update the entry
-        $res = updateTable( 'speakers', $whereKey
-                    , 'honorific,email,first_name,middle_name,last_name,' .
-                        'department,homepage,institute'
-                    , $_POST
-                );
-
-        // Update all talks speaker entries.
-        $res = updateTable( 'talks', 'speaker_id', 'speaker'
-            , array( 'speaker_id' => $sid, 'speaker' => speakerName( $sid ) )
-            );
-        if( $res )
-            echo printInfo( " .. updated related talks as well " );
-        
-    }
-    else
-    {
-        // Insert a new entry.
-        $speakerId = getUniqueFieldValue( 'speakers', 'id' );
-        $_POST[ 'id' ] = intval( $speakerId ) + 1;
-
-        $res = insertIntoTable( 'speakers'
-                    , 'id,honorific,email,first_name,middle_name,last_name,' .
-                        'department,homepage,institute'
-                    , $_POST 
-                    );
     }
 
     if( $res )

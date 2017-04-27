@@ -28,7 +28,7 @@ foreach( $talks as $t )
     // If talk has been delivered, then dont display.
     $event = getEventsOfTalkId( $t['id'] );
     if( $event )
-        if( strtotime($event[ 'date' ] ) <= strtotime( 'today' ) )
+        if( strtotime($event[ 'date' ] ) <= strtotime( 'yesterday' ) )
             // This talk has been delivered successfully.
             continue;
     array_push( $upcomingTalks, $t );

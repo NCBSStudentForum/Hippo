@@ -258,8 +258,8 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
  * Task 3: Annoy AWS speaker if they have not completed their entry.
  */
 $today = strtotime( 'today' );
-$startDay = strtotime( 'this wednesday' );
 $endDay = strtotime( 'this friday' );
+$startDay = $endDay - (3 * 24 * 86400 );
 if( $today >= $startDay && $today <= $endDay ) 
 {
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );

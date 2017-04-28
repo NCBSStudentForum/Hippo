@@ -156,6 +156,7 @@ else
 //$symbEdit = "&#9998";              // pencil
 $symbEdit = "&#x270d";                // Writing hand
 $symbCalendar = "&#128197";          // Does not work on chromium
+$symbCalendar = "Schedule It";
 $symbDelete = "&#10008";
 $symbCancel = "&#10008";
 

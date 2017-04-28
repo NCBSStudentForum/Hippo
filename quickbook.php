@@ -30,6 +30,10 @@ $defaults = array(
 
 $external_id = null;
 
+
+/*
+ * We can come here from a $_GET or $_POST request 
+ */
 if( array_key_exists( 'external_id', $_GET ) )
 {
     $external_id = $_GET[ 'external_id' ];
@@ -37,9 +41,13 @@ if( array_key_exists( 'external_id', $_GET ) )
     $tableName = $expr[ 0 ];
     $id = $expr[ 1 ];
     $entry = getTableEntry( $tableName, 'id', array( "id" => $id ) );
-    echo printInfo( "Scheduling for the following talk" );
+    echo "<h1>Scheduling for the following talk </h1>";
     echo arrayToTableHTML( $entry, 'events', '', 'id,status,date,time,venue' );
     $defaults = array_merge( $defaults, $entry );
+
+    // Update the title of booking request.
+    $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 
+            . $defaults[ 'speaker' ] . " on '" . $defaults[ 'title' ] . "'";
 }
 else
 {
@@ -244,7 +252,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         echo '<input type="hidden" name="title" 
             value="' . $defaults['title' ] . '">';
         echo '<input type="hidden" name="description" 
-            value="' . $defaults[ 'title' ] . '">';
+            value="' . $defaults[ 'description' ] . '">';
         echo '<input type="hidden" name="external_id" 
             value="' . $external_id . '">';
         // Insert all information into form.

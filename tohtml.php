@@ -1252,12 +1252,11 @@ function talkToHTML( $talk, $with_picture = false )
     $when = humanReadableDate( $event[ 'date' ] ) . ', ' .
             humanReadableTime( $event[ 'start_time'] );
 
-    $title = __ucwords__($talk[ 'class' ]) . ' by ' . $speakerName . " on '"
-             . $talk[ 'title' ] . "'";
+    $title = '(' . __ucwords__($talk[ 'class' ]) . ') ' . $talk[ 'title' ];
 
     $html = '<div style="width:550px;text-align:justify">';
     $html .= '<table border="0"><tr>';
-    $html .= '<td colspan="2"><h1>' . $talk[ 'title' ] . '</h1></td>';
+    $html .= '<td colspan="2"><h1>' . $title . '</h1></td>';
     $html .= "</tr><tr>";
 
     if( $with_picture )

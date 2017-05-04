@@ -25,7 +25,7 @@ else if( $_POST[ 'response' ] == 'submit' )
         echo printInfo( 'Successfully updated entry' );
 
         // TODO: Update the request or event associated with this entry as well.
-        $externalId = 'talks.' . $_POST['id'];
+        // $externalId = 'talks.' . $_POST['id'];
 
         echo goToPage( 'admin_acad_manages_talks.php' , 0 );
         exit;

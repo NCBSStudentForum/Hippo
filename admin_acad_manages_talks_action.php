@@ -53,7 +53,7 @@ else if( $_POST[ 'response' ] == 'DO_NOTHING' )
 }
 else if( $_POST[ 'response' ] == 'edit' )
 {
-    echo printInfo( "Here you can only change the host, title and description
+    echo printInfo( "Here you can only change the host, class, title and description
         of the talk." );
 
     $id = $_POST[ 'id' ];

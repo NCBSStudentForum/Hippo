@@ -1,7 +1,7 @@
 <?php
 
 include_once 'check_access_permissions.php';
-mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN' ) );
+mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN' ) );
 
 include_once 'header.php';
 include_once 'database.php';
@@ -23,6 +23,10 @@ else if( $_POST[ 'response' ] == 'submit' )
     if( $res )
     {
         echo printInfo( 'Successfully updated entry' );
+
+        // TODO: Update the request or event associated with this entry as well.
+        $externalId = 'talks.' . $_POST['id'];
+
         echo goToPage( 'admin_acad_manages_talks.php' , 0 );
         exit;
     }

@@ -17,7 +17,7 @@ $speaker = array(
     );
 
 // Get talks only in future.
-$whereExpr = "status!='INVALID' ORDER BY created_on DESC";
+$whereExpr = "status!='INVALID' ORDER BY created_on ASC";
 $talks = getTableEntries( 'talks', '', $whereExpr );
 
 $upcomingTalks = array( );

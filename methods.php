@@ -932,9 +932,10 @@ function verifyRequest( $request )
            please write to hippo@lists.ncbs.res.in " ;
     }
 
-    if( strlen( $request[ 'title' ] ) < 1 )
+    if( strlen( $request[ 'title' ] ) < 8 )
     {
-        return "Title can not be empty";
+        return "Request 'TITLE' must have at least 8 characters. Got <pre>" 
+            . $request[ 'title' ] . "</pre>";
     }
 
     // Let admin override this condition.

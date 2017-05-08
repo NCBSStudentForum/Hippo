@@ -14,11 +14,15 @@ function generateAWSEmail( $monday )
 
     $res = array( );
 
-    $upcomingAws = getUpcomingAWS( $monday );
-    if( ! $upcomingAws )
-        $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
+    // Collect all AWSs with full entry and non-completed entry. getUpcomingAWS 
+    // collects all AWS entries which not filled by AWS. Ideally such is never 
+    // be a  situation.
+    $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
+    $upcomingAws = array_merge( $upcomingAws, getUpcomingAWS( $monday ) );
 
     $html = '';
+
+    // if there is NO AWS this monday, notify users.
     if( count( $upcomingAws ) < 1 )
     {
         $html .= "<p>Greetings</p>";

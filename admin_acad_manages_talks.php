@@ -48,6 +48,7 @@ foreach( $upcomingTalks as $t )
     // Get image of speaker if available.
     echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
 
+    /* TODO : Admin should be able to edit speaker here. */
     /*
     echo '<form method="post" action="admin_edit_speaker.php">';
     $speakerId = $t[ 'speaker_id' ];
@@ -58,7 +59,7 @@ foreach( $upcomingTalks as $t )
 
     echo '</td><td>';
     echo '<form method="post" action="admin_acad_manages_talks_action.php">';
-    echo '<table border="0">';
+    echo '<table border="1">';
     echo '<tr>';
     echo arrayToTableHTML( $t, 'info', '', 'speaker_id');
     echo '</tr><tr>';
@@ -104,9 +105,20 @@ foreach( $upcomingTalks as $t )
         // If event is already approved, show it here.
         echo "<strong>Above talk has been confirmed and event detail is shown 
             below.</strong>";
-        $html = arrayToTableHTML( $event, 'events', ''
+
+        $html = '<table border="0">';
+        $html .= '<tr><td>';
+        $html .= arrayToTableHTML( $event, 'events', 'lightyellow'
             , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
             ',status,calendar_event_id,last_modified_on' );
+
+        $html .= '</td><td>';
+
+        $html .= '<form method="post" action="./admin_acad_send_email.php">';
+        $html .= ' <input type="hidden" name="talk_id" value="' . $t[ 'id' ] . '" >';
+        $html .= '<button title="Send email" name="response" value="send email">Email</button>';
+        $html .= '</form>';
+        $html .= '</td></tr></table>';
         echo $html;
     }
     // Else there might be a pending request.

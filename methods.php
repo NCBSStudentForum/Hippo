@@ -677,9 +677,8 @@ function html2Markdown( $html, $strip_inline_image = false )
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
-        //$cmd = __DIR__ . "/html2other.py $outfile md ";
         // We now use lynx to format html to plain text.
-        $md = `lynx -dump $outfile`;
+        $md = `elinks -dump-width 80 -dump $outfile`;
         unlink( $outfile );
         return $md;
     }

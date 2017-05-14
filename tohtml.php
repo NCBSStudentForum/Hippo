@@ -225,7 +225,12 @@ function eventSummaryHTML( $event, $talk = null)
     $time = "$startT to $endT";
     $venue = venueSummary( $event[ 'venue'] );
 
-    $html = "<h1>" . $event[ 'title' ] . "</h1>";
+    if( $talk )
+        $title = talkSummaryLine( $talk );
+    else
+        $title = $event[ 'title'];
+
+    $html = "<h2>" . $title . "</h2>";
     $html .= '<table class="show_events">';
 
     if( $talk )
@@ -1608,4 +1613,15 @@ function gradeSelect( $name, $default = 'X' )
         );
     return $select;
 }
+
+function talkSummaryLine( $talk )
+{
+
+    $title = __ucwords__( $talk[ 'title' ] );
+    $msg = __ucwords__ ( $talk['class'] ) . ' by ';
+    $msg .= $talk[ 'speaker' ];
+    $msg .= " : '$title'";
+    return $msg;
+}
+
 ?>

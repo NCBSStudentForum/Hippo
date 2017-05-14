@@ -24,8 +24,8 @@ echo '<table class="tasks">
         </td>
     </tr>
     <tr>
-        <td>Generate emails and documents</td>
-        <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
+        <td>Send emails manually (and generate documents)</td>
+        <td> <a href="admin_acad_email_and_docs.php">Send emails</td>
     </tr>
     <tr>
         <td>Manage talks and seminars. </td>

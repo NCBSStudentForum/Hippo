@@ -673,11 +673,13 @@ function html2Markdown( $html, $strip_inline_image = false )
     }
 
     $outfile = __DIR__ . '/data/_html.html';
+
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
-        $cmd = __DIR__ . "/html2other.py $outfile md ";
-        $md = `$cmd`;
+        //$cmd = __DIR__ . "/html2other.py $outfile md ";
+        // We now use lynx to format html to plain text.
+        $md = `lynx -dump $outfile`;
         unlink( $outfile );
         return $md;
     }

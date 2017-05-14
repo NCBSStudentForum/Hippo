@@ -594,9 +594,8 @@ function getThumbnail( $originalImage )
     *
     * @return 
  */
-function getLoginPicturePath( $login, $default = '' )
+function getLoginPicturePath( $login, $default = 'null' )
 {
-    $picPath = nullPicPath( );
     $conf = getConf( );
     $picPath = $conf['data']['user_imagedir'] . '/' . $login . '.jpg';
     if( ! file_exists( $picPath ) )

@@ -57,26 +57,42 @@ function eventToTex( $event, $talk = null )
 
 
     // Header
-    $head = '\begin{tikzpicture}[ every node/.style={rectangle
+    $head = '';
+
+    // Put institute of host in header as well
+    $isInstem = false;
+    $inst = emailInstitute( $talk[ 'host' ], "latex" );
+    if( strpos( 'institute for stem cell', strtolower( $inst ) ) !== false )
+        $isInstem = true;
+
+    if( $isInstem )
+        $instemLogo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
+    else
+        $instemLogo = '';
+
+    // Logo etc.
+    $dateAndPlace = '\faClockO \,' .  $when . ' \faHome \,' . $where;
+    $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
+    $head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
+        { \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
+    $head .= '\node[] (instem) at ([xshift=30mm,yshift=-15mm]current page.north west) 
+        { ' . $instemLogo . '};';
+    $head .= '\node[ ] (aws) at ($(ncbs)!0.5!(instem)$) {\color{red}' . $talk['class'] . '};';
+    $head .= '\draw[dotted,thick] ([yshift=-5mm]ncbs.south east) -- ++(-\linewidth,0)
+                node[above,midway] {\color{red} ' . $dateAndPlace . ' };';
+    $head .= '\end{tikzpicture}';
+
+    $head .= '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
     $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image] (when)  { 
-                    \hfill \faClockO \,' .  $when . ' \faHome \,' . $where . '};';
-    $head .= '\node[below=of when, yshift=0mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
+    $head .= '\node[above right=of image, yshift=-10mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $tex = array( $head );
 
-    // Put talk class in header.
-    if( $talk )
-        $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
-
-    // Put institute of host in header as well
-    $inst = emailInstitute( $talk[ 'host' ], "latex" );
-    echo "<pre> $inst </pre>";
-
-    if( $inst )
-        $tex[ ] = '\rhead{\textsc{' . $inst. '}}';
+    //// Put talk class in header.
+    //if( $talk )
+    //    $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
 
 
 
@@ -126,15 +142,15 @@ $tex = array( "\documentclass[]{article}"
     , "\usepackage{tikz}"
     // Old version may not work.
     , "\usepackage{fontawesome}"
-    , '\usepackage{fancyhdr}'
+    //, '\usepackage{fancyhdr}'
     , '\linespread{1.2}'
-    , '\pagestyle{fancy}'
+    //, '\pagestyle{fancy}'
     , '\pagenumbering{gobble}'
-    , '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
-        TATA Institute of Fundamental Research, Mumbai}'
+    //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
+    //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
-    //, '\usepackage[sfdefault,light]{FiraSans}'
-    , '\usepackage[]{ebgaramond}'
+    , '\usepackage[sfdefault,light]{FiraSans}'
+    //, '\usepackage[sfdefault]{ebgaramond}'
     , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );

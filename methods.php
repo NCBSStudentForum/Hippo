@@ -588,23 +588,31 @@ function getThumbnail( $originalImage )
 
 
 /**
-    * @brief Image of login.
+    * @brief Image of login. These are different than speaker.
     *
     * @param $user
     *
     * @return 
  */
-function getLoginPicturePath( $login )
+function getLoginPicturePath( $login, $default = '' )
 {
     $picPath = nullPicPath( );
     $conf = getConf( );
     $picPath = $conf['data']['user_imagedir'] . '/' . $login . '.jpg';
     if( ! file_exists( $picPath ) )
-        $picPath = nullPicPath( );
+        $picPath = nullPicPath( $default );
 
     return $picPath;
 }
 
+/**
+    * @brief Picture path of speakers (not user login).
+    *
+    * @param $user
+    * @param $default
+    *
+    * @return 
+ */
 function getUserPicture( $user, $default = 'null' )
 {
     $picPath = getLoginPicturePath( $user );

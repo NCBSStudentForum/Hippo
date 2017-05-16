@@ -36,9 +36,11 @@ def main( args ):
     try:
         with open( args.msgfile, 'r' )  as f:
             # Remove all non-printable characters from message.
-            body = f.read( )
+            lines = f.read( ).split( '\n' )
+            body = '\n'.join( lines )
             try:
-                body = remove_control_chars( body )
+                lines = map( remove_control_chars, lines) 
+                body = '\n'.join( lines )
             except Exception as e:
                 print( 'Failed to strip non-printable characters' )
 
@@ -46,7 +48,6 @@ def main( args ):
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False
 
-    print( args.to )
     msg = MIMEMultipart( 'alernative' )
     msg[ 'To' ] = ",".join( args.to )
 

@@ -8,7 +8,19 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email import Encoders
+import unicodedata
+import re
 from logger import _logger
+
+# Function to remove unprintable characters from email.
+
+all_chars = (unichr(i) for i in range(0x110000))
+# or equivalently and much more efficiently
+control_chars = ''.join(map(unichr, range(0,32) + range(127,160)))
+control_char_re = re.compile('[%s]' % re.escape(control_chars))
+
+def remove_control_chars(s):
+    return control_char_re.sub('', s)
 
 def main( args ):
     _logger.debug( "Got command line params %s" % vars(args) )
@@ -23,7 +35,13 @@ def main( args ):
     body = '';
     try:
         with open( args.msgfile, 'r' )  as f:
+            # Remove all non-printable characters from message.
             body = f.read( )
+            try:
+                body = remove_control_chars( body )
+            except Exception as e:
+                print( 'Failed to strip non-printable characters' )
+
     except Exception as e:
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False

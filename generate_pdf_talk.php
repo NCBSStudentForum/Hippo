@@ -63,21 +63,26 @@ function eventToTex( $event, $talk = null )
     // Put institute of host in header as well
     $isInstem = false;
     $inst = emailInstitute( $talk[ 'host' ], "latex" );
-    if( strpos( 'institute for stem cell', strtolower( $inst ) ) !== false )
+
+    if( strpos( strtolower( $inst ), 'institute for stem cell' ) !== false )
         $isInstem = true;
 
+    $instemLogo = '';
     if( $isInstem )
+    {
         $instemLogo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
-    else
-        $instemLogo = '';
+        echo printInfo("Using instem logo: $instemLogo" );
+    }
 
     // Logo etc.
     $dateAndPlace = '\faClockO \,' .  $when . ' \faHome \,' . $where;
     $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
     $head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
         { \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
+
     $head .= '\node[] (instem) at ([xshift=30mm,yshift=-15mm]current page.north west) 
         { ' . $instemLogo . '};';
+
     $head .= '\node[ ] (aws) at ($(ncbs)!0.5!(instem)$) {\color{blue}' . $talk['class'] . '};';
     $head .= '\draw[dotted,thick] ([yshift=-5mm]ncbs.south east) -- ++(-\linewidth,0)
                 node[above,midway] {\color{blue} ' . $dateAndPlace . ' };';

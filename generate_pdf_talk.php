@@ -158,8 +158,8 @@ $tex = array( "\documentclass[]{article}"
     //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
     //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
-    , '\usepackage[sfdefault,light]{FiraSans}'
-    //, '\usepackage[sfdefault]{ebgaramond}'
+    //, '\usepackage[sfdefault,light]{FiraSans}'
+    , '\usepackage[sfdefault]{ebgaramond}'
     , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );

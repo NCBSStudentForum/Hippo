@@ -86,7 +86,7 @@ if( $_POST['response'] == 'edit' )
         echo '
         <tr>
             <td>Date</td>
-            <td><input class="datepicker" type="date" name="date" id="" value="' . 
+            <td><input class="datepicker"  name="date" id="" value="' . 
                 __get__($default, 'date', '' ) . '" /></td>
         </tr>
         <tr>

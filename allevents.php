@@ -31,7 +31,7 @@ if( array_key_exists( 'date', $_GET ) )
 echo '<form action="" method="get" accept-charset="utf-8">
     <table class="info">
     <tr>
-        <td> <input type="date" class="datepicker" name="date" value="' . 
+        <td> <input  class="datepicker" name="date" value="' . 
             $defaults[ 'date' ] . '" /> </td>
             <td> <button name="response">' . $symbScan . '</button> </td>
     </tr>

@@ -46,10 +46,15 @@ foreach( $upcomingTalks as $t )
     echo '<table><tr><td>';
 
     // Get image of speaker if available.
-    if( intval( $t['speaker_id'] ) > 0 )
-        echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
-    else
-        echo inlineImageOfSpeaker( $t['speaker'], $height = '100px', $width = '100px' );
+    echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
+
+    /*
+    echo '<form method="post" action="admin_edit_speaker.php">';
+    $speakerId = $t[ 'speaker_id' ];
+    echo '<input type="hidden" name="speaker_id"  value="' . $t['speaker_id'] . '" />';
+    echo ' <button name="response"  value="Edit"> ' . $symbEdit . '</button> ';
+    echo '</form>';
+     */
 
     echo '</td><td>';
     echo '<form method="post" action="admin_acad_manages_talks_action.php">';

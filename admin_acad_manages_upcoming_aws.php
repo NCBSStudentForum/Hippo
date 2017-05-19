@@ -75,7 +75,7 @@ echo '
     <table class="standout">
     <tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>
     <tr>
-        <td> <input class="datepicker" type="date" name="date" value="" > </td>
+        <td> <input class="datepicker"  name="date" value="" > </td>
         <td>
             <input id="autocomplete_speaker" name="speaker" 
                 placeholder="I will autocomplete" />

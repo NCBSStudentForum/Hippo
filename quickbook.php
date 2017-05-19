@@ -97,7 +97,7 @@ echo '<form action="" method="post" accept-charset="utf-8">';
 echo '
     <tr>
         <td>Pick a date</td>
-        <td><input type="date" class="datepicker" name="date" 
+        <td><input  class="datepicker" name="date" 
             value="' . $defaults[ 'date' ] . '" /> </td>
     </tr>
     <tr>

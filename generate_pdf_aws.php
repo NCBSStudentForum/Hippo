@@ -58,7 +58,7 @@ function awsToTex( $aws )
     $imagefile = getLoginPicturePath( $aws['speaker'], 'null' );
     $imagefile = getThumbnail( $imagefile );
 
-    $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
+    $speakerImg = '\includegraphics[height=5cm]{' . $imagefile . '}';
 
     // Date and plate
     $dateAndPlace =  humanReadableDate( $aws[ 'date' ] ) .  
@@ -137,7 +137,7 @@ else
 }
 
 // Intialize pdf template.
-$tex = array( "\documentclass[]{article}"
+$tex = array( "\documentclass[10pt]{article}"
     , "\usepackage[margin=25mm,top=20mm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{grffile}"
@@ -152,8 +152,8 @@ $tex = array( "\documentclass[]{article}"
     //, '\chead{\textsc{{\color{blue} Annual Work Seminar}}}'
     , '\usetikzlibrary{calc,positioning,arrows}'
     , '\usepackage[T1]{fontenc}'
-    //, '\usepackage[]{ebgaramond}'
-    , '\usepackage[sfdefault,light]{FiraSans}'
+    , '\usepackage[]{ebgaramond}'
+    //, '\usepackage[sfdefault,light]{FiraSans}'
     //, '\rhead{ \includegraphics[height=15 mm]{./data/ncbs_logo.png} }'
     //, '\lhead { \includegraphics[height=15 mm]{./data/inStem_logo.png}}'
     , '\begin{document}'

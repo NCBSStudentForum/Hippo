@@ -351,14 +351,15 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
    $days = implode( "/", $days );
 
    // Week pattern.
-   $weekpat = str_replace( ",", " ", trim( $weekpat ) );
-   $weekArr = explode( ' ', $weekpat );
-   if( count( $weekArr ) < 1 )
+   if( strlen( trim( $weekpat ) ) < 1 )
        $weeks = 'first/second/third/fourth/fifth';
    else
-       $weeks = implode( '/', $weekArr );
+   {
+       $weekpat = str_replace( ",", " ", trim( $weekpat ) );
+       $weeks = str_replace( ' ', '/', $weekpat );
+   }
 
-     return "$days,$weeks,$durationInMonths";
+   return "$days,$weeks,$durationInMonths";
 }
 
 /**

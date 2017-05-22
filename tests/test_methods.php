@@ -15,7 +15,7 @@ $pat = constructRepeatPattern( "Mon Wed", "", "2" );
 print_r( $pat );
 print_r( repeatPatToDays( $pat, dbDate('today') ) );
 
-$pat = constructRepeatPattern( "Tue", "second,fourth", "6" );
+$pat = constructRepeatPattern( "Tuesday,Wednes", "second,fourth", "6" );
 print_r( $pat );
 print_r( repeatPatToDays( $pat, dbDate('today') ) );
 

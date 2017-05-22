@@ -337,10 +337,13 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
    $daypat = trim( str_replace( ",", " ", $daypat ));
    $daysArr = array( );
    foreach( explode( " ", $daypat ) as $day )
+   {
+       $day = substr( $day, 0, 3 ); // Trim to first 3 letters.
        if( strlen( $day ) == 3 )
            $daysArr[] = $day;
        else
            echo alertUser( "Day $day is not 3 letter long. Ignored .. " );
+   }
 
    $days = array_map( function( $day ) { return date('D', strtotime( $day ) ); }
                             , $daysArr );

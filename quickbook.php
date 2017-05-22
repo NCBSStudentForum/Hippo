@@ -97,17 +97,17 @@ echo '<form action="" method="post" accept-charset="utf-8">';
 echo '
     <tr>
         <td>Pick a date</td>
-        <td><input type="date" class="datepicker" name="date" 
+        <td><input  class="datepicker" name="date" 
             value="' . $defaults[ 'date' ] . '" /> </td>
     </tr>
     <tr>
         <td>Start time </td>
-        <td><input type="time" class="timepicker" name="start_time" 
+        <td><input  class="timepicker" name="start_time" 
             value="' . $defaults[ 'start_time'] . '" /> </td>
     </tr>
     <tr>
         <td>End time </td>
-        <td><input type="time" class="timepicker" name="end_time" 
+        <td><input  class="timepicker" name="end_time" 
             value="' . $defaults[ 'end_time'] . '" /> </td>
     </tr>
     <tr>

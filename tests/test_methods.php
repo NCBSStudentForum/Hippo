@@ -11,11 +11,11 @@ include_once( 'methods.php' );
 //$pat = repeatPatToDays( $pat, '2017-04-11' );
 //var_dump( $pat );
 //print( "\nTest 2 </br> \n" );
-$pat = constructRepeatPattern( "Mon,W", "", "2" );
+$pat = constructRepeatPattern( "Mon Wed", "", "2" );
 print_r( $pat );
 print_r( repeatPatToDays( $pat, dbDate('today') ) );
 
-$pat = constructRepeatPattern( "Tue", "second,fourth", "6" );
+$pat = constructRepeatPattern( "Tuesday,Wednes", "second,fourth", "6" );
 print_r( $pat );
 print_r( repeatPatToDays( $pat, dbDate('today') ) );
 

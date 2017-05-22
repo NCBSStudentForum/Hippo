@@ -337,10 +337,13 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
    $daypat = trim( str_replace( ",", " ", $daypat ));
    $daysArr = array( );
    foreach( explode( " ", $daypat ) as $day )
+   {
+       $day = substr( $day, 0, 3 ); // Trim to first 3 letters.
        if( strlen( $day ) == 3 )
            $daysArr[] = $day;
        else
            echo alertUser( "Day $day is not 3 letter long. Ignored .. " );
+   }
 
    $days = array_map( function( $day ) { return date('D', strtotime( $day ) ); }
                             , $daysArr );
@@ -684,8 +687,8 @@ function html2Markdown( $html, $strip_inline_image = false )
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
-        // We now use lynx to format html to plain text.
-        $md = `elinks -dump-width 80 -dump $outfile`;
+        $cmd = __DIR__ . "/html2other.py $outfile md ";
+        $md = `$cmd`; 
         unlink( $outfile );
         return $md;
     }

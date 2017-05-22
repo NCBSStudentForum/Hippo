@@ -32,13 +32,14 @@ function eventToTex( $event, $talk = null )
     $speaker = '';
 
     // Prepare speaker image.
-    $imagefile = getSpeakerPicturePath( $talk[ 'speaker' ] );
+    $imagefile = getSpeakerPicturePath( $talk[ 'speaker_id' ] );
+    echo "<pre> $imagefile </pre>";
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
 
     // Add user image.
     $imagefile = getThumbnail( $imagefile );
-    $speakerImg = '\includegraphics[width=5cm]{' . $imagefile . '}';
+    $speakerImg = '\includegraphics[height=4.5cm]{' . $imagefile . '}';
 
     if( $talk )
     {
@@ -62,32 +63,40 @@ function eventToTex( $event, $talk = null )
     // Put institute of host in header as well
     $isInstem = false;
     $inst = emailInstitute( $talk[ 'host' ], "latex" );
-    if( strpos( 'institute for stem cell', strtolower( $inst ) ) !== false )
+
+    if( strpos( strtolower( $inst ), 'institute for stem cell' ) !== false )
         $isInstem = true;
 
+    $instemLogo = '';
     if( $isInstem )
+    {
         $instemLogo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
-    else
-        $instemLogo = '';
+        echo printInfo("Using instem logo: $instemLogo" );
+    }
 
     // Logo etc.
     $dateAndPlace = '\faClockO \,' .  $when . ' \faHome \,' . $where;
     $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
     $head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
         { \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
+
     $head .= '\node[] (instem) at ([xshift=30mm,yshift=-15mm]current page.north west) 
         { ' . $instemLogo . '};';
-    $head .= '\node[ ] (aws) at ($(ncbs)!0.5!(instem)$) {\color{red}' . $talk['class'] . '};';
+
+    $head .= '\node[ ] (aws) at ($(ncbs)!0.5!(instem)$) {\color{blue}' . $talk['class'] . '};';
     $head .= '\draw[dotted,thick] ([yshift=-5mm]ncbs.south east) -- ++(-\linewidth,0)
-                node[above,midway] {\color{red} ' . $dateAndPlace . ' };';
+                node[above,midway] {\color{blue} ' . $dateAndPlace . ' };';
     $head .= '\end{tikzpicture}';
+    $head .= ' ';
 
     $head .= '\begin{tikzpicture}[ every node/.style={rectangle
         ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
-    $head .= '\node[text width=5cm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image, yshift=-10mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
+    $head .= '\node[text width=5cm,minimum height=5cm] (image) at (0,0) {' . $speakerImg . '};';
+    $head .= '\node[above right=of image, yshift=-20mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
+    $head .= ' '; // So tikzpicture don't overlap.
+
     $tex = array( $head );
 
     //// Put talk class in header.
@@ -149,8 +158,8 @@ $tex = array( "\documentclass[]{article}"
     //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
     //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
-    , '\usepackage[sfdefault,light]{FiraSans}'
-    //, '\usepackage[sfdefault]{ebgaramond}'
+    //, '\usepackage[sfdefault,light]{FiraSans}'
+    , '\usepackage[sfdefault]{ebgaramond}'
     , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );

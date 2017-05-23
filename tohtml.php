@@ -1467,6 +1467,26 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
 }
 
 /**
+    * @brief Display any image.
+    *
+    * @param $picpath
+    * @param $height
+    * @param $width
+    *
+    * @return 
+ */
+function displayImage( $picpath, $height = 'auto', $width = 'auto' )
+{
+    if( ! file_exists( $picpath ) )
+        $picpath = nullPicPath( );
+
+    $html = '<img width="' . $width . '" height="' . $height . '" src="'
+            . dataURI( $picpath, 'image/jpg' ) . '" >';
+    return $html;
+}
+
+
+/**
     * @brief Return an empty image.
     *
     * @return

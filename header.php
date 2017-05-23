@@ -55,7 +55,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     <td> <a href="statistics.php" target="_blank" >Statistics </a> </td>
     <!-- <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td> -->
     <td> <a href="courses.php" target="_blank" >Courses</a></td>
-    <td> <a href="<?php echo calendarURL();?>" target="_blank" >Calendar</a></td>
+    <td> <a href="map.php" target="_blank" >Map</a></td>
     <!--
     RSS has been thorougly abused to make it work with NCBS screen.
     <td> <a href="rss.php" target="_blank" >

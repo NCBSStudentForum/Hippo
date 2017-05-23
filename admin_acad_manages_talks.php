@@ -114,10 +114,37 @@ foreach( $upcomingTalks as $t )
 
         $html .= '</td><td>';
 
+        // $html .= "<td><button onclick=\"AreYouSure(this)\" 
+        //         name=\"response\" title=\"Cancel this event\"> 
+        //     $symbCancel </button></td>";
+
+        /* PREPARE email template */
+        $talkid = explode( '.', $event[ 'external_id' ])[1];
+        $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
+        if( ! $talk )
+            continue;
+
+        $talkHTML = talkToHTML( $talk, false );
+
+        $subject = __ucwords__( $talk[ 'class' ] ) . " by " . $talk['speaker'] . ' on ' .
+            humanReadableDate( $event[ 'date' ] );
+
+        $hostInstitite = emailInstitute( $talk[ 'host' ] );
+
+        $templ = emailFromTemplate(
+            "this_event" 
+            , array( 'EMAIL_BODY' => $talkHTML
+                    , 'HOST_INSTITUTE' => strtoupper( $hostInstitite )
+                ) 
+            );
+        $templ = htmlspecialchars( json_encode( $templ ) );
+
         $html .= '<form method="post" action="./admin_acad_send_email.php">';
-        $html .= ' <input type="hidden" name="talk_id" value="' . $t[ 'id' ] . '" >';
+        $html .= '<input type="hidden" name="subject" value="'. $subject . '" >';
+        $html .= '<input type="hidden" name="template" value="'. $templ . '" >';
         $html .= '<button title="Send email" name="response" value="send email">Email</button>';
         $html .= '</form>';
+
         $html .= '</td></tr></table>';
         echo $html;
     }

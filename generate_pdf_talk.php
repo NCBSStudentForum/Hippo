@@ -159,7 +159,7 @@ $tex = array( "\documentclass[]{article}"
     //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
     //, '\usepackage[sfdefault,light]{FiraSans}'
-    , '\usepackage[sfdefault]{ebgaramond}'
+    , '\usepackage[]{ebgaramond}'
     , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );

@@ -1,16 +1,15 @@
-<script type="text/javascript">
-function showLabel( msg )
-{
-    document.getElementById("location_info").innertHtml = msg;
-}
-</script>
 
 <?php
 
 include_once "header.php";
 include_once 'tohtml.php';
 include_once 'methods.php';
+?>
 
+<script src="js/jquery.imagemapster.min.js"> </script>
+
+
+<?php
 $imageUrl = __DIR__ . "/data/ncbs_map_route_map_to_lecture_halls.jpeg";
 
 echo "<h1> NCSB Map</h1>";
@@ -18,13 +17,28 @@ echo "<h1> NCSB Map</h1>";
 if( file_exists( $imageUrl ) )
 {
     echo  "Selected location <p id=\"location_info\"></p>";
-    echo displayImage( $imageUrl, $height = "auto", $width = "1000px", $usemap = 'ncbsmap' );
+
+    $html = '<img width="800px"  height="auto" id="ncbsmap_img" 
+            src="' . dataURI( $imageUrl, 'image/jpg' ) .  '" usemap="#ncbsmap" >';
+    echo $html;
     echo '
     <map name="ncbsmap">
-      <area shape="rect" coords="0,0,500,500" 
-        onmouseover="showLabel( \'This is map\' )" />
+      <area shape="rect" coords="100,0,110,10" href="#" data-key="tl" />
+      <area shape="rect" coords="100,800,110,810" href="#" data-key="bl" />
+      <area shape="rect" coords="1100,0,1110,10" href="#" data-key="tr" />
+      <area shape="rect" coords="1100,800,1110,810" href="#" data-key="bl" />
+      <area shape="circle" coords="600,530,30" href="#" data-key="RAS" />
     </map>
     ';
+    echo "
+        <script type=\"text/javascript\" charset=\"utf-8\">
+        $('#ncbsmap_img').mapster( { 
+            mapKey : 'data-key' 
+            , toolTip : true
+        })
+            .mapster( 'set', true, 'bl,br,tl,tr,RAS' )
+        </script>
+    ";
 }
 else
 {

@@ -1475,13 +1475,13 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
     *
     * @return 
  */
-function displayImage( $picpath, $height = 'auto', $width = 'auto' )
+function displayImage( $picpath, $height = 'auto', $width = 'auto', $usemap = '' )
 {
     if( ! file_exists( $picpath ) )
         $picpath = nullPicPath( );
 
     $html = '<img width="' . $width . '" height="' . $height . '" src="'
-            . dataURI( $picpath, 'image/jpg' ) . '" >';
+            . dataURI( $picpath, 'image/jpg' ) . '" usemap="#' . $usemap . '"  >';
     return $html;
 }
 

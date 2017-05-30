@@ -40,6 +40,11 @@ div.header {
     max-width : var(--maxwidth);
 }
 
+div.aws_preference {
+    font-size : x-small;
+    background : lightblue;
+}
+
 div.bottom {
     font-size : xx-small;
     font-color : red;

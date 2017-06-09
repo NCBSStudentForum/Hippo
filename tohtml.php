@@ -595,6 +595,70 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     return $html;
 }
 
+/**
+    * @brief Add tinyMCE editor.
+    *
+    * @param $id
+    *
+    * @return 
+    */
+function editor_script( $id, $default = '' )
+{
+    $editor = "<script>
+        tinymce.init( { selector : '#" . $id . "'
+        , init_instance_callback: \"insert_content\"
+        , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
+        , paste_as_text : true
+        , paste_enable_default_filters: false
+        , height : 300
+        , paste_data_images: true
+        , cleanup : false
+        , verify_html : false
+        , cleanup_on_startup : false
+        , toolbar1 : 'undo redo | insert | stylesheet | bold italic'
+        + ' | alignleft aligncenter alignright alignjustify'
+        + ' | bulllist numlist outdent indent | link image'
+        , toolbar2 : \"imageupload\",
+            setup: function(editor) {
+                var inp = $('<input id=\"tinymce-uploader\" ' +
+                    'type=\"file\" name=\"pic\" accept=\"image/*\"'
+                    + ' style=\"display:none\">'
+                );
+                $(editor.getElement()).parent().append(inp);
+                inp.on(\"change\",function(){
+                    var input = inp.get(0);
+                    var file = input.files[0];
+                    var fr = new FileReader();
+                    fr.onload = function() {
+                        var img = new Image();
+                        img.src = fr.result;
+                        editor.insertContent(
+                            '<img src=\"' + img.src + '\"/><br/>'
+                        );
+                        inp.val('');
+            }
+            fr.readAsDataURL(file);
+            });
+
+            editor.addButton( 'imageupload', {
+            text:\"Insert image\",
+                icon: false,
+                onclick: function(e) {
+                    inp.trigger('click');
+            }
+            });
+            }
+            });
+
+            function insert_content( inst ) {
+                inst.setContent( '$default' );
+            }
+                                    </script>";
+
+    return $editor;
+
+}
+
 
 /**
     * @brief Convert a database table schema to HTML table to user to
@@ -728,56 +792,7 @@ function dbTableToHTMLTable( $tablename
                 $val .= "<script> CKEDITOR.replace( '$inputId' ); </script>";
             else
             {
-                $val .= "<script>
-                        tinymce.init( { selector : '#" . $inputId . "'
-                        , init_instance_callback: \"insert_content\"
-                        , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
-                        , paste_as_text : true
-                        , paste_enable_default_filters: false
-                        , height : 300
-                        , paste_data_images: true
-                        , cleanup : false
-                        , verify_html : false
-                        , cleanup_on_startup : false
-                        , toolbar1 : 'undo redo | insert | stylesheet | bold italic'
-                        + ' | alignleft aligncenter alignright alignjustify'
-                        + ' | bulllist numlist outdent indent | link image'
-                        , toolbar2 : \"imageupload\",
-                        setup: function(editor) {
-                        var inp = $('<input id=\"tinymce-uploader\" ' +
-                        'type=\"file\" name=\"pic\" accept=\"image/*\"'
-                        + ' style=\"display:none\">'
-                        );
-                        $(editor.getElement()).parent().append(inp);
-                        inp.on(\"change\",function(){
-                        var input = inp.get(0);
-                        var file = input.files[0];
-                        var fr = new FileReader();
-                        fr.onload = function() {
-                        var img = new Image();
-                        img.src = fr.result;
-                        editor.insertContent(
-                        '<img src=\"' + img.src + '\"/><br/>'
-                        );
-                        inp.val('');
-                    }
-                        fr.readAsDataURL(file);
-                    });
-
-                        editor.addButton( 'imageupload', {
-                        text:\"Insert image\",
-                        icon: false,
-                        onclick: function(e) {
-                        inp.trigger('click');
-                    }
-                    });
-                    }
-                    });
-
-                        function insert_content( inst ) {
-                        inst.setContent( '$default' );
-                    }
-                        </script>";
+                $val .= editor_script( $inputId, $default );
             }
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
@@ -1027,22 +1042,10 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
              <td>Abstract </td>
              <td>
              <textarea class="editable" id="abstract" name="abstract">' .
-             $text . '</textarea>
-             <script>
-             tinymce.init( { selector : "#abstract"
-                     , height : 300
-                     , theme : "modern"
-                     , plugins : [ "paste wordcount fullscreen table textcolor"
-                     , "imagetools toc code" ]
-                     , init_instance_callback: "insert_content"
-                     , paste_as_text : true
-                 } );
-             function insert_content( inst ) {
-             inst.setContent( \'' . $text . '\');
-         }
-             </script>
-             </td>
-             </tr>';
+             $text . '</textarea> ' .
+             editor_script( 'abstract', $text ) . 
+             '</td> </tr>'
+             ;
 
     for( $i = 1; $i <= 2; $i++ )
     {

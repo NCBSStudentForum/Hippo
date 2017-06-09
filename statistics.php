@@ -82,6 +82,7 @@ $bookingTable = "<table border='1'>
     <tr> <td>Cancelled by user</td> <td> $nCancelled </td> </tr>
     </table>";
 
+/*
 // Now get all the Thesis Seminar.
 $thesisSeminars = getTableEntries( 'talks', 'class', "class='THESIS SEMINAR'" );
 $logins = getLogins( );
@@ -127,6 +128,8 @@ foreach( $thesisSeminars as $ts )
     else
         $yearsToGraduate[ ] = array( -1, 0 );
 }
+
+ */
 
 
 ?>
@@ -563,6 +566,7 @@ echo $bookingTable;
 <h3></h3>
 <div id="events_class" style="width:100%; height:400px;"></div>
 
+<!--
 <h1>Academic statistics </h1>
 
 <p class="warn">
@@ -575,6 +579,7 @@ date from thesis seminar date. </p>
 
 <h3>Years to Graduate</h3>
 <div id="timeToGraduate" style="width:100%; height:400px;"></div>
+-->
 
 <h3></h3>
 <div id="container0" style="width:100%; height:400px;"></div>

@@ -67,25 +67,25 @@ function eventToTex( $event, $talk = null )
     if( strpos( strtolower( $inst ), 'institute for stem cell' ) !== false )
         $isInstem = true;
 
-    $instemLogo = '';
+    $logo = '';
     if( $isInstem )
-    {
-        $instemLogo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
-        echo printInfo("Using instem logo: $instemLogo" );
-    }
+        $logo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
+    else
+        $logo = '\includegraphics[height=1.5cm]{./data/ncbs_logo.png}';
+
 
     // Logo etc.
     $dateAndPlace = '\faClockO \,' .  $when . ' \faHome \,' . $where;
     $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
-    $head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
-        { \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
+    //$head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
+        //{ \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
 
-    $head .= '\node[] (instem) at ([xshift=30mm,yshift=-15mm]current page.north west) 
-        { ' . $instemLogo . '};';
+    $head .= '\node[] (logo) at ([xshift=30mm,yshift=-15mm]current page.north west) 
+        { ' . $logo . '};';
 
-    $head .= '\node[ ] (aws) at ($(ncbs)!0.5!(instem)$) {\color{blue}' . $talk['class'] . '};';
-    $head .= '\draw[dotted,thick] ([yshift=-5mm]ncbs.south east) -- ++(-\linewidth,0)
-                node[above,midway] {\color{blue} ' . $dateAndPlace . ' };';
+    $head .= '\node[align=left] (tclass) at ([xshift=-30mm,yshift=-15mm]current page.north east)
+                     {\color{blue}' . $talk['class'] . ' };';
+    $head .= '\node[below=of tclass,yshift=3mm,align=left,text width=\linewidth] {\color{blue} ' . $dateAndPlace . ' };';
     $head .= '\end{tikzpicture}';
     $head .= ' ';
 
@@ -159,7 +159,7 @@ $tex = array( "\documentclass[]{article}"
     //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
     //, '\usepackage[sfdefault,light]{FiraSans}'
-    , '\usepackage[sfdefault]{ebgaramond}'
+    , '\usepackage[]{ebgaramond}'
     , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );

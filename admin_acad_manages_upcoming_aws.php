@@ -92,7 +92,7 @@ if( count(  $upcomingAWSs ) > 0 )
 {
     $groupDate = strtotime( $upcomingAWSs[0]['date'] );
     echo '<table class="show_schedule">';
-    echo '<tr> <td>' . $upcomingAWSs[0]['date'] . '</td>';
+    echo '<tr> <td>' . humanReadableDate( $upcomingAWSs[0]['date'] ) . '</td>';
 }
 
 foreach( $upcomingAWSs as $aws )
@@ -103,10 +103,21 @@ foreach( $upcomingAWSs as $aws )
     {
         $groupDate = strtotime( $aws['date'] );
         echo '</tr>';
-        echo '<tr><td>' . $aws['date'] . '</td>';
+        echo '<tr><td>' . humanReadableDate( $aws['date'] ) . '</td>';
     }
     echo '<td>';
+
     echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
+
+    // Check if user has requested AWS schedule and has it been approved.
+    $request = getTableEntry( 'aws_scheduling_request'
+                        , 'speaker,status'
+                        , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
+                        );
+    // If user request for rescheduling was approved, print it here.
+    if( $request )
+        echo preferenceToHtml( $request );
+
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
     echo '<button name="response" value="delete" title="Delete this entry"
@@ -193,8 +204,16 @@ foreach( $schedule as $upcomingAWS )
                 title="Remove this speaker from AWS speaker list" >' 
                 . $symbDelete . '</button>';
     echo '</form>';
+    // Check if user has requested AWS schedule and has it been approved.
+    $request = getTableEntry( 'aws_scheduling_request'
+                        , 'speaker,status'
+                        , array( 'status' => 'APPROVED', 'speaker' => $upcomingAWS[ 'speaker' ])
+                        );
+    // If user request for rescheduling was approved, print it here.
+    if( $request )
+        echo preferenceToHtml( $request );
     echo "</td><td>";
-    echo $upcomingAWS[ 'date' ];
+    echo humanReadableDate( $upcomingAWS[ 'date' ] );
 
     $csvLine .= $upcomingAWS['date'] . ',';
 

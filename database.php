@@ -530,7 +530,7 @@ function getEventsOnThisVenueBetweenTime( $venue, $date
     global $db;
     $stmt = $db->prepare( 
         "SELECT * FROM events
-        WHERE venue=:venue AND status=:status AND date=:date 
+        WHERE venue=:venue AND status=:status AND date=:date AND status='VALID'
         AND ( (start_time < :start_time AND end_time > :start_time )
               OR ( start_time < :end_time AND end_time > :end_time )
               OR ( start_time >= :start_time AND end_time <= :end_time )

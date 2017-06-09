@@ -15,7 +15,7 @@ $schedulingReqs = getTableEntries( 'aws_scheduling_request', 'status'
 if( count( $schedulingReqs ) == 0 )
 {
     echo printWarning( "No requests are left" ); 
-    echo goBack( "user_aws.php", 2 );
+    echo goBack( "./admin_acad_manages_scheduling_request.php", 2 );
     exit;
 }
 else
@@ -41,6 +41,6 @@ else
     }
 }
 
-echo goBackToPageLink( 'user_aws.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad_manages_scheduling_request_submit.php', 'Go back' );
 
 ?>

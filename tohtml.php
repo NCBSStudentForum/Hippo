@@ -1644,4 +1644,19 @@ function talkSummaryLine( $talk )
     return $msg;
 }
 
+function preferenceToHtml( $request )
+{
+
+    $html = '<div class="aws_preference"><br />User Preferences: <br />';
+    $prefs = array( );
+    if( $request[ 'first_preference' ] )
+        $prefs[ ] =  humanReadableDate( $request[ 'first_preference' ] );
+    if( $request[ 'second_preference' ] )
+        $prefs[ ] = humanReadableDate( $request[ 'second_preference' ] );
+
+    $html .= implode( ' <br /> ', $prefs );
+    $html .= '</div>';
+    return $html;
+}
+
 ?>

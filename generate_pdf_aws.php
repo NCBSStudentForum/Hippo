@@ -144,6 +144,7 @@ $tex = array( "\documentclass[10pt]{article}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"
+    , "\usepackage{wrapfig}"
     , "\usepackage{fontawesome}"
     , '\pagenumbering{gobble}'
     //, '\usepackage{fancyhdr}'
@@ -214,7 +215,7 @@ else
 
 if( file_exists( $texFile ) )
 {
-    unlink( $texFile );
+    //unlink( $texFile );
 }
 
 echo "<br/>";

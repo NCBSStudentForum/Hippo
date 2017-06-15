@@ -15,7 +15,7 @@ $schedulingReqs = getTableEntries( 'aws_scheduling_request', 'status'
 if( count( $schedulingReqs ) == 0 )
 {
     echo printWarning( "No requests are left" ); 
-    echo goBack( "./admin_acad_manages_scheduling_request.php", 2 );
+    goBack( "./admin_acad.php", 1 );
     exit;
 }
 else

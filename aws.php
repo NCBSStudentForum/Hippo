@@ -9,10 +9,8 @@ if( strtotime( 'today' ) == strtotime( 'this monday' ) )
     $today = dbDate( 'this monday' );
 else
     $today = dbDate( 'next monday' );
-
-echo "<h2>Annual Work Seminars on " . humanReadableDate( $today ) . " </h2>";
-
 $default = array( 'date' => $today );
+
 if( $_GET )
 {
     if( array_key_exists( 'date', $_GET ) )
@@ -20,6 +18,8 @@ if( $_GET )
     else
         $default = array( 'date' => $today );
 }
+
+echo "<h2>Annual Work Seminars on " . humanReadableDate( $default[ 'date' ] ) . " </h2>";
 
 echo '
     <form method="get" action="">

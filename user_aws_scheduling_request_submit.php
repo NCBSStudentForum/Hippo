@@ -13,6 +13,7 @@ $sendEmail = true;
 
 // Speaker is the current user.
 $_POST[ 'speaker' ] = $_SESSION[ 'user' ];
+$login = $_SESSION[ 'user' ];
 
 if( $_POST[ 'response' ] == 'submit' )
 {
@@ -85,7 +86,14 @@ if( $_POST[ 'response' ] == 'submit' )
         $sendEmail = false;
 
     // Create subject for email
-    $subject = "Your preferences for AWS schedule  has been recieved";
+    $subject = "Your preferences for AWS schedule has been recieved";
+
+    $msg = "<p>Dear " . loginToHTML( $login ) . "</p>";
+    $msg .= "<p>Your scheduling request has been logged. </p>";
+    $msg .= arrayToVerticalTableHTML( $_POST, 'info', NULL, 'response' );
+
+    $email = getLoginEmail( $login );
+    sendPlainTextEmail( $msg, $subject, $email, 'hippo@lists.ncbs.res.in' );
 }
 else if( $_POST[ 'response' ] == 'delete' )
 {
@@ -103,33 +111,6 @@ else if( $_POST[ 'response' ] == 'delete' )
     }
     else
         $sendEmail = false;
-}
-
-
-if( $sendEmail )
-{
-    $to = getLoginEmail( $_POST[ 'speaker' ] );
-    $table = getTableEntry( 
-        'aws_scheduling_request', 'id' , array( 'id' => $_POST[ 'id' ] ) 
-        );
-
-
-    if( ! $table )
-    {
-        echo minionEmbarrassed( "Could not fetch your preference.." );
-    }
-    else
-    {
-        $options = array( 
-            'USER' => loginToText( $_POST[ 'speaker' ] )
-            , 'EMAIL_BODY' => arrayToVerticalTableHTML( $table, 'info' )
-            );
-        $templ = emailFromTemplate( 'user_create_request', $options );
-
-        sendPlainTextEmail(
-            $templ['email_body'], $subject, $to, $templ['cc'] 
-            ); 
-    }
 }
 
 echo goBackToPageLink( "user_aws.php", "Go back" );

@@ -88,7 +88,7 @@ if( $_POST[ 'response' ] == 'submit' )
     // Create subject for email
     $subject = "Your preferences for AWS schedule has been recieved";
 
-    $msg = "<p>Dear " . loginToHTML( $login ) . "</p>";
+    $msg = "<p>Dear " . loginToText( $login ) . "</p>";
     $msg .= "<p>Your scheduling request has been logged. </p>";
     $msg .= arrayToVerticalTableHTML( $_POST, 'info', NULL, 'response' );
 

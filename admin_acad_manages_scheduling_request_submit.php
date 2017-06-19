@@ -66,6 +66,7 @@ if( $_POST[ 'response' ] == 'Reject' )
         sendPlainTextEmail( $msg
             , "Your preference for AWS dates (id:". $rid . ") has been rejected"
             , $speakerInfo[ 'email' ]
+            , 'hippo@lists.ncbs.res.in'
         );
 
         goToPage( "admin_acad_manages_scheduling_request.php", 1 );
@@ -99,6 +100,7 @@ elseif( $_POST['response'] == 'Accept' )
         sendPlainTextEmail( $msg
                 , "Your AWS preference dates (id:$rid) have been approved"
                 , $speakerInfo['email' ]
+                , 'hippo@lists.ncbs.res.in'
             );
         
         echo goToPage( 'admin_acad_manages_scheduling_request.php', 1 );

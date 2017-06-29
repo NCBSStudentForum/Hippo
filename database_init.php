@@ -250,6 +250,7 @@ function initialize( $db  )
             , abstract MEDIUMTEXT
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
             , comment TEXT 
+            , acknowledged ENUM( 'YES', 'NO' ) DEFAULT 'NO'
             , FOREIGN KEY (speaker) REFERENCES logins(login)
             , UNIQUE (speaker, date) )"
         );

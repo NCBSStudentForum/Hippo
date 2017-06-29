@@ -22,8 +22,10 @@ if( $_POST )
             Please mark your calendar as well." 
         );
 
-        $email = "<p>User " . loginToText( $user ) . " has just acknowledged his/her AWS date. </p>";
+        $email = "<p>" . loginToHTML( $user ) . " has just acknowledged his/her AWS date. </p>";
+        $emial .= "<p>" . humanReadableDate( 'now' ) . "</p>";
         $subject = "$user has acknowledged his/her AWS date";
+
         $to = 'hippo@lists.ncbs.res.in';
         sendPlainTextEmail( $email, $subject, $to );
 

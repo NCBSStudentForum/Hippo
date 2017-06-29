@@ -15,9 +15,34 @@ $tempScheduleAWS = temporaryAwsSchedule( $_SESSION[ 'user' ] );
 if( $scheduledAWS )
 {
     echo alertUser( "
-        <font color=\"blue\">&#x2620 Your AWS has been scheduled on " . 
-        humanReadableDate( $scheduledAWS[ 'date' ] ) . '</font>'
+        <font color=\"blue\">&#x2620 Your AWS date has been confirmed. It is on " . 
+        humanReadableDate( $scheduledAWS[ 'date' ] ) . '.</font>'
     );
+
+    $disabled = '';
+    if( $scheduledAWS[ 'acknowledged' ] == 'YES' )
+    {
+        echo "You have already confirmed your schedule. Be sure to mark your calendar as well.";
+        $disabled = 'disabled';
+    }
+    else
+    {
+    echo printInfo( 
+        "By pressing this button, you are confirming your AWS schedule.
+        If you have already acknowledged, this button will be disabled.
+        Please contact academic office in case you want to change your schedule.
+        " );
+    }
+
+    echo "
+        <form method=\"post\" action=\"user_acknowledge_aws_schedule_action.php\">
+        <button $disabled name=\"acknowledged\" value=\"YES\">Acknowledge schedule</button>
+        <input type=\"hidden\" name=\"id\" value=\"" . $scheduledAWS[ 'id' ] . "\" >
+        </form>
+        ";
+
+
+    /*
     echo printWarning( "
         <x-small>
         This date is very unlikely to change without your approval.
@@ -26,6 +51,8 @@ if( $scheduledAWS )
         </x-small>
         "
     );
+     */
+
 }
 else 
 {
@@ -112,11 +139,13 @@ echo '</div>';
 if( $scheduledAWS )
 {
 
+    $editableTill = strtotime( '-1 day', strtotime( $scheduledAWS[ 'date' ] ) );
     echo printInfo( 'Please fill-in details of your upcoming  AWS below.
          We will use this to generate the notification email
-         and document. You can change it as many times as you like 
+         and document. You can change it as many times as you like upto 
+         23:59 Hrs, ' . humanReadableDate( $editableTill ) . '
          <small> (Note: We will not store the old version).</small>
-        ' );
+         ' );
     $id = $scheduledAWS[ 'id' ];
     echo "<form method=\"post\" action=\"user_aws_update_upcoming_aws.php\">";
     echo arrayToVerticalTableHTML( $scheduledAWS, 'aws', NULL

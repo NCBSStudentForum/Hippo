@@ -371,16 +371,17 @@ if( $today >= $startDay && $today <= $endDay )
             $subject = "You have not confirmed your AWS schedule yet";
             $body = "<p> Dear " .  loginToHTML( $speaker ) . " </p>";
             $body .= "<p>Greetings!</p>
-                <p>You AWS date has been fixed and you are requested to 
-                acknowledge your AWS schedule. To do so, please login
-                to NCBS Hippo (https://ncbs.res.in/hippo), and go to 'My AWS' page.
-                All you need to do to press a button there.
+                <p>You AWS date has been fixed. It is on " . humanReadableDate( $aws[ 'date' ] ) . 
+                ". You are requested to acknowledge your AWS schedule. To do so, please login
+                to NCBS Hippo (https://ncbs.res.in/hippo), and click on 'My AWS' link.
+                All you need to do to press a button there and I will stop bugging you.
                 </p>
-                <p>I send this reminder daily till speaker acknowledge his AWS
-                   schedule " . $symbStuckOutTounge . " .</p>
+                <p>I send this reminder daily till speaker acknowledge his/her 
+                AWS schedule " . $symbStuckOutTounge . " .</p> 
                 ";
-            $body .= "<p> This email was generated and sent on " . 
+            $body .= "<p> This email was automatically generated and sent on " . 
                 humanReadableDate( 'now' ) . " </p>";
+
             $cclist = 'hippo@lists.ncbs.res.in';
             echo printInfo( "Sending reminder to $to " );
             sendPlainTextEmail( $body, $subject, $to, $cclist );

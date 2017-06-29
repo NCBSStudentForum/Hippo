@@ -13,17 +13,17 @@ if( $_POST )
 {
     $data = array( 'speaker' => $user );
     $data = array_merge( $_POST, $data );
-    var_dump( $data );
-    echo "Sending your acknowledgment to database ";
+    echo( "Sending your acknowledgment to database " );
     $res = updateTable( 'upcoming_aws', 'id,speaker', 'acknowledged', $data );
     if( $res )
     {
-        echo printInfo( "You have successfully acknowledged your AWS schedule. 
+        echo printInfo( 
+            "You have successfully acknowledged your AWS schedule. 
             Please mark your calendar as well." 
         );
 
-        //goToPage( "user_aws.php", 1 );
-        //exit;
+        goToPage( "user_aws.php", 1 );
+        exit;
     }
     else
     {

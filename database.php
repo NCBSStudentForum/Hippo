@@ -2071,5 +2071,6 @@ function getSpeakerByName( $name )
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
+
 ?>
 

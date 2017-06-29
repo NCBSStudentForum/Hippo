@@ -10,7 +10,6 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/var/log/hippo.log' );
 
-$symbStuckOutTounge = "&#9786";
 
 // Directory to store the mdsum of sent emails.
 $maildir = getDataDir( ) . '/_mails';
@@ -351,23 +350,24 @@ if( $today >= $startDay && $today <= $endDay )
  */
 {
     $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '14:15' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '16:00' );
 
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Checking for upcoming aws which has not been acknowleged" );
 
         // Get all events which are grouped.
-        $nonConfirmedUpcomingAws = getTableEntries( 
-                'upcoming_aws', 'date', "acknowledged='NO'" 
-            );
+        $nonConfirmedUpcomingAws = getUpcomingAWS( );
+
         foreach( $nonConfirmedUpcomingAws as $aws )
         {
+            if( $aws[ 'acknowledged' ] == 'YES' )
+                continue;
+
             //var_dump( $aws );
             $speaker = $aws[ 'speaker' ];
             $table = arrayToVerticalTableHTML( $aws, 'aws' );
             $to = getLoginEmail( $speaker );
-            echo printInfo( "Sending reminder to $to " );
             $subject = "You have not confirmed your AWS schedule yet";
             $body = "<p> Dear " .  loginToHTML( $speaker ) . " </p>";
             $body .= "
@@ -379,9 +379,11 @@ if( $today >= $startDay && $today <= $endDay )
                 schedule " . $symbStuckOutTounge . " .</p>
                 ";
             $email = $body . $table;
-            echo $email;
+            $cclist = 'hippo@lists.ncbs.res.in';
+            echo printInfo( "Sending reminder to $to " );
+            sendPlainTextEmail( $email, $subject, $to, $cclist );
         }
     }
-
 }
+
 ?>

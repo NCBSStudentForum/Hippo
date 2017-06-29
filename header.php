@@ -5,8 +5,6 @@ ob_start();
 
 /**
  * @brief Return link to calendar.
- * TODO: This must be specified by admin later.
- *
  * @return 
  */
 function calendarURL( ) 
@@ -175,5 +173,6 @@ $symbCheck = "&#10003";
 $symbSubmit = $symbCheck;
 $symbUpdate = $symbCheck;
 $symbRupee = '&#8377';
+$symbStuckOutTounge = "&#9786";
 
 ?>

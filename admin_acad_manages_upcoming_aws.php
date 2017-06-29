@@ -42,7 +42,7 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '<table>';
     echo '<tr><td>';
 
-    echo arrayToTableHTML( $upcomingAWS, 'aws' 
+    echo arrayToVerticalTableHTML( $upcomingAWS, 'aws' 
         , '', array( 'id', 'status', 'comment' )
     );
 
@@ -114,9 +114,12 @@ foreach( $upcomingAWSs as $aws )
                         , 'speaker,status'
                         , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
                         );
+
     // If user request for rescheduling was approved, print it here.
     if( $request )
         echo preferenceToHtml( $request );
+
+    echo "<p class=\"note_to_user\">Acknowledged: " . $aws[ 'acknowledged' ] . "</p>";
 
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';

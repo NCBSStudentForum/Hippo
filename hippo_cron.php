@@ -10,6 +10,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/var/log/hippo.log' );
 
+$symbStuckOutTounge = "&#9786";
 
 // Directory to store the mdsum of sent emails.
 $maildir = getDataDir( ) . '/_mails';
@@ -345,4 +346,42 @@ if( $today >= $startDay && $today <= $endDay )
     }
 }
 
+/* If user has not acknowledged their aws, bug them till they acknowlege. Do it
+ * every day 4p.m.
+ */
+{
+    $today = 'today';
+    $awayFrom = strtotime( 'now' ) - strtotime( '14:15' );
+
+    if( $awayFrom > -1 && $awayFrom < 15 * 60 )
+    {
+        echo printInfo( "Checking for upcoming aws which has not been acknowleged" );
+
+        // Get all events which are grouped.
+        $nonConfirmedUpcomingAws = getTableEntries( 
+                'upcoming_aws', 'date', "acknowledged='NO'" 
+            );
+        foreach( $nonConfirmedUpcomingAws as $aws )
+        {
+            //var_dump( $aws );
+            $speaker = $aws[ 'speaker' ];
+            $table = arrayToVerticalTableHTML( $aws, 'aws' );
+            $to = getLoginEmail( $speaker );
+            echo printInfo( "Sending reminder to $to " );
+            $subject = "You have not confirmed your AWS schedule yet";
+            $body = "<p> Dear " .  loginToHTML( $speaker ) . " </p>";
+            $body .= "
+                <p>You need to acknowledge your AWS schedule. To do so, please login
+                to NCBS Hippo (https://ncbs.res.in/hippo), and go to 'My AWS' page.
+                All you need to do to press a button.
+                </p>
+                <p>I'll send this reminder daily unless you acknowledge your 
+                schedule " . $symbStuckOutTounge . " .</p>
+                ";
+            $email = $body . $table;
+            echo $email;
+        }
+    }
+
+}
 ?>

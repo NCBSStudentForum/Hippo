@@ -370,7 +370,7 @@ if( $today >= $startDay && $today <= $endDay )
             $to = getLoginEmail( $speaker );
             $subject = "You have not confirmed your AWS schedule yet";
             $body = "<p> Dear " .  loginToHTML( $speaker ) . " </p>";
-            $body .= "
+            $body .= "<p>Greetings!</p>
                 <p>You need to acknowledge your AWS schedule. To do so, please login
                 to NCBS Hippo (https://ncbs.res.in/hippo), and go to 'My AWS' page.
                 All you need to do to press a button.
@@ -378,7 +378,8 @@ if( $today >= $startDay && $today <= $endDay )
                 <p>I'll send this reminder daily unless you acknowledge your 
                 schedule " . $symbStuckOutTounge . " .</p>
                 ";
-            $email = $body . $table;
+            $body .= "<p> This email was generated and sent on " . 
+                    humanReadableDate( 'now' ) . ' ' . humanReadableTime( 'now' ) . " </p>";
             $cclist = 'hippo@lists.ncbs.res.in';
             echo printInfo( "Sending reminder to $to " );
             sendPlainTextEmail( $email, $subject, $to, $cclist );

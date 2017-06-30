@@ -49,6 +49,22 @@ else if( $_POST['response'] == 'add' )
         exit;
     }
 }
+else if( $_POST['response'] == 'delete' )
+{
+    $res = deleteFromTable( 'email_templates' , 'id' , $_POST );
+    if( $res )
+    {
+        echo printInfo( 'Successfully deleted email template.' );
+        goToPage( $_SERVER[ "HTTP_REFERER" ], 1 );
+        exit;
+    }
+    else
+    {
+        echo minionEmbarrassed( "I could not delete email template" );
+        echo goBackToPageLink( $_SERVER[ "HTTP_REFERER" ], "Go back" );
+        exit;
+    }
+}
 else
 {
     echo printWarning( "Unknown response code from server " . $_POST[ 'response' ]

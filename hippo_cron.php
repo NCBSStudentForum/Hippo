@@ -1,4 +1,7 @@
 <?php
+/*
+ * This file is run by cron every 15 minutes.
+ */
 
 include_once 'header.php';
 include_once 'methods.php';
@@ -352,7 +355,10 @@ if( $today >= $startDay && $today <= $endDay )
     $today = 'today';
     $awayFrom = strtotime( 'now' ) - strtotime( '17:00' );
 
-    if( $awayFrom > -1 && $awayFrom < 15 * 60 )
+    $dayNo = date( 'N', strtotime( 'today' ) );
+
+    // Send this reminder only on even days.
+    //if( $dayNo % 2 == 0 && $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Checking for upcoming aws which has not been acknowleged" );
 
@@ -362,25 +368,34 @@ if( $today >= $startDay && $today <= $endDay )
         foreach( $nonConfirmedUpcomingAws as $aws )
         {
             if( $aws[ 'acknowledged' ] == 'YES' )
+            {
+                echo printInfo( $aws[ 'speaker' ] . " has already confirmed " );
                 continue;
+            }
 
             //var_dump( $aws );
             $speaker = $aws[ 'speaker' ];
             $table = arrayToVerticalTableHTML( $aws, 'aws' );
             $to = getLoginEmail( $speaker );
+            $email = getEmailTemplateById( 'REMIND_SPEAKER_TO_CONFIRM_AWS_DATE' );
+            var_dump( $email );
+
             $subject = "You have not confirmed your AWS schedule yet";
             $body = "<p> Dear " .  loginToHTML( $speaker ) . " </p>";
             $body .= "<p>Greetings!</p>
                 <p>You AWS date has been fixed. It is on " . humanReadableDate( $aws[ 'date' ] ) . 
-                ". You are requested to acknowledge your AWS schedule. To do so, please login
+                ". You are requested to confirm your AWS schedule so we know that
+                you are aware of your AWS schedule. To do so, please login
                 to NCBS Hippo (https://ncbs.res.in/hippo), and click on 'My AWS' link.
-                All you need to do to press a button there and I will stop bugging you.
+                All you need to do is to press a button 'Acknowledge Schedule' there 
+                and I will stop bugging you.
                 </p>
-                <p>I send this reminder daily till speaker acknowledge his/her 
-                AWS schedule " . $symbStuckOutTounge . " .</p> 
+                <p>I send this reminder on every Tuesday, Thursday, Saturday 
+                till speaker confirms his/her AWS date " . $symbStuckOutTounge . " .</p> 
                 ";
             $body .= "<p> This email was automatically generated and sent on " . 
-                humanReadableDate( 'now' ) . " </p>";
+                humanReadableDate( 'now' ) . ". If this is mistake, please write to 
+               hippo@lists.ncbs.res.in .  </p>";
 
             $cclist = 'hippo@lists.ncbs.res.in';
             echo printInfo( "Sending reminder to $to " );

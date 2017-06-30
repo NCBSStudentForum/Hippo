@@ -19,7 +19,7 @@ foreach( $templates as $template )
 {
     $templateDict[ $template[ 'id' ] ] = $template;
     $html .= '<option name="id" value="' . $template[ 'id' ] .  '">' 
-        . $template[ 'when_to_send' ] . '</option>';
+        . $template[ 'id' ] . '</option>';
 }
 
 $html .= "</select>";
@@ -37,14 +37,19 @@ $defaults = array( "id" => "" );
 if( $id )
 {
     $defaults = $templateDict[ $id ];
-    $todo = 'edit';
+    $todo = 'update';
 }
 
 echo '<form method="post" action="admin_manages_email_templates_submit.php">';
-echo dbTableToHTMLTable( 'email_templates', $defaults
-    , array( 'id', 'recipients', 'cc', 'when_to_send', 'description' )
-    , $todo
-    );
+if( $todo  == 'update' )
+    $editable = array( 'recipients', 'cc', 'when_to_send', 'description' );
+else
+    $editable = array( 'id', 'recipients', 'cc', 'when_to_send', 'description' );
+
+echo dbTableToHTMLTable( 'email_templates', $defaults, $editable, $todo);
+echo '<button onclick="AreYouSure( this )" 
+    name="response" title="Delete this entry" value="delete">' . $symbDelete 
+    . '</button>';
 echo "</form>";
 
 echo goBackToPageLink( "admin.php", "Go back" );

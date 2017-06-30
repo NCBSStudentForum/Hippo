@@ -86,7 +86,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
     }
 
     /* Send out email to TCM members and faculty about upcoming AWS. */
-    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '15:00' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         $awses = getUpcomingAWS( dbDate( 'next monday' ) );
@@ -113,6 +113,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
                 $subject = 'Annual Work Seminar of ' . $speaker;
                 $to = $recipient[ 'email' ];
                 $cc = $email[ 'cc' ];
+                echo "<p>Sending AWS notification $to </pre>";
                 sendPlainTextEmail( $email[ 'email_body' ], $subject, $to, $cc );
             }
         }

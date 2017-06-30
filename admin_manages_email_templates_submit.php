@@ -6,7 +6,7 @@ include_once "check_access_permissions.php";
 
 mustHaveAnyOfTheseRoles( array( 'ADMIN' ) );
 
-if( $_POST['response'] == 'edit' )
+if( $_POST['response'] == 'update' )
 {
     $_POST[ 'modified_on' ] = date( 'Y-m-d H:i:s', strtotime( 'now' ));
     $res = updateTable( 'email_templates'

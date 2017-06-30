@@ -23,11 +23,12 @@ if( $_POST )
         );
 
         $email = "<p>" . loginToHTML( $user ) . " has just acknowledged his/her AWS date. </p>";
-        $emial .= "<p>" . humanReadableDate( 'now' ) . "</p>";
+        $email .= "<p>" . humanReadableDate( 'now' ) . "</p>";
         $subject = "$user has acknowledged his/her AWS date";
 
-        $to = 'hippo@lists.ncbs.res.in';
-        sendPlainTextEmail( $email, $subject, $to );
+        $to = 'acadoffice@ncbs.res.in';
+        $cc = 'hippo@lists.ncbs.res.in';
+        sendPlainTextEmail( $email, $subject, $to, $cc );
 
         goToPage( "user_aws.php", 1 );
         exit;

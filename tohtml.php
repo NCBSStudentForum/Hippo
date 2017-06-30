@@ -1208,7 +1208,7 @@ function speakerName( $speaker )
                         , array( 'id' => $speaker )
                     );
 
-    $name = $speaker[ 'honorific' ];
+    $name = __get__( $speaker, 'honorific', '' );
     $name .= ' ' . $speaker[ 'first_name' ];
 
     if( __get__( $speaker, 'middle_name', '' ) )
@@ -1216,6 +1216,11 @@ function speakerName( $speaker )
 
     $name .= ' ' . $speaker[ 'last_name' ];
     return $name;
+}
+
+function arrayToName( $arr )
+{
+    return speakerName( $arr );
 }
 
 

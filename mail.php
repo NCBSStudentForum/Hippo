@@ -182,6 +182,11 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     return true;
 }
 
+function notifyFacultyAboutAWS( $email, $aws )
+{
+
+}
+
 
 // $res = sendEmail( "testing"
 //     , "Your request has been created"

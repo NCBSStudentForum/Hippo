@@ -84,8 +84,42 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             sendPlainTextEmail( $mail, $subject, $to, $cclist );
         }
     }
+
+    /* Send out email to TCM members and faculty about upcoming AWS. */
+    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
+    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    {
+        $awses = getUpcomingAWS( dbDate( 'next monday' ) );
+        foreach( $awses as $aws )
+        {
+            $speaker = loginToText( $aws[ 'speaker' ] );
+            echo "<h3>AWS of $speaker</h3>";
+            $emails = array( );
+            foreach( $aws as $key => $value )
+                if( preg_match( '/tcm_member_\d|supervisor_\d/', $key ) )
+                    if( strlen( $value )  > 1 )
+                        $emails[ ] = $value;
+
+            foreach( $emails as $email )
+            {
+                $recipient = findAnyoneWithEmail( $email );
+                $name = arrayToName( $recipient );
+                $email = emailFromTemplate( 'NOTIFY_SUPERVISOR_TCM_ABOUT_AWS'
+                    , array( 'FACULTY' => $name, 'AWS_SPEAKER' => $speaker
+                            , 'AWS_DATE' => humanReadableDate( $aws[ 'date' ] ) 
+                            , 'AWS_DATE_DB' => $aws[ 'date' ]
+                        )
+                    );
+                $subject = 'Annual Work Seminar of ' . $speaker;
+                $to = $recipient;
+                $cc = $email[ 'cc' ];
+                sendPlainTextEmail( $email[ 'email_body' ], $subject, $to, $cc );
+            }
+        }
+    }
 }
-else if( $today == dbDate( strtotime( 'this monday' ) ) )
+
+if( $today == dbDate( strtotime( 'this monday' ) ) )
 {
     // Send on 10 am about AWS
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
@@ -125,7 +159,8 @@ else if( $today == dbDate( strtotime( 'this monday' ) ) )
         }
     }
 }
-else if( $today == dbDate( strtotime( 'this sunday' ) ) )
+
+if( $today == dbDate( strtotime( 'this sunday' ) ) )
 {
     // Send on 7pm about this week events.
     $awayFrom = strtotime( 'now' ) - strtotime( '7:00 pm' );

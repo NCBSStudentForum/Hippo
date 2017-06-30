@@ -111,7 +111,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
                         )
                     );
                 $subject = 'Annual Work Seminar of ' . $speaker;
-                $to = $recipient;
+                $to = $recipient[ 'email' ];
                 $cc = $email[ 'cc' ];
                 sendPlainTextEmail( $email[ 'email_body' ], $subject, $to, $cc );
             }

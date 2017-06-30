@@ -24,7 +24,7 @@ if( $_POST )
 
         $email = "<p>" . loginToHTML( $user ) . " has just acknowledged his/her AWS date. </p>";
         $email .= "<p>" . humanReadableDate( 'now' ) . "</p>";
-        $subject = "$user has acknowledged his/her AWS date";
+        $subject = loginToText( $user ) . " has acknowledged his/her AWS date";
 
         $to = 'acadoffice@ncbs.res.in';
         $cc = 'hippo@lists.ncbs.res.in';

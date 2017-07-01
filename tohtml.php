@@ -439,7 +439,7 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
     *
     * @return
  */
-function arrayHeaderRow( $array, $tablename, $tobefilterd )
+function arrayHeaderRow( $array, $tablename, $tobefilterd = '' )
 {
     $hrow = '';
     $keys = array_keys( $array );

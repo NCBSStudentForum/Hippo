@@ -566,7 +566,8 @@ function venueSummary( $venue )
     if( is_string( $venue ) )
         $venue = getVenueById( $venue );
 
-    return $venue['name'] . ' ' . $venue['building_name'] . ', ' . $venue['location'];
+    return $venue['name'] . ' [' . $venue[ 'type' ] . '], ' .
+        $venue['building_name'] . ', ' . $venue['location'];
 }
 
 function requestToEditableTableHTML( $request, $editables = Array( ) )

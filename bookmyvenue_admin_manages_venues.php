@@ -12,7 +12,7 @@ echo '<h1>Manage venues</h1>';
 
 $default = array( );
 
-$venues = getVenues( );
+$venues = getVenues( $sortby = 'id' );
 $venuesId = array( );
 foreach( $venues as $venue )
     $venuesId[ ] = $venue[ 'id' ];

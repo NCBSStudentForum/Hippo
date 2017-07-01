@@ -255,6 +255,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             value="' . __get__( $defaults, 'description', '')  . '">';
         echo '<input type="hidden" name="external_id" 
             value="' . $external_id . '">';
+
         // Insert all information into form.
         echo '<input type="hidden" name="date" value="' . $defaults[ 'date' ] . '" >';
 

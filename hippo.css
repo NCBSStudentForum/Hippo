@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans|EB+Garamond|Open+Sans');
+h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 body {
-    font-family : open-sans, droid-serif, sans-serif, Verdana;
+    font-family : 'Fira Sans';
     font-size : normal;
     max-width : 1000px;
     min-width : 100%;

@@ -389,7 +389,7 @@ if( $today >= $startDay && $today <= $endDay )
  */
 {
     $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '9:00' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '10:00' );
     $dayNo = date( 'N', strtotime( 'today' ) );
 
     // Send this reminder only on even days.
@@ -418,12 +418,12 @@ if( $today >= $startDay && $today <= $endDay )
                 );
 
             $subject = "Please confirm your annual work seminar (AWS) date";
-            $body = $email[ 'EMAIL_BODY' ] . 
+            $body = $email[ 'email_body' ] . 
                 "<p> This email was automatically generated and sent on " . 
-                humanReadableDate( 'now' ) . ". If this is mistake, please write to 
-               hippo@lists.ncbs.res.in .  </p>";
+                humanReadableDate( 'now' ) . 
+                ". If this is mistake, please write to acadoffice@ncbs.res.in.</p>";
 
-            $cclist = $email[ 'CC' ];
+            $cclist = $email[ 'cc' ];
             echo printInfo( "Sending reminder to $to " );
             sendPlainTextEmail( $body, $subject, $to, $cclist );
         }

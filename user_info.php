@@ -47,8 +47,9 @@ echo '</table>';
 echo '<br>';
 
 // This is second table.
-echo alertUser( "Note that If I can find you on LDAP server, I'll overwrite your 
-    first name, last_name, and email id. " );
+echo alertUser( "If I find your information on NCBS LDAP server, 
+    I'll overwrite your first name, last_name, and email id. " 
+    );
 echo "<form method=\"post\" action=\"user_info_action.php\">";
 echo dbTableToHTMLTable( 'logins', $info
     , $editables = Array( 'title', 'first_name', 'last_name'

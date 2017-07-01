@@ -24,6 +24,14 @@ echo '<table class="tasks">
         </td>
     </tr>
     <tr>
+    <td>
+        Add/Update/Delete venues
+    </td>
+        <td>
+            <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a> 
+        </td>
+    </tr>
+    <tr>
         <td>Send emails manually (and generate documents)</td>
         <td> <a href="admin_acad_email_and_docs.php">Send emails</td>
     </tr>

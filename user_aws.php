@@ -59,14 +59,16 @@ else
     if( $tempScheduleAWS )
     {
         echo printInfo( "<font color=\"blue\">&#x2620 Your AWS is most likely to be on " . 
-            humanReadableDate( $tempScheduleAWS[ 'date' ] ) . "</font>" .
+            humanReadableDate( $tempScheduleAWS[ 'date' ] ) .". Note that this is not 
+            a confirmed schedule. Just a heads-up!</font>" .
             ".<br>Once confirmed, I will notify you immediately, 
             and once more, at least 28 days in advance." );
 
         echo printWarning( 
-            "This date may change a little if any other speaker's
-            request to change their AWS is approved or new speakers are added. 
-            After approval, this date is very unlikely to change without your consent.
+            "This date likely to change if any other speaker's
+            request to change his/her AWS schedule is approved and/or 
+            new speakers are added.  Once your schedule is confirmed, 
+            it does not change without your approval.
             " 
         );
     }
@@ -178,11 +180,11 @@ foreach( $awsRequests as $awsr )
 echo goBackToPageLink( "user.php", "Go back" );
 echo "<br />";
 
-echo "<h3>Past Annual Work Seminar</h3>";
+echo "<h1>Past Annual Work Seminar</h1>";
 
 echo "<table>";
 echo '<tr><td>
-    If you notice a missing AWS in your list, please emails details to 
+    If you notice your AWS entry is missing from the list below, please emails details to 
     <a href="mailto:hippo@lists.ncbs.res.in" target="_black">hippo@lists.ncbs.res.in</a>
     ';
 echo "</td></tr>";

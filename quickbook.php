@@ -187,8 +187,8 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {
     $date = humanReadableDate( $_POST[ 'date' ] );
 
-    echo printInfo( "I found following available venues for $date" );
     echo "<br/>";
+    echo alertUser( "I found following venues available on $date" );
 
     $venues = getVenues( $sortby = 'name' );
 

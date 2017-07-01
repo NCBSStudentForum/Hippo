@@ -8,6 +8,8 @@ include_once "check_access_permissions.php";
 mustHaveAnyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 echo userHTML( );
 
+echo '<h1>Manage venues</h1>';
+
 $default = array( );
 
 $venues = getVenues( );
@@ -32,20 +34,26 @@ if( __get__( $_POST, 'response', '' ) == 'Select'  )
     $task ='update';
 }
 
-$editables = 'name,institute,building_name,floor,location,type,strength,distance_from_ncbs';
+$editables = 'name,institute,building_name,floor,location,type,strength';
+$editables .= ',distance_from_ncbs';
 $editables .= ',suitable_for_conference,has_projector,has_skype';
 
-echo ' <form method="post" action="bookmyvenue_admin_manages_venues_action.php" >';
+echo ' <h2>Add or Update venue </h2> ';
+echo '<form method="post" action="bookmyvenue_admin_manages_venues_action.php">';
+if( $task == 'add new' )     // Append id to the editable since we are creating new entry.
+{
+    $editables .= ',id';
+}
 echo dbTableToHTMLTable( 'venues', $default, $editables, $task );
 if( $task != 'add new' )
 {
     echo '<button name="response" value="delete" onClick="AreYouSure(this)" 
             title="Delete this entry">' . $symbDelete . '</button>';
-    echo '</form>';
 }
 
+echo '</form>';
 
-echo '<h1>Manage venues</h1>';
+
 
 echo '<h2> List of venues </h2>';
 echo '<table class="show_venue">';

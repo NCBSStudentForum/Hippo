@@ -8,7 +8,7 @@ mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
 echo userHTML( );
 
-echo alertUser( "<small>If monday is not chosen as preference
+echo alertUser( "<small>If Monday is not chosen as preference
     , I will pick first monday next to chosen date while scheduling.
     </small>" 
     );
@@ -20,7 +20,8 @@ if( ! __get__( $_POST, 'speaker', null ) )
     $_POST[ 'speaker' ] = $_SESSION[ 'user' ];
 
 // Check if this user already has a preference.
-$prefs = getTableEntry( 'aws_scheduling_request', 'speaker', $_POST );
+$_POST[ 'status' ] = 'VALID';
+$prefs = getTableEntry( 'aws_scheduling_request', 'speaker,status', $_POST );
 if( ! $prefs )
     $prefs = array( );
 

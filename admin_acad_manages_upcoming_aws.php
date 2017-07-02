@@ -119,7 +119,8 @@ foreach( $upcomingAWSs as $aws )
     if( $request )
         echo preferenceToHtml( $request );
 
-    echo "<p class=\"note_to_user\">Acknowledged: " . $aws[ 'acknowledged' ] . "</p>";
+    if( $aws[ 'acknowledged' ] == 'NO'  )
+        echo "<p class=\"note_to_user\">Acknowledged: " . $aws[ 'acknowledged' ] . "</p>";
 
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';

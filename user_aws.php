@@ -9,6 +9,7 @@ mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 
 echo userHTML( );
 
+// AWS schedule.
 echo '<div style="border:1px dotted">';
 $scheduledAWS = scheduledAWSInFuture( $_SESSION['user'] );
 $tempScheduleAWS = temporaryAwsSchedule( $_SESSION[ 'user' ] );
@@ -131,7 +132,15 @@ else
         echo '<strong>You already have a request below.
             Notice that request is only effective when its <tt>STATUS</tt> has 
             changed to <tt>APPROVED</tt>. </strong>';
+
+        // Form to revoke the approved preference.
+        echo ' <form method="post" action="user_revoke_aws_preference.php">';
         echo arrayToTableHTML( $approved, 'info' );
+        echo '<button name="response" value="delete_preference">Revoke</button> ';
+        echo '<input type="hidden" name="id" value="' . $approved['id'] . '" />';
+        echo '</form>';
+
+
     }
     
 }

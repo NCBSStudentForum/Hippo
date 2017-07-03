@@ -1,9 +1,10 @@
 <?php
 
-include_once( "header.php" );
-include_once( "methods.php" );
-include_once( 'tohtml.php' );
-include_once( "check_access_permissions.php" );
+include_once "header.php" ;
+include_once "methods.php" ;
+include_once 'tohtml.php' ;
+include_once "check_access_permissions.php" ;
+include_once 'mail.php';
 
 mustHaveAnyOfTheseRoles( Array( 'USER' ) );
 

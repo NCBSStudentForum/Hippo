@@ -333,12 +333,12 @@ def construct_flow_graph(  ):
                         ndays = diffInDays(date, first, True)
                         if ndays <= 14:
                             _logger.info( 'Using first preference for %s' % speaker )
-                            addEdge(speaker, slot, 1, -3 + ndays / 7 )
+                            addEdge(speaker, slot, 1, 0 + ndays / 7 )
                     if second:
                         ndays = diffInDays(date, second, True) 
                         if ndays <= 14:
                             _logger.info( 'Using second preference for %s' % speaker )
-                            addEdge(speaker, slot, 1, -1 + ndays / 7 )
+                            addEdge(speaker, slot, 1, 2 + ndays / 7 )
                     
     _logger.info( 'Constructed flow graph' )
 

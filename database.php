@@ -613,6 +613,7 @@ function getUniqueFieldValue( $tablename, $column = 'id' )
 function submitRequest( $request )
 {
     global $db;
+    $collision = false;
 
     if( ! array_key_exists( 'user', $_SESSION ) )
     {
@@ -655,6 +656,7 @@ function submitRequest( $request )
             foreach( $collideWith as $ev )
                 echo arrayToTableHTML( $ev, 'events', $hide );
             echo '</div>';
+            $collision = true;
             continue;
         }
 

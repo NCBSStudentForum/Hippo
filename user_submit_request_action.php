@@ -66,16 +66,16 @@ if( $msg == "OK" )
             , 'hippo@lists.ncbs.res.in'
             );
 
-        goToPage( "user.php", 2 );
-        exit;
+        //goToPage( "user.php", 2 );
+        //exit;
     }
     else
     {
         echo printWarning( 
             "Your request could not be submitted. Please notify the admin." 
         );
-        echo goBackToPageLink( "user.php", "Go back" );
-        exit;
+        //echo goBackToPageLink( "user.php", "Go back" );
+        //exit;
     }
 }
 else

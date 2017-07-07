@@ -66,6 +66,7 @@ if( $msg == "OK" )
             , 'hippo@lists.ncbs.res.in'
             );
 
+        echo printInfo( "Your request has been submitted" );
         //goToPage( "user.php", 2 );
         //exit;
     }

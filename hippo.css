@@ -92,10 +92,11 @@ table.public_links tr td {
 }
 
 table.show_info {
-    max-width : var(--maxwidth);
-    min-width : 90%;
+    max-width: var(--maxwidth);
+    min-width: 400px;
+    min-width: 90%;
     border: 1px solid;
-    background : cyan;
+    background : lightyellow;
 }
 
 table.show_info tr td 
@@ -484,6 +485,11 @@ td.db_table_fieldname {
     text-transform : uppercase;
 }
 
+tr.bordered {
+    border-top: 1px dotted;
+}
+
+
 table.summary {
     font-size : small;
     min-width : 50%;
@@ -535,3 +541,5 @@ div.howto {
     width : 500px;
     text-align: justify;
 }
+
+

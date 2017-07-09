@@ -45,6 +45,9 @@ if( $_POST['response'] == "Review" )
     echo '<table class="show_events">';
     $childrenId = 0;
 
+    $jcLabmeets = getLabmeetAndJC( );
+
+    $collideWith = array( );
     foreach( $requests as $r )
     {
         $rid = $r['rid'];
@@ -54,6 +57,22 @@ if( $_POST['response'] == "Review" )
         echo "<td><input type=\"checkbox\" name=\"events[]\" value=\"$id\" checked></td>";
         $tobefiltered = Array( 'status', 'modified_by', 'rid', 'timestamp', 'external_id' );
         echo "<td>" . arrayToTableHTML( $r, 'request', '', $tobefiltered ) . "</td>";
+
+        $date = $r['date'];
+        $stime = $r[ 'start_time'];
+        $etime = $r[ 'end_time'];
+        $venue = $r[ 'venue' ];
+        $jcOrLab = isThereALabmeetOrJCOnThisVenueSlot( 
+            $date, $stime, $etime, $venue, $jcLabmeets 
+        );
+
+        if( $jcOrLab )
+        {
+            echo "<td>See Warning</td>";
+            $collideWith[ ] = $jcOrLab;
+        }
+        else
+            echo "<td>Clean</td>";
 
     }
 
@@ -70,6 +89,20 @@ if( $_POST['response'] == "Review" )
     echo "<input name=\"request[]\" type=\"checkbox\" checked
         onclick=\"toggleMe(this)\" />Select all</td>
         ";
+
+    if( count( $collideWith ) > 0 )
+    {
+        echo alertUser( "Warning: User is trying to book venue/slot where following 
+            JCs or LABMEETs usually booked. Please be extra careful while approving!" 
+        );
+        foreach( $collideWith as $entry )
+        {
+            $ignore = 'is_public_event,url,description,status,gid,rid,'
+                . 'external_id,modified_by,timestamp'
+                . ',eid,calendar_id,calendar_event_id,last_modified_on';
+            echo arrayToTableHTML( $jcOrLab, 'info', 'lightyellow', $ignore );
+         }
+    }
 
     echo printWarning( 
                 "Be sure to select some entries before taking any action." 

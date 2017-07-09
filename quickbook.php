@@ -188,7 +188,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
     $date = humanReadableDate( $_POST[ 'date' ] );
 
     echo "<br/>";
-    echo alertUser( "I found following venues available on $date" );
+    echo "<h2> Following venues are available on $date </h2>";
 
     $venues = getVenues( $sortby = 'name' );
 
@@ -214,6 +214,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             , dbDate( $_POST[ 'date' ] )
             , $_POST[ 'start_time' ], $_POST[ 'end_time' ]
             );
+
         $reqs = getRequestsOnThisVenueBetweenTime( 
             $venue[ 'id' ]
             , dbDate( $_POST[ 'date' ] )
@@ -229,15 +230,18 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         // If there is already any request or event on this venue, do not book.
         if( count( $all ) > 0 )
         {
-            echo '<tr><td colspan="2">';
-            echo alertUser( "Venue " . $venue[ 'id' ] . " is taken " .
-                    " by following booking requests/events" 
-                );
+            echo '<tr class="bordered"><td colspan="2">';
+            echo ( "<tt> Venue <font color=\"red\">" 
+                . strtoupper( $venue['id']) 
+                . " </font> has been taken by following booking request/event</tt>" 
+            );
 
             echo '<div style="font-size:x-small">';
             foreach( $all as $r )
                 echo arrayToTableHTML( $r, 'info', ''
-                        , 'is_public_event,url,description,gid,rid,external_id,modified_by,timestamp'
+                    , 'is_public_event,url,description,status,gid,rid,'
+                        . 'external_id,modified_by,timestamp'
+                        . ',calendar_id,calendar_event_id,last_modified_on'
                     );
             echo '</div>';
             echo '</td></tr>';

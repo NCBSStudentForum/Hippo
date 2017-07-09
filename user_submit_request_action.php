@@ -67,16 +67,12 @@ if( $msg == "OK" )
             );
 
         echo printInfo( "Your request has been submitted" );
-        //goToPage( "user.php", 2 );
-        //exit;
     }
     else
     {
         echo printWarning( 
             "Your request could not be submitted. Please notify the admin." 
         );
-        //echo goBackToPageLink( "user.php", "Go back" );
-        //exit;
     }
 }
 else

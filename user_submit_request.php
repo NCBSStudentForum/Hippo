@@ -10,15 +10,12 @@ echo userHTML( );
 
 mustHaveAnyOfTheseRoles( array( 'USER', 'BOOKMYVENUE_ADMIN' ) );
 
-echo printInfo( '
-    To make your event visible on NCBS Google calendar, Set option 
-    <tt>IS PUBLIC EVENT</tt>  to <tt>YES</tt>.
+echo alertUser( '
+    1. Set <tt>IS PUBLIC EVENT</tt>  to <tt>YES</tt> if you want your event to appear 
+    on google-calendar. <br />
+    2. Select proper <tt>CLASS</tt> for your booking. Your 
+    request will be rejected if it is filed under wrong <tt>CLASS</tt>
     ' );
-
-echo alertUser(
-    "Make sure to select proper <tt>CLASS</tt> for your booking. Your 
-    request will be rejected if it is filed under wront <tt>CLASS</tt>
-    " );
     
 $venues = getVenues( $sortby = 'total_events' );
 
@@ -38,6 +35,7 @@ $dbDate = dbDate( $date );
 // Generate options here.
 $venue = __get__( $_POST, 'venue', '' );
 $venue = trim( $venue );
+
 if( $venue )
     $venueHTML = "<input name=\"venue\" type=\"text\" value=\"$venue\" readonly>";
 else
@@ -54,6 +52,29 @@ $defaultEndTime = __get__( $_POST, 'end_time'
 $date = __get__( $_POST, 'date', '' );
 $title = __get__( $_POST, 'title', '' );
 $description = __get__( $_POST, 'description', '' );
+
+$labmeetOrJC = isThereALabmeetOrJCOnThisVenueSlot( 
+        $date, $startTime, $defaultEndTime, $venue 
+    );
+if( $labmeetOrJC )
+{
+    $ignore = 'is_public_event,url,description,status,gid,rid,'
+        . 'external_id,modified_by,timestamp'
+        . ',calendar_id,calendar_event_id,last_modified_on';
+
+    echo printWarning( "<font color=\"red\">
+        ATTN: Following Journal Club or Labmeet usually happens at this 
+        slot.  DO NOT book here unless you are sure that following event WILL not
+        happen. 
+        </font>" );
+
+    echo '<small>';
+    echo arrayToTableHTML( $labmeetOrJC, 'info', '', $ignore );
+    echo '</small>';
+    echo '<br><br>';
+}
+
+echo ' <h2>Fill-in details</h2> ';
 
 // If external_id is given then this needs to go into request table. This is 
 // used to fetch event data from external table. The format of this field if 

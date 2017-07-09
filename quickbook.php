@@ -263,7 +263,8 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         $block .= '<div><tr>';
         if( $jclabmeet )
         {
-            $block = '<div class="bordered">';
+            $block = '<form method="post" action="user_submit_request.php">';
+            $block .= '<div class="bordered">';
             $block .= '<tr><td colspan="1">';
             $block .= '<font color=\"red\">ALERT: This slot/venue though available
                  is usually booked for following JC/Labmeet. Make sure to check

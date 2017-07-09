@@ -1444,11 +1444,13 @@ function emailFromTemplate( $templateName, $options )
         echo alertUser( "No template found with id: aws_template. I won't
                         be able to generate email"
                       );
-        return '';
+        return null;
     }
 
     foreach( $options as $key => $value )
-    $desc = str_replace( "@$key@", $value, $desc );
+    {
+        $desc = str_replace( "@$key@", $value, $desc );
+    }
 
     $templ[ 'email_body' ] = $desc;
     return $templ;

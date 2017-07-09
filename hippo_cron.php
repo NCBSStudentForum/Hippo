@@ -301,7 +301,7 @@ $endDay = strtotime( 'next friday' );
 $startDay = $endDay - (3 * 24 * 86400 );
 if( $today >= $startDay && $today <= $endDay ) 
 {
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '11:30 am' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
         // Every day 10 am. Annoy.
@@ -312,12 +312,13 @@ if( $today >= $startDay && $today <= $endDay )
                 continue;
 
             // Otherwise annoy
-            $subject = "Details of your upcoming AWS are incomplete, human!";
-            $to = getEmailById( $aws[ 'speaker' ] );
+            $subject = "Details of your upcoming AWS are still incomplete!";
+            $to = getLoginEmail( $aws[ 'speaker' ] );
 
-            $macros = array( 'USER' => getUserInfo( $aws['speaker'] )
+            $macros = array( 'USER' => loginToHTML( $aws['speaker'] )
                             , 'DATE' => humanReadableDate( $today ) 
                         );
+
             $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $macros );
 
             // Log it.

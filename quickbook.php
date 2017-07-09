@@ -8,12 +8,11 @@
 include_once 'database.php';
 include_once 'methods.php';
 include_once 'tohtml.php';
-include_once './check_access_permissions.php';
+include_once 'check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( "USER" ) );
 
 echo userHTML( );
-
 
 $roundedTimeNow = round( time( ) / (15 * 60) ) * (15 * 60 );
 
@@ -31,9 +30,7 @@ $defaults = array(
 $external_id = null;
 
 
-/*
- * We can come here from a $_GET or $_POST request 
- */
+/* We can come here from a $_GET or $_POST request */
 if( array_key_exists( 'external_id', $_GET ) )
 {
     $external_id = $_GET[ 'external_id' ];
@@ -90,6 +87,8 @@ else
     $openAirNo = 'checked';
 
 
+/* PAGE 
+ */
 
 echo '<br />';
 echo '<table style="min-width:300px;max-width:500px",border="0">';
@@ -168,33 +167,39 @@ if( ! anyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN' ) ) )
 $publicEvents = getPublicEventsOnThisDay( $date );
 if( count( $publicEvents ) > 0 )
 {
-    echo "<div style=\"font-size:small\">";
-    echo alertUser( "Following public events are scheduled on the campus on 
-        selected date" 
-    );
+    echo "<h2>Following public events are scheduled on the campus on selected date </h2>";
+
+    echo "<div style=\"font-size:x-small\">";
     foreach( $publicEvents as $event )
-        echo arrayToTableHTML( $event, 'events', ''
-            , array( 'gid', 'eid', 'description', 'status', 'is_public_event'
-            , 'external_id'
-            , 'calendar_id', 'calendar_event_id', 'last_modified_on' 
-            )
-        );
+        echo arrayToTableHTML( $event, 'info', ''
+            , 'gid,eid,description,status,is_public_event,external_id'
+              . ',calendar_id,calendar_event_id,last_modified_on,url' 
+          ) ;
 
     echo "</div>";
 }
+
+/******************************************************************************
+ * Get the list of labmeets and JC 
+ * ***************************************************************************/
+$jcAndMeets = getLabmeetAndJC( );
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {
     $date = humanReadableDate( $_POST[ 'date' ] );
 
-    echo "<br/>";
     echo "<h2> Following venues are available on $date </h2>";
 
     $venues = getVenues( $sortby = 'name' );
 
-    echo '<table border="0">';
     foreach ($venues as $venue) 
     {
+        $table = '<table class="venue_slot">';
+        $venueId = $venue[ 'id' ];
+        $date = dbDate( $_POST['date'] );
+        $startTime = $_POST[ 'start_time' ];
+        $endTime = $_POST[ 'end_time' ];
+
         if( $venue[ 'strength' ] < $_POST[ 'strength' ] )
             continue;
 
@@ -209,18 +214,15 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             continue;
 
         // Cool. Now check if any event is scheduled at this venue.
-        $events = getEventsOnThisVenueBetweenTime(
-            $venue[ 'id' ]
-            , dbDate( $_POST[ 'date' ] )
-            , $_POST[ 'start_time' ], $_POST[ 'end_time' ]
-            );
+        $events = getEventsOnThisVenueBetweenTime( 
+            $venueId , $date , $startTime, $endTime
+        );
 
         $reqs = getRequestsOnThisVenueBetweenTime( 
-            $venue[ 'id' ]
-            , dbDate( $_POST[ 'date' ] )
-            , $_POST[ 'start_time' ], $_POST[ 'end_time' ]
+            $venueId, $date, $startTime, $endTime
             );
 
+        // merge requests and events are together.
         $all = array( );
         if( $events )
             $all = array_merge( $all, $events );
@@ -228,55 +230,82 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             $all = array_merge( $all, $reqs );
 
         // If there is already any request or event on this venue, do not book.
+        $ignore = 'is_public_event,url,description,status,gid,rid,'
+            . 'external_id,modified_by,timestamp'
+            . ',calendar_id,calendar_event_id,last_modified_on';
+
         if( count( $all ) > 0 )
         {
-            echo '<tr class="bordered"><td colspan="2">';
-            echo ( "<tt> Venue <font color=\"red\">" 
+            $tr = '<tr><td colspan="2">';
+            $tr .= "<tt> Venue <font color=\"red\">" 
                 . strtoupper( $venue['id']) 
                 . " </font> has been taken by following booking request/event</tt>" 
-            );
+                ;
 
-            echo '<div style="font-size:x-small">';
+            $tr .= '<div style="font-size:x-small">';
+
             foreach( $all as $r )
-                echo arrayToTableHTML( $r, 'info', ''
-                    , 'is_public_event,url,description,status,gid,rid,'
-                        . 'external_id,modified_by,timestamp'
-                        . ',calendar_id,calendar_event_id,last_modified_on'
-                    );
-            echo '</div>';
-            echo '</td></tr>';
+                $tr .= arrayToTableHTML( $r, 'info', '', $ignore );
+
+            $tr .= '</div>';
+            $tr .= '</td></tr>';
+            $table .= $tr;
             continue;
         }
 
         // Now construct a table and form
-        echo '<tr>';
-        echo '<form method="post" action="user_submit_request.php">';
+        // check if there is a labmeet or JC at this slot/venue.
+        $jclabmeet = isThereALabmeetOrJCOnThisVenueSlot( 
+                $date, $startTime, $endTime, $venueId, $jcAndMeets 
+            );
+
+        $block = '<form method="post" action="user_submit_request.php">';
+        $block .= '<div><tr>';
+        if( $jclabmeet )
+        {
+            $block = '<div class="bordered">';
+            $block .= '<tr><td colspan="1">';
+            $block .= '<font color=\"red\">ALERT: This slot/venue though available
+                 is usually booked for following JC/Labmeet. Make sure to check
+                with booking party before you book this slot. They may book it 
+                later. </font>';
+
+            $block .= '<div style="font-size:x-small">';
+            $block .= arrayToTableHTML( $jclabmeet, 'info', 'lightcyan', $ignore . ",date,eid");
+            $block .= '</div>';
+            $block .= '</td></tr>';
+        }
+
 
         // Create hidden fields from defaults.
-        echo '<input type="hidden" name="title" 
+        $block .= '<input type="hidden" name="title" 
             value="' . $defaults['title' ] . '">';
-        echo '<input type="hidden" name="description" 
+        $block .= '<input type="hidden" name="description" 
             value="' . __get__( $defaults, 'description', '')  . '">';
-        echo '<input type="hidden" name="external_id" 
+        $block .= '<input type="hidden" name="external_id" 
             value="' . $external_id . '">';
 
         // Insert all information into form.
-        echo '<input type="hidden" name="date" value="' . $defaults[ 'date' ] . '" >';
+        $block .= '<input type="hidden" name="date" value="' . $defaults[ 'date' ] . '" >';
 
-        echo '<input type="hidden" 
+        $block .= '<input type="hidden" 
             name="start_time" value="' . $defaults[ 'start_time' ] . '" >';
-        echo '<input type="hidden" 
+        $block .= '<input type="hidden" 
             name="end_time" value="' . $defaults[ 'end_time' ] . '" >';
-        echo '<input type="hidden" 
+        $block .= '<input type="hidden" 
             name="venue" value="' . $venue[ 'id' ] . '" >';
-
         $venueT = venueSummary( $venue );
-        echo "<td>$venueT</td>";
-        echo '<td> <button type="submit" title="Book this venue">' . $symbCheck . '</button></td>';
-        echo '</form>';
-        echo '</tr>';
+        $block .= "<td>$venueT</td>";
+        $block .= '<td> <button type="submit" title="Book this venue">' . $symbCheck . '</button></td>';
+        $block .= '</tr></div>';
+        $block .= '</form>';
+
+        $table .= $block;
+
+        $table .= '</table>';
+        echo $table;
     }
-    echo '</table>';
+
     unset( $_POST );
 }
 

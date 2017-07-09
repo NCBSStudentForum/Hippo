@@ -2074,5 +2074,56 @@ function getSpeakerByName( $name )
 }
 
 
+function getLabmeetAndJC( )
+{
+    global $db;
+    $today = dbDate( 'today' );
+    $query = "SELECT * FROM events WHERE 
+                (class='LAB MEETING' OR class='JOURNAL CLUB MEETING') 
+                AND status='VALID' AND date > '$today' GROUP BY gid";
+    $res = $db->query( $query );
+    $entries = fetchEntries( $res );
+
+    // Add which day these events happening.
+    $result = array( );
+    foreach( $entries as $entry )
+    {
+        $entry[ 'day' ] = date( 'D', strtotime( $entry[ 'date' ] ) );
+        $result[] = $entry;
+    }
+    return $result;
+}
+
+/**
+    * @brief Is there a labmeet or JC on given slot/venue.
+    *
+    * @param $date
+    * @param $starttime
+    * @param $endtime
+    * @param $entries
+    *
+    * @return 
+ */
+function isThereALabmeetOrJCOnThisVenueSlot( $date, $starttime, $endtime, $venue, $entries = null )
+{
+    $day = date( 'D', strtotime( $date ) );
+
+    if( ! $entries )
+        $entries = getLabmeetAndJC( );
+
+    foreach( $entries as $entry )
+    {
+        if( $entry['day'] == $day && $entry[ 'venue' ] == $venue )
+        {
+            $s1 = $entry[ 'start_time' ];
+            $e1 = $entry[ 'end_time' ];
+            if( isOverlappingTimeInterval( $starttime, $endtime, $s1, $e1 ) )
+                return $entry;
+        }
+    }
+    return array( );
+}
+
+
 ?>
 

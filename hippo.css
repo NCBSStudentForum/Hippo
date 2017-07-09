@@ -198,6 +198,17 @@ table.timetable tr td {
     /*border: 1px dotted;*/
 }
 
+table.venue_slot {
+    max-width: var(--maxwidth);
+    border : 0px dotted;
+    border-collapse: collapse;
+}
+
+table.venue_slot tr td {
+    border : 0px;
+    width: 400px;
+}
+
 div.info {
     /*border : 1px solid #73AD21;*/
     max-width : var(--maxwidth);
@@ -485,8 +496,9 @@ td.db_table_fieldname {
     text-transform : uppercase;
 }
 
-tr.bordered {
-    border-top: 1px dotted;
+
+div.bordered {
+    border: 1px dotted blue;
 }
 
 

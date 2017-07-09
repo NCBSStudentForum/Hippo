@@ -1041,3 +1041,30 @@ function fixTags( $tags )
     $tags = preg_replace( '/([;]+\s*|[,]+\s*|\s+)/', ',', $tags );
     return $tags;
 }
+
+/**
+    * @brief Check if two time interval are overalloing.
+    *
+    * @param $s1 Start time 1.
+    * @param $e1 End time 1.
+    * @param $s2 Start time 2.
+    * @param $e2 End time 2.
+    *
+    * @return  Return true if there is overlap.
+ */
+function isOverlappingTimeInterval( $start1, $end1, $start2, $end2 )
+{
+    $a1 = strtotime( $start1 );  
+    $a2 = strtotime( $end1 );  
+
+    $b1 = strtotime( $start2 );  
+    $b2 = strtotime( $end2 );  
+
+    if( $a2 > $b1 )
+        return true;
+
+    if( $a1 < $b2 )
+        return true;
+
+    return false;
+}

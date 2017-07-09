@@ -45,7 +45,7 @@ $today = dbDate( strtotime( 'today' ) );
 */
 
 $today = dbDate( strtotime( 'today' ) );
-echo printInfo( "Today is $today" );
+echo printInfo( "Today is " . humanReadableDate( $today ) );
 
 if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
@@ -89,11 +89,11 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
     $awayFrom = strtotime( 'now' ) - strtotime( '15:00' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
+        error_log( 'Try notifying TCM and PI about AWS' );
         $awses = getUpcomingAWS( dbDate( 'next monday' ) );
         foreach( $awses as $aws )
         {
             $speaker = loginToText( $aws[ 'speaker' ] );
-            echo "<h3>AWS of $speaker</h3>";
             $emails = array( );
             foreach( $aws as $key => $value )
                 if( preg_match( '/tcm_member_\d|supervisor_\d/', $key ) )
@@ -301,7 +301,7 @@ $endDay = strtotime( 'next friday' );
 $startDay = $endDay - (3 * 24 * 86400 );
 if( $today >= $startDay && $today <= $endDay ) 
 {
-    $awayFrom = strtotime( 'now' ) - strtotime( '11:30 am' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
         // Every day 10 am. Annoy.

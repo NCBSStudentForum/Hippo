@@ -360,7 +360,7 @@ if( $today >= $startDay && $today <= $endDay )
 
             $to = getLoginEmail( $createdBy );
 
-            echo "<p>Group id $gid by $to last event $lastEventOn</p>";
+            error_log( "<p>Group id $gid by $to last event $lastEventOn</p>" );
 
             $cclist = $template[ 'cc' ];
             $title = $e['title'];

@@ -1,7 +1,8 @@
 <?php 
 
 include_once __DIR__ . '/../check_access_permissions.php';
-mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'ADMIN' ) );
+
+// mustHaveAllOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'ADMIN' ) );
 
 include_once 'NCBSCalendar.php';
 

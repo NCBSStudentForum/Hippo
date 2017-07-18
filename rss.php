@@ -25,11 +25,17 @@ function feedDate( $date )
 function todayTomorrow( $date, $venue )
 {
     if( strtotime( $date ) == strtotime( 'today' ) )
-        return "Today @ $venue";
+        return "Today, $venue";
     else if( strtotime( $date ) <= (strtotime( 'today' ) + 24 * 3600 ) )
         return "Tomorrow @ $venue";
 
-    return "@ $venue";
+    return "$venue";
+}
+
+function sanitize( $title )
+{
+    $title = preg_replace('/[^A-Za-z0-9\-\ \'\",]/', '', $title);
+    return $title;
 }
 
 $events = getPublicEvents( 'today', 'VALID', 60 );
@@ -51,7 +57,7 @@ foreach( $events as $e )
     $date =  feedDate( $e[ 'date' ] );
 
     $feed .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
-                    $e[ 'title'] . "</title>";
+                    sanitize( $e[ 'title'] ) . "</title>";
 
     $feed .= "<link> https://ncbs.res.in/hippo/events.php?date=" . $e['date'] . 
                 "</link>";

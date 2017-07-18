@@ -27,7 +27,7 @@ function todayTomorrow( $date, $venue )
     if( strtotime( $date ) == strtotime( 'today' ) )
         return "Today, $venue";
     else if( strtotime( $date ) <= (strtotime( 'today' ) + 24 * 3600 ) )
-        return "Tomorrow @ $venue";
+        return "Tomorrow, $venue";
 
     return "$venue";
 }
@@ -55,6 +55,9 @@ foreach( $events as $e )
     $feed .= "<item>";
 
     $date =  feedDate( $e[ 'date' ] );
+
+    if( strlen( $e[ 'title' ] ) < 2 )
+        continue;
 
     $feed .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
                     sanitize( $e[ 'title'] ) . "</title>";

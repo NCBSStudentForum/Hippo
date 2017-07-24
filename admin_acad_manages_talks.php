@@ -48,14 +48,6 @@ foreach( $upcomingTalks as $t )
     // Get image of speaker if available.
     echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
 
-    /* TODO : Admin should be able to edit speaker here. */
-    /*
-    echo '<form method="post" action="admin_edit_speaker.php">';
-    $speakerId = $t[ 'speaker_id' ];
-    echo '<input type="hidden" name="speaker_id"  value="' . $t['speaker_id'] . '" />';
-    echo ' <button name="response"  value="Edit"> ' . $symbEdit . '</button> ';
-    echo '</form>';
-     */
 
     echo '</td><td>';
     echo '<form method="post" action="admin_acad_manages_talks_action.php">';

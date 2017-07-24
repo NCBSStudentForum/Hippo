@@ -16,21 +16,32 @@ $faculty = getFaculty( );
 $speakers = getTableEntries( 'speakers' );
 $logins = getTableEntries( 'logins' );
 
+// generate a key from speaker.
+function speakerKey( $x )
+{
+    $key = nameArrayToText( $x );
+    if( strlen( $x['email'] ) > 0 )
+        $key .= ' (' . $x[ 'email' ] . ' )';
+    return $key;
+}
+
+// Use speaker ID.
 $speakersMap = array( );
-foreach( $speakers as $visitor )
-    if( strlen( $visitor[ 'email' ] ) > 0 )
-        $speakersMap[ $visitor[ 'email' ] ] = $visitor;
-    else
-        $speakersMap[ nameArrayToText( $visitor ) ] = $visitor;
+foreach( $speakers as $x )
+    if( intval( $x[ 'id' ] ) > 0 )
+        $speakersMap[ speakerKey( $x ) ] = $x;
 
 // This must not be a key => value array else autocomplete won't work. Or have 
 // any null value,
-$speakersIds = array( );
+$speakerAutoCompleteKeys = array( );
 foreach( $speakers as $x )
-    if( $x[ 'email' ] )
-        $speakersIds[] = $x[ 'email' ];
-    else
-        $speakersIds[] = nameArrayToText( $visitor );
+{
+    // If id is zero, these speakers are very old and not supported anymore. You
+    // CANNOT edit them.
+    if( intval( $x[ 'id' ] ) == 0 )
+        continue;
+    $speakerAutoCompleteKeys[ ] = speakerKey( $x );
+}
 
 $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
 $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
@@ -44,8 +55,10 @@ $( function() {
     var host = <?php echo json_encode( $faculty ); ?>;
     var logins = <?php echo json_encode( $logins ); ?>;
 
-    // These emails must not be key value array.
-    var emails = <?php echo json_encode( $speakersIds ); ?>;
+    var id;
+
+    // Keys for autocompletion.
+    var ids = <?php echo json_encode( $speakerAutoCompleteKeys ); ?>;
 
     $( "#talks_host" ).autocomplete( { source : host }); 
     $( "#talks_host" ).attr( "placeholder", "autocomplete" );
@@ -55,21 +68,22 @@ $( function() {
 
 
     // Once email is matching we need to fill other fields.
-    $( "#speakers_email" ).autocomplete( { source : emails
+    $( "#speakers_id" ).autocomplete( { source : ids
         , focus : function( ) { return false; }
     }).on( 'autocompleteselect', function( e, ui ) 
         {
-            var email = ui.item.value;
-            $('#speakers_first_name').val( speakersDict[ email ]['first_name'] );
-            $('#speakers_middle_name').val( speakersDict[ email ]['middle_name'] );
-            $('#speakers_last_name').val( speakersDict[ email ]['last_name'] );
-            $('#speakers_department').val( speakersDict[ email ]['department'] );
-            $('#speakers_institute').val( speakersDict[ email ]['institute'] );
-            $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
+            id = ui.item.value;
+            $('#speakers_id').val( speakersDict[ id ]['id'] );
+            $('#speakers_first_name').val( speakersDict[ id ]['first_name'] );
+            $('#speakers_middle_name').val( speakersDict[ id ]['middle_name'] );
+            $('#speakers_last_name').val( speakersDict[ id ]['last_name'] );
+            $('#speakers_department').val( speakersDict[ id ]['department'] );
+            $('#speakers_institute').val( speakersDict[ id ]['institute'] );
+            $('#speakers_homepage').val( speakersDict[ id ]['homepage'] );
         }
     );
-    $('#speakers_email').val( email );
-    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
+    $('#speakers_id').val( id );
+    $( "#speakers_id" ).attr( "placeholder", "autocomplete" );
 });
 </script>
 
@@ -92,35 +106,31 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 echo "<h3>Speaker details</h3>";
 
 echo '<form method="post" action="">';
-echo '<input id="speakers_email" name="email" type="text" value="" >';
+echo '<input id="speakers_id" name="id" type="text" value="" >';
 echo '<button type="submit" name="response" value="show">Show details</button>';
 echo '</form>';
 
 // Show speaker image here.
-if( array_key_exists( 'email', $_POST ) )
+// Show emage.
+if( __get__( $_POST, 'id', '' ) )
 {
-    // Show emage.
-    if( __get__( $_POST, 'email', '' ) )
+    // Get the real speaker id for database table.
+    $speaker = $speakersMap[ $_POST[ 'id' ] ];
+    if( $speaker )
     {
-        $speaker = __get__( $speakersMap, $_POST['email'], '' );
-        if( $speaker )
-        {
-            $picPath = getSpeakerPicturePath( $speaker );
-            echo showImage( $picPath );
-            echo arrayToVerticalTableHTML( $speaker, 'info' );
-        }
-        else
-            echo alertUser( "No speaker is found for entry : " . $_POST[ 'email' ] );
+        $picPath = getSpeakerPicturePath( $speaker );
+        echo showImage( $picPath );
+        echo arrayToVerticalTableHTML( $speaker, 'info' );
     }
+    else
+        echo alertUser( "No speaker is found for entry : " . $_POST[ 'email' ] );
 }
 
 echo '<h3>Edit speaker details</h3>';
 
 echo printInfo( 
     "Email id of speaker is very desirable but not neccessary. <br>
-    <small>
-        It helps keeping database clean and makes autocompletion possible.
-    </small>
+    It helps keeping database clean and makes autocompletion possible.
     "
     );
 

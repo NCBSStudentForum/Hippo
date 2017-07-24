@@ -119,8 +119,15 @@ if( __get__( $_POST, 'id', '' ) )
     if( $speaker )
     {
         $picPath = getSpeakerPicturePath( $speaker );
-        echo showImage( $picPath );
-        echo arrayToVerticalTableHTML( $speaker, 'info' );
+        $html = '<table class="show_info" border="1"> <tr>';
+        $html .= '<td>';
+        $html .= showImage( $picPath );
+        $html .= '</td>';
+        $html .= '<td>';
+        $html .= arrayToVerticalTableHTML( $speaker, 'info' );
+        $html .= '</td>';
+        $html .= '</tr></table>';
+        echo $html;
     }
     else
         echo alertUser( "No speaker is found for entry : " . $_POST[ 'email' ] );

@@ -20,6 +20,8 @@ $speakersMap = array( );
 foreach( $speakers as $visitor )
     if( strlen( $visitor[ 'email' ] ) > 0 )
         $speakersMap[ $visitor[ 'email' ] ] = $visitor;
+    else
+        $speakersMap[ nameArrayToText( $visitor ) ] = $visitor;
 
 // This must not be a key => value array else autocomplete won't work. Or have 
 // any null value,
@@ -27,6 +29,8 @@ $speakersIds = array( );
 foreach( $speakers as $x )
     if( $x[ 'email' ] )
         $speakersIds[] = $x[ 'email' ];
+    else
+        $speakersIds[] = nameArrayToText( $visitor );
 
 $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
 $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );

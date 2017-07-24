@@ -1068,3 +1068,19 @@ function isOverlappingTimeInterval( $start1, $end1, $start2, $end2 )
 
     return false;
 }
+
+
+/**
+    * @brief Convert array to name.
+    *
+    * @param $name
+    *
+    * @return 
+ */
+function nameArrayToText( $name )
+{
+    $txt = __get__( $name, 'first_name', '' ) . ' ' 
+                . __get__( $name, 'middle_name', '' ) . ' '
+                . __get__( $name, 'last_name', '' );
+    return $txt;
+}

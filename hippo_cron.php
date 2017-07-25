@@ -182,38 +182,45 @@ if( $today == dbDate( strtotime( 'this sunday' ) ) )
 
         $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
 
-        foreach( $events as $event )
+        if( count( $events ) > 0 )
         {
-            if( $event[ 'is_public_event' ] == 'NO' )
-                continue;
+            foreach( $events as $event )
+            {
+                if( $event[ 'is_public_event' ] == 'NO' )
+                    continue;
 
-            $externalId = $event[ 'external_id'];
-            if( ! $externalId )
-                continue;
+                $externalId = $event[ 'external_id'];
+                if( ! $externalId )
+                    continue;
 
-            $id = explode( '.', $externalId);
-            $id = $id[1];
-            if( intval( $id ) < 0 )
-                continue;
+                $id = explode( '.', $externalId);
+                $id = $id[1];
+                if( intval( $id ) < 0 )
+                    continue;
 
-            $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
+                $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
 
-            // We just need the summary of every event here.
-            $html .= eventSummaryHTML( $event, $talk );
-            $html .= "<br>";
+                // We just need the summary of every event here.
+                $html .= eventSummaryHTML( $event, $talk );
+                $html .= "<br>";
+            }
+
+            $html .= "<br><br>";
+
+            // Generate email
+            // getEmailTemplates
+            $templ = emailFromTemplate( 'this_week_events'
+                , array( "EMAIL_BODY" => $html ) 
+            );
+
+            sendPlainTextEmail( $templ[ 'email_body'], $subject, $to, $cclist );
         }
-
-        echo $html;
-
-        $html .= "<br><br>";
-
-        // Generate email
-        // getEmailTemplates
-        $templ = emailFromTemplate( 'this_week_events'
-            , array( "EMAIL_BODY" => $html ) 
-        );
-
-        sendPlainTextEmail( $templ[ 'email_body'], $subject, $to, $cclist );
+        else
+        {
+            $html .= "<p> I could not find any event in my database! </p>";
+            $html .=  "<p> -- Hippo </p>";
+            sendPlainTextEmail( $html, $subject, $to, $cclist );
+        }
     }
 }
 

@@ -255,26 +255,29 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         // Now construct a table and form
         // check if there is a labmeet or JC at this slot/venue.
-        $jclabmeet = isThereALabmeetOrJCOnThisVenueSlot( 
+        $jclabmeets = clashesOnThisVenueSlot( 
                 $date, $startTime, $endTime, $venueId, $jcAndMeets 
             );
 
         $block = '<form method="post" action="user_submit_request.php">';
         $block .= '<div><tr>';
-        if( $jclabmeet )
+        if( count( $jclabmeets ) > 0 )
         {
-            $block = '<form method="post" action="user_submit_request.php">';
-            $block .= '<div class="bordered">';
-            $block .= '<tr><td colspan="1">';
-            $block .= '<font color=\"red\">ALERT: This slot/venue though available
-                 is usually booked for following JC/Labmeet. Make sure to check
-                with booking party before you book this slot. They may book it 
-                later. </font>';
+            foreach( $jclabmeets as $jclabmeet )
+            {
+                $block .= '<div class="">';
+                $block .= '<tr><td colspan="1">';
+                $block .= '<font color=\"red\">ALERT: Though ' . $venue[ 'id' ] 
+                    . ' is available
+                    , it is usually booked for following JC/Labmeet. Make sure to check
+                    with booking party before you book this slot. They may book it 
+                    later. </font>';
 
-            $block .= '<div style="font-size:x-small">';
-            $block .= arrayToTableHTML( $jclabmeet, 'info', 'lightcyan', $ignore . ",date,eid");
-            $block .= '</div>';
-            $block .= '</td></tr>';
+                $block .= '<div style="font-size:x-small">';
+                $block .= arrayToTableHTML( $jclabmeet, 'info', 'lightcyan', $ignore . ",date,eid");
+                $block .= '</div>';
+                $block .= '</td></tr>';
+            }
         }
 
 

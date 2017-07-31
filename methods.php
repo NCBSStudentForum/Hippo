@@ -1063,10 +1063,10 @@ function isOverlappingTimeInterval( $start1, $end1, $start2, $end2 )
     assert( $s2 < $e2 );
 
     $res = true;
-    if( $e1 < $s2 )
+    if( $e1 <= $s2 )
         $res = false;
 
-    if( $e2 > $s1 )
+    if( $e2 >= $s1 )
         $res = false;
 
     return $res;

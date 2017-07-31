@@ -2073,14 +2073,20 @@ function getSpeakerByName( $name )
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
-
-function getLabmeetAndJC( )
+function getWeeklyEventByClass( $classes )
 {
     global $db;
+
+    $classes = explode( ',', $classes );
+    $where = array( );
+    foreach( $classes as $cls )
+        $whereExp[ ] = "class='$cls'";
+
+    $whereExp = implode( ' OR ', $whereExp );
+
     $today = dbDate( 'today' );
     $query = "SELECT * FROM events WHERE 
-                (class='LAB MEETING' OR class='JOURNAL CLUB MEETING') 
-                AND status='VALID' AND date > '$today' GROUP BY gid";
+                ( $whereExp ) AND status='VALID' AND date > '$today' GROUP BY gid";
     $res = $db->query( $query );
     $entries = fetchEntries( $res );
 
@@ -2092,6 +2098,12 @@ function getLabmeetAndJC( )
         $result[] = $entry;
     }
     return $result;
+}
+
+
+function getLabmeetAndJC( )
+{
+    return getWeeklyEventByClass( 'JOURNAL CLUB MEETING,LAB MEETING' );
 }
 
 /**
@@ -2137,7 +2149,7 @@ function isThereALabmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue,
 function getAllGroupMeets( )
 {
     global $db;
-    $events = getLabmeetAndJC( ); 
+    $events = getWeeklyEventByClass( 'LAB MEETING' ); 
     return $events;
 
 }

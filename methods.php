@@ -1054,19 +1054,22 @@ function fixTags( $tags )
  */
 function isOverlappingTimeInterval( $start1, $end1, $start2, $end2 )
 {
-    $a1 = strtotime( $start1 );  
-    $a2 = strtotime( $end1 );  
+    $s1 = strtotime( $start1 );  
+    $e1 = strtotime( $end1 );  
+    $s2 = strtotime( $start2 );  
+    $e2 = strtotime( $end2 );  
 
-    $b1 = strtotime( $start2 );  
-    $b2 = strtotime( $end2 );  
+    assert( $s1 < $e1 );
+    assert( $s2 < $e2 );
 
-    if( $a2 > $b1 )
-        return true;
+    $res = true;
+    if( $e1 < $s2 )
+        $res = false;
 
-    if( $a1 < $b2 )
-        return true;
+    if( $e2 > $s1 )
+        $res = false;
 
-    return false;
+    return $res;
 }
 
 

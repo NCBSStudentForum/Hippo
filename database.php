@@ -2116,15 +2116,22 @@ function getLabmeetAndJC( )
     *
     * @return 
  */
-function isThereALabmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries = null )
+function isThereAClashOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries )
+{
+    $clashes = clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries );
+    if( count( $clashes ) > 0 )
+        return true;
+    return false;
+}
+
+function  clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries )
 {
     $days = array( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' );
+
     if( ! in_array( $day, $days ) )
         $day = date( 'D', strtotime( $day ) );
 
-    if( ! $entries )
-        $entries = getLabmeetAndJC( );
-
+    $clashes = array( );
     foreach( $entries as $entry )
     {
         if( $entry['day'] == $day )
@@ -2134,25 +2141,22 @@ function isThereALabmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue,
                 $s1 = $entry[ 'start_time' ];
                 $e1 = $entry[ 'end_time' ];
                 if( isOverlappingTimeInterval( $starttime, $endtime, $s1, $e1 ) )
-                    return $entry;
+                    $clashes[ ] = $entry;
             }
         }
     }
-    return array( );
+    return $clashes;
 }
 
-/**
-    * @brief Get all group meetings.
-    *
-    * @return 
- */
-function getAllGroupMeets( )
+
+
+function isThereALabmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries = null )
 {
-    global $db;
-    $events = getWeeklyEventByClass( 'LAB MEETING' ); 
-    return $events;
-
+    if( ! $entries )
+        $entries = getLabmeetAndJC( );
+    return isThereAClashOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries );
 }
+
 
 ?>
 

@@ -1545,8 +1545,11 @@ function getSlotAtThisTime( $day, $slot_time, $slots = null )
     *
     * @return
  */
-function slotTable( $groupmeets = array( ), $width = "15px" )
+function slotTable( $width = "15px" )
 {
+    // Collect all upcoming labmeets. We want to avoid them.
+    $labmeets = getWeeklyEventByClass( 'LAB MEETING' );
+
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
     $html = '<table class="timetable">';
 
@@ -1570,20 +1573,31 @@ function slotTable( $groupmeets = array( ), $width = "15px" )
         {
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
             $slot = getSlotAtThisTime( $day, $slotTime, $slots );
+
             if( ! $slot )
                 continue;
 
-            $clash = isThereALabmeetOrJCOnThisVenueSlot( 
-                $day, $slot[ 'start_time' ], $slot[ 'end_time' ], '' 
-                , $groupmeets
+            $clashes = clashesOnThisVenueSlot( 
+                $day, $slot[ 'start_time' ], $slot[ 'end_time' ], '', $labmeets
             );
 
 
             $isOccupied = false;
-            if( $clash )
+            if( count( $clashes ) > 0 )
             {
+                $clash = end( $clashes );
                 echo "Slot $day " . $slot[ 'start_time' ] . ' to ' . $slot[ 'end_time' ]
-                    . ' is occupied by ' . $clash[ 'title' ] . '<br/>';
+                    . ' is clashing with following labmeets. <br>';
+                foreach( $clashes as $clash )
+                {
+                    $msg = '<small>';
+                    $msg .=  $clash[ 'day' ] . ' : ';
+                    $msg .=  $clash[ 'start_time' ] . ' ' . $clash[ 'end_time' ];
+                    $msg .=  ' ' . $clash[ 'title' ] . ' <br />';
+                    $msg .= '</small>';
+                    echo( $msg );
+                }
+
                 $isOccupied = true;
             }
 
@@ -1594,10 +1608,10 @@ function slotTable( $groupmeets = array( ), $width = "15px" )
                 $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
                         humanReadableTime(  $slot[ 'end_time' ] );
 
-                if( $isOccupied )
-                    $text .= 'x';
-
                 $bgColor = 'lightblue';
+                if( $isOccupied )
+                    $bgColor = 'red';
+
 
                 $id = $slot[ 'id' ];
                 if( ! is_numeric( $id[0] ) )

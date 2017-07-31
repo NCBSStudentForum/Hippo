@@ -2104,26 +2104,43 @@ function getLabmeetAndJC( )
     *
     * @return 
  */
-function isThereALabmeetOrJCOnThisVenueSlot( $date, $starttime, $endtime, $venue, $entries = null )
+function isThereALabmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries = null )
 {
-    $day = date( 'D', strtotime( $date ) );
+    $days = array( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' );
+    if( ! in_array( $day, $days ) )
+        $day = date( 'D', strtotime( $day ) );
 
     if( ! $entries )
         $entries = getLabmeetAndJC( );
 
     foreach( $entries as $entry )
     {
-        if( $entry['day'] == $day && $entry[ 'venue' ] == $venue )
+        if( $entry['day'] == $day )
         {
-            $s1 = $entry[ 'start_time' ];
-            $e1 = $entry[ 'end_time' ];
-            if( isOverlappingTimeInterval( $starttime, $endtime, $s1, $e1 ) )
-                return $entry;
+            if( strlen($venue) == 0 || $entry[ 'venue' ] == $venue )
+            {
+                $s1 = $entry[ 'start_time' ];
+                $e1 = $entry[ 'end_time' ];
+                if( isOverlappingTimeInterval( $starttime, $endtime, $s1, $e1 ) )
+                    return $entry;
+            }
         }
     }
     return array( );
 }
 
+/**
+    * @brief Get all group meetings.
+    *
+    * @return 
+ */
+function getAllGroupMeets( )
+{
+    global $db;
+    $events = getLabmeetAndJC( ); 
+    return $events;
+
+}
 
 ?>
 

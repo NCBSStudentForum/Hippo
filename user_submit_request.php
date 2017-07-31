@@ -53,25 +53,27 @@ $date = __get__( $_POST, 'date', '' );
 $title = __get__( $_POST, 'title', '' );
 $description = __get__( $_POST, 'description', '' );
 
-$labmeetOrJC = isThereALabmeetOrJCOnThisVenueSlot( 
-        $date, $startTime, $defaultEndTime, $venue 
-    );
-if( $labmeetOrJC )
+$labmeetOrJCs = labmeetOrJCOnThisVenueSlot( $date, $startTime, $defaultEndTime, $venue );
+
+if( count( $labmeetOrJCs ) > 0 )
 {
-    $ignore = 'is_public_event,url,description,status,gid,rid,'
-        . 'external_id,modified_by,timestamp'
-        . ',calendar_id,calendar_event_id,last_modified_on';
+    foreach( $labmeetOrJCs as $labmeetOrJC )
+    {
+        $ignore = 'is_public_event,url,description,status,gid,rid,'
+            . 'external_id,modified_by,timestamp'
+            . ',calendar_id,calendar_event_id,last_modified_on';
 
-    echo printWarning( "<font color=\"red\">
-        ATTN: Following Journal Club or Labmeet usually happens at this 
-        slot.  DO NOT book here unless you are sure that following event WILL not
-        happen. 
-        </font>" );
+        echo printWarning( "<font color=\"red\">
+            ATTN: Following Journal Club or Labmeet usually happens at this 
+            slot.  DO NOT book here unless you are sure that following event WILL not
+            happen. 
+            </font>" );
 
-    echo '<small>';
-    echo arrayToTableHTML( $labmeetOrJC, 'info', '', $ignore );
-    echo '</small>';
-    echo '<br><br>';
+        echo '<small>';
+        echo arrayToTableHTML( $labmeetOrJC, 'info', '', $ignore );
+        echo '</small>';
+        echo '<br><br>';
+    }
 }
 
 echo ' <h2>Fill-in details</h2> ';

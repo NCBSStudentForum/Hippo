@@ -1583,23 +1583,25 @@ function slotTable( $width = "15px" )
 
 
             $isOccupied = false;
-            if( count( $clashes ) > 0 )
-            {
-                $clash = end( $clashes );
-                echo "Slot $day " . $slot[ 'start_time' ] . ' to ' . $slot[ 'end_time' ]
-                    . ' is clashing with following labmeets. <br>';
-                foreach( $clashes as $clash )
-                {
-                    $msg = '<small>';
-                    $msg .=  $clash[ 'day' ] . ' : ';
-                    $msg .=  $clash[ 'start_time' ] . ' ' . $clash[ 'end_time' ];
-                    $msg .=  ' ' . $clash[ 'title' ] . ' <br />';
-                    $msg .= '</small>';
-                    echo( $msg );
-                }
 
-                $isOccupied = true;
-            }
+            //if( count( $clashes ) > 0 )
+            //{
+            //    $clash = end( $clashes );
+            //    echo "Slot $day " . $slot[ 'start_time' ] . ' to ' . $slot[ 'end_time' ]
+            //        . ' is clashing with following labmeets. <br>';
+
+            //    foreach( $clashes as $clash )
+            //    {
+            //        $msg = '<small>';
+            //        $msg .=  $clash[ 'day' ] . ' : ';
+            //        $msg .=  $clash[ 'start_time' ] . ' ' . $clash[ 'end_time' ];
+            //        $msg .=  ' ' . $clash[ 'title' ] . ' <br />';
+            //        $msg .= '</small>';
+            //        echo( $msg );
+            //    }
+
+            //    $isOccupied = true;
+            //}
 
             if( $slot )
             {

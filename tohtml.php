@@ -1545,7 +1545,7 @@ function getSlotAtThisTime( $day, $slot_time, $slots = null )
     *
     * @return
  */
-function slotTable( $width = "15px" )
+function slotTable( $groupmeets = array( ), $width = "15px" )
 {
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
     $html = '<table class="timetable">';
@@ -1570,17 +1570,39 @@ function slotTable( $width = "15px" )
         {
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
             $slot = getSlotAtThisTime( $day, $slotTime, $slots );
+            if( ! $slot )
+                continue;
+
+            $clash = isThereALabmeetOrJCOnThisVenueSlot( 
+                $day, $slot[ 'start_time' ], $slot[ 'end_time' ], '' 
+                , $groupmeets
+            );
+
+
+            $isOccupied = false;
+            if( $clash )
+            {
+                echo "Slot $day " . $slot[ 'start_time' ] . ' to ' . $slot[ 'end_time' ]
+                    . ' is occupied by ' . $clash[ 'title' ] . '<br/>';
+                $isOccupied = true;
+            }
+
             if( $slot )
             {
                 $duration = strtotime( $slot[ 'end_time' ] )  -
                             strtotime( $slot[ 'start_time' ] );
                 $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
                         humanReadableTime(  $slot[ 'end_time' ] );
-                $id = $slot[ 'id' ];
+
+                if( $isOccupied )
+                    $text .= 'x';
+
                 $bgColor = 'lightblue';
 
+                $id = $slot[ 'id' ];
                 if( ! is_numeric( $id[0] ) )
                     $bgColor = 'red';
+
 
                 $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
                 $html .= "<td style=\"background:$bgColor\" colspan=\"$ncols\">

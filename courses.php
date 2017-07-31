@@ -12,13 +12,17 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+// Collect all upcoming labmeets.
+$groupMeets = getAllGroupMeets( );
+
 echo '<h2>Slots </h2>';
 echo alertUser( "These are proposed slots. They are not official yet and subject
     to change" );
-echo slotTable( );
+echo slotTable( $groupMeets );
 
 
 echo "<h2>Enrollement table for this semester courses</h2>";
+
 
 $year = getCurrentYear( );
 $sem = getCurrentSemester( );

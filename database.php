@@ -2124,7 +2124,7 @@ function isThereAClashOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entr
     return false;
 }
 
-function  clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries )
+function clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries )
 {
     $days = array( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' );
 
@@ -2150,11 +2150,11 @@ function  clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries )
 
 
 
-function isThereALabmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries = null )
+function labmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries = null )
 {
     if( ! $entries )
         $entries = getLabmeetAndJC( );
-    return isThereAClashOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries );
+    return clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries );
 }
 
 

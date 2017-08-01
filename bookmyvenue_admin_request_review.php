@@ -62,9 +62,8 @@ if( $_POST['response'] == "Review" )
         $stime = $r[ 'start_time'];
         $etime = $r[ 'end_time'];
         $venue = $r[ 'venue' ];
-        $jcOrLab = isThereALabmeetOrJCOnThisVenueSlot( 
-            $date, $stime, $etime, $venue, $jcLabmeets 
-        );
+
+        $jcOrLab = clashesOnThisVenueSlot( $date, $stime, $etime, $venue, $jcLabmeets );
 
         if( $jcOrLab )
         {
@@ -95,13 +94,16 @@ if( $_POST['response'] == "Review" )
         echo alertUser( "Warning: User is trying to book venue/slot where following 
             JCs or LABMEETs usually booked. Please be extra careful while approving!" 
         );
-        foreach( $collideWith as $entry )
+        foreach( $collideWith as $entries )
         {
-            $ignore = 'is_public_event,url,description,status,gid,rid,'
-                . 'external_id,modified_by,timestamp'
-                . ',eid,calendar_id,calendar_event_id,last_modified_on';
-            echo arrayToTableHTML( $jcOrLab, 'info', 'lightyellow', $ignore );
-         }
+            foreach( $entries as $entry )
+            {
+                $ignore = 'is_public_event,url,description,status,gid,rid,'
+                    . 'external_id,modified_by,timestamp'
+                    . ',eid,calendar_id,calendar_event_id,last_modified_on';
+                echo arrayToTableHTML( $jcOrLab, 'info', 'lightyellow', $ignore );
+             }
+        }
     }
 
     echo printWarning( 

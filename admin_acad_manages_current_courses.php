@@ -119,13 +119,16 @@ echo '<form method="post" action="admin_acad_manages_current_courses_action.php"
 
 // We will figure out the semester by start_date .
 $default[ 'slot' ] = $slotSelect;
+if( __get__( $default, 'course_id', '') )
+    $action = 'Update';
+
 echo dbTableToHTMLTable( 'courses'
     , $default
     , 'course_id,start_date,end_date,slot', $action 
     , 'semester'
     );
 
-if( $action == 'Edit' )
+if( $action == 'Delete' )
     echo '<button name="response" onclick="AreYouSure(this)">' . 
             $symbDelete . '</button>';
 

@@ -325,12 +325,13 @@ function initialize( $db  )
              -- Combination of course code, semester and year
             id VARCHAR(30) PRIMARY KEY
             , semester ENUM( 'AUTUMN', 'SPRING') NOT NULL
+            , year VARCHAR(5) NOT NULL
             , course_id VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
             , venue VARCHAR(20)
             , slot VARCHAR(4) 
-            , UNIQUE KEY(semester,course_id)
+            , UNIQUE KEY(semester,year,course_id)
             )" );
         
 
@@ -350,7 +351,7 @@ function initialize( $db  )
     $res = $db->query( "
         create TABLE IF NOT EXISTS course_registration  (
              student_id VARCHAR(50) NOT NULL 
-            , semester ENUM ( 'MONSOON', 'VASANT' ) NOT NULL
+            , semester ENUM ( 'AUTUMN', 'SPRING' ) NOT NULL
             , year VARCHAR(5) NOT NULL
             -- CHECK contraints are ignored by MYSQL.
             , course_id VARCHAR(8) NOT NULL CHECK ( course_id <> '' )

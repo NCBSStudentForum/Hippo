@@ -32,47 +32,64 @@ else if( $_POST['response'] == 'delete' )
             echo minionEmbarrassed( "Failed to delete speaker from database" );
     }
 }
-else if ( $_POST[ 'response' ] == 'Add' ) 
+else
 {
-    echo printInfo( "Adding a new course in current course list" );
-    if( strlen( $_POST[ 'course_id' ] ) > 0 )
-    {
-        $id = getCourseInstanceId( $_POST[ 'course_id' ] );
-        $_POST[ 'id' ] = $id;
-        $_POST['semester'] = getSemester( $_POST[ 'start_date' ] );
+    $_POST[ 'semester' ] = getCurrentSemester( );
+    $_POST[ 'year' ] = getCurrentYear( );
 
-        $res = insertIntoTable( 
-            'courses'
-            , 'id,course_id,semester,start_date,end_date,slot,venue' 
-            , $_POST 
+    $courseAtThisSlotVenue = getTableEntry( 'courses'
+            , 'slot,venue,year,semester', $_POST );
+
+    if( $courseAtThisSlotVenue )
+    {
+        echo printWarning( "Following course is already assigned at this slot/venue" );
+        echo arrayToVerticalTableHTML( $courseAtThisSlotVenue, 'info' );
+        echo goBack( );
+        exit;
+    }
+
+    if ( $_POST[ 'response' ] == 'Add' ) 
+    {
+        echo printInfo( "Adding a new course in current course list" );
+        if( strlen( $_POST[ 'course_id' ] ) > 0 )
+        {
+            $id = getCourseInstanceId( $_POST[ 'course_id' ] );
+            $_POST[ 'id' ] = $id;
+            $_POST['semester'] = getSemester( $_POST[ 'start_date' ] );
+
+            $res = insertIntoTable( 
+                'courses'
+                , 'id,course_id,semester,start_date,end_date,slot,venue' 
+                , $_POST 
             );
 
-        if( ! $res )
-            echo printWarning( "Could not add course to list" );
-        else
-        {
-            goBack( 'admin_acad_manages_current_courses.php', 1 );
-            exit;
+            if( ! $res )
+                echo printWarning( "Could not add course to list" );
+            else
+            {
+                goBack( 'admin_acad_manages_current_courses.php', 1 );
+                exit;
+            }
         }
-    }
-    else
-        echo printWarning( "Could ID can not be empty" );
-    
+        else
+            echo printWarning( "Could ID can not be empty" );
 
-}
-else if ( $_POST[ 'response' ] == 'Update' ) 
-{
-    $res = updateTable( 'courses'
+
+    }
+    else if ( $_POST[ 'response' ] == 'Update' ) 
+    {
+        $res = updateTable( 'courses'
             , 'course_id'
             , 'semester,start_date,end_date,slot,venue' 
             , $_POST 
-            );
+        );
 
-    if( $res )
-    {
-        echo printInfo( 'Updated course' );
-        goBack( 'admin_acad_manages_current_courses.php', 1);
-        exit;
+        if( $res )
+        {
+            echo printInfo( 'Updated course' );
+            goBack( 'admin_acad_manages_current_courses.php', 1);
+            exit;
+        }
     }
 }
 

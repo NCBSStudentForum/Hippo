@@ -129,7 +129,7 @@ $default[ 'slot' ] = $slotSelect;
 $default[ 'venue' ] = $venueSelect;
 $default[ 'semester' ] = $sem;
 
-if( __get__( $_POST, 'course_id', '') )
+if( __get__( $_POST, 'running_course', '') )
     $action = 'Update';
 else
     $action = 'Add';

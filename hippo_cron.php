@@ -233,7 +233,6 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
     $todaysEvents = getPublicEventsOnThisDay( $today );
 
-    $html = '';
     $nTalks = 0;
 
     if( count( $todaysEvents ) > 0 )
@@ -250,8 +249,24 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
                 $talk = getTableEntry( 'talks', 'id', $data );
                 if( $talk )
                 {
-                    $html .= talkToHTML( $talk );
+                    $html = talkToHTML( $talk );
                     $nTalks += 1;
+
+                    // Now prepare an email to sent to mailing list.
+                    $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
+                    $subject = "(Today : " . humanReadableShortDate( $today ) . ")" ;
+                    $subject .= talkToShortEventTitle( $talk );
+
+                    $template = emailFromTemplate( 'todays_events', $macros );
+
+                    if( array_key_exists( 'email_body', $template ) && $template[ 'email_body' ] )
+                    {
+                        // Send it out.
+                        $to = $template[ 'recipients' ];
+                        $ccs = $template[ 'CC' ];
+                        $msg = $template[ 'email_body' ];
+                        sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
+                    }
                 }
             }
         }
@@ -269,29 +284,6 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
             echo printInfo( "Successfully generated PDF file" );
             // DO NOT SEND attachment.
             //$attachment = $pdffile;
-        }
-
-        // Now prepare an email to sent to mailing list.
-        $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
-        $subject = "Today's events - " . humanReadableDate( $today ) ;
-
-        $template = emailFromTemplate( 'todays_events', $macros );
-
-        // Send emails out only if number of talks are more than 0.
-        if( $nTalks > 0 )
-        {
-            if( array_key_exists( 'email_body', $template ) && $template[ 'email_body' ] )
-            {
-                // Send it out.
-                $to = $template[ 'recipients' ];
-                $ccs = $template[ 'CC' ];
-                $msg = $template[ 'email_body' ];
-                sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
-            }
-        }
-        else
-        {
-            error_log( 'No public talk or event found for ' . $today );
         }
 
         ob_flush( );

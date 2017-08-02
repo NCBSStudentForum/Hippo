@@ -1978,7 +1978,7 @@ function getSemesterCourses( $year, $sem )
     $sDate = dbDate( strtotime( "$year-01-01" ) );
     $eDate = dbDate( strtotime( "$year-07-31" ) );
 
-    if( $sem == 'MONSOON' )
+    if( $sem == 'AUTUMN' )
     {
         $sDate = dbDate( strtotime( "$year-07-01" ) );
         $eDate = dbDate( strtotime( "$year-12-31" ) );

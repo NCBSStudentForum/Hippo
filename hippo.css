@@ -275,6 +275,11 @@ button.submit {
     left-margin : 100%;
 }
 
+button.courseInfo {
+    background : none;
+    font-size : small;
+}
+
 table.input {
     text-align : left;
     background-color:var(--background); 

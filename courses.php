@@ -12,6 +12,17 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+?>
+
+<script type="text/javascript" charset="utf-8">
+function showCourseInfo( x )
+{
+    alert( "Course description:\n" +  x.value );
+}
+</script>
+
+<?php
+
 echo '<h2>Slots </h2>';
 echo alertUser( "These are proposed slots. They are not official yet and subject
     to change" );
@@ -51,8 +62,11 @@ foreach( $courses as $c )
 
     $enrollments[ $cid ] = $registrations;
 
+    $cinfo = $course[ 'description' ];
+
     echo '<tr>
-        <td> ' . $cid . ' - ' . $course[ 'name' ] . '</td>
+        <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
+            value="' . $cinfo . '" >' . $cid . '</button> ' . $course[ 'name' ] . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
         <td>' . $c[ 'slot' ] . '</td>

@@ -77,7 +77,8 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
     $runningCourse = getTableEntry( 'courses', 'id'
                             , array( 'id' =>  $_POST[ 'running_course' ] ) 
                         );
-    $default = array_merge( $default, $runningCourse );
+    if( $runningCourse )
+        $default = array_merge( $default, $runningCourse );
     $action = 'Edit';
 }
 
@@ -101,8 +102,7 @@ echo '<tr>
             <input id="running_course" name="running_course" type="text" >
         </td>
         <td>
-            <button name="response" value="search" style="float:left" >' . 
-                $symbScan . '</button>
+            <button name="response" value="search" style="float:left" >Show</button>
         </td>
     </tr>';
 
@@ -124,6 +124,8 @@ echo '<form method="post" action="admin_acad_manages_current_courses_action.php"
 
 // We will figure out the semester by start_date .
 $default[ 'slot' ] = $slotSelect;
+$default[ 'venue' ] = $venueSelect;
+
 if( __get__( $default, 'course_id', '') )
     $action = 'Update';
 

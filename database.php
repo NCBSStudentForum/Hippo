@@ -1503,7 +1503,7 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( ! $data[$k] )
+        if( ! __get__( $data, $k, false ) )
             $data[ $k ] = null;
 
         array_push( $cols, $k );

@@ -26,8 +26,6 @@ $sem = getCurrentSemester( );
 
 $courses = getSemesterCourses( $year, $sem );
 
-echo '<table border="1">';
-echo '<tr><th>Course</th><th>Slot</th><th>All Enrollments</th>';
 
 echo alertUser(
     "Click on the button to see the list of enrolled students" 
@@ -35,6 +33,10 @@ echo alertUser(
 
 
 $enrollments = array( );
+
+echo '<table border="1">';
+echo '<tr><th>Course</th><th>Slot</th><th>Venue</th><th>All Enrollments</th>';
+
 foreach( $courses as $c )
 {
     $cid = $c['course_id'];
@@ -54,6 +56,7 @@ foreach( $courses as $c )
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
         <td>' . $c[ 'slot' ] . '</td>
+        <td>' . $c[ 'venue' ] . '</td>
         <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">Show list</button></td>
         </form>';
@@ -67,7 +70,8 @@ if( $_POST )
 {
 
     $cid = $_POST[ 'course_id'];
-    echo '<h3>Enrollment for course ' . $cid . '</h3>';
+    $courseName = getCourseName( $cid );
+    echo '<h3>Enrollment for course ' . $courseName .'</h3>';
 
     $table = '<table class="show_events">';
     $count = 0;

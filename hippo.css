@@ -432,6 +432,16 @@ table.request tr:nth-of-type( odd ) {
     background : #eee;
 }
 
+table.info {
+    max-width : 80%;
+    min-width : 500px;
+    background : var(--background);
+}
+table.info tr:nth-of-type( odd ) {
+    background : #eee;
+}
+
+
 table.admin {
     width : 80%;
     min-width : 500px;

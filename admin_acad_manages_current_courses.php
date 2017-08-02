@@ -24,6 +24,9 @@ $slots = getTableEntries( 'slots', 'groupid' );
 $slotMap = array();
 foreach( $slots as $s )
 {
+    if( intval($s[ 'groupid' ]) == 0 )
+        continue;
+
     $slotGroupId = $s[ 'groupid' ];
     if( ! array_key_exists( $slotGroupId, $slotMap ) )
         $slotMap[ $slotGroupId ] = $slotGroupId .  ' (' . $s['day'] . ':' 
@@ -43,6 +46,8 @@ foreach( $allCourses as $c )
     $coursesMap[ $c[ 'id' ] ] = $c[ 'name' ];
 
 $courseIdsSelect = arrayToSelectList( 'course_id', $coursesId, $coursesMap );
+$venues = getTableEntries( 'venues', '', "type='LECTURE HALL'" );
+$venueSelect = venuesToHTMLSelect( $venues );
 
 // Running course for this semester.
 $runningCourses = getSemesterCourses( $year, $sem );
@@ -66,7 +71,7 @@ $( function() {
 <?php
 
 // Array to hold runnig course.
-$default = array( 'course_id' => $courseIdsSelect );
+$default = array( 'course_id' => $courseIdsSelect, 'venue' => $venueSelect );
 if( $_POST && array_key_exists( 'running_course', $_POST ) )
 {
     $runningCourse = getTableEntry( 'courses', 'id'
@@ -124,7 +129,7 @@ if( __get__( $default, 'course_id', '') )
 
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'course_id,start_date,end_date,slot', $action 
+    , 'course_id,start_date,end_date,slot,venue', $action 
     , 'semester'
     );
 

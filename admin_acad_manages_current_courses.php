@@ -120,8 +120,7 @@ echo '</form>';
 
 
 
-echo "<h2>Assign a course to current sememster or edit a running course </h2>";
-
+echo "<h2>Add/edit runnuing courses </h2>";
 
 echo '<form method="post" action="admin_acad_manages_current_courses_action.php">';
 
@@ -130,13 +129,14 @@ $default[ 'slot' ] = $slotSelect;
 $default[ 'venue' ] = $venueSelect;
 $default[ 'semester' ] = $sem;
 
-if( __get__( $default, 'course_id', '') )
+if( __get__( $_POST, 'course_id', '') )
     $action = 'Update';
+else
+    $action = 'Add';
 
 echo dbTableToHTMLTable( 'courses'
     , $default
     , 'course_id,start_date,end_date,slot,venue', $action 
-    , 'semester'
     );
 
 if( $action == 'Delete' )

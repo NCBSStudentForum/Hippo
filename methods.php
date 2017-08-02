@@ -269,6 +269,14 @@ function humanReadableDate( $date )
     return date( 'l, M d Y', strtotime($date) );
 }
 
+function humanReadableShortDate( $date )
+{
+    if( is_int( $date ) )
+        return date( 'l, M d, Y', $date );
+
+    return date( 'D, M d', strtotime($date) );
+}
+
 function humanReadableTime( $time )
 {
     if( is_int( $time ) )
@@ -1022,10 +1030,23 @@ function fixName( $name )
 }
 
 
+/**
+    * @brief Following functions generates event title based on talk.
+    *
+    * @param $talk
+    *
+    * @return 
+ */
 function talkToEventTitle( $talk )
 {
     $title = __ucwords__( $talk[ 'class' ] ) . " by " . fixName( $talk[ 'speaker' ] );
     $title .= " on '" . $talk[ 'title' ] . "'";
+    return $title;
+}
+
+function talkToShortEventTitle( $talk )
+{
+    $title = __ucwords__( $talk[ 'class' ] ) . " by " . fixName( $talk[ 'speaker' ] );
     return $title;
 }
 

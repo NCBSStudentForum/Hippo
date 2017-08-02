@@ -328,6 +328,7 @@ function initialize( $db  )
             , course_id VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
+            , venue VARCHAR(20)
             , slot VARCHAR(4) 
             , UNIQUE KEY(semester,course_id)
             )" );

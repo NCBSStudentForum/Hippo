@@ -92,8 +92,14 @@ echo printInfo( "Current semester is $sem, $year" );
 
 echo '<div style="font-size:small">';
 
+echo '<table class="info">';
+$tobefilterd = 'id,semester,year';
+echo arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 foreach( $runningCourses as $course )
-    echo arrayToTableHTML( $course, 'info', '', '', 'id' );
+{
+    echo arrayToRowHTML( $course, 'aws', $tobefilterd );
+}
+echo '</table>';
 
 echo '</div>';
 echo "</br>";

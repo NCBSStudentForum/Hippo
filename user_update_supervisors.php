@@ -69,7 +69,7 @@ echo "</form>";
 echo "<h3>List of supervisors/TCM members in my database</h3>";
 
 $count = 0;
-echo '<table border="0"><tr>';
+echo '<table class="info"><tr>';
 foreach( $rows as $row )
 {
     if( $count % 4 == 0 )

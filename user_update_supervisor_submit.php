@@ -17,7 +17,7 @@ if( trim( $_POST[ 'email'] ) && trim( $_POST[ 'first_name' ] ) )
     if( $res )
     {
         echo printInfo( "Successfully added/updated supervisor to list" );
-        goBack( 'user_udpate_supervisors.php', 1 );
+        goBack( 'user_update_supervisors.php', 1 );
         exit;
     }
     else
@@ -26,7 +26,7 @@ if( trim( $_POST[ 'email'] ) && trim( $_POST[ 'first_name' ] ) )
 else
 {
     echo printWarning( "Incomplete details. Try again .." );
-    goToPage( "user_update_supervisors.php", 1 );
+    goBack( 'user_update_supervisors.php', 1 );
     exit;
 }
 

@@ -1643,7 +1643,8 @@ function slotTable( $width = "15px" )
 function coursesTable( )
 {
     $courses = getTableEntries( 'courses_metadata' );
-    $html = '<table class="show_aws">';
+    $html = '<div style="font-size:small">';
+    $html .= '<table class="show_aws">';
     foreach( $courses as $c )
     {
         $instructors = array( );
@@ -1655,11 +1656,13 @@ function coursesTable( )
         $html .= "<td>" . $c[ 'id' ] . "</td>";
         $html .= "<td>" . $c[ 'credits' ] . "</td>";
         $html .= "<td>" . $c[ 'name' ] . "</td>";
+        $html .= "<td>" . $c[ 'description' ] . "</td>";
         $html .= "<td>" . implode('<br>', $instructors) . "</td>";
         $html .= "</tr>";
 
     }
     $html .= '</table>';
+    $html .= '</div>';
     return $html;
 }
 

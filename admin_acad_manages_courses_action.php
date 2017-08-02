@@ -70,7 +70,7 @@ else if ( $_POST[ 'response' ] == 'Update' )
 
     if( $res )
     {
-        echo printInfo( 'Updated course' );
+        echo printInfo( 'Updated course : ' . $_POST[ 'id' ] );
         goBack( 'admin_acad_manages_courses.php', 0 );
         exit;
     }

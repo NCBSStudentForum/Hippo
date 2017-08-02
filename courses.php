@@ -63,6 +63,7 @@ foreach( $courses as $c )
     $enrollments[ $cid ] = $registrations;
 
     $cinfo = $course[ 'description' ];
+    echo $cinfo;
 
     echo '<tr>
         <td> <button onclick="showCourseInfo(this)" class="courseInfo" 

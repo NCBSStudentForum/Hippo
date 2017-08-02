@@ -864,9 +864,9 @@ function getSemester( $date )
 {
     $month = intval( date( 'm', strtotime( $date) ) );
     if( $month > 0 && $month < 7 )
-        return 'VASANT';
+        return 'SPRING';
     else
-        return 'MONSOON';
+        return 'AUTUMN';
 
 }
 

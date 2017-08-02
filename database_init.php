@@ -324,7 +324,7 @@ function initialize( $db  )
         create TABLE IF NOT EXISTS courses (
              -- Combination of course code, semester and year
             id VARCHAR(30) PRIMARY KEY
-            , semester ENUM( 'MONSOON', 'VASANT') NOT NULL
+            , semester ENUM( 'AUTUMN', 'SPRING') NOT NULL
             , course_id VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL

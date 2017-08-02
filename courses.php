@@ -47,7 +47,7 @@ echo alertUser(
 $enrollments = array( );
 
 echo '<table border="1">';
-echo '<tr><th>Course</th><th>Slot</th><th>Venue</th><th>All Enrollments</th>';
+echo '<tr><th>Course</th><th>Credit</th><th>Slot, Venue</th><th>All Enrollments</th>';
 
 foreach( $courses as $c )
 {
@@ -70,8 +70,8 @@ foreach( $courses as $c )
             value="' . $cinfo . '" >' . $cid . '</button> ' . $course[ 'name' ] . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
-        <td>' . $c[ 'slot' ] . '</td>
-        <td>' . $c[ 'venue' ] . '</td>
+        <td>' . $course[ 'credits' ] . '</td>
+        <td> <strong>' . $c[ 'slot' ] . '</strong>, ' .  $c[ 'venue' ] . '</td>
         <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">Show list</button></td>
         </form>';

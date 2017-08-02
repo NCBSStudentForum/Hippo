@@ -4,6 +4,7 @@ include_once 'header.php';
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
+include_once 'methods.php';
 include_once './check_access_permissions.php';
 
 if( ! (isIntranet() || isAuthenticated( ) ) )
@@ -62,8 +63,7 @@ foreach( $courses as $c )
 
     $enrollments[ $cid ] = $registrations;
 
-    $cinfo = $course[ 'description' ];
-    echo $cinfo;
+    $cinfo = html2Markdown( $course[ 'description' ] );
 
     echo '<tr>
         <td> <button onclick="showCourseInfo(this)" class="courseInfo" 

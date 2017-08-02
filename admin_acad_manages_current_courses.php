@@ -16,7 +16,7 @@ $action = 'Add';
 
 // Get the list of all courses. Admin will be asked to insert a course into 
 // database.
-$allCourses = getTableEntries( 'courses_metadata' );
+$allCourses = getTableEntries( 'courses_metadata', 'name' );
 $coursesId = array_map( function( $x ) { return $x['id']; }, $allCourses );
 $coursesMap = array( );
 

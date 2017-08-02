@@ -225,9 +225,9 @@ if( $today == dbDate( strtotime( 'this sunday' ) ) )
 }
 
 /*
- * Task 2. Every day at 8am, check today's event and send out an email.
+ * Task 2. Send today's event every day at 8am.
  */
-$awayFrom = strtotime( 'now' ) - strtotime( '8:00 am' );
+$awayFrom = strtotime( 'now' ) - strtotime( '8:00' );
 $today = dbDate( strtotime( 'today' ) );
 if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
@@ -254,7 +254,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 
                     // Now prepare an email to sent to mailing list.
                     $macros = array( 'EMAIL_BODY' => $html, 'DATE' => $today );
-                    $subject = "(Today : " . humanReadableShortDate( $today ) . ")" ;
+                    $subject = "Today (" . humanReadableShortDate( $today ) . "): " ;
                     $subject .= talkToShortEventTitle( $talk );
 
                     $template = emailFromTemplate( 'todays_events', $macros );

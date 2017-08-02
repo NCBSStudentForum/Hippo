@@ -43,7 +43,7 @@ else if ( $_POST[ 'response' ] == 'Add' )
 
         $res = insertIntoTable( 
             'courses'
-            , 'id,course_id,semester,start_date,end_date,slot' 
+            , 'id,course_id,semester,start_date,end_date,slot,venue' 
             , $_POST 
             );
 
@@ -51,7 +51,7 @@ else if ( $_POST[ 'response' ] == 'Add' )
             echo printWarning( "Could not add course to list" );
         else
         {
-            goBack( 'admin_acad_manages_current_courses.php', 0 );
+            goBack( 'admin_acad_manages_current_courses.php', 1 );
             exit;
         }
     }
@@ -64,14 +64,14 @@ else if ( $_POST[ 'response' ] == 'Update' )
 {
     $res = updateTable( 'courses'
             , 'course_id'
-            , 'semester,start_date,end_date,slot' 
+            , 'semester,start_date,end_date,slot,venue' 
             , $_POST 
             );
 
     if( $res )
     {
         echo printInfo( 'Updated course' );
-        goBack( 'admin_acad_manages_current_courses.php', 0 );
+        goBack( 'admin_acad_manages_current_courses.php', 1);
         exit;
     }
 }

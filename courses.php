@@ -46,9 +46,9 @@ echo alertUser(
 
 $enrollments = array( );
 
-echo '<table border="1">';
-echo '<tr><th>Course</th><th>Credit</th><th>Slot, Venue</th><th>All Enrollments</th>';
+echo '<table class="info">';
 
+echo '<tr><th>Course</th><th>Credit</th><th>Slot, Venue</th><th>All Enrollments</th>';
 foreach( $courses as $c )
 {
     $cid = $c['course_id'];

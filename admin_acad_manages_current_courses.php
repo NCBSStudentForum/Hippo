@@ -71,7 +71,10 @@ $( function() {
 <?php
 
 // Array to hold runnig course.
-$default = array( 'course_id' => $courseIdsSelect, 'venue' => $venueSelect );
+$default = array( 
+    'course_id' => $courseIdsSelect, 'venue' => $venueSelect 
+    , 'semester' => $sem
+);
 if( $_POST && array_key_exists( 'running_course', $_POST ) )
 {
     $runningCourse = getTableEntry( 'courses', 'id'
@@ -83,7 +86,7 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
 }
 
 
-echo "<h2>Courses running these days</h2>";
+echo "<h1>Running courses</h1>";
 
 echo printInfo( "Current semester is $sem, $year" );
 
@@ -125,6 +128,7 @@ echo '<form method="post" action="admin_acad_manages_current_courses_action.php"
 // We will figure out the semester by start_date .
 $default[ 'slot' ] = $slotSelect;
 $default[ 'venue' ] = $venueSelect;
+$default[ 'semester' ] = $sem;
 
 if( __get__( $default, 'course_id', '') )
     $action = 'Update';

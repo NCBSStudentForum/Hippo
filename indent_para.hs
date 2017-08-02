@@ -2,12 +2,13 @@
 
 import Text.Pandoc.JSON
 
-indent_para LineBreak = Str "\n  " 
-indent_para x = x
+indent_para [ ] = [ ]
+indent_para (LineBreak:xs) = LineBreak : Space : (indent_para xs)
+indent_para (x:xs) = x : (indent_para xs) 
 
 main :: IO ( )
 main = toJSONFilter filter
   where 
-    filter (Para x) = Para (map indent_para x)
+    filter (Para x) = Para (indent_para x)
     filter x = x
 

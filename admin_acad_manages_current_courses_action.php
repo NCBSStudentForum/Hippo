@@ -42,10 +42,14 @@ else
 
     if( $courseAtThisSlotVenue )
     {
-        echo printWarning( "Following course is already assigned at this slot/venue" );
-        echo arrayToVerticalTableHTML( $courseAtThisSlotVenue, 'info' );
-        echo goBackToPageLink( "admin_acad_manages_current_courses.php" );
-        exit;
+        // If different course is alredy on this slot/venue.
+        if( $courseAtThisSlotVenue[ 'course_id' ] != $_POST[ 'course_id' ] )
+        {
+            echo printWarning( "Following course is already assigned at this slot/venue" );
+            echo arrayToVerticalTableHTML( $courseAtThisSlotVenue, 'info' );
+            echo goBackToPageLink( "admin_acad_manages_current_courses.php" );
+            exit;
+        }
     }
 
     if ( $_POST[ 'response' ] == 'Add' ) 

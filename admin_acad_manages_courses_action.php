@@ -54,7 +54,7 @@ else if ( $_POST[ 'response' ] == 'Add' )
         }
     }
     else
-        echo printWarning( "Could ID can not be empty" );
+        echo printWarning( "Course ID can not be empty!" );
     
 
 }

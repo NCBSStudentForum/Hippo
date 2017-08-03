@@ -1991,6 +1991,19 @@ function getSemesterCourses( $year, $sem )
     return fetchEntries( $res );
 }
 
+/**
+    * @brief Get all the courses running this semester.
+    *
+    * @return 
+ */
+function getRunningCourses( )
+{
+    $year = getCurrentYear( );
+    $sem = getCurrentSemester( );
+    return getSemesterCourses( $year, $sem );
+}
+
+
 function getMyCourses( $sem, $year, $user  )
 {
     $whereExpr = "semester='$sem' AND year='$year' AND student_id='$user'";

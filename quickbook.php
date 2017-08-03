@@ -191,9 +191,6 @@ $jcAndMeets = getLabmeetAndJC( );
     * @{ */
 /**  @} */
 $courses = getRunningCourses(  );
-var_dump( $courses );
-
-
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {
@@ -224,7 +221,10 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         if( $_POST[ 'openair' ] == 'YES' && ! ($venue[ 'type' ] == 'OPEN AIR') )
             continue;
 
-        // Cool. Now check if any event is scheduled at this venue.
+        /**
+            * @name Now check if any request or booking is already made on this
+            * slot/venue. If yes, then do not book.
+        */
         $events = getEventsOnThisVenueBetweenTime( 
             $venueId , $date , $startTime, $endTime
         );
@@ -245,6 +245,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             . 'external_id,modified_by,timestamp'
             . ',calendar_id,calendar_event_id,last_modified_on';
 
+        $venueIsTaken = false;
         if( count( $all ) > 0 )
         {
             $tr = '<tr><td colspan="2">';
@@ -261,7 +262,35 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             $tr .= '</div>';
             $tr .= '</td></tr>';
             $table .= $tr;
-            continue;
+            $venueIsTaken = true;
+        }
+
+        /*
+         * Also check if a course is running on this slot/venue.
+         */
+        $clashingCourses = runningCoursesOnThisVenueSlot( 
+            $venue[ 'id' ], $date, $startTime, $endTime 
+        );
+
+        if( $clashingCourses )
+        {
+            $tr = '<tr><td colspan="2">';
+            $tr .= "<tt> Venue <font color=\"red\">" 
+                . strtoupper( $venue['id']) 
+                . " </font> has following course(s)</tt>" 
+                ;
+
+            $tr .= '<div style="font-size:x-small">';
+
+            $ignore = '';
+            foreach( $clashingCourses as $id => $r )
+                $tr .= arrayToTableHTML( $r, 'info', '', $ignore );
+
+            $tr .= '</div>';
+            $tr .= '</td></tr>';
+            $table .= $tr;
+            $venueIsTaken = true;
+
         }
 
         // Now construct a table and form
@@ -315,9 +344,11 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         $block .= '</tr></div>';
         $block .= '</form>';
 
-        $table .= $block;
+        if( ! $venueIsTaken )
+            $table .= $block;
 
         $table .= '</table>';
+
         echo $table;
     }
 

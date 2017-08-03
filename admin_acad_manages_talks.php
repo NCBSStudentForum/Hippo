@@ -71,16 +71,17 @@ foreach( $upcomingTalks as $t )
     echo '</td>';
 
     /***************************************************************************
-     * THIRD COLUMN: Related booking if any.
+     * THIRD COLUMN: Booking related to this talk.
      */
 
     // Check if this talk has already been approved or in pending approval.
+    $externalId = getTalkExternalId( $t );
     $event = getTableEntry( 'events', 'external_id,status'
-        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status' => 'VALID' )
+        , array( 'external_id' => $externalId, 'status' => 'VALID' )
         );
 
     $request = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
-        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status'  => 'PENDING' )
+        , array( 'external_id' => $externalId, 'status'  => 'PENDING' )
         );
 
     // If either a request of event is found, don't let user schedule the talk. 
@@ -89,8 +90,11 @@ foreach( $upcomingTalks as $t )
     if( ! ($request || $event ) )
     {
         echo '<td>';
+        echo '<form method="post" action="admin_acad_manages_talks_action.php">';
+        echo '<input type="hidden" name="id" value="' . $t[ 'id' ] . '" />';
         echo '<button title="Schedule this talk" 
             name="response" value="schedule">' . $symbCalendar . '</button>';
+        echo '</form>';
         echo '</td>';
     }
     else

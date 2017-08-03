@@ -2170,6 +2170,86 @@ function labmeetOrJCOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entrie
     return clashesOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries );
 }
 
+function getOccupiedSlots( $year = null, $sem = null )
+{
+    if( ! $year )
+        $year = getCurrentYear( );
+    if( ! $sem )
+        $sem = getCurrentSemester( );
+
+    $res = $db->query( 
+        "SELECT slot FROM courses WHERE year='$year' AND semester='$sem'"
+    );
+
+    $slots = array_map( 
+        function($x) { return $x['slot']; }
+        , fetchEntries( $res, PDO::FETCH_ASSOC )
+        );
+
+    return $slots;
+}
+
+
+function getRunningCoursesOnThisVenue( $venue, $date )
+{
+    global $db;
+
+    $year = getYear( $date );
+    $sem = getSemester( $date );
+    $courses = getTableEntries( 'courses', 'id'
+        , "year='$year' AND semester='$sem' AND ( end_date > '$date' AND start_date < '$date' )"
+        . " AND venue='$venue' "
+    );
+
+    return $courses;
+}
+
+
+/**
+    * @brief This function returns running courses on this day, venue, and slot.
+    *
+    * @param $venue
+    * @param $date
+    * @param $startTime
+    * @param $endTime
+    *
+    * @return 
+ */
+function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
+{
+    $courses = getRunningCoursesOnThisVenue( $venue, $date );
+
+    $day = date( 'D', strtotime($date) );
+
+    if( ! $courses )
+        return null;
+
+    // Check if any of these courses slot is clasing with booking.
+    $clashes = array( );
+    foreach( $courses as $course )
+    {
+        $slotId = $course[ 'slot' ];
+        $slots = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
+        foreach( $slots as $sl )
+        {
+            // If this slot is on on the same day as of booking request, ignore
+            // the course.
+            if( strcasecmp( $sl[ 'day' ], $day ) !== 0 )
+                continue;
+
+            $st = $sl[ 'start_time' ];
+            $et = $sl[ 'end_time' ];
+            if( isOverlappingTimeInterval( $startTime, $endTime, $st, $et ))
+                $clashes[ $course[ 'id' ] ] = $course;
+        }
+
+    }
+
+    if( count( $clashes ) > 0 )
+        return $clashes;
+    return null;
+}
+
 
 ?>
 

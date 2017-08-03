@@ -169,13 +169,14 @@ if( count( $publicEvents ) > 0 )
 {
     echo "<h2>Following public events are scheduled on the campus on selected date </h2>";
 
-    echo "<div style=\"font-size:x-small\">";
+    echo "<div style=\"font-size:small\">";
+    $tohide = 'gid,eid,description,status,is_public_event,external_id'
+              . ',calendar_id,calendar_event_id,last_modified_on,url' ;
+    echo '<table class="info">';
+    echo arrayHeaderRow( $publicEvents[0], 'info', $tohide );
     foreach( $publicEvents as $event )
-        echo arrayToTableHTML( $event, 'info', ''
-            , 'gid,eid,description,status,is_public_event,external_id'
-              . ',calendar_id,calendar_event_id,last_modified_on,url' 
-          ) ;
-
+        echo arrayToRowHTML( $event, 'info', $tohide );
+    echo '</table>';
     echo "</div>";
 }
 
@@ -183,6 +184,16 @@ if( count( $publicEvents ) > 0 )
  * Get the list of labmeets and JC 
  * ***************************************************************************/
 $jcAndMeets = getLabmeetAndJC( );
+
+/**
+    * @name Get all the running courses and prepare a data-structure which is
+    * easy to test for clash.
+    * @{ */
+/**  @} */
+$courses = getRunningCourses(  );
+var_dump( $courses );
+
+
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {

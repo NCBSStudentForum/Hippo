@@ -89,8 +89,11 @@ initialize( $db  );
 function getEventsOfTalkId( $talkId )
 {
     global $db;
+
+    $externalId = getTalkExternalId( $talkId );
+
     $entry = getTableEntry( 'events', 'external_id,status'
-        , array( 'external_id' => "talks.$talkId" , 'status' => 'VALID' ) 
+        , array( 'external_id' => "$externalId" , 'status' => 'VALID' ) 
         );
     return $entry;
 }
@@ -98,8 +101,9 @@ function getEventsOfTalkId( $talkId )
 function getBookingRequestOfTalkId( $talkId )
 {
     global $db;
+    $externalId = getTalkExternalId( $talkId );
     $entry = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
-        , array( 'external_id' => "talks.$talkId", 'status' => 'PENDING' ) 
+        , array( 'external_id' => "$externalId", 'status' => 'PENDING' ) 
         );
     return $entry;
 }

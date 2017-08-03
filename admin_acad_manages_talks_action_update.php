@@ -25,7 +25,7 @@ else if( $_POST[ 'response' ] == 'submit' )
         echo printInfo( 'Successfully updated entry' );
 
         // TODO: Update the request or event associated with this entry as well.
-        $externalId = 'talks.' . $_POST['id'];
+        $externalId = getTalkExternalId( $_POST );
 
         $talk = getTableEntry( 'talks', 'id', $_POST );
         assert( $talk );

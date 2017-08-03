@@ -12,6 +12,20 @@ mustHaveAnyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 
+echo '
+    <table class="tasks">
+        <tr>
+        <td>
+            Book using old interface
+        </td>
+        <td>
+            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a> 
+        </td>
+        </tr>
+    </table>'
+    ;
+echo '<br />';
+
 echo '<table class="tasks">
     <tr>
     <td>

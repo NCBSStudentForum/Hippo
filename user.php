@@ -83,7 +83,7 @@ echo '<h3>BookMyVenue</h3>';
 
 $html = '<table class="tasks">';
 $html .= '<tr>
-    <td>Book my venue. (Note: Old interface has been deprecated). </small>
+    <td>Book my venue. <blink> Old interface has been deprecated </blink> </small>
     </td>
       <td> <a href="quickbook.php">Book my venue</a> </td>
    </tr>

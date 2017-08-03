@@ -44,7 +44,7 @@ else
     {
         echo printWarning( "Following course is already assigned at this slot/venue" );
         echo arrayToVerticalTableHTML( $courseAtThisSlotVenue, 'info' );
-        echo goBack( );
+        echo goBackToPageLink( "admin_acad_manages_current_courses.php" );
         exit;
     }
 

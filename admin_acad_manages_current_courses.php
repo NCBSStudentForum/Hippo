@@ -145,7 +145,10 @@ echo dbTableToHTMLTable( 'courses'
     , 'course_id,start_date,end_date,slot,venue', $action 
     );
 
-if( $action == 'Delete' )
+/* If we are updating, we might also like to remove the entry. This button also 
+ * appears. Admin can remove the course schedule.
+ */
+if( $action == 'Update' )
     echo '<button name="response" onclick="AreYouSure(this)">' . 
             $symbDelete . '</button>';
 

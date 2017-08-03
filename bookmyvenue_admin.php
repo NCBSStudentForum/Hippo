@@ -12,6 +12,20 @@ mustHaveAnyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 
+echo '
+    <table class="tasks">
+        <tr>
+        <td>
+            Book using old interface
+        </td>
+        <td>
+            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a> 
+        </td>
+        </tr>
+    </table>'
+    ;
+echo '<br />';
+
 echo '<table class="tasks">
     <tr>
     <td>
@@ -54,8 +68,10 @@ if( count( $requests ) == 0 )
 else
     echo printInfo( "These requests needs your attention" );
 
-$html = "<div style=\"font-size:small\">";
+$html = '<div style="font-size:small">';
 $html .= '<table class="show_request">';
+
+$tohide = 'last_modified_on,status,modified_by,timestamp,url,external_id,gid,rid';
 foreach( $requests as $r )
 {
     $html .= '<form action="bookmyvenue_admin_request_review.php" method="post">';
@@ -69,10 +85,7 @@ foreach( $requests as $r )
     if( strpos( $r[ 'external_id'], 'talks.' ) !== false )
         $color = 'yellow';
 
-    $html .= arrayToTableHTML( $r, 'events'
-        , $color
-        ,  'last_modified_on,status,modified_by,timestamp,url,external_id,gid,rid'
-    );
+    $html .= arrayToTableHTML( $r, 'events', $color,  $tohide );
     $html .= '</td>';
     $html .= '<td style="background:white">
         <button name="response" value="Review" title="Review request"> ' . 

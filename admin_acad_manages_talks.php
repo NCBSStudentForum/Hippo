@@ -35,139 +35,140 @@ foreach( $talks as $t )
 }
 
 if( count( $upcomingTalks ) < 1 )
-    echo alertUser( "There is no upcoming talk/seminar." );
+    echo alertUser( "Rejoice! There is no upcoming talk/seminar." );
 else
-    echo "<h1>Upcoming talks.</h1>";
+    echo "<h1>Upcoming talks</h1>";
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
+echo '<div style="font-size:x-small">';
+// Outer table
+echo '<table border="1">';
 foreach( $upcomingTalks as $t )
 {
-    // Outer table
-    echo '<table><tr><td>';
-
-    // Get image of speaker if available.
-    echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
-
-
-    echo '</td><td>';
-    echo '<form method="post" action="admin_acad_manages_talks_action.php">';
-    echo '<table border="1">';
     echo '<tr>';
-    echo arrayToTableHTML( $t, 'info', '', 'speaker_id');
-    echo '</tr><tr>';
-    echo '
-        <input type="hidden" name="id" value="' . $t[ 'id' ] . '" />
-        <td><button onclick="AreYouSure(this)" name="response" 
-            title="Delete this entry" >' . $symbDelete . '</button></td>';
+    /***************************************************************************
+     * FIRST COLUMN: Speaker picture.
+     */
+    echo '<td>';
+    echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
+    echo '</td>';
+
+    /***************************************************************************
+     * SECOND COLUMN: Talk information.
+     */
+    echo '<td>';
+    echo '<form method="post" action="admin_acad_manages_talks_action.php">';
+    echo arrayToVerticalTableHTML( $t, 'info', '', 'speaker_id');
+
+    // Put an edit button. 
+    echo '<button style="float:right" title="Edit this talk"
+            name="response" value="edit">' . $symbEdit . '</button>';
+
+    echo '<input type="hidden" name="id" value="' . $t[ 'id' ] . '" />
+        <button onclick="AreYouSure(this)" name="response" 
+            title="Delete this talk" >' . $symbDelete . '</button>';
+    echo '</form>';
+    echo '</td>';
+
+    /***************************************************************************
+     * THIRD COLUMN: Booking related to this talk.
+     */
 
     // Check if this talk has already been approved or in pending approval.
+    $externalId = getTalkExternalId( $t );
     $event = getTableEntry( 'events', 'external_id,status'
-        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status' => 'VALID' )
+        , array( 'external_id' => $externalId, 'status' => 'VALID' )
         );
 
     $request = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
-        , array( 'external_id' => 'talks.' . $t[ 'id' ], 'status'  => 'PENDING' )
+        , array( 'external_id' => $externalId, 'status'  => 'PENDING' )
         );
 
     // If either a request of event is found, don't let user schedule the talk. 
     // Here we disable the schedule button.
+
     if( ! ($request || $event ) )
-        echo '<td><button style="float:right" title="Schedule this talk" 
-        name="response" value="schedule">' . $symbCalendar . '</button></td>';
-    else
-        echo '<td></td>';
-
-    // Put an edit button. 
-    echo '<td><button style="float:right" title="Edit this entry"
-            name="response" value="edit">' . $symbEdit . '</button></td>';
-
-    echo '</tr></table>';
-    echo '</form>';
-
-    // Close outer table.
-    echo '</td></tr></table>';
-
-    // Now put a table showing bookmyvenue_requests/events for this talk.
-    // To make sure that user dont' confuse these two table as different 
-    // talks rather than one talk and one is event/request; reduce the size 
-    // of second table.
-    echo "<div style=\"font-size:x-small\">";
-    if( $event )
     {
-        // If event is already approved, show it here.
-        echo "<strong>Above talk has been confirmed and event detail is shown 
-            below.</strong>";
-
-        $html = '<table border="0">';
-        $html .= '<tr><td>';
-        $html .= arrayToTableHTML( $event, 'events', 'lightyellow'
-            , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
-            ',status,calendar_event_id,last_modified_on' );
-
-        $html .= '</td><td>';
-
-        // $html .= "<td><button onclick=\"AreYouSure(this)\" 
-        //         name=\"response\" title=\"Cancel this event\"> 
-        //     $symbCancel </button></td>";
-
-        /* PREPARE email template */
-        $talkid = explode( '.', $event[ 'external_id' ])[1];
-        $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
-        if( ! $talk )
-            continue;
-
-        $talkHTML = talkToHTML( $talk, false );
-
-        $subject = __ucwords__( $talk[ 'class' ] ) . " by " . $talk['speaker'] . ' on ' .
-            humanReadableDate( $event[ 'date' ] );
-
-        $hostInstitite = emailInstitute( $talk[ 'host' ] );
-
-        $templ = emailFromTemplate(
-            "this_event" 
-            , array( 'EMAIL_BODY' => $talkHTML
-                    , 'HOST_INSTITUTE' => strtoupper( $hostInstitite )
-                ) 
-            );
-        $templ = htmlspecialchars( json_encode( $templ ) );
-
-        $html .= '<form method="post" action="./admin_acad_send_email.php">';
-        $html .= '<input type="hidden" name="subject" value="'. $subject . '" >';
-        $html .= '<input type="hidden" name="template" value="'. $templ . '" >';
-        $html .= '<button title="Send email" name="response" value="send email">Email</button>';
-        $html .= '</form>';
-
-        $html .= '</td></tr></table>';
-        echo $html;
-    }
-    // Else there might be a pending request.
-    else if( $request )
-    {
-        echo "<strong>Shown below is the booking request pending review for 
-                above talk. </strong>
-            ";
-        $gid = $request[ 'gid' ];
-
-        echo arrayToTableHTML( $request, 'requests', ''
-            , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
-            ',status,calendar_event_id,last_modified_on' );
-
-        echo '<form method="post" action="user_show_requests_edit.php">';
-        echo "<table class=\"show_requests\"><tr>";
-        echo "<td><button onclick=\"AreYouSure(this)\" 
-            name=\"response\" title=\"Cancel this request\"> 
-            $symbCancel </button></td>";
-        echo "<td style=\"float:right\">
-            <button name=\"response\" title=\"Edit this request\"
-            value=\"edit\"> $symbEdit </button></td>";
-        echo "</tr></table>";
-        echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
+        echo '<td>';
+        echo '<form method="post" action="admin_acad_manages_talks_action.php">';
+        echo '<input type="hidden" name="id" value="' . $t[ 'id' ] . '" />';
+        echo '<button title="Schedule this talk" 
+            name="response" value="schedule">' . $symbCalendar . '</button>';
         echo '</form>';
+        echo '</td>';
     }
-    echo "</div>";
-    echo "<hr>";
-    echo "<br />";
+    else
+    {
+        echo '<td>';
+        if( $event )
+        {
+            // If event is already approved, show it here.
+            echo "<strong>Above talk has been confirmed and event detail is shown 
+                below.</strong>";
+
+            $html = arrayToVerticalTableHTML( $event, 'events', 'lightyellow'
+                , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
+                ',status,calendar_event_id,last_modified_on' );
+
+            /* PREPARE email template */
+            $talkid = explode( '.', $event[ 'external_id' ])[1];
+            $talk = getTableEntry( 'talks', 'id', array( 'id' => $talkid ) );
+            if( ! $talk )
+                continue;
+
+            $talkHTML = talkToHTML( $talk, false );
+
+            $subject = __ucwords__( $talk[ 'class' ] ) . " by " . $talk['speaker'] . ' on ' .
+                humanReadableDate( $event[ 'date' ] );
+
+            $hostInstitite = emailInstitute( $talk[ 'host' ] );
+
+            $templ = emailFromTemplate(
+                "this_event" 
+                , array( 'EMAIL_BODY' => $talkHTML
+                        , 'HOST_INSTITUTE' => strtoupper( $hostInstitite )
+                    ) 
+                );
+            $templ = htmlspecialchars( json_encode( $templ ) );
+
+            $html .= '<form method="post" action="./admin_acad_send_email.php">';
+            $html .= '<input type="hidden" name="subject" value="'. $subject . '" >';
+            $html .= '<input type="hidden" name="template" value="'. $templ . '" >';
+
+
+            $html .= "<p>Use can send email: ";
+            $html .= '<button title="Send email" name="response" value="send email">Email</button>';
+            $html .= '</p>';
+            $html .= '</form>';
+            echo $html;
+        }
+        // Else there might be a pending request.
+        else if( $request )
+        {
+            echo "<strong>Shown below is the booking request pending review for 
+                    above talk. </strong>
+                ";
+            $gid = $request[ 'gid' ];
+
+            echo arrayToVerticalTableHTML( $request, 'requests', ''
+                , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
+                ',status,calendar_event_id,last_modified_on' );
+
+            echo '<form method="post" action="user_show_requests_edit.php">';
+            echo "<button onclick=\"AreYouSure(this)\" 
+                name=\"response\" title=\"Cancel this request\"> 
+                $symbCancel </button>";
+            echo "<button name=\"response\" title=\"Edit this request\"
+                value=\"edit\"> $symbEdit </button>";
+            echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
+            echo '</form>';
+        }
+        echo '</td>';
+    }
+    echo '</tr>';
 }
+echo '</table>';
+echo '</div>';
     
 echo goBackToPageLink( "user.php", "Go back" );
 

@@ -1527,7 +1527,7 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
 
     $res = $stmt->execute( );
     if( ! $res )
-        echo "<pre>Failed to execute $query </pre>";
+        echo printWarning( "<pre>Failed to execute $query </pre>" );
     return $res;
 }
 

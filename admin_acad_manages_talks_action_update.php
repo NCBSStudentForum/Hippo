@@ -25,10 +25,45 @@ else if( $_POST[ 'response' ] == 'submit' )
         echo printInfo( 'Successfully updated entry' );
 
         // TODO: Update the request or event associated with this entry as well.
-        // $externalId = 'talks.' . $_POST['id'];
+        $externalId = 'talks.' . $_POST['id'];
 
-        echo goToPage( 'admin_acad_manages_talks.php' , 0 );
-        exit;
+        $talk = getTableEntry( 'talks', 'id', $_POST );
+        assert( $talk );
+
+        $success = true;
+
+        $event = getEventsOfTalkId( $_POST[ 'id' ] ); 
+        $request = getBookingRequestOfTalkId( $_POST[ 'id' ] );
+
+        if( $event )
+        {
+            echo printInfo( "Updating event related to this talk" );
+            $event[ 'title' ] = talkToEventTitle( $talk );
+            $event[ 'description' ] = $talk[ 'description' ];
+            $res = updateTable( 'events', 'gid,eid', 'title,description', $event );
+            if( $res )
+                echo printInfo( "... Updated successfully" );
+            else
+                $success = false;
+        }
+        else if( $request )
+        {
+            echo printInfo( "Updating booking request related to this talk" );
+            $request[ 'title' ] = talkToEventTitle( $talk );
+            $request[ 'description' ] = $talk[ 'description' ];
+            $res = updateTable( 'bookmyvenue_requests', 'gid,eid'
+                , 'title,description', $request );
+            if( $res )
+                echo printInfo( "... Updated successfully" );
+            else
+                $success = false;
+        }
+
+        if( $success )
+        {
+            echo goToPage( 'admin_acad_manages_talks.php' , 0 );
+            exit;
+        }
     }
     else
         echo printWarning( "Failed to update the talk " );
@@ -36,7 +71,6 @@ else if( $_POST[ 'response' ] == 'submit' )
 else
     echo printInfo( "Unknown operation " . $_POST[ 'response' ] );
     
-
 echo goBackToPageLink( 'admin_acad_manages_talks.php', "Go back" );
 exit;
 

@@ -277,7 +277,8 @@ button.submit {
 
 button.courseInfo {
     background : none;
-    font-size : small;
+    border : 1px dotted;
+    font-size : x-small;
 }
 
 table.input {

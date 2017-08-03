@@ -67,7 +67,7 @@ foreach( $courses as $c )
 
     echo '<tr>
         <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" >' . $cid . '</button> ' . $course[ 'name' ] . '</td>
+            value="' . $cinfo . '" >Details</button> ' . $course[ 'name' ] . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
         <td>' . $course[ 'credits' ] . '</td>

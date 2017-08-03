@@ -25,8 +25,10 @@ function showCourseInfo( x )
 <?php
 
 echo '<h2>Slots </h2>';
-echo alertUser( "These are proposed slots. They are not official yet and subject
-    to change" );
+echo alertUser( "If a course is running in slot 1, then its time is 
+    represented by tiles 1A, 1B and 1C. 
+    <br>No course should overlap with other slot tiles.
+    <br>No course can run on red color tiles." );
 echo slotTable(  );
 
 

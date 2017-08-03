@@ -74,12 +74,6 @@ $( function() {
         {
             id = ui.item.value;
             $('#speakers_id').val( speakersDict[ id ]['id'] );
-            $('#speakers_first_name').val( speakersDict[ id ]['first_name'] );
-            $('#speakers_middle_name').val( speakersDict[ id ]['middle_name'] );
-            $('#speakers_last_name').val( speakersDict[ id ]['last_name'] );
-            $('#speakers_department').val( speakersDict[ id ]['department'] );
-            $('#speakers_institute').val( speakersDict[ id ]['institute'] );
-            $('#speakers_homepage').val( speakersDict[ id ]['homepage'] );
         }
     );
     $('#speakers_id').val( id );

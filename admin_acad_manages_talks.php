@@ -37,7 +37,7 @@ foreach( $talks as $t )
 if( count( $upcomingTalks ) < 1 )
     echo alertUser( "There is no upcoming talk/seminar." );
 else
-    echo printInfo( "Following upcoming talks are available." );
+    echo "<h1>Upcoming talks.</h1>";
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 foreach( $upcomingTalks as $t )

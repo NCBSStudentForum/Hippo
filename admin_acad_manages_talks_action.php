@@ -28,30 +28,42 @@ else if( $_POST[ 'response' ] == 'delete' )
         $success = true;
         $externalId = "talk." . $_POST[ 'id' ];
 
-        // Now cancel this talk in requests, if there is any.
-        $res = updateTable( 
-            'bookmyvenue_requests', 'external_id', 'status'
-            , array( 'external_id' => $externalId
-                    , 'status' => 'CANCELLED' )
-            );
-        if( ! $res  )
-            $success = false;
+        $events = getTableEntries( 'events'
+            , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        );
+        $requests = getTableEntries( 'bookmyvenue_requests'
+            , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        );
 
-        // Cancel confirmed event if any.
-        $res = updateTable( 
-            'events', 'external_id', 'status'
-            , array( 'external_id' => $externalId
-                    , 'status' => 'CANCELLED' )
-            );
-        if( ! $res  )
-            $success = false;
-        
-        if( $success )
+        foreach( $events as $e )
         {
-            echo "Successfully deleted related events/requests";
-            goBack( );
-            exit;
+            $e[ 'status' ] = 'CANCELLED';
+            // Now cancel this talk in requests, if there is any.
+            $res = updateTable( 'events', 'external_id', 'status', $e );
         }
+
+        foreach( $requests as $r )
+        {
+            $r[ 'status' ] = 'CANCELLED';
+            $res = updateTable( 
+                'bookmyvenue_requests', 'external_id', 'status', $r
+                );
+        }
+
+        // /* VALIDATION: Check the bookings are deleted  */
+
+        // $events = getTableEntries( 'events'
+        //     , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        // );
+        // $requests = getTableEntries( 'bookmyvenue_requests'
+        //     , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        // );
+        // assert( ! $events );
+        // assert( ! $requests );
+        
+        echo "Successfully deleted related events/requests";
+        goBack( );
+        exit;
     }
     else
         echo printWarning( "Failed to delete the talk " );

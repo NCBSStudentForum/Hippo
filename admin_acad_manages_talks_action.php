@@ -23,24 +23,35 @@ else if( $_POST[ 'response' ] == 'delete' )
     $res = deleteFromTable( 'talks', 'id', $_POST );
     if( $res )
     {
-        echo printInfo( 'Successfully deleted entry' );
+        echo printInfo( 'Successfully deleted talk' );
+
+        $success = true;
+        $externalId = "talk." . $_POST[ 'id' ];
 
         // Now cancel this talk in requests, if there is any.
-        updateTable( 
+        $res = updateTable( 
             'bookmyvenue_requests', 'external_id', 'status'
-            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
+            , array( 'external_id' => $externalId
                     , 'status' => 'CANCELLED' )
             );
+        if( ! $res  )
+            $success = false;
 
         // Cancel confirmed event if any.
-        updateTable( 
+        $res = updateTable( 
             'events', 'external_id', 'status'
-            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
+            , array( 'external_id' => $externalId
                     , 'status' => 'CANCELLED' )
             );
+        if( ! $res  )
+            $success = false;
         
-        goBack( );
-        exit;
+        if( $success )
+        {
+            echo "Successfully deleted related events/requests";
+            goBack( );
+            exit;
+        }
     }
     else
         echo printWarning( "Failed to delete the talk " );

@@ -81,7 +81,7 @@ if( $speaker )  // Sepeaker is successfully updated. Move on.
                 else 
                 {
                     // Else create a request with external_id as talkId.
-                    $external_id = "talks." . $talkId;
+                    $external_id = getTalkExternalId( $res2 );
                     $_POST[ 'external_id' ] = $external_id;
                     $_POST[ 'is_public_event' ] = 'YES';
 

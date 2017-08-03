@@ -23,22 +23,52 @@ else if( $_POST[ 'response' ] == 'delete' )
     $res = deleteFromTable( 'talks', 'id', $_POST );
     if( $res )
     {
-        echo printInfo( 'Successfully deleted entry' );
+        echo printInfo( 'Successfully deleted talk' );
 
-        // Now cancel this talk in requests, if there is any.
-        updateTable( 
-            'bookmyvenue_requests', 'external_id', 'status'
-            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
-                    , 'status' => 'CANCELLED' )
-            );
+        $success = true;
+        $externalId = getTalkExternalId( $_POST );
 
-        // Cancel confirmed event if any.
-        updateTable( 
-            'events', 'external_id', 'status'
-            , array( 'external_id' => "talks." + $_POST[ 'id' ] 
-                    , 'status' => 'CANCELLED' )
-            );
+        echo( "External id for bookings: $externalId <br>" );
+
+        $events = getTableEntries( 'events'
+            , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        );
+        $requests = getTableEntries( 'bookmyvenue_requests'
+            , 'external_id', "external_id='$externalId' AND status='PENDING'" 
+        );
+
+        foreach( $events as $e )
+        {
+            echo printInfo( "Cancelling following event" );
+            echo arrayToTableHTML( $e, 'info' );
+            $e[ 'status' ] = 'CANCELLED';
+            // Now cancel this talk in requests, if there is any.
+            $res = updateTable( 'events', 'external_id', 'status', $e );
+        }
+
+        foreach( $requests as $r )
+        {
+            echo printInfo( "Cancelling following booking request " );
+            echo arrayToTableHTML( $r, 'info' );
+
+            $r[ 'status' ] = 'CANCELLED';
+            $res = updateTable( 
+                'bookmyvenue_requests', 'external_id', 'status', $r
+                );
+        }
+
+        // /* VALIDATION: Check the bookings are deleted  */
+
+        // $events = getTableEntries( 'events'
+        //     , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        // );
+        // $requests = getTableEntries( 'bookmyvenue_requests'
+        //     , 'external_id', "external_id='$externalId' AND status='VALID'" 
+        // );
+        // assert( ! $events );
+        // assert( ! $requests );
         
+        echo "Successfully deleted related events/requests";
         goBack( );
         exit;
     }
@@ -70,7 +100,7 @@ else if( $_POST[ 'response' ] == 'schedule' )
     // We are sending this to quickbook.php as GET request. Only external_id is 
     // sent to page.
     //var_dump( $_POST );
-    $external_id = "talks." . $_POST[ 'id' ];
+    $external_id = getTalkExternalId( $_POST );
     $query = "&external_id=".$external_id;
     header( "Location: quickbook.php?" . $query );
     exit;

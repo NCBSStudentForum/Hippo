@@ -1108,3 +1108,21 @@ function nameArrayToText( $name )
                 . __get__( $name, 'last_name', '' );
     return $txt;
 }
+
+/**
+    * @brief Return a external_id of talk for booking.
+    *
+    * @param $talk
+    *
+    * @return "talks.$id"
+ */
+function getTalkExternalId( $talk )
+{
+    $id = '';
+    if( is_array( $talk ) )
+        $id = $talk[ 'id' ];
+    else if( is_string( $talk ) )
+        $id = $talk;
+
+    return "talks.$id";
+}

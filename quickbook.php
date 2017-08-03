@@ -48,13 +48,6 @@ if( array_key_exists( 'external_id', $_GET ) )
 }
 else
 {
-    // Display these messages if $_GET is not used.
-    echo '<div style="font-size:x-small">';
-    echo printInfo( 'A powerful booking interface is also available 
-        if you need to explore other events/dates/venues  before booking. 
-        <a href="bookmyvenue_browse.php">TAKE ME THERE</a> ' );
-    echo '</div>';
-
     echo alertUser( 
         'NOTICE: This interface is not for booking talks/seminar. 
         Please use <a href="user_register_talk.php">this interface</a>

@@ -83,12 +83,9 @@ echo '<h3>BookMyVenue</h3>';
 
 $html = '<table class="tasks">';
 $html .= '<tr>
-    <td>Browse available venues to submit a booking request
-    <small>On top-right corner <strong><tt>QuickBook</tt></strong> is a
-    simpler interface to do booking. You can use either. 
-    This interface shows more details. </small>
+    <td>Book my venue. (Note: Old interface has been deprecated). </small>
     </td>
-      <td> <a href="bookmyvenue_browse.php">Browse and book a venue</a> </td>
+      <td> <a href="quickbook.php">Book my venue</a> </td>
    </tr>
    <tr>
    <td>You can see your unapproved requests. You can modify their description, and 

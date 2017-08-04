@@ -189,24 +189,23 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
     $venues = getVenues( $sortby = 'name' );
 
+
+    $table = '<table class="info">';
     foreach ($venues as $venue) 
     {
-        $table = '<table class="venue_slot">';
         $venueId = $venue[ 'id' ];
         $date = dbDate( $_POST['date'] );
         $startTime = $_POST[ 'start_time' ];
         $endTime = $_POST[ 'end_time' ];
 
+        $skip = false;
+        $skipMsg = '<tt>' . $venueId . '</tt> does not meet your requirements: ';
         if( $venue[ 'strength' ] < $_POST[ 'strength' ] )
         {
-            $tr = '<tr><td colspan="2">';
-            $msg = $venueId . ' is not large enough. 
-                Required strength ' . $_POST[ 'strength' ] . ', venue strength '
-                . $venue[ 'strength' ];
-            $tr .= colored( $msg, 'blue' );
-            $tr .= '</td></tr>';
-            $table .= $tr;
-            continue;
+            $msg = "Required strength=" . $_POST[ 'strength' ] . 
+                ' but venue strength=' . $venue[ 'strength' ] . '.';
+            $skipMsg .= $msg;
+            $skip = true;
         }
 
         // One can reduce a Kernaugh map here. The expression is A' + B where
@@ -214,17 +213,31 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         // venue. We take its negative and use continue.
         if( $_POST[ 'has_skype' ] == 'YES' && ! ($venue[ 'has_skype' ] == 'YES') )
         {
-            $tr = '<tr><td colspan="2">';
-            $msg = $venueId . ' does not have conference facilty. ';
-            $tr .= colored( $msg, 'blue' );
-            $tr .= '</td></tr>';
-            $table .= $tr;
-            continue;
+            $skipMsg .= " No conference facility. " ;
+            $skip = true;
         }
+
+        if( $_POST[ 'has_projector' ] == 'YES' && ! ($venue[ 'has_projector' ] == 'YES') )
+        {
+            $skipMsg .= " No projector. ";
+            $skip = true;
+        }
+
 
         // Similarly, openair.
         if( $_POST[ 'openair' ] == 'YES' && ! ($venue[ 'type' ] == 'OPEN AIR') )
+        {
+            // No need to display anything here.
             continue;
+            $skip = true;
+        }
+
+        if( $skip )
+        {
+            $table .= '<tr><td colspan="2"><small>' 
+                   . colored( $skipMsg, 'grey' ) . '</small></td></tr>';
+            continue;
+        }
 
         /**
             * @name Now check if any request or booking is already made on this
@@ -352,10 +365,10 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         if( ! $venueIsTaken )
             $table .= $block;
 
-        $table .= '</table>';
 
-        echo $table;
     }
+    $table .= '</table>';
+    echo $table;
 
     unset( $_POST );
 }

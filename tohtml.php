@@ -1711,5 +1711,18 @@ function preferenceToHtml( $request )
     return $html;
 }
 
+/**
+    * @brief Reutrn colored text.
+    *
+    * @param $txt
+    * @param $color
+    *
+    * @return 
+ */
+function colored( $txt, $color = 'black' )
+{
+    return "<font color=\"$color\"> $txt </font>";
+
+}
 
 ?>

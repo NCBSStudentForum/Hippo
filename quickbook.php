@@ -180,12 +180,6 @@ if( count( $publicEvents ) > 0 )
  * ***************************************************************************/
 $jcAndMeets = getLabmeetAndJC( );
 
-/**
-    * @name Get all the running courses and prepare a data-structure which is
-    * easy to test for clash.
-    * @{ */
-/**  @} */
-$courses = getRunningCourses(  );
 
 if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 {
@@ -204,13 +198,29 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         $endTime = $_POST[ 'end_time' ];
 
         if( $venue[ 'strength' ] < $_POST[ 'strength' ] )
+        {
+            $tr = '<tr><td colspan="2">';
+            $msg = $venueId . ' is not large enough. 
+                Required strength ' . $_POST[ 'strength' ] . ', venue strength '
+                . $venue[ 'strength' ];
+            $tr .= colored( $msg, 'blue' );
+            $tr .= '</td></tr>';
+            $table .= $tr;
             continue;
+        }
 
         // One can reduce a Kernaugh map here. The expression is A' + B where
         // A is request for skype variable and B is has_skype field of 
         // venue. We take its negative and use continue.
         if( $_POST[ 'has_skype' ] == 'YES' && ! ($venue[ 'has_skype' ] == 'YES') )
+        {
+            $tr = '<tr><td colspan="2">';
+            $msg = $venueId . ' does not have conference facilty. ';
+            $tr .= colored( $msg, 'blue' );
+            $tr .= '</td></tr>';
+            $table .= $tr;
             continue;
+        }
 
         // Similarly, openair.
         if( $_POST[ 'openair' ] == 'YES' && ! ($venue[ 'type' ] == 'OPEN AIR') )

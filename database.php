@@ -2254,6 +2254,17 @@ function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
     return null;
 }
 
+function getSlotInfo( $id )
+{
+    global $db;
+    $slots = getTableEntries( 'slots', 'id', "groupid='$id'" );
+    $res = array( );
+    foreach( $slots as $sl )
+        $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-' 
+            . dbTime( $sl[ 'end_time' ] );
+    return $id . ' <small>(' . implode( ', ', $res ) . ') </small>';
+}
+
 
 ?>
 

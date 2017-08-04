@@ -67,13 +67,16 @@ foreach( $courses as $c )
 
     $cinfo = html2Markdown( $course[ 'description' ] );
 
+    $slot = $c[ 'slot' ];
+    $slotInfo = getSlotInfo( $slot );
+
     echo '<tr>
         <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
             value="' . $cinfo . '" >Details</button> ' . $course[ 'name' ] . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
         <td>' . $course[ 'credits' ] . '</td>
-        <td> <strong>' . $c[ 'slot' ] . '</strong> </td><td>' .  $c[ 'venue' ] . '</td>
+        <td>' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
         <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">Show list</button></td>
         </form>';

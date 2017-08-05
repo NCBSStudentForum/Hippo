@@ -222,7 +222,7 @@ if( file_exists( $pdfFile ) )
     unlink( $pdfFile );
 
 file_put_contents( $texFile,  $TeX );
-$cmd = "pdflatex --output-directory $outdir $texFile";
+$cmd = "lualatex --output-directory $outdir $texFile";
 if( file_exists( $texFile ) )
     $res = `$cmd`;
 

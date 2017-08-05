@@ -106,7 +106,8 @@ $enrollments = array( );
 /**  @} */
 
 echo '<table class="info">';
-echo '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th></tr>';
+echo '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th>
+    <th>Enrollments</th> </tr>';
 foreach( $slotCourses as $slot => $courses )
 {
     foreach( $courses as $c )

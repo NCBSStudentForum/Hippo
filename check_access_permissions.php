@@ -19,13 +19,12 @@ function requiredPrivilege( $role )
 
 function anyOfTheseRoles( $roles )
 {
-    if( array_key_exists( 'user', $_SESSION ) )
-    {
-        $userRoles = getRoles( $_SESSION['user'] );
-        foreach( $roles as $role )
-            if( in_array( $role, $userRoles ) )
-                return true;
-    }
+    $user = $_SESSION[ 'user' ];
+    assert( $user );
+    $userRoles = getRoles( $_SESSION['user'] );
+    foreach( $roles as $role )
+        if( in_array( $role, $userRoles ) )
+            return true;
     return false;
 }
 

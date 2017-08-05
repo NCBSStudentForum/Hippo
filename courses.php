@@ -13,6 +13,21 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+$year = getCurrentYear( );
+$sem = getCurrentSemester( );
+$slotCourses = array( );
+$runningCourses = getSemesterCourses( $year, $sem );
+
+// Collect both metadata and other information in slotCourse array.
+foreach( $runningCourses as $c )
+{
+    $cid = $c[ 'course_id' ];
+    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
+    $slotCourses[ $c[ 'slot' ] ][ ] = array_merge( $c, $course );
+}
+
+$slotCourseJSON = json_encode( $slotCourses );
+
 ?>
 
 <script type="text/javascript" charset="utf-8">
@@ -20,25 +35,50 @@ function showCourseInfo( x )
 {
     alert( "Course description:\n" +  x.value );
 }
+
+function showRunningCourse( x )
+{
+    var slotId = x.value;
+    var courses = <?php echo $slotCourseJSON; ?>;
+    var runningCourses = courses[ slotId ];
+
+    if( runningCourses && runningCourses.length > 0 )
+    {
+        var runningCoursesTxt = runningCourses.map( 
+            function(x, index) { return (1 + index) + '. ' + x.name 
+            + ' at ' + x.venue ; } 
+        ).join( "\n");
+
+        var msg = "Following courses are running in slot " + slotId 
+            + "\n" + runningCoursesTxt;
+    }
+    else
+    {
+        msg = "No course is running on slot " + slotId;
+    }
+
+    alert( msg );
+}
 </script>
+
+ 
 
 <?php
 
 echo '<h2>Slots </h2>';
-echo alertUser( "If a course is running in slot 1, then its time is 
+echo printInfo( 
+    "If a course is running in slot 1, then its time is 
     represented by tiles 1A, 1B and 1C. 
     <br>No course should overlap with other slot tiles.
     <br>No course can run on red color tiles." );
+
+echo alertUser( 'Click on <button class="invisible" disabled>1A</button> etc to see the list of courses 
+    running on this slot this semester' );
 echo slotTable(  );
 
 
 echo "<h2>Enrollement table for this semester courses</h2>";
 
-
-$year = getCurrentYear( );
-$sem = getCurrentSemester( );
-
-$courses = getSemesterCourses( $year, $sem );
 
 
 echo alertUser(
@@ -51,36 +91,35 @@ $enrollments = array( );
 echo '<table class="info">';
 
 echo '<tr><th>Course</th><th>Credit</th><th>Slot</th><th>Venue</th><th>All Enrollments</th>';
-foreach( $courses as $c )
+foreach( $slotCourses as $slot => $courses )
 {
-    $cid = $c['course_id'];
-    $course = getTableEntry( 'courses_metadata', 'id'
-                    , array( 'id' => $c['course_id'] ) 
-                );
+    foreach( $courses as $c )
+    {
+        $cid = $c[ 'id' ];
+        $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
+        $registrations = getTableEntries(
+            'course_registration', 'student_id', $whereExpr 
+        );
 
-    $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
-    $registrations = getTableEntries(
-                        'course_registration', 'student_id', $whereExpr 
-                    );
+        $enrollments[ $cid ] = $registrations;
 
-    $enrollments[ $cid ] = $registrations;
+        $cinfo = html2Markdown( $c[ 'description' ] );
 
-    $cinfo = html2Markdown( $course[ 'description' ] );
+        $slotInfo = getSlotInfo( $slot );
 
-    $slot = $c[ 'slot' ];
-    $slotInfo = getSlotInfo( $slot );
-
-    echo '<tr>
-        <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" >Details</button> ' . $course[ 'name' ] . '</td>
-        <form method="post" action="#">
-        <input type="hidden" name="course_id" value="' . $cid . '">
-        <td>' . $course[ 'credits' ] . '</td>
-        <td>' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
-        <td>' . count( $registrations ) . '</td><td>
-            <button name="response" value="show_enrollment">Show list</button></td>
-        </form>';
-    echo '</tr>';
+        echo '<tr>
+            <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
+            value="' . $cinfo . '" >Details</button> ' . $c[ 'name' ] . '</td>
+            <form method="post" action="#">
+            <input type="hidden" name="course_id" value="' . $cid . '">
+            <td>' . $c[ 'credits' ] . '</td>
+            <td>' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
+            <td>' . count( $registrations ) . '</td><td>
+            <button name="response" value="show_enrollment">
+            <small>Show Enrollments</small></button></td>
+            </form>';
+        echo '</tr>';
+    }
 }
 echo '</table><br/>';
 

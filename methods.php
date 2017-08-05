@@ -701,8 +701,7 @@ function html2Markdown( $html, $strip_inline_image = false )
         unlink( $outfile );
         return $md;
     }
-    else 
-        return html2text( $html );
+    return $html;
 }
 
 function html2Tex( $html, $strip_inline_image = false )

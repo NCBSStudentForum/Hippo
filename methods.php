@@ -1128,3 +1128,10 @@ function getTalkExternalId( $talk )
 
     return "talks.$id";
 }
+
+// returns true if $needle is a substring of $haystack
+function contains($needle, $haystack)
+{
+    return strpos($haystack, $needle) !== false;
+}
+

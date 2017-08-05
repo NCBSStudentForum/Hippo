@@ -28,8 +28,13 @@ foreach( $runningCourses as $c )
 
 $slotCourseJSON = json_encode( $slotCourses );
 
-?>
+echo alertUser( 
+    "NOTICE: If you are reading this then this page does not contain officially
+    approved information. Any information provided on this page may change or 
+    disappear.
+    ");
 
+?>
 <script type="text/javascript" charset="utf-8">
 function showCourseInfo( x )
 {
@@ -65,31 +70,42 @@ function showRunningCourse( x )
 
 <?php
 
-echo '<h2>Slots </h2>';
-echo printInfo( 
-    "If a course is running in slot 1, then its time is 
-    represented by tiles 1A, 1B and 1C. 
-    <br>No course should overlap with other slot tiles.
-    <br>No course can run on red color tiles." );
 
+echo '<h1>Slots </h1>';
+
+
+echo printInfo( "
+    <ul>
+    <li> If a course is running in slot 1, then its time is 
+    represented by tiles 1A, 1B and 1C.  </li>
+    <li> No course should overlap with any other course's slot tiles.  </li>
+    <li> No course can run on red color tiles. These are reserved tiles. </li>
+    </ul>" 
+);
+    
 echo alertUser( 'Click on <button class="invisible" disabled>1A</button> etc to see the list of courses 
     running on this slot this semester' );
 echo slotTable(  );
 
 
-echo "<h2>Enrollement table for this semester courses</h2>";
+echo "<h1>Enrollement table for this semester courses</h1>";
 
 
 
 echo alertUser(
-    "Click on the button to see the list of enrolled students" 
+    "Click on the button <button disabled>Show list</button>to see the 
+    list of enrolled students" 
     );
 
 
 $enrollments = array( );
 
-echo '<table class="info">';
+/**
+    * @name Show the courses.
+    * @{ */
+/**  @} */
 
+echo '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th>';
 echo '<tr><th>Course</th><th>Credit</th><th>Slot</th><th>Venue</th><th>All Enrollments</th>';
 foreach( $slotCourses as $slot => $courses )
 {
@@ -125,11 +141,16 @@ echo '</table><br/>';
 
 echo closePage( );
 
+/**
+    * @name Show enrollment.
+    * @{ */
+/**  @} */
 if( $_POST )
 {
 
     $cid = $_POST[ 'course_id'];
     $courseName = getCourseName( $cid );
+
     echo '<h3>Enrollment for course ' . $courseName .'</h3>';
 
     $table = '<table class="show_events">';
@@ -154,6 +175,8 @@ if( $_POST )
     echo '<br>';
     echo closePage( );
 }
+
+echo '</div>';
 
 
 ?>

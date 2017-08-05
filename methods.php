@@ -999,7 +999,9 @@ function verifyRequest( $request )
 function emailInstitute( $email, $format = 'html' )
 {
 
-    $res = 'National Center For Biological Sciences, Bangalore (TIFR Mumbai)';
+    $ncbs = 'National Center For Biological Sciences, Bangalore (TIFR Mumbai)';
+    $instem = 'Institute for Stem Cell Biology and Regenerative Medicine, Bangalore';
+    $ccamp =  'Center for Cellular and Molecular Platforms, Bangalore';
 
     if( $format == 'html' )
         $break = '<br>';
@@ -1008,10 +1010,11 @@ function emailInstitute( $email, $format = 'html' )
     else
         $break = '\n';
 
+    $res = $ncbs;
     if( strpos( $email, 'instem.res.in' ) !== false )
-        $res .= $break . 'Institute for Stem Cell Biology and Regenerative Medicine, Bangalore';
+        $res = $instem;
     else if( strpos( $email, 'ccamp.res.in' ) !== false )
-        $res .= $break . 'Center for Cellular and Molecular Platforms, Bangalore';
+        $res = $ncbs . $break . $ccamp;
     return $res;
 }
 

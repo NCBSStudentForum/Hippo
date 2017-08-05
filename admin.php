@@ -62,15 +62,6 @@ echo '<h3>Email management</h3>';
 echo '
     <table class="admin">
     <tr>
-        <td>
-        You can see scheduled emails, canncel them or if neccessary
-        , send them right away.
-        </td>
-        <td>
-            <a href="admin_manages_email.php">Manage emails</a>
-        </td>
-    </tr>
-    <tr>
         <td>Manage email templates</td>
         <td>
             <a href="admin_manages_email_templates.php">Manage Email template</a>

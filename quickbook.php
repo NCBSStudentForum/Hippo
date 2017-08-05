@@ -13,17 +13,7 @@ include_once 'check_access_permissions.php';
 mustHaveAnyOfTheseRoles( array( "USER" ) );
 
 echo userHTML( );
-?>
 
-<!-- Setup background property on body here 
-IT DOES NOT WORK. Fix it later.
-<script type="text/javascript" charset="utf-8">
-    var body = document.getElementsByTagName('body')[0];
-    body.style.backgroundImage = 'url(http://ncbs.res.in/hippo/data/background.jpeg)';
-</script>
--->
-
-<?php
 $roundedTimeNow = round( time( ) / (15 * 60) ) * (15 * 60 );
 
 $defaults = array( 

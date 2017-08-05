@@ -92,8 +92,9 @@ echo "<h1>Enrollement table for this semester courses</h1>";
 
 
 
+$showEnrollText = 'Show Enrollement';
 echo alertUser(
-    "Click on the button <button disabled>Show list</button>to see the 
+    "Click on the button <button disabled>$showEnrollText</button>to see the 
     list of enrolled students" 
     );
 
@@ -133,7 +134,7 @@ foreach( $slotCourses as $slot => $courses )
             <td>' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
             <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">
-            <small>Show Enrollments</small></button></td>
+            <small>' . $showEnrollText . '</small></button></td>
             </form>';
         echo '</tr>';
     }

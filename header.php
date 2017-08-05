@@ -74,12 +74,12 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <!-- Here are the js script -->
 <script src="js/jquery-1.12.4.js"></script>
 <script src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.css">
 
 <script src="js/easyzoom.js"></script>
 <link rel="stylesheet" href="js/easyzoom.css">
 
 <script src="js/jquery-ui.multidatespicker.js"></script>
-<link rel="stylesheet" href="js/jquery-ui.css">
 
 
 <script type="text/javascript" src="js/jquery-timepicker-1.11.9/jquery.timepicker.js"></script>

@@ -1582,27 +1582,6 @@ function slotTable( $width = "15px" )
             );
 
 
-            $isOccupied = false;
-
-            //if( count( $clashes ) > 0 )
-            //{
-            //    $clash = end( $clashes );
-            //    echo "Slot $day " . $slot[ 'start_time' ] . ' to ' . $slot[ 'end_time' ]
-            //        . ' is clashing with following labmeets. <br>';
-
-            //    foreach( $clashes as $clash )
-            //    {
-            //        $msg = '<small>';
-            //        $msg .=  $clash[ 'day' ] . ' : ';
-            //        $msg .=  $clash[ 'start_time' ] . ' ' . $clash[ 'end_time' ];
-            //        $msg .=  ' ' . $clash[ 'title' ] . ' <br />';
-            //        $msg .= '</small>';
-            //        echo( $msg );
-            //    }
-
-            //    $isOccupied = true;
-            //}
-
             if( $slot )
             {
                 $duration = strtotime( $slot[ 'end_time' ] )  -
@@ -1611,18 +1590,19 @@ function slotTable( $width = "15px" )
                         humanReadableTime(  $slot[ 'end_time' ] );
 
                 $bgColor = 'lightblue';
-                if( $isOccupied )
-                    $bgColor = 'red';
-
-
                 $id = $slot[ 'id' ];
+                $gid = $slot[ 'groupid' ];
+
                 if( ! is_numeric( $id[0] ) )
                     $bgColor = 'red';
 
 
                 $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
-                $html .= "<td style=\"background:$bgColor\" colspan=\"$ncols\">
-                         $id <br> <small> <tt>$text</tt> </small> </td>";
+
+                $html .= "<td id=\"slot_$id\" style=\"background:$bgColor\" colspan=\"$ncols\">
+                         <button onClick=\"showRunningCourse(this)\" 
+                          id=\"slot_$gid\" value=\"$gid\" class=\"invisible\"> $id </button> 
+                         <br> <small> <tt>$text</tt> </small> </td>";
 
                 // Increase $i by ncols - 1. 1 is increased by loop.
                 if( $ncols > 1 )

@@ -281,6 +281,12 @@ button.courseInfo {
     font-size : x-small;
 }
 
+button.invisible {
+    background : none;
+    border : 1px dotted;
+    font-size : x-small;
+}
+
 table.input {
     text-align : left;
     background-color:var(--background); 

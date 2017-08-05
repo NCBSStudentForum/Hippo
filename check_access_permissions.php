@@ -20,7 +20,7 @@ function requiredPrivilege( $role )
 function anyOfTheseRoles( $roles )
 {
     $user = $_SESSION[ 'user' ];
-    assert( $user );
+    assert( strlen( $user ) > 0 );
     $userRoles = getRoles( $_SESSION['user'] );
     foreach( $roles as $role )
         if( in_array( $role, $userRoles ) )

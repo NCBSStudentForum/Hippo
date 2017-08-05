@@ -41,7 +41,7 @@ function initialize( $db  )
             , first_name VARCHAR(200)
             , last_name VARCHAR(100)
             , roles SET( 
-                'USER', 'ADMIN', 'JOURNALCLUB_ADMIN', 'AWS_ADMIN', 'BOOKMYVENUE_ADMIN'
+                'USER', 'ADMIN', 'MEETINGS', 'ACAD_ADMIN', 'BOOKMYVENUE_ADMIN', '
             ) DEFAULT 'USER'
             , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             , created_on DATETIME 

@@ -8,7 +8,9 @@ include_once 'database.php';
 include_once 'check_access_permissions.php';
 require_once './calendar/NCBSCalendar.php';
 
-mustHaveAnyOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
+// Disabling it because google-calendar takes care of security. Moreover, this 
+// script can be run by cron job.
+//mustHaveAnyOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
 
 ?>
 

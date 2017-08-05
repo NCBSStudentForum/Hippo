@@ -13,7 +13,17 @@ include_once 'check_access_permissions.php';
 mustHaveAnyOfTheseRoles( array( "USER" ) );
 
 echo userHTML( );
+?>
 
+<!-- Setup background property on body here 
+IT DOES NOT WORK. Fix it later.
+-->
+<script type="text/javascript" charset="utf-8">
+    var body = document.getElementsByTagName('body')[0];
+    body.style.backgroundImage = 'url(http://ncbs.res.in/hippo/data/background.jpeg)';
+</script>
+
+<?php
 $roundedTimeNow = round( time( ) / (15 * 60) ) * (15 * 60 );
 
 $defaults = array( 
@@ -27,12 +37,11 @@ $defaults = array(
     , "title" => ''
     );
 
-$external_id = null;
-
 
 /* NOTE: We can come here from a $_GET or $_POST request. Usually this happend when 
  * admin is scheduling a talk.
  */
+$external_id = null;
 if( array_key_exists( 'external_id', $_GET ) )
 {
     $external_id = $_GET[ 'external_id' ];
@@ -375,5 +384,6 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
 
 echo goBackToPageLink( "user.php", "Go back" );
+echo "</body>";
 
 ?>

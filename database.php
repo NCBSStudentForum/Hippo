@@ -1971,6 +1971,26 @@ function addOrUpdateSpeaker( $data )
     return getTableEntry( 'speakers', 'id', $data );
 }
 
+function getCourseInfo( $cid )
+{
+    $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
+    $html = $c['name'];
+
+    $instructors = array( );
+    foreach( $c as $k => $v )
+    {
+        if( contains( 'instructor', $k ) )
+            if( $v )
+            {
+                $name = arrayToName( findAnyoneWithEmail( $v ) );
+                $instructors[ ] = "<small><a href=\"mailto:$v\">$name</a></small>";
+            }
+    }
+
+    $instructors = implode( '<br>', $instructors );
+    return $html . '<br>' . $instructors;
+}
+
 function getCourseName( $cid )
 {
     $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
@@ -2262,7 +2282,7 @@ function getSlotInfo( $id )
     foreach( $slots as $sl )
         $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-' 
             . dbTime( $sl[ 'end_time' ] );
-    return $id . ' <small>(' . implode( ', ', $res ) . ') </small>';
+    return '<small>(' . implode( ', ', $res ) . ') </small>';
 }
 
 

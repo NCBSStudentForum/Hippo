@@ -214,10 +214,12 @@ div.info {
     max-width : var(--maxwidth);
 }
 
-button {
-    font-size: x-large;
-    /*min-width : 50px;*/
+button.invisible {
+    background : none;
+    border : 1px dotted;
+    font-size : small;
 }
+
 
 // change them together.
 button.add_event {
@@ -281,11 +283,11 @@ button.courseInfo {
     font-size : x-small;
 }
 
-button.invisible {
-    background : none;
-    border : 1px dotted;
-    font-size : x-small;
+button {
+    font-size: x-large;
+    /*min-width : 50px;*/
 }
+
 
 table.input {
     text-align : left;

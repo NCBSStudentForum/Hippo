@@ -1174,7 +1174,7 @@ function awsToHTML( $aws, $with_picture = false )
         $html .=  '<table class="email">';
         $html .= '<tr><td style="width:500px"></td>';
         $user = $aws[ 'speaker' ];
-        $imgHtml = getUserPicture( $user );
+        $imgHtml = getUserPicture( $user, 'hippo' );
         $html .= "<td float=\"right\"> <div> $imgHtml </div>";
         $html .= "</td></tr>";
         $html .= "</table>";

@@ -626,7 +626,7 @@ function getLoginPicturePath( $login, $default = 'null' )
  */
 function getUserPicture( $user, $default = 'null' )
 {
-    $picPath = getLoginPicturePath( $user );
+    $picPath = getLoginPicturePath( $user, $default );
     $html ='<img class="login_picture" width="200px"
         height="auto" src="' . dataURI( $picPath, 'image/jpg' ) . '" >';
 

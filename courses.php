@@ -13,8 +13,12 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+echo alertUser( 
+    "NOTICE: If you are reading this then this page does not contain officially
+    approved information. Any information provided on this page may change or 
+    disappear.
+    ");
 ?>
-
 <script type="text/javascript" charset="utf-8">
 function showCourseInfo( x )
 {
@@ -24,15 +28,21 @@ function showCourseInfo( x )
 
 <?php
 
-echo '<h2>Slots </h2>';
-echo alertUser( "If a course is running in slot 1, then its time is 
-    represented by tiles 1A, 1B and 1C. 
-    <br>No course should overlap with other slot tiles.
-    <br>No course can run on red color tiles." );
+echo '<h1>Slots </h1>';
+
+echo printInfo( "
+    <ul>
+    <li> If a course is running in slot 1, then its time is 
+    represented by tiles 1A, 1B and 1C.  </li>
+    <li> No course should overlap with any other course's slot tiles.  </li>
+    <li> No course can run on red color tiles. These are reserved tiles. </li>
+    </ul>" 
+);
+    
 echo slotTable(  );
 
 
-echo "<h2>Enrollement table for this semester courses</h2>";
+echo "<h1>Enrollement table for this semester courses</h1>";
 
 
 $year = getCurrentYear( );
@@ -42,15 +52,22 @@ $courses = getSemesterCourses( $year, $sem );
 
 
 echo alertUser(
-    "Click on the button to see the list of enrolled students" 
+    "Click on the button <button disabled>Show list</button>to see the 
+    list of enrolled students" 
     );
 
 
 $enrollments = array( );
 
-echo '<table class="info">';
+/**
+    * @name Show the courses.
+    * @{ */
+/**  @} */
 
-echo '<tr><th>Course</th><th>Credit</th><th>Slot</th><th>Venue</th><th>All Enrollments</th>';
+echo '<div style="font-size:small">';
+echo '<table class="info">';
+echo '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th>';
+echo '<th>Enrollments</th>';
 foreach( $courses as $c )
 {
     $cid = $c['course_id'];
@@ -65,18 +82,19 @@ foreach( $courses as $c )
 
     $enrollments[ $cid ] = $registrations;
 
-    $cinfo = html2Markdown( $course[ 'description' ] );
+    $cDesc = html2Markdown( $course[ 'description' ] );
+    $courseInfo = getCourseInfo( $cid );
 
     $slot = $c[ 'slot' ];
     $slotInfo = getSlotInfo( $slot );
 
     echo '<tr>
         <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" >Details</button> ' . $course[ 'name' ] . '</td>
+            value="' . $cDesc . '" >Details</button> ' . $courseInfo . '</td>
         <form method="post" action="#">
         <input type="hidden" name="course_id" value="' . $cid . '">
         <td>' . $course[ 'credits' ] . '</td>
-        <td>' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
+        <td>' . $slot . '<br />' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
         <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">Show list</button></td>
         </form>';
@@ -86,11 +104,16 @@ echo '</table><br/>';
 
 echo closePage( );
 
+/**
+    * @name Show enrollment.
+    * @{ */
+/**  @} */
 if( $_POST )
 {
 
     $cid = $_POST[ 'course_id'];
     $courseName = getCourseName( $cid );
+
     echo '<h3>Enrollment for course ' . $courseName .'</h3>';
 
     $table = '<table class="show_events">';
@@ -115,6 +138,8 @@ if( $_POST )
     echo '<br>';
     echo closePage( );
 }
+
+echo '</div>';
 
 
 ?>

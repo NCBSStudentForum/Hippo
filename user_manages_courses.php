@@ -44,7 +44,6 @@ echo "<h2>Registration form</h2>";
 $default = array( 'student_id' => $_SESSION[ 'user' ] 
                 , 'semester' => $sem
                 , 'year' => $year
-                , 'registered_on' => dbDateTime( 'now' )
                 , 'course_id' => $courseSelect
                 );
 
@@ -58,33 +57,37 @@ echo dbTableToHTMLTable( 'course_registration'
                       );
 echo '</form>';
 
+
+/**
+    * @name Show the registered courses.
+    * @{ */
+/**  @} */
+
 $tofilter = 'student_id';
-
 echo '<div style="font-size:small">';
-
-echo '<table border="1">';
+echo '<table class="1">';
 echo '<tr>';
-
 $action = 'drop';
 $count = 0;
 
 if( count( $myCourses ) > 0 )
-    echo "<h2>You are registered for following courses </h2>";
+    echo "<h1>You are registered for following courses </h1>";
 
 foreach( $myCourses as $c )
 {
     $count += 1;
+
+    // Break at 3 courses.
     if( $count % 3 == 0 )
         echo '</tr><tr>';
 
     echo '<td>';
     echo '<form method="post" action="user_manages_courses_action.php">';
 
-
     $cid = $c[ 'course_id' ];
     $course = getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
 
-    // If more than 30 days have passed, do not allow registering for courses.
+    // If more than 30 days have passed, do not allow dropping courses. 
     if( strtotime( 'now' ) - strtotime( $runningCourses[ $cid][ 'start_date' ] ) 
             > 30 * 24 * 3600 )
     {
@@ -100,6 +103,9 @@ foreach( $myCourses as $c )
     // TODO: Don't show grades unless student has given feedback.
     if( strlen( $c[ 'grade' ] == 0 ) )
         $tofilter .= ',grade,grade_is_given_on';
+
+    // Put course name in this table.
+    $c[ 'course_id' ] .=  ' : ' . $course[ 'name' ];
 
     echo dbTableToHTMLTable( 'course_registration', $c, '', $action, $tofilter );
     echo '</form>';

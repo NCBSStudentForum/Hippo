@@ -57,28 +57,33 @@ if( $scheduledAWS )
 }
 else 
 {
-    if( $tempScheduleAWS )
-    {
-        echo printInfo( "<font color=\"blue\">&#x2620 Your AWS is most likely to be on " . 
-            humanReadableDate( $tempScheduleAWS[ 'date' ] ) .". Note that this is not 
-            a confirmed schedule. Just a heads-up!</font>" .
-            ".<br>Once confirmed, I will notify you immediately, 
-            and once more, at least 28 days in advance." );
+    
+    /*
+     * DO NOT SHOW THE TEMPORARY SCHEDULE 
+     */
 
-        echo printWarning( 
-            "This date likely to change if any other speaker's
-            request to change his/her AWS schedule is approved and/or 
-            new speakers are added.  Once your schedule is confirmed, 
-            it does not change without your approval.
-            " 
-        );
-    }
-    else
-        echo printInfo( 
-            "You don't have any AWS scheduled in next 12 months. This happens if 
-            you already given 3 AWS or more. If this is not the case, you should 
-            write to academic office.
-        " );
+    //if( $tempScheduleAWS )
+    //{
+    //    echo printInfo( "<font color=\"blue\">&#x2620 Your AWS is most likely to be on " . 
+    //        humanReadableDate( $tempScheduleAWS[ 'date' ] ) .". Note that this is not 
+    //        a confirmed schedule. Just a heads-up!</font>" .
+    //        ".<br>Once confirmed, I will notify you immediately, 
+    //        and once more, at least 28 days in advance." );
+
+    //    echo printWarning( 
+    //        "This date likely to change if any other speaker's
+    //        request to change his/her AWS schedule is approved and/or 
+    //        new speakers are added.  Once your schedule is confirmed, 
+    //        it does not change without your approval.
+    //        " 
+    //    );
+    //}
+    //else
+    //    echo printInfo( 
+    //        "You don't have any AWS scheduled in next 12 months. This happens if 
+    //        you already given 3 AWS or more. If this is not the case, you should 
+    //        write to academic office.
+    //    " );
 
 
     // Here user can submit preferences.
@@ -93,10 +98,9 @@ else
     if( ! $prefs )
     {
         echo printInfo( 
-            "If you can not make it on this date, hurry up 
-            and let me know your preferred dates. I will try my best to assign you on 
-            or very near to these dates. Make sure you are available near these dates 
-            as well (+/- 2 weeks).
+            "You can tell me know your preferred dates. I will try my best to 
+            assign you on or very near to these dates (+/- 2 weeks). Make sure that
+            you are available at these dates.
             "
             );
 

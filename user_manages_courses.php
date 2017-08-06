@@ -21,9 +21,9 @@ foreach( getSemesterCourses( $year, $sem ) as $rc )
 
 echo '<h1>Course enrollment</h1>';
 
-echo alertUser( "
-    <strong>Policy for dropping a course </strong> 
-    <br>  Upto 30 days from starting of course, you are free to drop a course. 
+echo printInfo( "
+    <h3>Policy for dropping courses </h3> 
+    Upto 30 days from starting of course, you are free to drop a course. 
     After that, you need to write to your course instructor and academic office.
     " );
 
@@ -44,7 +44,7 @@ echo "<h2>Registration form</h2>";
 $default = array( 'student_id' => $_SESSION[ 'user' ] 
                 , 'semester' => $sem
                 , 'year' => $year
-                , 'registered_on' => dbDate( 'now' )
+                , 'registered_on' => dbDateTime( 'now' )
                 , 'course_id' => $courseSelect
                 );
 
@@ -52,7 +52,7 @@ $default = array( 'student_id' => $_SESSION[ 'user' ]
 echo '<form method="post" action="user_manages_courses_action.php">';
 echo dbTableToHTMLTable( 'course_registration'
                         , $default
-                        , 'course_id,type' 
+                        , 'course_id:required,type' 
                         , 'submit'
                         , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
                       );

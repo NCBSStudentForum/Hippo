@@ -673,10 +673,8 @@ function editor_script( $id, $default = '' )
     *
     * @return  An html table. You need to wrap it in a form.
  */
-function dbTableToHTMLTable( $tablename
-                             , $defaults=Array(), $editables = ''
-                                     , $button_val = 'submit', $hide = ''
-                           )
+function dbTableToHTMLTable( $tablename, $defaults=Array()
+    , $editables = '', $button_val = 'submit', $hide = '' )
 {
     global $symbUpdate, $symbCheck;
     global $symbEdit;
@@ -688,6 +686,22 @@ function dbTableToHTMLTable( $tablename
 
     if( is_string( $editables ) )
         $editables = explode( ",", $editables );
+
+    /*    
+     *  Editabale can have keyval:attribs format. Separate out the extra format
+     *  from keys.
+     */
+    $attribMap = array( );
+    $editableKeys = array( );
+    foreach( $editables as $v )
+    {
+        $temp = explode( ":", $v );
+        $editableKeys[ ] = $temp[0];
+        if( count( $temp ) > 1 )
+            $attribMap[ $temp[0] ] = array_slice( $temp, 1 );
+    }
+
+
     if( is_string( $hide ) )
         $hide = explode( ",", $hide );
 
@@ -704,12 +718,22 @@ function dbTableToHTMLTable( $tablename
 
         // If not in editables list, make field readonly.
         $readonly = True;
-        if( in_array($keyName , $editables ) )
+        if( in_array($keyName , $editableKeys ) )
             $readonly = False;
 
         // Add row to table
-        $html .= "<tr><td class=\"db_table_fieldname\"> " .
-                 strtoupper(prettify( $keyName )) . "</td>";
+        $columnText = strtoupper( prettify( $keyName ) );
+
+        // Update column text if 'required' is in attributes.
+        $attribs = __get__( $attribMap, $keyName, null );
+        if( $attribs )
+        {
+            if( in_array( 'required', $attribs ) )
+                $columnText .= '*';
+        }
+
+
+        $html .= "<tr><td class=\"db_table_fieldname\"> $columnText </td>";
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
@@ -825,7 +849,7 @@ function dbTableToHTMLTable( $tablename
     else if( strtolower( $button_val ) == 'edit' )
         $buttonSym = $symbEdit;
 
-    if( count( $editables ) > 0 && strlen( $button_val ) > 0 )
+    if( count( $editableKeys ) > 0 && strlen( $button_val ) > 0 )
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
         $html .= "<button style=\"float:right\" value=\"$button_val\"

@@ -1729,4 +1729,34 @@ function colored( $txt, $color = 'black' )
 
 }
 
+
+function getCourseShortInfoText( $course )
+{
+    if( is_string( $course ) )
+        $course = getCourseById( $course );
+
+    $text = $course[ 'name' ];
+
+    return $text;
+}
+
+function getCourseInfo( $cid )
+{
+    $c =  getCourseById( $cid );
+    $html = $c['name'];
+    $instructors = array( );
+    foreach( $c as $k => $v )
+    {
+        if( contains( 'instructor', $k ) )
+            if( $v )
+            {
+                $name = arrayToName( findAnyoneWithEmail( $v ) );
+                $instructors[ ] = "<small><a href=\"mailto:$v\">$name</a></small>";
+            }
+    }
+
+    $instructors = implode( '<br>', $instructors );
+    return $html . '<br>' . $instructors;
+}
+
 ?>

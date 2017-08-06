@@ -12,12 +12,17 @@ echo userHTML( );
 $sem = getCurrentSemester( );
 $year = getCurrentYear( );
 
-// User courses.
-$myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
 
 $runningCourses = array( );
 foreach( getSemesterCourses( $year, $sem ) as $rc )
     $runningCourses[ $rc[ 'course_id' ] ] = $rc;
+
+// User courses and slots.
+$myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
+$mySlots = array( );
+foreach( $myCourses as $c )
+    $mySlots[ ] = $runningCourses[ $c[ 'course_id' ] ]['slot'];
+$mySlots = array_unique( $mySlots );
 
 echo '<h1>Course enrollment</h1>';
 
@@ -30,12 +35,32 @@ echo printInfo( "
 // Running course this semester.
 $courseMap = array( );
 $options = array( );
+
+$blockedCourses = array( );
 foreach( $runningCourses as $c )
 {
+    // Ignore any course which is colliding with any registered course.
     $cid = $c[ 'course_id' ];
+    $cname = getCourseName( $cid );
+    $slot = $c[ 'slot' ];
+    if( in_array( $slot, $mySlots ) )
+    {
+        $blockedCourses[ $cid ] = $cname;
+        continue;
+    }
+    
     $options[] = $cid ;
-    $courseMap[ $cid ] = $cid . ' - ' . getCourseName( $cid );
+    $courseMap[ $cid ] = getCourseName( $cid ) . 
+        " (slot " . $c[ 'slot' ] . ")";
 }
+
+// Show user which slots have been blocked.
+echo alertUser( 
+    "You have registered for courses running on following slots: " 
+    . implode( ", ", $mySlots )
+    . ". <br> Any course running on any of these slots will not appear in your 
+    registration form."
+    );
 
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
 
@@ -50,11 +75,11 @@ $default = array( 'student_id' => $_SESSION[ 'user' ]
 
 echo '<form method="post" action="user_manages_courses_action.php">';
 echo dbTableToHTMLTable( 'course_registration'
-                        , $default
-                        , 'course_id:required,type' 
-                        , 'submit'
-                        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
-                      );
+        , $default
+        , 'course_id:required,type' 
+        , 'submit'
+        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
+    );
 echo '</form>';
 
 
@@ -115,7 +140,8 @@ foreach( $myCourses as $c )
 echo '</tr></table>';
 echo '</div>';
 
-
+echo '<h1>Slots </h1>';
+echo slotTable( );
 
 echo goBackToPageLink( "user.php", "Go back" );
 

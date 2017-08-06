@@ -1971,25 +1971,6 @@ function addOrUpdateSpeaker( $data )
     return getTableEntry( 'speakers', 'id', $data );
 }
 
-function getCourseInfo( $cid )
-{
-    $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
-    $html = $c['name'];
-
-    $instructors = array( );
-    foreach( $c as $k => $v )
-    {
-        if( contains( 'instructor', $k ) )
-            if( $v )
-            {
-                $name = arrayToName( findAnyoneWithEmail( $v ) );
-                $instructors[ ] = "<small><a href=\"mailto:$v\">$name</a></small>";
-            }
-    }
-
-    $instructors = implode( '<br>', $instructors );
-    return $html . '<br>' . $instructors;
-}
 
 function getCourseName( $cid )
 {
@@ -2285,6 +2266,27 @@ function getSlotInfo( $id )
     return '<small>(' . implode( ', ', $res ) . ') </small>';
 }
 
+
+/**
+    * @brief Get the slot of given slot.
+    *
+    * @param $cid 
+    *
+    * @return 
+ */
+function getCourseSlot( $cid )
+{
+    global $db;
+    $slot = getTableEntry( 'courses', 'slot', "course_id='$cid'" );
+    return $slots[ 'slot' ];
+}
+
+
+function getCourseById( $cid )
+{
+    $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
+    return $c;
+}
 
 ?>
 

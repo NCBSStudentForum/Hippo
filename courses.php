@@ -27,14 +27,8 @@ foreach( $runningCourses as $c )
 }
 
 $slotCourseJSON = json_encode( $slotCourses );
-
-echo alertUser( 
-    "NOTICE: If you are reading this then this page does not contain officially
-    approved information. Any information provided on this page may change or 
-    disappear.
-    ");
-
 ?>
+
 <script type="text/javascript" charset="utf-8">
 function showCourseInfo( x )
 {
@@ -83,23 +77,19 @@ echo printInfo( "
     </ul>" 
 );
     
-$semester = getCurrentSemester( );
-$year = getCurrentYear( );
-$sme = __ucwords__( $semester );
-
-echo alertUser( 
+echo printInfo( 
     "Click on <button class=\"invisible\" disabled>1A</button> etc to see the 
     list of courses running on this slot this semester
     ");
 echo slotTable(  );
 
-
-echo "<h1>Enrollement table for $sem, $year courses</h1>";
-
-
+/*
+ * Enrollment table.
+ */
+echo "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
 
 $showEnrollText = 'Show Enrollement';
-echo alertUser(
+echo printInfo(
     "Click on the button <button disabled>$showEnrollText</button>to see the 
     list of enrolled students" 
     );
@@ -130,14 +120,16 @@ foreach( $slotCourses as $slot => $courses )
         $cinfo = html2Markdown( $c[ 'description' ] );
 
         $slotInfo = getSlotInfo( $slot );
+        $details = getCourseInfo( $cid );
 
         echo '<tr>
             <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" >Details</button> ' . $c[ 'name' ] . '</td>
+            value="' . $cinfo . '" >Details</button> '. $details . '</td>
             <form method="post" action="#">
             <input type="hidden" name="course_id" value="' . $cid . '">
             <td>' . $c[ 'credits' ] . '</td>
-            <td>' . $slotInfo . '</td><td>' .  $c[ 'venue' ] . '</td>
+            <td>' . "<strong> $slot </strong> <br>" . $slotInfo . '</td><td>' 
+                .  $c[ 'venue' ] . '</td>
             <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">
             <small>' . $showEnrollText . '</small></button></td>

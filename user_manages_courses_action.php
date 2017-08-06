@@ -35,6 +35,8 @@ $courseSelect = arrayToSelectList( 'courses', $options, $courseMap );
 if( $_POST[ 'response' ] == 'submit' )
 {
     $_POST[ 'last_modified_on' ] = dbDateTime( 'now' );
+    $_POST[ 'registered_on' ] = dbDateTime( 'now' );
+
     $res = insertIntoTable( 'course_registration'
                 , 'student_id,semester,year,type,course_id,registered_on,last_modified_on'
                 , $_POST );
@@ -65,7 +67,6 @@ else if( $_POST[ 'response' ] == 'drop' )
     else
         echo minionEmbarrassed( "Failed to drop course" );
 }
-
 else
     echo alertUser( 'Unknown type of request ' . $_POST[ 'response' ] );
 

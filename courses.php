@@ -83,12 +83,18 @@ echo printInfo( "
     </ul>" 
 );
     
-echo alertUser( 'Click on <button class="invisible" disabled>1A</button> etc to see the list of courses 
-    running on this slot this semester' );
+$semester = getCurrentSemester( );
+$year = getCurrentYear( );
+$sme = __ucwords__( $semester );
+
+echo alertUser( 
+    "Click on <button class=\"invisible\" disabled>1A</button> etc to see the 
+    list of courses running on this slot this semester
+    ");
 echo slotTable(  );
 
 
-echo "<h1>Enrollement table for this semester courses</h1>";
+echo "<h1>Enrollement table for $sem, $year courses</h1>";
 
 
 

@@ -96,18 +96,6 @@ echo '<table class="admin">
     </tr>
     </table>';
 
-echo '<h2>Manage talks and seminars</h2>';
-echo '<table class="admin">';
-echo '
-    <tr>
-        <td>Manage talks and seminars. </td>
-        <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
-    </tr>
-    <tr>
-        <td>Add or update speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
-    </tr>
-    </table>';
 
 $login = null;
 $date = null;
@@ -167,21 +155,6 @@ if( isset( $_POST[ 'response' ] ))
 }
 
 
-echo "<h2>Information</h2>";
-echo '
-  <table border="0" class="admin">
-    <tr>
-        <td>AWS summary <small>
-            See the summary of all AWSs. You may be able to missing AWS entry 
-            in "Date Wise" list.  </small>
-        </td>
-        <td>
-            <a href="admin_acad_summary_user_wise.php">User wise</a> 
-            <a href="admin_acad_summary_date_wise.php">Date wise</a>
-        </td>
-    </tr>
-  </table>';
-
 /* 
  * Course work,
  */
@@ -234,6 +207,35 @@ else
     }
     echo '</form>';
 }
+
+
+echo "<h2>Information</h2>";
+echo '
+  <table border="0" class="admin">
+    <tr>
+        <td>AWS summary <small>
+            See the summary of all AWSs. You may be able to missing AWS entry 
+            in "Date Wise" list.  </small>
+        </td>
+        <td>
+            <a href="admin_acad_summary_user_wise.php">User wise</a> 
+            <a href="admin_acad_summary_date_wise.php">Date wise</a>
+        </td>
+    </tr>
+  </table>';
+
+echo '<h2>Manage talks and seminars</h2>';
+echo '<table class="admin">';
+echo '
+    <tr>
+        <td>Manage talks and seminars. </td>
+        <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
+    </tr>
+    <tr>
+        <td>Add or update speakers. </td>
+        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+    </tr>
+    </table>';
 
 echo goBackToPageLink( 'user.php', 'Go back' );
 

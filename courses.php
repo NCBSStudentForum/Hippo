@@ -18,6 +18,9 @@ $sem = getCurrentSemester( );
 $slotCourses = array( );
 $runningCourses = getSemesterCourses( $year, $sem );
 
+// HTML for downloading.
+$page = '';
+
 // Collect both metadata and other information in slotCourse array.
 foreach( $runningCourses as $c )
 {
@@ -82,12 +85,16 @@ echo printInfo(
     "Click on <button class=\"invisible\" disabled>1A</button> etc to see the 
     list of courses running on this slot this semester
     ");
-echo slotTable(  );
+$table = slotTable(  );
+echo $table;
+$page .= $table;
 
 /*
  * Enrollment table.
  */
-echo "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
+$m = "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
+echo $m;
+$page .= $m;
 
 $showEnrollText = 'Show Enrollement';
 echo printInfo(
@@ -103,8 +110,8 @@ $enrollments = array( );
     * @{ */
 /**  @} */
 
-echo '<table class="info">';
-echo '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th>
+$table = '<table class="info">';
+$table .= '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th>
     <th>Enrollments</th> </tr>';
 foreach( $slotCourses as $slot => $courses )
 {
@@ -123,7 +130,7 @@ foreach( $slotCourses as $slot => $courses )
         $slotInfo = getSlotInfo( $slot );
         $details = getCourseInfo( $cid );
 
-        echo '<tr>
+        $table .= '<tr>
             <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
             value="' . $cinfo . '" >Details</button> '. $details . '</td>
             <form method="post" action="#">
@@ -135,10 +142,12 @@ foreach( $slotCourses as $slot => $courses )
             <button name="response" value="show_enrollment">
             <small>' . $showEnrollText . '</small></button></td>
             </form>';
-        echo '</tr>';
+        $table .= '</tr>';
     }
 }
-echo '</table><br/>';
+$table .= '</table><br/>';
+echo $table;
+$page .= $table;
 
 echo closePage( );
 
@@ -168,7 +177,6 @@ if( $_POST )
     }
 
     $table .= '</table>';
-
     echo '<div style="font-size:small">';
     echo $table;
     echo '</div>';
@@ -178,6 +186,5 @@ if( $_POST )
 }
 
 echo '</div>';
-
 
 ?>

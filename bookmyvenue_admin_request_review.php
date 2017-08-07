@@ -102,6 +102,7 @@ if( $_POST['response'] == "Review" )
                     . 'external_id,modified_by,timestamp'
                     . ',eid,calendar_id,calendar_event_id,last_modified_on';
                 echo arrayToTableHTML( $jcOrLab, 'info', 'lightyellow', $ignore );
+                echo '<br />';
              }
         }
     }

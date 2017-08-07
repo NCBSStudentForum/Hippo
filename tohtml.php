@@ -1752,7 +1752,8 @@ function getCourseInfo( $cid )
             if( $v )
             {
                 $name = arrayToName( findAnyoneWithEmail( $v ) );
-                $instructors[ ] = "<small><a href=\"mailto:$v\">$name</a></small>";
+                $instructors[ ] = "<small><a href=\"mailto:$v\" target=\"_top\">
+                    $name </a></small>";
             }
     }
 

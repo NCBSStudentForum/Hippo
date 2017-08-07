@@ -289,6 +289,22 @@ function initialize( $db  )
             )"
         );
 
+    // Generic table for making some task appear in some time interval.
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS conditional_tasks (
+            id VARCHAR(50) PRIMARY KEY NOT NULL
+            , start_date DATE NOT NULL
+            , end_date DATE
+            , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
+            , comment TEXT
+        )" 
+        );
+    // This entry keeps track if course registraction should be open/closed for
+    // current semester.
+    $res = $db->query( "
+        INSERT IGNORE INTO conditional_tasks (id) VALUES ('COURSE_REGISTRATION')
+        ");
+
     // Slots 
     $res = $db->query( "
         create TABLE IF NOT EXISTS slots (

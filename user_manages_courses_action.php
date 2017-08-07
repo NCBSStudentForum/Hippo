@@ -62,7 +62,11 @@ else if( $_POST[ 'response' ] == 'drop' )
     $res = deleteFromTable( 'course_registration'
                         , 'student_id,semester,year,course_id'
                         , $_POST ); 
-    if( $res )
+    $course = getTableEntry( 'course_registration'
+                        , 'student_id,semester,year,course_id'
+                        , $_POST ); 
+
+    if( ! $course )
         echo printInfo( "Successfully dropped course." );
     else
         echo minionEmbarrassed( "Failed to drop course" );

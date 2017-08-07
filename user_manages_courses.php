@@ -26,11 +26,29 @@ $mySlots = array_unique( $mySlots );
 
 echo '<h1>Course enrollment</h1>';
 
-echo printInfo( "
-    <h3>Policy for dropping courses </h3> 
-    Upto 30 days from starting of course, you are free to drop a course. 
-    After that, you need to write to your course instructor and academic office.
-    " );
+// Check if registration is open
+
+$regOpen = isRegistrationOpen( );
+if( $regOpen )
+{
+    echo "<h2>Registration form</h2>";
+
+    $default = array( 'student_id' => $_SESSION[ 'user' ] 
+                    , 'semester' => $sem
+                    , 'year' => $year
+                    , 'course_id' => $courseSelect
+                    );
+    echo '<form method="post" action="user_manages_courses_action.php">';
+    echo dbTableToHTMLTable( 'course_registration'
+        , $default
+        , 'course_id:required,type' 
+        , 'submit'
+        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
+    );
+    echo '</form>';
+}
+else
+    echo printInfo( "Course registration is yet not open for $sem $year"  );
 
 // Running course this semester.
 $courseMap = array( );
@@ -54,33 +72,7 @@ foreach( $runningCourses as $c )
         " (slot " . $c[ 'slot' ] . ")";
 }
 
-// Show user which slots have been blocked.
-echo alertUser( 
-    "You have registered for courses running on following slots: " 
-    . implode( ", ", $mySlots )
-    . ". <br> Any course running on any of these slots will not appear in your 
-    registration form."
-    );
-
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
-
-echo "<h2>Registration form</h2>";
-
-$default = array( 'student_id' => $_SESSION[ 'user' ] 
-                , 'semester' => $sem
-                , 'year' => $year
-                , 'course_id' => $courseSelect
-                );
-
-
-echo '<form method="post" action="user_manages_courses_action.php">';
-echo dbTableToHTMLTable( 'course_registration'
-        , $default
-        , 'course_id:required,type' 
-        , 'submit'
-        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
-    );
-echo '</form>';
 
 
 /**
@@ -96,7 +88,25 @@ $action = 'drop';
 $count = 0;
 
 if( count( $myCourses ) > 0 )
-    echo "<h1>You are registered for following courses </h1>";
+{
+    echo "<h1>You are registered for following courses for $sem $year</h1>";
+
+    // Show user which slots have been blocked.
+    echo alertUser( 
+        "You have registered for courses running on following slots: " 
+        . implode( ", ", $mySlots )
+        . ". <br> Any course running on any of these slots will not appear in your 
+        registration form."
+        );
+}
+
+// Dropping policy
+echo printInfo( "
+    <h3>Policy for dropping courses </h3> 
+    Upto 30 days from starting of course, you are free to drop a course. 
+    After that, you need to write to your course instructor and academic office.
+    " );
+
 
 foreach( $myCourses as $c )
 {
@@ -116,21 +126,18 @@ foreach( $myCourses as $c )
     if( strtotime( 'now' ) - strtotime( $runningCourses[ $cid][ 'start_date' ] ) 
             > 30 * 24 * 3600 )
     {
+        $action = ''; 
         echo $course['name'] . '<br>' . '<tt>' . 
             humanReadableDate( $runningCourses[ $cid ][ 'start_date' ] ) 
             . ' to ' . humanReadableDate( $runningCourses[$cid]['end_date'] )
             . '</tt>'
             ;
 
-        $action = ''; 
     }
 
     // TODO: Don't show grades unless student has given feedback.
     if( strlen( $c[ 'grade' ] == 0 ) )
         $tofilter .= ',grade,grade_is_given_on';
-
-    // Put course name in this table.
-    $c[ 'course_id' ] .=  ' : ' . $course[ 'name' ];
 
     echo dbTableToHTMLTable( 'course_registration', $c, '', $action, $tofilter );
     echo '</form>';

@@ -109,7 +109,7 @@ echo '<input type="file" name="picture" id="picture" value="" />';
 echo '</td></tr></table>';
 
 echo dbTableToHTMLTable( 'speakers', $speaker 
-    , 'honorific,email,homepage,first_name,middle_name,last_name,department,institute'
+    , 'honorific,email,homepage,first_name:required,middle_name,last_name,department,institute:required'
     , ''
     );
 

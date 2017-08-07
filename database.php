@@ -2288,5 +2288,20 @@ function getCourseById( $cid )
     return $c;
 }
 
+
+/**
+    * @brief Check if registration for courses is open.
+    *
+    * @return 
+ */
+function isRegistrationOpen( )
+{
+    $res = getTableEntry( 'conditional_tasks', 'id', array( 'id' => 'COURSE_REGISTRATION' ) );
+    if( strtotime( $res[ 'end_date' ] ) >= strtotime( 'today' ) )
+        return true;
+
+    return false;
+
+}
 ?>
 

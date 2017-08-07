@@ -36,7 +36,35 @@ $taskSelect = arrayToSelectList( 'task'
         );
 
 
-echo '<h2>Enrollement</h2>'; echo '<form method="post" action="">'; echo
+/**
+    * @brief A single button should be able to enable or disable the course
+    * registration.
+ */
+echo '<h1>Enable/disable enrollement</h1>';
+
+$schedule = getTableEntry( 'conditional_tasks', 'id', array( 'id' => 'COURSE_REGISTRATION' ) );
+if( strtotime( $schedule[ 'end_date' ] ) >= strtotime( 'today' ) )
+{
+    echo printInfo( "Course registration is OPEN." );
+    echo arrayToTableHTML( $schedule, 'info', '', 'id,status' );
+}
+else
+    echo printInfo( "Course registration is CLOSED." );
+
+
+
+echo '<h3>Update registration dates </h3>';
+echo '
+    <form method="post" action="#">
+        Opens on <input class="datepicker" name="start_date" />
+        Ends on <input class="datepicker" name="end_date" />
+        <button name="task" value="update_registration_date"> Update </button>
+    </form>
+    ';
+
+
+echo '<h1>Manage grades/enrollement</h1>'; 
+echo '<form method="post" action="">'; echo
 "<table>
     <tr>
         <th>Select courses</th>
@@ -51,18 +79,34 @@ echo '<h2>Enrollement</h2>'; echo '<form method="post" action="">'; echo
 
 echo '</form>';
 
-if( $_POST )
+// Handle request here.
+
+if( ! $_POST )
+    exit;
+
+if( __get__( $_POST, 'task', '' ) == 'update_registration_date' )
+{
+    $_POST[ 'id' ] = 'COURSE_REGISTRATION';
+    echo printInfo( "Updating course registration dates" );
+    $res = updateTable( 'conditional_tasks', 'id', 'start_date,end_date', $_POST );
+    if( $res )
+    {
+        // Refresh page.
+        header( "Refresh:0" );
+    }
+}
+else
 {
     $courseSelected = $_POST[ 'course_id' ];
     $taskSelected = $_POST[ 'task'];
-    echo '<div style="font-size:small">';
 
+    echo '<div style="font-size:small">';
     $_POST[ 'semester' ] = $sem;
     $_POST[ 'year' ] = $year;
 
     $enrollments = getTableEntries( 'course_registration'
         , 'student_id', whereExpr( 'semester,year,course_id', $_POST  )
-        );
+    );
 
     if( $_POST[ 'task' ] == '' )
     {
@@ -77,8 +121,8 @@ if( $_POST )
         {
             echo '<tr><td>';
             echo '<form method="post" 
-                    action="admin_acad_manages_enrollments_action.php">';
-            echo arrayToTableHTML( $enrol, 'enrollment', ''
+                action="admin_acad_manages_enrollments_action.php">';
+            echo arrayToTableHTML( $enrol, 'info', ''
                 , 'last_modified_on,grade,grade_is_given_on' );
             echo '</td><td><button name="response" value="drop">Drop</button>';
             echo '</td></tr>';
@@ -89,7 +133,7 @@ if( $_POST )
             echo '</form>';
         }
         echo '</table>';
-        
+
     }
     else if( $_POST[ 'task' ] == 'Grade' )
     {
@@ -99,7 +143,7 @@ if( $_POST )
         {
             echo printInfo( "Grading for course " . $_POST[ 'course_id' ] );
             echo '<form method="post" 
-                    action="admin_acad_manages_enrollments_action.php">';
+                action="admin_acad_manages_enrollments_action.php">';
             echo '<table>';
 
             $ids = array( );
@@ -125,14 +169,12 @@ if( $_POST )
         }
     }
     else
-    {
         echo printInfo( "Unsupported task " . $_POST[ 'task' ] );
-    }
+
 
     echo "</div>";
 }
 
-echo "<br/><br/>";
 echo goBackToPageLink( 'admin_acad.php', 'Go back' );
 
 ?>

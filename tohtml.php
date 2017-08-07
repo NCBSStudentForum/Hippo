@@ -726,12 +726,13 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         // Update column text if 'required' is in attributes.
         $attribs = __get__( $attribMap, $keyName, null );
+        $required = false;
         if( $attribs )
-        {
             if( in_array( 'required', $attribs ) )
-                $columnText .= '*';
-        }
+                $required = true;
 
+        if( $required )
+            $columnText .= '<strong>*</strong>';
 
         $html .= "<tr><td class=\"db_table_fieldname\"> $columnText </td>";
 

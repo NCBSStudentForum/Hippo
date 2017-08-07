@@ -2225,13 +2225,6 @@ function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
 
     $courses = getRunningCoursesOnThisVenue( $venue, $date );
 
-    foreach( $courses as $c )
-    {
-        echo $venue;
-        echo " ", $date;
-        var_dump( $c[ 'id' ] );
-    }
-
     $day = date( 'D', strtotime($date) );
 
     if( ! $courses )

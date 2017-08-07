@@ -44,7 +44,7 @@ $( function() {
 // Logic for POST requests.
 $course = array( 'id' => '', 'day' => '', 'start_time' => '', 'end_time' => '' );
 
-echo "<h2>Courses</h2>";
+echo "<h1>All courses</h1>";
 
 echo coursesTable( );
 

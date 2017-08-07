@@ -2202,7 +2202,7 @@ function getRunningCoursesOnThisVenue( $venue, $date )
     $year = getYear( $date );
     $sem = getSemester( $date );
     $courses = getTableEntries( 'courses', 'id'
-        , "year='$year' AND semester='$sem' AND ( end_date > '$date' AND start_date < '$date' )"
+        , " ( end_date >= '$date' AND start_date <= '$date' )"
         . " AND venue='$venue' "
     );
 
@@ -2222,7 +2222,15 @@ function getRunningCoursesOnThisVenue( $venue, $date )
  */
 function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
 {
+
     $courses = getRunningCoursesOnThisVenue( $venue, $date );
+
+    foreach( $courses as $c )
+    {
+        echo $venue;
+        echo " ", $date;
+        var_dump( $c[ 'id' ] );
+    }
 
     $day = date( 'D', strtotime($date) );
 
@@ -2244,6 +2252,7 @@ function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
 
             $st = $sl[ 'start_time' ];
             $et = $sl[ 'end_time' ];
+
             if( isOverlappingTimeInterval( $startTime, $endTime, $st, $et ))
                 $clashes[ $course[ 'id' ] ] = $course;
         }

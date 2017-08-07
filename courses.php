@@ -23,7 +23,8 @@ foreach( $runningCourses as $c )
 {
     $cid = $c[ 'course_id' ];
     $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
-    $slotCourses[ $c[ 'slot' ] ][ ] = array_merge( $c, $course );
+    if( $course )
+        $slotCourses[ $c[ 'slot' ] ][ ] = array_merge( $c, $course );
 }
 
 $slotCourseJSON = json_encode( $slotCourses );

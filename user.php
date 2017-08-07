@@ -26,18 +26,18 @@ $html .= '
    </table>';
 echo $html;
 
-echo "<h3> Manage course </h3>";
+echo "<h3> Manage courses </h3>";
 
 $thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
 echo '<table class="tasks">';
 
 echo  '<tr>
         <td>
-            Manage course for semester (' . $thisSem . ')
-                <small>Register/deregister for current courses.
+            Manage courses for semester (' . $thisSem . ')
+                <small>Register/deregister courses for this semster. </small>
         </td>
         <td>
-            <a href="user_manages_courses.php">My current courses</a> 
+            <a href="user_manages_courses.php">My Courses</a> 
         </td>
         </tr>';
 

@@ -161,12 +161,17 @@ if( ! anyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN' ) ) )
 $publicEvents = getPublicEventsOnThisDay( $date );
 if( count( $publicEvents ) > 0 )
 {
-    echo "<h2>Following public events are scheduled on the campus on selected date </h2>";
+    echo alertUser(
+        "<h3>Alert: Public events on selected date</h3>
+        It is advisable not to book any academic event which clashes with these 
+        events.
+        "
+    );
 
-    echo "<div style=\"font-size:small\">";
+    echo "<div style=\"font-size:x-small\">";
     $tohide = 'gid,eid,description,status,is_public_event,external_id'
               . ',calendar_id,calendar_event_id,last_modified_on,url' ;
-    echo '<table class="info">';
+    echo '<table class="show_events">';
     echo arrayHeaderRow( $publicEvents[0], 'info', $tohide );
     foreach( $publicEvents as $event )
         echo arrayToRowHTML( $event, 'info', $tohide );

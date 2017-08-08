@@ -36,7 +36,11 @@ $slotCourseJSON = json_encode( $slotCourses );
 <script type="text/javascript" charset="utf-8">
 function showCourseInfo( x )
 {
-    alert( "Course description:\n" +  x.value );
+    swal({ 
+        title : "Course description",
+        text : x.value 
+        tyle : "info"
+        });
 }
 
 function showRunningCourse( x )

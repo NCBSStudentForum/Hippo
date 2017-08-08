@@ -89,6 +89,10 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <link href="hippo.css" rel="stylesheet" type="text/css" />
 
+<!-- Sweet alert -->
+<script src="js/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="js/sweetalert/dist/sweetalert.css">
+
 <script>
 $( function() {
     $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );

@@ -136,7 +136,21 @@ $default[ 'venue' ] = $venueSelect;
 $default[ 'semester' ] = $sem;
 
 if( __get__( $_POST, 'running_course', '') )
+{
     $action = 'Update';
+    $course = getTableEntry( 'courses', 'id', array( 'id' => $_POST[ 'running_course' ]) );
+    $default[ 'semester' ] = $sem;
+
+    // Select the already assigned venue.
+    $venueSelect = venuesToHTMLSelect( $venues, false, 'venue', array( $course[ 'venue' ] ) );
+    $default[ 'venue' ] = $venueSelect;
+
+    // Select the already assigned slot.
+    $slotSelect = arrayToSelectList( 'slot', array_keys($slotMap), $slotMap 
+            , false, $course['slot']
+        );
+    $default[ 'slot' ] = $slotSelect;
+}
 else
     $action = 'Add';
 

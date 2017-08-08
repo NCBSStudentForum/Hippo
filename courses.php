@@ -22,9 +22,6 @@ $sem = getCurrentSemester( );
 $slotCourses = array( );
 $runningCourses = getSemesterCourses( $year, $sem );
 
-// HTML for downloading.
-$page = '';
-
 // Collect both metadata and other information in slotCourse array.
 foreach( $runningCourses as $c )
 {
@@ -41,9 +38,10 @@ $slotCourseJSON = json_encode( $slotCourses );
 function showCourseInfo( x )
 {
     swal({ 
-        title : "Course description"
-        , text : x.value 
+        title : x.title
+        , text : "<div align=\"left\">" + x.value + "</div>"
         , type : "info"
+        , html : true
         });
 }
 
@@ -60,7 +58,7 @@ function showRunningCourse( x )
         runningCoursesTxt = runningCourses.map( 
             function(x, index) { return (1 + index) + '. ' + x.name 
             + ' at ' + x.venue ; } 
-        ).join( "\n");
+        ).join( "<br>");
 
         title = "Following courses are running in slot " + slotId;
     }
@@ -74,6 +72,7 @@ function showRunningCourse( x )
         title : title
         , text : runningCoursesTxt
         , type : "info"
+        , html : true
         });
 }
 </script>
@@ -101,14 +100,12 @@ echo printInfo(
     ");
 $table = slotTable(  );
 echo $table;
-$page .= $table;
 
 /*
  * Enrollment table.
  */
 $m = "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
 echo $m;
-$page .= $m;
 
 $showEnrollText = 'Show Enrollement';
 echo printInfo(
@@ -125,7 +122,7 @@ $enrollments = array( );
 /**  @} */
 
 $table = '<table class="info">';
-$table .= '<tr><th>Course <br> Instructors</th><th>Credit</th><th>Slot</th><th>Venue</th>
+$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot</th><th>Venue</th>
     <th>Enrollments</th> </tr>';
 foreach( $slotCourses as $slot => $courses )
 {
@@ -139,17 +136,22 @@ foreach( $slotCourses as $slot => $courses )
 
         $enrollments[ $cid ] = $registrations;
 
-        $cinfo = html2Markdown( $c[ 'description' ] );
+        $cinfo = $c[ 'description' ];
+        $cname = $c[ 'name' ];
+        $cr = $c[ 'credits' ];
+        $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
+        $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
+            . humanReadableDate( $c[ 'end_date' ] );
 
         $slotInfo = getSlotInfo( $slot );
         $details = getCourseInfo( $cid );
 
         $table .= '<tr>
             <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" >Details</button> '. $details . '</td>
+            value="' . $cinfo . '" title="' . $cname . '" >Details</button> '. $details . '</td>
             <form method="post" action="#">
             <input type="hidden" name="course_id" value="' . $cid . '">
-            <td>' . $c[ 'credits' ] . '</td>
+            <td>' .  $schedule . '</td>
             <td>' . "<strong> $slot </strong> <br>" . $slotInfo . '</td><td>' 
                 .  $c[ 'venue' ] . '</td>
             <td>' . count( $registrations ) . '</td><td>
@@ -161,8 +163,10 @@ foreach( $slotCourses as $slot => $courses )
 }
 
 $table .= '</table><br/>';
+
+echo '<div style="font-size:small">';
 echo $table;
-$page .= $table;
+echo '</div>';
 
 echo closePage( );
 

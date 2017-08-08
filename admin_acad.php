@@ -214,7 +214,7 @@ echo '
   <table border="0" class="admin">
     <tr>
         <td>AWS summary <small>
-            See the summary of all AWSs. You may be able to missing AWS entry 
+            See the summary of all AWSs. You may be able to spot missing AWS entry 
             in "Date Wise" list.  </small>
         </td>
         <td>

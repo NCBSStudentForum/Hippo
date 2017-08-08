@@ -1,7 +1,3 @@
-<!-- Sweet alert -->
-<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
-
 <?php
 
 include_once 'header.php';

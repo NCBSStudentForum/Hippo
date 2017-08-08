@@ -578,4 +578,34 @@ div.howto {
     text-align: justify;
 }
 
+// Links 
+ a:link {
+    text-decoration: none;
+    color : red;
+}
 
+a:visited {
+    text-decoration: none;
+    color : green;
+}
+
+a:hover {
+    text-decoration: underline;
+    color : hotpink;
+}
+
+a:active {
+    text-decoration: underline;
+    color : blue;
+}
+
+address {
+    display: block;
+    font-style: italic;
+}
+
+a[href^="mailto:"]
+{ 
+  color: red;
+  font-size: 11px;
+}

@@ -89,9 +89,9 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <link href="hippo.css" rel="stylesheet" type="text/css" />
 
-<!-- Sweet alert -->
-<script src="js/sweetalert/dist/sweetalert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="js/sweetalert/dist/sweetalert.css">
+<!-- Disable favicon requests -->
+<link rel="icon" href="data:,">
+
 
 <script>
 $( function() {

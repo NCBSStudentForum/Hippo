@@ -1,3 +1,7 @@
+<!-- Sweet alert -->
+<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
+
 <?php
 
 include_once 'header.php';
@@ -37,9 +41,9 @@ $slotCourseJSON = json_encode( $slotCourses );
 function showCourseInfo( x )
 {
     swal({ 
-        title : "Course description",
-        text : x.value 
-        tyle : "info"
+        title : "Course description"
+        , text : x.value 
+        , type : "info"
         });
 }
 
@@ -48,23 +52,29 @@ function showRunningCourse( x )
     var slotId = x.value;
     var courses = <?php echo $slotCourseJSON; ?>;
     var runningCourses = courses[ slotId ];
+    var title;
+    var runningCoursesTxt;
 
     if( runningCourses && runningCourses.length > 0 )
     {
-        var runningCoursesTxt = runningCourses.map( 
+        runningCoursesTxt = runningCourses.map( 
             function(x, index) { return (1 + index) + '. ' + x.name 
             + ' at ' + x.venue ; } 
         ).join( "\n");
 
-        var msg = "Following courses are running in slot " + slotId 
-            + "\n" + runningCoursesTxt;
+        title = "Following courses are running in slot " + slotId;
     }
     else
     {
-        msg = "No course is running on slot " + slotId;
+        title = "No course is running on slot " + slotId;
+        runningCoursesTxt = "";
     }
 
-    alert( msg );
+    swal({ 
+        title : title
+        , text : runningCoursesTxt
+        , type : "info"
+        });
 }
 </script>
 
@@ -149,6 +159,7 @@ foreach( $slotCourses as $slot => $courses )
         $table .= '</tr>';
     }
 }
+
 $table .= '</table><br/>';
 echo $table;
 $page .= $table;

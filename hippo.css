@@ -581,12 +581,12 @@ div.howto {
 // Links 
  a:link {
     text-decoration: none;
-    color : red;
+    color : blue;
 }
 
 a:visited {
     text-decoration: none;
-    color : green;
+    color : blue;
 }
 
 a:hover {
@@ -604,8 +604,9 @@ address {
     font-style: italic;
 }
 
-a[href^="mailto:"]
-{ 
-  color: red;
-  font-size: 11px;
+a[href^="mailto:"] { 
+
+  text-decoration: none;
+  font-style : italic;
+  font-size: small;
 }

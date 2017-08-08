@@ -17,6 +17,12 @@ $action = 'Add';
 // Get the list of all courses. Admin will be asked to insert a course into 
 // database.
 $allCourses = getTableEntries( 'courses_metadata', 'name' );
+$courseMap = array( );
+foreach( $allCourses as $cr )
+    $courseMap[ $cr[ 'id' ] ] = $cr;
+
+var_dump( $courseMap );
+
 $coursesId = array_map( function( $x ) { return $x['id']; }, $allCourses );
 $coursesMap = array( );
 
@@ -86,34 +92,42 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
 }
 
 
-echo "<h1>Running courses</h1>";
+echo printInfo( "Current semester is $sem, $year." );
 
-echo printInfo( "Current semester is $sem, $year" );
-
-echo '<div style="font-size:small">';
-
-echo '<table class="info">';
-$tobefilterd = 'id,semester,year';
-echo arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
-foreach( $runningCourses as $course )
+/**
+    * @name Show courses for this semester.
+    * @{ */
+/**  @} */
+if( count( $runningCourses ) > 0 )
 {
-    echo arrayToRowHTML( $course, 'aws', $tobefilterd );
-}
-echo '</table>';
+    echo "<h1>Running courses</h1>";
+    $table = '<div style="font-size:small">';
+    $table .= '<table class="info">';
+    $tobefilterd = 'id,semester,year';
+    $table .= arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 
-echo '</div>';
-echo "</br>";
+    foreach( $runningCourses as $course )
+    {
+        $course[ 'name' ] = $allCourses[ $course[ 'course_id' ] ]['name'];
+        $table .= arrayToRowHTML( $course, 'aws', $tobefilterd );
+    }
+    $table .= '</table>';
+    $table .= '</div>';
+    echo $table;
 
-echo '<form method="post" action="#">';
-echo '<table class="">';
-echo '<tr>
-        <td>
-            <input id="running_course" name="running_course" type="text" >
-        </td>
+    // Interface to edit the course schedule.
+    echo "</br>";
+    echo '<form method="post" action="#">';
+    echo '<table class="">';
+    echo '<tr>
+        <td><input id="running_course" name="running_course" type="text"></td>
         <td>
             <button name="response" value="search" style="float:left" >Show</button>
         </td>
-    </tr>';
+        </tr>';
+}
+else
+    echo alertUser( 'No course is running this semester!' );
 
 // If a course has been selected then add its id to a hidden field. This entry 
 // in invalid when adding a new course to current semester courses.

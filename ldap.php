@@ -1,5 +1,7 @@
 <?php
 
+include_once 'methods.php';
+
 function findGroup( $laboffice )
 {
     if( strcasecmp( $laboffice, "faculty" ) == 0 )

@@ -91,6 +91,7 @@ table.public_links tr td {
     font-color : gray;
 }
 
+
 table.show_info {
     max-width: var(--maxwidth);
     min-width: 400px;
@@ -174,9 +175,14 @@ table.tasks {
 table.tasks tr td 
 {
     /*border : 0.5px dotted; */
-    min-width : 300px;
+    min-width : 50%;
     max-width : 60%;
     background : var(--background);
+}
+
+table.tasks tr td:nth-child(1)
+{
+    font-size:normal;
 }
 
 table.standout {
@@ -578,6 +584,19 @@ div.howto {
     text-align: justify;
 }
 
+
+address {
+    display: block;
+    font-style: italic;
+}
+
+a[href^="mailto:"] { 
+
+  text-decoration: none;
+  font-style : italic;
+  font-size: small;
+}
+
 // Links 
  a:link {
     text-decoration: none;
@@ -590,23 +609,12 @@ a:visited {
 }
 
 a:hover {
-    text-decoration: underline;
-    color : hotpink;
+    text-decoration: none;
+    font-variant: small-caps;
+    color : red;
 }
 
 a:active {
     text-decoration: underline;
     color : blue;
-}
-
-address {
-    display: block;
-    font-style: italic;
-}
-
-a[href^="mailto:"] { 
-
-  text-decoration: none;
-  font-style : italic;
-  font-size: small;
 }

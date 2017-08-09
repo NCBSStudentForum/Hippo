@@ -1,6 +1,3 @@
-<!-- Sweet alert -->
-<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
 
 <?php
 
@@ -10,7 +7,14 @@ include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'methods.php';
 include_once './check_access_permissions.php';
+?>
 
+<!-- Sweet alert -->
+<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
+
+
+<?php
 if( ! (isIntranet() || isAuthenticated( ) ) )
 {
     echo printWarning( "You must either log-in OR intranet to access this page" );
@@ -144,11 +148,12 @@ foreach( $slotCourses as $slot => $courses )
             . humanReadableDate( $c[ 'end_date' ] );
 
         $slotInfo = getSlotInfo( $slot );
-        $details = getCourseInfo( $cid );
+        $instructors = getCourseInstructors( $cid );
 
         $table .= '<tr>
             <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" title="' . $cname . '" >Details</button> '. $details . '</td>
+            value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
+            . $instructors . '</td>
             <form method="post" action="#">
             <input type="hidden" name="course_id" value="' . $cid . '">
             <td>' .  $schedule . '</td>
@@ -207,3 +212,13 @@ if( $_POST )
 echo '</div>';
 
 ?>
+
+
+<!-- Prefix Mail logo on mailto links -->
+<script type="text/javascript" charset="utf-8">
+$( "a[href^=\"mailto:\"]" ).each( function() {
+    var text = $(this).html( );
+    $(this).html(  "&#9993" + " " + text );
+    });
+</script>
+

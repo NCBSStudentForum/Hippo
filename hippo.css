@@ -220,6 +220,12 @@ div.info {
     max-width : var(--maxwidth);
 }
 
+// Buttons
+
+button {
+    font-size: x-large;
+    /*min-width : 50px;*/
+}
 button.invisible {
     background : none;
     border : 1px dotted;
@@ -285,13 +291,12 @@ button.submit {
 
 button.courseInfo {
     background : none;
-    border : 1px dotted;
-    font-size : x-small;
-}
-
-button {
-    font-size: x-large;
-    /*min-width : 50px;*/
+    border : none;
+    min-width : 200px;
+    font-size : small;
+    font-variant: small-caps;
+    text-decoration: underline;
+    text-align : left;
 }
 
 
@@ -593,8 +598,9 @@ address {
 a[href^="mailto:"] { 
 
   text-decoration: none;
-  font-style : italic;
-  font-size: small;
+  font-style : none;
+  font-family : monospace;
+  font-size: x-small;
 }
 
 // Links 

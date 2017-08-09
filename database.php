@@ -1232,15 +1232,18 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     $query = "SELECT * FROM $tablename";
 
     if( is_string( $where) && strlen( $where ) > 0 )
-        $query .= " WHERE :where ";
+        $query .= " WHERE $where ";
 
-    if( is_string($orderby) && strlen( $orderby) > 0 )
+    if( strlen($orderby) > 0 )
         $query .= " ORDER BY :orderby";
 
+    echo $query;
 
     $stmt = $db->prepare( $query );
+    if( $orderby )
+        $stmt->bindValue( ":orderby", $orderby );
 
-    $stmt->bindValue( ":where", $where );
+    $stmt->execute( );
 
     if( $orderby )
         $stmt->bindValue( ":orderby", $orderby );

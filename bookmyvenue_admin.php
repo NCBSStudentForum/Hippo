@@ -105,23 +105,6 @@ echo goBackToPageLink( "user.php", "Go back" );
 <?php
 
 $events = getEventsBeteen( 'today', '+2 week' );
-
-//echo alertUser( 'Public events will apprear first' );
-//$publicEvents = array( );
-//$nonPublicEvents = array( );
-//foreach( $events as $e )
-//{
-//    if( $e[ 'is_public_event' ] == 'YES' )
-//    {
-//        //var_dump( $e );
-//        $publicEvents[] = $e;
-//    }
-//    else
-//        $nonPublicEvents[] = $e;
-//}
-
-//$events = $publicEvents + $nonPublicEvents;
-
 if( count( $events ) > 0 )
 {
     $html = '<div style="font-size:small;">';

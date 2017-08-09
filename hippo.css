@@ -287,6 +287,7 @@ button.display_request {
 button.submit {
     float : right;
     left-margin : 100%;
+    font-size: x-large;
 }
 
 button.courseInfo {
@@ -304,7 +305,6 @@ button.courseInfo:hover {
     font-size : normal;
     text-decoration: none;
 }
-
 
 
 table.input {

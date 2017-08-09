@@ -215,10 +215,11 @@ echo '</div>';
 
 
 <!-- Prefix Mail logo on mailto links -->
+<!--
 <script type="text/javascript" charset="utf-8">
 $( "a[href^=\"mailto:\"]" ).each( function() {
     var text = $(this).html( );
     $(this).html(  "&#9993" + " " + text );
     });
 </script>
-
+-->

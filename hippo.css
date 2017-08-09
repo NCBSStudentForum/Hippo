@@ -299,6 +299,13 @@ button.courseInfo {
     text-align : left;
 }
 
+button.courseInfo:hover {
+    border : 1px dotted;
+    font-size : normal;
+    text-decoration: none;
+}
+
+
 
 table.input {
     text-align : left;
@@ -600,7 +607,12 @@ a[href^="mailto:"] {
   text-decoration: none;
   font-style : none;
   font-family : monospace;
-  font-size: x-small;
+  font-size: small;
+}
+
+a[href^="mailto:"]::before { 
+    content: "\2709";
+    font-size: x-large;
 }
 
 // Links 

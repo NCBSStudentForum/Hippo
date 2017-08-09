@@ -1231,18 +1231,21 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     global $db;
     $query = "SELECT * FROM $tablename";
 
-
     if( is_string( $where) && strlen( $where ) > 0 )
         $query .= " WHERE :where ";
 
-    if( $orderby )
+    if( is_string($orderby) && strlen( $orderby) > 0 )
         $query .= " ORDER BY :orderby";
 
-    $stmt = $db->prepare( $query );
-    $stmt->bindValue( ":where", $where );
-    $stmt->bindValue( ":orderby", $orderby );
-    $stmt->execute( );
 
+    $stmt = $db->prepare( $query );
+
+    $stmt->bindValue( ":where", $where );
+
+    if( $orderby )
+        $stmt->bindValue( ":orderby", $orderby );
+
+    $stmt->execute( );
     return fetchEntries( $stmt );
 }
 
@@ -1599,6 +1602,7 @@ function getFaculty( $status = '', $order_by = 'first_name' )
         $query .= " ORDER BY  '$order_by' ";
 
     $stmt = $db->prepare( $query );
+
     if( $status )
         $stmt->bindValue( ':status', $status );
 

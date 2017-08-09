@@ -150,6 +150,8 @@ function AreYouSure( button )
     }, 500);
   })();
 </script>
+
+
 <!-- load basic unicode chara -->
 <?php
 

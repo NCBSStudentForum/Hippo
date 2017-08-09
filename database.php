@@ -2265,7 +2265,7 @@ function getSlotInfo( $id )
     foreach( $slots as $sl )
         $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-' 
             . dbTime( $sl[ 'end_time' ] );
-    return '<small>(' . implode( ', ', $res ) . ') </small>';
+    return  implode( ', ', $res );
 }
 
 

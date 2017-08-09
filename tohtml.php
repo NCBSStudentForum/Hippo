@@ -1741,10 +1741,11 @@ function getCourseShortInfoText( $course )
     return $text;
 }
 
-function getCourseInfo( $cid )
+function getCourseInstructors( $c )
 {
-    $c =  getCourseById( $cid );
-    $html = $c['name'];
+    if( is_string( $c ) )
+        $c =  getCourseById( $c );
+
     $instructors = array( );
     foreach( $c as $k => $v )
     {
@@ -1752,12 +1753,20 @@ function getCourseInfo( $cid )
             if( $v )
             {
                 $name = arrayToName( findAnyoneWithEmail( $v ) );
-                $instructors[ ] = "<small><a href=\"mailto:$v\" target=\"_top\">
+                $instructors[ ] = "<small><a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
                     $name </a></small>";
             }
     }
 
     $instructors = implode( '<br>', $instructors );
+    return $instructors;
+
+}
+
+function getCourseInfo( $cid )
+{
+    $c =  getCourseById( $cid );
+    $instructors = getCourseInstructors( $c );
     return $html . '<br>' . $instructors;
 }
 

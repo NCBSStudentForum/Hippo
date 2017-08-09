@@ -1237,8 +1237,6 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     if( strlen($orderby) > 0 )
         $query .= " ORDER BY :orderby";
 
-    echo $query;
-
     $stmt = $db->prepare( $query );
     if( $orderby )
         $stmt->bindValue( ":orderby", $orderby );

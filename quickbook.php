@@ -39,9 +39,18 @@ if( array_key_exists( 'external_id', $_GET ) )
     $tableName = $expr[ 0 ];
     $id = $expr[ 1 ];
     $entry = getTableEntry( $tableName, 'id', array( "id" => $id ) );
+
     echo "<h1>Scheduling following talk </h1>";
+
+    echo '<div style="font-size:small">';
     echo arrayToVerticalTableHTML( $entry, 'events', '', 'id,status,date,time,venue' );
-    $defaults = array_merge( $defaults, $entry );
+    echo '</div>';
+
+
+    // NOTE: Do not merge $defaults and $entry; just get from $entry what you
+    // want and put it in $defaults. Otherwise, the page will become very messy.
+    $defaults[ 'class' ] = $entry[ 'class' ];
+    $defaults[ 'speaker' ] = $entry[ 'speaker' ];
 
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 

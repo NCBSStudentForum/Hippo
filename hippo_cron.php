@@ -335,7 +335,7 @@ if( $today >= $startDay && $today <= $endDay )
  */
 {
     $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:15' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '10:14' );
 
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
@@ -364,14 +364,14 @@ if( $today >= $startDay && $today <= $endDay )
             $cclist = $template[ 'cc' ];
             $title = $e['title'];
 
-            if( strtotime( $today ) + 7 * 24 * 3600 == strtotime( $lastEventOn ) )
+            if( strtotime( $today ) + (7 * 24 * 3600) == strtotime( $lastEventOn ) )
             {
                 $subject = "IMP! Your recurrent booking '$title' is expiring in 7 days";
                 echo printInfo( $subject );
                 sendPlainTextEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }
-            else if( strtotime( $today ) + 1 * 24 * 3600 == strtotime( $lastEventOn ) )
+            else if( strtotime( $today ) + (1 * 24 * 3600) == strtotime( $lastEventOn ) )
             {
                 $subject = "ATTN! Your recurrent booking '$title' is expiring tomorrow";
                 echo printInfo( $subject );

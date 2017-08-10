@@ -335,7 +335,7 @@ if( $today >= $startDay && $today <= $endDay )
  */
 {
     $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:14' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '13:00' );
 
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {

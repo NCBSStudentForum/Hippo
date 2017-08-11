@@ -51,6 +51,7 @@ if( array_key_exists( 'external_id', $_GET ) )
     // want and put it in $defaults. Otherwise, the page will become very messy.
     $defaults[ 'class' ] = $entry[ 'class' ];
     $defaults[ 'speaker' ] = $entry[ 'speaker' ];
+    $defaults[ 'title' ] = $entry[ 'title' ];
 
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 

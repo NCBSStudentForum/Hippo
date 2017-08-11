@@ -107,7 +107,7 @@ foreach( $upcomingTalks as $t )
                 below.</strong>";
 
             $html = arrayToVerticalTableHTML( $event, 'events', 'lightyellow'
-                , 'eid,class,external_id,url,modified_by,timestamp,calendar_id' . 
+                , 'eid,class,url,modified_by,timestamp,calendar_id' . 
                 ',status,calendar_event_id,last_modified_on' );
 
             /* PREPARE email template */
@@ -136,7 +136,7 @@ foreach( $upcomingTalks as $t )
             $html .= '<input type="hidden" name="template" value="'. $templ . '" >';
 
 
-            $html .= "<p>Use can send email: ";
+            $html .= "<p>You can send email: ";
             $html .= '<button title="Send email" name="response" value="send email">Email</button>';
             $html .= '</p>';
             $html .= '</form>';

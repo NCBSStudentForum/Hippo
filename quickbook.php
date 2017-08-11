@@ -46,12 +46,19 @@ if( array_key_exists( 'external_id', $_GET ) )
     echo arrayToVerticalTableHTML( $entry, 'events', '', 'id,status,date,time,venue' );
     echo '</div>';
 
-    $defaults = array_merge( $entry, $defaults );
-
+    $defaults[ 'title' ] = $entry[ 'title' ];
+    $defaults[ 'class' ] = $entry[ 'class' ];
+    $defaults[ 'is_public_event' ] = 'YES';
+    $defaults[ 'speaker' ] = $entry[ 'speaker' ];
+    $defaults[ 'description' ] = $entry[ 'class' ];
     // Fix description otherwise, it might show up in booking page.
     $defaults[ 'description' ] = html2Markdown(
-        $defaults[ 'description' ], $strip_inline_image = true 
-    );
+        $entry[ 'description' ], $strip_inline_image = true 
+        );
+
+    // Get only 200 characters from the description.
+    $defaults[ 'description' ] = substr( $defaults[ 'description'], 0, 200 );
+
 
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 

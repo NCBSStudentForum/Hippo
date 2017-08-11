@@ -46,12 +46,12 @@ if( array_key_exists( 'external_id', $_GET ) )
     echo arrayToVerticalTableHTML( $entry, 'events', '', 'id,status,date,time,venue' );
     echo '</div>';
 
+    $defaults = array_merge( $entry, $defaults );
 
-    // NOTE: Do not merge $defaults and $entry; just get from $entry what you
-    // want and put it in $defaults. Otherwise, the page will become very messy.
-    $defaults[ 'class' ] = $entry[ 'class' ];
-    $defaults[ 'speaker' ] = $entry[ 'speaker' ];
-    $defaults[ 'title' ] = $entry[ 'title' ];
+    // Fix description otherwise, it might show up in booking page.
+    $defaults[ 'description' ] = html2Markdown(
+        $defaults[ 'description' ], $strip_inline_image = true 
+    );
 
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 
@@ -84,15 +84,14 @@ if( $defaults[ 'has_projector' ] == 'YES' )
 else 
     $projectorNo = 'checked';
 
-$openAirNo = ''; $openAirYes = ' ';
+$openAirNo = ''; $openAirYes = '';
 if( $defaults[ 'openair' ] == 'YES' )
     $openAirYes = 'checked'; 
 else 
     $openAirNo = 'checked';
 
 
-/* PAGE 
- */
+/* PAGE */
 
 echo '<br />';
 echo '<table style="min-width:300px;max-width:500px",border="0">';
@@ -159,7 +158,7 @@ $date = __get__( $_POST, 'date', dbDate(strtotime( 'today' )) );
 // Force this only if user is not admin.
 if( ! anyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN' ) ) )
 {
-    if( strtotime( $date ) >= strtotime( 'today' ) + 60 * 24 * 3600 )
+    if( strtotime( $date ) >= (strtotime( 'today' ) + 60 * 24 * 3600 ) )
     {
         echo alertUser( "You can not book more than 60 days in advance" );
         exit;
@@ -353,7 +352,8 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         }
 
 
-        // Create hidden fields from defaults.
+        // Create hidden fields from defaults. The description must be cleaned
+        // otherwise it will be displayed on the screen.
         $block .= '<input type="hidden" name="title" 
             value="' . $defaults['title' ] . '">';
         $block .= '<input type="hidden" name="description" 

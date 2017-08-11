@@ -506,7 +506,11 @@ function arrayToVerticalTableHTML( $array, $tablename
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
-            $table .= "<td><div class=\"cell_content\">$array[$k]</div></td>";
+
+            // Escape some special chars speacial characters.
+            $text = $array[ $k ];
+
+            $table .= "<td><div class=\"cell_content\">$text</div></td>";
             $table .= "</tr>";
         }
 

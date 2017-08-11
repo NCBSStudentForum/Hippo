@@ -50,19 +50,16 @@ if( array_key_exists( 'external_id', $_GET ) )
     $defaults[ 'class' ] = $entry[ 'class' ];
     $defaults[ 'is_public_event' ] = 'YES';
     $defaults[ 'speaker' ] = $entry[ 'speaker' ];
-    $defaults[ 'description' ] = $entry[ 'class' ];
-    // Fix description otherwise, it might show up in booking page.
-    $defaults[ 'description' ] = html2Markdown(
-        $entry[ 'description' ], $strip_inline_image = true 
-        );
+    $defaults[ 'class' ] = $entry[ 'class' ];
 
-    // Get only 200 characters from the description.
-    $defaults[ 'description' ] = substr( $defaults[ 'description'], 0, 200 );
 
 
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 
             . $defaults[ 'speaker' ] . " on '" . $defaults[ 'title' ] . "'";
+
+    // Description is just the title of the talk. Keep it short.
+    $defaults[ 'description' ] = $defaults[ 'title' ];
 }
 else
 {

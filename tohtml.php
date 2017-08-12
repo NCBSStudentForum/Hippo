@@ -685,7 +685,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     global $dbChoices;
     global $useCKEditor;
 
-    $html = "<table class=\"editable_$tablename\">";
+    $html = "<table class=\"editable_$tablename\" id=\"$tablename\">";
     $schema = getTableSchema( $tablename );
 
     if( is_string( $editables ) )
@@ -853,6 +853,9 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         $buttonSym = $symbUpdate;
     else if( strtolower( $button_val ) == 'edit' )
         $buttonSym = $symbEdit;
+
+    // Let JS add extra rows here.
+    $html .= '<tr><td></td><td><table id="' . $tablename . '_extra_rows"> </table></td>';
 
     if( count( $editableKeys ) > 0 && strlen( $button_val ) > 0 )
     {
@@ -1659,7 +1662,7 @@ function coursesTable( )
         $instructors = array( );
         foreach( $c as $k => $v )
         if( $v && strpos( $k, 'instructor_') !== false )
-            $instructors[] = $v;
+            $instructors = array_merge($instructors, explode( ',', $v ) );
 
         $html .= "<tr>";
         $html .= "<td>" . $c[ 'id' ] . "</td>";

@@ -331,6 +331,7 @@ function initialize( $db  )
             , instructor_4 VARCHAR(50) 
             , instructor_5 VARCHAR(50) 
             , instructor_6 VARCHAR(50) 
+            , instructor_extras VARCHAR(500) -- comma separated list of extra
             , comment VARCHAR(100)
             )
         ");

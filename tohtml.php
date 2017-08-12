@@ -1756,12 +1756,15 @@ function getCourseInstructors( $c )
     $instructors = array( );
     foreach( $c as $k => $v )
     {
-        if( contains( 'instructor', $k ) )
-            if( $v )
+        if( contains( 'instructor_', $k ) )
+            foreach( explode( ",", $v) as $i )
             {
-                $name = arrayToName( findAnyoneWithEmail( $v ) );
-                $instructors[ ] = "<small><a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
-                    $name </a></small>";
+                if( $i )
+                {
+                    $name = arrayToName( findAnyoneWithEmail( $i ) );
+                    $instructors[ ] = "<small><a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
+                        $name </a></small>";
+                }
             }
     }
 

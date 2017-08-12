@@ -82,177 +82,29 @@ $bookingTable = "<table border='1'>
     <tr> <td>Cancelled by user</td> <td> $nCancelled </td> </tr>
     </table>";
 
-/*
-// Now get all the Thesis Seminar.
 $thesisSeminars = getTableEntries( 'talks', 'class', "class='THESIS SEMINAR'" );
-$logins = getLogins( );
+$thesisSemPerYear = array( );
+$thesisSemPerMonth = array( );
 
-$timeSpent = array( );
-foreach( $logins as $login )
-{
-    $jDate =  $login[ 'joined_on' ];
-    $endDate = $login[ 'valid_until' ];
-    if( ! $endDate )
-        $endDate = 'today';
-    if( $jDate )
-    {
-        $nSecs = strtotime( $endDate ) - strtotime( $jDate );
-        $nYears = $nSecs / (365.24 * 24 * 3600 );
-        $timeSpent[ ] = array( $nYears, 0 );
-    }
-    else
-        $timeSpent[ ] = array( -1, 0 );
-}
+for( $i = 1; $i <= 12; $i ++ )
+    $thesisSemPerMonth[ date( 'F', strtotime( "2000/$i/01" ) )] = 0;
 
-$yearsToGraduate = array( );
 foreach( $thesisSeminars as $ts )
 {
-    $speaker = $ts[ 'speaker' ];
-    $id = $ts[ 'id' ];
-    $event = getEventsOfTalkId( $id );
-    $date = $event[ 'date' ];
-    $speakerInfo = getSpeakerByName( $speaker );
-    $login = getTableEntry( 'logins', 'email', $speakerInfo );
-    if( $login )
-    {
-        $nSecs = strtotime( $date ) - strtotime( $login[ 'joined_on' ] );
-        $nYears = $nSecs / (365.24 * 24 * 3600 );
+    // Get event of this seminar.
+    $event = getEventsOfTalkId( $ts[ 'id' ] );
 
-        // If nYears is more than 15, something is really wrong with this data.
-        if( $nYears < 15 )
-            $yearsToGraduate[ ] = array( $nYears, 0 );
-        else                // Invalid entry
-            $yearsToGraduate[ ] = array( -1, 0 );
-        
-    }
-    else
-        $yearsToGraduate[ ] = array( -1, 0 );
+    $year = intval( date( 'Y', strtotime( $event['date'] )  ));
+    $month = date( 'F', strtotime( $event['date'] ) );
+
+
+    if( $year > 2000 )
+        $thesisSemPerYear[ $year ] = __get__( $thesisSemPerYear, $year, 0 ) + 1;
+
+    $thesisSemPerMonth[ $month ] += 1;
+
 }
-
- */
-
-
 ?>
-
-<!-- Plot distribution of years student spend -->
-<script type="text/javascript" charset="utf-8">
-$(function () {
-    
-    var data = <?php echo json_encode( $timeSpent ); ?>;
-
-    /**
-     * Get histogram data out of xy data
-     * @param   {Array} data  Array of tuples [x, y]
-     * @param   {Number} step Resolution for the histogram
-     * @returns {Array}       Histogram data
-     */
-    function histogram(data, step) {
-        var histo = {},
-            x,
-            i,
-            arr = [];
-
-        // Group down
-        for (i = 0; i < data.length; i++) {
-            x = Math.floor(data[i][0] / step) * step;
-            if (!histo[x]) {
-                histo[x] = 0;
-            }
-            histo[x]++;
-        }
-
-        // Make the histo group into an array
-        for (x in histo) {
-            if (histo.hasOwnProperty((x))) {
-                arr.push([parseFloat(x), histo[x]]);
-            }
-        }
-
-        // Finally, sort the array
-        arr.sort(function (a, b) {
-            return a[0] - b[0];
-        });
-
-        return arr;
-    }
-
-    Highcharts.chart('timeSpent', {
-        chart: { type: 'column' },
-        title: { text: 'Years spent by students on campus (-1 is incomplete entry)' },
-        xAxis: { min : -1, max: 10 },
-        yAxis: [{ title: { text: '# Students' } }, ],
-        series: [{
-            name: '# Years ',
-            type: 'column',
-            data: histogram(data, 1),
-            pointPadding: 0,
-            groupPadding: 0,
-            pointPlacement: 'between'
-        },] 
-    });
-});
-</script>
-
-<!-- Plot distribution of years student take to graduate -->
-<script type="text/javascript" charset="utf-8">
-$(function () {
-    
-    var data = <?php echo json_encode( $yearsToGraduate ); ?>;
-
-    /**
-     * Get histogram data out of xy data
-     * @param   {Array} data  Array of tuples [x, y]
-     * @param   {Number} step Resolution for the histogram
-     * @returns {Array}       Histogram data
-     */
-    function histogram(data, step) {
-        var histo = {},
-            x,
-            i,
-            arr = [];
-
-        // Group down
-        for (i = 0; i < data.length; i++) {
-            x = Math.floor(data[i][0] / step) * step;
-            if (!histo[x]) {
-                histo[x] = 0;
-            }
-            histo[x]++;
-        }
-
-        // Make the histo group into an array
-        for (x in histo) {
-            if (histo.hasOwnProperty((x))) {
-                arr.push([parseFloat(x), histo[x]]);
-            }
-        }
-
-        // Finally, sort the array
-        arr.sort(function (a, b) {
-            return a[0] - b[0];
-        });
-
-        return arr;
-    }
-
-    Highcharts.chart('timeToGraduate', {
-        chart: { type: 'column' },
-        xAxis: { min : -1 },
-        title: { text: 'Years to graduate (-1 is incomplete entry)' },
-        yAxis: [{ title: { text: '#Students' } }, ],
-        series: [{
-            name: '# Years ',
-            type: 'column',
-            data: histogram(data, 1),
-            pointPadding: 0,
-            groupPadding: 0,
-            pointPlacement: 'between'
-        },] 
-    });
-});
-</script>
-
-
 
 <script type="text/javascript" charset="utf-8">
 $(function( ) { 
@@ -293,7 +145,44 @@ $(function( ) {
 
 </script>
 
+<script type="text/javascript" charset="utf-8">
+$(function( ) { 
 
+    var thesisSemPerMonth = <?php echo json_encode( array_values( $thesisSemPerMonth) ); ?>;
+    var cls = <?php echo json_encode( array_keys( $thesisSemPerMonth) ); ?>;
+
+    Highcharts.chart('thesis_seminar_per_month', {
+
+        chart : { type : 'column' },
+        title: { text: 'Thesis Seminar distributuion (monthly)' },
+        yAxis: { title: { text: 'Number of events' } },
+        xAxis : { categories : cls }, 
+        legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+        series: [{ name: 'Total events by class', data: thesisSemPerMonth, }], 
+    });
+
+});
+</script>
+
+<script type="text/javascript" charset="utf-8">
+$(function( ) { 
+
+    var thesisSemPerYear = <?php echo json_encode( array_values( $thesisSemPerYear) ); ?>;
+    var cls = <?php echo json_encode( array_keys( $thesisSemPerYear) ); ?>;
+
+    Highcharts.chart('thesis_seminar_per_year', {
+
+        chart : { type : 'column' },
+        title: { text: 'Thesis Seminar distributuion (yearly)' },
+        yAxis: { title: { text: 'Number of events' } },
+        xAxis : { categories : cls }, 
+        legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+        series: [{ name: 'Total events by class', data: thesisSemPerYear, }], 
+    });
+
+});
+
+</script>
 
 <?php 
 
@@ -566,16 +455,13 @@ echo $bookingTable;
 <h3></h3>
 <div id="events_class" style="width:100%; height:400px;"></div>
 
+<h1>Academic statistics since March 01, 2017</h1>
 <!--
-<h1>Academic statistics </h1>
-
 <p class="warn">
 The goodness of following two histograms depends on the correctness of the joining date
 in my database. The years to graduation is computed by substracting joining 
 date from thesis seminar date. </p>
 
-<h3>Time spent on campus</h3>
-<div id="timeSpent" style="width:100%; height:400px;"></div>
 
 <h3>Years to Graduate</h3>
 <div id="timeToGraduate" style="width:100%; height:400px;"></div>
@@ -590,6 +476,12 @@ date from thesis seminar date. </p>
 <h3> Gap between consecutive AWSs </h3>
 Ideally, this value should be 12 months for all AWSs.
 <div id="container2" style="width:100%; height:400px;"></div>
+
+<h3>Thesis seminar distribution (monthly)</h3>
+<div id="thesis_seminar_per_month" style="width:100%; height:400px;"></div>
+
+<h3>Thesis seminar distribution (yearly)</h3>
+<div id="thesis_seminar_per_year" style="width:100%; height:400px;"></div>
 
 <a href="javascript:window.close();">Close Window</a>
 

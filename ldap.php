@@ -21,8 +21,11 @@ function serviceping($host, $port=389, $timeout=1)
     }
 }
 
-function getUserInfoFromLdap( $ldap, $ldap_ip="ldap.ncbs.res.in" )
+function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 {
+    $ldapArr = explode( "@", $query );
+    $ldap = $ldapArr[0];
+
     $ports = array( 389, 18288 );
     $baseDNs = array( 389 => 'dc=ncbs,dc=res,dc=in'
                         , 18288 => "dc=instem,dc=res,dc=in"

@@ -138,7 +138,7 @@ $(function( ) {
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total events by class', data: eventsByClass, }], 
+        series: [{ name: 'Total events grouped by class', data: eventsByClass, }], 
     });
 
 });
@@ -158,7 +158,7 @@ $(function( ) {
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total events by class', data: thesisSemPerMonth, }], 
+        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerMonth, }], 
     });
 
 });
@@ -177,7 +177,7 @@ $(function( ) {
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total events by class', data: thesisSemPerYear, }], 
+        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerYear, }], 
     });
 
 });
@@ -416,7 +416,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Gap in months between consecutive AWSs'
+            text: 'Gap between consecutive AWSs (months)'
         },
         xAxis: { max : 36 },
         yAxis: [{
@@ -425,7 +425,7 @@ $(function () {
             }
         }, ],
         series: [{
-            name: '#AWS with this gap',
+            name: 'Number of AWSs with gap',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,

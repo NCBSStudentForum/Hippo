@@ -17,7 +17,7 @@ include_once './check_access_permissions.php';
 <?php
 if( ! (isIntranet() || isAuthenticated( ) ) )
 {
-    echo printWarning( "You must either log-in OR intranet to access this page" );
+    echo loginOrIntranet( );
     exit;
 }
 

@@ -3,6 +3,12 @@
 include_once 'header.php';
 include_once 'database.php' ;
 
+function loginOrIntranet( )
+{
+    return "<p>You must either <a href=\"index.php\">login</a> or use 
+        intranet to access this page<p>";
+}
+
 function isAuthenticated( )
 {
     if( array_key_exists( 'AUTHENTICATED', $_SESSION ) )

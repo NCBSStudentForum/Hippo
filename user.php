@@ -79,7 +79,7 @@ if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
 }
 
 
-echo '<h3>BookMyVenue</h3>';
+echo '<h2>BookMyVenue</h2>';
 
 $html = '<table class="tasks">';
 $html .= '<tr>

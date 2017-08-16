@@ -1780,4 +1780,55 @@ function getCourseInfo( $cid )
     return $html . '<br>' . $instructors;
 }
 
+
+function bookmyVenueAdminTaskTable( )
+{
+    $html = '<table class="tasks">
+        <tr>
+        <td>
+            Book using old interface
+        </td>
+        <td>
+            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a> 
+        </td>
+        </tr>
+        </table>'
+    ;
+
+    $html .= '<br>';
+    $html .= '<table class="tasks">
+        <tr>
+        <td>
+           <strong>Make sure you are logged-in using correct google account </strong>
+            </strong>
+        </td>
+            <td>
+                <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
+                Synchronize public calendar </a> 
+            </td>
+        </tr>
+        <tr>
+        <td>
+            Add/Update/Delete venues
+        </td>
+            <td>
+                <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a> 
+            </td>
+        </tr>
+        <tr>
+            <td>Send emails manually (and generate documents)</td>
+            <td> <a href="admin_acad_email_and_docs.php">Send emails</td>
+        </tr>
+        <tr>
+            <td>Manage talks and seminars. </td>
+            <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
+        </tr>
+        <tr>
+            <td>Add or update speakers. </td>
+            <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+        </tr>
+        </table>' ;
+    return $html;
+}
+
 ?>

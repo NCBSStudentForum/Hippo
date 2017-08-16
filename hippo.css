@@ -172,17 +172,18 @@ table.tasks {
     max-width: var(--maxwidth);
 }
 
+
+table.tasks tr td:nth-child(1)
+{
+    font-size:normal;
+}
+
 table.tasks tr td 
 {
     /*border : 0.5px dotted; */
     min-width : 50%;
     max-width : 60%;
     background : var(--background);
-}
-
-table.tasks tr td:nth-child(1)
-{
-    font-size:normal;
 }
 
 table.standout {

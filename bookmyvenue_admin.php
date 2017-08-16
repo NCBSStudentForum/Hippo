@@ -12,55 +12,9 @@ mustHaveAnyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
 
-echo '
-    <table class="tasks">
-        <tr>
-        <td>
-            Book using old interface
-        </td>
-        <td>
-            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a> 
-        </td>
-        </tr>
-    </table>'
-    ;
-echo '<br />';
+echo bookmyVenueAdminTaskTable( );
 
-echo '<table class="tasks">
-    <tr>
-    <td>
-       <strong>Make sure you are logged-in using correct google account </strong>
-        </strong>
-    </td>
-        <td>
-            <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
-            Synchronize public calendar </a> 
-        </td>
-    </tr>
-    <tr>
-    <td>
-        Add/Update/Delete venues
-    </td>
-        <td>
-            <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a> 
-        </td>
-    </tr>
-    <tr>
-        <td>Send emails manually (and generate documents)</td>
-        <td> <a href="admin_acad_email_and_docs.php">Send emails</td>
-    </tr>
-    <tr>
-        <td>Manage talks and seminars. </td>
-        <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
-    </tr>
-    <tr>
-        <td>Add or update speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
-    </tr>
-    </table>
-    ';
-
-echo '<h2> Pending requests </h2>';
+echo '<h1> Pending requests </h1>';
 $requests = getPendingRequestsGroupedByGID( ); 
 
 if( count( $requests ) == 0 )
@@ -74,6 +28,15 @@ $html .= '<table class="show_request">';
 $tohide = 'last_modified_on,status,modified_by,timestamp,url,external_id,gid,rid';
 foreach( $requests as $r )
 {
+    // If request date has passed, ignore it.
+    if( strtotime( $r[ 'date' ] ) < strtotime( '-2 days' ) )
+    {
+        // Do not show requests which are more than 1 days old. Their status
+        // remains PENDING all the time. Dont know what to do such
+        // unapproved/expired requests.
+        continue;
+    }
+
     $html .= '<form action="bookmyvenue_admin_request_review.php" method="post">';
     $html .= '<tr><td>';
     // Hide some buttons to send information to next page.
@@ -100,7 +63,7 @@ echo goBackToPageLink( "user.php", "Go back" );
 
 ?>
 
-<h2>Upcoming (approved) events in next 4 weeks </h2>
+<h1>Upcoming (approved) events in next 4 weeks </h1>
 
 <?php
 

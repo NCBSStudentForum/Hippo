@@ -134,11 +134,12 @@ echo '<h1> Infrequently asked questions. </h1> ';
 echo ' <h2> How is AWS schedule computed? </h2> ';
 echo '
     The AWS schedule is computed by network-flow methods. For each available slot,
-    we draw an edge from every speaker and put a cost on this edge. The cost is 
-    minimum of the slot is roughly 1 year away from the last date at which speaker 
-    gave her AWS. Now the problem is to select edges such that this cost is minimized 
+    we draw an edge from every speaker and put a cost on this edge. Lets say the 
+    potential slot is x days away from the last AWS date. The cost is 
+    minimum if x is 365 days; and it increases with (x-365). For x < 365, cost is 
+    very hight.  Now the problem is to select edges such that this cost is minimized 
     i.e. all speakers give their AWS exactly 1 year after the joining or after their
-    last AWS date. This is the general idea but what we do it more complicated that 
+    last AWS date. This is the general idea. The real situation more complicated that 
     this. Following policy is enforced.
 
     <ul>

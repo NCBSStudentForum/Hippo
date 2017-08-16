@@ -87,8 +87,13 @@ elseif( $_POST['response'] == 'Accept' )
 
         $user = loginToText( $speaker );
         $msg .= "<p>
-            Your edit to your AWS entry has been approved. 
-            The updated entry is following:
+            Your AWS scheduling preferences has been approved.
+            <br>
+            I will try to schedule your AWS on or very near to these dates but it 
+            can not be guaranteed especially when there are multiple scheduling 
+            requests on nearby slots.  
+           <br>
+           The preferece you sent are below.
             </p>";
 
         // Get the latest request.

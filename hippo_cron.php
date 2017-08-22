@@ -263,7 +263,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
                     {
                         // Send it out.
                         $to = $template[ 'recipients' ];
-                        $ccs = $template[ 'CC' ];
+                        $ccs = $template[ 'cc' ];
                         $msg = $template[ 'email_body' ];
                         sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
                     }

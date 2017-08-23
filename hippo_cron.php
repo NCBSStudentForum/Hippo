@@ -298,7 +298,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 $today = strtotime( 'today' );
 $endDay = strtotime( 'next friday' );
 $startDay = $endDay - (3 * 24 * 3600 );
-if( $today >= $startDay && $today <= $endDay ) 
+if( $today > $startDay && $today <= $endDay ) 
 {
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )

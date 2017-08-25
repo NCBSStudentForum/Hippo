@@ -169,10 +169,7 @@ foreach( $awses as $aws )
 {
     $outfile .= '_' . $aws[ 'speaker' ];
     $tex[] = awsToTex( $aws );
-
-    // If speaker has instem id, put InSTEM as well in header.
-    //$inst = emailInstitute( getLoginEmail( $aws[ 'speaker' ] ), "latex" );
-    //$tex[] = '\newpage';
+    $tex[] = '\newpage';
 }
 
 $tex[] = '\end{document}';

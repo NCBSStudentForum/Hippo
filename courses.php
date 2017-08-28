@@ -88,16 +88,15 @@ function showRunningCourse( x )
 
 echo '<h1>Slots </h1>';
 
+//echo printInfo( "
+//    <ul>
+//    <li> If a course is running in slot 1, then its time is 
+//    represented by tiles 1A, 1B and 1C.  </li>
+//    <li> No course should overlap with any other course's slot tiles.  </li>
+//    <li> No course can run on red color tiles. These are reserved tiles. </li>
+//    </ul>" 
+//);
 
-echo printInfo( "
-    <ul>
-    <li> If a course is running in slot 1, then its time is 
-    represented by tiles 1A, 1B and 1C.  </li>
-    <li> No course should overlap with any other course's slot tiles.  </li>
-    <li> No course can run on red color tiles. These are reserved tiles. </li>
-    </ul>" 
-);
-    
 echo printInfo( 
     "Click on <button class=\"invisible\" disabled>1A</button> etc to see the 
     list of courses running on this slot this semester

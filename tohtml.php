@@ -1586,6 +1586,9 @@ function slotTable( $width = "15px" )
     // Generate columns. Each one is 15 min long. Starting from 9am to 6:00pm
     $maxCols = intval( ( 17.5 - 9 ) * 4 );
 
+    //for ($i = 0; $i < $maxCols; $i++)
+    //    $html .= '<th> </th>';
+
 
     // Check which slot is here.
     $slots = getTableEntries('slots' );

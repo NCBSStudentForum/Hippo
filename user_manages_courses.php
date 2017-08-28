@@ -46,9 +46,12 @@ foreach( $runningCourses as $c )
         continue;
     }
     
-    $options[] = $cid ;
-    $courseMap[ $cid ] = getCourseName( $cid ) . 
-        " (slot " . $c[ 'slot' ] . ")";
+    if( $cid )
+    {
+        $options[] = $cid ;
+        $courseMap[ $cid ] = getCourseName( $cid ) . 
+            " (slot " . $c[ 'slot' ] . ")";
+    }
 }
 
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );

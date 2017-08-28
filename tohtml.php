@@ -1579,19 +1579,13 @@ function getSlotAtThisTime( $day, $slot_time, $slots = null )
  */
 function slotTable( $width = "15px" )
 {
-    // Collect all upcoming labmeets. We want to avoid them.
-    $labmeets = getWeeklyEventByClass( 'LAB MEETING' );
 
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
     $html = '<table class="timetable">';
 
     // Generate columns. Each one is 15 min long. Starting from 9am to 6:00pm
-    $maxCols = ( 18 - 9 ) * 4;
+    $maxCols = intval( ( 17.5 - 9 ) * 4 );
 
-    $html .= "<tr>";
-    for ($i = -1; $i < $maxCols; $i++)
-        $html .= "<th width=\" " . $width . "\"></th>";
-    $html .= "</tr>";
 
     // Check which slot is here.
     $slots = getTableEntries('slots' );
@@ -1606,18 +1600,11 @@ function slotTable( $width = "15px" )
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
             $slot = getSlotAtThisTime( $day, $slotTime, $slots );
 
-            if( ! $slot )
-                continue;
-
-            $clashes = clashesOnThisVenueSlot( 
-                $day, $slot[ 'start_time' ], $slot[ 'end_time' ], '', $labmeets
-            );
-
-
             if( $slot )
             {
                 $duration = strtotime( $slot[ 'end_time' ] )  -
                             strtotime( $slot[ 'start_time' ] );
+
                 $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
                         humanReadableTime(  $slot[ 'end_time' ] );
 
@@ -1641,7 +1628,7 @@ function slotTable( $width = "15px" )
                     $i += $ncols - 1;
             }
             else
-                $html .= "<td></td>";
+                $html .= "<td> </td>";
         }
         $html .= "</tr>";
     }

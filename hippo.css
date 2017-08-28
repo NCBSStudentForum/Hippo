@@ -203,6 +203,8 @@ table.timetable {
 
 table.timetable tr td {
     /*border: 1px dotted;*/
+    min-width : 10px;
+    max-width : 100px;
 }
 
 table.venue_slot {

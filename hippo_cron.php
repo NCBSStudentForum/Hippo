@@ -67,9 +67,11 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             $subject = 'Next week Annual Work Seminar (' . humanReadableDate( $nextMonday) . ') by ';
             $subject .= implode( ', ', $res[ 'speakers'] );
             $mail = $res[ 'email' ];
+
             $pdffile = $res[ 'pdffile' ];
 
-            $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, $pdffile );
+            // On friday, there should not be any pdffile.
+            $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
             ob_flush( );
         }
         else

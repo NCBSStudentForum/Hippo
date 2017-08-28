@@ -22,33 +22,12 @@ $myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
 $mySlots = array( );
 foreach( $myCourses as $c )
     $mySlots[ ] = $runningCourses[ $c[ 'course_id' ] ]['slot'];
+
 $mySlots = array_unique( $mySlots );
 
 echo '<h1>Course enrollment</h1>';
 
 // Check if registration is open
-
-$regOpen = isRegistrationOpen( );
-if( $regOpen )
-{
-    echo "<h2>Registration form</h2>";
-
-    $default = array( 'student_id' => $_SESSION[ 'user' ] 
-                    , 'semester' => $sem
-                    , 'year' => $year
-                    , 'course_id' => $courseSelect
-                    );
-    echo '<form method="post" action="user_manages_courses_action.php">';
-    echo dbTableToHTMLTable( 'course_registration'
-        , $default
-        , 'course_id:required,type' 
-        , 'submit'
-        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
-    );
-    echo '</form>';
-}
-else
-    echo printInfo( "Course registration is yet not open for $sem $year"  );
 
 // Running course this semester.
 $courseMap = array( );
@@ -73,6 +52,29 @@ foreach( $runningCourses as $c )
 }
 
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
+
+$regOpen = isRegistrationOpen( );
+if( $regOpen )
+{
+    echo "<h2>Registration form</h2>";
+
+    $default = array( 'student_id' => $_SESSION[ 'user' ] 
+                    , 'semester' => $sem
+                    , 'year' => $year
+                    , 'course_id' => $courseSelect
+                    );
+    echo '<form method="post" action="user_manages_courses_action.php">';
+    echo dbTableToHTMLTable( 'course_registration'
+        , $default
+        , 'course_id:required,type' 
+        , 'submit'
+        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
+    );
+    echo '</form>';
+}
+else
+    echo printInfo( "Course registration is yet not open for $sem $year"  );
+
 
 
 /**

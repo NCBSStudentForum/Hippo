@@ -21,6 +21,8 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+echo alertUser( "Some courses may modify these timings." );
+
 $year = getCurrentYear( );
 $sem = getCurrentSemester( );
 $slotCourses = array( );

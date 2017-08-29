@@ -25,6 +25,7 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
 $year = getCurrentYear( );
 $sem = getCurrentSemester( );
 $slotCourses = array( );
+$tileCourses = array( );
 $runningCourses = getSemesterCourses( $year, $sem );
 
 // Collect both metadata and other information in slotCourse array.
@@ -36,15 +37,18 @@ foreach( $runningCourses as $c )
     {
         $slotId = $c[ 'slot' ];
         $tiles = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
+        $slotCourses[ $slotId ][ ] = array_merge( $c, $course );
         foreach( $tiles as $tile )
         {
             if( strpos( $c['ignore_tiles'], $tile[ 'id' ]) !== 0 )
-                $slotCourses[ $tile['id']][ ] = array_merge( $c, $course );
+            {
+                $tileCourses[ $tile['id']][ ] = array_merge( $c, $course );
+            }
         }
     }
 }
 
-$slotCourseJSON = json_encode( $slotCourses );
+$tileCoursesJSON = json_encode( $tileCourses );
 ?>
 
 <script type="text/javascript" charset="utf-8">
@@ -61,7 +65,7 @@ function showCourseInfo( x )
 function showRunningCourse( x )
 {
     var slotId = x.value;
-    var courses = <?php echo $slotCourseJSON; ?>;
+    var courses = <?php echo $tileCoursesJSON; ?>;
     var runningCourses = courses[ slotId ];
     var title;
     var runningCoursesTxt;
@@ -151,6 +155,8 @@ $enrollments = array( );
 $table = '<table class="info">';
 $table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
     <th>Enrollments</th> </tr>';
+
+ksort( $slotCourses );
 foreach( $slotCourses as $slot => $courses )
 {
     foreach( $courses as $c )

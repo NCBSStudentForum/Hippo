@@ -50,7 +50,7 @@ foreach( $runningCourses as $c )
     {
         $options[] = $cid ;
         $courseMap[ $cid ] = getCourseName( $cid ) . 
-            " (slot " . $c[ 'slot' ] . ")";
+            " (slot " . getCourseSlotTiles( $c ) . ")";
     }
 }
 

@@ -2328,5 +2328,44 @@ function isRegistrationOpen( )
     return false;
 
 }
+
+function getSlotTiles( $id )
+{
+   $tiles = getTableEntries( 'slots', 'groupid', "groupid='$id'" );
+   $result = array( );
+
+   foreach( $tiles as $tile )
+       $result[ $tile[ 'id' ] ] = $tile;
+
+   return $result;
+}
+
+/**
+    * @brief Is a course running on given tile e.g. 7A, 7B etc.
+    *
+    * @param $course
+    * @param $tile
+    *
+    * @return 
+ */
+function isCourseRunningOnThisTile( $course, $tile )
+{
+    if( strpos( $course['ignore_tiles'], $tile ) !== 0 )
+        return true;
+    return false;
+}
+
+function getCourseSlotTiles( $course )
+{
+   $sid = $course[ 'slot' ];
+   $tiles = getSlotTiles( $sid );
+   $result = array( );
+   foreach( $tiles as $id => $tile )
+       if( isCourseRunningOnThisTile( $course, $id ) )
+           $result[ ] = $id;
+
+   return implode( ",", $result );
+}
+
 ?>
 

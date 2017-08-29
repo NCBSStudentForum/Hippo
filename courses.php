@@ -21,7 +21,6 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
-echo alertUser( "Some courses may modify these timings." );
 
 $year = getCurrentYear( );
 $sem = getCurrentSemester( );
@@ -98,6 +97,11 @@ function showRunningCourse( x )
 
 echo '<h1>Slots </h1>';
 
+echo printInfo( 
+    "Some courses may modify these slot timings. In case of any discrepency
+    , please write to <tt>acadoffice@ncbs.res.in</tt> " 
+);
+
 //echo printInfo( "
 //    <ul>
 //    <li> If a course is running in slot 1, then its time is 
@@ -119,6 +123,16 @@ echo $table;
  */
 $m = "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
 echo $m;
+
+if( isRegistrationOpen( ) )
+{
+    echo alertUser(
+        "Registration link is now open! After login, visit <tt>My Courses</tt> page
+        to enrol. 
+        "
+        );
+
+}
 
 $showEnrollText = 'Show Enrollement';
 echo printInfo(
@@ -161,7 +175,7 @@ foreach( $slotCourses as $slot => $courses )
         $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
             . humanReadableDate( $c[ 'end_date' ] );
 
-        $slotInfo = getSlotInfo( $slot );
+        $slotInfo = getCourseSlotTiles( $c, $slot );
         $instructors = getCourseInstructors( $cid );
 
         $table .= '<tr>
@@ -171,9 +185,9 @@ foreach( $slotCourses as $slot => $courses )
             <form method="post" action="#">
             <input type="hidden" name="course_id" value="' . $cid . '">
             <td>' .  $schedule . '</td>
-            <td>' . "<strong> $slot </strong> <br>" . $slotInfo 
-                . '<br><strong>' . $note . '</strong></td><td>' 
-                .  $c[ 'venue' ] . '</td>
+            <td>' . "<strong> $slotInfo </strong> <br>" 
+                  .  '<strong>' . $note . '</strong></td><td>' 
+                  .  $c[ 'venue' ] . '</td>
             <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">
             <small>' . $showEnrollText . '</small></button></td>

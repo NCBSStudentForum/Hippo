@@ -144,6 +144,11 @@ foreach( $slotCourses as $slot => $courses )
         $cinfo = $c[ 'description' ];
         $cname = $c[ 'name' ];
         $cr = $c[ 'credits' ];
+
+        $note = '';
+        if( $c[ 'note' ] )
+            $note = colored( '* ' . $c[ 'note' ], 'blue' );
+
         $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
         $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
             . humanReadableDate( $c[ 'end_date' ] );
@@ -158,7 +163,8 @@ foreach( $slotCourses as $slot => $courses )
             <form method="post" action="#">
             <input type="hidden" name="course_id" value="' . $cid . '">
             <td>' .  $schedule . '</td>
-            <td>' . "<strong> $slot </strong> <br>" . $slotInfo . '</td><td>' 
+            <td>' . "<strong> $slot </strong> <br>" . $slotInfo 
+                . '<br><strong>' . $note . '</strong></td><td>' 
                 .  $c[ 'venue' ] . '</td>
             <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">

@@ -2269,14 +2269,25 @@ function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
     return null;
 }
 
-function getSlotInfo( $id )
+function getSlotInfo( $id, $ignore = '' )
 {
     global $db;
+
+    $ignore = str_replace( ' ', ',', $ignore );
+    $ignoreTiles = explode( ',', $ignore );
+
     $slots = getTableEntries( 'slots', 'id', "groupid='$id'" );
     $res = array( );
     foreach( $slots as $sl )
+    {
+        // This slot is in ignore tile list i.e. a course is not using its slot
+        // fully.
+        if( in_array( $sl['id'], $ignoreTiles ) )
+            continue;
+
         $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-' 
             . dbTime( $sl[ 'end_time' ] );
+    }
     return  implode( ', ', $res );
 }
 

@@ -34,7 +34,15 @@ foreach( $runningCourses as $c )
     $cid = $c[ 'course_id' ];
     $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
     if( $course )
-        $slotCourses[ $c[ 'slot' ] ][ ] = array_merge( $c, $course );
+    {
+        $slotId = $c[ 'slot' ];
+        $tiles = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
+        foreach( $tiles as $tile )
+        {
+            if( strpos( $c['ignore_tiles'], $tile[ 'id' ]) !== 0 )
+                $slotCourses[ $tile['id']][ ] = array_merge( $c, $course );
+        }
+    }
 }
 
 $slotCourseJSON = json_encode( $slotCourses );

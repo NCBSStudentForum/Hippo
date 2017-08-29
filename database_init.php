@@ -347,7 +347,8 @@ function initialize( $db  )
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
             , venue VARCHAR(20)
-            , slot VARCHAR(4)
+            , slot VARCHAR(4)   -- Running in this slot.
+            , ignore_tiles VARCHAR(20) -- CSV, ignore these tiles.
             , note VARCHAR(200) DEFAULT ''  -- Add extra comment.
             , UNIQUE KEY(semester,year,course_id)
             )" );

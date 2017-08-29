@@ -156,7 +156,7 @@ else
 
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'course_id,start_date,end_date,slot,venue,note', $action 
+    , 'course_id,start_date,end_date,slot,venue,note,ignore_tiles', $action 
     );
 
 /* If we are updating, we might also like to remove the entry. This button also 

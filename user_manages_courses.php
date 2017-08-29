@@ -14,8 +14,14 @@ $year = getCurrentYear( );
 
 
 $runningCourses = array( );
-foreach( getSemesterCourses( $year, $sem ) as $rc )
-    $runningCourses[ $rc[ 'course_id' ] ] = $rc;
+$semCourses = getSemesterCourses( $year, $sem );
+foreach( $semCourses as $rc )
+{
+    $cid = $rc[ 'course_id' ];
+    $rc[ 'name' ] = getCourseName( $cid );
+    $rc[ 'slot_tiles' ] = getCourseSlotTiles( $rc );
+    $runningCourses[ $cid ] = $rc;
+}
 
 // User courses and slots.
 $myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
@@ -151,6 +157,22 @@ foreach( $myCourses as $c )
     
 echo '</tr></table>';
 echo '</div>';
+
+if( $runningCourses )
+{
+    echo '<h1> Running courses </h1>';
+
+    echo '<div style="font-size:small">';
+    echo '<table class="info">';
+    $ignore = 'id,semester,year,comment,ignore_tiles,slot';
+    $cs = array_values( $runningCourses );
+    echo arrayHeaderRow( $cs[0], 'info', $ignore );
+    foreach( $cs as $rc )
+        echo arrayToRowHTML( $rc, 'info', $ignore );
+    echo '</table>';
+    echo '</div>';
+}
+
 
 echo '<h1>Slots </h1>';
 echo slotTable( );

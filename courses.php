@@ -149,7 +149,7 @@ $enrollments = array( );
 /**  @} */
 
 $table = '<table class="info">';
-$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot</th><th>Venue</th>
+$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
     <th>Enrollments</th> </tr>';
 foreach( $slotCourses as $slot => $courses )
 {

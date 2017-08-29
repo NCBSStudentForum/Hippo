@@ -348,7 +348,7 @@ function initialize( $db  )
             , end_date DATE NOT NULL
             , venue VARCHAR(20)
             , slot VARCHAR(4)
-            , comment VARCHAR DEFAULT ''  -- Add extra comment.
+            , note VARCHAR(200) DEFAULT ''  -- Add extra comment.
             , UNIQUE KEY(semester,year,course_id)
             )" );
         

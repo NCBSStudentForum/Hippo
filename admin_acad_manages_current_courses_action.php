@@ -63,7 +63,7 @@ else
 
             $res = insertIntoTable( 
                 'courses'
-                , 'id,course_id,year,semester,start_date,end_date,slot,venue' 
+                , 'id,course_id,year,semester,start_date,end_date,slot,venue,note' 
                 , $_POST 
             );
 
@@ -84,7 +84,7 @@ else
     {
         $res = updateTable( 'courses'
             , 'course_id'
-            , 'semester,year,start_date,end_date,slot,venue' 
+            , 'semester,year,start_date,end_date,slot,venue,note'
             , $_POST 
         );
 

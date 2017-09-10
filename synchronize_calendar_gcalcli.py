@@ -24,12 +24,15 @@ import math
 from collections import defaultdict, OrderedDict
 import datetime 
 import tempfile 
+import subprocess
 from logger import _logger
 from db_connect import db_
 
 fmt_ = '%Y-%m-%d'
 
-cwd = os.path.dirname( os.path.realpath( __file__ ) )
+# gcalcli command.
+cmd_ = [ "/usr/bin/gcalcli" ] 
+options_ = [ "--calendar", 'NCBS Public Calendar', "--tsv", '--details', 'all' ]
 
 def init( cur ):
     """
@@ -37,11 +40,59 @@ def init( cur ):
     """
     pass
 
+def listToEventDict( event ):
+    assert type( event ) == list
+    e = { }
+    if not event:
+        return e
+    e[ 'start_date' ] = event[0]
+    e[ 'start_time' ] = event[1]
+    e[ 'end_date' ] = event[2]
+    e[ 'end_time' ] = event[3]
+    e[ 'url' ] = event[4]
+    e[ 'calendar_event_id' ] = event[4].split( 'eid=', 1 )[-1]
+    e[ 'title'] = event[6]
+    e[ 'location'] = event[7]
+    e[ 'description'] = event[8]
+    return e
+
+def execute( cmd ):
+    print( '[INFO] Executing %s' % ' '.join( cmd ) )
+    o = subprocess.check_output( cmd, shell = False )
+    return filter( lambda x: len( x.strip( )) > 10, o.split( '\n' ) )
+
+def get_agenda( start, end ):
+    global cmd_, options_
+    global fmt_
+    start_date = start.strftime( fmt_ )
+    end_date = end.strftime( fmt_ )
+    print( '[INFO] Getting events between %s and %s' % (start_date, end_date))
+    cmd = cmd_ + [ 'agenda' , '%s' % start_date, '%s' % end_date ] + options_
+    events = execute( cmd )
+    return map( lambda x: listToEventDict( x.split( '\t' ) ), events )
+
 def addOrUpdateEvent( e ):
     st, et = e[ 'start_time'], e['end_time']
     date = e['date']
     title = e['title'] 
-    print( date, st, et, title )
+
+def is_event_in_google_calendar( event, dbEvents ):
+    for i, eventDict in enumerate( dbEvents ):
+        if eventDict[ 'calendar_event_id' ] == e[ 'calendar_event_id' ]:
+            print( '[INFO] Event already exists' )
+            return True
+    return True
+
+def deleteOrUpdate( googleEvents, localEvents ):
+    if is_event_in_google_calendar( 
+
+def synchronize( localEvents, googleEvents ):
+    global cmd_ 
+    
+    # First delete/update any google event.
+    for i, g in enumerate( googleEvents ):
+        deleteOrUpdate( e,  localEvents )
+
 
 def process( ):
     global db_
@@ -62,14 +113,16 @@ def process( ):
     todayStr = today.strftime( fmt_ )
     endDayStr = endDay.strftime( fmt_ )
 
+    # Events in google calendar.
+    googleEvents = get_agenda( today, endDay )
+
     print( 'Getting events between %s and %s' % (todayStr, endDayStr ))
     cur.execute( """
         SELECT * FROM events WHERE is_public_event='YES' AND date >= '%s'
         AND date <= '%s'""" % (todayStr, endDayStr)
         )
     es = cur.fetchall( )
-    for e in es:
-        addOrUpdateEvent( e )
+    synchronize( es, googleEvents )
 
 
 def main( outfile ):

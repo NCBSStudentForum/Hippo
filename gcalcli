@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 # ** The MIT License **
 #
@@ -218,6 +218,7 @@ except:
 
 locale.setlocale(locale.LC_ALL, "")
 
+ARGS_ = { }
 
 def stringToUnicode(string):
     if string:
@@ -1399,6 +1400,25 @@ class gcalcli:
             sys.stdout.write('\n')
             sys.exit(1)
 
+    def _UpdateEvent(self, event):
+        # Update event 
+        # copy only editable event details for patching
+        print( '[INFO] Updating %s' % event )
+        modEvent = {}
+        keys = ['summary', 'location', 'start', 'end', 'description']
+        for k in keys:
+            if k in event:
+                modEvent[k] = ARGS_.get( k, '' ) or event[k]
+
+        self._RetryWithBackoff(
+            self._CalService().events().
+            patch(calendarId=event['gcalcli_cal']['id'],
+                  eventId=event['id'],
+                  body=modEvent))
+        PrintMsg(CLR_RED(), "Saved!\n")
+        return
+
+
     def _EditEvent(self, event):
 
         while True:
@@ -1883,6 +1903,18 @@ class gcalcli:
 
         self._IterateEvents(self.now, eventList,
                             yearDate=True, work=self._EditEvent)
+        
+    def UpdateEvents( self, searchText, start, end ):
+        # the empty string would get *ALL* events...
+        if searchText == '':
+            return
+
+        eventList = self._SearchForCalEvents(start, end, searchText)
+
+        self._IterateEvents(self.now, eventList,
+                            yearDate=True, work=self._UpdateEvent)
+        
+
 
     def Remind(self, minutes=10, command=None, use_reminders=False):
         """Check for events between now and now+minutes.
@@ -2302,10 +2334,17 @@ gflags.RegisterValidator("color_border",
 
 gflags.ADOPT_module_key_flags(gflags)
 
+def argsToDict( args ):
+    global  ARGS_
+    for i, arg in enumerate( args ):
+        if '--' in arg:
+            ARGS_[ arg.replace( '--', '' ) ] = args[i+1]
 
 def BowChickaWowWow():
+    global ARGS_
     try:
         argv = sys.argv
+        ARGS_ = argsToDict( sys.argv )
         if os.path.exists(os.path.expanduser('~/.gcalclirc')):
             # We want .gcalclirc to be sourced before any other --flagfile
             # params since we may be told to use a specific config folder, we
@@ -2370,7 +2409,7 @@ def BowChickaWowWow():
         sys.exit(1)
 
     # No sense instaniating gcalcli for nothing
-    if not args[0] in ['list', 'search', 'agenda', 'calw', 'calm', 'quick',
+    if not args[0] in ['list', 'update', 'search', 'agenda', 'calw', 'calm', 'quick',
                        'add', 'delete', 'edit', 'remind', 'import', 'help']:
         PrintErrMsg('Error: %s is an invalid command' % args[0])
         sys.exit(1)
@@ -2615,6 +2654,24 @@ def BowChickaWowWow():
         gcal.EditEvents(stringToUnicode(args[1]))
 
         sys.stdout.write('\n')
+
+    elif args[0] == 'update':
+        eStart = None
+        eEnd = None
+        if len(args) < 2:
+            PrintErrMsg('Error: invalid search string\n')
+            sys.exit(1)
+        elif len(args) == 4:  # search, start, end
+            eStart = gcal.dateParser.fromString(args[2])
+            eEnd = gcal.dateParser.fromString(args[3])
+        elif len(args) == 3:  # search, start (default end)
+            eStart = gcal.dateParser.fromString(args[2])
+
+        # allow unicode strings for input
+        gcal.UpdateEvents(stringToUnicode(args[1]), eStart, eEnd)
+
+        sys.stdout.write('\n')
+
 
     elif args[0] == 'remind':
         if len(args) == 3:  # minutes and command

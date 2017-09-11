@@ -105,7 +105,6 @@ def areSameEvents( local, google ):
     res = True
     for i in [ 'title', 'description' ]:
         res = res and ( local[i] == google[i] )
-
     res = res and ( local[ 'venue' ] in google[ 'location' ] )
     res = res and ( '%s' % local[ 'start_time' ] == '%s:00' % google[ 'start_time' ] )
     res = res and ( '%s' % local[ 'end_time' ] == '%s:00' % google[ 'end_time' ] )
@@ -118,17 +117,26 @@ def deleteEvent( event ):
     print( "Deleting event %s" % eventToStr( event ) )
     cmd = cmd_ + [ 'delete', title, start, end, '--imaexpert' ]
 
+def updateEvent( googleEvent, localEvent ):
+    global cmd_ 
+    options = [ ]
+    cmd = cmd_ + [ 'update', googleEvent[ 'title' ] ] + options
+    print( cmd )
+
 
 def deleteOrUpdate( googleEvent, localEvents ):
-    foundLocalEvent = False
+    foundLocalEvent = None
     calEventId = googleEvent[ 'calendar_event_id' ]
     for le in localEvents:
         if areSameEvents( le, googleEvent ):
-            foundLocalEvent = True
+            foundLocalEvent = le
             break
-    if not foundLocalEvent:
+
+    if foundLocalEvent is None:
         # delete this event.
         deleteEvent( googleEvent )
+    else:
+        updateEvent( googleEvent, foundLocalEvent )
 
 def synchronize( localEvents, googleEvents ):
     global cmd_ 

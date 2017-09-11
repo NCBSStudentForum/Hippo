@@ -24,6 +24,7 @@ import math
 from collections import defaultdict, OrderedDict
 import datetime 
 import tempfile 
+import base64
 import subprocess
 from logger import _logger
 from db_connect import db_
@@ -40,21 +41,36 @@ def init( cur ):
     """
     pass
 
+def b64decode( b64_string ):
+    b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
+    return base64.b64decode( b64_string ).strip( )
+
+def getEid( eid ):
+    eid = eid.split( 'eid=', 1)[-1].split('&')[0]
+    eid = b64decode( eid )
+    return eid.split( ' ' )[0]
+
 def listToEventDict( event ):
     assert type( event ) == list
     e = { }
     if not event:
         return e
     e[ 'start_date' ] = event[0]
+    e[ 'date' ] = event[0]
     e[ 'start_time' ] = event[1]
     e[ 'end_date' ] = event[2]
     e[ 'end_time' ] = event[3]
     e[ 'url' ] = event[4]
-    e[ 'calendar_event_id' ] = event[4].split( 'eid=', 1 )[-1]
+    e[ 'calendar_event_id' ] = getEid( event[4] )
     e[ 'title'] = event[6]
     e[ 'location'] = event[7]
     e[ 'description'] = event[8]
     return e
+
+def eventToStr( event ):
+    return "%s (%s), %s to %s" % ( event[ 'title'], event[ 'location' ]
+            , event[ 'start_date' ], event[ 'end_date' ] 
+            )
 
 def execute( cmd ):
     print( '[INFO] Executing %s' % ' '.join( cmd ) )
@@ -83,15 +99,40 @@ def is_event_in_google_calendar( event, dbEvents ):
             return True
     return True
 
-def deleteOrUpdate( googleEvents, localEvents ):
-    if is_event_in_google_calendar( 
+def areSameEvents( local, google ):
+    res = True
+    for i in [ 'title', 'description' ]:
+        res = res and ( local[i] == google[i] )
+
+    res = res and ( local[ 'venue' ] in google[ 'location' ] )
+    res = res and ( '%s' % local[ 'start_time' ] == '%s:00' % google[ 'start_time' ] )
+    res = res and ( '%s' % local[ 'end_time' ] == '%s:00' % google[ 'end_time' ] )
+    return res
+
+def deleteEvent( event ):
+    global cmd_
+    title = event[ 'title' ]
+    start, end = event[ 'start_date' ], event[ 'end_date' ]
+    print( "Deleting event %s" % eventToStr( event ) )
+    cmd = cmd_ + [ 'delete', title, start, end, '--imaexpert' ]
+
+
+def deleteOrUpdate( googleEvent, localEvents ):
+    foundLocalEvent = False
+    calEventId = googleEvent[ 'calendar_event_id' ]
+    for le in localEvents:
+        if areSameEvents( le, googleEvent ):
+            foundLocalEvent = True
+            break
+    if not foundLocalEvent:
+        # delete this event.
+        deleteEvent( googleEvent )
 
 def synchronize( localEvents, googleEvents ):
     global cmd_ 
-    
     # First delete/update any google event.
-    for i, g in enumerate( googleEvents ):
-        deleteOrUpdate( e,  localEvents )
+    for i, ge in enumerate( googleEvents ):
+        deleteOrUpdate( ge,  localEvents )
 
 
 def process( ):

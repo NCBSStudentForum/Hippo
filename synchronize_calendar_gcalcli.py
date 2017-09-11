@@ -31,8 +31,10 @@ from db_connect import db_
 
 fmt_ = '%Y-%m-%d'
 
+cwd_ = os.path.dirname(os.path.realpath(__file__))
+
 # gcalcli command.
-cmd_ = [ "/usr/bin/gcalcli" ] 
+cmd_ = [ os.path.join( cwd_, "gcalcli" ) ] 
 options_ = [ "--calendar", 'NCBS Public Calendar', "--tsv", '--details', 'all' ]
 
 def init( cur ):

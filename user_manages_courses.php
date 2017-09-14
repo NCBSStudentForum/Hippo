@@ -106,7 +106,7 @@ if( count( $myCourses ) > 0 )
     echo alertUser( 
         "You have registered for courses running on following slots: " 
         . implode( ", ", $mySlots )
-        . ". <br> Any course running on any of these slots will not appear in your 
+        . ". <br> All courses running these slots will not appear in your 
         registration form."
         );
 }

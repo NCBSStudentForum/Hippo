@@ -1552,7 +1552,19 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
     return showImage( $picPath, $height, $width );
 }
 
+function getSlotsAtThisDay( $day, $slots = null )
+{
+    if( ! $slots )
+        $slots = getTableEntries( 'slots' );
 
+    $res = array( );
+    foreach( $slots as $s )
+        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
+            $res[] = $s;
+
+    return $res;
+
+}
 
 function getSlotAtThisTime( $day, $slot_time, $slots = null )
 {

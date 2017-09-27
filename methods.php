@@ -1153,3 +1153,9 @@ function isEventOfTalk( $event )
     return false;
 
 }
+
+function getSlotIdOfTile( $tile )
+{
+    preg_match_all( '!\d+!', $tile, $matches );
+    return implode( '', $matches[0] );
+}

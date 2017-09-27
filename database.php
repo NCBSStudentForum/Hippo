@@ -2206,7 +2206,6 @@ function getOccupiedSlots( $year = null, $sem = null )
     return $slots;
 }
 
-
 function getRunningCoursesOnThisVenue( $venue, $date )
 {
     global $db;
@@ -2216,6 +2215,25 @@ function getRunningCoursesOnThisVenue( $venue, $date )
     $courses = getTableEntries( 'courses', 'id'
         , " ( end_date >= '$date' AND start_date <= '$date' )"
         . " AND venue='$venue' "
+    );
+
+    return $courses;
+}
+
+function getRunningCoursesOnTheseSlotTiles( $date, $tile )
+{
+    global $db;
+
+    $year = getCurrentYear( );
+    $sem = getCurrentSemester(  );
+    $date = dbDate( $date );
+
+    // Slot is integer value.
+    $slot = getSlotIdOfTile( $tile );
+
+    $courses = getTableEntries( 'courses', 'id'
+        , " ( end_date >= '$date' AND start_date <= '$date' )"
+        . " AND slot='$slot' "
     );
 
     return $courses;

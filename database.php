@@ -2037,8 +2037,9 @@ function getRunningCourses( )
 
 function getMyCourses( $sem, $year, $user  )
 {
-    $whereExpr = "semester='$sem' AND year='$year' AND student_id='$user'";
-    return getTableEntries( 'course_registration', 'status', $whereExpr );
+    $whereExpr = "status='VALID' AND semester='$sem' AND year='$year' AND student_id='$user'";
+    $courses = getTableEntries( 'course_registration', 'course_id', $whereExpr );
+    return array_filter( $courses, function( $x ) { return strlen( $x['course_id'] ) > 0; } );
 }
 
 /**

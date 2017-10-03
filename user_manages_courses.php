@@ -25,9 +25,27 @@ foreach( $semCourses as $rc )
 
 // User courses and slots.
 $myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
+
 $mySlots = array( );
 foreach( $myCourses as $c )
-    $mySlots[ ] = $runningCourses[ $c[ 'course_id' ] ]['slot'];
+{
+    // Get the running courses.  In rare case, use may have enrolled in course 
+    // which is not running anymore.
+    $course = __get__( $runningCourses, $c['course_id'], null );
+    if( $course )
+        $mySlots[ ] = $runningCourses[ $c[ 'course_id' ] ]['slot'];
+    else 
+    {
+        // This course is no longer running. Drop it.
+        updateTable( 'course_registration', 'student_id,year,semester,course_id'
+            , 'status'
+            , array( 'student_id' => $_SESSION[ 'user' ], 'year' => $year
+                , 'semster' => $sem, 'course_id' => $c[ 'course_id' ]
+                , 'status' => 'INVALID' 
+            )
+        );
+    }
+}
 
 $mySlots = array_unique( $mySlots );
 
@@ -82,7 +100,7 @@ if( $regOpen )
     echo '</form>';
 }
 else
-    echo printInfo( "Course registration is yet not open for $sem $year"  );
+    echo printInfo( "Course registration is not open for $sem $year"  );
 
 
 
@@ -96,7 +114,6 @@ echo '<div style="font-size:small">';
 echo '<table class="1">';
 echo '<tr>';
 $action = 'drop';
-$count = 0;
 
 if( count( $myCourses ) > 0 )
 {
@@ -119,10 +136,9 @@ echo printInfo( "
     " );
 
 
+$count = 0;
 foreach( $myCourses as $c )
 {
-    $count += 1;
-
     // Break at 3 courses.
     if( $count % 3 == 0 )
         echo '</tr><tr>';
@@ -138,12 +154,6 @@ foreach( $myCourses as $c )
             > 30 * 24 * 3600 )
     {
         $action = ''; 
-        echo $course['name'] . '<br>' . '<tt>' . 
-            humanReadableDate( $runningCourses[ $cid ][ 'start_date' ] ) 
-            . ' to ' . humanReadableDate( $runningCourses[$cid]['end_date'] )
-            . '</tt>'
-            ;
-
     }
 
     // TODO: Don't show grades unless student has given feedback.
@@ -153,6 +163,8 @@ foreach( $myCourses as $c )
     echo dbTableToHTMLTable( 'course_registration', $c, '', $action, $tofilter );
     echo '</form>';
     echo '</td>';
+
+    $count += 1;
 }
     
 echo '</tr></table>';

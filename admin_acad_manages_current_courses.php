@@ -163,7 +163,9 @@ echo dbTableToHTMLTable( 'courses'
  * appears. Admin can remove the course schedule.
  */
 if( $action == 'Update' )
-    echo '<button name="response" onclick="AreYouSure(this)">' . 
+    echo '<button name="response" onclick="AreYouSure(this)" 
+        title="Remove this course from running courses."
+        >' . 
             $symbDelete . '</button>';
 
 echo '</form>';

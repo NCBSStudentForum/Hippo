@@ -31,7 +31,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <title>NCBS Hippo</title>
 
-<h1><a href="index.php" style="text-decoration:none">NCBS Hippo</a></h1>
+<h1><a href="index.php">NCBS Hippo</a></h1>
 <!--
 <a href="https://github.com/dilawar/ncbs-hippo" target='_blank'>Github</a>
 <a href='https://github.com/dilawar/ncbs-hippo/issues' target="_blank">Report issue</a></small>
@@ -81,11 +81,6 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <script src="js/jquery-ui.multidatespicker.js"></script>
 
-<!-- Sweet alert -->
-<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
-
-
 
 <script type="text/javascript" src="js/jquery-timepicker-1.11.9/jquery.timepicker.js"></script>
 
@@ -130,29 +125,16 @@ $( function() {
 </script>
 <script src="tinymce/js/tinymce/tinymce.min.js"></script>
 
-
 <!-- confirm on delete -->
 <script type="text/javascript" charset="utf-8">
 function AreYouSure( button )
 {
-    swal({
-      title: "Are you sure?",
-      text: "This is a destructive operation.",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
-      confirmButtonText: "Yes, continue!",
-      closeOnConfirm: false,
-      closeOnCancel: false
-    },
-    function( x ){
-        console.log( x );
-        if( x )
-            button.setAttribute( 'value', 'delete' );
-        else
-            button.setAttribute( 'value', 'DO_NOTHING' );
-        return x;
-    });
+    var x = confirm( "ALERT! Destructive operation! Continue?" );
+    if( x )
+        button.setAttribute( 'value', 'delete' );
+    else
+        button.setAttribute( 'value', 'DO_NOTHING' );
+    return x;
 }
 </script>
 

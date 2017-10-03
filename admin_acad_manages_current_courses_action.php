@@ -25,11 +25,22 @@ else if( $_POST['response'] == 'delete' )
         if( $res )
         {
             echo printInfo( "Successfully deleted entry" );
-            goBack( 'admin_acad_manages_current_courses.php', 0 );
-            exit;
+            // Remove all enrollments.
+            $year = getCurrentYear( );
+            $sem = getCurrentSemester( );
+
+            $res = deleteFromTable( 'course_registration', 'semester,year,course_id'
+                , array( 'year' => $year, 'semester' => $semester, 'course_id' => $_POST[ 'course_id'] )
+                );
+            if( $res )
+            {
+                printInfo( "Successfully removed enrollments." );
+                goBack( 'admin_acad_manages_current_courses.php', 0 );
+                exit;
+            }
         }
         else
-            echo minionEmbarrassed( "Failed to delete speaker from database" );
+            echo minionEmbarrassed( "Failed to delete course from the" );
     }
 }
 else

@@ -25,6 +25,12 @@ $dbChoices = array(
         'TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',SEMINAR,THESIS SEMINAR,SIMONS SEMINAR,ANNUAL WORK SEMINAR' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL'
+    , 'bookmyvenue.class' =>
+        'UNKNOWN,TALK,INFORMAL TALK' .
+        ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
+        ',SEMINAR,SIMONS SEMINAR,THESIS SEMINAR,' .
+        ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
+        ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     );
 
 /**
@@ -39,7 +45,7 @@ $dbChoices = array(
  */
 function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorted = true )
 {
-    $choicesSplit = explode( ',', __get__( $choices, $key, '' ) );
+    $choicesSplit = array_filter( explode( ',', __get__( $choices, $key, '' )));
 
     if( $sorted )
         sort( $choicesSplit );
@@ -47,6 +53,7 @@ function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorte
     // Remove the default one and add the default at the front.
     $results = array_diff( $choicesSplit, array( $default ) );
     array_unshift( $results, $default );
+
     return array_unique( $results );
 }
 
@@ -1701,10 +1708,17 @@ function getAWSSpeakers( $sortby = False )
     *
     * @return 
  */
-function getTentativeAWSSchedule( )
+function getTentativeAWSSchedule( $monday = null )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM aws_temp_schedule ORDER BY date" );
+
+    $whereExpr = '';
+    if( $monday )
+    {
+        $date = dbDate( $monday );
+        $whereExpr = " WHERE date='$date' ";
+    }
+    $stmt = $db->query( "SELECT * FROM aws_temp_schedule $whereExpr ORDER BY date" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

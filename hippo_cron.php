@@ -431,21 +431,32 @@ if( $today > $startDay && $today <= $endDay )
 }
 
 /* Assign AWS after 8 weeks . */
-
 if( dbDate( 'today' ) == dbDate( strtotime( 'this monday' ) ) )
 {
-
-    $afterEightWeeks = dbDate( strtotime( $today ) + 8 * 7 * 86400 );
-    echo printInfo( "Today is monday and after 8 weeks $afterEightWeeks" );
-
-    echo humanReadableDate( $afterEightWeeks );
-    // Get scheduled AWS on this week.
-    $awses = getTentativeAWSSchedule( $afterEightWeeks );
-    foreach( $awses as $aws )
+    $awayFrom = strtotime( 'now' ) - strtotime( '13:00' );
+    if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
-        echo 'X';
-    }
+        $afterEightWeeks = dbDate( strtotime( $today ) + 56 * 86400 );
+        echo printInfo( "Today is monday and after 8 weeks $afterEightWeeks" );
 
+        echo humanReadableDate( $afterEightWeeks );
+        // Get scheduled AWS on this week.
+        $awses = getTentativeAWSSchedule( $afterEightWeeks );
+
+        // Assign these AWS and send email to speaker.
+        foreach( $awses as $aws )
+        {
+            $speaker = $aws[ 'speaker' ];
+            $date = $aws[ 'date' ];
+            $res = acceptScheduleOfAWS( $speaker, $date );
+            if( $res )
+            {
+                echo printInfo( "Successfully assigned" );
+                rescheduleAWS( );
+                $res = notifyUserAboutUpcomingAWS( $speaker, $date );
+            }
+        }
+    }
 }
 
 ?>

@@ -9,20 +9,6 @@ include_once 'mail.php';
 
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
-function notifyUserAboutUpcomingAWS( $speaker, $date )
-{
-    // Now insert a entry into email database.
-    $templ = getEmailTemplateById( 'aws_confirmed_notify_speaker' );
-    // Replace text in the template.
-    $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $templ['description'] ); 
-    $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg );
-    $to = getLoginEmail( $speaker );
-    return sendPlainTextEmail( $msg
-        , 'ATTN! Your AWS date has been fixed'
-        , $to 
-        , $templ[ 'cc' ]
-        );
-}
 
 if( $_POST['response'] == "Reschedule" )
 {

@@ -39,13 +39,27 @@ if( array_key_exists( 'external_id', $_GET ) )
     $tableName = $expr[ 0 ];
     $id = $expr[ 1 ];
     $entry = getTableEntry( $tableName, 'id', array( "id" => $id ) );
+
     echo "<h1>Scheduling following talk </h1>";
+
+    echo '<div style="font-size:small">';
     echo arrayToVerticalTableHTML( $entry, 'events', '', 'id,status,date,time,venue' );
-    $defaults = array_merge( $defaults, $entry );
+    echo '</div>';
+
+    $defaults[ 'title' ] = $entry[ 'title' ];
+    $defaults[ 'class' ] = $entry[ 'class' ];
+    $defaults[ 'is_public_event' ] = 'YES';
+    $defaults[ 'speaker' ] = $entry[ 'speaker' ];
+    $defaults[ 'class' ] = $entry[ 'class' ];
+
+
 
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 
             . $defaults[ 'speaker' ] . " on '" . $defaults[ 'title' ] . "'";
+
+    // Description is just the title of the talk. Keep it short.
+    $defaults[ 'description' ] = $defaults[ 'title' ];
 }
 else
 {
@@ -74,15 +88,14 @@ if( $defaults[ 'has_projector' ] == 'YES' )
 else 
     $projectorNo = 'checked';
 
-$openAirNo = ''; $openAirYes = ' ';
+$openAirNo = ''; $openAirYes = '';
 if( $defaults[ 'openair' ] == 'YES' )
     $openAirYes = 'checked'; 
 else 
     $openAirNo = 'checked';
 
 
-/* PAGE 
- */
+/* PAGE */
 
 echo '<br />';
 echo '<table style="min-width:300px;max-width:500px",border="0">';
@@ -149,7 +162,7 @@ $date = __get__( $_POST, 'date', dbDate(strtotime( 'today' )) );
 // Force this only if user is not admin.
 if( ! anyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN' ) ) )
 {
-    if( strtotime( $date ) >= strtotime( 'today' ) + 60 * 24 * 3600 )
+    if( strtotime( $date ) >= (strtotime( 'today' ) + 60 * 24 * 3600 ) )
     {
         echo alertUser( "You can not book more than 60 days in advance" );
         exit;
@@ -343,7 +356,8 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         }
 
 
-        // Create hidden fields from defaults.
+        // Create hidden fields from defaults. The description must be cleaned
+        // otherwise it will be displayed on the screen.
         $block .= '<input type="hidden" name="title" 
             value="' . $defaults['title' ] . '">';
         $block .= '<input type="hidden" name="description" 

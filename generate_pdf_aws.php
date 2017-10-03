@@ -55,7 +55,7 @@ function awsToTex( $aws )
         $abstract = 'Not disclosed yet!';
 
     // Add user image.
-    $imagefile = getLoginPicturePath( $aws['speaker'], 'null' );
+    $imagefile = getLoginPicturePath( $aws['speaker'], 'hippo' );
     $imagefile = getThumbnail( $imagefile );
 
     $speakerImg = '\includegraphics[height=5cm]{' . $imagefile . '}';
@@ -69,15 +69,17 @@ function awsToTex( $aws )
     $head = '';
     $head .= '\begin{minipage}[b][6cm][b]{\linewidth} ';
 
+    $logo = './data/ncbs_logo.png';
+
     // Header 
     $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
-    $head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
-        { \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
-    $head .= '\node[] (instem) at ([xshift=30mm,yshift=-15mm]current page.north west) 
-        { \includegraphics[height=1.5cm]{./data/inStem_logo.png} };';
-    $head .= '\node[ ] (aws) at ($(ncbs)!0.5!(instem)$) {\color{blue}Annual Work Seminar};';
-    $head .= '\draw[dotted,thick] ([yshift=-5mm]ncbs.south) -- ([yshift=-5mm]instem.south)
-                node[above,midway] {\color{blue} ' . $dateAndPlace . ' };';
+    //$head .= '\node[] (logo) at ([yshift=-15mm,xshift=30mm]current page.north west) 
+    //    { \includegraphics[height=1cm]{' . $logo . '}};';
+    $head .= '\node[] (logo) at ([yshift=-15mm,xshift=30mm]current page.north west) { }; ';
+    $head .= '\node[yshift=0mm,align=right,above right=of logo,text width=0.65\linewidth]
+             (aws) at (0.3\linewidth,0) {\Huge \textsc{Annual Work Seminar} };';
+    $head .= '\node[below=of aws,text width=0.65\linewidth,align=right] 
+        (dateAndPlace) { ' . $dateAndPlace . ' }; ';
     $head .= '\end{tikzpicture}';
 
     $head .= '\par';
@@ -85,7 +87,9 @@ function awsToTex( $aws )
     $head .= '\node (align) at (0,0) {};';
     $head .= '\node[left=of align] (img) { ' . $speakerImg . '};';
     $head .= '\node[above right=of img] (date) { };';
-    $head .= '\node[right=of img,text width=0.65\linewidth] (title) {\textsc{\Large ' . $title . '}};';
+
+
+    $head .= '\node[right=of img,text width=0.65\linewidth] (title) {{\Large ' . $title . '}};';
     $head .= '\node[below=of title,text width=0.65\linewidth] (author) {\textbf{' . $speaker . '}};';
     $head .= '\end{tikzpicture}';
     $head .= '\end{minipage}';
@@ -150,10 +154,10 @@ $tex = array( "\documentclass[10pt]{article}"
     //, '\usepackage{fancyhdr}'
     , '\linespread{1.2}'
     //, '\pagestyle{fancy}'
-    //, '\chead{\textsc{{\color{blue} Annual Work Seminar}}}'
     , '\usetikzlibrary{calc,positioning,arrows}'
     , '\usepackage[T1]{fontenc}'
-    , '\usepackage[]{ebgaramond}'
+    //, '\usepackage[]{ebgaramond}'
+    , '\usepackage[]{libertine}'
     //, '\usepackage[sfdefault,light]{FiraSans}'
     //, '\rhead{ \includegraphics[height=15 mm]{./data/ncbs_logo.png} }'
     //, '\lhead { \includegraphics[height=15 mm]{./data/inStem_logo.png}}'
@@ -165,10 +169,7 @@ foreach( $awses as $aws )
 {
     $outfile .= '_' . $aws[ 'speaker' ];
     $tex[] = awsToTex( $aws );
-
-    // If speaker has instem id, put InSTEM as well in header.
-    //$inst = emailInstitute( getLoginEmail( $aws[ 'speaker' ] ), "latex" );
-    //$tex[] = '\newpage';
+    $tex[] = '\newpage';
 }
 
 $tex[] = '\end{document}';

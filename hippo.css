@@ -91,6 +91,7 @@ table.public_links tr td {
     /*background: lightblue;*/
 }
 
+
 table.show_info {
     max-width: var(--maxwidth);
     min-width: 400px;
@@ -171,11 +172,17 @@ table.tasks {
     max-width: var(--maxwidth);
 }
 
+
+table.tasks tr td:nth-child(1)
+{
+    font-size:normal;
+}
+
 table.tasks tr td 
 {
     /*border : 0.5px dotted; */
     min-width : 50%;
-    max-width : 50%;
+    max-width : 60%;
     background : var(--background);
 }
 
@@ -200,6 +207,8 @@ table.timetable {
 
 table.timetable tr td {
     /*border: 1px dotted;*/
+    min-width : 10px;
+    max-width : 100px;
 }
 
 table.venue_slot {
@@ -218,6 +227,12 @@ div.info {
     max-width : var(--maxwidth);
 }
 
+// Buttons
+
+button {
+    font-size: x-large;
+    /*min-width : 50px;*/
+}
 button.invisible {
     background : none;
     border : 1px dotted;
@@ -279,17 +294,23 @@ button.display_request {
 button.submit {
     float : right;
     left-margin : 100%;
+    font-size: x-large;
 }
 
 button.courseInfo {
     background : none;
-    border : 1px dotted;
-    font-size : x-small;
+    border : none;
+    min-width : 200px;
+    font-size : small;
+    font-variant: small-caps;
+    text-decoration: underline;
+    text-align : left;
 }
 
-button {
-    font-size: x-large;
-    /*min-width : 50px;*/
+button.courseInfo:hover {
+    border : 1px dotted;
+    font-size : normal;
+    text-decoration: none;
 }
 
 
@@ -582,8 +603,6 @@ div.howto {
     text-align: justify;
 }
 
-// Links 
-
 
 address {
     display: block;
@@ -593,22 +612,34 @@ address {
 a[href^="mailto:"] { 
 
   text-decoration: none;
-  font-style : italic;
+  font-style : none;
+  font-family : monospace;
   font-size: small;
 }
 
-a:active {
+a[href^="mailto:"]::before { 
+    content: "\2709";
+    font-size: x-large;
+}
+
+// Links 
+ a:link {
     text-decoration: none;
     color : blue;
 }
 
-a {
+a:visited {
+    text-decoration: none;
     color : blue;
-    text-decoration: underline;
-    font-variant : small-caps;
 }
 
 a:hover {
-    color : hotpink;
-    text-decoration: bold;
+    text-decoration: none;
+    font-variant: small-caps;
+    color : red;
+}
+
+a:active {
+    text-decoration: underline;
+    color : blue;
 }

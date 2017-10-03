@@ -26,7 +26,7 @@ $html .= '
    </table>';
 echo $html;
 
-echo "<h3> Manage courses </h3>";
+echo "<h1> Manage courses </h1>";
 
 $thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
 echo '<table class="tasks">';
@@ -47,7 +47,7 @@ echo '</table>';
 $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
 if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
 {
-    echo '<h3>Annual Work Seminars</h3>';
+    echo '<h1>Annual Work Seminars</h1>';
     $html = '<div class="tasks"><table class="tasks">';
     $html .= '
         <tr>
@@ -79,11 +79,13 @@ if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
 }
 
 
-echo '<h3>BookMyVenue</h3>';
+echo '<h1>Book My Venue</h1>';
 
 $html = '<table class="tasks">';
 $html .= '<tr>
-    <td>Create a booking request. </td>
+    <td> Create a booking request <br>
+    <small>Do not use for registering Talks or Thesis Seminar </small>
+    </td>
       <td> <a href="quickbook.php">Book my venue</a> </td>
    </tr>
    <tr>
@@ -102,7 +104,7 @@ $html .= '<tr>
 echo $html;
 
 
-echo "<h3>Talk manangement </h3>";
+echo "<h1>Talks and Thesis Seminar </h1>";
 echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
     <tr>

@@ -45,6 +45,7 @@ if( $task == 'add new' )     // Append id to the editable since we are creating 
     $editables .= ',id';
 }
 echo dbTableToHTMLTable( 'venues', $default, $editables, $task );
+
 if( $task != 'add new' )
 {
     echo '<button name="response" value="delete" onClick="AreYouSure(this)" 

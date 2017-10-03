@@ -26,6 +26,7 @@ foreach( $requests as $request )
         , 'url' , 'status', 'external_id'
     );
     $gid = $request['gid'];
+
     echo "<div style=\"font-size:small;\">";
     echo "<table class=\"info\" >";
     echo "<tr>";

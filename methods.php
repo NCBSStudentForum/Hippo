@@ -1135,3 +1135,27 @@ function contains($needle, $haystack)
     return strpos($haystack, $needle) !== false;
 }
 
+/**
+    * @brief Check if a given request or event belong to a talk.
+    *
+    * @param $event Given request of talk.
+    *
+    * @return 
+ */
+function isEventOfTalk( $event )
+{
+    $externalId = __get__( $event, 'external_id', 'SELF.-1' );
+
+    // This is valid id if there is an external talk.
+    if( preg_match( '/talks\.\d+/', $externalId ) )
+        return true;
+
+    return false;
+
+}
+
+function getSlotIdOfTile( $tile )
+{
+    preg_match_all( '!\d+!', $tile, $matches );
+    return implode( '', $matches[0] );
+}

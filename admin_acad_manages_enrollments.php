@@ -20,7 +20,6 @@ $taskSelected = __get__( $_POST, 'task', '' );
 
 $runningCourses = array();
 
-
 foreach( getSemesterCourses( $year, $sem ) as $c )
     $runningCourses[ $c[ 'course_id' ] ] = $c;
 

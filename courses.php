@@ -6,16 +6,25 @@ include_once 'tohtml.php';
 include_once 'html2text.php';
 include_once 'methods.php';
 include_once './check_access_permissions.php';
+?>
 
+<!-- Sweet alert -->
+<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
+
+
+<?php
 if( ! (isIntranet() || isAuthenticated( ) ) )
 {
-    echo printWarning( "You must either log-in OR intranet to access this page" );
+    echo loginOrIntranet( );
     exit;
 }
+
 
 $year = getCurrentYear( );
 $sem = getCurrentSemester( );
 $slotCourses = array( );
+$tileCourses = array( );
 $runningCourses = getSemesterCourses( $year, $sem );
 
 // Collect both metadata and other information in slotCourse array.
@@ -24,10 +33,21 @@ foreach( $runningCourses as $c )
     $cid = $c[ 'course_id' ];
     $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
     if( $course )
-        $slotCourses[ $c[ 'slot' ] ][ ] = array_merge( $c, $course );
+    {
+        $slotId = $c[ 'slot' ];
+        $tiles = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
+        $slotCourses[ $slotId ][ ] = array_merge( $c, $course );
+        foreach( $tiles as $tile )
+        {
+            if( strpos( $c['ignore_tiles'], $tile[ 'id' ]) !== 0 )
+            {
+                $tileCourses[ $tile['id']][ ] = array_merge( $c, $course );
+            }
+        }
+    }
 }
 
-$slotCourseJSON = json_encode( $slotCourses );
+$tileCoursesJSON = json_encode( $tileCourses );
 ?>
 
 <script type="text/javascript" charset="utf-8">
@@ -44,7 +64,7 @@ function showCourseInfo( x )
 function showRunningCourse( x )
 {
     var slotId = x.value;
-    var courses = <?php echo $slotCourseJSON; ?>;
+    var courses = <?php echo $tileCoursesJSON; ?>;
     var runningCourses = courses[ slotId ];
     var title;
     var runningCoursesTxt;
@@ -80,16 +100,20 @@ function showRunningCourse( x )
 
 echo '<h1>Slots </h1>';
 
-
-echo printInfo( "
-    <ul>
-    <li> If a course is running in slot 1, then its time is 
-    represented by tiles 1A, 1B and 1C.  </li>
-    <li> No course should overlap with any other course's slot tiles.  </li>
-    <li> No course can run on red color tiles. These are reserved tiles. </li>
-    </ul>" 
+echo printInfo( 
+    "Some courses may modify these slot timings. In case of any discrepency
+    , please write to <tt>acadoffice@ncbs.res.in</tt> " 
 );
-    
+
+//echo printInfo( "
+//    <ul>
+//    <li> If a course is running in slot 1, then its time is 
+//    represented by tiles 1A, 1B and 1C.  </li>
+//    <li> No course should overlap with any other course's slot tiles.  </li>
+//    <li> No course can run on red color tiles. These are reserved tiles. </li>
+//    </ul>" 
+//);
+
 echo printInfo( 
     "Click on <button class=\"invisible\" disabled>1A</button> etc to see the 
     list of courses running on this slot this semester
@@ -102,6 +126,16 @@ echo $table;
  */
 $m = "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
 echo $m;
+
+if( isRegistrationOpen( ) )
+{
+    echo alertUser(
+        "Registration link is now open! After login, visit <tt>My Courses</tt> page
+        to enrol. 
+        "
+        );
+
+}
 
 $showEnrollText = 'Show Enrollement';
 echo printInfo(
@@ -118,8 +152,10 @@ $enrollments = array( );
 /**  @} */
 
 $table = '<table class="info">';
-$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot</th><th>Venue</th>
+$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
     <th>Enrollments</th> </tr>';
+
+ksort( $slotCourses );
 foreach( $slotCourses as $slot => $courses )
 {
     foreach( $courses as $c )
@@ -135,21 +171,28 @@ foreach( $slotCourses as $slot => $courses )
         $cinfo = $c[ 'description' ];
         $cname = $c[ 'name' ];
         $cr = $c[ 'credits' ];
+
+        $note = '';
+        if( $c[ 'note' ] )
+            $note = colored( '* ' . $c[ 'note' ], 'blue' );
+
         $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
         $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
             . humanReadableDate( $c[ 'end_date' ] );
 
-        $slotInfo = getSlotInfo( $slot );
-        $details = getCourseInfo( $cid );
+        $slotInfo = getCourseSlotTiles( $c, $slot );
+        $instructors = getCourseInstructors( $cid );
 
         $table .= '<tr>
             <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" title="' . $cname . '" >Details</button> '. $details . '</td>
+            value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
+            . $instructors . '</td>
             <form method="post" action="#">
             <input type="hidden" name="course_id" value="' . $cid . '">
             <td>' .  $schedule . '</td>
-            <td>' . "<strong> $slot </strong> <br>" . $slotInfo . '</td><td>' 
-                .  $c[ 'venue' ] . '</td>
+            <td>' . "<strong> $slotInfo </strong> <br>" 
+                  .  '<strong>' . $note . '</strong></td><td>' 
+                  .  $c[ 'venue' ] . '</td>
             <td>' . count( $registrations ) . '</td><td>
             <button name="response" value="show_enrollment">
             <small>' . $showEnrollText . '</small></button></td>
@@ -203,3 +246,14 @@ if( $_POST )
 echo '</div>';
 
 ?>
+
+
+<!-- Prefix Mail logo on mailto links -->
+<!--
+<script type="text/javascript" charset="utf-8">
+$( "a[href^=\"mailto:\"]" ).each( function() {
+    var text = $(this).html( );
+    $(this).html(  "&#9993" + " " + text );
+    });
+</script>
+-->

@@ -331,6 +331,7 @@ function initialize( $db  )
             , instructor_4 VARCHAR(50) 
             , instructor_5 VARCHAR(50) 
             , instructor_6 VARCHAR(50) 
+            , instructor_extras VARCHAR(500) -- comma separated list of extra
             , comment VARCHAR(100)
             )
         ");
@@ -346,7 +347,9 @@ function initialize( $db  )
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
             , venue VARCHAR(20)
-            , slot VARCHAR(4) 
+            , slot VARCHAR(4)   -- Running in this slot.
+            , ignore_tiles VARCHAR(20) -- CSV, ignore these tiles.
+            , note VARCHAR(200) DEFAULT ''  -- Add extra comment.
             , UNIQUE KEY(semester,year,course_id)
             )" );
         

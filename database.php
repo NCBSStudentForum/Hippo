@@ -18,6 +18,9 @@ $dbChoices = array(
         ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
+    , 'venues.type' =>
+        'OPEN AIR,MEETING ROOM,CAFETERIA,LECTURE HALL,SPORTS,AUDITORIUM,CENTER' . 
+        ',UNKNOWN,CONFERENCE ROOM'
     , 'talks.class' =>
         'TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',SEMINAR,THESIS SEMINAR,SIMONS SEMINAR,ANNUAL WORK SEMINAR' .
@@ -1231,14 +1234,22 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     global $db;
     $query = "SELECT * FROM $tablename";
 
-
     if( is_string( $where) && strlen( $where ) > 0 )
         $query .= " WHERE $where ";
 
-    if( $orderby )
-        $query .= " ORDER BY $orderby";
+    if( strlen($orderby) > 0 )
+        $query .= " ORDER BY :orderby";
 
-    $stmt = $db->query( $query );
+    $stmt = $db->prepare( $query );
+    if( $orderby )
+        $stmt->bindValue( ":orderby", $orderby );
+
+    $stmt->execute( );
+
+    if( $orderby )
+        $stmt->bindValue( ":orderby", $orderby );
+
+    $stmt->execute( );
     return fetchEntries( $stmt );
 }
 
@@ -1595,6 +1606,7 @@ function getFaculty( $status = '', $order_by = 'first_name' )
         $query .= " ORDER BY  '$order_by' ";
 
     $stmt = $db->prepare( $query );
+
     if( $status )
         $stmt->bindValue( ':status', $status );
 
@@ -2194,7 +2206,6 @@ function getOccupiedSlots( $year = null, $sem = null )
     return $slots;
 }
 
-
 function getRunningCoursesOnThisVenue( $venue, $date )
 {
     global $db;
@@ -2204,6 +2215,25 @@ function getRunningCoursesOnThisVenue( $venue, $date )
     $courses = getTableEntries( 'courses', 'id'
         , " ( end_date >= '$date' AND start_date <= '$date' )"
         . " AND venue='$venue' "
+    );
+
+    return $courses;
+}
+
+function getRunningCoursesOnTheseSlotTiles( $date, $tile )
+{
+    global $db;
+
+    $year = getCurrentYear( );
+    $sem = getCurrentSemester(  );
+    $date = dbDate( $date );
+
+    // Slot is integer value.
+    $slot = getSlotIdOfTile( $tile );
+
+    $courses = getTableEntries( 'courses', 'id'
+        , " ( end_date >= '$date' AND start_date <= '$date' )"
+        . " AND slot='$slot' "
     );
 
     return $courses;
@@ -2257,15 +2287,26 @@ function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
     return null;
 }
 
-function getSlotInfo( $id )
+function getSlotInfo( $id, $ignore = '' )
 {
     global $db;
+
+    $ignore = str_replace( ' ', ',', $ignore );
+    $ignoreTiles = explode( ',', $ignore );
+
     $slots = getTableEntries( 'slots', 'id', "groupid='$id'" );
     $res = array( );
     foreach( $slots as $sl )
+    {
+        // This slot is in ignore tile list i.e. a course is not using its slot
+        // fully.
+        if( in_array( $sl['id'], $ignoreTiles ) )
+            continue;
+
         $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-' 
             . dbTime( $sl[ 'end_time' ] );
-    return '<small>(' . implode( ', ', $res ) . ') </small>';
+    }
+    return  implode( ', ', $res );
 }
 
 
@@ -2305,5 +2346,44 @@ function isRegistrationOpen( )
     return false;
 
 }
+
+function getSlotTiles( $id )
+{
+   $tiles = getTableEntries( 'slots', 'groupid', "groupid='$id'" );
+   $result = array( );
+
+   foreach( $tiles as $tile )
+       $result[ $tile[ 'id' ] ] = $tile;
+
+   return $result;
+}
+
+/**
+    * @brief Is a course running on given tile e.g. 7A, 7B etc.
+    *
+    * @param $course
+    * @param $tile
+    *
+    * @return 
+ */
+function isCourseRunningOnThisTile( $course, $tile )
+{
+    if( strpos( $course['ignore_tiles'], $tile ) !== 0 )
+        return true;
+    return false;
+}
+
+function getCourseSlotTiles( $course )
+{
+   $sid = $course[ 'slot' ];
+   $tiles = getSlotTiles( $sid );
+   $result = array( );
+   foreach( $tiles as $id => $tile )
+       if( isCourseRunningOnThisTile( $course, $id ) )
+           $result[ ] = $id;
+
+   return implode( ",", $result );
+}
+
 ?>
 

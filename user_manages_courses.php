@@ -14,19 +14,53 @@ $year = getCurrentYear( );
 
 
 $runningCourses = array( );
-foreach( getSemesterCourses( $year, $sem ) as $rc )
-    $runningCourses[ $rc[ 'course_id' ] ] = $rc;
+$semCourses = getSemesterCourses( $year, $sem );
+foreach( $semCourses as $rc )
+{
+    $cid = $rc[ 'course_id' ];
+    $rc[ 'name' ] = getCourseName( $cid );
+    $rc[ 'slot_tiles' ] = getCourseSlotTiles( $rc );
+    $runningCourses[ $cid ] = $rc;
+}
 
 // User courses and slots.
 $myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
 $mySlots = array( );
 foreach( $myCourses as $c )
     $mySlots[ ] = $runningCourses[ $c[ 'course_id' ] ]['slot'];
+
 $mySlots = array_unique( $mySlots );
 
 echo '<h1>Course enrollment</h1>';
 
 // Check if registration is open
+
+// Running course this semester.
+$courseMap = array( );
+$options = array( );
+
+$blockedCourses = array( );
+foreach( $runningCourses as $c )
+{
+    // Ignore any course which is colliding with any registered course.
+    $cid = $c[ 'course_id' ];
+    $cname = getCourseName( $cid );
+    $slot = $c[ 'slot' ];
+    if( in_array( $slot, $mySlots ) )
+    {
+        $blockedCourses[ $cid ] = $cname;
+        continue;
+    }
+    
+    if( $cid )
+    {
+        $options[] = $cid ;
+        $courseMap[ $cid ] = getCourseName( $cid ) . 
+            " (slot " . getCourseSlotTiles( $c ) . ")";
+    }
+}
+
+$courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
 
 $regOpen = isRegistrationOpen( );
 if( $regOpen )
@@ -50,29 +84,6 @@ if( $regOpen )
 else
     echo printInfo( "Course registration is yet not open for $sem $year"  );
 
-// Running course this semester.
-$courseMap = array( );
-$options = array( );
-
-$blockedCourses = array( );
-foreach( $runningCourses as $c )
-{
-    // Ignore any course which is colliding with any registered course.
-    $cid = $c[ 'course_id' ];
-    $cname = getCourseName( $cid );
-    $slot = $c[ 'slot' ];
-    if( in_array( $slot, $mySlots ) )
-    {
-        $blockedCourses[ $cid ] = $cname;
-        continue;
-    }
-    
-    $options[] = $cid ;
-    $courseMap[ $cid ] = getCourseName( $cid ) . 
-        " (slot " . $c[ 'slot' ] . ")";
-}
-
-$courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
 
 
 /**
@@ -95,7 +106,7 @@ if( count( $myCourses ) > 0 )
     echo alertUser( 
         "You have registered for courses running on following slots: " 
         . implode( ", ", $mySlots )
-        . ". <br> Any course running on any of these slots will not appear in your 
+        . ". <br> All courses running these slots will not appear in your 
         registration form."
         );
 }
@@ -146,6 +157,22 @@ foreach( $myCourses as $c )
     
 echo '</tr></table>';
 echo '</div>';
+
+if( $runningCourses )
+{
+    echo '<h1> Running courses </h1>';
+
+    echo '<div style="font-size:small">';
+    echo '<table class="info">';
+    $ignore = 'id,semester,year,comment,ignore_tiles,slot';
+    $cs = array_values( $runningCourses );
+    echo arrayHeaderRow( $cs[0], 'info', $ignore );
+    foreach( $cs as $rc )
+        echo arrayToRowHTML( $rc, 'info', $ignore );
+    echo '</table>';
+    echo '</div>';
+}
+
 
 echo '<h1>Slots </h1>';
 echo slotTable( );

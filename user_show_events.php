@@ -33,8 +33,16 @@ else
         echo "<button name=\"response\" title=\"Cancel this group\" 
                 onclick=\"AreYouSure(this)\" >Cancel Group</button>
                 ";
-        echo "<button title=\"Edit this event\" name=\"response\" 
-                value=\"edit\" font-size=\"small\">Edit Group</button>";
+
+        // If this event if from external talk, then do not allow user to edit
+        // it here.
+        if( ! isEventOfTalk( $group ) )
+            echo "<button title=\"Edit this event\" name=\"response\" 
+                    value=\"edit\" font-size=\"small\">Edit Group</button>";
+        else
+            echo "This event belongs to a talk, 
+                to edit it <a href=\"user_manage_talk.php\" > edit its talk</a> .";
+
         echo "</td></tr>";
         echo "<input type=\"hidden\" name=\"gid\" value=\"$gid\">";
         echo '</form>';

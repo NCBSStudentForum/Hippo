@@ -506,7 +506,11 @@ function arrayToVerticalTableHTML( $array, $tablename
             $kval = prettify( $k );
             $label = strtoupper( $kval );
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
-            $table .= "<td><div class=\"cell_content\">$array[$k]</div></td>";
+
+            // Escape some special chars speacial characters.
+            $text = $array[ $k ];
+
+            $table .= "<td><div class=\"cell_content\">$text</div></td>";
             $table .= "</tr>";
         }
 
@@ -681,7 +685,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     global $dbChoices;
     global $useCKEditor;
 
-    $html = "<table class=\"editable_$tablename\">";
+    $html = "<table class=\"editable_$tablename\" id=\"$tablename\">";
     $schema = getTableSchema( $tablename );
 
     if( is_string( $editables ) )
@@ -849,6 +853,9 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         $buttonSym = $symbUpdate;
     else if( strtolower( $button_val ) == 'edit' )
         $buttonSym = $symbEdit;
+
+    // Let JS add extra rows here.
+    $html .= '<tr><td></td><td><table id="' . $tablename . '_extra_rows"> </table></td>';
 
     if( count( $editableKeys ) > 0 && strlen( $button_val ) > 0 )
     {
@@ -1545,7 +1552,19 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
     return showImage( $picPath, $height, $width );
 }
 
+function getSlotsAtThisDay( $day, $slots = null )
+{
+    if( ! $slots )
+        $slots = getTableEntries( 'slots' );
 
+    $res = array( );
+    foreach( $slots as $s )
+        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
+            $res[] = $s;
+
+    return $res;
+
+}
 
 function getSlotAtThisTime( $day, $slot_time, $slots = null )
 {
@@ -1572,19 +1591,16 @@ function getSlotAtThisTime( $day, $slot_time, $slots = null )
  */
 function slotTable( $width = "15px" )
 {
-    // Collect all upcoming labmeets. We want to avoid them.
-    $labmeets = getWeeklyEventByClass( 'LAB MEETING' );
 
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
     $html = '<table class="timetable">';
 
     // Generate columns. Each one is 15 min long. Starting from 9am to 6:00pm
-    $maxCols = ( 18 - 9 ) * 4;
+    $maxCols = intval( ( 17.5 - 9 ) * 4 );
 
-    $html .= "<tr>";
-    for ($i = -1; $i < $maxCols; $i++)
-        $html .= "<th width=\" " . $width . "\"></th>";
-    $html .= "</tr>";
+    //for ($i = 0; $i < $maxCols; $i++)
+    //    $html .= '<th> </th>';
+
 
     // Check which slot is here.
     $slots = getTableEntries('slots' );
@@ -1599,18 +1615,11 @@ function slotTable( $width = "15px" )
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
             $slot = getSlotAtThisTime( $day, $slotTime, $slots );
 
-            if( ! $slot )
-                continue;
-
-            $clashes = clashesOnThisVenueSlot( 
-                $day, $slot[ 'start_time' ], $slot[ 'end_time' ], '', $labmeets
-            );
-
-
             if( $slot )
             {
                 $duration = strtotime( $slot[ 'end_time' ] )  -
                             strtotime( $slot[ 'start_time' ] );
+
                 $text = humanReadableTime( $slot[ 'start_time' ] ) . ' - ' .
                         humanReadableTime(  $slot[ 'end_time' ] );
 
@@ -1626,7 +1635,7 @@ function slotTable( $width = "15px" )
 
                 $html .= "<td id=\"slot_$id\" style=\"background:$bgColor\" colspan=\"$ncols\">
                          <button onClick=\"showRunningCourse(this)\" 
-                          id=\"slot_$gid\" value=\"$gid\" class=\"invisible\"> $id </button> 
+                          id=\"slot_$gid\" value=\"$id\" class=\"invisible\"> $id </button> 
                          <br> <small> <tt>$text</tt> </small> </td>";
 
                 // Increase $i by ncols - 1. 1 is increased by loop.
@@ -1634,7 +1643,7 @@ function slotTable( $width = "15px" )
                     $i += $ncols - 1;
             }
             else
-                $html .= "<td></td>";
+                $html .= "<td> </td>";
         }
         $html .= "</tr>";
     }
@@ -1655,7 +1664,7 @@ function coursesTable( )
         $instructors = array( );
         foreach( $c as $k => $v )
         if( $v && strpos( $k, 'instructor_') !== false )
-            $instructors[] = $v;
+            $instructors = array_merge($instructors, explode( ',', $v ) );
 
         $html .= "<tr>";
         $html .= "<td>" . $c[ 'id' ] . "</td>";
@@ -1741,24 +1750,87 @@ function getCourseShortInfoText( $course )
     return $text;
 }
 
-function getCourseInfo( $cid )
+function getCourseInstructors( $c )
 {
-    $c =  getCourseById( $cid );
-    $html = $c['name'];
+    if( is_string( $c ) )
+        $c =  getCourseById( $c );
+
     $instructors = array( );
     foreach( $c as $k => $v )
     {
-        if( contains( 'instructor', $k ) )
-            if( $v )
+        if( contains( 'instructor_', $k ) )
+            foreach( explode( ",", $v) as $i )
             {
-                $name = arrayToName( findAnyoneWithEmail( $v ) );
-                $instructors[ ] = "<small><a href=\"mailto:$v\" target=\"_top\">
-                    $name </a></small>";
+                if( $i )
+                {
+                    $name = arrayToName( findAnyoneWithEmail( $i ) );
+                    $instructors[ ] = "<small><a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
+                        $name </a></small>";
+                }
             }
     }
 
     $instructors = implode( '<br>', $instructors );
+    return $instructors;
+
+}
+
+function getCourseInfo( $cid )
+{
+    $c =  getCourseById( $cid );
+    $instructors = getCourseInstructors( $c );
     return $html . '<br>' . $instructors;
+}
+
+
+function bookmyVenueAdminTaskTable( )
+{
+    $html = '<table class="tasks">
+        <tr>
+        <td>
+            Book using old interface
+        </td>
+        <td>
+            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a> 
+        </td>
+        </tr>
+        </table>'
+    ;
+
+    $html .= '<br>';
+    $html .= '<table class="tasks">
+        <tr>
+        <td>
+           <strong>Make sure you are logged-in using correct google account </strong>
+            </strong>
+        </td>
+            <td>
+                <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
+                Synchronize public calendar </a> 
+            </td>
+        </tr>
+        <tr>
+        <td>
+            Add/Update/Delete venues
+        </td>
+            <td>
+                <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a> 
+            </td>
+        </tr>
+        <tr>
+            <td>Send emails manually (and generate documents)</td>
+            <td> <a href="admin_acad_email_and_docs.php">Send emails</td>
+        </tr>
+        <tr>
+            <td>Manage talks and seminars. </td>
+            <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
+        </tr>
+        <tr>
+            <td>Add or update speakers. </td>
+            <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+        </tr>
+        </table>' ;
+    return $html;
 }
 
 ?>

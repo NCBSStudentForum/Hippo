@@ -75,24 +75,28 @@ function eventToTex( $event, $talk = null )
 
 
     // Logo etc.
-    $dateAndPlace = '\faClockO \,' .  $when . ' \faHome \,' . $where;
-    $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
-    //$head .= '\node[] (ncbs) at ([xshift=-40mm,yshift=-15mm]current page.north east) 
-        //{ \includegraphics[height=1.5cm]{./data/ncbs_logo.png} };';
+    $date = '\faClockO \,' .  $when;
+    $place = ' \faHome \,' . $where;
 
-    $head .= '\node[] (logo) at ([xshift=30mm,yshift=-15mm]current page.north west) 
+    $head .= '\begin{tikzpicture}[remember picture,overlay
+        ,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
+
+    $head .= '\node[] (logo) at ([xshift=30mm,yshift=-20mm]current page.north west) 
         { ' . $logo . '};';
 
-    $head .= '\node[align=left] (tclass) at ([xshift=-30mm,yshift=-15mm]current page.north east)
-                     {\color{blue}' . $talk['class'] . ' };';
-    $head .= '\node[below=of tclass,yshift=3mm,align=left,text width=\linewidth] {\color{blue} ' . $dateAndPlace . ' };';
+    $head .= '\node[align=left] (tclass) at ([xshift=-40mm,yshift=-15mm]current page.north east)
+                     {\color{blue} \Huge ' . $talk['class'] . ' };';
+    $head .= '\node[below=of tclass.south west,yshift=3mm,align=right,text width=0.5\linewidth] 
+        (date) {\small \emph ' . $date . ' };';
+    $head .= '\node[below=of date,yshift=3mm,align=right,text width=0.5\linewidth] 
+        (place) {\small \emph ' . $place . ' };';
     $head .= '\end{tikzpicture}';
-    $head .= ' ';
+    $head .= '\vspace{0cm} ';
 
     $head .= '\begin{tikzpicture}[ every node/.style={rectangle
-        ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
-    $head .= '\node[text width=5cm,minimum height=5cm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image, yshift=-20mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
+            ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
+    $head .= '\node[text width=5cm,minimum height=5cm,yshift=-10mm] (image) at (0,0) {' . $speakerImg . '};';
+    $head .= '\node[above right=of image, yshift=-25mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $head .= ' '; // So tikzpicture don't overlap.
@@ -139,7 +143,7 @@ function eventToTex( $event, $talk = null )
 // Intialize pdf template.
 //////////////////////////////////////////////////////////////////////////////
 // Institute 
-$tex = array( "\documentclass[]{article}"
+$tex = array( "\documentclass[12pt]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{wrapfig}"
@@ -158,8 +162,9 @@ $tex = array( "\documentclass[]{article}"
     //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
     //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{calc,positioning,arrows}'
-    //, '\usepackage[sfdefault,light]{FiraSans}'
-    , '\usepackage[]{ebgaramond}'
+    //, '\usepackage[sfdefault,book]{FiraSans}'
+    //, '\usepackage[]{ebgaramond}'
+    , '\usepackage{libertine}'
     , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );
@@ -222,7 +227,7 @@ if( file_exists( $pdfFile ) )
     unlink( $pdfFile );
 
 file_put_contents( $texFile,  $TeX );
-$cmd = "lualatex --output-directory $outdir $texFile";
+$cmd = "pdflatex --shell-escape --output-directory $outdir $texFile";
 if( file_exists( $texFile ) )
     $res = `$cmd`;
 

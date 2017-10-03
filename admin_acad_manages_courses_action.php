@@ -13,11 +13,27 @@ if( $_POST['response'] == 'DO_NOTHING' )
     goBack( "admin_acad_manages_courses.php", 0 );
     exit;
 }
-else if( $_POST['response'] == 'delete' )
+
+
+// Instructor extras has to be reformatted.
+$extraInstTxt = '';
+if( is_array( __get__( $_POST, 'more_instructors', false) ) )
+    $extraInstTxt = implode(',', $_POST[ 'more_instructors' ] );
+
+// Append to already existibg extra instructiors.
+if( __get__( $_POST, 'instructor_extras', '' ) && $extraInstTxt )
+    if( $extraInstTxt )
+        $_POST[ 'instructor_extras' ] .= ',' . $extraInstTxt;
+else
+    if ( $extraInstTxt )
+        $_POST[ 'instructor_extras' ] =  $extraInstTxt;
+
+if( $_POST['response'] == 'delete' )
 {
     // We may or may not get email here. Email will be null if autocomplete was 
     // used in previous page. In most cases, user is likely to use autocomplete 
     // feature.
+
 
     if( strlen($_POST[ 'id' ]) > 0 )
     {
@@ -41,7 +57,7 @@ else if ( $_POST[ 'response' ] == 'Add' )
             'courses_metadata'
             , 'id,name,credits,description' 
                 .  ',instructor_1,instructor_2,instructor_3'
-                . ',instructor_4,instructor_5,instructor_6,comment'
+                . ',instructor_4,instructor_5,instructor_6,instructor_extras,comment'
             , $_POST 
             );
 
@@ -64,7 +80,7 @@ else if ( $_POST[ 'response' ] == 'Update' )
             , 'id'
             , 'name,credits,description' 
                 .  ',instructor_1,instructor_2,instructor_3'
-                . ',instructor_4,instructor_5,instructor_6,comment'
+                . ',instructor_4,instructor_5,instructor_6,instructor_extras,comment'
             , $_POST 
             );
 

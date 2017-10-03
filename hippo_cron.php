@@ -67,9 +67,11 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             $subject = 'Next week Annual Work Seminar (' . humanReadableDate( $nextMonday) . ') by ';
             $subject .= implode( ', ', $res[ 'speakers'] );
             $mail = $res[ 'email' ];
+
             $pdffile = $res[ 'pdffile' ];
 
-            $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, $pdffile );
+            // On friday, there should not be any pdffile.
+            $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
             ob_flush( );
         }
         else
@@ -263,7 +265,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
                     {
                         // Send it out.
                         $to = $template[ 'recipients' ];
-                        $ccs = $template[ 'CC' ];
+                        $ccs = $template[ 'cc' ];
                         $msg = $template[ 'email_body' ];
                         sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
                     }
@@ -298,7 +300,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 $today = strtotime( 'today' );
 $endDay = strtotime( 'next friday' );
 $startDay = $endDay - (3 * 24 * 3600 );
-if( $today >= $startDay && $today <= $endDay ) 
+if( $today > $startDay && $today <= $endDay ) 
 {
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
@@ -335,7 +337,7 @@ if( $today >= $startDay && $today <= $endDay )
  */
 {
     $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:15' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '13:00' );
 
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
@@ -364,14 +366,14 @@ if( $today >= $startDay && $today <= $endDay )
             $cclist = $template[ 'cc' ];
             $title = $e['title'];
 
-            if( strtotime( $today ) + 7 * 24 * 3600 == strtotime( $lastEventOn ) )
+            if( strtotime( $today ) + (7 * 24 * 3600) == strtotime( $lastEventOn ) )
             {
                 $subject = "IMP! Your recurrent booking '$title' is expiring in 7 days";
                 echo printInfo( $subject );
                 sendPlainTextEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }
-            else if( strtotime( $today ) + 1 * 24 * 3600 == strtotime( $lastEventOn ) )
+            else if( strtotime( $today ) + (1 * 24 * 3600) == strtotime( $lastEventOn ) )
             {
                 $subject = "ATTN! Your recurrent booking '$title' is expiring tomorrow";
                 echo printInfo( $subject );

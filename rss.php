@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <?php
 
 include_once 'database.php';
@@ -38,14 +39,47 @@ function sanitize( $title )
     return $title;
 }
 
+function cmp( $a, $b )
+{
+    return strtotime( $a[ 'date' ] ) > strtotime( $b['date'] );
+}
+
+/* Courses today */
+$todayCourses = array( );
+$slots = getTableEntries( 'slots' );
+$day = date( 'D', strtotime( 'today' ) );
+$today = dbDate( 'today' );
+
+$todaySlots = getSlotsAtThisDay( $day, $slots );
+foreach( $todaySlots as $slot )
+{
+    $slotId = $slot[ 'id' ];
+    $runningCourses = getRunningCoursesOnTheseSlotTiles( $today, $slotId );
+
+    foreach( $runningCourses as $cr )
+    {
+        $ev = array_merge( $cr, $slot );
+        $ev[ 'class' ] = 'CLASS';
+        $ev[ 'created_by' ] = 'Hippo';
+        $ev[ 'timestamp' ] = 'NULL';
+        $ev[ 'title' ] = getCourseName( $cr[ 'course_id' ] );
+        $ev[ 'date' ] = dbDate( 'today' );
+        $todayCourses[ ] = $ev;
+    }
+}
+
+// Today's event.
 $events = getPublicEvents( 'today', 'VALID', 60 );
+$events = array_merge( $events, $todayCourses );
 
-$feed =  '<rss version="2.0">
-    <channel>';
+// Sort events by date.
+usort( $events, "cmp" );
 
+$feed =  '<rss version="2.0"> <channel>';
 $feed .= "<title>Events over next 60 days</title>";
 $feed .= "<link>" . appURL( ) . "</link>";
 $feed .= "<description>NCB events list </description>";
+
 foreach( $events as $e )
 {
     if( $e['date'] == dbDate( 'today' ) )

@@ -1,6 +1,5 @@
 <?php
 
-include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
 
@@ -1550,38 +1549,6 @@ function inlineImageOfSpeaker( $speaker, $height = 'auto', $width = 'auto')
 {
     $picPath = getSpeakerPicturePath( $speaker );
     return showImage( $picPath, $height, $width );
-}
-
-function getSlotsAtThisDay( $day, $slots = null )
-{
-    if( ! $slots )
-        $slots = getTableEntries( 'slots' );
-
-    $res = array( );
-    foreach( $slots as $s )
-        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
-            $res[] = $s;
-
-    return $res;
-
-}
-
-function getSlotAtThisTime( $day, $slot_time, $slots = null )
-{
-    if( ! $slots )
-        $slots = getTableEntries( 'slots' );
-
-    $slot = null;
-    foreach( $slots as $s )
-    {
-        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
-        {
-            if( dbTime( $s[ 'start_time' ]) == $slot_time )
-                return $s;
-        }
-    }
-
-    return $slot;
 }
 
 /**

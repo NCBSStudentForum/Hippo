@@ -1159,3 +1159,37 @@ function getSlotIdOfTile( $tile )
     preg_match_all( '!\d+!', $tile, $matches );
     return implode( '', $matches[0] );
 }
+
+
+function getSlotsAtThisDay( $day, $slots = null )
+{
+    if( ! $slots )
+        $slots = getTableEntries( 'slots' );
+
+    $res = array( );
+    foreach( $slots as $s )
+        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
+            $res[] = $s;
+
+    return $res;
+
+}
+
+function getSlotAtThisTime( $day, $slot_time, $slots = null )
+{
+    if( ! $slots )
+        $slots = getTableEntries( 'slots' );
+
+    $slot = null;
+    foreach( $slots as $s )
+    {
+        if( strcasecmp( $s[ 'day' ], $day ) == 0 )
+        {
+            if( dbTime( $s[ 'start_time' ]) == $slot_time )
+                return $s;
+        }
+    }
+
+    return $slot;
+}
+

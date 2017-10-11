@@ -26,12 +26,12 @@ if( $res )
         , $info[ 'email' ]
         );
 
-    goToPage( 'user.php', 1 );
+    goToPage( 'user_info.php', 1 );
     exit;
 }
 
 echo printWarning( "Could not update user details " );
-echo goBackToPageLink( "user.php", "Go back" );
+echo goBackToPageLink( "user_info.php", "Go back" );
 exit;
 
 ?>

@@ -2400,5 +2400,41 @@ function getCourseSlotTiles( $course )
    return implode( ",", $result );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get the Type of column from mysql tables.
+    *
+    * @Param $tablename
+    * @Param $columnname
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getTableColumnTypes( $tableName, $columnName )
+{
+    global $db;
+    $stmt = $db->prepare( "SHOW COLUMNS FROM $tableName LIKE '$columnName'" );
+    $stmt->execute( );
+    $column = $stmt->fetch( PDO::FETCH_ASSOC );
+    $type = $column[ "Type" ];
+
+    $res = array( );
+    if( preg_match( "/^(enum|set)\((.*)\)$/" , $type, $match ) )
+    {
+        foreach( explode(",", $match[2] ) as $v )
+        {
+            $v = str_replace( "'", "", $v );
+            $res[] = $v;
+        }
+    }
+    else
+        $res[] = $type;
+
+    return $res;
+
+}
+
+
+
 ?>
 

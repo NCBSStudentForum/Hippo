@@ -113,17 +113,35 @@ else
     }
     else if( $_POST[ 'task' ] == 'Change enrollment' )
     {
-        echo printInfo( "Changing enrollment" );
+        echo "<h2>Changing enrollment</h2>";
 
+        echo printInfo( "Press in button to change the status of ennrollment." );
+
+        $types = getTableColumnTypes( 'course_registration', 'type' );
+
+        $i = 0;
         echo '<table>';
         foreach( $enrollments as $enrol )
         {
-            echo '<tr><td>';
+            $i += 1;
+            echo "<tr><td>$i</td><td>";
             echo '<form method="post" 
                 action="admin_acad_manages_enrollments_action.php">';
+            
             echo arrayToTableHTML( $enrol, 'info', ''
-                , 'last_modified_on,grade,grade_is_given_on' );
-            echo '</td><td><button name="response" value="drop">Drop</button>';
+                , 'last_modified_on,grade,grade_is_given_on,status' );
+
+            $type = $enrol[ 'type' ];
+
+            foreach( $types as $t )
+            {
+                if( $t == $type )
+                    continue ;
+
+                echo '</td><td><button name="response" value="' . $t 
+                    . '">'. $t . '</button>';
+            }
+
             echo '</td></tr>';
             echo '<input type="hidden" name="year" value="' . $enrol[ 'year'] . '" >';
             echo '<input type="hidden" name="semester" value="' . $enrol['semester'] . '" >';

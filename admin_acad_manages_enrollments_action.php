@@ -30,16 +30,17 @@ if( $_POST[ 'response' ] == 'submit' )
     }
     
 }
-else if( $_POST[ 'response' ] == 'drop' )
+else if( in_array( $_POST[ 'response' ], getTableColumnTypes( 'course_registration', 'type' ) ) )
 {
     // Drop this course for given user.
-    $res = deleteFromTable( 'course_registration'
-                        , 'student_id,semester,year,course_id'
-                        , $_POST ); 
+    $_POST[ 'type' ] = $_POST[ 'response' ];
+    $res = updateTable( 'course_registration'
+        , 'student_id,semester,year,course_id', 'type', $_POST 
+    ); 
     if( $res )
-        echo printInfo( "Successfully dropped course." );
+        echo printInfo( "Successfully changed enrollment." );
     else
-        echo minionEmbarrassed( "Failed to drop course" );
+        echo minionEmbarrassed( "Failed to change enrollment for this." );
 }
 else if( $_POST[ 'response' ] == 'grade' )
 {

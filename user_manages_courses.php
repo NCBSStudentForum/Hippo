@@ -100,7 +100,7 @@ if( $regOpen )
     echo '</form>';
 }
 else
-    echo printInfo( "Course registration is not open for $sem $year"  );
+    echo printInfo( "Course registration has been closed for $sem $year."  );
 
 
 
@@ -150,7 +150,7 @@ foreach( $myCourses as $c )
     $course = getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
 
     // If more than 30 days have passed, do not allow dropping courses. 
-    if( strtotime( 'now' ) - strtotime( $runningCourses[ $cid][ 'start_date' ] ) 
+    if( (strtotime( 'now' ) - strtotime( $runningCourses[ $cid][ 'start_date' ] )) 
             > 30 * 24 * 3600 )
     {
         $action = ''; 

@@ -55,7 +55,7 @@ if( strtoupper( $info['eligible_for_aws'] ) == "NO" )
     );
 
 echo '<h3>Submit request to academic office</h3>';
-$form = ' <form method="post" action="user_submit_booking_request_action.php">';
+$form = ' <form method="post" action="user_aws_request.php">';
 if( strtoupper( $info['eligible_for_aws'] ) == "YES" )
     $form .= ' <button type="submit" name="request_to_academic_office" 
         value="remove_me_from_aws_list">Remove me from AWS list</button> ';

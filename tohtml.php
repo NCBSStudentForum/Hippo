@@ -306,7 +306,7 @@ function hourToHTMLTable( $day, $hour, $venue, $section = 4 )
         {
 
             // Add a form to trigger adding event purpose.
-            $html .= "<form method=\"post\" action=\"user_submit_request.php\" >";
+            $html .= "<form method=\"post\" action=\"user_submit_booking_request.php\" >";
             $html .= "<td>";
             if( $segDateTime >= strtotime( 'now' ) )
                 $html .= "<button class=\"add_event$is_public_event\" name=\"add_event\" value=\"$segTime\">+</button>";

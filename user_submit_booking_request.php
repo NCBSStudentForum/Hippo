@@ -1,5 +1,4 @@
 <?php 
-
 include_once( "header.php" );
 include_once( "methods.php" );
 include_once( "database.php" );
@@ -91,7 +90,7 @@ $default[ 'end_time' ] = $defaultEndTime;
 
 $default = array_merge( $default, $_POST );
 
-echo '<form method="post" action="user_submit_request_action.php">';
+echo '<form method="post" action="user_submit_booking_request_action.php">';
 echo dbTableToHTMLTable( 'bookmyvenue_requests'
         , $default
         , 'class,title,description,url,is_public_event,end_time' 

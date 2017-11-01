@@ -334,7 +334,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
                 $date, $startTime, $endTime, $venueId, $jcAndMeets 
             );
 
-        $block = '<form method="post" action="user_submit_request.php">';
+        $block = '<form method="post" action="user_submit_booking_request.php">';
         $block .= '<div><tr>';
         if( count( $jclabmeets ) > 0 )
         {

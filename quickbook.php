@@ -63,10 +63,8 @@ if( array_key_exists( 'external_id', $_GET ) )
 }
 else
 {
-    echo alertUser( 
-        'NOTICE: This interface is not for booking talks/seminar. 
-        Please use <a href="user_register_talk.php">this interface</a>
-            '
+    echo alertUser( colored('To book TALK or SEMINAR, please use 
+        <a href="user_register_talk.php">this interface</a>.', 'darkred' )
         );
 }
 

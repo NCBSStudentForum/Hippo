@@ -1197,30 +1197,29 @@ function awsToHTML( $aws, $with_picture = false )
         $abstract = "Not yet disclosed!";
 
     $html = "<div style=\"width:500px\">";
+    $html .= "<div width=500px><hr width=500px align=left> </div>";
 
     // Adding css inline screw up the email view. Dont do it.
 
     if( $with_picture )
     {
         $html .=  '<table class="email">';
-        $html .= '<tr><td style="width:500px"></td>';
+        $html .= '<tr>';
         $user = $aws[ 'speaker' ];
         $imgHtml = getUserPicture( $user, 'hippo' );
-        $html .= "<td float=\"right\"> <div> $imgHtml </div>";
-        $html .= "</td></tr>";
+        $html .= "<td float=\"left\"> <div> $imgHtml </div> </td>";
+        $html .= "<td><h2>$speaker <br>$title</h2></td>";
+        $html .= "</tr>";
         $html .= "</table>";
     }
 
-    $html .= "<h2>$speaker on '$title' </h2>";
 
-    $html .=  '<table class="email" style="width:500px;border:1px dotted">';
-    $html .= '
-             <tr>
-             <td>Supervisors</td>
+    $html .=  '<table class="email" style="width:500px">';
+    $html .= ' <tr> <td>' . smallCaps( 'Supervisors') . '</td>
              <td>' . implode( ", ", $supervisors ) . '</td>
              </tr>
              <tr>
-             <td>Thesis Committee Members</td>
+             <td>' . smallCaps( 'Thesis Committee Members') . '</td>
              <td>' . implode( ", ", $tcm) . '</td>
              </tr>
              </table>';
@@ -1798,6 +1797,11 @@ function bookmyVenueAdminTaskTable( )
         </tr>
         </table>' ;
     return $html;
+}
+
+function smallCaps( $text )
+{
+    return "<font style=\"font-variant:small-caps\"> $text </font>";
 }
 
 ?>

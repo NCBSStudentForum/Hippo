@@ -153,7 +153,7 @@ $enrollments = array( );
 
 $table = '<table class="info">';
 $table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
-    <th>Enrollments</th> </tr>';
+    <th>Enrollments</th><th>URL</th> </tr>';
 
 ksort( $slotCourses );
 foreach( $slotCourses as $slot => $courses )
@@ -193,8 +193,16 @@ foreach( $slotCourses as $slot => $courses )
             <td>' . "<strong> $slotInfo </strong> <br>" 
                   .  '<strong>' . $note . '</strong></td><td>' 
                   .  $c[ 'venue' ] . '</td>
-            <td>' . count( $registrations ) . '</td><td>
-            <button name="response" value="show_enrollment">
+            <td>' . count( $registrations ) . '</td>';
+
+        // If url is found, put it in page.
+        if( $c['url'] )
+            $table .= '<td><a target="_blank" href="' . $c['url']  
+                . '">Course page</a></td>';
+        else
+            $table .= '<td></td>';
+
+        $table .= '<td> <button name="response" value="show_enrollment">
             <small>' . $showEnrollText . '</small></button></td>
             </form>';
         $table .= '</tr>';

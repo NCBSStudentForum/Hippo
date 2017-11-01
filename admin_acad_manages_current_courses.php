@@ -1,11 +1,10 @@
 <?php
-
-include_once 'check_access_permissions.php';
-mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN' ) );
-
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
+
+include_once 'check_access_permissions.php';
+mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 echo userHTML( );
 
@@ -75,6 +74,7 @@ $default = array(
     'course_id' => $courseIdsSelect, 'venue' => $venueSelect 
     , 'semester' => $sem
 );
+
 if( $_POST && array_key_exists( 'running_course', $_POST ) )
 {
     $runningCourse = getTableEntry( 'courses', 'id'
@@ -82,6 +82,7 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
                         );
     if( $runningCourse )
         $default = array_merge( $default, $runningCourse );
+
     $action = 'Edit';
 }
 
@@ -92,13 +93,17 @@ echo printInfo( "Current semester is $sem, $year" );
 
 echo '<div style="font-size:small">';
 
+// Show running courses here.
 echo '<table class="info">';
 $tobefilterd = 'id,semester,year';
 echo arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 foreach( $runningCourses as $course )
 {
+    $cname = getCourseName( $course[ 'course_id'] );
+    $course[ 'name' ] = $cname;
     echo arrayToRowHTML( $course, 'aws', $tobefilterd );
 }
+
 echo '</table>';
 
 echo '</div>';
@@ -111,7 +116,7 @@ echo '<tr>
             <input id="running_course" name="running_course" type="text" >
         </td>
         <td>
-            <button name="response" value="search" style="float:left" >Show</button>
+            <button name="response" value="search" style="float:left" >Select</button>
         </td>
     </tr>';
 
@@ -156,7 +161,7 @@ else
 
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'course_id,start_date,end_date,slot,venue,note,ignore_tiles', $action 
+    , 'course_id,start_date,end_date,slot,venue,note,url,ignore_tiles', $action 
     );
 
 /* If we are updating, we might also like to remove the entry. This button also 

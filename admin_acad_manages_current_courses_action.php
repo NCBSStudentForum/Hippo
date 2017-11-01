@@ -43,13 +43,15 @@ else if( $_POST['response'] == 'delete' )
             echo minionEmbarrassed( "Failed to delete course from the" );
     }
 }
-else
+else // Add or Update here.
 {
     $_POST[ 'semester' ] = getCurrentSemester( );
     $_POST[ 'year' ] = getCurrentYear( );
 
     $courseAtThisSlotVenue = getTableEntry( 'courses'
             , 'slot,venue,year,semester', $_POST );
+
+    $updatable = 'semester,year,start_date,end_date,slot,venue,note,url,ignore_tiles';
 
     if( $courseAtThisSlotVenue )
     {
@@ -74,7 +76,7 @@ else
 
             $res = insertIntoTable( 
                 'courses'
-                , 'id,course_id,year,semester,start_date,end_date,slot,venue,note,ignore_tiles' 
+                , "id,course_id,$updatable"
                 , $_POST 
             );
 
@@ -88,17 +90,10 @@ else
         }
         else
             echo printWarning( "Could ID can not be empty" );
-
-
     }
     else if ( $_POST[ 'response' ] == 'Update' ) 
     {
-        $res = updateTable( 'courses'
-            , 'course_id'
-            , 'semester,year,start_date,end_date,slot,venue,note,ignore_tiles'
-            , $_POST 
-        );
-
+        $res = updateTable( 'courses', 'course_id', $updatable , $_POST );
         if( $res )
         {
             echo printInfo( 'Updated course' );

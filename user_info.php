@@ -10,11 +10,6 @@ $info = getUserInfo( $_SESSION['user'] );
 $conf = getConf( );
 $picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION['user'] . '.jpg';
 
-echo alertUser( 
-    "<p>Make sure your <tt>TITLE</tt>, <tt>JOINED ON</tt> and picture are 
-    correct. </p>"
-    );
-
 echo '<table class="">';
 echo '<tr><td>';
 
@@ -40,17 +35,12 @@ echo '<p><small>
     </small></p>
     ';
 echo '<input type="file" name="picture" id="picture" value="" />';
-echo '<button name="Response" title="Upload your picture" value="upload">' 
-        . $symbUpload . '</button>';
+echo '<button name="Response" title="Upload your picture" value="upload">Upload</button>';
 echo '</form>';
 echo '</td></tr>';
 echo '</table>';
 echo '<br>';
 
-// This is second table.
-echo alertUser( "If I find your information on NCBS LDAP server, 
-    I'll overwrite your first name, last_name, and email id. " 
-    );
 echo "<form method=\"post\" action=\"user_info_action.php\">";
 echo dbTableToHTMLTable( 'logins', $info
     , $editables = Array( 'title', 'first_name', 'last_name'
@@ -59,8 +49,10 @@ echo dbTableToHTMLTable( 'logins', $info
     );
 echo "</form>";
 
-if( ! $info['eligible_for_aws'] )
-    echo printWarning( "If you should be 'ELIGIBLE FOR AWS', let academic office know." );
+if( strtoupper( $info['eligible_for_aws'] ) == "NO" )
+    echo alertUser( 
+        "If you are 'ELIGIBLE FOR AWS', please write to academic office." 
+    );
 
 echo goBackToPageLink( "user.php", "Go back" );
 

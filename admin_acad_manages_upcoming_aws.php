@@ -107,7 +107,11 @@ foreach( $upcomingAWSs as $aws )
     }
     echo '<td>';
 
+    // Speaker name and email
     echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
+    // Speaker PI if any.
+    echo '<br><small><tt>PI: ' . getPIOrHost( $aws[ 'speaker' ] ) . '</tt></small>';
+
 
     // Check if user has requested AWS schedule and has it been approved.
     $request = getTableEntry( 'aws_scheduling_request'
@@ -199,6 +203,10 @@ foreach( $schedule as $upcomingAWS )
     
     echo "<tr><td>";
     echo $speakerInfo;
+
+    // Add PI info.
+    echo  '<br><small><tt>PI: ' . getPIOrHost( $speaker ) . '</tt></small>';
+
     $intranetLink = getIntranetLink( $speaker );
     echo "<br>$intranetLink ";
     echo '<form action="admin_acad_manages_upcoming_aws_submit.php" 

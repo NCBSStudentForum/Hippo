@@ -2434,6 +2434,24 @@ function getTableColumnTypes( $tableName, $columnName )
 
 }
 
+function getPIOrHost( $login )
+{
+    // A. Search in table logins.
+    global $db;
+    $row = getTableEntry( 'logins', "login", array( 'login' => $login ) );
+    if( __get__($row, 'pi_or_host', '' ) )
+        return $row[ 'pi_or_host' ];
+
+    // B. Search in previous AWS databases.
+    $awses = getMyAws( $login );
+    if( count( $awses ) > 0 )
+    {
+        $mostRecentAWS = $awses[0];
+        return $mostRecentAWS[ 'supervisor_1'];
+    }
+
+    return '';
+}
 
 
 ?>

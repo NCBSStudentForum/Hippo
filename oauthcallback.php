@@ -136,9 +136,11 @@ if( array_key_exists( 'google_command', $_SESSION ) )
         }
     }
     else
+    {
         echo printWarning(
             "Unsupported  command " .  $_SESSION['google_command'] 
         );
+    }
 }
 else
     echo printInfo( "No command is given regarging google calendar" );

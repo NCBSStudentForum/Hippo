@@ -2012,7 +2012,7 @@ function getSemesterCourses( $year, $sem )
     if( $sem == 'AUTUMN' )
     {
         $sDate = dbDate( strtotime( "$year-07-01" ) );
-        $eDate = dbDate( strtotime( "$year-12-31" ) );
+        $eDate = dbDate( strtotime( "$year-12-31" )  );
     }
 
     global $db;

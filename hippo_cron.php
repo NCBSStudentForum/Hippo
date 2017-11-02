@@ -315,12 +315,16 @@ if( $today > $startDay && $today <= $endDay )
             // Otherwise annoy
             $subject = "Details of your upcoming AWS are still incomplete!";
             $to = getLoginEmail( $aws[ 'speaker' ] );
+            $pi = getPIOrHost( $aws[ 'speaker' ] );
 
             $macros = array( 'USER' => loginToHTML( $aws['speaker'] )
                             , 'DATE' => humanReadableDate( $today ) 
                         );
 
             $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $macros );
+
+            if( $pi )
+                $templ[ 'cc' ] = $templ['cc'] . ",$pi";
 
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );

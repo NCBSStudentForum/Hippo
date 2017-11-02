@@ -194,17 +194,19 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
     // Replace text in the template.
     $msg = str_replace( '%SPEAKER%', loginToText( $speaker ), $templ['description'] ); 
     $msg = str_replace( '%DATE%', humanReadableDate( $date ), $msg );
+
     $to = getLoginEmail( $speaker );
+
+    // CC to PI as well.
+    $pi = getPIOrHost( $speaker );
+    if( $pi )
+        $templ[ 'cc' ] = $templ[ 'cc' ] . ",$pi";
+
     return sendPlainTextEmail( $msg
         , 'ATTN! Your AWS date has been fixed'
-        , $to 
-        , $templ[ 'cc' ]
+        , $to , $templ[ 'cc' ]
         );
 }
 
-// $res = sendEmail( "testing"
-//     , "Your request has been created"
-//     , "dilawars@ncbs.res.in" 
-//     );
 
 ?>

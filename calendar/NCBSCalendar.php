@@ -52,6 +52,7 @@ class NCBSCalendar
         $this->calID = $calID;
         $this->offset = 0.0; // (new DateTime())->format( 'Z' );
         $this->client = new Google_Client( );
+
         if( file_exists($oauth_file) )
             $this->oauthFile =  $oauth_file;
         else
@@ -65,7 +66,11 @@ class NCBSCalendar
             return None;
         }
 
-        $this->client->setAuthConfig( $this->oauthFile );
+        try {
+            $this->client->setAuthConfig( $this->oauthFile );
+        } catch (Exception $e) {
+        }
+
         $this->client->setScopes( 'https://www.googleapis.com/auth/calendar');
         $this->redirectURL = $this->client->createAuthUrl();
     }

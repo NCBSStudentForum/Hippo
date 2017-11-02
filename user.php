@@ -16,7 +16,7 @@ $html .= '
    <tr>
       <td>
       See and edit (most of) your details. <small>This is one time task. If 
-      you suppose to give AWS, please visit and check all details.
+      you are eligible to give AWS, please visit and check details.
       </small>
       </td>
       <td> 

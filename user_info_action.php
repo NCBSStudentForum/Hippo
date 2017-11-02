@@ -10,7 +10,7 @@ $res = updateTable(
         "logins"
         , "login"
         , "valid_until,first_name,last_name,title" . 
-             ",laboffice,joined_on,alternative_email"
+             ",laboffice,joined_on,alternative_email,pi_or_host"
         , $_POST 
     );
 

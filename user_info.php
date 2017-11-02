@@ -23,7 +23,7 @@ $( function() {
     // These emails must not be key value array.
     var emails = <?php echo json_encode( $facEmails ); ?>;
     $( "#logins_pi_or_host" ).autocomplete( { source : emails }); 
-    $( "#logins_pi_or_host" ).attr( "placeholder", "autocomplete" );
+    $( "#logins_pi_or_host" ).attr( "placeholder", "type email of your supervisor" );
 });
 </script>
 

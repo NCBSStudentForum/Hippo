@@ -71,13 +71,16 @@ function generateAWSEmail( $monday )
 
     $mail = emailFromTemplate( 'aws_template', $data );
 
-    echo "Generating pdf";
-    $script = __DIR__ . '/generate_pdf_aws.php';
-    $cmd = "php -q -f $script date=$monday";
-    echo "Executing <pre> $cmd </pre>";
-    ob_flush( );
-
-    $ret = `$cmd`;
+    try {
+        echo "Generating pdf";
+        $script = __DIR__ . '/generate_pdf_aws.php';
+        $cmd = "php -q -f $script date=$monday";
+        echo "Executing <pre> $cmd </pre>";
+        ob_flush( );
+        $ret = `$cmd`;
+    } catch (Exception $e) {
+        echo printWarning( "Failed to generat pdf " . $e->getMessages( ) );
+    }
 
     if( ! file_exists( $pdffile ) )
     {

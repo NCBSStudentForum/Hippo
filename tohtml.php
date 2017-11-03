@@ -1225,7 +1225,7 @@ function awsToHTML( $aws, $with_picture = false )
     else
         $html .= '<td></td>';
 
-    $html .= "<td><h3>$speaker</h3> <h2>$title</h2></td>";
+    $html .= "<td><h2>$speaker on '$title' </h2> </td>";
     $html .= "</tr>";
     $html .= "</table>";
 

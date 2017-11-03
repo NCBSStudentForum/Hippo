@@ -50,7 +50,7 @@ echo printInfo( "Today is " . humanReadableDate( $today ) );
 if( $today == dbDate( strtotime( 'this friday' ) ) )
 {
     // Send any time between 4pm and 4:15 pm.
-    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '4:30 pm' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
@@ -62,6 +62,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         $to = 'academic@lists.ncbs.res.in';
 
         $res = generateAWSEmail( $nextMonday );
+
         if( $res[ 'speakers'] )
         {
             $subject = 'Next week Annual Work Seminar (' . humanReadableDate( $nextMonday) . ') by ';
@@ -70,7 +71,8 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 
             $pdffile = $res[ 'pdffile' ];
 
-            // On friday, there should not be any pdffile.
+            echo $mail[ 'email_body' ];
+
             $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
             ob_flush( );
         }

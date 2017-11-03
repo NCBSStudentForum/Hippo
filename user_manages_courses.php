@@ -49,9 +49,17 @@ foreach( $myCourses as $c )
 
 $mySlots = array_unique( $mySlots );
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Course enrollment.
+    * Check each course date. If course is starting at date x, then start the
+    * coruse x-7 days and let people register till x+7 days.
+ */
+/* ----------------------------------------------------------------------------*/
 echo '<h1>Course enrollment</h1>';
 
-// Check if registration is open
+$today = strtotime( 'today' );
 
 // Running course this semester.
 $courseMap = array( );
@@ -60,48 +68,44 @@ $options = array( );
 $blockedCourses = array( );
 foreach( $runningCourses as $c )
 {
-    // Ignore any course which is colliding with any registered course.
-    $cid = $c[ 'course_id' ];
-    $cname = getCourseName( $cid );
-    $slot = $c[ 'slot' ];
-    if( in_array( $slot, $mySlots ) )
+    $cstart = strtotime( $c[ 'start_date' ] );
+    if( $today > strtotime( '-7 day', $cstart) && $today <= strtotime( '+7 day', $cstart ) )
     {
-        $blockedCourses[ $cid ] = $cname;
-        continue;
-    }
-    
-    if( $cid )
-    {
-        $options[] = $cid ;
-        $courseMap[ $cid ] = getCourseName( $cid ) . 
-            " (slot " . getCourseSlotTiles( $c ) . ")";
+        // Ignore any course which is colliding with any registered course.
+        $cid = $c[ 'course_id' ];
+        $cname = getCourseName( $cid );
+        $slot = $c[ 'slot' ];
+        if( in_array( $slot, $mySlots ) )
+        {
+            $blockedCourses[ $cid ] = $cname;
+            continue;
+        }
+        
+        if( $cid )
+        {
+            $options[] = $cid ;
+            $courseMap[ $cid ] = getCourseName( $cid ) . 
+                " (slot " . getCourseSlotTiles( $c ) . ")";
+        }
     }
 }
 
+// Get the list of valid courses.
+echo "<h2>Registration form</h2>";
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
-
-$regOpen = isRegistrationOpen( );
-if( $regOpen )
-{
-    echo "<h2>Registration form</h2>";
-
-    $default = array( 'student_id' => $_SESSION[ 'user' ] 
-                    , 'semester' => $sem
-                    , 'year' => $year
-                    , 'course_id' => $courseSelect
-                    );
-    echo '<form method="post" action="user_manages_courses_action.php">';
-    echo dbTableToHTMLTable( 'course_registration'
-        , $default
-        , 'course_id:required,type' 
-        , 'submit'
-        , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
-    );
-    echo '</form>';
-}
-else
-    echo printInfo( "Course registration has been closed for $sem $year."  );
-
+$default = array( 'student_id' => $_SESSION[ 'user' ] 
+                , 'semester' => $sem
+                , 'year' => $year
+                , 'course_id' => $courseSelect
+                );
+echo '<form method="post" action="user_manages_courses_action.php">';
+echo dbTableToHTMLTable( 'course_registration'
+    , $default
+    , 'course_id:required,type' 
+    , 'submit'
+    , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
+);
+echo '</form>';
 
 
 /**
@@ -150,11 +154,8 @@ foreach( $myCourses as $c )
     $course = getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
 
     // If more than 30 days have passed, do not allow dropping courses. 
-    if( (strtotime( 'now' ) - strtotime( $runningCourses[ $cid][ 'start_date' ] )) 
-            > 30 * 24 * 3600 )
-    {
+    if( strtotime( 'today' ) > strtotime( '+30 day',strtotime($runningCourses[ $cid][ 'start_date' ])))
         $action = ''; 
-    }
 
     // TODO: Don't show grades unless student has given feedback.
     if( strlen( $c[ 'grade' ] == 0 ) )

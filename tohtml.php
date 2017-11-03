@@ -1213,21 +1213,22 @@ function awsToHTML( $aws, $with_picture = false )
 
     // Adding css inline screw up the email view. Dont do it.
 
-    $html .=  '<table class="email">';
-    $html .= '<tr>';
     $user = $aws[ 'speaker' ];
 
+    // Add a table only if there is a picture. Adding TD when there is no picture 
+    // screws up the formatting of emails.
     if( $with_picture )
     {
+        $html .=  '<table class="email">';
+        $html .= '<tr>';
         $imgHtml = getUserPicture( $user, 'hippo' );
         $html .= "<td float=\"left\"> <div> $imgHtml </div> </td>";
+        $html .= "<td><h2>$speaker on '$title' </h2> </td>";
+        $html .= "</tr>";
+        $html .= "</table>";
     }
     else
-        $html .= '<td></td>';
-
-    $html .= "<td><h2>$speaker on '$title' </h2> </td>";
-    $html .= "</tr>";
-    $html .= "</table>";
+        $html .= "<h2>$speaker on '$title' </h2>";
 
 
     $html .=  '<table class="email" style="width:500px">';

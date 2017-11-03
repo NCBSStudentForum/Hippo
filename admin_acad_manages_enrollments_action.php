@@ -94,6 +94,8 @@ else if( $_POST[ 'response' ] == 'enroll_new' )
                 , 'semester' => getCurrentSemester( )
                 , 'year' => getCurrentYear( )) 
             );
+        if( $res )
+            echo printInfo( "Successfully enrolled $user" );
     }
 }
 else

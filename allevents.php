@@ -56,33 +56,45 @@ $count = 0;
 $eventWidth = 200;
 $maxEventsInLine = intval( 800 / $eventWidth );
 echo '<table width="250px">';
-echo '<tr>';
+
+// These are the venues with any events today.
+$venues = array( );
 foreach( $events as $ev )
 {
-    if( $count % $maxEventsInLine == 0 )
-        echo "</tr><tr>";
-
-    $now = strtotime( 'now' );
-    $eventEnd = $ev[ 'date' ] . ' ' . $ev[ 'end_time' ];
-    $eventEnd = strtotime( $eventEnd );
-
-    $background = 'lightyellow';
-    if( $eventEnd <= $now )
-        $background = '';
-
-    if( isPublicEvent( $ev ) )
-        $background = "red";
-
-    $width = $eventWidth . "px";
-    echo "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
-    echo eventToShortHTML( $ev );
-    echo "</td>";
-    $count += 1;
+    $venue = $ev[ 'venue' ];
+    if( ! array_key_exists( $venue, $venues ) )
+        $venues[ $venue ] = array( );
+    $venues[ $venue ][ ] = $ev;
 }
-echo '</tr>';
+ksort( $venues );
+
+foreach( $venues as $venue => $events )
+{
+    echo "<tr><td>$venue</td>";
+    foreach( $events as $ev )
+    {
+        $now = strtotime( 'now' );
+        $eventEnd = $ev[ 'date' ] . ' ' . $ev[ 'end_time' ];
+        $eventEnd = strtotime( $eventEnd );
+
+        $background = 'lightyellow';
+        if( $eventEnd <= $now )
+            $background = '';
+
+        if( isPublicEvent( $ev ) )
+            $background = "red";
+
+        $width = $eventWidth . "px";
+        echo "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
+        echo eventToShortHTML( $ev );
+        echo "</td>";
+    }
+    echo '</tr>';
+}
 echo '</table>';
 echo '</br>';
 
+echo '<h2> Classes </h2>';
 /*******************************************************************************
  * Get running courses.
  **/

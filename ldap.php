@@ -23,40 +23,30 @@ function serviceping($host, $port=389, $timeout=1)
 
 function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 {
+    $port = 8862;
     $ldapArr = explode( "@", $query );
     $ldap = $ldapArr[0];
-
-    $ports = array( 389, 18288 );
-    $baseDNs = array( 389 => 'dc=ncbs,dc=res,dc=in'
-                        , 18288 => "dc=instem,dc=res,dc=in"
-                    );
-
     // Search on all ports.
     $info = array( 'count' => 0 );
-    foreach( $baseDNs  as $port => $base_dn )
+
+    if( 0 == serviceping( $ldap_ip, $port, 2 ) )
     {
-
-        if( 0 == serviceping( $ldap_ip, $port, 2 ) )
-        {
-            echo alertUser( "Could not connect to $ldap_ip : $port . Timeout ... " );
-            return NULL;
-        }
-
-        $ds = ldap_connect($ldap_ip, $port );
-        $r = ldap_bind($ds); 
-
-        if( ! $r )
-        {
-            echo "LDAP binding failed. TODO: Ask user to edit details ";
-            continue;
-        }
-
-        $sr = ldap_search($ds, $base_dn, "uid=$ldap");
-        $info = ldap_get_entries($ds, $sr);
-
-        if( $info[ 'count' ] > 0  )
-            break;
+        echo alertUser( "Could not connect to $ldap_ip : $port . Timeout ... " );
+        return NULL;
     }
+
+    $ds = ldap_connect($ldap_ip, $port );
+    $r = ldap_bind($ds); 
+
+    if( ! $r )
+    {
+        echo "LDAP binding failed. TODO: Ask user to edit details ";
+        continue;
+    }
+
+    $base_dn = "dc=ncbs,dc=res,dc=in";
+    $sr = ldap_search($ds, $base_dn, "uid=$ldap");
+    $info = ldap_get_entries($ds, $sr);
 
     $result = array();
     for( $s=0; $s < $info['count']; $s++)
@@ -75,20 +65,22 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 
         $profileId = __get__( $i, 'profileidentification', array( -1 ) );
         $profileidentification = $profileId[0];
-
-        array_push($result
-            , array(
-                "fname" => $i['givenname'][0]
-                , "first_name" => $i['givenname'][0]
-                , "lname" => $i['sn'][0]
-                , "last_name" => $i['sn'][0]
+        $title = $i[ 'profilecontracttype'][0];
+        $designation = $i[ 'profiledesignation'][0];
+        $active = $i[ 'profileactive' ][0];
+        $result[ ] =  array( "fname" => $i['profilefirstname'][0]
+                , "first_name" => $i['profilefirstname'][0]
+                , "lname" => $i['profilelastname'][0]
+                , "last_name" => $i['profilelastname'][0]
                 , "uid" => $profileidentification
                 , "id" => $profileidentification
                 , "email" => $i['mail'][0]
                 , "laboffice" => $laboffice[0]
                 , "joined_on" => $joinedOn[0]
-            )
-        );
+                , "title" => $title
+                , "designation" => $designation
+                , 'is_active' => $active
+            );
     }
 
     if( count( $result ) > 0 )

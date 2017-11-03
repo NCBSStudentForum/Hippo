@@ -1058,7 +1058,14 @@ function getUserInfo( $user )
     $stmt = $db->prepare( "SELECT * FROM logins WHERE login=:login" );
     $stmt->bindValue( ":login", $user );
     $stmt->execute( );
-    return $stmt->fetch( PDO::FETCH_ASSOC );
+    $res =  $stmt->fetch( PDO::FETCH_ASSOC );
+
+    // Fetch ldap as well.
+    $ldap = getUserInfoFromLdap( $user );
+    if( $ldap )
+        $res = array_merge( $res, $ldap );
+
+    return $res;
 }
 
 function getLoginInfo( $login_name )

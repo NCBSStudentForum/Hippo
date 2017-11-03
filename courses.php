@@ -230,16 +230,25 @@ if( $_POST )
     echo '<h3>Enrollment for course ' . $courseName .'</h3>';
 
     $table = '<table class="show_events">';
-    $count = 0;
+
+    $rows = [ ];
     foreach( $enrollments[$cid]  as $r )
     {
-        $count += 1;
         $studentId = $r[ 'student_id' ];
-        $login = loginToText( $studentId );
-        $table .= '<tr>';
-        $table .= '<td>' . $count . '</td><td>' . $login . '</td>';
-        $table .= '<td>' . $r[ 'type' ] . "</td>";
-        $table .= '</tr>';
+        $info = getUserInfo( $studentId );
+        $row = '';
+        $row .= '<td>' . loginToText( $info, false) . '</td>';
+        $row.= '<td>' . $info[ 'email' ] . '</td>';
+        $row .= '<td>' . $r[ 'type' ] . "</td>";
+        $rows[ $info[ 'first_name'] ] = $row;
+    }
+
+    ksort( $rows );
+    $count = 0;
+    foreach( $rows as $fname => $row )
+    {
+        $count ++;
+        $table .= "<tr><td>$count</td>" . $row . '</tr>';
     }
 
     $table .= '</table>';
@@ -254,7 +263,6 @@ if( $_POST )
 echo '</div>';
 
 ?>
-
 
 <!-- Prefix Mail logo on mailto links -->
 <!--

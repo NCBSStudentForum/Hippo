@@ -958,21 +958,34 @@ function arrayToSelectList( $name, $options
  */
 function loginToText( $login, $withEmail = true, $autofix = true )
 {
+    if( ! $login )
+        return '';
+
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )
+    {
+        if( strlen( trim($login) ) < 1 )
+            return '';
         $user = getUserInfo( $login );
+    }
     else
         $user = $login;
 
-    if( ! $user )
-        return fixName( $login );
+    if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
+    {
+        $ldap = getUserInfoFromLdap( $user[ 'email'] );
+        if( $ldap )
+            $user = array_merge( $user, $ldap );
+    }
 
     // Return first name + middle name + last name.
     $name = array( );
     foreach( explode( ',', 'first_name,middle_name,last_name' ) as $key )
+    {
         if( array_key_exists( $key, $user ) )
             array_push( $name, $user[ $key ] );
+    }
 
     $text = implode( ' ', $name );
 
@@ -993,8 +1006,7 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     return $text;
 }
 
-function loginToHTML( $login, $withEmail = true )
-{
+function loginToHTML( $login, $withEmail = true ) {
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )

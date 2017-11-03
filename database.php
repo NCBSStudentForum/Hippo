@@ -1066,6 +1066,19 @@ function getLoginInfo( $login_name )
     return getUserInfo( $login_name );
 }
 
+function getLoginByEmail( $email )
+{
+    global $db;
+    $stmt = $db->prepare( "SELECT login FROM logins WHERE email=:email" );
+    $stmt->bindValue( ":email", $email );
+    $stmt->execute( );
+    $res = $stmt->fetch( PDO::FETCH_ASSOC );
+    if( $res )
+        return $res['login'];
+    return '';
+}
+
+
 function getLoginEmail( $login )
 {
     global $db;
@@ -1248,11 +1261,6 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " ORDER BY :orderby";
 
     $stmt = $db->prepare( $query );
-    if( $orderby )
-        $stmt->bindValue( ":orderby", $orderby );
-
-    $stmt->execute( );
-
     if( $orderby )
         $stmt->bindValue( ":orderby", $orderby );
 

@@ -71,6 +71,31 @@ else if( $_POST[ 'response' ] == 'grade' )
 
     }
 }
+else if( $_POST[ 'response' ] == 'enroll_new' )
+{
+    $emails = preg_split( "/[\s,]+/", $_POST[ 'logins'] );
+    foreach( $emails as $email )
+    {
+        $user = findAnyoneWithEmail( $email );
+        if( ! $user )
+        {
+            echo printWarning( "$email is not found in my database. Probably 
+                a mistake. I am ignoring this candidate. " 
+                );
+            continue;
+        }
+
+        $user = getLoginByEmail( $email );
+        $res = insertIntoTable( 'course_registration'
+            , 'student_id,course_id,semester,year,type'
+            , array( 'student_id' => $user
+                , 'course_id' => $_POST[ 'course_id' ]
+                , 'type' => $_POST[ 'type' ]
+                , 'semester' => getCurrentSemester( )
+                , 'year' => getCurrentYear( )) 
+            );
+    }
+}
 else
     echo alertUser( 'Unknown type of request ' . $_POST[ 'response' ] );
 

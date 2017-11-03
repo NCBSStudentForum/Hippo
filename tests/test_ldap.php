@@ -10,3 +10,4 @@ var_dump( getUserInfoFromLdap( 'colinj' ) );
 var_dump( getUserInfoFromLdap( 'rashi' ) );
 var_dump( getUserInfoFromLdap( 'jayaprakashp' ) );
 var_dump( getUserInfoFromLdap( 'hrishikeshn' ) );
+var_dump( getUserInfoFromLdap( 'dlakhe' ) );

@@ -24,8 +24,10 @@ function serviceping($host, $port=389, $timeout=1)
 function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 {
     $port = 8862;
+
     $ldapArr = explode( "@", $query );
     $ldap = $ldapArr[0];
+
     // Search on all ports.
     $info = array( 'count' => 0 );
 

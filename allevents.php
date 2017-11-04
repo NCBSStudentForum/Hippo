@@ -79,7 +79,7 @@ foreach( $events as $ev )
 
     // Blink if the event is currently happening.
     if( $eventEnd >= $now && $eventStart <= $now )
-        $table .= '<blink><font>&#9200;</font></blink>' 
+        $table .= '<blink><font>&#128365;</font></blink>' 
             . eventToShortHTML( $ev );
     elseif( $eventEnd <= $now )    // This one is over.
         $table .= '<font color="gray">' 

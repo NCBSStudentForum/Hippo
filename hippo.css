@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans|EB+Garamond|Open+Sans');
+
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 body {
-    font-family : 'Fira Sans';
     font-size : normal;
-    max-width : 1000px;
-    min-width : 100%;
+    min-width : 80%;
 }
 
 :root { --background : ivory; --maxwidth : 800px }
@@ -88,9 +87,8 @@ table.public_links {
     min-width: 80%;
 }
 table.public_links tr td {
-    /*background: lightblue;*/
-}
 
+}
 
 table.show_info {
     max-width: var(--maxwidth);
@@ -170,16 +168,14 @@ table.show_schedule th
 
 table.tasks 
 {
-    width: 500px;
+    max-width: var(--maxwidth);
 }
 
 table.tasks tr td 
 {
-    /*border : 0.5px dotted; */
-    min-width : 50%;
-    max-width : 60%;
+    width:50%;
+    max-width : 50%;
     background : var(--background);
-    border: 1pt dotted;
 }
 
 table.standout {

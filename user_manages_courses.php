@@ -143,6 +143,7 @@ echo printInfo( "
 $count = 0;
 foreach( $myCourses as $c )
 {
+    $action = 'drop';
     // Break at 3 courses.
     if( $count % 3 == 0 )
         echo '</tr><tr>';

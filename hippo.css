@@ -171,10 +171,15 @@ table.tasks
     max-width: var(--maxwidth);
 }
 
-table.tasks tr td 
+table.tasks tr td:nth-child(1)
 {
-    width:50%;
-    max-width : 50%;
+    width:60%;
+    background : var(--background);
+}
+
+table.tasks tr td:nth-child(2)
+{
+    width:40%;
     background : var(--background);
 }
 

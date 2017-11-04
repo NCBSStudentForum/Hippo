@@ -31,16 +31,15 @@ echo "<h1> Manage courses </h1>";
 $thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
 echo '<table class="tasks">';
 
-echo  '<tr>
+echo  "<tr>
         <td>
-            Manage courses for semester (' . $thisSem . ')
-                <small>Register/deregister courses for this semster. </small>
+            Manage courses for semester ( $thisSem )
+            <small>Register/deregister courses for this semster. </small>
         </td>
         <td>
-            <a href="user_manages_courses.php">My Courses</a> 
+            <a href=\"user_manages_courses.php\">My Courses</a> 
         </td>
-        </tr>';
-
+        </tr>";
 echo '</table>';
 
 // Only show this section if user is eligible for AWS.

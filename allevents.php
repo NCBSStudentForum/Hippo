@@ -55,34 +55,48 @@ $requests = getPendingRequestsOnThisDay( $defaults[ 'date' ] );
 $count = 0;
 $eventWidth = 200;
 $maxEventsInLine = intval( 800 / $eventWidth );
-echo '<table width="250px">';
-echo '<tr>';
+
+$table = '<table width="250px">';
+$table .= '<tr>';
 foreach( $events as $ev )
 {
     if( $count % $maxEventsInLine == 0 )
-        echo "</tr><tr>";
+        $table .= "</tr><tr>";
 
     $now = strtotime( 'now' );
     $eventEnd = $ev[ 'date' ] . ' ' . $ev[ 'end_time' ];
+    $eventStart = $ev[ 'date' ] . ' ' . $ev[ 'start_time' ];
     $eventEnd = strtotime( $eventEnd );
+    $eventStart = strtotime( $eventStart );
 
     $background = 'lightyellow';
-    if( $eventEnd <= $now )
-        $background = '';
-
     if( isPublicEvent( $ev ) )
-        $background = "red";
+        $background = "yellow";
+
 
     $width = $eventWidth . "px";
-    echo "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
-    echo eventToShortHTML( $ev );
-    echo "</td>";
+    $table .= "<td style=\"background:$background;min-width:$width;border:1px dotted;\">";
+
+    // Blink if the event is currently happening.
+    if( $eventEnd >= $now && $eventStart <= $now )
+        $table .= '<blink><font color="red">&#11044;</font></blink>' 
+            . eventToShortHTML( $ev );
+    elseif( $eventEnd <= $now )    // This one is over.
+        $table .= '<font color="gray">' 
+                        . eventToShortHTML( $ev ) . '</font>';
+    else
+        $table .= eventToShortHTML( $ev );
+
+    $table .= "</td>";
     $count += 1;
 }
-echo '</tr>';
-echo '</table>';
+$table .= '</tr>';
+$table .= '</table>';
+echo $table;
+
 echo '</br>';
 
+echo '<h2>Classes</h2>';
 /*******************************************************************************
  * Get running courses.
  **/
@@ -127,7 +141,7 @@ echo '</br>';
  */
 if( count( $requests ) > 0 )
 {
-    echo "<h3>Following booking requests are pending approval </h3>";
+    echo "<h2>Pending approval </h2>";
     $count = 0;
     $eventWidth = 150;
     $maxEventsInLine = intval( 900 / $eventWidth );
@@ -152,7 +166,7 @@ if( count( $requests ) > 0 )
 
 if( count( $cancelled ) > 0 )
 {
-    echo '<h2>Following events are cancelled</h2>';
+    echo '<h2>Cancelled events</h2>';
     $count = 0;
     $eventWidth = 150;
     $maxEventsInLine = intval( 900 / $eventWidth );

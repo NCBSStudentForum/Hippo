@@ -168,14 +168,9 @@ table.show_schedule th
     font-size : x-small;
 }
 
-table.tasks {
-    max-width: var(--maxwidth);
-}
-
-
-table.tasks tr td:nth-child(1)
+table.tasks 
 {
-    font-size:normal;
+    width: 500px;
 }
 
 table.tasks tr td 
@@ -184,16 +179,12 @@ table.tasks tr td
     min-width : 50%;
     max-width : 60%;
     background : var(--background);
-}
-
-table.tasks td:nth-child(1) {
-    font-size : small;
+    border: 1pt dotted;
 }
 
 table.standout {
     max-width : 800px;
     min-width : 80%;
-
 }
 
 table.standout tr td

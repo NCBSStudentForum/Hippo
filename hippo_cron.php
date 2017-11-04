@@ -391,7 +391,7 @@ if( $today > $startDay && $today <= $endDay )
 }
 
 /* If user has not acknowledged their aws date, send them this reminder on even
- * days; at 9 AM.
+ * days; at 10 AM.
  */
 {
     $today = 'today';
@@ -429,7 +429,12 @@ if( $today > $startDay && $today <= $endDay )
                 humanReadableDate( 'now' ) . 
                 ". If this is mistake, please write to acadoffice@ncbs.res.in.</p>";
 
+            // Add PI to cc list.
             $cclist = $email[ 'cc' ];
+            $pi = getPIOrHost( $speaker );
+            if( $pi )
+                $cclist .= ",$pi";
+
             echo printInfo( "Sending reminder to $to " );
             sendPlainTextEmail( $body, $subject, $to, $cclist );
         }

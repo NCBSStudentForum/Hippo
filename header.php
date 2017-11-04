@@ -147,7 +147,7 @@ function AreYouSure( button )
         blinks[i].style.visibility = visibility;
       }
       visibility = (visibility === 'visible') ? 'hidden' : 'visible';
-    }, 500);
+    }, 1000);
   })();
 </script>
 

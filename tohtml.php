@@ -1821,4 +1821,14 @@ function smallCaps( $text )
     return "<font style=\"font-variant:small-caps\"> $text </font>";
 }
 
+
+function mailto( $email, $text = '' )
+{
+    if( ! $text )
+        $text = $email;
+
+    $html = "<a href=\"mailto:" . $email . "\"> $text </a>";
+    return $html;
+}
+
 ?>

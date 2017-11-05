@@ -221,6 +221,7 @@ echo closePage( );
     * @name Show enrollment.
     * @{ */
 /**  @} */
+
 if( $_POST )
 {
 
@@ -232,15 +233,17 @@ if( $_POST )
     $table = '<table class="show_events">';
 
     $rows = [ ];
+    $allEmails = array( );
     foreach( $enrollments[$cid]  as $r )
     {
         $studentId = $r[ 'student_id' ];
         $info = getUserInfo( $studentId );
         $row = '';
         $row .= '<td>' . loginToText( $info, false) . '</td>';
-        $row.= '<td>' . $info[ 'email' ] . '</td>';
+        $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
         $row .= '<td>' . $r[ 'type' ] . "</td>";
         $rows[ $info[ 'first_name'] ] = $row;
+        $allEmails[ ] = $info[ 'email'];
     }
 
     ksort( $rows );
@@ -255,6 +258,11 @@ if( $_POST )
     echo '<div style="font-size:small">';
     echo $table;
     echo '</div>';
+
+    // Put a link to email to all.
+    $mailtext = implode( ",", $allEmails );
+
+    echo '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
 
     echo '<br>';
     echo closePage( );

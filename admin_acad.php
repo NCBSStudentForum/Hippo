@@ -162,21 +162,22 @@ echo '<h1>COURSES</h1>';
 echo '
   <table border="0" class="admin">
     <tr>
-        <td>Manage courses and slots </td>
-        <td>
-            <a href="admin_acad_manages_slots.php">Slots</a> 
-            <a href="admin_acad_manages_courses.php">Courses</a> 
-        </td>
+        <td>Add/Delete or update slots </td>
+        <td> <a href="admin_acad_manages_slots.php">Slots</a> </td>
+    </tr>
+    <tr>
+        <td>Add new courses, or update course description.</td>
+        <td> <a href="admin_acad_manages_courses.php">Courses</a> </td>
     </tr>
     <tr> </tr>
     <tr>
-        <td>Manage this sememster courses </td>
+        <td>Manage this sememster courses</td>
         <td>
-            <a href="admin_acad_manages_current_courses.php">Manage running courses</a> 
+            <a href="admin_acad_manages_current_courses.php">Manage this semester courses</a> 
         </td>
     </tr>
     <tr>
-        <td>Manage registration, submit grades </td>
+        <td>Manage course registration and submit grades.</td>
         <td>
             <a href="admin_acad_manages_enrollments.php">Manage Enrollment</a> 
         </td>
@@ -185,6 +186,7 @@ echo '
   ';
 
 
+echo '<h1>Extra</h1>';
 echo "<h2>Automatic Housekeeping</h2>";
 
 $badEntries = doAWSHouseKeeping( );

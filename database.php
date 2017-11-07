@@ -986,6 +986,8 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
 {
     global $db;
 
+    if( ! $ldapInfo )
+        $ldapInfo = getUserInfoFromLdap( $userid );
 
     if( $ldapInfo[ 'last_name' ] == 'NA' )
         $ldapInfo[ 'last_name' ] = '';

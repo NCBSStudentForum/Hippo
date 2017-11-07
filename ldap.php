@@ -69,6 +69,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
         $profileidentification = $profileId[0];
         $title = $i[ 'profilecontracttype'][0];
         $designation = $i[ 'profiledesignation'][0];
+
         $active = $i[ 'profileactive' ][0];
         $result[ ] =  array( "fname" => $i['profilefirstname'][0]
                 , "first_name" => $i['profilefirstname'][0]

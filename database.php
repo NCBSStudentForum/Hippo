@@ -1060,10 +1060,18 @@ function getUserInfo( $user )
     $stmt->execute( );
     $res =  $stmt->fetch( PDO::FETCH_ASSOC );
 
+    // Get the user title. 
+    $title = $res[ 'title' ];
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
+
+
     if( $ldap )
         $res = array_merge( $res, $ldap );
+
+    // If title was found in database, overwrite ldap info.
+    if( $title )
+        $res[ 'title' ] = $title;
 
     return $res;
 }

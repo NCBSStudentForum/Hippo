@@ -21,7 +21,7 @@ $auth = authenticateUsingLDAP( $ldap, $pass );
 if(! $auth) 
 {
     echo printErrorSevere("FATAL : Username or password is incorrect.");
-    //goToPage( 'index.php', 2 );
+    goToPage( 'index.php', 2 );
 }
 else 
 {
@@ -29,9 +29,12 @@ else
 
     $_SESSION['AUTHENTICATED'] = TRUE;
     $_SESSION['user'] = $ldap;
-    $_SESSION['email'] = $email;
 
     $ldapInfo = getUserInfoFromLdap( $ldap );
+    $email = $ldapInfo[ 'email' ];
+    $_SESSION['email'] = $email;
+
+    $type = __get__( $ldapInfo, 'title', 'UNKNOWN' );
 
     // In any case, create a entry in database.
     createUserOrUpdateLogin( $ldap, $ldapInfo, $type );
@@ -50,7 +53,7 @@ else
        exit;
     }
 
-    //goToPage( "user.php", 0 );
-    //exit;
+    goToPage( "user.php", 0 );
+    exit;
 }
 ?>

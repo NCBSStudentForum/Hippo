@@ -17,18 +17,13 @@ if( ! array_key_exists( 'login', $_POST ) )
 }
 
 $default = getUserInfo( $_POST['login'] );
-
 if( ! $default )
 {
-    $default = getUserInfoFromLdap( $_POST[ 'login' ] );
-    if( ! $default )
-    {
-        echo printWarning( 
-            "Invalid username. I did not find anyone named " .
-            $_POST[ 'login' ] . " on LDAP server" );
-        echo goBackToPageLink( 'admin_acad.php', 'Go back' );
-        exit;
-    }
+    echo printWarning( 
+        "Invalid username. I did not find anyone named " .
+        $_POST[ 'login' ] . " on LDAP server" );
+    echo goBackToPageLink( 'admin_acad.php', 'Go back' );
+    exit;
 }
 
 echo '<form method="post" action="admin_acad_update_user_submit.php">';

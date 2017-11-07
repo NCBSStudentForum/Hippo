@@ -1193,3 +1193,7 @@ function getSlotAtThisTime( $day, $slot_time, $slots = null )
     return $slot;
 }
 
+function __substr__( $needle, $haystack )
+{
+    return ( strpos( strtolower( $haystack ), strtolower( $needle) ) !== false );
+}

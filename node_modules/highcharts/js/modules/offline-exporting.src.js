@@ -1,11 +1,12 @@
 /**
- * @license Highcharts JS v5.0.7 (2017-01-17)
+ * @license Highcharts JS v5.0.14 (2017-07-28)
  * Client side exporting module
  *
  * (c) 2015 Torstein Honsi / Oystein Moseng
  *
  * License: www.highcharts.com/license
  */
+'use strict';
 (function(factory) {
     if (typeof module === 'object' && module.exports) {
         module.exports = factory;
@@ -22,7 +23,6 @@
          * License: www.highcharts.com/license
          */
 
-        'use strict';
         /*global MSBlobBuilder */
 
         var merge = Highcharts.merge,
@@ -91,14 +91,19 @@
                 windowRef;
 
             // IE specific blob implementation
-            if (nav.msSaveOrOpenBlob) {
+            // Don't use for normal dataURLs
+            if (
+                typeof dataURL !== 'string' &&
+                !(dataURL instanceof String) &&
+                nav.msSaveOrOpenBlob
+            ) {
                 nav.msSaveOrOpenBlob(dataURL, filename);
                 return;
             }
 
             // Some browsers have limitations for data URL lengths. Try to convert to
-            // Blob or fall back.
-            if (dataURL.length > 2000000) {
+            // Blob or fall back. Edge always needs that blob.
+            if (isEdgeBrowser || dataURL.length > 2000000) {
                 dataURL = Highcharts.dataURLtoBlob(dataURL);
                 if (!dataURL) {
                     throw 'Data URL length limit reached';
@@ -109,7 +114,6 @@
             if (a.download !== undefined) {
                 a.href = dataURL;
                 a.download = filename; // HTML5 download attribute
-                a.target = '_blank';
                 doc.body.appendChild(a);
                 a.click();
                 doc.body.removeChild(a);
@@ -443,7 +447,16 @@
         };
 
         /**
-         * Add a new method to the Chart object to perform a local download
+         * Exporting and offline-exporting modules required. Export a chart to an image
+         * locally in the user's browser.
+         *
+         * @param  {Object} exportingOptions
+         *         Exporting options, the same as in {@link
+         *         Highcharts.Chart#exportChart}.
+         * @param  {Options} chartOptions
+         *         Additional chart options for the exported chart. For example a
+         *         different background color can be added here, or `dataLabels`
+         *         for export only.
          */
         Highcharts.Chart.prototype.exportChartLocal = function(exportingOptions, chartOptions) {
             var chart = this,
@@ -472,9 +485,46 @@
                     }
                 };
 
+            // If we are on IE and in styled mode, add a whitelist to the renderer
+            // for inline styles that we want to pass through. There are so many
+            // styles by default in IE that we don't want to blacklist them all.
+
+            if (isMSBrowser) {
+                Highcharts.SVGRenderer.prototype.inlineWhitelist = [
+                    /^blockSize/,
+                    /^border/,
+                    /^caretColor/,
+                    /^color/,
+                    /^columnRule/,
+                    /^columnRuleColor/,
+                    /^cssFloat/,
+                    /^cursor/,
+                    /^fill$/,
+                    /^fillOpacity/,
+                    /^font/,
+                    /^inlineSize/,
+                    /^length/,
+                    /^lineHeight/,
+                    /^opacity/,
+                    /^outline/,
+                    /^parentRule/,
+                    /^rx$/,
+                    /^ry$/,
+                    /^stroke/,
+                    /^textAlign/,
+                    /^textAnchor/,
+                    /^textDecoration/,
+                    /^transform/,
+                    /^vectorEffect/,
+                    /^visibility/,
+                    /^x$/,
+                    /^y$/
+                ];
+            }
+
+
             // Always fall back on:
             // - MS browsers: Embedded images JPEG/PNG, or any PDF
-            // - Edge: PNG/JPEG all cases
             // - Embedded images and PDF
             if (
                 (
@@ -484,8 +534,6 @@
                         chart.container.getElementsByTagName('image').length &&
                         options.type !== 'image/svg+xml'
                     )
-                ) || (
-                    isEdgeBrowser && options.type !== 'image/svg+xml'
                 ) || (
                     options.type === 'application/pdf' &&
                     chart.container.getElementsByTagName('image').length
@@ -500,44 +548,42 @@
 
         // Extend the default options to use the local exporter logic
         merge(true, Highcharts.getOptions().exporting, {
-            libURL: 'https://code.highcharts.com/5.0.7/lib/',
-            buttons: {
-                contextButton: {
-                    menuItems: [{
-                        textKey: 'printChart',
-                        onclick: function() {
-                            this.print();
-                        }
-                    }, {
-                        separator: true
-                    }, {
-                        textKey: 'downloadPNG',
-                        onclick: function() {
-                            this.exportChartLocal();
-                        }
-                    }, {
-                        textKey: 'downloadJPEG',
-                        onclick: function() {
-                            this.exportChartLocal({
-                                type: 'image/jpeg'
-                            });
-                        }
-                    }, {
-                        textKey: 'downloadSVG',
-                        onclick: function() {
-                            this.exportChartLocal({
-                                type: 'image/svg+xml'
-                            });
-                        }
-                    }, {
-                        textKey: 'downloadPDF',
-                        onclick: function() {
-                            this.exportChartLocal({
-                                type: 'application/pdf'
-                            });
-                        }
-                    }]
+            libURL: 'https://code.highcharts.com/5.0.14/lib/',
+
+            // When offline-exporting is loaded, redefine the menu item definitions
+            // related to download.
+            menuItemDefinitions: {
+                downloadPNG: {
+                    textKey: 'downloadPNG',
+                    onclick: function() {
+                        this.exportChartLocal();
+                    }
+                },
+                downloadJPEG: {
+                    textKey: 'downloadJPEG',
+                    onclick: function() {
+                        this.exportChartLocal({
+                            type: 'image/jpeg'
+                        });
+                    }
+                },
+                downloadSVG: {
+                    textKey: 'downloadSVG',
+                    onclick: function() {
+                        this.exportChartLocal({
+                            type: 'image/svg+xml'
+                        });
+                    }
+                },
+                downloadPDF: {
+                    textKey: 'downloadPDF',
+                    onclick: function() {
+                        this.exportChartLocal({
+                            type: 'application/pdf'
+                        });
+                    }
                 }
+
             }
         });
 

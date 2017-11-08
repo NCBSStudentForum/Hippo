@@ -1822,6 +1822,63 @@ function smallCaps( $text )
 }
 
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Course to HTML row.
+    *
+    * @Param $c
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
+{
+    $cid = $c[ 'id' ];
+    $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
+    $registrations = getTableEntries(
+        'course_registration', 'student_id', $whereExpr 
+    );
+
+    $enrollments[ $cid ] = $registrations;
+
+    $cinfo = $c[ 'description' ];
+    $cname = $c[ 'name' ];
+    $cr = $c[ 'credits' ];
+
+    $note = '';
+    if( $c[ 'note' ] )
+        $note = colored( '* ' . $c[ 'note' ], 'blue' );
+
+    $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
+    $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
+        . humanReadableDate( $c[ 'end_date' ] );
+
+    $slotInfo = getCourseSlotTiles( $c, $slot );
+    $instructors = getCourseInstructors( $cid );
+
+    $row = '<tr>
+        <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
+        value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
+        . $instructors . '</td>
+        <form method="post" action="#">
+        <input type="hidden" name="course_id" value="' . $cid . '">
+        <td>' .  $schedule . '</td>
+        <td>' . "<strong> $slotInfo </strong> <br>" 
+        .  '<strong>' . $note . '</strong></td><td>' 
+        .  $c[ 'venue' ] . '</td>
+        <td>' . count( $registrations ) . '</td>';
+
+    // If url is found, put it in page.
+    if( $c['url'] )
+        $row .= '<td><a target="_blank" href="' . $c['url']  
+        . '">Course page</a></td>';
+    else
+        $row .= '<td></td>';
+
+    return $row;
+}
+
+
 function mailto( $email, $text = '' )
 {
     if( ! $text )

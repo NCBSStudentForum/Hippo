@@ -1193,6 +1193,25 @@ function getSlotAtThisTime( $day, $slot_time, $slots = null )
     return $slot;
 }
 
+function getNextSemester( $sem = null, $year = null )
+{
+    $nextSem = array( );
+    if( ! $sem )
+        $sem = getCurrentSemester( );
+    if( ! $year )
+        $year = getCurrentYear( );
+
+    $nextSem[ 'semester' ] = 'AUTUMN';
+    $nextSem[ 'year' ] = $year;
+
+    if( $sem == 'AUTUMN' )
+    {
+        $nextSem[ 'semester' ] = 'SPRING';
+        $nextSem[ 'year' ] = date( 'Y', strtotime( 'next year' ));
+    }
+    return $nextSem;
+}
+
 function __substr__( $needle, $haystack )
 {
     return ( strpos( strtolower( $haystack ), strtolower( $needle) ) !== false );

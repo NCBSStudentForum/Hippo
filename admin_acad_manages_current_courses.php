@@ -52,7 +52,12 @@ $venues = getTableEntries( 'venues', '', "type='LECTURE HALL'" );
 $venueSelect = venuesToHTMLSelect( $venues );
 
 // Running course for this semester.
+$nextSem = getNextSemester( );
 $runningCourses = getSemesterCourses( $year, $sem );
+$nextSemCourses = getSemesterCourses( $nextSem[ 'year' ], $nextSem[ 'semester' ] );
+
+$runningCourses = array_merge( $runningCourses, $nextSemCourses );
+
 $runningCourseIds = array_map( 
             function( $x ) { return $x[ 'id']; }, $runningCourses 
         );

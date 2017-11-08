@@ -9,8 +9,8 @@ include_once './check_access_permissions.php';
 ?>
 
 <!-- Sweet alert -->
-<script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert/dist/sweetalert.css">
+<script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert2/dist/sweetalert.css">
 
 
 <?php
@@ -80,9 +80,8 @@ function showCourseInfo( x )
 {
     swal({ 
         title : x.title
-        , text : "<div align=\"left\">" + x.value + "</div>"
+        , html : "<div align=\"left\">" + x.value + "</div>"
         , type : "info"
-        , html : true
         });
 }
 
@@ -111,9 +110,8 @@ function showRunningCourse( x )
 
     swal({ 
         title : title
-        , text : runningCoursesTxt
+        , html : runningCoursesTxt
         , type : "info"
-        , html : true
         });
 }
 </script>

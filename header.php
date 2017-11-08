@@ -71,32 +71,28 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <br />
 </html>
 
-<!-- Here are the js script -->
-<script src="js/jquery-1.12.4.js"></script>
-<script src="js/jquery-ui.js"></script>
-<link rel="stylesheet" href="js/jquery-ui.css">
+<script src="./node_modules/jquery/dist/jquery.js"></script>
 
-<script src="js/easyzoom.js"></script>
-<link rel="stylesheet" href="js/easyzoom.css">
+<script src="./node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+<link href="./node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css" />
 
-<script src="js/jquery-ui.multidatespicker.js"></script>
+<script src="./node_modules/jquery-timepicker/jquery.timepicker.js"></script>
+<link href="./node_modules/jquery-timepicker/jquery.timepicker.css" rel="stylesheet" type="text/css" />
 
-
-<script type="text/javascript" src="js/jquery-timepicker-1.11.9/jquery.timepicker.js"></script>
-
-<link rel="stylesheet" type="text/css" href="js/jquery-timepicker-1.11.9/jquery.timepicker.css" />
-<script type="text/javascript" src="js/jquery-timepicker-1.11.9/lib/site.js"></script>
+<script src="./node_modules/jquery-ui-multi-date-picker/dist/jquery-ui.multidatespicker.js"></script>
 
 <link href="hippo.css" rel="stylesheet" type="text/css" />
 
 <!-- Disable favicon requests -->
 <link rel="icon" href="data:,">
 
-
 <script>
 $( function() {
     $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
   } );
+</script>
+
+<script>
 $( function() {
     $( "input.datetimepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
   } );
@@ -107,7 +103,7 @@ $(function(){
     $('input.timepicker').timepicker( { 
             minTime : '8am'
             , scrollDefault : 'now'
-            , timeFormat : 'H:i', step : '15' 
+            , timeFormat : 'H:mm', step : '15' 
     });
 });
 </script>
@@ -123,7 +119,9 @@ $( function() {
 } );
 
 </script>
-<script src="tinymce/js/tinymce/tinymce.min.js"></script>
+
+
+<script src="./node_modules/tinymce/tinymce.min.js"></script>
 
 <!-- confirm on delete -->
 <script type="text/javascript" charset="utf-8">

@@ -1835,6 +1835,7 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 {
     $cid = $c[ 'id' ];
     $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
+
     $registrations = getTableEntries(
         'course_registration', 'student_id', $whereExpr 
     );
@@ -1850,6 +1851,7 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
         $note = colored( '* ' . $c[ 'note' ], 'blue' );
 
     $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
+
     $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
         . humanReadableDate( $c[ 'end_date' ] );
 

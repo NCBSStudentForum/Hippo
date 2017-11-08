@@ -325,9 +325,6 @@ if( $today > $startDay && $today <= $endDay )
 
             $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $macros );
 
-            if( $pi )
-                $templ[ 'cc' ] = $templ['cc'] . ",$pi";
-
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );
             sendPlainTextEmail( 

@@ -1862,13 +1862,12 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
         <td> <button id="$cid" onclick="showCourseInfo(this)" class="courseInfo" 
         value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
         . $instructors . '</td>
-        <form method="post" action="#">
-        <input type="hidden" name="course_id" value="' . $cid . '">
         <td>' .  $schedule . '</td>
         <td>' . "<strong> $slotInfo </strong> <br>" 
         .  '<strong>' . $note . '</strong></td><td>' 
         .  $c[ 'venue' ] . '</td>
-        <td>' . count( $registrations ) . '</td>';
+        <td>' . count( $registrations ) . '</td>' 
+        ;
 
     // If url is found, put it in page.
     if( $c['url'] )

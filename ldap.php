@@ -109,14 +109,14 @@ function authenticateUsingLDAP( $user, $pass )
         return false;
 
     $auth = false;
-    $ports = array( 389, 18288, 19554 );
-    foreach(  $ports as $port )
+    $ports = array( "ncbs" => 389, "instem" => 18288, "ccamp" => 19554 );
+    foreach(  $ports as $dc => $port )
     {
         echo printInfo( "Trying to connect to port $port" );
         $res = ldap_connect( "ldap.ncbs.res.in", $port ) or 
             die( "Could not connect to ldap on port $port" );
 
-        $ldapQuery = "uid=$user,ou=People,dc=ncbs,dc=res,dc=in";
+        $ldapQuery = "uid=$user,ou=People,dc=$dc,dc=res,dc=in";
 
         if( $res )
         {

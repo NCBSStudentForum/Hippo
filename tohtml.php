@@ -1857,7 +1857,7 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
     $instructors = getCourseInstructors( $cid );
 
     $row = '<tr>
-        <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
+        <td> <button id="$cid" onclick="showCourseInfo(this)" class="courseInfo" 
         value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
         . $instructors . '</td>
         <form method="post" action="#">

@@ -92,4 +92,48 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
         return null;
 }
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Use LDAP to authenticate user.
+    *
+    * @Param $user
+    * @Param $pass
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function authenticateUsingLDAP( $user, $pass )
+{
+    if( strlen( trim($user) ) < 1 )
+        return false;
+
+    $auth = false;
+    $ports = array( 389, 18288, 19554 );
+    foreach(  $ports as $port )
+    {
+        echo printInfo( "Trying to connect to port $port" );
+        $res = ldap_connect( "ldap.ncbs.res.in", $port ) or 
+            die( "Could not connect to ldap on port $port" );
+
+        $ldapQuery = "uid=$user,ou=People,dc=ncbs,dc=res,dc=in";
+
+        if( $res )
+        {
+            $bind = ldap_bind( $res, $ldapQuery, $pass ) or die( "Could not bind to ldap" );
+
+            if( $bind )
+            {
+                $auth = true;
+                ldap_unbind( $res );
+                break;
+            }
+            ldap_close( $res );
+        }
+    }
+
+    return $auth;
+}
+
+
 ?>

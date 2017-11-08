@@ -113,21 +113,8 @@ echo printInfo(
 $table = slotTable(  );
 echo $table;
 
-/*
- * Enrollment table.
- */
-$m = "<h1>Enrollment table for " . __ucwords__( $sem) . ", $year courses</h1>";
-echo $m;
-
-if( isRegistrationOpen( ) )
-{
-    echo alertUser(
-        "Registration link is now open! After login, visit <tt>My Courses</tt> page
-        to enrol. 
-        "
-        );
-
-}
+/* Enrollment table. */
+echo "<h1>Running courses in " . __ucwords__( $sem) . ", $year semester</h1>";
 
 $showEnrollText = 'Show Enrollement';
 echo printInfo(
@@ -135,8 +122,6 @@ echo printInfo(
     list of enrolled students" 
     );
 
-
-$enrollments = array( );
 
 /**
     * @name Show the courses.
@@ -147,53 +132,15 @@ $table = '<table class="info">';
 $table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
     <th>Enrollments</th><th>URL</th> </tr>';
 
+// Go over courses and populate the entrollment array.
+$enrollments = array( );
 ksort( $slotCourses );
 foreach( $slotCourses as $slot => $courses )
 {
     foreach( $courses as $c )
     {
-        $cid = $c[ 'id' ];
-        $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
-        $registrations = getTableEntries(
-            'course_registration', 'student_id', $whereExpr 
-        );
-
-        $enrollments[ $cid ] = $registrations;
-
-        $cinfo = $c[ 'description' ];
-        $cname = $c[ 'name' ];
-        $cr = $c[ 'credits' ];
-
-        $note = '';
-        if( $c[ 'note' ] )
-            $note = colored( '* ' . $c[ 'note' ], 'blue' );
-
-        $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
-        $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
-            . humanReadableDate( $c[ 'end_date' ] );
-
-        $slotInfo = getCourseSlotTiles( $c, $slot );
-        $instructors = getCourseInstructors( $cid );
-
-        $table .= '<tr>
-            <td> <button onclick="showCourseInfo(this)" class="courseInfo" 
-            value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
-            . $instructors . '</td>
-            <form method="post" action="#">
-            <input type="hidden" name="course_id" value="' . $cid . '">
-            <td>' .  $schedule . '</td>
-            <td>' . "<strong> $slotInfo </strong> <br>" 
-                  .  '<strong>' . $note . '</strong></td><td>' 
-                  .  $c[ 'venue' ] . '</td>
-            <td>' . count( $registrations ) . '</td>';
-
-        // If url is found, put it in page.
-        if( $c['url'] )
-            $table .= '<td><a target="_blank" href="' . $c['url']  
-                . '">Course page</a></td>';
-        else
-            $table .= '<td></td>';
-
+        $table .= '<tr>';
+        $table .= courseToHTMLRow( $c, $slot, $sem, $year, $enrollments );
         $table .= '<td> <button name="response" value="show_enrollment">
             <small>' . $showEnrollText . '</small></button></td>
             </form>';
@@ -226,7 +173,7 @@ if( $_POST )
 
     $rows = [ ];
     $allEmails = array( );
-    foreach( $enrollments[$cid]  as $r )
+    foreach( __get__($enrollments, $cid, array()) as $r )
     {
         $studentId = $r[ 'student_id' ];
         $info = getUserInfo( $studentId );
@@ -252,9 +199,11 @@ if( $_POST )
     echo '</div>';
 
     // Put a link to email to all.
-    $mailtext = implode( ",", $allEmails );
-
-    echo '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
+    if( count( $allEmails ) > 0 )
+    {
+        $mailtext = implode( ",", $allEmails );
+        echo '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
+    }
 
     echo '<br>';
     echo closePage( );
@@ -262,14 +211,54 @@ if( $_POST )
 
 echo '</div>';
 
-?>
 
-<!-- Prefix Mail logo on mailto links -->
-<!--
-<script type="text/javascript" charset="utf-8">
-$( "a[href^=\"mailto:\"]" ).each( function() {
-    var text = $(this).html( );
-    $(this).html(  "&#9993" + " " + text );
-    });
-</script>
--->
+/*******************************************************************************
+ * Upcoming courses.
+ *******************************************************************************/
+// Collect both metadata and other information in slotCourse array.
+
+$slotUpcomingCourses = array( );
+$nextSem = getNextSemester( );
+$upcomingCourses = getSemesterCourses( $nextSem[ 'year' ], $nextSem['semester'] );
+foreach( $upcomingCourses as $c )
+{
+    $cid = $c[ 'course_id' ];
+    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
+    if( $course )
+    {
+        $slotId = $c[ 'slot' ];
+        $tiles = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
+        $slotUpcomingCourses[ $slotId ][ ] = array_merge( $c, $course );
+    }
+}
+
+$table = '<table class="info">';
+$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
+    <th>Enrollments</th><th>URL</th> </tr>';
+
+foreach( $slotUpcomingCourses as $slot => $ucs )
+{
+    foreach( $ucs as $uc )
+    {
+        $table .= '<tr>';
+        $slot = $uc[ 'slot' ];
+        $sem = getSemester( $uc[ 'end_date' ] );
+        $year = getYear( $uc[ 'end_date' ] );
+        $table .= courseToHTMLRow( $uc, $slot, $sem, $year, $upcomingEnrollments );
+        $table .= '</tr>';
+    }
+}
+$table .= '</table>';
+
+if( count( $slotUpcomingCourses ) > 0 )
+{
+    echo '<h1>Upcoming courses</h1>';
+    echo '<div style="font-size:small">';
+    echo $table;
+    echo '</div>';
+}
+
+echo '<br>';
+echo closePage( );
+
+?>

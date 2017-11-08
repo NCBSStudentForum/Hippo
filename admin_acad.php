@@ -171,7 +171,7 @@ echo '
     </tr>
     <tr> </tr>
     <tr>
-        <td>Manage this sememster courses</td>
+        <td>Manage running courses</td>
         <td>
             <a href="admin_acad_manages_current_courses.php">Manage this semester courses</a> 
         </td>

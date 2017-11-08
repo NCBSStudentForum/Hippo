@@ -45,40 +45,53 @@ else if( $_POST['response'] == 'delete' )
 }
 else // Add or Update here.
 {
-    $_POST[ 'semester' ] = getCurrentSemester( );
-    $_POST[ 'year' ] = getCurrentYear( );
+    $_POST[ 'semester' ] = getSemester(  $_POST[ 'end_date' ] );
+    $_POST[ 'year' ] = getYear( $_POST[ 'end_date' ]  );
 
-    $courseAtThisSlotVenue = getTableEntry( 'courses'
-            , 'slot,venue,year,semester', $_POST );
+    // Check if any other course is running on this venue/slot between given
+    // dates.
+    $startDate = $_POST[ 'start_date' ];
+    $endDate = $_POST[ 'end_date' ];
+
+    $sem = getSemester( $endDate );
+    $year = getYear( $endDate );
+
+    $_POST[ 'semester' ] = $sem;
+    $_POST[ 'year' ] = $year;
+
+    $coursesAtThisVenue = getCoursesAtThisVenueSlotBetweenDates(
+        $_POST[ 'venue' ], $_POST[ 'slot' ], $startDate, $endDate 
+    );
+
+    var_dump( $_POST );
+
+    $collisionCourses = array_filter( 
+            $coursesAtThisVenue 
+            , function( $c ) { return $c['course_id'] != $_POST[ 'course_id' ]; }
+            );
 
     $updatable = 'semester,year,start_date,end_date,slot,venue,note,url,ignore_tiles';
-
-    if( $courseAtThisSlotVenue )
+    if( count( $collisionCourses ) > 0 )
     {
-        // If different course is alredy on this slot/venue.
-        if( $courseAtThisSlotVenue[ 'course_id' ] != $_POST[ 'course_id' ] )
+        foreach( $collisionCourses as $cc )
         {
             echo printWarning( "Following course is already assigned at this slot/venue" );
-            echo arrayToVerticalTableHTML( $courseAtThisSlotVenue, 'info' );
-            echo goBackToPageLink( "admin_acad_manages_current_courses.php" );
-            exit;
+            echo arrayToVerticalTableHTML( $cc, 'info' );
+            echo '<br>';
         }
+        echo goBackToPageLink( "admin_acad_manages_current_courses.php" );
+        exit;
     }
 
     if ( $_POST[ 'response' ] == 'Add' ) 
     {
         echo printInfo( "Adding a new course in current course list" );
+
         if( strlen( $_POST[ 'course_id' ] ) > 0 )
         {
-            $id = getCourseInstanceId( $_POST[ 'course_id' ] );
+            $id = getCourseInstanceId( $_POST[ 'course_id' ], $sem, $year );
             $_POST[ 'id' ] = $id;
-            $_POST['semester'] = getSemester( $_POST[ 'start_date' ] );
-
-            $res = insertIntoTable( 
-                'courses'
-                , "id,course_id,$updatable"
-                , $_POST 
-            );
+            $res = insertIntoTable('courses',"id,course_id,$updatable", $_POST);
 
             if( ! $res )
                 echo printWarning( "Could not add course to list" );

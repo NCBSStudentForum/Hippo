@@ -63,8 +63,6 @@ else // Add or Update here.
         $_POST[ 'venue' ], $_POST[ 'slot' ], $startDate, $endDate 
     );
 
-    var_dump( $_POST );
-
     $collisionCourses = array_filter( 
             $coursesAtThisVenue 
             , function( $c ) { return $c['course_id'] != $_POST[ 'course_id' ]; }

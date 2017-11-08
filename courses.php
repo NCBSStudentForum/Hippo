@@ -1,7 +1,3 @@
-<!-- Sweet alert -->
-<script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert2/dist/sweetalert.css">
-
 <?php
 include_once 'header.php';
 include_once 'database.php';
@@ -16,6 +12,14 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+?>
+
+<!-- Sweet alert -->
+<script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./node_modules/sweetalert2/dist/sweetalert.css">
+
+
+<?php
 /* get this semester and next semester courses */
 
 $year = getCurrentYear( );
@@ -77,9 +81,9 @@ function showCourseInfo( x )
     swal({ 
         title : x.title
         , html : "<div align=\"left\">" + x.value + "</div>"
-        , type : "info"
-        });
+    });
 }
+
 
 function showRunningCourse( x )
 {
@@ -150,7 +154,6 @@ echo printInfo(
 $table = '<table class="info">';
 $table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
     <th>Enrollments</th><th>URL</th> </tr>';
-$table .= '<form method="post" action="#">';
 
 // Go over courses and populate the entrollment array.
 $enrollments = array( );
@@ -162,14 +165,15 @@ foreach( $slotCourses as $slot => $courses )
         $cid = $c[ 'course_id' ];
         $table .= '<tr>';
         $table .= courseToHTMLRow( $c, $slot, $sem, $year, $enrollments );
+        $table .= '<form method="post" action="#">';
         $table .= '<td> <button name="response" value="show_enrollment">
                   <small>' . $showEnrollText . '</small></button></td>';
         $table .= '<input type="hidden" name="course_id" value="' . $cid . '">';
+        $table .= '</form>';
         $table .= '</tr>';
     }
 }
 
-$table .= '</form>';
 $table .= '</table><br/>';
 
 echo '<div style="font-size:small">';
@@ -181,16 +185,14 @@ echo '</div>';
     * @{ */
 /**  @} */
 
-if( $_POST )
+if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
 {
-
-    echo '<h3>Enrollment for course ' . $courseName .'</h3>';
-
-    $cid = $_POST[ 'course_id'];
     $courseName = getCourseName( $cid );
+    $cid = $_POST[ 'course_id'];
     $rows = [ ];
     $allEmails = array( );
 
+    echo '<h3>Enrollment for course ' . $courseName .'</h3>';
     foreach( __get__($enrollments, $cid, array()) as $r )
     {
         $studentId = $r[ 'student_id' ];
@@ -225,7 +227,7 @@ if( $_POST )
     {
         $mailtext = implode( ",", $allEmails );
         echo '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
-    }
+        }
 }
 
 
@@ -235,31 +237,32 @@ if( $_POST )
 // Collect both metadata and other information in slotCourse array.
 
 
-$table = '<table id="upcoming_courses" class="info">';
-$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
+$newTab = '<table id="upcoming_courses" class="info">';
+$newTab .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
     <th>Enrollments</th><th>URL</th> </tr>';
 
 foreach( $slotUpcomingCourses as $slot => $ucs )
 {
     foreach( $ucs as $uc )
     {
-        $table .= '<tr>';
+        $newTab .= '<tr>';
         $slot = $uc[ 'slot' ];
         $sem = getSemester( $uc[ 'end_date' ] );
         $year = getYear( $uc[ 'end_date' ] );
 
-        $table .= courseToHTMLRow( $uc, $slot, $sem, $year, $upcomingEnrollments );
-        $table .= '</tr>';
+        $newTab .= courseToHTMLRow( $uc, $slot, $sem, $year, $upcomingEnrollments);
+                        
+        $newTab .= '</tr>';
     }
 }
-$table .= '</table>';
+$newTab .= '</table>';
 
 // Show table.
 if( count( $slotUpcomingCourses ) > 0 )
 {
     echo '<h1>Upcoming courses</h1>';
     echo '<div style="font-size:small">';
-    echo $table;
+    echo $newTab;
     echo '</div>';
 }
 

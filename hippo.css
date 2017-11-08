@@ -4,7 +4,6 @@ h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 body {
 
     font-family: Ubuntu;
-    font-size : normal;
     min-width : 80%;
 }
 
@@ -50,7 +49,6 @@ div.aws_preference {
 
 div.bottom {
     font-size : xx-small;
-    font-color : red;
 }
 
 div.cell_content {
@@ -221,10 +219,8 @@ div.info {
     max-width : var(--maxwidth);
 }
 
-// Buttons
-
 button {
-    font-size: x-large;
+    font-size: large;
     /*min-width : 50px;*/
 }
 button.invisible {
@@ -234,7 +230,6 @@ button.invisible {
 }
 
 
-// change them together.
 button.add_event {
     width : 20px;
     height : 20px;
@@ -251,7 +246,6 @@ button.display_event {
     background : red;
 }
 
-// Change both together.
 button.add_event_with_public_event {
     width : 20px;
     height : 20px;
@@ -287,7 +281,6 @@ button.display_request {
 
 button.submit {
     float : right;
-    left-margin : 100%;
     font-size: x-large;
 }
 
@@ -303,7 +296,6 @@ button.courseInfo {
 
 button.courseInfo:hover {
     border : 1px dotted;
-    font-size : normal;
     text-decoration: none;
 }
 
@@ -345,7 +337,6 @@ table.show_events {
 }
 
 table.show_events tr td  {
-    layout : auto;
     text-align : left;
     background-color: cyan;
     /*border-collapse : separate;*/
@@ -358,7 +349,7 @@ table.submit_request tr {
 }
 
 table.submit_request.tr td {
-    border-width = 0.5px;
+    border-width : 0.5px;
 }
 
 table.event {
@@ -482,23 +473,17 @@ table.admin td {
     width : 50%;
 }
 
-
 .goback {
-    align : left ;
 }
 
 .update {
     position : absolute;
-    align : right;
     left : 440px;
-    border-type : dotted;
 }
 
 .submit {
     position : absolute;
-    align : right;
     left : 440px;
-    border-type : dotted;
 }
 
 /* paragraphs */
@@ -516,7 +501,6 @@ p.info {
 
 p.warn {
     color : red;
-    width : 80% px;
     font-size : large;
 }
 
@@ -558,12 +542,10 @@ table.summary tr td  {
 }
 
 table.index {
-    align : top;
     min-width : 50%;
-};
+}
 
 table.index tr td {
-    valign : top;
     min-width : 250px;
 }
 
@@ -579,8 +561,7 @@ table.repeat_pat tr td  {
     max-width : 30%;
 }
 
-/* SELECT 
- */
+/* SELECT */
 select.supervisors {
     min-width : 300px;
 }
@@ -592,21 +573,13 @@ ul {
 }
 
 
-div.howto {
-    width : 500px;
-    text-align: justify;
-}
-
-
 address {
     display: block;
-    font-style: italic;
 }
 
 a[href^="mailto:"] { 
 
   text-decoration: none;
-  font-style : none;
   font-family : monospace;
   font-size: small;
 }
@@ -616,8 +589,7 @@ a[href^="mailto:"]::before {
     font-size: x-large;
 }
 
-// Links 
- a:link {
+a:link {
     text-decoration: none;
     color : blue;
 }

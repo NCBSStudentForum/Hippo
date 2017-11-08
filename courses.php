@@ -20,6 +20,7 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
     exit;
 }
 
+/* get this semester and next semester courses */
 
 $year = getCurrentYear( );
 $sem = getCurrentSemester( );
@@ -47,7 +48,31 @@ foreach( $runningCourses as $c )
     }
 }
 
+$slotUpcomingCourses = array( );
+$nextSem = getNextSemester( );
+$upcomingCourses = getSemesterCourses( $nextSem[ 'year' ], $nextSem['semester'] );
+foreach( $upcomingCourses as $c )
+{
+    $cid = $c[ 'course_id' ];
+    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
+    if( $course )
+    {
+        $slotId = $c[ 'slot' ];
+        $tiles = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
+        $slotUpcomingCourses[ $slotId ][ ] = array_merge( $c, $course );
+        foreach( $tiles as $tile )
+        {
+            if( strpos( $c['ignore_tiles'], $tile[ 'id' ]) !== 0 )
+            {
+                $tileCourses[ $tile['id']][ ] = array_merge( $c, $course );
+            }
+        }
+    }
+}
+
+
 $tileCoursesJSON = json_encode( $tileCourses );
+
 ?>
 
 <script type="text/javascript" charset="utf-8">
@@ -217,20 +242,6 @@ echo '</div>';
  *******************************************************************************/
 // Collect both metadata and other information in slotCourse array.
 
-$slotUpcomingCourses = array( );
-$nextSem = getNextSemester( );
-$upcomingCourses = getSemesterCourses( $nextSem[ 'year' ], $nextSem['semester'] );
-foreach( $upcomingCourses as $c )
-{
-    $cid = $c[ 'course_id' ];
-    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
-    if( $course )
-    {
-        $slotId = $c[ 'slot' ];
-        $tiles = getTableEntries( 'slots', 'groupid', "groupid='$slotId'" );
-        $slotUpcomingCourses[ $slotId ][ ] = array_merge( $c, $course );
-    }
-}
 
 $table = '<table class="info">';
 $table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>

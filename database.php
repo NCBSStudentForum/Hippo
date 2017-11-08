@@ -2476,6 +2476,26 @@ function getPIOrHost( $login )
     return '';
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Find all courses running on given venue/slot and between given
+    * dates.
+    *
+    * @Param $venue
+    * @Param $slot
+    * @Param $start
+    * @Param $end
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
+{
+    $whereExpr = "( end_date > '$start' AND start_date < '$end' ) 
+                    AND slot='$slot' AND venue='$venue'";
+    $courses = getTableEntries( 'courses', 'start_date' , $whereExpr );
+    return $courses;
+}
 
 ?>
 

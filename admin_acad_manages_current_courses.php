@@ -17,6 +17,8 @@ $action = 'Add';
 // database.
 $allCourses = getTableEntries( 'courses_metadata', 'name' );
 $coursesId = array_map( function( $x ) { return $x['id']; }, $allCourses );
+asort( $coursesId );
+
 $coursesMap = array( );
 
 $slots = getTableEntries( 'slots', 'groupid' );
@@ -45,6 +47,7 @@ foreach( $allCourses as $c )
     $coursesMap[ $c[ 'id' ] ] = $c[ 'name' ];
 
 $courseIdsSelect = arrayToSelectList( 'course_id', $coursesId, $coursesMap );
+
 $venues = getTableEntries( 'venues', '', "type='LECTURE HALL'" );
 $venueSelect = venuesToHTMLSelect( $venues );
 

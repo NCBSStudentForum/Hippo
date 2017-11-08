@@ -102,21 +102,13 @@ echo '<h1>Slots </h1>';
 
 echo printInfo( 
     "Some courses may modify these slot timings. In case of any discrepency
-    , please write to <tt>acadoffice@ncbs.res.in</tt> " 
+    please notify " . mailto( 'acadoffice@ncbs.res.in', 'Academic Office' ) . "."
 );
 
-//echo printInfo( "
-//    <ul>
-//    <li> If a course is running in slot 1, then its time is 
-//    represented by tiles 1A, 1B and 1C.  </li>
-//    <li> No course should overlap with any other course's slot tiles.  </li>
-//    <li> No course can run on red color tiles. These are reserved tiles. </li>
-//    </ul>" 
-//);
 
 echo printInfo( 
-    "Click on <button class=\"invisible\" disabled>1A</button> etc to see the 
-    list of courses running on this slot this semester
+    "Click on tile <button class=\"invisible\" disabled>1A</button> etc to see the 
+    list of courses running at this time.
     ");
 $table = slotTable(  );
 echo $table;

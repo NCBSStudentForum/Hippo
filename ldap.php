@@ -113,22 +113,22 @@ function authenticateUsingLDAP( $user, $pass )
     foreach(  $ports as $dc => $port )
     {
         echo printInfo( "Trying to connect to port $port" );
-        $res = ldap_connect( "ldap.ncbs.res.in", $port ) or 
+        $res = @ldap_connect( "ldap.ncbs.res.in", $port ) or 
             die( "Could not connect to ldap on port $port" );
 
         $ldapQuery = "uid=$user,ou=People,dc=$dc,dc=res,dc=in";
 
         if( $res )
         {
-            $bind = ldap_bind( $res, $ldapQuery, $pass ) or die( "Could not bind to ldap" );
+            $bind = @ldap_bind( $res, $ldapQuery, $pass );
 
             if( $bind )
             {
                 $auth = true;
-                ldap_unbind( $res );
+                @ldap_unbind( $res );
                 break;
             }
-            ldap_close( $res );
+            @ldap_close( $res );
         }
     }
 

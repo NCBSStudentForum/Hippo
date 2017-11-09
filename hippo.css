@@ -410,8 +410,9 @@ div.image {
 }
 
 table.login_main {
-    float: right;
-    left-margin:80%;
+    position:relative;
+    margin-left: 600px;
+    margin-top: 10px;
 }
 
 table.login_main tr td {

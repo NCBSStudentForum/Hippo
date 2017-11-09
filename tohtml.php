@@ -118,10 +118,10 @@ function loginForm()
     $table = "";
     $table .= '<form action="login.php" method="post">';
     $table .= '<table class="login_main">';
-    $table .= '<tr><td><small>NCBS/InSTEM Username </td></tr> ';
-    $table .= '<tr><td><input type="text" name="username" id="username" /> </td></tr>';
-    $table .= '<tr><td><small>Password</small></td></tr>';
-    $table .= '<tr><td> <input type="password"  name="pass" id="pass"> </td></tr>';
+    $table .= '<tr><td><input type="text" name="username" id="username"
+        placeholder="NCBS/Instem Username" /> </td></tr>';
+    $table .= '<tr><td> <input type="password"  name="pass" id="pass"
+            placeholder="Password" > </td></tr>';
     $table .= '<tr><td> <input style="float: right" type="submit" name="response" value="Login" /> </td></tr>';
     $table .= '</table>';
     $table .= '</form>';

@@ -32,10 +32,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <title>NCBS Hippo</title>
 
 <h1><a href="index.php">NCBS Hippo</a></h1>
-<!--
-<a href="https://github.com/dilawar/ncbs-hippo" target='_blank'>Github</a>
-<a href='https://github.com/dilawar/ncbs-hippo/issues' target="_blank">Report issue</a></small>
--->
+
 <div style="font-size:small">
 <table class="public_links">
     <tr>
@@ -166,16 +163,20 @@ else
     exit;
 }
 
-
-// Select one background picture.
-$command = "/usr/bin/python " . __DIR__ . "/photography/fetch_last_week_winner.py";
-$background = shell_exec( $command );
-if( $background )
+// Show background image only on index.php page.
+$thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
+if( strpos( $thisPage, 'index.php' ) !== false )
 {
-    echo "<body style=\" background-image:url($background);
-            filter:alpha(Opactity=30);opacity=0.3;
-            width:800px;
-                 \">";
+    // Select one background picture.
+    $command = "/usr/bin/python " . __DIR__ . "/photography/fetch_last_week_winner.py";
+    $background = shell_exec( $command );
+    if( $background )
+    {
+        echo "<body style=\" background-image:url($background);
+        filter:alpha(Opactity=30);opacity=0.3;
+        width:800px;
+        \">";
+    }
 }
 
 

@@ -1,20 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu|EB+Garamond|Open+Sans');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
-:root { --background : rgba(100,200,20,0.5) ; --maxwidth : 800px }
+:root { --background : rgba(255,255,250,0.8) ; --maxwidth : 800px }
 
 body {
-    font-family: Ubuntu;
+    font-family: Open Sans;
+    max-width: var(--maxwidth);
     min-width : 80%;
-    font-color:white;
-    color:white;
     display:block;
-    width:1000px;
-    height:1000px;
     background-color:var(--background);
-    background-size:contain;
+    background-size: 800px;
+    background-position:0 140px;
     background-repeat:no-repeat;
-    width:var(--maxwidth);
     background-attachment:fixed;
 }
 
@@ -53,6 +50,8 @@ div.aws_preference {
 
 div.bottom {
     font-size : xx-small;
+    float: bottom;
+    top-margin: 95%;
 }
 
 div.cell_content {
@@ -86,12 +85,13 @@ table.show_user tr td
 }
 
 table.public_links {
-
     max-width: var(--maxwidth);
     min-width: 80%;
 }
 
 table.public_links tr td {
+    border-right: 1px solid;
+    width: 80px;
 }
 
 table.show_info {
@@ -404,8 +404,12 @@ div.image {
 }
 
 table.login_main {
+    float: right;
+    left-margin:80%;
 }
 
+table.login_main tr td {
+}
 
 table.eventline  {
     table-layout : fixed;
@@ -563,12 +567,10 @@ a[href^="mailto:"]::before {
 
 a:link {
     text-decoration: none;
-    color:white;
 }
 
 a:visited {
     text-decoration: none;
-    color:white;
 }
 
 a:hover {
@@ -578,4 +580,9 @@ a:hover {
 
 a:active {
     text-decoration: underline;
+}
+
+footer {
+    position: fixed;
+    top: 95%;
 }

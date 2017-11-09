@@ -31,19 +31,17 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 //ini_set( 'display_errors', 1 );
 //ini_set( 'error_log', '/var/log/hippo.log' );
 
-$summary = summaryTable( );
-
 // Now create a login form.
 echo "<table class=\"index\">";
-echo ' <tr> <td style="min-width:75%"> </p> ' .  $summary .  '</td> <td> ';
-
+echo '</tr>';
 echo loginForm();
 echo '</tr>';
 echo "</table>";
-echo "</td></tr>";
-echo '<div class="public_calendar">';
-echo calendarIFrame( );
-echo '</div>';
+
+//echo '<br>';
+//echo '<div class="public_calendar">';
+//echo calendarIFrame( );
+//echo '</div>';
 
 echo "<br><br>";
 

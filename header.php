@@ -170,7 +170,13 @@ else
 // Select one background picture.
 $command = "/usr/bin/python " . __DIR__ . "/photography/fetch_last_week_winner.py";
 $background = shell_exec( $command );
-var_dump( $background );
+if( $background )
+{
+    echo "<body style=\" background-image:url($background);
+            filter:alpha(Opactity=30);opacity=0.3;
+            width:800px;
+                 \">";
+}
 
 
 //$symbEdit = "&#9998";              // pencil

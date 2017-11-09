@@ -1,18 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu|EB+Garamond|Open+Sans');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
-body {
+:root { --background : black; --maxwidth : 800px }
 
+body {
     font-family: Ubuntu;
     min-width : 80%;
+    font-color:white;
+    color:white;
+    display:block;
+    background-color:rgba(200,100,100,1.0);
+    width:var(--maxwidth);
+    background-attachment:fixed;
 }
 
-:root { --background : ivory; --maxwidth : 800px }
-
-body {
-    max-width : var(--maxwidth);
-    min-width : 100%;
-}
 
 h1.aws {
     font-size : 1.2em;
@@ -212,6 +213,10 @@ table.venue_slot {
 table.venue_slot tr td {
     border : 0px;
     width: 400px;
+}
+
+table {
+    background: rgba(200,200,200,0.5);
 }
 
 div.info {
@@ -515,7 +520,6 @@ div.alert_user {
    max-width : var(--maxwidth);
    min-width : 100%;
    padding-bottom : 10px;
-   color : blue;
 }
 
 td.db_table_fieldname {
@@ -577,6 +581,7 @@ address {
     display: block;
 }
 
+
 a[href^="mailto:"] { 
 
   text-decoration: none;
@@ -591,12 +596,12 @@ a[href^="mailto:"]::before {
 
 a:link {
     text-decoration: none;
-    color : blue;
+    color:red;
 }
 
 a:visited {
     text-decoration: none;
-    color : blue;
+    color:darkred;
 }
 
 a:hover {
@@ -607,5 +612,4 @@ a:hover {
 
 a:active {
     text-decoration: underline;
-    color : blue;
 }

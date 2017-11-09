@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu|EB+Garamond|Open+Sans');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
-:root { --background : black; --maxwidth : 800px }
+:root { --background : rgba(100,200,20,0.5) ; --maxwidth : 800px }
 
 body {
     font-family: Ubuntu;
@@ -9,7 +9,11 @@ body {
     font-color:white;
     color:white;
     display:block;
-    background-color:rgba(200,100,100,1.0);
+    width:1000px;
+    height:1000px;
+    background-color:var(--background);
+    background-size:contain;
+    background-repeat:no-repeat;
     width:var(--maxwidth);
     background-attachment:fixed;
 }
@@ -45,7 +49,6 @@ div.header {
 
 div.aws_preference {
     font-size : x-small;
-    background : lightblue;
 }
 
 div.bottom {
@@ -80,15 +83,15 @@ table.show_user tr td
 {
     /*border : 0.5px dotted; */
     min-width : 20%;
-    background : var(--background);
 }
 
 table.public_links {
+
     max-width: var(--maxwidth);
     min-width: 80%;
 }
-table.public_links tr td {
 
+table.public_links tr td {
 }
 
 table.show_info {
@@ -96,7 +99,6 @@ table.show_info {
     min-width: 400px;
     min-width: 90%;
     border: 1px solid;
-    background : lightyellow;
 }
 
 table.show_info tr td 
@@ -105,7 +107,6 @@ table.show_info tr td
 }
 
 table.show_speaker tr td  {
-    background : var(--background);
 }
 
 
@@ -120,13 +121,11 @@ table.show_aws tr td
     text-align : left;
     max-width : 500px;
     max-height: 3cm;
-    background : var(--background);
 }
 
 table.show_calendar {
     max-width : var(--maxwidth);
     min-width : 100%;
-    background : var(--background);
     margin: 20px;
 }
 
@@ -140,7 +139,6 @@ table.show_calendar tr td:nth-child(1)
 table.show_aws_summary {
     max-width : 1000px;
     min-width : 100%;
-    background : var(--background);
 }
 
 
@@ -157,13 +155,11 @@ table.show_schedule {
 table.show_schedule tr td
 {
     border : 1px dotted;
-    background: var(--background);
 }
 
 
 table.show_schedule th
 {
-    background: lightblue;
     font-size : x-small;
 }
 
@@ -175,13 +171,11 @@ table.tasks
 table.tasks tr td:nth-child(1)
 {
     width:60%;
-    background : var(--background);
 }
 
 table.tasks tr td:nth-child(2)
 {
     width:40%;
-    background : var(--background);
 }
 
 table.standout {
@@ -192,7 +186,6 @@ table.standout {
 table.standout tr td
 {
     border : 1px dotted;
-    background: lightblue;
 }
 
 table.timetable {
@@ -216,7 +209,6 @@ table.venue_slot tr td {
 }
 
 table {
-    background: rgba(200,200,200,0.5);
 }
 
 div.info {
@@ -229,7 +221,6 @@ button {
     /*min-width : 50px;*/
 }
 button.invisible {
-    background : none;
     border : 1px dotted;
     font-size : small;
 }
@@ -239,7 +230,6 @@ button.add_event {
     width : 20px;
     height : 20px;
     border-style : none;
-    background : lightblue;
     min-height : 20px;
     min-width : 20px;
 }
@@ -248,14 +238,12 @@ button.display_event {
     min-height : 20px;
     min-width : 20px;
     border-style : none;
-    background : red;
 }
 
 button.add_event_with_public_event {
     width : 20px;
     height : 20px;
     border-style : none;
-    background : gray;
     min-height : 20px;
     min-width : 20px;
 }
@@ -263,7 +251,6 @@ button.display_event_with_public_event {
     min-height : 20px;
     min-width : 20px;
     border-style : none;
-    background : gray;
 }
 
 button.add_event_past {
@@ -279,7 +266,6 @@ button.display_request {
     min-width : 20px;
     /*border-radius : 50%;*/
     border-style : none;
-    background : yellow;
     /*alignment : right;*/
     /*vertical-align: text-top;*/
 }
@@ -290,7 +276,6 @@ button.submit {
 }
 
 button.courseInfo {
-    background : none;
     border : none;
     min-width : 200px;
     font-size : small;
@@ -307,7 +292,6 @@ button.courseInfo:hover {
 
 table.input {
     text-align : left;
-    background-color:var(--background); 
     min-width : 400px;
     max-width : var(--maxwidth); 
 }
@@ -330,7 +314,6 @@ table.request {
 
 table.show_requests {
     text-align : left;
-    background-color:var(--background); 
     border-collapse : separate;
     width : 100%;
 }
@@ -343,7 +326,6 @@ table.show_events {
 
 table.show_events tr td  {
     text-align : left;
-    background-color: cyan;
     /*border-collapse : separate;*/
     /*border : 1px dotted;*/
 }
@@ -359,7 +341,6 @@ table.submit_request.tr td {
 
 table.event {
     text-align : left;
-    background-color:var(--background); 
     border-collapse : separate;
     border : 1px dotted;
     max-width : 90%;
@@ -367,7 +348,6 @@ table.event {
 
 table.show_venue {
     text-align : left;
-    background-color:var(--background); 
     border-collapse : separate;
     border : 1px dotted;
     max-width : 90%;
@@ -377,14 +357,12 @@ table.show_venue {
 
 table.editable_events {
     text-align : left;
-    background-color:var(--background); 
     border : 0px;
     /*max-width : 90%;*/
 }
 
 table.editable_course_registration {
     text-align : left;
-    background-color:var(--background); 
     border : 1px dotted;
     /*max-width : 90%;*/
 }
@@ -406,14 +384,12 @@ table.editable_logins {
 
 table.editable_logins tr td {
     text-align: left;
-    background-color: var(--background);
     word-wrap: break-word;
 }
 
 table.editable_faculty {
     text-align : left;
     min-width : 500px;
-    background : var(--background);
 }
 
 
@@ -428,7 +404,6 @@ div.image {
 }
 
 table.login_main {
-    background-color : var(--background);
 }
 
 
@@ -438,13 +413,11 @@ table.eventline  {
 }
 
 table.eventline tr td  {
-    background-color:var(--background); 
     padding : 1px;
 }
 
 table.hourtable {
     table-layout : fixed;
-    background-color:var(--background); 
 }
 
 table.hourtable tr td {
@@ -453,16 +426,13 @@ table.hourtable tr td {
 
 
 table.request tr:nth-of-type( odd ) {
-    background : #eee;
 }
 
 table.info {
     max-width : 80%;
     min-width : 500px;
-    background : var(--background);
 }
 table.info tr:nth-of-type( odd ) {
-    background : #eee;
 }
 
 
@@ -473,7 +443,6 @@ table.admin {
 }
 
 table.admin td {
-    background : var(--background);
     border : 1px dotted;
     width : 50%;
 }
@@ -542,7 +511,6 @@ table.summary {
 
 table.summary tr td  {
     border : 0px dotted;
-    background-color : var(--background);
 }
 
 table.index {
@@ -554,7 +522,6 @@ table.index tr td {
 }
 
 table.repeat_pat {
-    background-color : var(--background );
     border: 1px dotted;
     min-width: 500px;
     max-width : var(--maxwidth);
@@ -596,18 +563,17 @@ a[href^="mailto:"]::before {
 
 a:link {
     text-decoration: none;
-    color:red;
+    color:white;
 }
 
 a:visited {
     text-decoration: none;
-    color:darkred;
+    color:white;
 }
 
 a:hover {
     text-decoration: none;
     font-variant: small-caps;
-    color : red;
 }
 
 a:active {

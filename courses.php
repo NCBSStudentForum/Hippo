@@ -209,7 +209,7 @@ if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
     $count = 0;
 
     // Construct enrollment table.
-    $table = '<table id="show_enrollmenents" class="show_events">';
+    $table = '<table id="show_enrollmenents" class="info">';
     foreach( $rows as $fname => $row )
     {
         $count ++;

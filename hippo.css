@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu|EB+Garamond|Open+Sans');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
-:root { --background : rgba(255,255,250,0.8) ; --maxwidth : 800px }
+:root { --background : rgba(255,255,251,0.8) ; --maxwidth : 800px }
 
 body {
     font-family: Open Sans;
@@ -215,6 +215,7 @@ table.venue_slot tr td {
 }
 
 table {
+    background-color: rgba(255,255,230,0.9);
 }
 
 div.info {
@@ -282,18 +283,17 @@ button.submit {
 }
 
 button.courseInfo {
-    border : none;
+    /*border: 1px solid;*/
     min-width : 200px;
-    font-size : small;
     font-variant: small-caps;
-    text-decoration: underline;
     text-align : left;
+    font-weight: bold;
 }
 
-button.courseInfo:hover {
-    border : 1px dotted;
-    text-decoration: none;
-}
+/*button.courseInfo:hover {*/
+    /*border : 1px dotted;*/
+    /*text-decoration: none;*/
+/*}*/
 
 
 table.input {
@@ -437,13 +437,16 @@ table.hourtable tr td {
 
 
 table.request tr:nth-of-type( odd ) {
+    background: #eee;
 }
 
 table.info {
     max-width : 80%;
     min-width : 500px;
 }
+
 table.info tr:nth-of-type( odd ) {
+    background: #eee;
 }
 
 

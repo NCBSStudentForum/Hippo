@@ -1257,3 +1257,19 @@ function isImage( $url )
     fclose($fp);
     return false;
 }
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Select random JPEG from directory.
+    *
+    * @Param $dir
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function random_jpeg( $dir )
+{
+    $files = glob( "$dir/*.jpg" );
+    $idx = array_rand( $files );
+    return $files[ $idx ];
+}

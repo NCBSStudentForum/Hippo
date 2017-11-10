@@ -1,8 +1,8 @@
 <?php
 
-include_once( 'tohtml.php' );
-include_once( 'methods.php' );
-include_once( 'calendar/calendar.php' );
+include_once 'tohtml.php' ;
+include_once 'methods.php' ;
+include_once 'calendar/calendar.php' ;
 
 
 session_save_path("/tmp/");
@@ -40,10 +40,12 @@ $thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
 if( strpos( $thisPage, 'index.php' ) !== false )
 {
     // Select one background picture.
-    $command = "/usr/bin/python " . __DIR__ . "/background/fetch_last_week_winner.py";
+    $command = 'nohup /usr/bin/python ' 
+        . __DIR__ . '/fetch_last_week_winner.py > /dev/null 2>&1 &'
+        ;
 
     // Select one image from directory _backgrounds.
-    $background = shell_exec( $command );
+    $background = random_jpeg( "_backgrounds" );
     if( $background )
     {
         echo "<body style=\" background-image:url($background);

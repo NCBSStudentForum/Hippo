@@ -13,6 +13,9 @@ os.environ[ 'https_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 br_ = mechanize.Browser()
 base_url_ = 'https://intranet.ncbs.res.in/photography'
 
+background_dir_ = '_backgrounds'
+if not os.path.exists( background_dir_ ):
+    os.makedirs( background_dir_ )
 
 def log( msg ):
     return 
@@ -28,7 +31,6 @@ def is_image_and_ready(url):
 
 def print_broser( ):
     global br_
-    print( br_ )
 
 def main( ):
     global br_, base_url_
@@ -42,7 +44,18 @@ def main( ):
         url = l.url 
         if is_image_and_ready( url ):
             urls.append(url)
+            outfile = os.path.basename( url )
+            outpath = os.path.join( background_dir_, outfile )
+            if not os.path.exists( outpath ):
+                try:
+                    with open( outpath, 'wb' ) as f:
+                        f.write( urllib2.urlopen( url ).read( ) )
+                except Exception as e:
+                    pass
+
             log( url )
+
+    # This we write to stdout.
     print( random.choice( urls ) )
 
 

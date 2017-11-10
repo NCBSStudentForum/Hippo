@@ -35,6 +35,23 @@ echo loginForm();
 echo '</tr>';
 echo "</table>";
 
+// Show background image only on index.php page.
+$thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
+if( strpos( $thisPage, 'index.php' ) !== false )
+{
+    // Select one background picture.
+    $command = "/usr/bin/python " . __DIR__ . "/background/fetch_last_week_winner.py";
+    $background = shell_exec( $command );
+    if( $background )
+    {
+        echo "<body style=\" background-image:url($background);
+        filter:alpha(Opactity=30);opacity=0.3;
+        width:800px;
+        \">";
+    }
+}
+
+
 //echo '<br>';
 //echo '<div class="public_calendar">';
 //echo calendarIFrame( );

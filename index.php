@@ -40,9 +40,11 @@ $thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
 if( strpos( $thisPage, 'index.php' ) !== false )
 {
     // Select one background picture.
-    $command = 'nohup /usr/bin/python ' 
+    $command = 'nohup python ' 
         . __DIR__ . '/fetch_backgrounds.py > /dev/null 2>&1 &'
         ;
+    // Run command.
+    shell_exec( $command );
 
     // Select one image from directory _backgrounds.
     $background = random_jpeg( "_backgrounds" );

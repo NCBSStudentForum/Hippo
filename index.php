@@ -41,6 +41,8 @@ if( strpos( $thisPage, 'index.php' ) !== false )
 {
     // Select one background picture.
     $command = "/usr/bin/python " . __DIR__ . "/background/fetch_last_week_winner.py";
+
+    // Select one image from directory _backgrounds.
     $background = shell_exec( $command );
     if( $background )
     {

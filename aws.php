@@ -20,7 +20,6 @@ if( $_GET )
 }
 
 echo "<h2>Annual Work Seminars on " . humanReadableDate( $default[ 'date' ] ) . " </h2>";
-
 echo '
     <form method="get" action="">
     <table border="0">

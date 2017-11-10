@@ -3,8 +3,16 @@
 include_once 'header.php';
 include_once 'database.php';
 include_once 'tohtml.php';
+include_once 'check_access_permissions.php';
 
-echo userHTML( );
+// Show it only if accessed from intranet or user have logged in.
+if( ! (isIntranet( ) || isAuthenticated( ) ) )
+{
+    echo printWarning( "To access this page, either use Intranet or log-in first" );
+    echo closePage( );
+    exit;
+}
+
 
 echo '<strong>Multiple keywords can be separated by , </strong>';
 echo '

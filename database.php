@@ -2425,6 +2425,33 @@ function getCourseSlotTiles( $course )
    return implode( ",", $result );
 }
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  So far how many CLASS events have happened.
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function totalClassEvents( )
+{
+    $courses = getTableEntries( 'courses' );
+    $numEvents = 0;
+    foreach( $courses as $c )
+    {
+        $startDate = strtotime( $c[ 'start_date' ] );
+        $endDate = min( strtotime( 'now' ), strtotime( $c['end_date' ] ) );
+        $slots = $c[ 'slot' ];
+        $nTiles = count( getSlotTiles( $slots ) );
+        $nWeeks = intval( max(0,$endDate - $startDate) / (24*3600*7.0) );
+
+        // For each week, add this many events.
+        $numEvents += $nWeeks * $nTiles;
+    }
+
+    return $numEvents;
+}
+
 /* --------------------------------------------------------------------------*/
 /**
     * @Synopsis  Get the Type of column from mysql tables.
@@ -2500,4 +2527,6 @@ function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
 }
 
 ?>
+
+
 

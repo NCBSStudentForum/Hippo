@@ -6,6 +6,8 @@ import mechanize
 import mimetypes
 import urllib2
 import random
+import PIL.Image
+import cStringIO
 
 os.environ[ 'http_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 os.environ[ 'https_proxy' ] = 'http://proxy.ncbs.res.in:3128'
@@ -45,12 +47,17 @@ def main( ):
         if is_image_and_ready( url ):
             urls.append(url)
             outfile = os.path.basename( url )
-            outpath = os.path.join( background_dir_, outfile )
+            outpath = os.path.join( background_dir_, outfile + '.jpg' )
             if not os.path.exists( outpath ):
                 try:
-                    with open( outpath, 'wb' ) as f:
-                        f.write( urllib2.urlopen( url ).read( ) )
+                    img = cStringIO.StringIO( urllib2.urlopen( url ).read( ) )
+                    img = PIL.Image.open( img )
+                    width = 800
+                    height = int((float(img.size[1])*width/float(img.size[0])))
+                    img = img.resize( (width,height), PIL.Image.ANTIALIAS )
+                    img.save( outpath )
                 except Exception as e:
+                    print( e )
                     pass
 
             log( url )

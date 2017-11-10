@@ -24,7 +24,9 @@ else if( $_POST['response'] == 'delete' )
         $res = deleteFromTable( 'courses', 'id', $_POST );
         if( $res )
         {
+            deleteBookings( $_POST[ 'id' ] );
             echo printInfo( "Successfully deleted entry" );
+
             // Remove all enrollments.
             $year = getCurrentYear( );
             $sem = getCurrentSemester( );
@@ -81,6 +83,7 @@ else // Add or Update here.
         exit;
     }
 
+    // No collision. Add or update now.
     if ( $_POST[ 'response' ] == 'Add' ) 
     {
         echo printInfo( "Adding a new course in current course list" );
@@ -89,12 +92,14 @@ else // Add or Update here.
         {
             $id = getCourseInstanceId( $_POST[ 'course_id' ], $sem, $year );
             $_POST[ 'id' ] = $id;
+
             $res = insertIntoTable('courses',"id,course_id,$updatable", $_POST);
 
             if( ! $res )
                 echo printWarning( "Could not add course to list" );
             else
             {
+                $res = addBookings( $_POST[ 'id' ] );
                 goBack( 'admin_acad_manages_current_courses.php', 1 );
                 exit;
             }
@@ -107,9 +112,10 @@ else // Add or Update here.
         $res = updateTable( 'courses', 'course_id', $updatable , $_POST );
         if( $res )
         {
+            $res = updateBookings( $_POST[ 'id' ] );
             echo printInfo( 'Updated course' );
-            goBack( 'admin_acad_manages_current_courses.php', 1);
-            exit;
+            //goBack( 'admin_acad_manages_current_courses.php', 1);
+            //exit;
         }
     }
 }

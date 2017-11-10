@@ -1270,6 +1270,10 @@ function isImage( $url )
 function random_jpeg( $dir )
 {
     $files = glob( "$dir/*.jpg" );
-    $idx = array_rand( $files );
-    return $files[ $idx ];
+    if( $files )
+    {
+        $idx = array_rand( $files );
+        return $files[ $idx ];
+    }
+    return '';
 }

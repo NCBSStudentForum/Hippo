@@ -41,7 +41,7 @@ if( strpos( $thisPage, 'index.php' ) !== false )
 {
     // Select one background picture.
     $command = 'nohup /usr/bin/python ' 
-        . __DIR__ . '/fetch_last_week_winner.py > /dev/null 2>&1 &'
+        . __DIR__ . '/fetch_backgrounds.py > /dev/null 2>&1 &'
         ;
 
     // Select one image from directory _backgrounds.

@@ -70,7 +70,7 @@ $( function() {
     var coursesDict = <?php echo json_encode( $coursesMap ) ?>;
     var courses = <?php echo json_encode( $runningCourseIds ); ?>;
     $( "#running_course" ).autocomplete( { source : courses }); 
-    $( "#running_course" ).attr( "placeholder", "autocomplete" );
+    $( "#running_course" ).attr( "placeholder", "Type course code" );
 });
 
 </script>
@@ -99,22 +99,20 @@ echo "<h1>Running courses</h1>";
 
 echo printInfo( "Current semester is $sem, $year" );
 
-echo '<div style="font-size:small">';
-
-// Show running courses here.
+echo '<div style="font-size:80%">';
 echo '<table class="info">';
 $tobefilterd = 'id,semester,year';
 echo arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 foreach( $runningCourses as $course )
 {
     $cname = getCourseName( $course[ 'course_id'] );
-    $course[ 'name' ] = $cname;
+    $course[ 'course_id' ] = '<strong>'. $course['course_id'] . '</strong><br> ' . $cname;
     echo arrayToRowHTML( $course, 'aws', $tobefilterd );
 }
 
 echo '</table>';
-
 echo '</div>';
+
 echo "</br>";
 
 echo '<form method="post" action="#">';

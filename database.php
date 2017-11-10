@@ -2059,6 +2059,104 @@ function getRunningCourses( )
     return getSemesterCourses( $year, $sem );
 }
 
+function deleteBookings( $course )
+{
+    $bookedby = $course;
+
+    // Make them invalid.
+    $res = updateTable( 'events', 'created_by', 'status'
+        , array( 'created_by' => $course, 'status' => 'INVALID' )
+    );
+    return $res;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Create events for given course.
+ * The course id COURSE-SEM-YEAR is used a user for booking. When
+ * deleting for course, we delete all events created by COURSE-SEM-YEAR
+ *
+ * @Param $runningCourseId Course Id of course.
+ *
+ * @Returns True if successful.
+ */
+/* ----------------------------------------------------------------------------*/
+function addBookings( $runningCourseId )
+{
+    // Fetch the course name.
+    $course = getTableEntry( 'courses', 'id', array( 'id' => $runningCourseId ) );
+    $cname = getCourseName( $course[ 'course_id' ] );
+
+    $bookedby = $runningCourseId;
+
+    $venue = $course[ 'venue' ];
+    $title = "Course $cname";
+
+    $tiles = getSlotTiles( $course[ 'slot' ] );
+    $ignoreTiles = $course[ 'ignore_tiles' ];
+
+    if( $ignoreTiles )
+        $tiles = array_diff( $tiles, explode(',', $ignore_tiles) );
+
+    $startDate = $course[ 'start_date' ];
+    $endDate = $course[ 'end_date' ];
+
+    // Select unique gid.
+    $gid = intval( getUniqueFieldValue( 'events', 'gid' ) ) + 1;
+    echo "gid is $gid";
+
+    $temp = $startDate;
+    $eid = 0;
+    while( strtotime($temp) <= strtotime( $endDate ) )
+    {
+        $temp = dbDate(  strtotime( '+1 week', strtotime($temp) ));
+        foreach( $tiles as $tile )
+        {
+            $eid += 1;
+            $day = $tile[ 'day' ];
+            $date = dbDate( strtotime( "next $day", strtotime( $temp ) ) );
+            $startTime = $tile[ 'start_time' ];
+            $endTime = $tile[ 'end_time' ];
+            $msg = "$title at $venue on $date, $startTime, $endTime";
+
+            $data = array( 
+                'gid' => $gid, 'eid' => $eid
+                , 'date' => dbDate( $date )
+                , 'start_time' => $startTime
+                , 'end_time' => $endTime
+                , 'venue' => $venue
+                , 'title' => $title
+                , 'class' => 'CLASS'
+                , 'description' => 'AUTO BOOKED BY Hippo'
+                , 'created_by' => $bookedby
+                , 'last_modified_on' => dbDateTime( 'now' )
+            );
+
+
+            $res = insertIntoTable( 'events', array_keys( $data ), $data );
+            if( ! $res )
+                echo printWarning( "Could not book: $msg" );
+        }
+    }
+    return true;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Update the booking for this course.
+    *
+    * @Param $course
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function updateBookings( $course )
+{
+    deleteBookings( $course );
+    $res = addBookings( $course );
+    return $res;
+}
+
 
 function getMyCourses( $sem, $year, $user  )
 {

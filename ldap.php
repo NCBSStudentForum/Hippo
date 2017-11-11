@@ -37,8 +37,8 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
         return NULL;
     }
 
-    $ds = ldap_connect($ldap_ip, $port );
-    $r = ldap_bind($ds); 
+    $ds = @ldap_connect($ldap_ip, $port );
+    $r = @ldap_bind($ds); 
 
     if( ! $r )
     {
@@ -47,8 +47,8 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     }
 
     $base_dn = "dc=ncbs,dc=res,dc=in";
-    $sr = ldap_search($ds, $base_dn, "uid=$ldap");
-    $info = ldap_get_entries($ds, $sr);
+    $sr = @ldap_search($ds, $base_dn, "uid=$ldap");
+    $info = @ldap_get_entries($ds, $sr);
 
     $result = array();
     for( $s=0; $s < $info['count']; $s++)

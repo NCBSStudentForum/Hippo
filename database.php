@@ -3,7 +3,6 @@
 include_once 'database_init.php';
 include_once "methods.php";
 include_once 'ldap.php';
-include_once 'mail.php';
 
 // Option values for event/request.
 $dbChoices = array( 
@@ -2171,60 +2170,6 @@ function addBookings( $runningCourseId )
     return true;
 }
 
-function cancelEventAndNotifyBookingParty( $ev )
-{
-    echo printInfo( "Cancelling and notifying the booking party" );
-
-    $res = changeStatusOfEvent( $ev[ 'gid' ]
-        , $ev[ 'eid' ], $ev[ 'created_by' ], 'CANCELLED' 
-    );
-
-    $login = $ev[ 'created_by' ];
-    if( $res )
-    {
-        // Nofity the user.
-        $to = getLoginEmail( $ev[ 'created_by' ] );
-        $cc = 'hippo@lists.ncbs.res.in';
-        $subject = 'ATTN: Your booked event has been cancelled by Hippo';
-        $msg = "<p> Greetings " . loginToHTML( $login ) . '</p>';
-
-        $msg .= "<p> Following events has been cancelled because it was on a 
-            lecture hall and an  upcoming course has been scheduled here.
-            Lecture Halls are given preference for courses. </p>";
-
-        $msg .= arrayToTableHTML( $ev, 'event' );
-
-        $msg .= "<p>Kindly find another venue for your event. </p>";
-        sendPlainTextEmail( $subject, $body, $to, $cc );
-    }
-}
-
-function cancelRequesttAndNotifyBookingParty( $request )
-{
-    echo printInfo( "Cancelling and notifying the booking party" );
-    $res = changeRequestStatus( $request[ 'gid' ]
-        , $request[ 'eid' ], $request[ 'created_by' ], 'CANCELLED' 
-    );
-
-    $login = $request[ 'created_by' ];
-    if( $res )
-    {
-        // Nofity the user.
-        $to = getLoginEmail( $request[ 'created_by' ] );
-        $cc = 'hippo@lists.ncbs.res.in';
-        $subject = 'ATTN: Your booked event has been cancelled by Hippo';
-        $msg = "<p> Greetings " . loginToHTML( $login ) . '</p>';
-
-        $msg .= "<p> Following events has been cancelled because it was on a 
-            lecture hall and an  upcoming course has been scheduled here.
-            Lecture Halls are given preference for courses. </p>";
-
-        $msg .= arrayToTableHTML( $request, 'event' );
-
-        $msg .= "<p>Kindly find another venue for your event. </p>";
-        sendPlainTextEmail( $subject, $body, $to, $cc );
-    }
-}
 
 /* --------------------------------------------------------------------------*/
 /**

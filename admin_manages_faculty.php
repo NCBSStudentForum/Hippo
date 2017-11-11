@@ -18,13 +18,14 @@ $specialization = array( );
 foreach( $faculty as $fac )
 {
     $facultyMap[ $fac[ 'email' ] ] = $fac;
-    $specialization[ ] = $fac[ 'specialization' ];
+    $specialization[ $fac[ 'specialization' ] ] = 0;
 }
-$specialization = array_unique( $specialization );
 
 echo "<h2>Add a new faculty or update existing faculty </h3>";
 
 $facultyEmails = array_keys( $facultyMap );
+$specialization = array_keys( $specialization );
+
 echo printInfo( '
     If email is not found in database, you may add a faculty, otherwise
     you can update an existing faculty. You can also add instructor of given 
@@ -36,7 +37,7 @@ echo printInfo( '
 <script type="text/javascript" charset="utf-8">
 $( function() {
     var emails = <?php echo json_encode( $facultyEmails ) ?>;
-    var specialization = <?php echo json_encode( $specialization ) ?>;
+    var specialization = <?php echo json_encode($specialization ) ?>;
     $( "#faculty" ).autocomplete( { source : emails }); 
     $( "#faculty_specialization" ).autocomplete( { source : specialization }); 
     $( "#faculty" ).attr( "placeholder", "valid email id" );

@@ -64,7 +64,7 @@ echo '</table>';
 echo '<br>';
 
 $editables = Array( 'title', 'first_name', 'last_name', 'alternative_email'
-    , 'institute', 'valid_until', 'joined_on', 'pi_or_host' 
+    , 'institute', 'valid_until', 'joined_on', 'pi_or_host', 'specialization'
     );
 
 echo "<form method=\"post\" action=\"user_info_action.php\">";

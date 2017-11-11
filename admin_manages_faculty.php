@@ -13,9 +13,14 @@ $action = 'add';
 $faculty = getFaculty( );
 $facultyMap = array( );
 $default = array( );
+$specialization = array( );
 
 foreach( $faculty as $fac )
+{
     $facultyMap[ $fac[ 'email' ] ] = $fac;
+    $specialization[ ] = $fac[ 'specialization' ];
+}
+$specialization = array_unique( $specialization );
 
 echo "<h2>Add a new faculty or update existing faculty </h3>";
 
@@ -31,8 +36,11 @@ echo printInfo( '
 <script type="text/javascript" charset="utf-8">
 $( function() {
     var emails = <?php echo json_encode( $facultyEmails ) ?>;
+    var specialization = <?php echo json_encode( $specialization ) ?>;
     $( "#faculty" ).autocomplete( { source : emails }); 
-    $( "#faculty" ).attr( "placeholder", "autocomplete" );
+    $( "#faculty_specialization" ).autocomplete( { source : specialization }); 
+    $( "#faculty" ).attr( "placeholder", "valid email id" );
+    $( "#faculty_specialization" ).attr( "placeholder", "Specialization" );
 });
 </script>
 
@@ -63,7 +71,7 @@ echo '<form method="post" action="admin_manages_faculty_submit.php">';
 echo dbTableToHTMLTable( 'faculty'
     , $default
     , array( 'email', 'first_name', 'middle_name', 'last_name'
-    , 'status', 'affiliation', 'url', 'institute' ), $action
+    , 'status', 'specialization', 'affiliation', 'url', 'institute' ), $action
 );
 
 // If we are updating, do give an delete button.

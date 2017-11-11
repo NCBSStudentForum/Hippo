@@ -737,11 +737,11 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         if( $required )
             $columnText .= '<strong>*</strong>';
 
-        $html .= "<tr><td class=\"db_table_fieldname\"> $columnText </td>";
+        $inputId = $tablename . "_" . $keyName;
+        $html .= "<tr><td class=\"db_table_fieldname\" > $columnText </td>";
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
-        $inputId = $tablename . "_" . $keyName;
 
         // DIRTY HACK: If value is already a html entity then don't use a input
         // tag. Currently only '<select></select> is supported

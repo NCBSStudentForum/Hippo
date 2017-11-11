@@ -1356,3 +1356,31 @@ function cancelRequesttAndNotifyBookingParty( $request )
         sendPlainTextEmail( $subject, $body, $to, $cc );
     }
 }
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Insert given key => value at given index.
+    *
+    * @Param $arr
+    * @Param $index
+    * @Param $key
+    * @Param $value
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function array_insert_at( $arr, $index, $key, $value )
+{
+    $newarr = array( );
+    $i = 0;
+    foreach( $arr as $k => $v )
+    {
+        if( $i == $index )
+        {
+            $newarr[ $key ] = $value;
+            $newarr[ $k ] = $v;
+        }
+        $newarr[ $k ] = $v;
+    }
+    return $newarr;
+}

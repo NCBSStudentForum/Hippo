@@ -100,7 +100,7 @@ $(function(){
     $('input.timepicker').timepicker( { 
             minTime : '8am'
             , scrollDefault : 'now'
-            , timeFormat : 'H:mm', step : '15' 
+            , timeFormat : 'H:mm', interval : '15' 
     });
 });
 </script>

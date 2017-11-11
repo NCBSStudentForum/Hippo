@@ -438,13 +438,13 @@ if( $today > $startDay && $today <= $endDay )
     }
 }
 
-/* Assign AWS after 8 weeks . */
+/* Assign AWS after 10 weeks . */
 if( dbDate( 'today' ) == dbDate( strtotime( 'this monday' ) ) )
 {
     $awayFrom = strtotime( 'now' ) - strtotime( '13:00' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
-        $afterEightWeeks = dbDate( strtotime( $today ) + 56 * 86400 );
+        $afterEightWeeks = dbDate( strtotime( $today ) + 10 * 7 * 86400 );
         echo printInfo( "Today is monday and after 8 weeks $afterEightWeeks" );
 
         echo humanReadableDate( $afterEightWeeks );

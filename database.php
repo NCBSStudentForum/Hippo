@@ -3,6 +3,7 @@
 include_once 'database_init.php';
 include_once "methods.php";
 include_once 'ldap.php';
+include_once 'mail.php';
 
 // Option values for event/request.
 $dbChoices = array( 
@@ -420,6 +421,18 @@ function changeStatusOfEventGroup( $gid, $user, $status )
         gid=:gid AND created_by=:created_by" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':created_by', $user );
+    return $stmt->execute( );
+}
+
+function changeStatusOfEvent( $gid, $eid, $user, $status )
+{
+    global $db;
+    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE 
+        gid=:gid AND eid=:eid created_by=:created_by" );
+    $stmt->bindValue( ':status', $status );
+    $stmt->bindValue( ':gid', $gid );
+    $stmt->bindValue( ':gid', $eid );
     $stmt->bindValue( ':created_by', $user );
     return $stmt->execute( );
 }
@@ -2130,6 +2143,22 @@ function addBookings( $runningCourseId )
                 , 'last_modified_on' => dbDateTime( 'now' )
             );
 
+            // Check if there is already an event here. If yes, notify the user.
+            $events = getEventsOnThisVenueBetweenTime( $venue, $date, $startTime, $endTime );
+            $reqs = getRequestsOnThisVenueBetweenTime( $venue, $date, $startTime, $endTime );
+
+            foreach( $events as $ev )
+            {
+                echo arrayToTableHTML( $ev, 'event' );
+                // Remove all of them.
+                cancelEventAndNotifyBookingParty( $ev );
+            }
+
+            foreach( $reqs as $req )
+            {
+                echo arrayToTableHTML( $req, 'event' );
+                cancelRequesttAndNotifyBookingParty( $req );
+            }
 
             $res = insertIntoTable( 'events', array_keys( $data ), $data );
             if( ! $res )
@@ -2140,6 +2169,61 @@ function addBookings( $runningCourseId )
         $temp = dbDate(  strtotime( '+1 week', strtotime($temp) ));
     }
     return true;
+}
+
+function cancelEventAndNotifyBookingParty( $ev )
+{
+    echo printInfo( "Cancelling and notifying the booking party" );
+
+    $res = changeStatusOfEvent( $ev[ 'gid' ]
+        , $ev[ 'eid' ], $ev[ 'created_by' ], 'CANCELLED' 
+    );
+
+    $login = $ev[ 'created_by' ];
+    if( $res )
+    {
+        // Nofity the user.
+        $to = getLoginEmail( $ev[ 'created_by' ] );
+        $cc = 'hippo@lists.ncbs.res.in';
+        $subject = 'ATTN: Your booked event has been cancelled by Hippo';
+        $msg = "<p> Greetings " . loginToHTML( $login ) . '</p>';
+
+        $msg .= "<p> Following events has been cancelled because it was on a 
+            lecture hall and an  upcoming course has been scheduled here.
+            Lecture Halls are given preference for courses. </p>";
+
+        $msg .= arrayToTableHTML( $ev, 'event' );
+
+        $msg .= "<p>Kindly find another venue for your event. </p>";
+        sendPlainTextEmail( $subject, $body, $to, $cc );
+    }
+}
+
+function cancelRequesttAndNotifyBookingParty( $request )
+{
+    echo printInfo( "Cancelling and notifying the booking party" );
+    $res = changeRequestStatus( $request[ 'gid' ]
+        , $request[ 'eid' ], $request[ 'created_by' ], 'CANCELLED' 
+    );
+
+    $login = $request[ 'created_by' ];
+    if( $res )
+    {
+        // Nofity the user.
+        $to = getLoginEmail( $request[ 'created_by' ] );
+        $cc = 'hippo@lists.ncbs.res.in';
+        $subject = 'ATTN: Your booked event has been cancelled by Hippo';
+        $msg = "<p> Greetings " . loginToHTML( $login ) . '</p>';
+
+        $msg .= "<p> Following events has been cancelled because it was on a 
+            lecture hall and an  upcoming course has been scheduled here.
+            Lecture Halls are given preference for courses. </p>";
+
+        $msg .= arrayToTableHTML( $request, 'event' );
+
+        $msg .= "<p>Kindly find another venue for your event. </p>";
+        sendPlainTextEmail( $subject, $body, $to, $cc );
+    }
 }
 
 /* --------------------------------------------------------------------------*/

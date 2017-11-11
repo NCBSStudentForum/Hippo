@@ -206,7 +206,8 @@ function initialize( $db  )
             , affiliation ENUM ( 'NCBS', 'INSTEM', 'OTHER' ) DEFAULT 'INSTEM'
             , status ENUM ( 'ACTIVE', 'INACTIVE', 'INVALID' ) DEFAULT 'ACTIVE'
             , institute VARCHAR( 100 )
-            , url VARCHAR(300) 
+            , url VARCHAR(300)
+            , specialization VARCHAR(100)
             , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
             , modified_on DATETIME NOT NULL
             )"

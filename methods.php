@@ -1277,3 +1277,26 @@ function random_jpeg( $dir )
     }
     return '';
 }
+
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Is the given course active on given date.
+    *
+    * @Param $course
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function isCourseActive( $course, $day = 'today' )
+{
+    $date = strtotime( $day );
+
+    $start = strtotime( $course[ 'start_date' ] );
+    $end = strtotime( $course[ 'end_date' ] );
+
+    if( $date >= $start && $date <= $end )
+        return true;
+
+    return false;
+}

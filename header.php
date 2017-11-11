@@ -187,5 +187,6 @@ $symbSubmit = $symbCheck;
 $symbUpdate = $symbCheck;
 $symbRupee = '&#8377';
 $symbStuckOutTounge = "&#9786";
+$symbBell = '&#128365';
 
 ?>

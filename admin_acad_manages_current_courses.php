@@ -97,21 +97,23 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
 
 echo "<h1>Running courses</h1>";
 
-echo printInfo( "Current semester is $sem, $year" );
+echo printInfo( "Current semester is $sem, $year." );
 
-echo '<div style="font-size:80%">';
 echo '<table class="info">';
 $tobefilterd = 'id,semester,year';
+
 echo arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 foreach( $runningCourses as $course )
 {
     $cname = getCourseName( $course[ 'course_id'] );
     $course[ 'course_id' ] = '<strong>'. $course['course_id'] . '</strong><br> ' . $cname;
+
+    if( isCourseActive( $course ) )
+        $course[ 'course_id' ] = "<blink> $symbBell </blink>" . $course[ 'course_id' ];
+
     echo arrayToRowHTML( $course, 'aws', $tobefilterd );
 }
-
 echo '</table>';
-echo '</div>';
 
 echo "</br>";
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Ubuntu|EB+Garamond|Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Roboto+Mono|Open+Sans|Palatino|Fira+Mono');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
 :root { --background : rgba(255,255,251,0.8) ; --maxwidth : 800px }
@@ -215,8 +215,15 @@ table.venue_slot tr td {
 }
 
 table {
-    background-color: rgba(255,255,230,0.9);
+    font-family : 'Fira Sans';
+    font-size : small;
 }
+
+table tr td {
+    background-color: rgba(255,255,230,0.9);
+    border: 0px;
+}
+
 
 div.info {
     /*border : 1px solid #73AD21;*/
@@ -441,12 +448,19 @@ table.request tr:nth-of-type( odd ) {
 }
 
 table.info {
-    max-width : 80%;
-    min-width : 500px;
+    max-width : 90%;
+    min-width : 600px;
 }
 
 table.info tr:nth-of-type( odd ) {
     background: #eee;
+}
+
+table.info tr td {
+    font-family : 'Fira Sans';
+    font-size: 12px;
+    padding-bottom: 10px;
+    vertical-align:top;
 }
 
 

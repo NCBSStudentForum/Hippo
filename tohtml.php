@@ -970,7 +970,7 @@ function loginToText( $login, $withEmail = true, $autofix = true )
         $user = getUserInfo( $login );
     }
     else
-        $user = $login;
+        $user = array( 'first_name' => $login );
 
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
@@ -978,6 +978,9 @@ function loginToText( $login, $withEmail = true, $autofix = true )
         if( $ldap )
             $user = array_merge( $user, $ldap );
     }
+
+    if( is_bool( $user ) )
+        return $login;
 
     // Return first name + middle name + last name.
     $name = array( );

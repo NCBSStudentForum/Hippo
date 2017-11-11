@@ -1,9 +1,9 @@
 <?php
 
+include_once 'header.php';
 include_once 'tohtml.php' ;
 include_once 'methods.php' ;
 include_once 'calendar/calendar.php' ;
-
 
 session_save_path("/tmp/");
 
@@ -66,4 +66,5 @@ if( strpos( $thisPage, 'index.php' ) !== false )
 echo "<br><br>";
 
 include_once 'footer.php';
+
 ?>

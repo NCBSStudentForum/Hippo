@@ -155,6 +155,11 @@ $inifile = '/etc/hipporc';
 if(file_exists($inifile)) 
 {
     $conf = parse_ini_file($inifile, $process_section = TRUE );
+    if( ! $conf )
+    {
+        echo "Could not parse cofiguration file. Wake up the admin of this site." ;
+        exit;
+    }
     $_SESSION[ 'conf' ] = $conf;
 }
 else

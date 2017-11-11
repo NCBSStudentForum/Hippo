@@ -9,7 +9,7 @@ include_once 'tohtml.php';
 $res = updateTable( 
         "logins"
         , "login"
-        , "valid_until,first_name,last_name,title" . 
+        , "valid_until,first_name,last_name,title,specialization" . 
              ",laboffice,joined_on,alternative_email,pi_or_host"
         , $_POST 
     );

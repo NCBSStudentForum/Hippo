@@ -2103,18 +2103,16 @@ function addBookings( $runningCourseId )
 
     // Select unique gid.
     $gid = intval( getUniqueFieldValue( 'events', 'gid' ) ) + 1;
-    echo "gid is $gid";
 
     $temp = $startDate;
     $eid = 0;
     while( strtotime($temp) <= strtotime( $endDate ) )
     {
-        $temp = dbDate(  strtotime( '+1 week', strtotime($temp) ));
         foreach( $tiles as $tile )
         {
             $eid += 1;
             $day = $tile[ 'day' ];
-            $date = dbDate( strtotime( "next $day", strtotime( $temp ) ) );
+            $date = dbDate( strtotime( "this $day", strtotime( $temp ) ) );
             $startTime = $tile[ 'start_time' ];
             $endTime = $tile[ 'end_time' ];
             $msg = "$title at $venue on $date, $startTime, $endTime";
@@ -2137,6 +2135,9 @@ function addBookings( $runningCourseId )
             if( ! $res )
                 echo printWarning( "Could not book: $msg" );
         }
+
+        // get the next week now.
+        $temp = dbDate(  strtotime( '+1 week', strtotime($temp) ));
     }
     return true;
 }

@@ -114,8 +114,8 @@ else // Add or Update here.
         {
             $res = updateBookings( $_POST[ 'id' ] );
             echo printInfo( 'Updated course' );
-            //goBack( 'admin_acad_manages_current_courses.php', 1);
-            //exit;
+            goBack( 'admin_acad_manages_current_courses.php', 1);
+            exit;
         }
     }
 }

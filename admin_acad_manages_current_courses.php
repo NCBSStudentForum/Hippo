@@ -115,16 +115,22 @@ foreach( $runningCourses as $course )
 }
 echo '</table>';
 
-echo "</br>";
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Ask user which course to edit/update.
+ */
+/* ----------------------------------------------------------------------------*/
+echo "</br>";
 echo '<form method="post" action="#">';
 echo '<table class="">';
 echo '<tr>
-        <td>
+        <td> 
             <input id="running_course" name="running_course" type="text" >
         </td>
         <td>
-            <button name="response" value="search" style="float:left" >Select</button>
+            <button name="response" value="search" style="float:left" >Edit this course</button>
         </td>
     </tr>';
 

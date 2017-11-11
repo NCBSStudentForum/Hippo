@@ -2378,7 +2378,6 @@ function getRunningCoursesOnTheseSlotTiles( $date, $tile )
     return $courses;
 }
 
-
 /**
     * @brief This function returns running courses on this day, venue, and slot.
     *

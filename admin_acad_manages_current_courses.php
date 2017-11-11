@@ -164,8 +164,11 @@ if( __get__( $_POST, 'running_course', '') )
     $venueSelect = venuesToHTMLSelect( $venues, false, 'venue', array( $course[ 'venue' ] ) );
     $default[ 'venue' ] = $venueSelect;
 
-    // Select the already assigned slot.
-    $slotSelect = arrayToSelectList( 'slot', array_keys($slotMap), $slotMap 
+    // We show all venues and slots because some combination of (venue,slot) may
+    // be available. When updating the course we check for it. It can be fixed
+    // by adding a javascript but for now lets admin feel the pain.
+    $slotSelect = arrayToSelectList( 'slot'
+            , array_keys($slotMap), $slotMap 
             , false, $course['slot']
         );
     $default[ 'slot' ] = $slotSelect;

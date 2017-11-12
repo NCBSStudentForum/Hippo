@@ -2668,5 +2668,49 @@ function getAllSpecialization( )
     return fetchEntries( $res );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get specialization of given login. 
+    *
+    * @Param $speaker (usually student, could be faculty as well).
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getLoginSpecialization( $login )
+{
+    global $db;
+    $res = $db->query( "SELECT specialization FROM logins WHERE login='$login'");
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return $res[ 'specialization' ];
+}
+
+function getFacultySpecialization( $email )
+{
+    global $db;
+    $res = $db->query( "SELECT specialization FROM faculty WHERE email='$email'");
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return $res[ 'specialization' ];
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get login specialization, if not found, fetch the PIEmail
+    * specialization from faculty database.
+    *
+    * @Param $login
+    * @Param $PIEmail
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getSpecialization( $login, $PIEmail = '' )
+{
+    $specialization = getLoginSpecialization( $login );
+    if( ! $specialization )
+        if( $PIEmail )
+            $specialization = getFacultySpecialization( $PIEmail );
+    return $specialization;
+}
 
 ?>

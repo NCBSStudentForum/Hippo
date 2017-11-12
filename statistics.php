@@ -227,10 +227,23 @@ $(function( ) {
 $awses = getAllAWS( );
 $speakers = getAWSSpeakers( );
 
+// Construct a pie-data to be fed into Hightcharts.
+$awsSpeakers = array( );
+foreach( $speakers as $speaker )
+{
+    $pi = getPIOrHost( $speaker[ 'login' ] ); 
+    $spec = getSpecialization( $speaker[ 'login' ], $pi );
+    $awsSpeakers[ $spec ] = __get__( $awsSpeakers, $spec, 0 ) + 1;
+}
+$awsSpeakersPie = array( );
+foreach( $awsSpeakers as $spec => $v )
+    $awsSpeakersPie[] = array( 'name' => $spec, 'y' => $v );
+
 $awsPerSpeaker = array( );
 
 $awsYearData = array_map(
-    function( $x ) { return array(date('Y', strtotime($x['date'])), 0); } , $awses
+    function( $x ) { return array(date('Y', strtotime($x['date'])), 0); } 
+    , $awses
     );
 
 // Here each valid AWS speaker initialize her count to 0.
@@ -296,6 +309,7 @@ foreach( $awsCounts as $key => $val )
 $(function () {
     
     var data = <?php echo json_encode( $awsYearData ); ?>;
+    var speakers = <?php echo json_encode( $awsSpeakersPie); ?>;
 
     /**
      * Get histogram data out of xy data
@@ -333,37 +347,28 @@ $(function () {
         return arr;
     }
 
-    Highcharts.chart('venue_usage1', {
+    Highcharts.chart('aws_per_year', {
         chart: { type: 'column' },
         title: { text: 'Number of Annual Work Seminars per year' },
         xAxis: { min : 2010 },
-        yAxis: [{ title: { text: 'AWS Count' } }, ],
+        yAxis: [ { title: { text: 'AWS Count' } }, ],
         series: [{
             name: 'AWS this year',
             type: 'column',
             data: histogram(data, 1),
             pointPadding: 0,
             groupPadding: 0,
-            pointPlacement: 'between'
-            showInLegend:false;
+            pointPlacement: 'between',
+            showInLegend:false,
         }, 
     ] });
 
-    Highcharts.chart('venue_usage2', {
-        chart: { type: 'column' },
-        title: { text: 'Number of Annual Work Seminars per year' },
-        xAxis: { min : 2010 },
-        yAxis: [{ title: { text: 'AWS Count' } }, ],
-        series: [{
-            name: 'AWS this year',
-            type: 'column',
-            data: histogram(data, 1),
-            pointPadding: 0,
-            groupPadding: 0,
-            pointPlacement: 'between'
-            showInLegend:false;
-        }, 
-    ] });
+    Highcharts.chart('aws_speakers_pie', {
+        chart: { type: 'pie' },
+        title: { text: 'Size of each Subject Group' },
+        series: [{ name: 'Number of AWS speakers'
+            , data: speakers, },] }
+    );
 
 });
 
@@ -456,6 +461,27 @@ $(function () {
 });
 </script>
 
+<h1>Academic statistics since March 01, 2017</h1>
+
+<h3>Annual Work Seminars Distributions</h3>
+<table class=chart>
+<tr> <td> <div id="aws_per_year"></div> </td>
+<td> <div id="aws_gap_chart"></div> </td>
+</tr> 
+</table>
+
+<h3>AWS Speakers distributions</h3>
+<table class=chart>
+<tr> <td> <div id="aws_chart1"></div> </td>
+<td> <div id="aws_speakers_pie"></div> </td>
+</tr> </table>
+
+<h3>Thesis seminar distributions</h3>
+<table class=chart>
+<tr> <td> <div id="thesis_seminar_per_month"></div> </td>
+<td> <div id="thesis_seminar_per_year"></div> </td>
+</tr> </table>
+
 <h1>Booking requests between <?php
     echo humanReadableDate( 'march 01, 2017') ?> 
     and <?php echo humanReadableDate( $upto ); ?></h1>
@@ -483,30 +509,6 @@ echo $bookingTable;
 </tr>
 </table>
 
-<h1>Academic statistics since March 01, 2017</h1>
-<!--
-<p class="warn">
-The goodness of following two histograms depends on the correctness of the joining date
-in my database. The years to graduation is computed by substracting joining 
-date from thesis seminar date. </p>
-
-
-<h3>Years to Graduate</h3>
-<div id="timeToGraduate" style="width:100%; height:400px;"></div>
--->
-
-
-<h3></h3>
-<table class=chart>
-<tr> <td> <div id="aws_chart1"></div> </td>
-<td> <div id="aws_gap_chart"></div> </td>
-</tr> </table>
-
-<h3>Thesis seminar distributions</h3>
-<table class=chart>
-<tr> <td> <div id="thesis_seminar_per_month"></div> </td>
-<td> <div id="thesis_seminar_per_year"></div> </td>
-</tr> </table>
 
 <a href="javascript:window.close();">Close Window</a>
 

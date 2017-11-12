@@ -130,9 +130,12 @@ foreach( $community as $pi => $value )
 }
 
 // Before writing to JSON use index of node as source and target in edges.
+$nodeNames = array_unique( 
+    array_map( function( $n ) { return $n['name']; }, $network['nodes'] ) 
+);
 $nodeIds = array();
-foreach( $network['nodes'] as $node )
-    $nodeIds[ $node['name'] ] = count( $nodeIds );
+foreach( $nodeNames as $id => $name )
+    $nodeIds[ $name ] = $id;
 
 for( $i = 0; $i < count( $network['edges']); $i++)
 {
@@ -145,9 +148,9 @@ for( $i = 0; $i < count( $network['edges']); $i++)
 // Write the network array to json array.
 $networkJSON = json_encode( $network, JSON_PRETTY_PRINT );
 $networkJSONFileName = "data/network.json";
-//$handle = fopen( $networkJSONFileName, "w+" );
-//fwrite( $handle, $networkJSON );
-//fclose( $handle );
+$handle = fopen( $networkJSONFileName, "w+" );
+fwrite( $handle, $networkJSON );
+fclose( $handle );
 ?>
 
 <!-- Use d3 to draw graph -->

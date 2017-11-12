@@ -1048,7 +1048,7 @@ function getIntranetLink( $login )
 {
     $html = "<font style=\"font-size:x-small\"><a
             href=\"https://intranet.ncbs.res.in/people-search?name=$login\"
-            target=\"_blank\">Show on intranet</a></font>"
+            target=\"_blank\">Profile on Intranet</a></font>"
             ;
     return $html;
 }
@@ -1890,6 +1890,11 @@ function mailto( $email, $text = '' )
 
     $html = "<a href=\"mailto:" . $email . "\"> $text </a>";
     return $html;
+}
+
+function piSpecializationHTML( $pi, $specialization )
+{
+    return "<br><small><tt> $specialization <br>PI: $pi</tt></small>";
 }
 
 ?>

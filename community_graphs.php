@@ -145,12 +145,13 @@ for( $i = 0; $i < count( $network['edges']); $i++)
     $network['edges'][$i][ 'target' ] = $nodeIds[ $tgt ];
 }
 
-// Write the network array to json array.
 $networkJSON = json_encode( $network, JSON_PRETTY_PRINT );
-$networkJSONFileName = "data/network.json";
-$handle = fopen( $networkJSONFileName, "w+" );
-fwrite( $handle, $networkJSON );
-fclose( $handle );
+
+// Write the network array to json array.
+//$networkJSONFileName = "data/network.json";
+//$handle = fopen( $networkJSONFileName, "w+" );
+//fwrite( $handle, $networkJSON );
+//fclose( $handle );
 ?>
 
 <!-- Use d3 to draw graph -->

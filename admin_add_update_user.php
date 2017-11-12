@@ -4,6 +4,7 @@ include_once 'header.php' ;
 include_once 'check_access_permissions.php' ;
 include_once 'tohtml.php' ;
 include_once 'ldap.php';
+include_once './snippets/pi_specialization.php';
 
 mustHaveAnyOfTheseRoles( Array( 'ADMIN', 'AWS_ADMIN' ) );
 
@@ -40,7 +41,7 @@ echo dbTableToHTMLTable(
     'logins', $default
     , Array( 'alternative_email', 'roles', 'status'
                 , 'title', 'eligible_for_aws', 'joined_on'
-                , 'valid_until' , 'laboffice'
+                , 'valid_until' , 'laboffice', 'specialization', 'pi_or_host'
             ) 
     , $buttonVal
     );

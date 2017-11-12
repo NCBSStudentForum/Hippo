@@ -31,6 +31,7 @@ import tempfile
 from logger import _logger
 from db_connect import db_
 import networkx as nx
+import random
 import compute_cost
 
 fmt_ = '%Y-%m-%d'
@@ -61,6 +62,10 @@ speakers_ = { }
 # List of holidays.
 holidays_ = {}
 
+specialization_ = [ ]
+speakersSpecialization_ = { }
+
+
 def init( cur ):
     """
     Create a temporaty table for scheduling AWS
@@ -83,12 +88,19 @@ def init( cur ):
         """
         )
     for a in cur.fetchall( ):
-        speakers_[ a['login'].lower() ] = a
-    cur.execute( """SELECT * FROM holidays ORDER BY date""")
+        login = a[ 'login' ].lower( )
+        speakers_[ login ] = a
 
+
+    cur.execute( """SELECT * FROM holidays ORDER BY date""")
     for a in cur.fetchall( ):
         if a[ 'schedule_talk_or_aws' ] == 'NO':
             holidays_[ a['date'] ] = a
+
+    cur.execute( """SELECT DISTINCT(specialization) FROM faculty""")
+    for a in cur.fetchall( ):
+        specialization_.append( a['specialization'] )
+
     _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
 
@@ -99,6 +111,7 @@ def getAllAWSPlusUpcoming( ):
     try:
         cur = db_.cursor( dictionary = True )
     except Exception as e:
+        print( e )
         print( 
         '''If complain is about dictionary keyword. Install 
         https://pypi.python.org/pypi/mysql-connector-python-rf/2.2.2
@@ -116,10 +129,21 @@ def getAllAWSPlusUpcoming( ):
         # Keep the number of slots occupied at this day.
         upcoming_aws_slots_[ a['date'] ].append( a['speaker'] )
 
-    # Now get all the previous AWSs happened so far.
+    # Now get all the previous AWSs happened so far. Also fetch the
+    # specialization of student depending on the PI of AWS.
     cur.execute( 'SELECT * FROM annual_work_seminars' )
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ].lower() ].append( a )
+
+        # Also get the specialization by reading the supervisor_1 .
+        pi = a[ 'supervisor_1' ]
+        if not pi:
+            continue
+        cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % pi )
+        spec = cur.fetchone( )
+        if spec:
+            speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
+
 
     for a in aws_:
         # Sort a list in place.
@@ -130,6 +154,27 @@ def getAllAWSPlusUpcoming( ):
     cur.execute( "SELECT * FROM aws_scheduling_request WHERE status='APPROVED'" )
     for a in cur.fetchall( ):
         aws_scheduling_requests_[ a[ 'speaker' ].lower( ) ] = a
+
+    # Get specialization of each student. If no specified, fetch the
+    # specialization of current PI. 
+    # IMP: This will overwrite the specialization fetched from previous AWS. It
+    # is required.
+    for st in speakers_:
+        cur.execute( "SELECT specialization FROM logins WHERE login='%s'" % st )
+        a = cur.fetchone( )
+        if not a[ 'specialization' ]:
+            # Ok. Not specified; use faculty specialization.
+            piOrHost = speakers_[ st ]['pi_or_host']  
+            if piOrHost:
+                cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % piOrHost )
+                a = cur.fetchone( )
+        if a is not None and a[ 'specialization' ]:
+            speakersSpecialization_[ st ] = a[ 'specialization' ]
+
+    ## Print specialization
+    #for s in speakersSpecialization_:
+    #    print( s, speakersSpecialization_[s] )
+
 
 
 def computeCost( speaker, slot_date, last_aws ):
@@ -185,6 +230,8 @@ def construct_flow_graph(  ):
     experienced speaker from other days. We avoid that by drawing two edges 
     from freshers to a 'date' i.e. maximum of 2 slots can be filled by freshers.
     For others we let them fill all three slots.
+
+    4 slots every monday and all belong to one specialization.
     """
     global g_
     global aws_
@@ -278,16 +325,22 @@ def construct_flow_graph(  ):
            _logger.warn( "This date %s is holiday" % monday )
            continue
 
-        nSlots = 3
+        nSlots = 4
         if monday in upcoming_aws_slots_:
             # Check how many of these dates have been taken.
             _logger.info( 'Date %s is taken ' % monday )
             nSlots -= len( upcoming_aws_slots_[ monday ] )
 
         # For each Monday, we have 3 AWS - (assigned on upcoming_aws_slots_)
+        # For each week select a specialization.
+        specForWeek = random.choice( specialization_ )
+        _logger.info( " -- Specialization for this week is %s" % specForWeek )
         for j in range( nSlots ):
             dateSlot = '%s,%d' % (monday, j)
-            g_.add_node( dateSlot, date = monday, pos = (5, 10*(3*i + j)) )
+            g_.add_node( 
+                    dateSlot, date = monday, pos = (5, 10*(3*i + j)),
+                    specialization = specForWeek 
+                    )
             g_.add_edge( dateSlot, 'sink', capacity = 1, weight = 0 )
             slots.append( dateSlot )
     
@@ -298,7 +351,9 @@ def construct_flow_graph(  ):
     # slots to be taken by freshers (maximum ).
     freshersDate = defaultdict( list )
     for speaker in speakers_:
+        speakerSpecialization = speakersSpecialization_.get( speaker, '' )
         preferences = aws_scheduling_requests_.get( speaker, {} )
+
         if preferences:
             _logger.info( "%s has preferences %s " % (speaker,preferences) )
 
@@ -308,6 +363,11 @@ def construct_flow_graph(  ):
 
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
+            # If this slot does not belong to same specialization then ignore
+            # it.
+            if speakerSpecialization and g_.node[ slot ]['specialization'] != speakerSpecialization:
+                continue
+
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
             if weight:
@@ -332,7 +392,7 @@ def construct_flow_graph(  ):
                     if first:
                         ndays = diffInDays(date, first, True)
                         if ndays <= 14:
-                            _logger.info( 'Using first preference for %s' % speaker )
+                            _logger.debug( 'Using first preference for %s' % speaker )
                             addEdge(speaker, slot, 1, 0 + ndays / 7 )
                     if second:
                         ndays = diffInDays(date, second, True) 
@@ -554,8 +614,8 @@ def computeSchedule( ):
     _logger.info( 'Scheduling AWS now' )
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
-    _logger.info( '\t Computed. Getting schedules now ...' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
+    _logger.info( '\t Computed. Getting schedules now ...' )
     sch = getMatches( res )
     return sch
 

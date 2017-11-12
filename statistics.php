@@ -248,15 +248,30 @@ foreach( $awses as $aws )
 }
 
 $awsCounts = array( );
-$awsCountsPie = array( );
+$awsCountsBySpec = array( );
 $awsDates = array( );
 foreach( $awsPerSpeaker as $speaker => $awses )
 {
+    $pi = getPIOrHost( $speaker );
     $awsCounts[ $speaker ] = count( $awses );
     $awsDates[ $speaker ] = array_map( 
         function($x) { return $x['date']; }, $awses 
     );
+
+    // Get the AWS specialization by queries the specialization of PI. If not
+    // found, use the current specialization of speaker.
+    foreach( $awses as $aws )
+    {
+        $spec = getFacultySpecialization( $aws[ 'supervisor_1' ] );
+        if( ! trim( $spec ) )
+            $spec = getSpecialization( $speaker, $pi );
+        $awsCountsBySpec[ $spec ] = __get__( $awsCountsBySpec, $spec, 0) + 1;
+    }
+
 }
+$awsCountsBySpecPie = array( );
+foreach( $awsCountsBySpec as $spec => $v )
+    $awsCountsBySpecPie[] = array( 'name' => $spec, 'y' => $v );
 
 $numAWSPerSpeaker = array( );
 $gapBetweenAWS = array( );
@@ -428,64 +443,13 @@ $(function () {
 
 $(function () {
     
-    var data = <?php echo json_encode( $gapBetweenAWS ); ?>;
-
-    /**
-     * Get histogram data out of xy data
-     * @param   {Array} data  Array of tuples [x, y]
-     * @param   {Number} step Resolution for the histogram
-     * @returns {Array}       Histogram data
-     */
-    function histogram(data, step) {
-        var histo = {},
-            x,
-            i,
-            arr = [];
-
-        // Group down
-        for (i = 0; i < data.length; i++) {
-            x = Math.floor(data[i][0] / step) * step;
-            if (!histo[x]) {
-                histo[x] = 0;
-            }
-            histo[x]++;
-        }
-
-        // Make the histo group into an array
-        for (x in histo) {
-            if (histo.hasOwnProperty((x))) {
-                arr.push([parseFloat(x), histo[x]]);
-            }
-        }
-
-        // Finally, sort the array
-        arr.sort(function (a, b) {
-            return a[0] - b[0];
-        });
-
-        return arr;
-    }
-
+    var data = <?php echo json_encode( $awsCountsBySpecPie ); ?>;
     Highcharts.chart('aws_gap_chart', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Gap between consecutive AWSs (months)'
-        },
-        xAxis: { max : 36 },
-        yAxis: [{
-            title: {
-                text: 'AWS Count'
-            }
-        }, ],
+        chart: { type: 'pie' },
+        title: { text: 'AWS by Specialization' },
         series: [{
-            name: 'Number of AWSs with gap',
-            type: 'column',
-            data: histogram(data, 1),
-            pointPadding: 0,
-            groupPadding: 0,
-            pointPlacement: 'between'
+            name: 'Number of AWS',
+            data: data,
         }, 
     ] });
 

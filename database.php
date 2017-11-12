@@ -2682,7 +2682,7 @@ function getLoginSpecialization( $login )
     global $db;
     $res = $db->query( "SELECT specialization FROM logins WHERE login='$login'");
     $res = $res->fetch( PDO::FETCH_ASSOC );
-    return $res[ 'specialization' ];
+    return trim( $res[ 'specialization' ] );
 }
 
 function getFacultySpecialization( $email )
@@ -2690,7 +2690,7 @@ function getFacultySpecialization( $email )
     global $db;
     $res = $db->query( "SELECT specialization FROM faculty WHERE email='$email'");
     $res = $res->fetch( PDO::FETCH_ASSOC );
-    return $res[ 'specialization' ];
+    return trim( $res[ 'specialization' ] );
 }
 
 /* --------------------------------------------------------------------------*/
@@ -2710,6 +2710,10 @@ function getSpecialization( $login, $PIEmail = '' )
     if( ! $specialization )
         if( $PIEmail )
             $specialization = getFacultySpecialization( $PIEmail );
+
+    if( ! trim( $specialization ) )
+        $specialization = 'UNSPECIFIED';
+
     return $specialization;
 }
 

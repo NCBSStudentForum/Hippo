@@ -74,13 +74,12 @@ foreach( $awses as $aws )
     $community[ $pi ]['degree'] += 1;
 
     // Co-supervisor is an edge
-    if( strlen( $aws[ "supervisor_2" ] ) > 0 )
+    $super2 = __get__( $aws, 'supervisor_2', '' );
+    if( $super2 )
     {
-        // Only if PI is from NCBS.
-        $super2 = $aws[ 'supervisor_2' ];
         if( in_array( $super2, $pis ) )
         {
-            array_push( $community[ $pi ]['edges'], $super2 );
+            $community[ $pi ]['edges'][] =  $super2;
             $community[ $super2 ]['degree'] += 1;
         }
     }
@@ -93,12 +92,9 @@ foreach( $awses as $aws )
             continue;
 
         $tcmMember = trim( $aws[ "tcm_member_$i" ] );
-        if( strpos( $tcmMember, '@') == false ) // Invalid email id.
-            continue;
-
         if( in_array( $tcmMember, $pis ) )
         {
-            array_push( $community[ $pi ][ 'edges' ], $tcmMember );
+            $community[ $pi ][ 'edges' ][] = $tcmMember;
             $community[ $tcmMember ][ "degree" ] += 1;
             $foundAnyTcm = true;
         }
@@ -106,7 +102,7 @@ foreach( $awses as $aws )
 
     // If not TCM member is found for this TCM. Add an edge onto PI.
     if(! $foundAnyTcm )
-        array_push( $community[ $pi ][ 'edges' ], $pi );
+        $community[ $pi ][ 'edges' ][] =  $pi;
 }
 
 // Now for each PI, draw edges to other PIs.

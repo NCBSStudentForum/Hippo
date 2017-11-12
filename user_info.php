@@ -83,6 +83,9 @@ $editables = Array( 'title', 'first_name', 'last_name', 'alternative_email'
     , 'institute', 'valid_until', 'joined_on', 'pi_or_host', 'specialization'
     );
 
+$info[ 'specialization' ] = arrayToSelectList( 'specialization'
+    , $specialization, array(), false, $info[ 'specialization' ]
+    );
 echo "<form method=\"post\" action=\"user_info_action.php\">";
 echo dbTableToHTMLTable( 'logins', $info, $editables );
 echo "</form>";

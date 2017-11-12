@@ -419,7 +419,7 @@ $(function () {
         return arr;
     }
 
-    Highcharts.chart('container2', {
+    Highcharts.chart('aws_gap_chart', {
         chart: {
             type: 'column'
         },
@@ -481,15 +481,17 @@ date from thesis seminar date. </p>
 <h3></h3>
 <div id="container1" style="width:100%; height:400px;"></div>
 
-<h3> Gap between consecutive AWSs </h3>
-Ideally, this value should be 12 months for all AWSs.
-<div id="container2" style="width:100%; height:400px;"></div>
+<h3>Gap between consecutive AWSs </h3>
+<div id="aws_gap_chart" style="width:100%; height:400px;"></div>
 
-<h3>Thesis seminar distribution (monthly)</h3>
-<div id="thesis_seminar_per_month" style="width:100%; height:400px;"></div>
-
-<h3>Thesis seminar distribution (yearly)</h3>
-<div id="thesis_seminar_per_year" style="width:100%; height:400px;"></div>
+<h3>Thesis seminar distributions</h3>
+<table><tr>
+<td>
+<div id="thesis_seminar_per_month" style="width:50%; height:250px;"></div>
+</td><td>
+<div id="thesis_seminar_per_year" style="width:50%; height:250px;"></div>
+</td></tr>
+</table>
 
 <a href="javascript:window.close();">Close Window</a>
 

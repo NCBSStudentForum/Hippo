@@ -48,6 +48,8 @@ echo '</td></tr>';
 echo '</table>';
 echo '<br>';
 
+$info = getUserInfo( $_SESSION['user'] );
+
 $editables = Array( 'title', 'first_name', 'last_name', 'alternative_email'
     , 'institute', 'valid_until', 'joined_on', 'pi_or_host', 'specialization'
     );

@@ -129,14 +129,16 @@ $(function( ) {
     var venues = <?php echo json_encode( $venues ); ?>;
 
     Highcharts.chart('venue_usage1', {
-
         chart : { type : 'column' },
         title: { text: 'Venue usage in hours' },
         yAxis: { title: { text: 'Time in hours' } },
         xAxis : { categories : venues }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Venue usage', data: venueUsage, showInLegend:false }], 
-    });
+        series: [{ name: 'Venue usage', data: venueUsage
+                    , pointPlacement: 'middle',
+                    , showInLegend:false 
+                 }], 
+        });
 
     Highcharts.chart('venue_usage2', {
         chart : { type : 'pie' },
@@ -196,7 +198,10 @@ $(function( ) {
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerMonth,  showInLegend:false}], 
+        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerMonth
+            ,  showInLegend:false
+            , pointPlacement: 'middle',
+        }], 
     });
 
 });
@@ -358,7 +363,7 @@ $(function () {
             data: histogram(data, 1),
             pointPadding: 0,
             groupPadding: 0,
-            pointPlacement: 'between',
+            pointPlacement: 'middle',
             showInLegend:false,
         }, 
     ] });
@@ -421,21 +426,18 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Total speakers with #AWSs'
+            text: 'Speakers distrbution'
         },
-        xAxis: { min : 0 },
-        yAxis: [{
-            title: {
-                text: 'Speaker Count'
-            }
+        xAxis: { min : -0.5, title: {text: '#AWS given'} },
+        yAxis: [{ title: { text: 'Speaker Count' }
         }, ],
         series: [{
-            name: 'Total speakers with #AWS',
+            name: 'Number of speakers',
             type: 'column',
             data: histogram(data, 1),
-            pointPadding: 0,
+            pointPadding: 0.1,
             groupPadding: 0,
-            pointPlacement: 'between'
+            pointPlacement: 'middle'
         }, 
     ] });
 

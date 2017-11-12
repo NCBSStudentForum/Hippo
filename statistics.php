@@ -265,9 +265,9 @@ foreach( $awsPerSpeaker as $speaker => $awses )
         $spec = getFacultySpecialization( $aws[ 'supervisor_1' ] );
         if( ! trim( $spec ) )
             $spec = getSpecialization( $speaker, $pi );
-        $awsCountsBySpec[ $spec ] = __get__( $awsCountsBySpec, $spec, 0) + 1;
+        if( $spec != 'UNSPECIFIED' )
+            $awsCountsBySpec[ $spec ] = __get__( $awsCountsBySpec, $spec, 0) + 1;
     }
-
 }
 $awsCountsBySpecPie = array( );
 foreach( $awsCountsBySpec as $spec => $v )
@@ -446,7 +446,7 @@ $(function () {
     var data = <?php echo json_encode( $awsCountsBySpecPie ); ?>;
     Highcharts.chart('aws_gap_chart', {
         chart: { type: 'pie' },
-        title: { text: 'AWS by Specialization' },
+        title: { text: 'AWS by Subject Area' },
         series: [{
             name: 'Number of AWS',
             data: data,

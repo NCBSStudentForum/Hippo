@@ -214,6 +214,14 @@ table.venue_slot tr td {
     width: 400px;
 }
 
+table.chart {
+    max-width: 100%;
+}
+
+table.chart tr dt  {
+    max-width: 50%;
+}
+
 table {
     font-family : 'Fira Sans';
     font-size : small;

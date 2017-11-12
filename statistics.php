@@ -77,8 +77,15 @@ $eventsByClass[ 'ANNUAL WORK SEMINAR' ] = count(
 $eventsByClass[ 'CLASS' ] = __get__( $eventsByClass, 'CLASS', 0 ) 
     + totalClassEvents( );
 
+$eventsByClassPie = array( );
+foreach( $eventsByClass as $cl => $v )
+    $eventsByClassPie[ ] = array( 'name' => $cl, 'y' => $v );
+
 $venues = array_keys( $venueUsageTime );
 $venueUsage = array_values( $venueUsageTime );
+$venueUsagePie = array( );
+foreach( $venueUsageTime as $v => $t )
+    $venueUsagePie[ ] = array( "name" => $v, "y" => $t );
 
 $bookingTable = "<table border='1'>
     <tr> <td>Total booking requests</td> <td>" . count( $requests ) . "</td> </tr>
@@ -118,16 +125,27 @@ foreach( $thesisSeminars as $ts )
 $(function( ) { 
 
     var venueUsage = <?php echo json_encode( $venueUsage ); ?>;
+    var venueUsagePie = <?php echo json_encode( $venueUsagePie ); ?>;
     var venues = <?php echo json_encode( $venues ); ?>;
 
-    Highcharts.chart('venues_plot', {
+    Highcharts.chart('venue_usage1', {
 
         chart : { type : 'column' },
         title: { text: 'Venue usage in hours' },
         yAxis: { title: { text: 'Time in hours' } },
         xAxis : { categories : venues }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Venue usage', data: venueUsage, }], 
+        series: [{ name: 'Venue usage', data: venueUsage, showInLegend:false }], 
+    });
+
+    Highcharts.chart('venue_usage2', {
+        chart : { type : 'pie' },
+        title: { text: 'Venue usage' },
+        tooltip: { pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' },
+        legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+        series: [{ name: 'Venue usage'
+                    , data: venueUsagePie
+                    , showInLegend:false }], 
     });
 
 });
@@ -137,16 +155,28 @@ $(function( ) {
 $(function( ) { 
 
     var eventsByClass = <?php echo json_encode( array_values( $eventsByClass) ); ?>;
+    var eventsByClassPie = <?php echo json_encode( $eventsByClassPie ); ?>;
     var cls = <?php echo json_encode( array_keys( $eventsByClass) ); ?>;
 
-    Highcharts.chart('events_class', {
+    Highcharts.chart('events_class1', {
 
         chart : { type : 'column' },
         title: { text: 'Event distribution by categories' },
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total events grouped by class', data: eventsByClass, }], 
+        series: [{ name: 'Total events grouped by class'
+                    , data: eventsByClass, showInLegend:false
+                 }], 
+    });
+
+    Highcharts.chart('events_class2', {
+        chart : { type : 'pie' },
+        title: { text: 'Event distribution' },
+        tooltip: { pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' },
+        series: [{ name: 'Total events grouped by class'
+                    , data: eventsByClassPie, showInLegend:false 
+                }], 
     });
 
 });
@@ -166,7 +196,7 @@ $(function( ) {
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerMonth, }], 
+        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerMonth,  showInLegend:false}], 
     });
 
 });
@@ -185,7 +215,7 @@ $(function( ) {
         yAxis: { title: { text: 'Number of events' } },
         xAxis : { categories : cls }, 
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerYear, }], 
+        series: [{ name: 'Total Thesis Seminars', data: thesisSemPerYear, showInLegend : false}], 
     });
 
 });
@@ -218,6 +248,7 @@ foreach( $awses as $aws )
 }
 
 $awsCounts = array( );
+$awsCountsPie = array( );
 $awsDates = array( );
 foreach( $awsPerSpeaker as $speaker => $awses )
 {
@@ -232,7 +263,6 @@ $gapBetweenAWS = array( );
 foreach( $awsCounts as $key => $val )
 {
     array_push( $numAWSPerSpeaker,  array($val, 0) );
-
     for( $i = 1; $i < count( $awsDates[ $key ] ); $i++ )
     {
         $gap = (strtotime( $awsDates[ $key ][$i-1] ) - 
@@ -288,7 +318,7 @@ $(function () {
         return arr;
     }
 
-    Highcharts.chart('container0', {
+    Highcharts.chart('venue_usage1', {
         chart: { type: 'column' },
         title: { text: 'Number of Annual Work Seminars per year' },
         xAxis: { min : 2010 },
@@ -300,6 +330,23 @@ $(function () {
             pointPadding: 0,
             groupPadding: 0,
             pointPlacement: 'between'
+            showInLegend:false;
+        }, 
+    ] });
+
+    Highcharts.chart('venue_usage2', {
+        chart: { type: 'column' },
+        title: { text: 'Number of Annual Work Seminars per year' },
+        xAxis: { min : 2010 },
+        yAxis: [{ title: { text: 'AWS Count' } }, ],
+        series: [{
+            name: 'AWS this year',
+            type: 'column',
+            data: histogram(data, 1),
+            pointPadding: 0,
+            groupPadding: 0,
+            pointPlacement: 'between'
+            showInLegend:false;
         }, 
     ] });
 
@@ -349,7 +396,7 @@ $(function () {
         return arr;
     }
 
-    Highcharts.chart('container1', {
+    Highcharts.chart('aws_chart1', {
         chart: {
             type: 'column'
         },
@@ -458,10 +505,19 @@ echo $bookingTable;
     and <?php echo humanReadableDate( $upto ); ?></h1>
 
 <h3></h3>
-<div id="venues_plot" style="width:100%; height:400px;"></div>
+<table class="chart">
+<tr> <td> <div id="venue_usage1"></div> </td>
+    <td> <div id="venue_usage2" ></div> </td>
+</tr>
+</table>
 
 <h3></h3>
-<div id="events_class" style="width:100%; height:400px;"></div>
+
+<table class="chart">
+<tr> <td> <div id="events_class1"></div> </td>
+    <td> <div id="events_class2" ></div> </td>
+</tr>
+</table>
 
 <h1>Academic statistics since March 01, 2017</h1>
 <!--
@@ -475,23 +531,18 @@ date from thesis seminar date. </p>
 <div id="timeToGraduate" style="width:100%; height:400px;"></div>
 -->
 
-<h3></h3>
-<div id="container0" style="width:100%; height:400px;"></div>
 
 <h3></h3>
-<div id="container1" style="width:100%; height:400px;"></div>
-
-<h3>Gap between consecutive AWSs </h3>
-<div id="aws_gap_chart" style="width:100%; height:400px;"></div>
+<table class=chart>
+<tr> <td> <div id="aws_chart1"></div> </td>
+<td> <div id="aws_gap_chart"></div> </td>
+</tr> </table>
 
 <h3>Thesis seminar distributions</h3>
-<table><tr>
-<td>
-<div id="thesis_seminar_per_month" style="width:50%; height:250px;"></div>
-</td><td>
-<div id="thesis_seminar_per_year" style="width:50%; height:250px;"></div>
-</td></tr>
-</table>
+<table class=chart>
+<tr> <td> <div id="thesis_seminar_per_month"></div> </td>
+<td> <div id="thesis_seminar_per_year"></div> </td>
+</tr> </table>
 
 <a href="javascript:window.close();">Close Window</a>
 

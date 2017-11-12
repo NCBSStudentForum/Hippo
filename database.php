@@ -2653,7 +2653,20 @@ function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
     return $courses;
 }
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get the specialization available for student.
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getAllSpecialization( )
+{
+    global $db;
+    $res = $db->query( 'SELECT DISTINCT(specialization) FROM faculty' );
+    return fetchEntries( $res );
+}
+
+
 ?>
-
-
-

@@ -1,9 +1,22 @@
 <?php
 
 include_once 'header.php';
-include_once( 'tohtml.php' );
+include_once 'tohtml.php' ;
+include_once './check_access_permissions.php';
 
 echo userHTML( );
+
+if( ! isAuthenticated( ) )
+{
+    echo printWarning( "Session expired!" );
+    goBack( "index.php", 2 );
+    exit;
+}
+
+$specialization = array( );
+foreach( getAllSpecialization( ) as $spec )
+    $specialization[$spec[ 'specialization' ] ] = 1;
+$specialization = array_keys( $specialization );
 
 $info = getUserInfo( $_SESSION['user'] );
 
@@ -22,8 +35,11 @@ $facEmails = array_keys( $facultyByEmail );
 $( function() {
     // These emails must not be key value array.
     var emails = <?php echo json_encode( $facEmails ); ?>;
+    var specialization = <?php echo json_encode( $specialization ); ?>;
     $( "#logins_pi_or_host" ).autocomplete( { source : emails }); 
     $( "#logins_pi_or_host" ).attr( "placeholder", "type email of your supervisor" );
+    $( "#logins_specialization" ).autocomplete( { source : specialization }); 
+    $( "#logins_specialization" ).attr( "placeholder", "Your specialization" );
 });
 </script>
 

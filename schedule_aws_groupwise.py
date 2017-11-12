@@ -325,7 +325,7 @@ def construct_flow_graph(  ):
            _logger.warn( "This date %s is holiday" % monday )
            continue
 
-        nSlots = 4
+        nSlots = 3
         if monday in upcoming_aws_slots_:
             # Check how many of these dates have been taken.
             _logger.info( 'Date %s is taken ' % monday )

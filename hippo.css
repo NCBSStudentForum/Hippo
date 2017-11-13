@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Roboto+Mono|Open+Sans|Palatino|Fira+Mono');
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Open+Sans|Ubuntu+Mono');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
 :root { --background : rgba(255,255,251,0.8); 
@@ -235,8 +235,9 @@ table.chart tr dt  {
 }
 
 table {
-    font-family : 'Fira Sans';
-    font-size : small;
+    font-family : 'Ubuntu Mono';
+    font-weight: thin;
+    font-size : 16px;
 }
 
 table tr td {

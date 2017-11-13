@@ -500,6 +500,9 @@ if( $intMonth % 2 == 0 )
             // Now print the names.
             foreach( $facultyMap as $fac => $speakers )
             {
+                if( count( $speakers ) < 1 )
+                    continue;
+
                 $table = '<table border="1">';
                 foreach( explode( ",", $speakers ) as $login )
                 {

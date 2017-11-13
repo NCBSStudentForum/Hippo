@@ -1726,7 +1726,7 @@ function getAWSFromPast( $from  )
     *
     * @return Array containing AWS speakers.
  */
-function getAWSSpeakers( $sortby = False )
+function getAWSSpeakers( $sortby = '' )
 {
     global $db;
     $sortExpr = '';

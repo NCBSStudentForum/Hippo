@@ -144,7 +144,9 @@ def getAllAWSPlusUpcoming( ):
         cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % pi )
         spec = cur.fetchone( )
         if spec:
-            speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
+            specialization = spec.get('specialization', 'UNSPECIFIED' ) 
+            if specialization and specialization != 'UNSPECIFIED':
+                speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
 
 
     for a in aws_:

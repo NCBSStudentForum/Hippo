@@ -171,7 +171,8 @@ table.show_schedule th
 
 table.tasks 
 {
-    max-width: var(--maxwidth);
+    max-width: 600px;
+    min-width : 500px;
 }
 
 table.tasks tr td:nth-child(1)

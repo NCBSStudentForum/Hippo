@@ -141,34 +141,6 @@ function goToPage($page="index.php", $delay = 3)
   header("Refresh: $delay, url=$url");
 }
 
-function goBackToPageLink( $url, $title = "Go back" )
-{
-
-    $html = "<br><br><div class=\"goback\">";
-    //$url = __get__( $_SERVER, 'HTTP_REFERER', $url );
-    $html .= "<a style=\"float: left\" href=\"$url\">
-            <font color=\"blue\" size=\"5\">$title</font>
-        </a></div><br>";
-    return $html;
-}
-
-/**
-    * @brief Go back to referer page.
-    *
-    * @param $defaultPage
-    *
-    * @return 
- */
-function goBack( $default = '', $delay = 0 )
-{
-    if( ! $default )
-        $url = __get__( $_SERVER, 'HTTP_REFERER', 'index.php' );
-    else
-        $url = $default;
-
-    goToPage( $url, $delay );
-}
-
 function __get__( $arr, $what, $default = NULL )
 {
     if( ! $arr )

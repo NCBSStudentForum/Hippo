@@ -20,7 +20,7 @@ $html .= '
       </small>
       </td>
       <td> 
-         <a href="user_info.php">Show/edit my profile</a> 
+         <a href="user_info.php"><i class="fa fa-user fa-3x"></i> My Profile</a> 
       </td>
    </tr>
    </table>';
@@ -37,7 +37,7 @@ echo  "<tr>
             <small>Register/deregister courses for this semster. </small>
         </td>
         <td>
-            <a href=\"user_manages_courses.php\">My Courses</a> 
+            <a href=\"user_manages_courses.php\"><i class=\"fa fa-book fa-3x\"></i>My Courses</a> 
         </td>
         </tr>";
 echo '</table>';
@@ -85,7 +85,7 @@ $html .= '<tr>
     <td> Create a booking request <br>
     <small>Do not use for registering Talks or Thesis Seminar </small>
     </td>
-      <td> <a href="quickbook.php">Book my venue</a> </td>
+      <td> <a href="quickbook.php"><i class="fa fa-hand-pointer-o fa-3x"></i>Book my venue</a> </td>
    </tr>
    <tr>
    <td>You can see your unapproved requests. You can modify their description, and 
@@ -112,7 +112,8 @@ echo '<table class="tasks">
         email and photograph of speaker handy, not neccessary but highly recommended.
         </small>
         </td><td>
-            <a href="user_register_talk.php">Register talk/seminar</a></td>
+            <a href="user_register_talk.php">
+            <i class="fa fa-comments fa-3x"></i> Register talk/seminar</a></td>
         </td>
     </tr><tr>
         <td> 

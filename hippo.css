@@ -229,7 +229,6 @@ table {
 }
 
 table tr td {
-    background-color: rgba(255,255,230,0.9);
     border: 0px;
 }
 
@@ -461,15 +460,15 @@ table.info {
     min-width : 600px;
 }
 
-table.info tr:nth-of-type( odd ) {
-    background: #eee;
-}
-
 table.info tr td {
     font-family : 'Fira Sans';
     font-size: 12px;
     padding-bottom: 10px;
     vertical-align:top;
+}
+
+table.info tr:nth-of-type( odd ) {
+    background-color: #eee;
 }
 
 

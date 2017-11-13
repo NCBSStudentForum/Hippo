@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Open+Sans|Ubuntu+Mono');
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Open+Sans|Ubuntu');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
 :root { --background : rgba(255,255,251,0.8); 
@@ -235,9 +235,7 @@ table.chart tr dt  {
 }
 
 table {
-    font-family : 'Ubuntu Mono';
-    font-weight: thin;
-    font-size : 16px;
+    font-family : 'Ubuntu';
 }
 
 table tr td {
@@ -352,15 +350,13 @@ table.show_requests {
 }
 
 table.show_events {
-    border: 1px dotted;
     max-width : var(--maxwidth);
     min-width : 80%;
 }
 
 table.show_events tr td  {
     text-align : left;
-    /*border-collapse : separate;*/
-    /*border : 1px dotted;*/
+    background-color: var( --tabletdcolor );
 }
 
 
@@ -492,9 +488,9 @@ table.admin {
     max-width : 90%;
 }
 
-table.admin td {
-    border : 1px dotted;
+table.admin tr td {
     width : 50%;
+    background-color: var( --tabletdcolor );
 }
 
 .goback {

@@ -1841,8 +1841,9 @@ function smallCaps( $text )
 function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 {
     $cid = $c[ 'id' ];
-    $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
 
+    $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid' 
+                AND type!='DROPPED'";
     $registrations = getTableEntries(
         'course_registration', 'student_id', $whereExpr 
     );

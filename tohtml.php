@@ -969,8 +969,11 @@ function loginToText( $login, $withEmail = true, $autofix = true )
             return '';
         $user = getUserInfo( $login );
     }
+    else if( is_array( $login ) )
+        $user = $login;
     else
-        $user = array( 'first_name' => $login );
+        $user = $login;
+
 
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
@@ -990,7 +993,8 @@ function loginToText( $login, $withEmail = true, $autofix = true )
             array_push( $name, $user[ $key ] );
     }
 
-    $text = implode( ' ', $name );
+    if( is_array( $name ) )
+        $text = implode( ' ', $name );
 
     if( $autofix )
         $text = fixName( $text );

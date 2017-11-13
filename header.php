@@ -68,10 +68,15 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <br />
 </html>
 
+<!--  REQUIRED -->
 <script src="./node_modules/jquery/dist/jquery.js"></script>
 
 <script src="./node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
 <link href="./node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+<!--
+<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+-->
 
 <script src="./node_modules/jquery-timepicker/jquery.timepicker.js"></script>
 <link href="./node_modules/jquery-timepicker/jquery.timepicker.css" rel="stylesheet" type="text/css" />
@@ -82,6 +87,9 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <!-- Disable favicon requests -->
 <link rel="icon" href="data:,">
+
+<!-- Font awesome -->
+<link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css"/>
 
 <script>
 $( function() {

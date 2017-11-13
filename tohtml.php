@@ -527,16 +527,16 @@ function requestToHTML( $request )
 function userHTML( )
 {
     $html = "<table class=\"user_float\">";
-    $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
-    $html .= "<tr><td><a href=\"quickbook.php\">QuickBook</a>";
-    $html .= '</td><td><a href="user_aws.php">MyAWS</a></td>';
-    $html .= "</tr><tr>";
-    $html .= "<td><a href=\"user.php\">My Home</a>";
-    $html .= '</td><td><a href="logout.php">Logout</a></td>';
+    $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th>";
+    $html .= '<th><a href="logout.php"><i class="fa fa-sign-out"></i>SignOut</a></th>';
+    $html .= '</tr>';
+    $html .= "<tr><td><a href=\"quickbook.php\"><i class=\"fa fa-hand-pointer-o\"></i>QuickBook</a>";
+    $html .= "<td><a href=\"user.php\"><i class=\"fa fa-home\"></i>My Home</a>";
     $html .= "</tr>";
     $html .= "</table>";
     return $html;
 }
+
 /*
 function venuesToCheckButtons( $venues )
 {
@@ -1899,6 +1899,34 @@ function mailto( $email, $text = '' )
 function piSpecializationHTML( $pi, $specialization )
 {
     return "<br><small><tt> $specialization <br>PI: $pi</tt></small>";
+}
+
+function goBackToPageLink( $url, $title = "Go back" )
+{
+
+    $html = "<br><br><div class=\"goback\">";
+    $html .= "<a style=\"float: left\" href=\"$url\"> 
+            <i class=\"fa fa-step-backward fa-3x\"></i>
+            <font color=\"blue\" size=\"5\">$title</font>
+        </a></div><br>";
+    return $html;
+}
+
+/**
+    * @brief Go back to referer page.
+    *
+    * @param $defaultPage
+    *
+    * @return 
+ */
+function goBack( $default = '', $delay = 0 )
+{
+    if( ! $default )
+        $url = __get__( $_SERVER, 'HTTP_REFERER', 'index.php' );
+    else
+        $url = $default;
+
+    goToPage( $url, $delay );
 }
 
 ?>

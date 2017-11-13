@@ -24,7 +24,7 @@ import sys
 import os
 import math
 import numpy as np
-from collections import defaultdict, OrderedDict
+from collections import defaultdict, OrderedDict, Counter
 import datetime 
 import copy
 import tempfile 
@@ -62,8 +62,10 @@ speakers_ = { }
 # List of holidays.
 holidays_ = {}
 
+# Specialization
 specialization_ = [ ]
 speakersSpecialization_ = { }
+specializationFreqs_ = { }
 
 
 def init( cur ):
@@ -168,10 +170,19 @@ def getAllAWSPlusUpcoming( ):
             if piOrHost:
                 cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % piOrHost )
                 a = cur.fetchone( )
+
         if a is not None and a[ 'specialization' ]:
             speakersSpecialization_[ st ] = a[ 'specialization' ]
 
+    
+    ## Compute the frequencies of specialization.
     ## Print specialization
+    freq = Counter( speakersSpecialization_.values( ) )
+    for k in freq:
+        specializationFreqs_[k] = 1.0 * freq[k] / sum( freq.values( ) )
+
+    _logger.info( specializationFreqs_ )
+
     #for s in speakersSpecialization_:
     #    print( s, speakersSpecialization_[s] )
 
@@ -333,7 +344,7 @@ def construct_flow_graph(  ):
 
         # For each Monday, we have 3 AWS - (assigned on upcoming_aws_slots_)
         # For each week select a specialization.
-        specForWeek = random.choice( specialization_ )
+        specForWeek = np.random.choice( specializationFreqs_.keys( ), p = specializationFreqs_.values( ) )
         _logger.info( " -- Specialization for this week is %s" % specForWeek )
         for j in range( nSlots ):
             dateSlot = '%s,%d' % (monday, j)
@@ -623,7 +634,6 @@ def print_schedule( schedule, outfile ):
     global g_, aws_
     with open( outfile, 'w' ) as f:
         f.write( "This is what is got \n" )
-
 
     cost = 0
     for date in  sorted(schedule):

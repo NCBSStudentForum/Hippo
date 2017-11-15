@@ -1069,18 +1069,15 @@ function getLoginIds( )
 function getUserInfo( $user )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM logins WHERE login=:login" );
-    $stmt->bindValue( ":login", $user );
-    $stmt->execute( );
-    $res =  $stmt->fetch( PDO::FETCH_ASSOC );
+
+    $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
 
     // Get the user title. 
     $title = $res[ 'title' ];
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
 
-
-    if( $ldap )
+    if( is_array($ldap) && is_array( $res ) && $ldap  )
         $res = array_merge( $res, $ldap );
 
     // If title was found in database, overwrite ldap info.

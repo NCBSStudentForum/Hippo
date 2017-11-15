@@ -20,8 +20,8 @@ else if( $_POST['response'] == 'send' )
     $msg = $_POST[ 'email_body' ];
     $cclist = $_POST[ 'cc' ];
     $subject = $_POST[ 'subject' ];
+
     echo printInfo( "Sending email to $to ($cclist ) with subject $subject" );
-    echo "<pre>" . html2Markdown( $msg, true ) . "</pre>";
 
     $res = sendHTMLEmail( $msg, $subject, $to, $cclist );
     if( $res )
@@ -29,6 +29,8 @@ else if( $_POST['response'] == 'send' )
     else
         echo minionEmbarrassed( "Failed to send email" );
 
+    echo  "<h2>Email content are following</h2>";
+    echo "<pre>" . html2Markdown( $msg, true ) . "</pre>";
 }
 
 echo goBackToPageLink( 'admin_acad_email_and_docs.php', 'Go back' );

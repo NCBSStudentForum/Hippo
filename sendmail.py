@@ -85,8 +85,9 @@ def main( args ):
         _logger.info( '\t From %s' % fromAddr )
         s.sendmail( fromAddr, toAddr, msg.as_string( ) )
         success = True
-    except Exception as e:
         _logger.info( "Everything went OK. Mail sent sucessfully" )
+    except Exception as e:
+        _logger.info( "Could not send. Error was %s" % e )
 
     s.quit( )
     return success

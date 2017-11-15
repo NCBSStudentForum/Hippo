@@ -43,7 +43,7 @@ def main( args ):
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False
 
-    msg = MIMEMultipart( 'alernative' )
+    msg = MIMEMultipart( 'alternative' )
     msg[ 'To' ] = ",".join( args.to )
 
     if args.cc:

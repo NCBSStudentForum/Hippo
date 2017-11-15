@@ -77,7 +77,7 @@ if( $_POST[ 'response' ] == 'Update' )
                 $msg .= arrayToVerticalTableHTML( $item, 'info' );
                 $msg .= "<p>I thought I let you know. </p>";
 
-                sendPlainTextEmail( $msg, $subject, $to );
+                sendHTMLEmail( $msg, $subject, $to );
             }
 
         }

@@ -23,7 +23,7 @@ else if( $_POST['response'] == 'send' )
     echo printInfo( "Sending email to $to ($cclist ) with subject $subject" );
     echo "<pre>" . html2Markdown( $msg, true ) . "</pre>";
 
-    $res = sendPlainTextEmail( $msg, $subject, $to, $cclist );
+    $res = sendHTMLEmail( $msg, $subject, $to, $cclist );
     if( $res )
         echo "Email sent successfully.";
     else

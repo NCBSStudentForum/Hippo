@@ -86,7 +86,7 @@ if( 'Email me' == __get__( $_POST, 'response', '' ) )
 
     $to = getLoginEmail( $user );
     $subject = "Your requested apartment listing @ " . $apt[ 'address' ] ;
-    sendPlainTextEmail( $msg, $subject, $to );
+    sendHTMLEmail( $msg, $subject, $to );
 }
 
 echo goBackToPageLink( "user.php", "Go back" );

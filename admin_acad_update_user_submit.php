@@ -25,7 +25,7 @@ if( $res )
             If this is a mistake, please contact academic office </p>";
         $subject = "Your name has been added to AWS list";
         $to = getLoginEmail( $login );
-        sendPlainTextEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+        sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
     }
 
     // Rerun the scheduling script every time a change is made.

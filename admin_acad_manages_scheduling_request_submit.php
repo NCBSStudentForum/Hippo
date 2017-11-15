@@ -63,7 +63,7 @@ if( $_POST[ 'response' ] == 'Reject' )
             );
         $msg .= arrayToVerticalTableHTML( $req, "request" );
 
-        sendPlainTextEmail( $msg
+        sendHTMLEmail( $msg
             , "Your preference for AWS dates (id:". $rid . ") has been rejected"
             , $speakerInfo[ 'email' ]
             , 'hippo@lists.ncbs.res.in'
@@ -102,7 +102,7 @@ elseif( $_POST['response'] == 'Accept' )
             );
         $msg .= arrayToVerticalTableHTML( $req, "request" );
 
-        sendPlainTextEmail( $msg
+        sendHTMLEmail( $msg
                 , "Your AWS preference dates (id:$rid) have been approved"
                 , $speakerInfo['email' ]
                 , 'hippo@lists.ncbs.res.in'

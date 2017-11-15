@@ -59,7 +59,7 @@ if( $_POST[ 'response' ] == 'NewBid' )
         $msg = arrayToTableHTML( $_POST, 'info' );
         $msg .= "<br>";
         $msg .= "<p> Comment : " . $_POST[ 'comment' ] . "</p>";
-        sendPlainTextEmail( $msg, $subject, $to, $cclist );
+        sendHTMLEmail( $msg, $subject, $to, $cclist );
 
         echo goBack( "user_buys.php", 0 );
         exit;

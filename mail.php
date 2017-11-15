@@ -115,7 +115,8 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
         echo printInfo( 'Email msg not in string format' );
         return;
     }
-    printInfo( "Trying to send email to $to, $cclist with subject $sub" );
+
+    echo printInfo( "Trying to send email to $to, $cclist with subject $sub" );
     if( strlen( trim( $msg ) ) < 1 )
         return;
 
@@ -137,12 +138,11 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     $archivefile = $maildir . '/' . md5($sub . $msg) . '.email';
     if( file_exists( $archivefile ) )
     {
-        echo printInfo( "This email has already been sent. Doing nothing" );
+        echo printWarning( "This email has already been sent. Doing nothing" );
         return;
     }
 
-    printInfo( "... preparing email" );
-
+    echo printInfo( "... preparing email" );
     $timestamp = date( 'r', strtotime( 'now' ) );
 
     $msg .= mailFooter( );
@@ -154,12 +154,12 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     $to =  implode( ' -t ', explode( ',', trim( $to ) ) );
 
     // Use \" whenever possible. ' don't escape especial characters in bash.
-    $cmd= __DIR__ . "/sendmail.py -t $to -s \"$sub\" -i \"$msgfile\" -H";
+    $cmd= __DIR__ . "/sendmail.py -t $to -s \"$sub\" -i \"$msgfile\" ";
 
     if( $cclist )
     {
         $cclist =  implode( ' -c ', explode( ',', trim( $cclist ) ) );
-        $cmd .= "-c $cclist";
+        $cmd .= " -c $cclist";
     }
 
     if( $attachment )
@@ -168,6 +168,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
             $cmd .= " -a \"$f\" ";
     }
 
+    echo ( "<tt>Executing $cmd </tt>" );
     $out = `$cmd`;
 
     error_log( "<pre> $cmd </pre>" );
@@ -178,7 +179,6 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     file_put_contents( $archivefile, "SENT" );
     unlink( $msgfile );
     return true;
-
 }
 
 

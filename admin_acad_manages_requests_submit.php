@@ -50,7 +50,7 @@ if( $_POST[ 'response' ] == 'Reject' )
         $req = getAwsRequestById( $rid );
         $msg .= arrayToVerticalTableHTML( $req, "request" );
 
-        sendPlainTextEmail( $msg
+        sendHTMLEmail( $msg
             , "Your AWS edit request (id:". $rid . ") has been rejected"
             , $speakerInfo[ 'email' ]
         );
@@ -93,7 +93,7 @@ elseif( $_POST['response'] == 'Accept' )
             $req = getAwsRequestById( $rid );
             $msg .= arrayToVerticalTableHTML( $req, "request" );
 
-            sendPlainTextEmail( $msg
+            sendHTMLEmail( $msg
                 , "Your AWS edit request (id:$rid) has been approved"
                 , $speakerInfo['email' ]
             );

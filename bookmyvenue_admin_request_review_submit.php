@@ -112,7 +112,7 @@ else
 
     error_log( "<pre> $msg </pre>" );
 
-    $res = sendPlainTextEmail( $msg
+    $res = sendHTMLEmail( $msg
         , "Your request '$eventGroupTitle'  has been $status" 
         , $userEmail 
         , 'hippo@lists.ncbs.res.in'

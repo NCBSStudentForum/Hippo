@@ -32,7 +32,7 @@ $today = dbDate( strtotime( 'today' ) );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         $day = humanReadableDate( $today );
-        sendPlainTextEmail( "<p>Hippo is alive on $day </p>"
+        sendHTMLEmail( "<p>Hippo is alive on $day </p>"
             , "Hippo is ALIVE on $day"
             , 'hippo@lists.ncbs.res.in'
             );
@@ -73,7 +73,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
 
             echo $mail[ 'email_body' ];
 
-            $res = sendPlainTextEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
+            $res = sendHTMLEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
             ob_flush( );
         }
         else
@@ -85,7 +85,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
             $mail = $res[ 'email' ];
             echo( "Sending to $to, $cclist with subject $subject" );
             echo( "$mail" );
-            sendPlainTextEmail( $mail, $subject, $to, $cclist );
+            sendHTMLEmail( $mail, $subject, $to, $cclist );
         }
     }
 
@@ -118,7 +118,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
                 $to = $recipient[ 'email' ];
                 $cc = $email[ 'cc' ];
                 echo "<p>Sending AWS notification $to </pre>";
-                sendPlainTextEmail( $email[ 'email_body' ], $subject, $to, $cc );
+                sendHTMLEmail( $email[ 'email_body' ], $subject, $to, $cc );
             }
         }
     }
@@ -151,7 +151,7 @@ if( $today == dbDate( strtotime( 'this monday' ) ) )
             echo( "Sending to $to, $cclist with subject $subject" );
 
             $pdffile = $res[ 'pdffile' ];
-            $ret = sendPlainTextEmail( $mail, $subject, $to, $cclist, $pdffile );
+            $ret = sendHTMLEmail( $mail, $subject, $to, $cclist, $pdffile );
             ob_flush( );
         }
         else
@@ -160,7 +160,7 @@ if( $today == dbDate( strtotime( 'this monday' ) ) )
             $subject = 'No Annual Work Seminar today : ' .
                             humanReadableDate( $nextMonday );
             $mail = $res[ 'email' ]['email_body'];
-            sendPlainTextEmail( $mail, $subject, $to, $cclist );
+            sendHTMLEmail( $mail, $subject, $to, $cclist );
         }
     }
 }
@@ -217,13 +217,13 @@ if( $today == dbDate( strtotime( 'this sunday' ) ) )
                 , array( "EMAIL_BODY" => $html ) 
             );
 
-            sendPlainTextEmail( $templ[ 'email_body'], $subject, $to, $cclist );
+            sendHTMLEmail( $templ[ 'email_body'], $subject, $to, $cclist );
         }
         else
         {
             $html .= "<p> I could not find any event in my database! </p>";
             $html .=  "<p> -- Hippo </p>";
-            sendPlainTextEmail( $html, $subject, $to, $cclist );
+            sendHTMLEmail( $html, $subject, $to, $cclist );
         }
     }
 }
@@ -269,7 +269,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
                         $to = $template[ 'recipients' ];
                         $ccs = $template[ 'cc' ];
                         $msg = $template[ 'email_body' ];
-                        sendPlainTextEmail( $msg, $subject, $to, $ccs, $attachment );
+                        sendHTMLEmail( $msg, $subject, $to, $ccs, $attachment );
                     }
                 }
             }
@@ -327,7 +327,7 @@ if( $today > $startDay && $today <= $endDay )
 
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );
-            sendPlainTextEmail( 
+            sendHTMLEmail( 
                 $templ[ 'email_body' ], $subject, $to, $templ[ 'cc' ] 
                 );
         }
@@ -373,14 +373,14 @@ if( $today > $startDay && $today <= $endDay )
             {
                 $subject = "IMP! Your recurrent booking '$title' is expiring in 7 days";
                 echo printInfo( $subject );
-                sendPlainTextEmail( $template[ 'email_body' ]
+                sendHTMLEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }
             else if( strtotime( $today ) + (1 * 24 * 3600) == strtotime( $lastEventOn ) )
             {
                 $subject = "ATTN! Your recurrent booking '$title' is expiring tomorrow";
                 echo printInfo( $subject );
-                sendPlainTextEmail( $template[ 'email_body' ]
+                sendHTMLEmail( $template[ 'email_body' ]
                     , $subject, $to, $cclist );
             }
         }
@@ -433,7 +433,7 @@ if( $today > $startDay && $today <= $endDay )
                 $cclist .= ",$pi";
 
             echo printInfo( "Sending reminder to $to " );
-            sendPlainTextEmail( $body, $subject, $to, $cclist );
+            sendHTMLEmail( $body, $subject, $to, $cclist );
         }
     }
 }
@@ -523,7 +523,7 @@ if( $intMonth % 2 == 0 )
                 $body = $email[ 'email_body' ];
                 $subject = 'Review the list of AWS speakers of your lab';
                 $to = $fac;
-                sendPlainTextEmail( $subject, $body, $to );
+                sendHTMLEmail( $subject, $body, $to );
             }
         }
     }

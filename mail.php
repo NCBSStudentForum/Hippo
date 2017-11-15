@@ -182,7 +182,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
 }
 
 
-function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
+function sendHTMLEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
     global $maildir;
     $conf = getConf( );
@@ -281,7 +281,7 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
     if( $pi )
         $templ[ 'cc' ] = $templ[ 'cc' ] . ",$pi";
 
-    return sendPlainTextEmail( $msg
+    return sendHTMLEmail( $msg
         , 'ATTN! Your AWS date has been fixed'
         , $to , $templ[ 'cc' ]
         );

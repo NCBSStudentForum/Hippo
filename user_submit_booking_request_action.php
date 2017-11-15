@@ -55,13 +55,13 @@ if( $msg == "OK" )
         $msg .= arrayToVerticalTableHTML( getRequestByGroupId( $gid )[0], 'request' );
         $msg .= "<p>You can edit/cancel the request anytime you like </p>";
 
-        sendPlainTextEmail( $msg
+        sendHTMLEmail( $msg
             , "Your booking request (id-$gid) has been recieved"
             , $userEmail 
             );
 
         // Send email to hippo@lists.ncbs.res.in 
-        sendPlainTextEmail( "<p>Details are following </p>" . $msg
+        sendHTMLEmail( "<p>Details are following </p>" . $msg
             , "A new booking request has been created by $userEmail"
             , 'hippo@lists.ncbs.res.in'
             );

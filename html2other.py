@@ -1,9 +1,9 @@
 #!/usr/bin/env python2.7
 
-"""html2markdown.py: 
+"""html2markdown.py:
 
 """
-    
+
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh"
 _credits__          = ["NCBS Bangalore"]
@@ -38,7 +38,7 @@ except Exception as e:
     pandoc_ = False
 
 # Wrap stdout so we can write to unicode
-# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
+# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
 def fix( msg ):
     msg = msg.decode( 'ascii', 'ignore' )
@@ -57,7 +57,7 @@ def tomd( msg ):
     msg = msg.replace( '</div>', '' )
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
     if pandoc_:
-        md = pypandoc.convert_text( msg, 'md', format = 'html' 
+        md = pypandoc.convert_text( msg, 'md', format = 'html'
                 , extra_args = [ '--atx-headers' ]
                 )
         return md.encode( 'ascii', 'ignore' )
@@ -92,7 +92,7 @@ def fixInlineImage( msg ):
     # And wrap all includegraphics around by wrapfig
     msg = re.sub( r'(\\includegraphics.+?width\=(.+?)([\],]).+?})'
             , r'\n\\begin{wrapfigure}{R}{\2}\n \1 \n \\end{wrapfigure}'
-            , msg, flags = re.DOTALL 
+            , msg, flags = re.DOTALL
             )
 
     return msg
@@ -105,7 +105,7 @@ def toTex( infile ):
                     , extra_args = [ '--parse-raw' ])
             msg = fixInlineImage( msg )
         except Exception as e:
-            msg = 'Failed to convert to TeX %s' % e 
+            msg = 'Failed to convert to TeX %s' % e
     return msg
 
 def htmlfile2md( filename ):
@@ -120,17 +120,22 @@ def htmlfile2md( filename ):
     md = pat.sub( '', md )
     return md
 
-def main( ):
-    infile = sys.argv[1]
-    outfmt = sys.argv[2]
+def main( infile, outfmt ):
     if outfmt == 'md':
         md = htmlfile2md( infile )
         print( md )
+        return md
     elif outfmt == 'tex':
         print( toTex( infile ) )
+        return toTex( infile )
     elif outfmt == "text":
         with open( infile, 'r' ) as f:
-            print html2text.html2text( fix( f.read( ) ) )
+            res = html2text.html2text( fix( f.read( ) ) )
+            print res
+            return res
+
 
 if __name__ == '__main__':
-    main()
+    infile = sys.argv[1]
+    outfmt = sys.argv[2]
+    main( infile, outfmt )

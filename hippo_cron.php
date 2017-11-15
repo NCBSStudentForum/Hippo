@@ -516,8 +516,8 @@ if( $intMonth % 2 == 0 )
 
                 $faculty = arrayToName( findAnyoneWithEmail( $fac ) );
                 $email = emailFromTemplate( 'NOTIFY_SUPERVISOR_AWS_CANDIDATES'
-                    , array( 'FACULTY' => $faculty, 'LIST_OF_AWS_SPEAKERS' => $table )
-                    , 'TIMESTAMP' => dbDateTime( 'now' )
+                    , array( 'FACULTY' => $faculty, 'LIST_OF_AWS_SPEAKERS' => $table 
+                    , 'TIMESTAMP' => dbDateTime( 'now' ) )
                 );
 
                 $body = $email[ 'email_body' ];

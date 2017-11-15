@@ -182,7 +182,20 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
 }
 
 
-function sendHTMLEmail($msg, $sub, $to, $cclist='', $attachment = null) 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Send email as plain text.
+    *
+    * @Param $msg
+    * @Param $sub
+    * @Param $to
+    * @Param $cclist
+    * @Param $attachment
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
     global $maildir;
     $conf = getConf( );

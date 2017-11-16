@@ -14,8 +14,12 @@ __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
 import sys
-reload( sys )
-sys.setdefaultencoding( 'utf-8' )
+
+PYMAJOR = sys.version_info[0]
+if PYMAJOR == 2:
+    reload( sys )
+    sys.setdefaultencoding( 'utf-8' )
+
 import os
 import re
 import textwrap
@@ -41,16 +45,23 @@ except Exception as e:
 # sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
 def fix( msg ):
-    msg = msg.decode( 'ascii', 'ignore' )
+    if PYMAJOR == 2:
+        msg = msg.decode( 'ascii', 'ignore' )
     return msg
 
 def tomd( msg ):
     msg = fix( msg )
 
     # remove <div class="strip_from_md"> </div>
-    msg = re.sub( r'\<div\s+class\s*=\s*strip\_from\_md\s*\>.+?\<div\>', ' link ')
+    #pat = re.compile( r'\<div\s+class\s*\=\s*strip\_from\_md\s*\>.+?\<div\>', re.DOTALL ) 
+    pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\<div\>', re.DOTALL ) 
+    for s in pat.findall( msg ):
+        msg = msg.replace( s, '' )
 
-    msg = filter( lambda x: x in string.printable, msg )
+
+    if PYMAJOR == 2:
+        msg = filter( lambda x: x in string.printable, msg )
+
     msg = msg.replace( '</div>', '' )
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
 
@@ -67,7 +78,7 @@ def tomd( msg ):
         except Exception as e:
             _logger.warn( 'Failed to convert to html using html2text. %s' % e )
 
-    return msg
+    return msg.decode( 'utf-8' )
 
 def fixInlineImage( msg ):
     """Convert inline images to given format and change the includegraphics text
@@ -109,10 +120,12 @@ def toTex( infile ):
 def htmlfile2md( filename ):
     with open( filename, 'r' ) as f:
         text = f.read( )
+
     md = tomd( text )
-    # Some more fixes.
+    md = md.decode( 'utf-8' )
     md = md.replace( '\\', '' )
     md = re.sub( r'\n\n+', r'\n\n', md )
+
     # Style ect.
     pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )
     md = pat.sub( '', md )
@@ -129,7 +142,7 @@ def main( infile, outfmt ):
     elif outfmt == "text":
         with open( infile, 'r' ) as f:
             res = html2text.html2text( fix( f.read( ) ) )
-            print res
+            print( res )
             return res
 
 

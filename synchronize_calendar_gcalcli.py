@@ -4,7 +4,6 @@
 
 Synchronize google calendar.
 
-
 """
 
 from __future__ import print_function 
@@ -28,14 +27,25 @@ import base64
 import subprocess
 from logger import _logger
 from db_connect import db_
+import pipes
+
+PYMAJOR = sys.version_info[0]
+
+if PYMAJOR==3:
+    import shlex
+    pipes.quote = shlex.quote
 
 fmt_ = '%Y-%m-%d'
+
+os.environ[ 'http_proxy' ] = 'http://proxy.ncbs.res.in:3128'
+os.environ[ 'https_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 
 cwd_ = os.path.dirname(os.path.realpath(__file__))
 
 # gcalcli command.
 cmd_ = [ os.path.join( cwd_, "gcalcli" ) ] 
-options_ = [ "--calendar", 'NCBS Public Calendar', "--tsv", '--details', 'all' ]
+cal_ = [ "--calendar", 'NCBS Public Calendar' ] 
+options_ = cal_ + [ "--tsv", '--details', 'all' ]
 
 def init( cur ):
     """
@@ -75,8 +85,9 @@ def eventToStr( event ):
             )
 
 def execute( cmd ):
-    print( '[INFO] Executing %s' % ' '.join( cmd ) )
-    o = subprocess.check_output( cmd, shell = False )
+    print( '[INFO] Executing %s' % cmd )
+    # shell-escape each argument.
+    o = subprocess.check_output( cmd, shell=False )
     return filter( lambda x: len( x.strip( )) > 10, o.split( '\n' ) )
 
 def get_agenda( start, end ):
@@ -84,7 +95,7 @@ def get_agenda( start, end ):
     global fmt_
     start_date = start.strftime( fmt_ )
     end_date = end.strftime( fmt_ )
-    print( '[INFO] Getting events between %s and %s' % (start_date, end_date))
+    _logger.info( '[INFO] Getting events between %s and %s' % (start_date, end_date))
     cmd = cmd_ + [ 'agenda' , '%s' % start_date, '%s' % end_date ] + options_
     events = execute( cmd )
     return map( lambda x: listToEventDict( x.split( '\t' ) ), events )
@@ -112,17 +123,17 @@ def areSameEvents( local, google ):
 
 def deleteEvent( event ):
     global cmd_
-    title = event[ 'title' ]
+    title = event[ 'title' ][:40]
     start, end = event[ 'start_date' ], event[ 'end_date' ]
-    print( "Deleting event %s" % eventToStr( event ) )
-    cmd = cmd_ + [ 'delete', title, start, end, '--imaexpert' ]
+    _logger.info( "Deleting event %s" % eventToStr( event ) )
+    cmd = cmd_ + cal_ + [ '--iamaexpert', 'delete', title, start, end ]
+    execute( cmd )
 
 def updateEvent( googleEvent, localEvent ):
     global cmd_ 
     options = [ ]
-    cmd = cmd_ + [ 'update', googleEvent[ 'title' ] ] + options
-    print( cmd )
-
+    cmd = cmd_ + cal_ + [ 'update', googleEvent[ 'title' ] ] + options
+    execute( cmd )
 
 def deleteOrUpdate( googleEvent, localEvents ):
     foundLocalEvent = None
@@ -140,10 +151,12 @@ def deleteOrUpdate( googleEvent, localEvents ):
 
 def synchronize( localEvents, googleEvents ):
     global cmd_ 
+
     # First delete/update any google event.
     for i, ge in enumerate( googleEvents ):
         deleteOrUpdate( ge,  localEvents )
 
+    # Then add new events.
 
 def process( ):
     global db_
@@ -166,8 +179,9 @@ def process( ):
 
     # Events in google calendar.
     googleEvents = get_agenda( today, endDay )
+    _logger.info( "Found total %d events in google" % len(googleEvents) )
 
-    print( 'Getting events between %s and %s' % (todayStr, endDayStr ))
+    _logger.info( 'Getting events between %s and %s' % (todayStr, endDayStr ))
     cur.execute( """
         SELECT * FROM events WHERE is_public_event='YES' AND date >= '%s'
         AND date <= '%s'""" % (todayStr, endDayStr)
@@ -178,7 +192,6 @@ def process( ):
 
 def main( outfile ):
     global db_
-    _logger.info( 'Synchronuzing calendar...' )
     process( )
     db_.close( )
 

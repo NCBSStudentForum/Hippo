@@ -45,17 +45,15 @@ def fix( msg ):
     return msg
 
 def tomd( msg ):
-    # First try with pandoc.
-    #   Remove all <div> tags.
-    # html = BeautifulSoup( msg, 'html.parser' )
-    # for td in html.find_all( 'td' ):
-        # if td:
-            # td.string = "\n ".join( textwrap.wrap(td.text, 80 ))
-
     msg = fix( msg )
+
+    # remove <div class="strip_from_md"> </div>
+    msg = re.sub( r'\<div\s+class\s*=\s*strip\_from\_md\s*\>.+?\<div\>', ' link ')
+
     msg = filter( lambda x: x in string.printable, msg )
     msg = msg.replace( '</div>', '' )
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
+
     if pandoc_:
         md = pypandoc.convert_text( msg, 'md', format = 'html'
                 , extra_args = [ '--atx-headers' ]

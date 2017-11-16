@@ -78,7 +78,7 @@ function eventToICALLink( $event )
     $prop = array( );
     $prop[ 'dtstart' ] = $event[ 'date' ] . ' ' . $event[ 'start_time' ];
     $prop[ 'dtend' ] = $event[ 'date' ] . ' ' . $event[ 'end_time' ];
-    $prop[ 'description' ] = $event[ 'description' ];
+    $prop[ 'description' ] = substr( $event[ 'description' ], 0, 200 );
     $prop[ 'location' ] = venueToText( $event[ 'venue' ] );
     $prop[ 'summary' ] = $event[ 'title' ];
 
@@ -1479,10 +1479,10 @@ function awsPdfURL( $speaker, $date, $msg = 'Download PDF' )
     *
     * @return
  */
-function downloadTextFile( $filename, $msg = 'Download file', $class = 'download_link' )
+function downloadTextFile( $filepath, $msg = 'Download file', $class = 'download_link' )
 {
     $url = '<a class="' . $class . '" target="_blank" href="download_file.php?filename='
-           . $filename .  '">' . $msg .'</a>';
+           . $filepath .  '">' . $msg .'</a>';
     return $url;
 }
 

@@ -51,9 +51,10 @@ function addToGoogleCalLink( $event )
     $link .= "&ctz=Asia/Kolkata";
     $link .= '&details=' . rawurlencode( $event[ 'description' ] );
     $link .= '&location=' . rawurlencode( $location );
-    $res = '<div class="remove_from_md"><a href="'. $link . '" target="_blank" >
-        <i class="fa fa-calendar-plus-o"></i>
-        Add to Google calendar</a> </div>';
+
+    $res = '<a href="'. $link . '" target="_blank" >';
+    $res .= '<img src="http://www.google.com/calendar/images/ext/gc_button6.gif" alt="" border="0">';
+    $res .= '</a>';
     return $res;
 }
 
@@ -88,7 +89,11 @@ function eventToICALLink( $event )
 
     $link = '.';
     if( file_exists( $filename ) )
-        $link = downloadTextFile( $filename, '<i class="fa fa-calendar fa"></i>ICAL' );
+        $link = downloadTextFile( $filename
+                        , '<i class="fa fa-calendar"> <strong>iCal</strong></i>'
+                        , 'link_as_button'
+                    );
+
     return $link;
 }
 
@@ -1414,11 +1419,10 @@ function talkToHTML( $talk, $with_picture = false )
     $html .=  '<td>';
     $html .= '<a target="_blank" href="' . appURL( ) .'events.php?date='
                  . $event[ 'date' ] . '">Permanent link</a>';
-    $googleCalLink = addToGoogleCalLink( $event );
 
+    $googleCalLink = addToGoogleCalLink( $event );
     $icalLink = eventToICALLink( $event );
 
-    $html .=  $googleCalLink . ' ' . $icalLink;
 
     $html .= "</td>";
     $html .= '</tr>';
@@ -1431,6 +1435,13 @@ function talkToHTML( $talk, $with_picture = false )
     $html .= "<p>" . fixHTML( $talk[ 'description' ] ) . '</p>';
 
     $html .= "</div>";
+
+    $html .=  "<div class=\"strip_from_md\">
+        <table><tr>
+        <td> $googleCalLink </td>
+        <td> $icalLink </td>
+        </tr></table>
+        </div>";
 
 
     return $html;
@@ -1468,16 +1479,10 @@ function awsPdfURL( $speaker, $date, $msg = 'Download PDF' )
     *
     * @return
  */
-function downloadTextFile( $filename, $msg = 'Download file' )
+function downloadTextFile( $filename, $msg = 'Download file', $class = 'download_link' )
 {
-    //if( strpos( '/data/', $filename ) !== false )
-    //$filename = basename( $filename );
-
-    //if( ! file_exists( getDataDir( ) ."/$filename" ) )
-    //$msg = "File doesn't exists";
-
-    $url = '<div><a target="_blank" href="download_file.php?filename='
-           . $filename .  '">' . $msg .'</a></div>';
+    $url = '<a class="' . $class . '" target="_blank" href="download_file.php?filename='
+           . $filename .  '">' . $msg .'</a>';
     return $url;
 }
 

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=EB+Garamond|Open+Sans|Ubuntu');
 h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
 
-:root { --background : rgba(255,255,251,0.8); 
+:root { --background : rgba(255,255,251,0.8);
     --tabletdcolor: rgba(200,255,200,0.9);
     --maxwidth : 800px }
 
@@ -86,7 +86,7 @@ table.show_user {
     min-width : 100%;
 }
 
-table.show_user tr td 
+table.show_user tr td
 {
     /*border : 0.5px dotted; */
     min-width : 20%;
@@ -110,7 +110,7 @@ table.show_info {
     background-color: lightyellow;
 }
 
-table.show_info tr td 
+table.show_info tr td
 {
     max-width : 25%;
 }
@@ -126,7 +126,7 @@ table.show_aws {
 
 table.show_aws tr td
 {
-    border : 0.5px dotted; 
+    border : 0.5px dotted;
     text-align : left;
     max-width : 500px;
     max-height: 3cm;
@@ -141,7 +141,7 @@ table.show_calendar {
 
 table.show_calendar tr td:nth-child(1)
 {
-    border : 0.5px dotted; 
+    border : 0.5px dotted;
     max-width : 20%;
     text-align : right;
 }
@@ -175,7 +175,7 @@ table.show_schedule th
     font-size : x-small;
 }
 
-table.tasks 
+table.tasks
 {
     max-width: 600px;
     min-width : 500px;
@@ -324,19 +324,19 @@ button.courseInfo {
 table.input {
     text-align : left;
     min-width : 400px;
-    max-width : var(--maxwidth); 
+    max-width : var(--maxwidth);
 }
 
 table.input tr td:nth-child(odd) {
     text-align : right;
-    min-width : 30%; 
+    min-width : 30%;
     vertical-align : top;
     font-size : small;
 }
 
 table.input tr td:nth-child(even) {
     text-align : left;
-    min-width : 70%; 
+    min-width : 70%;
 }
 
 table.request {
@@ -424,7 +424,7 @@ table.editable_faculty {
 }
 
 
-table.editable_faculty tr td 
+table.editable_faculty tr td
 {
     /*border : 0.5px dotted; */
     /*min-width : 20%;*/
@@ -595,14 +595,14 @@ address {
 }
 
 
-a[href^="mailto:"] { 
+a[href^="mailto:"] {
 
   text-decoration: none;
   font-family : monospace;
   font-size: small;
 }
 
-a[href^="mailto:"]::before { 
+a[href^="mailto:"]::before {
     content: "\2709";
     font-size: x-large;
 }
@@ -622,6 +622,13 @@ a:hover {
 
 a:active {
     text-decoration: underline;
+}
+
+a.link_as_button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    padding: 5px;
 }
 
 footer {

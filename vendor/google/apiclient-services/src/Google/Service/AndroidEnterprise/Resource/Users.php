@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -59,7 +59,7 @@ class Google_Service_AndroidEnterprise_Resource_Users extends Google_Service_Res
   }
   /**
    * Generates a token (activation code) to allow this user to configure their
-   * work account in the Android Setup Wizard. Revokes any previously generated
+   * managed account in the Android Setup Wizard. Revokes any previously generated
    * token.
    *
    * This call only works with Google managed accounts. (users.generateToken)
@@ -161,6 +161,23 @@ class Google_Service_AndroidEnterprise_Resource_Users extends Google_Service_Res
     return $this->call('patch', array($params), "Google_Service_AndroidEnterprise_User");
   }
   /**
+   * Revokes access to all devices currently provisioned to the user. The user
+   * will no longer be able to use the managed Play store on any of their managed
+   * devices.
+   *
+   * This call only works with EMM-managed accounts. (users.revokeDeviceAccess)
+   *
+   * @param string $enterpriseId The ID of the enterprise.
+   * @param string $userId The ID of the user.
+   * @param array $optParams Optional parameters.
+   */
+  public function revokeDeviceAccess($enterpriseId, $userId, $optParams = array())
+  {
+    $params = array('enterpriseId' => $enterpriseId, 'userId' => $userId);
+    $params = array_merge($params, $optParams);
+    return $this->call('revokeDeviceAccess', array($params));
+  }
+  /**
    * Revokes a previously generated token (activation code) for the user.
    * (users.revokeToken)
    *
@@ -175,7 +192,9 @@ class Google_Service_AndroidEnterprise_Resource_Users extends Google_Service_Res
     return $this->call('revokeToken', array($params));
   }
   /**
-   * Modifies the set of products a user is entitled to access.
+   * Modifies the set of products that a user is entitled to access (referred to
+   * as whitelisted products). Only products that are approved or products that
+   * were previously approved (products with revoked approval) can be whitelisted.
    * (users.setAvailableProductSet)
    *
    * @param string $enterpriseId The ID of the enterprise.

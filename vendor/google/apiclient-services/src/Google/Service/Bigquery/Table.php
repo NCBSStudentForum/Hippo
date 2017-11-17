@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,8 @@ class Google_Service_Bigquery_Table extends Google_Model
 {
   public $creationTime;
   public $description;
+  protected $encryptionConfigurationType = 'Google_Service_Bigquery_EncryptionConfiguration';
+  protected $encryptionConfigurationDataType = '';
   public $etag;
   public $expirationTime;
   protected $externalDataConfigurationType = 'Google_Service_Bigquery_ExternalDataConfiguration';
@@ -26,6 +28,7 @@ class Google_Service_Bigquery_Table extends Google_Model
   public $friendlyName;
   public $id;
   public $kind;
+  public $labels;
   public $lastModifiedTime;
   public $location;
   public $numBytes;
@@ -60,6 +63,20 @@ class Google_Service_Bigquery_Table extends Google_Model
   {
     return $this->description;
   }
+  /**
+   * @param Google_Service_Bigquery_EncryptionConfiguration
+   */
+  public function setEncryptionConfiguration(Google_Service_Bigquery_EncryptionConfiguration $encryptionConfiguration)
+  {
+    $this->encryptionConfiguration = $encryptionConfiguration;
+  }
+  /**
+   * @return Google_Service_Bigquery_EncryptionConfiguration
+   */
+  public function getEncryptionConfiguration()
+  {
+    return $this->encryptionConfiguration;
+  }
   public function setEtag($etag)
   {
     $this->etag = $etag;
@@ -76,10 +93,16 @@ class Google_Service_Bigquery_Table extends Google_Model
   {
     return $this->expirationTime;
   }
+  /**
+   * @param Google_Service_Bigquery_ExternalDataConfiguration
+   */
   public function setExternalDataConfiguration(Google_Service_Bigquery_ExternalDataConfiguration $externalDataConfiguration)
   {
     $this->externalDataConfiguration = $externalDataConfiguration;
   }
+  /**
+   * @return Google_Service_Bigquery_ExternalDataConfiguration
+   */
   public function getExternalDataConfiguration()
   {
     return $this->externalDataConfiguration;
@@ -107,6 +130,14 @@ class Google_Service_Bigquery_Table extends Google_Model
   public function getKind()
   {
     return $this->kind;
+  }
+  public function setLabels($labels)
+  {
+    $this->labels = $labels;
+  }
+  public function getLabels()
+  {
+    return $this->labels;
   }
   public function setLastModifiedTime($lastModifiedTime)
   {
@@ -148,10 +179,16 @@ class Google_Service_Bigquery_Table extends Google_Model
   {
     return $this->numRows;
   }
+  /**
+   * @param Google_Service_Bigquery_TableSchema
+   */
   public function setSchema(Google_Service_Bigquery_TableSchema $schema)
   {
     $this->schema = $schema;
   }
+  /**
+   * @return Google_Service_Bigquery_TableSchema
+   */
   public function getSchema()
   {
     return $this->schema;
@@ -164,26 +201,44 @@ class Google_Service_Bigquery_Table extends Google_Model
   {
     return $this->selfLink;
   }
+  /**
+   * @param Google_Service_Bigquery_Streamingbuffer
+   */
   public function setStreamingBuffer(Google_Service_Bigquery_Streamingbuffer $streamingBuffer)
   {
     $this->streamingBuffer = $streamingBuffer;
   }
+  /**
+   * @return Google_Service_Bigquery_Streamingbuffer
+   */
   public function getStreamingBuffer()
   {
     return $this->streamingBuffer;
   }
+  /**
+   * @param Google_Service_Bigquery_TableReference
+   */
   public function setTableReference(Google_Service_Bigquery_TableReference $tableReference)
   {
     $this->tableReference = $tableReference;
   }
+  /**
+   * @return Google_Service_Bigquery_TableReference
+   */
   public function getTableReference()
   {
     return $this->tableReference;
   }
+  /**
+   * @param Google_Service_Bigquery_TimePartitioning
+   */
   public function setTimePartitioning(Google_Service_Bigquery_TimePartitioning $timePartitioning)
   {
     $this->timePartitioning = $timePartitioning;
   }
+  /**
+   * @return Google_Service_Bigquery_TimePartitioning
+   */
   public function getTimePartitioning()
   {
     return $this->timePartitioning;
@@ -196,10 +251,16 @@ class Google_Service_Bigquery_Table extends Google_Model
   {
     return $this->type;
   }
+  /**
+   * @param Google_Service_Bigquery_ViewDefinition
+   */
   public function setView(Google_Service_Bigquery_ViewDefinition $view)
   {
     $this->view = $view;
   }
+  /**
+   * @return Google_Service_Bigquery_ViewDefinition
+   */
   public function getView()
   {
     return $this->view;

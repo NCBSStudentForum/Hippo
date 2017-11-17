@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,16 +26,27 @@ class Google_Service_Logging_LogEntry extends Google_Model
   protected $operationType = 'Google_Service_Logging_LogEntryOperation';
   protected $operationDataType = '';
   public $protoPayload;
+  public $receiveTimestamp;
   protected $resourceType = 'Google_Service_Logging_MonitoredResource';
   protected $resourceDataType = '';
   public $severity;
+  protected $sourceLocationType = 'Google_Service_Logging_LogEntrySourceLocation';
+  protected $sourceLocationDataType = '';
+  public $spanId;
   public $textPayload;
   public $timestamp;
+  public $trace;
 
+  /**
+   * @param Google_Service_Logging_HttpRequest
+   */
   public function setHttpRequest(Google_Service_Logging_HttpRequest $httpRequest)
   {
     $this->httpRequest = $httpRequest;
   }
+  /**
+   * @return Google_Service_Logging_HttpRequest
+   */
   public function getHttpRequest()
   {
     return $this->httpRequest;
@@ -72,10 +83,16 @@ class Google_Service_Logging_LogEntry extends Google_Model
   {
     return $this->logName;
   }
+  /**
+   * @param Google_Service_Logging_LogEntryOperation
+   */
   public function setOperation(Google_Service_Logging_LogEntryOperation $operation)
   {
     $this->operation = $operation;
   }
+  /**
+   * @return Google_Service_Logging_LogEntryOperation
+   */
   public function getOperation()
   {
     return $this->operation;
@@ -88,10 +105,24 @@ class Google_Service_Logging_LogEntry extends Google_Model
   {
     return $this->protoPayload;
   }
+  public function setReceiveTimestamp($receiveTimestamp)
+  {
+    $this->receiveTimestamp = $receiveTimestamp;
+  }
+  public function getReceiveTimestamp()
+  {
+    return $this->receiveTimestamp;
+  }
+  /**
+   * @param Google_Service_Logging_MonitoredResource
+   */
   public function setResource(Google_Service_Logging_MonitoredResource $resource)
   {
     $this->resource = $resource;
   }
+  /**
+   * @return Google_Service_Logging_MonitoredResource
+   */
   public function getResource()
   {
     return $this->resource;
@@ -103,6 +134,28 @@ class Google_Service_Logging_LogEntry extends Google_Model
   public function getSeverity()
   {
     return $this->severity;
+  }
+  /**
+   * @param Google_Service_Logging_LogEntrySourceLocation
+   */
+  public function setSourceLocation(Google_Service_Logging_LogEntrySourceLocation $sourceLocation)
+  {
+    $this->sourceLocation = $sourceLocation;
+  }
+  /**
+   * @return Google_Service_Logging_LogEntrySourceLocation
+   */
+  public function getSourceLocation()
+  {
+    return $this->sourceLocation;
+  }
+  public function setSpanId($spanId)
+  {
+    $this->spanId = $spanId;
+  }
+  public function getSpanId()
+  {
+    return $this->spanId;
   }
   public function setTextPayload($textPayload)
   {
@@ -119,5 +172,13 @@ class Google_Service_Logging_LogEntry extends Google_Model
   public function getTimestamp()
   {
     return $this->timestamp;
+  }
+  public function setTrace($trace)
+  {
+    $this->trace = $trace;
+  }
+  public function getTrace()
+  {
+    return $this->trace;
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +33,8 @@ class Google_Service_Safebrowsing extends Google_Service
 {
 
 
+  public $encodedFullHashes;
+  public $encodedUpdates;
   public $fullHashes;
   public $threatListUpdates;
   public $threatLists;
@@ -51,6 +53,62 @@ class Google_Service_Safebrowsing extends Google_Service
     $this->version = 'v4';
     $this->serviceName = 'safebrowsing';
 
+    $this->encodedFullHashes = new Google_Service_Safebrowsing_Resource_EncodedFullHashes(
+        $this,
+        $this->serviceName,
+        'encodedFullHashes',
+        array(
+          'methods' => array(
+            'get' => array(
+              'path' => 'v4/encodedFullHashes/{encodedRequest}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'encodedRequest' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'clientVersion' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'clientId' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->encodedUpdates = new Google_Service_Safebrowsing_Resource_EncodedUpdates(
+        $this,
+        $this->serviceName,
+        'encodedUpdates',
+        array(
+          'methods' => array(
+            'get' => array(
+              'path' => 'v4/encodedUpdates/{encodedRequest}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'encodedRequest' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'clientVersion' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'clientId' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
     $this->fullHashes = new Google_Service_Safebrowsing_Resource_FullHashes(
         $this,
         $this->serviceName,

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -127,6 +127,7 @@ class Google_Service_Directory extends Google_Service
   public $notifications;
   public $orgunits;
   public $privileges;
+  public $resolvedAppAccessSettings;
   public $resources_calendars;
   public $roleAssignments;
   public $roles;
@@ -271,6 +272,10 @@ class Google_Service_Directory extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'orgUnitPath' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -286,6 +291,21 @@ class Google_Service_Directory extends Google_Service
                 'sortOrder' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+              ),
+            ),'moveDevicesToOu' => array(
+              'path' => 'customer/{customerId}/devices/chromeos/moveDevicesToOu',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'customerId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'orgUnitPath' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'required' => true,
                 ),
               ),
             ),'patch' => array(
@@ -1023,6 +1043,24 @@ class Google_Service_Directory extends Google_Service
                   'required' => true,
                 ),
               ),
+            ),
+          )
+        )
+    );
+    $this->resolvedAppAccessSettings = new Google_Service_Directory_Resource_ResolvedAppAccessSettings(
+        $this,
+        $this->serviceName,
+        'resolvedAppAccessSettings',
+        array(
+          'methods' => array(
+            'GetSettings' => array(
+              'path' => 'resolvedappaccesssettings',
+              'httpMethod' => 'GET',
+              'parameters' => array(),
+            ),'ListTrustedApps' => array(
+              'path' => 'trustedapps',
+              'httpMethod' => 'GET',
+              'parameters' => array(),
             ),
           )
         )

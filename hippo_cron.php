@@ -81,7 +81,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         {
             // There is no AWS this monday.
             $subject = 'No Annual Work Seminar next week (' .
-                humanReadableDate( $nextMonday ) . ')';
+                            humanReadableDate( $nextMonday ) . ')';
 
             $mail = $res[ 'email' ];
             echo( "Sending to $to, $cclist with subject $subject" );
@@ -91,7 +91,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
     }
 
     /* Send out email to TCM members and faculty about upcoming AWS. */
-    $awayFrom = strtotime( 'now' ) - strtotime( '15:00' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '17:00' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         error_log( 'Try notifying TCM and PI about AWS' );
@@ -118,7 +118,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
                 $subject = 'Annual Work Seminar of ' . $speaker;
                 $to = $recipient[ 'email' ];
                 $cc = $email[ 'cc' ];
-                echo "<p>Sending AWS notification $to </pre>";
+                echo "Sending AWS notification $to </pre>";
                 sendHTMLEmail( $email[ 'email_body' ], $subject, $to, $cc );
             }
         }

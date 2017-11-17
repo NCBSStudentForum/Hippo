@@ -91,7 +91,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
     }
 
     /* Send out email to TCM members and faculty about upcoming AWS. */
-    $awayFrom = strtotime( 'now' ) - strtotime( '17:00' );
+    $awayFrom = strtotime( 'now' ) - strtotime( '15:00' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         error_log( 'Try notifying TCM and PI about AWS' );

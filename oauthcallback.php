@@ -8,10 +8,6 @@ include_once 'database.php';
 include_once 'check_access_permissions.php';
 require_once './calendar/NCBSCalendar.php';
 
-// Disabling it because google-calendar takes care of security. Moreover, this 
-// script can be run by cron job.
-//mustHaveAnyOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
-
 ?>
 
 <!-- Progress bar holder -->
@@ -29,9 +25,6 @@ echo userHTML( );
 // sends us a GET response. Use this token to process all other queries.
 
 $calendar = new NCBSCalendar( $_SESSION['calendar_id'] );
-
-echo alertUser( "Just a reminder, you MUST login to google-account which own the 
-    calendar " );
 
 $everythingWentOk = true;
 

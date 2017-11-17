@@ -30,7 +30,6 @@ import codecs
 import tempfile
 import base64
 import locale
-from lxml import etree
 from logger import _logger
 
 pandoc_ = True

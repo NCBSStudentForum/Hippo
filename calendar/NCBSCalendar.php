@@ -61,7 +61,9 @@ class NCBSCalendar
         $this->client->useApplicationDefaultCredentials( );
 
         // Mimic user (service account).
-        $this->client->setSubject( $conf[ 'google calendar']['service_account_email'];
+        $this->client->setSubject( 
+            $conf[ 'google calendar']['service_account_email'] 
+        );
         $this->client->setScopes( 'https://www.googleapis.com/auth/calendar');
     }
 

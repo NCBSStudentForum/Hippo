@@ -25,6 +25,8 @@ $_SESSION[ 'oauth_credential' ] =
 $_SESSION[ 'calendar_id'] = 
     'd2jud2r7bsj0i820k0f6j702qo@group.calendar.google.com'; 
 
+$_SESSION[ 'service_key_file' ] = '/etc/hippo/hippo-f1811b036a3f.json';
+
 $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 

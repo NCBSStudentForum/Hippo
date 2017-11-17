@@ -633,8 +633,8 @@ function venueSummary( $venue )
     if( is_string( $venue ) )
         $venue = getVenueById( $venue );
 
-    return $venue['name'] . ' [' . $venue[ 'type' ] . '], ' .
-        $venue['building_name'] . ', ' . $venue['location'];
+    return trim( $venue['name'] . ' [' . $venue[ 'type' ] . '], ' .
+        $venue['building_name'] . ', ' . $venue['location'] );
 }
 
 function requestToEditableTableHTML( $request, $editables = Array( ) )
@@ -1410,10 +1410,15 @@ function talkToHTML( $talk, $with_picture = false )
     else
         $html .= '<br><br> Host: ' . loginToHTML( $talk[ 'host' ] );
 
-    $html .= '<br><div style="font-size:small">';
-    $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where
-             . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
-    $html .= '</td></tr>';
+    $html .= '<br><br>';
+    $html .= '<div style="font-variant:small-caps;text-decoration:none;">';
+    $html .= '<table><tr>
+                <td class="when"> <i class="fa fa-clock-o fs-spin"></i>' . $when . '</td>
+            </tr><tr>
+                <td class="where"> <i class="fa fa-thumb-tack fs-spin fa-fw"></i>' . $where . '</td>
+            </tr><tr>
+                <td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) . '</td>';
+    $html .= '</tr>';
 
 
     // Add links to google,ical.

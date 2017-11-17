@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ class Google_Service_IdentityToolkit_UserInfo extends Google_Collection
 {
   protected $collection_key = 'providerUserInfo';
   public $createdAt;
+  public $customAttributes;
   public $customAuth;
   public $disabled;
   public $displayName;
@@ -28,9 +29,11 @@ class Google_Service_IdentityToolkit_UserInfo extends Google_Collection
   public $localId;
   public $passwordHash;
   public $passwordUpdatedAt;
+  public $phoneNumber;
   public $photoUrl;
   protected $providerUserInfoType = 'Google_Service_IdentityToolkit_UserInfoProviderUserInfo';
   protected $providerUserInfoDataType = 'array';
+  public $rawPassword;
   public $salt;
   public $screenName;
   public $validSince;
@@ -43,6 +46,14 @@ class Google_Service_IdentityToolkit_UserInfo extends Google_Collection
   public function getCreatedAt()
   {
     return $this->createdAt;
+  }
+  public function setCustomAttributes($customAttributes)
+  {
+    $this->customAttributes = $customAttributes;
+  }
+  public function getCustomAttributes()
+  {
+    return $this->customAttributes;
   }
   public function setCustomAuth($customAuth)
   {
@@ -116,6 +127,14 @@ class Google_Service_IdentityToolkit_UserInfo extends Google_Collection
   {
     return $this->passwordUpdatedAt;
   }
+  public function setPhoneNumber($phoneNumber)
+  {
+    $this->phoneNumber = $phoneNumber;
+  }
+  public function getPhoneNumber()
+  {
+    return $this->phoneNumber;
+  }
   public function setPhotoUrl($photoUrl)
   {
     $this->photoUrl = $photoUrl;
@@ -124,13 +143,27 @@ class Google_Service_IdentityToolkit_UserInfo extends Google_Collection
   {
     return $this->photoUrl;
   }
+  /**
+   * @param Google_Service_IdentityToolkit_UserInfoProviderUserInfo
+   */
   public function setProviderUserInfo($providerUserInfo)
   {
     $this->providerUserInfo = $providerUserInfo;
   }
+  /**
+   * @return Google_Service_IdentityToolkit_UserInfoProviderUserInfo
+   */
   public function getProviderUserInfo()
   {
     return $this->providerUserInfo;
+  }
+  public function setRawPassword($rawPassword)
+  {
+    $this->rawPassword = $rawPassword;
+  }
+  public function getRawPassword()
+  {
+    return $this->rawPassword;
   }
   public function setSalt($salt)
   {

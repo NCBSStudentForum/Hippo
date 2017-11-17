@@ -22,6 +22,9 @@ var array = [2010, 1, 14, 15, 25, 50, 125];
 var day11 = moment(Date.UTC.apply({}, array));
 var day12 = moment.unix(1318781876);
 
+// TODO: reenable in 2.0
+// moment(null);
+moment(undefined);
 moment({ years: 2010, months: 3, days: 5, hours: 15, minutes: 10, seconds: 3, milliseconds: 123 });
 moment("20140101", "YYYYMMDD", true);
 moment("20140101", "YYYYMMDD", "en");
@@ -36,6 +39,13 @@ moment(day.toISOString(), moment.ISO_8601, "en", true);
 moment(day.toISOString(), [moment.ISO_8601]);
 moment(day.toISOString(), [moment.ISO_8601], true);
 moment(day.toISOString(), [moment.ISO_8601], "en", true);
+
+moment(day.toUTCString(), moment.RFC_2822);
+moment(day.toUTCString(), moment.RFC_2822, true);
+moment(day.toUTCString(), moment.RFC_2822, "en", true);
+moment(day.toUTCString(), [moment.RFC_2822]);
+moment(day.toUTCString(), [moment.RFC_2822], true);
+moment(day.toUTCString(), [moment.RFC_2822], "en", true);
 
 var a = moment([2012]);
 var b = moment(a);
@@ -200,14 +210,12 @@ moment().utcOffset();
 moment("2012-2", "YYYY-MM").daysInMonth();
 moment([2011, 2, 12]).isDST();
 
-moment.isMoment();
 moment.isMoment(new Date());
 moment.isMoment(moment());
 
 moment.isDate(new Date());
 moment.isDate(/regexp/);
 
-moment.isDuration();
 moment.isDuration(new Date());
 moment.isDuration(moment.duration());
 
@@ -221,10 +229,13 @@ moment(1316116057189).fromNow();
 moment.localeData('en');
 var globalLang = moment();
 var localLang = moment();
-localLang.localeData('fr');
+localLang.localeData();
 localLang.format('LLLL');
 globalLang.format('LLLL');
 
+// TODO: reenable in 2.0
+// moment.duration(null);
+moment.duration(undefined);
 moment.duration(100);
 moment.duration(2, 'seconds');
 moment.duration({
@@ -236,6 +247,16 @@ moment.duration({
     months: 2,
     years: 2
 });
+moment.duration({
+    s: 2,
+    m: 2,
+    h: 2,
+    d: 2,
+    w: 2,
+    M: 2,
+    y: 2,
+});
+moment.duration(1, "minute").clone();
 moment.duration(1, "minutes").humanize();
 moment.duration(500).milliseconds();
 moment.duration(500).asMilliseconds();
@@ -256,6 +277,11 @@ adur.subtract(1, 'd').days();
 moment.locale();
 moment.locale('en');
 moment.locale(['en', 'fr']);
+
+// TODO: Reenable in 2.0
+// moment.defineLocale('en', null);
+// moment.updateLocale('en', null);
+// moment.locale('en', null);
 
 // Defining a custom language:
 moment.locale('en', {

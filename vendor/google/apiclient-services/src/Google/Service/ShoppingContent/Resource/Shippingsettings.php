@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,7 +44,9 @@ class Google_Service_ShoppingContent_Resource_Shippingsettings extends Google_Se
   /**
    * Retrieves the shipping settings of the account. (shippingsettings.get)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the managing account. If this account is
+   * not a multi-client account, then this parameter must be the same as
+   * accountId.
    * @param string $accountId The ID of the account for which to get/update
    * shipping settings.
    * @param array $optParams Optional parameters.
@@ -75,7 +77,8 @@ class Google_Service_ShoppingContent_Resource_Shippingsettings extends Google_Se
    * Lists the shipping settings of the sub-accounts in your Merchant Center
    * account. (shippingsettings.listShippingsettings)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the managing account. This must be a
+   * multi-client account.
    * @param array $optParams Optional parameters.
    *
    * @opt_param string maxResults The maximum number of shipping settings to
@@ -93,7 +96,9 @@ class Google_Service_ShoppingContent_Resource_Shippingsettings extends Google_Se
    * Updates the shipping settings of the account. This method supports patch
    * semantics. (shippingsettings.patch)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the managing account. If this account is
+   * not a multi-client account, then this parameter must be the same as
+   * accountId.
    * @param string $accountId The ID of the account for which to get/update
    * shipping settings.
    * @param Google_Service_ShoppingContent_ShippingSettings $postBody
@@ -111,7 +116,9 @@ class Google_Service_ShoppingContent_Resource_Shippingsettings extends Google_Se
   /**
    * Updates the shipping settings of the account. (shippingsettings.update)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the managing account. If this account is
+   * not a multi-client account, then this parameter must be the same as
+   * accountId.
    * @param string $accountId The ID of the account for which to get/update
    * shipping settings.
    * @param Google_Service_ShoppingContent_ShippingSettings $postBody

@@ -30,6 +30,7 @@ import codecs
 import tempfile
 import base64
 import locale
+from lxml import etree
 from logger import _logger
 
 pandoc_ = True
@@ -51,12 +52,12 @@ def fix( msg ):
 
 def tomd( msg ):
     msg = fix( msg )
-
     # remove <div class="strip_from_md"> </div>
-    #pat = re.compile( r'\<div\s+class\s*\=\s*strip\_from\_md\s*\>.+?\<div\>', re.DOTALL ) 
-    pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\<div\>', re.DOTALL ) 
+    pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL ) 
     for s in pat.findall( msg ):
         msg = msg.replace( s, '' )
+        print( '============' )
+        print( s )
 
 
     if PYMAJOR == 2:
@@ -132,14 +133,14 @@ def htmlfile2md( filename ):
     return md
 
 def main( infile, outfmt ):
-    if outfmt == 'md':
+    if outfmt in [ 'md', 'markdown', 'text', 'txt' ]:
         md = htmlfile2md( infile )
         print( md )
         return md
     elif outfmt == 'tex':
         print( toTex( infile ) )
         return toTex( infile )
-    elif outfmt == "text":
+    elif outfmt == "html2text":
         with open( infile, 'r' ) as f:
             res = html2text.html2text( fix( f.read( ) ) )
             print( res )

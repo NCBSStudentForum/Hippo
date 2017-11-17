@@ -58,9 +58,10 @@ else
 
             $talkHtml .= "<br>";
             // Link to pdf file.
-            $talkHtml.= '<a class="link_as_button" style="margin-left:400px"
+            $talkHtml.= '<a style="margin-left:500px"
                         target="_blank" href="generate_pdf_talk.php?date='
-                    . $default[ 'date' ] . '&id=' . $talkId . '">Download pdf</a>';
+                        . $default[ 'date' ] . '&id=' . $talkId . '">
+                        <i class="fa fa-download ">PDF</i></a>';
         }
     }
     echo $talkHtml;

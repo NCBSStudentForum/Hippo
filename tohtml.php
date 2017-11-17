@@ -53,8 +53,11 @@ function addToGoogleCalLink( $event )
     $link .= '&location=' . rawurlencode( $location );
 
     $res = '<a href="'. $link . '" target="_blank" >';
-    $res .= '<img src="http://www.google.com/calendar/images/ext/gc_button6.gif" alt="" border="0">';
+
+    // Get inline image.
+    $res .= inlineImage( __DIR__ . '/data/gc_button6.png' );
     $res .= '</a>';
+
     return $res;
 }
 
@@ -1365,7 +1368,6 @@ function talkToHTML( $talk, $with_picture = false )
     {
         $speakerArr = getSpeakerByName( $talk[ 'speaker' ] );
         $speakerName = speakerName( $speakerArr );
-        //echo "<pre> $speakerName </pre>";
     }
 
 
@@ -1599,16 +1601,23 @@ function googleCaledarURL( )
     return $url;
 }
 
-function showImage( $picpath, $height = 'auto', $width = 'auto' )
+function inlineImage( $picpath, $class = 'inline_image', $height = 'auto', $width = 'auto' )
 {
     if( ! file_exists( $picpath ) )
         $picpath = nullPicPath( );
 
-    $html = '<img class="login_picture" width="' . $width
+    $html = '<img class="'.$class . '" width="' . $width
             . '" height="' . $height . '" src="'
             . dataURI( $picpath, 'image/jpg' ) . '" >';
     return $html;
 }
+
+function showImage( $picpath, $height = 'auto', $width = 'auto' )
+{
+    return inlineImage( $picpath, $class = 'login_picture', $height, $width );
+}
+
+
 
 /**
     * @brief Display any image.

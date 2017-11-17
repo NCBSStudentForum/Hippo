@@ -1436,6 +1436,9 @@ function talkToHTML( $talk, $with_picture = false )
 
     $html .= "</div>";
 
+    // Add the calendar links
+    $html .= "<br><br>";
+
     $html .=  "<div class=\"strip_from_md\">
         <table><tr>
         <td> $googleCalLink </td>

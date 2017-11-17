@@ -47,32 +47,22 @@ class NCBSCalendar
      */
     public $format = 'Y-m-d\TH:i:s';
 
-    public function __construct( $oauth_file, $calID )
+    public function __construct( $calID )
     {
         $this->calID = $calID;
         $this->offset = 0.0; // (new DateTime())->format( 'Z' );
+
+        $conf = getConf( );
+
+        $secFile = $conf[ 'google calendar']['service_account_secret'];
+        putenv( 'GOOGLE_APPLICATION_CREDENTIALS=' . $secFile );
         $this->client = new Google_Client( );
 
-        if( file_exists($oauth_file) )
-            $this->oauthFile =  $oauth_file;
-        else
-        {
-            $ret = "
-                   <h3 class='warn'>
-                   Warning: You need to set the location of your OAuth2 Client Credentials from the
-                   <a href='http://developers.google.com/console'>Google API console</a>.
-                   </h3>
-                   ";
-            return None;
-        }
+        $this->client->useApplicationDefaultCredentials( );
 
-        try {
-            $this->client->setAuthConfig( $this->oauthFile );
-        } catch (Exception $e) {
-        }
-
+        // Mimic user (service account).
+        $this->client->setSubject( $conf[ 'google calendar']['service_account_email'];
         $this->client->setScopes( 'https://www.googleapis.com/auth/calendar');
-        $this->redirectURL = $this->client->createAuthUrl();
     }
 
     public function service( )
@@ -81,18 +71,6 @@ class NCBSCalendar
             $this->service = new Google_Service_Calendar( $this->client );
 
         return $this->service;
-    }
-
-    public function setAccessToken( $token )
-    {
-        $token = $this->client->fetchAccessTokenWithAuthCode($token );
-        try {
-            $this->client->setAccessToken($token);
-        } catch (InvalidArgumentException $e) {
-            echo printWarning( "Token expired! You must try again ..." );
-            echo goBackToPageLink( "bookmyvenue_admin.php", "Go back"  );
-            exit;
-        }
     }
 
     /**
@@ -182,6 +160,7 @@ class NCBSCalendar
         }
 
         $gevent = $this->getEvent( $event['calendar_id' ] , $event['calendar_event_id'] );
+
 
         // Now update the summary and description of event. Changing time is not
         // allowed in any case.

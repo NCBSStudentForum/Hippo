@@ -1,17 +1,10 @@
-<?php 
-session_start( );
-
+<?php
 include_once 'header.php';
 include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'database.php';
 include_once 'check_access_permissions.php';
 require_once './calendar/NCBSCalendar.php';
-
-// Disabling it because google-calendar takes care of security. Moreover, this 
-// script can be run by cron job.
-//mustHaveAnyOfTheseRoles( Array( 'BOOKMYVENUE_ADMIN' ) );
-
 ?>
 
 <!-- Progress bar holder -->
@@ -28,10 +21,16 @@ echo userHTML( );
 // When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 
 // sends us a GET response. Use this token to process all other queries.
 
-$calendar = new NCBSCalendar( $_SESSION['calendar_id'] );
+$calendar = new NCBSCalendar( $_SESSION[ 'oauth_credential' ]
+    , $_SESSION['calendar_id'] );
 
 echo alertUser( "Just a reminder, you MUST login to google-account which own the 
     calendar " );
+
+// Token may come from command line. 
+$arg = "4/rLX6XXHjKpbZlweo0_eJlKp6MDvI6AHtxQ2nrXZHYIA#";
+
+$calendar->setAccessToken( $arg );
 
 $everythingWentOk = true;
 
@@ -147,5 +146,7 @@ echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 echo '<br> <br> <br>';
 
 exit;
+
+
 
 ?>

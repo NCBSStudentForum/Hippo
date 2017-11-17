@@ -167,7 +167,7 @@ if(file_exists($inifile))
 }
 else
 {
-    echo printWarning( "Config file is not found. Can't continue" );
+    die( "Config file is not found. Can't continue" );
     exit;
 }
 

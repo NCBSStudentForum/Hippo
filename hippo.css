@@ -1,12 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Open+Sans|Ubuntu');
-h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|EB+Garamond|Ubuntu');
+h1, h2, h3, h4, h5, h6 {
+    font-family : 'EB Garamond';
+    line-height: 120%;
+}
 
 :root { --background : rgba(255,255,251,0.8);
     --tabletdcolor: rgba(200,255,200,0.9);
     --maxwidth : 800px }
 
 body {
-    font-family: Open Sans;
+    font-family: "Libre Baskerville";
+    font-size: 16px;
+    line-height: 140%;
     max-width: var(--maxwidth);
     min-width : 80%;
     display:block;
@@ -19,7 +24,7 @@ body {
 
 
 h1.aws {
-    font-size : 1.2em;
+    /* font-size : 1.2em; */
 }
 
 pre {

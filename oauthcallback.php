@@ -17,15 +17,14 @@ require_once './calendar/NCBSCalendar.php';
 
 <?php
 
-
 echo userHTML( );
 
 // We come here from google-calendar 
 // When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 
 // sends us a GET response. Use this token to process all other queries.
 
-$calendar = new NCBSCalendar( $_SESSION['calendar_id'] );
-
+$conf = getConf( );
+$calendar = new NCBSCalendar( $conf[ 'google calendar']['calendar_id'] );
 $everythingWentOk = true;
 
 // Find event in list of events but comparing summary.

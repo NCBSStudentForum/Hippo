@@ -53,6 +53,7 @@ function eventToTex( $event, $talk = null )
             $speakerHTML = speakerToHTML( getSpeakerByName( $talk[ 'speaker' ]));
 
         $speakerTex = html2Tex( $speakerHTML );
+
         $speaker = $speakerTex;
     }
 

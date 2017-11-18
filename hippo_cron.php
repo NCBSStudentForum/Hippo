@@ -8,7 +8,6 @@ include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'mail.php';
-include_once 'synchronize_calendar.php';
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
@@ -81,7 +80,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
         {
             // There is no AWS this monday.
             $subject = 'No Annual Work Seminar next week (' .
-                humanReadableDate( $nextMonday ) . ')';
+                            humanReadableDate( $nextMonday ) . ')';
 
             $mail = $res[ 'email' ];
             echo( "Sending to $to, $cclist with subject $subject" );
@@ -118,7 +117,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
                 $subject = 'Annual Work Seminar of ' . $speaker;
                 $to = $recipient[ 'email' ];
                 $cc = $email[ 'cc' ];
-                echo "<p>Sending AWS notification $to </pre>";
+                echo "Sending AWS notification $to </pre>";
                 sendHTMLEmail( $email[ 'email_body' ], $subject, $to, $cc );
             }
         }
@@ -530,18 +529,18 @@ if( $intMonth % 2 == 0 )
     }
 }
 
-/* synchronize calendar every day at 6am and 6pm. */
-$awayFrom = strtotime( 'now' ) - strtotime( '6:00' );
-$today = dbDate( strtotime( 'today' ) );
-if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
-{
-    $res = synchronize_google_calendar( );
-}
-$awayFrom = strtotime( 'now' ) - strtotime( '18:00' );
-$today = dbDate( strtotime( 'today' ) );
-if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
-{
-    $res = synchronize_google_calendar( );
-}
+///* synchronize calendar every day at 6am and 6pm. */
+//$awayFrom = strtotime( 'now' ) - strtotime( '6:00' );
+//$today = dbDate( strtotime( 'today' ) );
+//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+//{
+//    $res = synchronize_google_calendar( );
+//}
+//$awayFrom = strtotime( 'now' ) - strtotime( '18:00' );
+//$today = dbDate( strtotime( 'today' ) );
+//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+//{
+//    $res = synchronize_google_calendar( );
+//}
 
 ?>

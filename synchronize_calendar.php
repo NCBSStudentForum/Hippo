@@ -4,7 +4,7 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'database.php';
 include_once 'check_access_permissions.php';
-require_once './calendar/NCBSCalendar.php';
+include_once './calendar/NCBSCalendar.php';
 
 // We come here from google-calendar 
 // When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 

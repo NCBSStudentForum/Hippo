@@ -32,6 +32,7 @@ import sys
 import os
 from wikiapi import WikiApi
 import urllib2
+import html2text
 
 wiki_ = WikiApi( )
 common_ = set( nltk.corpus.words.words() )
@@ -50,7 +51,8 @@ def wiki_link( query ):
         return wikiLink
     return query
 
-def wikify( text ):
+def wikify( html ):
+    text = html2text.html2text( html )
     tokens = nltk.word_tokenize( text )
     nouns = [ word for (word,pos) in nltk.pos_tag(tokens) if isNoun(pos) ]
     for n in nouns:
@@ -60,13 +62,14 @@ def wikify( text ):
             print(n, link )
 
 def main( ):
-    text = ''
-    with open( sys.argv[1], 'r' ) as f:
-        text = f.read( )
-
-    text = wikify( text )
-
-
+    arg = sys.argv[1]
+    if os.path.exists( arg ):
+        with open( sys.argv[1], 'r' ) as f:
+            html = f.read( )
+    else:
+        # Open url and fetch the html.
+        html = urllib2.urlopen( arg ).read( )
+    text = wikify( html )
 
 if __name__ == '__main__':
     main()

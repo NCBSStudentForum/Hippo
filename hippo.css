@@ -72,9 +72,8 @@ div.goback {
 }
 
 div.public_calendar {
-    position : absolute;
-    top: 50%;
-    left: 50%;
+    margin-top : 500px;
+    background: transparent;
 }
 
 table.user_float {

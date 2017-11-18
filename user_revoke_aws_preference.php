@@ -28,7 +28,7 @@ if( __get__( $_POST, 'response', 'xxx' ) == 'delete_preference' )
             $body = "<p> $user has deleted his/her AWS preference. 
                AWS admin need to reschedule AWS again. 
                 </p> ";
-            sendPlainTextEmail( $body, $subject, 'hippo@lists.ncbs.res.in' );
+            sendHTMLEmail( $body, $subject, 'hippo@lists.ncbs.res.in' );
             goBack( "user_aws.php", 1 );
             exit;
         }

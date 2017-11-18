@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,8 +44,9 @@ class Google_Service_ShoppingContent_Resource_Products extends Google_Service_Re
   /**
    * Deletes a product from your Merchant Center account. (products.delete)
    *
-   * @param string $merchantId The ID of the managing account.
-   * @param string $productId The ID of the product.
+   * @param string $merchantId The ID of the account that contains the product.
+   * This account cannot be a multi-client account.
+   * @param string $productId The REST id of the product.
    * @param array $optParams Optional parameters.
    *
    * @opt_param bool dryRun Flag to run the request in dry-run mode.
@@ -59,8 +60,9 @@ class Google_Service_ShoppingContent_Resource_Products extends Google_Service_Re
   /**
    * Retrieves a product from your Merchant Center account. (products.get)
    *
-   * @param string $merchantId The ID of the managing account.
-   * @param string $productId The ID of the product.
+   * @param string $merchantId The ID of the account that contains the product.
+   * This account cannot be a multi-client account.
+   * @param string $productId The REST id of the product.
    * @param array $optParams Optional parameters.
    * @return Google_Service_ShoppingContent_Product
    */
@@ -71,9 +73,12 @@ class Google_Service_ShoppingContent_Resource_Products extends Google_Service_Re
     return $this->call('get', array($params), "Google_Service_ShoppingContent_Product");
   }
   /**
-   * Uploads a product to your Merchant Center account. (products.insert)
+   * Uploads a product to your Merchant Center account. If an item with the same
+   * channel, contentLanguage, offerId, and targetCountry already exists, this
+   * method updates that entry. (products.insert)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the account that contains the product.
+   * This account cannot be a multi-client account.
    * @param Google_Service_ShoppingContent_Product $postBody
    * @param array $optParams Optional parameters.
    *
@@ -89,7 +94,8 @@ class Google_Service_ShoppingContent_Resource_Products extends Google_Service_Re
   /**
    * Lists the products in your Merchant Center account. (products.listProducts)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the account that contains the products.
+   * This account cannot be a multi-client account.
    * @param array $optParams Optional parameters.
    *
    * @opt_param bool includeInvalidInsertedItems Flag to include the invalid

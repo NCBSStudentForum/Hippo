@@ -31,7 +31,7 @@ if( array_key_exists( 'date', $_GET ) )
 echo '<form action="" method="get" accept-charset="utf-8">
     <table class="info">
     <tr>
-        <td> <input  class="datepicker" name="date" value="' . 
+        <td> <input  class="datepicker" name="date" value="' .
             $defaults[ 'date' ] . '" /> </td>
             <td> <button name="response">' . $symbScan . '</button> </td>
     </tr>
@@ -79,10 +79,9 @@ foreach( $events as $ev )
 
     // Blink if the event is currently happening.
     if( $eventEnd >= $now && $eventStart <= $now )
-        $table .= '<blink><font>&#128365;</font></blink>' 
-            . eventToShortHTML( $ev );
+        $table .= '<i class="fa fa-circle-o-notch fa-spin fa-2x"></i>' . eventToShortHTML( $ev );
     elseif( $eventEnd <= $now )    // This one is over.
-        $table .= '<font color="gray">' 
+        $table .= '<font color="gray">'
                         . eventToShortHTML( $ev ) . '</font>';
     else
         $table .= eventToShortHTML( $ev );

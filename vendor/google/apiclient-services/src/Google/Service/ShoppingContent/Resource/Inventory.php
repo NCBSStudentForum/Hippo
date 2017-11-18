@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,15 +44,15 @@ class Google_Service_ShoppingContent_Resource_Inventory extends Google_Service_R
   }
   /**
    * Updates price and availability of a product in your Merchant Center account.
-   * This operation does not update the expiration date of the product.
    * (inventory.set)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the account that contains the product.
+   * This account cannot be a multi-client account.
    * @param string $storeCode The code of the store for which to update price and
    * availability. Use online to update price and availability of an online
    * product.
-   * @param string $productId The ID of the product for which to update price and
-   * availability.
+   * @param string $productId The REST id of the product for which to update price
+   * and availability.
    * @param Google_Service_ShoppingContent_InventorySetRequest $postBody
    * @param array $optParams Optional parameters.
    *

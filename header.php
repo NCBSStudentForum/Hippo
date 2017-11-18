@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 
-<?php 
+<?php
 ob_start();
 
 /**
  * @brief Return link to calendar.
- * @return 
+ * @return
  */
-function calendarURL( ) 
+function calendarURL( )
 {
-    return 'https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta';
+    return
+        'https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta';
 }
 
 
-if(!isset($_SESSION)) 
+if(!isset($_SESSION))
     session_start();
 
-// If this is not a index.php page. check if access is valid. 
-if( ! $_SERVER['PHP_SELF'] == 'index.php' ) 
+// If this is not a index.php page. check if access is valid.
+if( ! $_SERVER['PHP_SELF'] == 'index.php' )
     include_once( 'is_valid_access.php' );
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
@@ -46,7 +47,6 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     <a href="events.php" target="_blank">Talks</a>
     </td>
     <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td>
-    <td> <a href="community_graphs.php" target="_blank" >Community graph</a> </td>
     <td> <a href="statistics.php" target="_blank" >Statistics </a> </td>
     <!-- <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td> -->
     <td> <a href="courses.php" target="_blank" >Courses</a></td>
@@ -54,7 +54,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     <!--
     RSS has been thorougly abused to make it work with NCBS screen.
     <td> <a href="rss.php" target="_blank" >
-            <img src="data/feed-icon-14x14.2168a573d0d4.png" 
+            <img src="data/feed-icon-14x14.2168a573d0d4.png"
                 alt="Subscribe to public events">
             </a></td>
     -->
@@ -68,10 +68,15 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <br />
 </html>
 
+<!--  REQUIRED -->
 <script src="./node_modules/jquery/dist/jquery.js"></script>
 
 <script src="./node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
 <link href="./node_modules/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+<!--
+<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+-->
 
 <script src="./node_modules/jquery-timepicker/jquery.timepicker.js"></script>
 <link href="./node_modules/jquery-timepicker/jquery.timepicker.css" rel="stylesheet" type="text/css" />
@@ -82,6 +87,9 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <!-- Disable favicon requests -->
 <link rel="icon" href="data:,">
+
+<!-- Font awesome -->
+<link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css"/>
 
 <script>
 $( function() {
@@ -97,10 +105,10 @@ $( function() {
 
 <script>
 $(function(){
-    $('input.timepicker').timepicker( { 
+    $('input.timepicker').timepicker( {
             minTime : '8am'
             , scrollDefault : 'now'
-            , timeFormat : 'H:mm', interval : '15' 
+            , timeFormat : 'H:mm', interval : '15'
     });
 });
 </script>
@@ -110,7 +118,7 @@ $(function(){
 $( function() {
     var today = new Date();
     var tomorrow = (new Date()).setDate( today.getDate( ) + 1 );
-    $( "input.multidatespicker" ).multiDatesPicker( { 
+    $( "input.multidatespicker" ).multiDatesPicker( {
         dateFormat : "yy-m-d"
     });
 } );
@@ -152,7 +160,7 @@ function AreYouSure( button )
 
 // Always parse the config file and save it in the session.
 $inifile = '/etc/hipporc';
-if(file_exists($inifile)) 
+if(file_exists($inifile))
 {
     $conf = parse_ini_file($inifile, $process_section = TRUE );
     if( ! $conf )
@@ -164,7 +172,7 @@ if(file_exists($inifile))
 }
 else
 {
-    echo printWarning( "Config file is not found. Can't continue" );
+    die( "Config file is not found. Can't continue" );
     exit;
 }
 

@@ -3,7 +3,7 @@
 import os
 import sys
 import html2other
-import smtplib 
+import smtplib
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -43,7 +43,7 @@ def main( args ):
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False
 
-    msg = MIMEMultipart( 'alernative' )
+    msg = MIMEMultipart( 'alternative' )
     msg[ 'To' ] = ",".join( args.to )
 
     if args.cc:
@@ -53,16 +53,14 @@ def main( args ):
     msg[ 'Subject' ] = subject
     msg[ 'From' ] = fromAddr
 
-    if args.as_html:
-        msg.attach( MIMEText( body, 'html' ) );
-    else:
-        msg.attach( MIMEText( body, 'plain' ) );
+    msg.attach( MIMEText( html2other.tomd( body ), 'plain' ) );
+    msg.attach( MIMEText( body, 'html' ) );
 
     # Now attach files Only PDF are allowed.
     for attach in args.attach:
         print( '[INFO] Attaching file %s' % attach )
         if not os.path.exists( attach ):
-            continue 
+            continue
 
         # if filesize is more than 1 MB, ignore it.
         filesize = os.path.getsize( attach ) >> 20
@@ -72,7 +70,7 @@ def main( args ):
         with open( attach, 'rb' ) as f:
             data = MIMEBase( 'application', 'pdf' )
             data.set_payload( f.read( ) )
-            Encoders.encode_base64( data ) 
+            Encoders.encode_base64( data )
             data.add_header(
                     'Content-Disposition', 'attachment'
                     , filename= os.path.basename( attach )
@@ -87,8 +85,9 @@ def main( args ):
         _logger.info( '\t From %s' % fromAddr )
         s.sendmail( fromAddr, toAddr, msg.as_string( ) )
         success = True
-    except Exception as e:
         _logger.info( "Everything went OK. Mail sent sucessfully" )
+    except Exception as e:
+        _logger.info( "Could not send. Error was %s" % e )
 
     s.quit( )
     return success
@@ -104,7 +103,7 @@ if __name__ == '__main__':
         )
     parser.add_argument('--as-html', '-H'
         , required = False
-        , action = 'store_true' 
+        , action = 'store_true'
         , default = False
         , help = 'Send it as html. Default (false)'
         )
@@ -133,7 +132,7 @@ if __name__ == '__main__':
         , action = 'append'
         , help = 'attach these files'
         )
-    class Args: pass 
+    class Args: pass
     args = Args()
     parser.parse_args(namespace=args)
     main( args )

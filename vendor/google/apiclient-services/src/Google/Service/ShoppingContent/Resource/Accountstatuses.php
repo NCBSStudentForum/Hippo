@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,9 @@ class Google_Service_ShoppingContent_Resource_Accountstatuses extends Google_Ser
   /**
    * Retrieves the status of a Merchant Center account. (accountstatuses.get)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the managing account. If this account is
+   * not a multi-client account, then this parameter must be the same as
+   * accountId.
    * @param string $accountId The ID of the account.
    * @param array $optParams Optional parameters.
    * @return Google_Service_ShoppingContent_AccountStatus
@@ -56,7 +58,8 @@ class Google_Service_ShoppingContent_Resource_Accountstatuses extends Google_Ser
    * Lists the statuses of the sub-accounts in your Merchant Center account.
    * (accountstatuses.listAccountstatuses)
    *
-   * @param string $merchantId The ID of the managing account.
+   * @param string $merchantId The ID of the managing account. This must be a
+   * multi-client account.
    * @param array $optParams Optional parameters.
    *
    * @opt_param string maxResults The maximum number of account statuses to return

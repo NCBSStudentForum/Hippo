@@ -24,9 +24,9 @@ echo '
     <table border="0">
         <tr>
             <td>Select date</td>
-            <td><input class="datepicker" type="text" name="date" value="' . 
+            <td><input class="datepicker" type="text" name="date" value="' .
                     $default[ 'date' ] . '" ></td>
-            <td><button type="submit" name="response" 
+            <td><button type="submit" name="response"
                     title="Show events on this day"
                     value="show">Show me</button></td>
         </tr>
@@ -35,8 +35,8 @@ echo '
     ';
 
 $whichDay = $default[ 'date' ];
-$eventTalks = getTableEntries( 'events', 'date,start_time' , "date='$whichDay' 
-        AND status='VALID' AND external_id LIKE 'talks%'" 
+$eventTalks = getTableEntries( 'events', 'date,start_time' , "date='$whichDay'
+        AND status='VALID' AND external_id LIKE 'talks%'"
     );
 
 // Only if a event has an external_id then push it into 'talks'
@@ -44,7 +44,7 @@ if( count( $eventTalks ) < 1 )
 {
     echo alertUser( "I could not find any talk/seminar/lecture at given day!" );
 }
-else 
+else
 {
     $talkHtml = '';
 
@@ -55,9 +55,13 @@ else
         if( $talk )
         {
             $talkHtml .= talkToHTML( $talk, $with_picture = true );
+
+            $talkHtml .= "<br>";
             // Link to pdf file.
-            $talkHtml.= '<a target="_blank" href="generate_pdf_talk.php?date=' 
-                    . $default[ 'date' ] . '&id=' . $talkId . '">Download pdf</a>';
+            $talkHtml.= '<a style="margin-left:500px"
+                        target="_blank" href="generate_pdf_talk.php?date='
+                        . $default[ 'date' ] . '&id=' . $talkId . '">
+                        <i class="fa fa-download ">PDF</i></a>';
         }
     }
     echo $talkHtml;

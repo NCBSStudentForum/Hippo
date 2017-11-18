@@ -2,6 +2,7 @@
 
 include_once 'methods.php';
 include_once 'database.php';
+include_once 'ICS.php';
 
 $useCKEditor = false;
 
@@ -37,12 +38,75 @@ function fixHTML( $html, $strip_tags = false )
     return $res;
 }
 
+
+function addToGoogleCalLink( $event )
+{
+    $location = venueToText( $event[ 'venue' ] );
+    $date = dateTimeToGOOGLE( $event[ 'date' ], $event[ 'start_time' ] )
+                . '/' . dateTimeToGOOGLE( $event[ 'date' ], $event[ 'end_time' ] );
+
+    $link = 'http://www.google.com/calendar/event?action=TEMPLATE';
+    $link .= '&text=' . rawurlencode( $event[ 'title' ] );
+    $link .= "&dates=" . $date;
+    $link .= "&ctz=Asia/Kolkata";
+    $link .= '&details=' . rawurlencode( $event[ 'description' ] );
+    $link .= '&location=' . rawurlencode( $location );
+
+    $res = '<a href="'. $link . '" target="_blank" >';
+
+    // Get inline image.
+    $res .= inlineImage( __DIR__ . '/data/gc_button6.png' );
+    $res .= '</a>';
+
+    return $res;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Convert event to ICS file.
+    *
+    * @Param $event
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function eventToICAL( $event )
+{
+    $ics = new ICS( $event );
+    return $ics;
+}
+
+function eventToICALLink( $event )
+{
+    $prop = array( );
+    $prop[ 'dtstart' ] = $event[ 'date' ] . ' ' . $event[ 'start_time' ];
+    $prop[ 'dtend' ] = $event[ 'date' ] . ' ' . $event[ 'end_time' ];
+    $prop[ 'description' ] = substr( $event[ 'description' ], 0, 200 );
+    $prop[ 'location' ] = venueToText( $event[ 'venue' ] );
+    $prop[ 'summary' ] = $event[ 'title' ];
+
+    $ical = eventToICAL( $prop );
+
+    $filename = __DIR__ . '/_ical/' . $event[ 'gid' ] . $event[ 'eid' ] . '.ics';
+    file_put_contents( $filename, $ical->to_string( ) );
+
+    $link = '.';
+    if( file_exists( $filename ) )
+        $link = downloadTextFile( $filename
+                        , '<i class="fa fa-calendar"> <strong>iCal</strong></i>'
+                        , 'link_as_button'
+                    );
+
+    return $link;
+}
+
+
 /**
     * @brief Generate SPEAKER HTML with homepage and link.
     *
     * @param $speaker
     *
-    * @return 
+    * @return
  */
 function speakerToHTML( $speaker )
 {
@@ -80,7 +144,7 @@ function speakerToHTML( $speaker )
     *
     * @param $id
     *
-    * @return 
+    * @return
  */
 function speakerIdToHTML( $id )
 {
@@ -527,16 +591,16 @@ function requestToHTML( $request )
 function userHTML( )
 {
     $html = "<table class=\"user_float\">";
-    $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th></tr>";
-    $html .= "<tr><td><a href=\"quickbook.php\">QuickBook</a>";
-    $html .= '</td><td><a href="user_aws.php">MyAWS</a></td>';
-    $html .= "</tr><tr>";
-    $html .= "<td><a href=\"user.php\">My Home</a>";
-    $html .= '</td><td><a href="logout.php">Logout</a></td>';
+    $html .= "<tr colspan=\"2\"><th>Hi " . $_SESSION['user'] . "</th>";
+    $html .= '<th><a href="logout.php"><i class="fa fa-sign-out"></i>SignOut</a></th>';
+    $html .= '</tr>';
+    $html .= "<tr><td><a href=\"quickbook.php\"><i class=\"fa fa-hand-pointer-o\"></i>QuickBook</a>";
+    $html .= "<td><a href=\"user.php\"><i class=\"fa fa-home\"></i>My Home</a>";
     $html .= "</tr>";
     $html .= "</table>";
     return $html;
 }
+
 /*
 function venuesToCheckButtons( $venues )
 {
@@ -569,8 +633,8 @@ function venueSummary( $venue )
     if( is_string( $venue ) )
         $venue = getVenueById( $venue );
 
-    return $venue['name'] . ' [' . $venue[ 'type' ] . '], ' .
-        $venue['building_name'] . ', ' . $venue['location'];
+    return trim( $venue['name'] . ' [' . $venue[ 'type' ] . '], ' .
+        $venue['building_name'] . ', ' . $venue['location'] );
 }
 
 function requestToEditableTableHTML( $request, $editables = Array( ) )
@@ -604,7 +668,7 @@ function requestToEditableTableHTML( $request, $editables = Array( ) )
     *
     * @param $id
     *
-    * @return 
+    * @return
     */
 function editor_script( $id, $default = '' )
 {
@@ -690,7 +754,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     if( is_string( $editables ) )
         $editables = explode( ",", $editables );
 
-    /*    
+    /*
      *  Editabale can have keyval:attribs format. Separate out the extra format
      *  from keys.
      */
@@ -969,8 +1033,11 @@ function loginToText( $login, $withEmail = true, $autofix = true )
             return '';
         $user = getUserInfo( $login );
     }
+    else if( is_array( $login ) )
+        $user = $login;
     else
-        $user = array( 'first_name' => $login );
+        $user = $login;
+
 
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
@@ -990,7 +1057,8 @@ function loginToText( $login, $withEmail = true, $autofix = true )
             array_push( $name, $user[ $key ] );
     }
 
-    $text = implode( ' ', $name );
+    if( is_array( $name ) )
+        $text = implode( ' ', $name );
 
     if( $autofix )
         $text = fixName( $text );
@@ -1048,7 +1116,7 @@ function getIntranetLink( $login )
 {
     $html = "<font style=\"font-size:x-small\"><a
             href=\"https://intranet.ncbs.res.in/people-search?name=$login\"
-            target=\"_blank\">Show on intranet</a></font>"
+            target=\"_blank\">Profile on Intranet</a></font>"
             ;
     return $html;
 }
@@ -1090,7 +1158,7 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
              <td>
              <textarea class="editable" id="abstract" name="abstract">' .
              $text . '</textarea> ' .
-             editor_script( 'abstract', $text ) . 
+             editor_script( 'abstract', $text ) .
              '</td> </tr>'
              ;
 
@@ -1218,7 +1286,7 @@ function awsToHTML( $aws, $with_picture = false )
 
     $user = $aws[ 'speaker' ];
 
-    // Add a table only if there is a picture. Adding TD when there is no picture 
+    // Add a table only if there is a picture. Adding TD when there is no picture
     // screws up the formatting of emails.
     if( $with_picture )
     {
@@ -1253,7 +1321,7 @@ function awsToHTML( $aws, $with_picture = false )
 
 function speakerName( $speaker )
 {
-    // NOTE: Do not use is_int here. 
+    // NOTE: Do not use is_int here.
     if( is_numeric( $speaker ) )                        // Got an id.
         $speaker = getTableEntry( 'speakers', 'id'
                         , array( 'id' => $speaker )
@@ -1276,7 +1344,7 @@ function arrayToName( $arr )
 
 
 /**
-    * @brief Convert an event entry to HTML. 
+    * @brief Convert an event entry to HTML.
     *
     * @param $talk Talk/event entry.
     * @param $with_picture Fetch entry with picture.
@@ -1288,8 +1356,8 @@ function talkToHTML( $talk, $with_picture = false )
 
     $speakerId = intval( $talk[ 'speaker_id' ] );
 
-    // If speaker id is > 0, then use it to fetch the entry. If not use the 
-    // speaker name. There was a design problem in the begining, some speakers 
+    // If speaker id is > 0, then use it to fetch the entry. If not use the
+    // speaker name. There was a design problem in the begining, some speakers
     // do not have unique id but only email. This has to be fixed.
     if( $speakerId > 0 )
     {
@@ -1300,7 +1368,6 @@ function talkToHTML( $talk, $with_picture = false )
     {
         $speakerArr = getSpeakerByName( $talk[ 'speaker' ] );
         $speakerName = speakerName( $speakerArr );
-        //echo "<pre> $speakerName </pre>";
     }
 
 
@@ -1343,13 +1410,31 @@ function talkToHTML( $talk, $with_picture = false )
     else
         $html .= '<br><br> Host: ' . loginToHTML( $talk[ 'host' ] );
 
-    $html .= '<br><div style="font-size:small">';
-    $html .= '<table><tr><td>' . $when . '</td></tr><tr><td>' . $where
-             . '</td></tr><tr><td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] );
-    $html .= '</td></tr><tr><td>';
+    $html .= '<br><br>';
+    $html .= '<div style="font-variant:small-caps;text-decoration:none;">';
+    $html .= '<table><tr>
+                <td class="when"> <i class="fa fa-clock-o fs-spin"></i>' . $when . '</td>
+            </tr><tr>
+                <td class="where"> <i class="fa fa-thumb-tack fs-spin fa-fw"></i>' . $where . '</td>
+            </tr><tr>
+                <td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) . '</td>';
+    $html .= '</tr>';
+
+
+    // Add links to google,ical.
+    $html .= '<tr>';
+    $html .=  '<td>';
     $html .= '<a target="_blank" href="' . appURL( ) .'events.php?date='
                  . $event[ 'date' ] . '">Permanent link</a>';
-    $html .= '</td></tr></table>';
+
+    $googleCalLink = addToGoogleCalLink( $event );
+    $icalLink = eventToICALLink( $event );
+
+
+    $html .= "</td>";
+    $html .= '</tr>';
+
+    $html .= '</table>';
     $html .= '</div>';
     $html .= '</td>';
     $html .= '</tr></table>';
@@ -1357,6 +1442,17 @@ function talkToHTML( $talk, $with_picture = false )
     $html .= "<p>" . fixHTML( $talk[ 'description' ] ) . '</p>';
 
     $html .= "</div>";
+
+    // Add the calendar links
+    $html .= "<br><br>";
+
+    $html .=  "<div class=\"strip_from_md\">
+        <table><tr>
+        <td> $googleCalLink </td>
+        <td> $icalLink </td>
+        </tr></table>
+        </div>";
+
 
     return $html;
 }
@@ -1393,16 +1489,10 @@ function awsPdfURL( $speaker, $date, $msg = 'Download PDF' )
     *
     * @return
  */
-function downloadTextFile( $filename, $msg = 'Download file' )
+function downloadTextFile( $filepath, $msg = 'Download file', $class = 'download_link' )
 {
-    //if( strpos( '/data/', $filename ) !== false )
-    //$filename = basename( $filename );
-
-    //if( ! file_exists( getDataDir( ) ."/$filename" ) )
-    //$msg = "File doesn't exists";
-
-    $url = '<div><a target="_blank" href="download_file.php?filename='
-           . $filename .  '">' . $msg .'</a></div>';
+    $url = '<a class="' . $class . '" target="_blank" href="download_file.php?filename='
+           . $filepath .  '">' . $msg .'</a>';
     return $url;
 }
 
@@ -1516,16 +1606,23 @@ function googleCaledarURL( )
     return $url;
 }
 
-function showImage( $picpath, $height = 'auto', $width = 'auto' )
+function inlineImage( $picpath, $class = 'inline_image', $height = 'auto', $width = 'auto' )
 {
     if( ! file_exists( $picpath ) )
         $picpath = nullPicPath( );
 
-    $html = '<img class="login_picture" width="' . $width
+    $html = '<img class="'.$class . '" width="' . $width
             . '" height="' . $height . '" src="'
             . dataURI( $picpath, 'image/jpg' ) . '" >';
     return $html;
 }
+
+function showImage( $picpath, $height = 'auto', $width = 'auto' )
+{
+    return inlineImage( $picpath, $class = 'login_picture', $height, $width );
+}
+
+
 
 /**
     * @brief Display any image.
@@ -1534,7 +1631,7 @@ function showImage( $picpath, $height = 'auto', $width = 'auto' )
     * @param $height
     * @param $width
     *
-    * @return 
+    * @return
  */
 function displayImage( $picpath, $height = 'auto', $width = 'auto', $usemap = '' )
 {
@@ -1620,8 +1717,8 @@ function slotTable( $width = "15px" )
                 $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
 
                 $html .= "<td id=\"slot_$id\" style=\"background:$bgColor\" colspan=\"$ncols\">
-                         <button onClick=\"showRunningCourse(this)\" 
-                          id=\"slot_$gid\" value=\"$id\" class=\"invisible\"> $id </button> 
+                         <button onClick=\"showRunningCourse(this)\"
+                          id=\"slot_$gid\" value=\"$id\" class=\"invisible\"> $id </button>
                          <br> <small> <tt>$text</tt> </small> </td>";
 
                 // Increase $i by ncols - 1. 1 is increased by loop.
@@ -1671,14 +1768,14 @@ function coursesTable( )
     *
     * @param $default
     *
-    * @return 
+    * @return
  */
 function gradeSelect( $name, $default = 'X' )
 {
     if( strlen( $default ) == 0 )
         $default = 'X';
 
-    $select = arrayToSelectList( 
+    $select = arrayToSelectList(
             $name
             , array( 'A+', 'A', 'B+', 'B', 'C+', 'C', 'F', 'X' )
             , array( ), false, $default
@@ -1717,7 +1814,7 @@ function preferenceToHtml( $request )
     * @param $txt
     * @param $color
     *
-    * @return 
+    * @return
  */
 function colored( $txt, $color = 'black' )
 {
@@ -1777,7 +1874,7 @@ function bookmyVenueAdminTaskTable( )
             Book using old interface
         </td>
         <td>
-            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a> 
+            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a>
         </td>
         </tr>
         </table>'
@@ -1792,7 +1889,7 @@ function bookmyVenueAdminTaskTable( )
         </td>
             <td>
                 <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
-                Synchronize public calendar </a> 
+                Synchronize public calendar </a>
             </td>
         </tr>
         <tr>
@@ -1800,7 +1897,7 @@ function bookmyVenueAdminTaskTable( )
             Add/Update/Delete venues
         </td>
             <td>
-                <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a> 
+                <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a>
             </td>
         </tr>
         <tr>
@@ -1831,16 +1928,17 @@ function smallCaps( $text )
     *
     * @Param $c
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 {
     $cid = $c[ 'id' ];
-    $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'";
 
+    $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'
+                AND type!='DROPPED'";
     $registrations = getTableEntries(
-        'course_registration', 'student_id', $whereExpr 
+        'course_registration', 'student_id', $whereExpr
     );
 
     $enrollments[ $cid ] = $registrations;
@@ -1855,26 +1953,26 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
 
-    $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - ' 
+    $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - '
         . humanReadableDate( $c[ 'end_date' ] );
 
     $slotInfo = getCourseSlotTiles( $c, $slot );
     $instructors = getCourseInstructors( $cid );
 
     $row = '<tr>
-        <td> <button id="$cid" onclick="showCourseInfo(this)" class="courseInfo" 
-        value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>' 
+        <td> <button id="$cid" onclick="showCourseInfo(this)" class="courseInfo"
+        value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>'
         . $instructors . '</td>
         <td>' .  $schedule . '</td>
-        <td>' . "<strong> $slotInfo </strong> <br>" 
-        .  '<strong>' . $note . '</strong></td><td>' 
+        <td>' . "<strong> $slotInfo </strong> <br>"
+        .  '<strong>' . $note . '</strong></td><td>'
         .  $c[ 'venue' ] . '</td>
-        <td>' . count( $registrations ) . '</td>' 
+        <td>' . count( $registrations ) . '</td>'
         ;
 
     // If url is found, put it in page.
     if( $c['url'] )
-        $row .= '<td><a target="_blank" href="' . $c['url']  
+        $row .= '<td><a target="_blank" href="' . $c['url']
         . '">Course page</a></td>';
     else
         $row .= '<td></td>';
@@ -1890,6 +1988,39 @@ function mailto( $email, $text = '' )
 
     $html = "<a href=\"mailto:" . $email . "\"> $text </a>";
     return $html;
+}
+
+function piSpecializationHTML( $pi, $specialization )
+{
+    return "<br><small><tt> $specialization <br>PI: $pi</tt></small>";
+}
+
+function goBackToPageLink( $url, $title = "Go back" )
+{
+
+    $html = "<br><br><div class=\"goback\">";
+    $html .= "<a style=\"float: left\" href=\"$url\">
+            <i class=\"fa fa-step-backward fa-3x\"></i>
+            <font color=\"blue\" size=\"5\">$title</font>
+        </a></div><br>";
+    return $html;
+}
+
+/**
+    * @brief Go back to referer page.
+    *
+    * @param $defaultPage
+    *
+    * @return
+ */
+function goBack( $default = '', $delay = 0 )
+{
+    if( ! $default )
+        $url = __get__( $_SERVER, 'HTTP_REFERER', 'index.php' );
+    else
+        $url = $default;
+
+    goToPage( $url, $delay );
 }
 
 ?>

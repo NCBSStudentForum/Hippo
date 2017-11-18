@@ -122,10 +122,10 @@ echo dbTableToHTMLTable( 'talks', $talk
     );
 
 echo "<h3>Optionally create a booking request</h3>" ;
-echo printInfo( "
-    $symbWarn I may not be able to book the venue if there is already a pending 
-    booking request at your preferred venue/slot. In any case,
-    you can book later by clicking on <strong>Manage my talks</strong> in your 
+echo alertUser( "
+    $symbWarn I may not be able to book if there is already a pending 
+    booking request at your preferred venue/slot. I'll register your talk and
+    you can book venue later by clicking on <strong>Manage my talks</strong> in your 
     HOME page.
     <br />
     "

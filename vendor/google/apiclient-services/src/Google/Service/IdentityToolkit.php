@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,9 @@
  */
 class Google_Service_IdentityToolkit extends Google_Service
 {
+  /** View and manage your data across Google Cloud Platform services. */
+  const CLOUD_PLATFORM =
+      "https://www.googleapis.com/auth/cloud-platform";
   /** View and administer all your Firebase data and settings. */
   const FIREBASE =
       "https://www.googleapis.com/auth/firebase";
@@ -67,6 +70,10 @@ class Google_Service_IdentityToolkit extends Google_Service
               'path' => 'downloadAccount',
               'httpMethod' => 'POST',
               'parameters' => array(),
+            ),'emailLinkSignin' => array(
+              'path' => 'emailLinkSignin',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
             ),'getAccountInfo' => array(
               'path' => 'getAccountInfo',
               'httpMethod' => 'POST',
@@ -100,6 +107,10 @@ class Google_Service_IdentityToolkit extends Google_Service
               'path' => 'resetPassword',
               'httpMethod' => 'POST',
               'parameters' => array(),
+            ),'sendVerificationCode' => array(
+              'path' => 'sendVerificationCode',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
             ),'setAccountInfo' => array(
               'path' => 'setAccountInfo',
               'httpMethod' => 'POST',
@@ -130,6 +141,10 @@ class Google_Service_IdentityToolkit extends Google_Service
               'parameters' => array(),
             ),'verifyPassword' => array(
               'path' => 'verifyPassword',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
+            ),'verifyPhoneNumber' => array(
+              'path' => 'verifyPhoneNumber',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),

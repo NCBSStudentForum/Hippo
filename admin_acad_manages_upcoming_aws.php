@@ -109,8 +109,11 @@ foreach( $upcomingAWSs as $aws )
 
     // Speaker name and email
     echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
+
+    $pi = getPIOrHost( $aws[ 'speaker' ] );
+    $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
     // Speaker PI if any.
-    echo '<br><small><tt>PI: ' . getPIOrHost( $aws[ 'speaker' ] ) . '</tt></small>';
+    echo piSpecializationHTML( $pi, $specialization );
 
 
     // Check if user has requested AWS schedule and has it been approved.
@@ -185,6 +188,10 @@ foreach( $schedule as $upcomingAWS )
 
     $pastAWSes = getAwsOfSpeaker( $speaker );
 
+    // Get PI/HOST and speaker specialization.
+    $pi = getPIOrHost( $speaker );
+    $specialization = getSpecialization( $speaker, $pi );
+
     // This user may have not given any AWS in the past. We consider their 
     // joining date as last AWS date.
     if( count( $pastAWSes ) > 0 )
@@ -204,8 +211,8 @@ foreach( $schedule as $upcomingAWS )
     echo "<tr><td>";
     echo $speakerInfo;
 
-    // Add PI info.
-    echo  '<br><small><tt>PI: ' . getPIOrHost( $speaker ) . '</tt></small>';
+    // Add PI and specialization info.
+    echo piSpecializationHTML( $pi, $specialization );
 
     $intranetLink = getIntranetLink( $speaker );
     echo "<br>$intranetLink ";

@@ -20,10 +20,8 @@ if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' 
 }
 
 $_SESSION['user'] = 'anonymous'; // This for testing purpose.
-$_SESSION[ 'oauth_credential' ] =
-    '/etc/hippo/client_secret_636127149215-mn7vk37265hlq48d39qt45asnsvdbti0.apps.googleusercontent.com.json';
-$_SESSION[ 'calendar_id'] = 
-    'd2jud2r7bsj0i820k0f6j702qo@group.calendar.google.com'; 
+$_SESSION[ 'calendar_id'] =
+    'd2jud2r7bsj0i820k0f6j702qo@group.calendar.google.com';
 
 $_SESSION[ 'timezone' ] = 'Asia/Kolkata';
 ini_set( 'date.timezone', 'Asia/Kolkata' );
@@ -40,7 +38,7 @@ $thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
 if( strpos( $thisPage, 'index.php' ) !== false )
 {
     // Select one background picture.
-    $command = 'nohup python ' 
+    $command = 'nohup python '
         . __DIR__ . '/fetch_backgrounds.py > /dev/null 2>&1 &'
         ;
     // Run command.
@@ -57,13 +55,10 @@ if( strpos( $thisPage, 'index.php' ) !== false )
     }
 }
 
-
-//echo '<br>';
-//echo '<div class="public_calendar">';
-//echo calendarIFrame( );
-//echo '</div>';
-
-echo "<br><br>";
+echo '<br>';
+echo '<div class="public_calendar">';
+echo calendarIFrame( );
+echo '</div>';
 
 include_once 'footer.php';
 

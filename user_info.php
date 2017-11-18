@@ -1,34 +1,19 @@
 <?php
 
 include_once 'header.php';
-include_once( 'tohtml.php' );
+include_once 'tohtml.php' ;
+include_once './check_access_permissions.php';
+include_once './snippets/pi_specialization.php';
 
 echo userHTML( );
 
-$info = getUserInfo( $_SESSION['user'] );
+if( ! isAuthenticated( ) )
+{
+    echo printWarning( "Session expired!" );
+    goBack( "index.php", 2 );
+    exit;
+}
 
-// Collect all faculty
-$faculty = getFaculty( );
-$facultyByEmail = array( );
-foreach( $faculty as $fac )
-    $facultyByEmail[ $fac[ 'email' ] ] = $fac;
-
-$facEmails = array_keys( $facultyByEmail );
-
-?>
-
-<script type="text/javascript" charset="utf-8">
-// Autocomplete pi.
-$( function() {
-    // These emails must not be key value array.
-    var emails = <?php echo json_encode( $facEmails ); ?>;
-    $( "#logins_pi_or_host" ).autocomplete( { source : emails }); 
-    $( "#logins_pi_or_host" ).attr( "placeholder", "type email of your supervisor" );
-});
-</script>
-
-
-<?php
 $conf = getConf( );
 $picPath = $conf['data']['user_imagedir'] . '/' . $_SESSION['user'] . '.jpg';
 
@@ -63,10 +48,15 @@ echo '</td></tr>';
 echo '</table>';
 echo '<br>';
 
+$info = getUserInfo( $_SESSION['user'] );
+
 $editables = Array( 'title', 'first_name', 'last_name', 'alternative_email'
     , 'institute', 'valid_until', 'joined_on', 'pi_or_host', 'specialization'
     );
 
+$info[ 'specialization' ] = arrayToSelectList( 'specialization'
+    , $specialization, array(), false, $info[ 'specialization' ]
+    );
 echo "<form method=\"post\" action=\"user_info_action.php\">";
 echo dbTableToHTMLTable( 'logins', $info, $editables );
 echo "</form>";

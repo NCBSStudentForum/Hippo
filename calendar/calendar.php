@@ -5,22 +5,24 @@ include_once( 'database.php' );
 include_once( 'methods.php' );
 include_once( 'tohtml.php' );
 
-function calendarIFrame( ) 
+function calendarIFrame( )
 {
     return '
-        <iframe src="' . calendarURL() . '" 
-        style="border: 0" width="800" height="400" frameborder="0" 
-        scrolling="yes"></iframe>
+        <iframe class="google_calendar"
+            allowtransparency="true"
+            src="' . calendarURL() . '&mode=WEEK"
+            style="border: 0" width="800" height="400" frameborder="0"
+            scrolling="yes">
+        </iframe>
     ';
 }
-
 
 
 function addEventToGoogleCalendar($calendar_name, $event, $client )
 {
 }
 
-// This function uses gcalcli command to sync my local caledar with google 
+// This function uses gcalcli command to sync my local caledar with google
 // calendar.
 function addAllEventsToCalednar( $calendarname, $client )
 {

@@ -21,8 +21,6 @@ if( ! array_key_exists( 'events', $_POST ) )
     exit(0);
 }
 
-
-
 // If admin is rejecting and have not given any confirmation, ask for it.
 if( $whatToDo == 'REJECT' )
 {
@@ -60,7 +58,6 @@ else
         $event = explode( '.', $event );
         $gid = $event[0]; $rid = $event[1];
 
-
         // Get event info from gid and rid of event as passed to $_POST.
         $eventInfo = getRequestById( $gid, $rid );
         $userEmail = getLoginEmail(  $eventInfo[ 'created_by' ] );
@@ -86,14 +83,6 @@ else
             exit;
         }
         changeIfEventIsPublic( $gid, $rid, $isPublic );
-
-        if( $whatToDo == 'APPROVE' && $isPublic == 'YES' )
-        {
-            echo printInfo( "<pre>TODO</pre>Sync calendar here" );
-            // TODO: Add this to google calendar. Test it before you enable it.
-            //header( "Location:bookmyvenue_admin_update_eventgroup.php?event_gid=$gid" );
-            //exit;
-        }
     }
 
     $msg .= "</table>";
@@ -112,16 +101,16 @@ else
 
     error_log( "<pre> $msg </pre>" );
 
-    $res = sendPlainTextEmail( $msg
-        , "Your request '$eventGroupTitle'  has been $status" 
-        , $userEmail 
+    $res = sendHTMLEmail( $msg
+        , "Your request '$eventGroupTitle'  has been $status"
+        , $userEmail
         , 'hippo@lists.ncbs.res.in'
         );
 
     goToPage( "bookmyvenue_admin.php", 1 );
     exit;
 }
-    
+
 echo goBackToPageLink( "bookmyvenue_admin.php", "Go back" );
 
 ?>

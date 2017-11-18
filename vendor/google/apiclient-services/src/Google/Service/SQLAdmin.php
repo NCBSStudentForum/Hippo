@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -277,7 +277,12 @@ class Google_Service_SQLAdmin extends Google_Service
             'list' => array(
               'path' => 'flags',
               'httpMethod' => 'GET',
-              'parameters' => array(),
+              'parameters' => array(
+                'databaseVersion' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
             ),
           )
         )
@@ -306,6 +311,21 @@ class Google_Service_SQLAdmin extends Google_Service
             ),'delete' => array(
               'path' => 'projects/{project}/instances/{instance}',
               'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'project' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'instance' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'demoteMaster' => array(
+              'path' => 'projects/{project}/instances/{instance}/demoteMaster',
+              'httpMethod' => 'POST',
               'parameters' => array(
                 'project' => array(
                   'location' => 'path',
@@ -396,6 +416,10 @@ class Google_Service_SQLAdmin extends Google_Service
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
                 'maxResults' => array(
                   'location' => 'query',
@@ -498,6 +522,21 @@ class Google_Service_SQLAdmin extends Google_Service
               ),
             ),'stopReplica' => array(
               'path' => 'projects/{project}/instances/{instance}/stopReplica',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'project' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'instance' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'truncateLog' => array(
+              'path' => 'projects/{project}/instances/{instance}/truncateLog',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'project' => array(

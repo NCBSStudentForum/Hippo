@@ -105,7 +105,96 @@ function mailFooter( )
         ";
 }
 
+function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
+{
+    global $maildir;
+    $conf = getConf( );
+    if( ! is_string( $msg ) )
+    {
+        error_log( "Email msg is not in string format" );
+        echo printInfo( 'Email msg not in string format' );
+        return;
+    }
 
+    echo printInfo( "Trying to send email to $to, $cclist with subject $sub" );
+    if( strlen( trim( $msg ) ) < 1 )
+        return;
+
+    if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
+    {
+        echo printInfo( "Email service has not been configured." );
+        error_log( "Mail service is not configured" );
+        return;
+    }
+
+    if( $conf['global']['send_emails' ] == false )
+    {
+        echo alertUser( "<br>Sending emails has been disabled in this installation" );
+        return;
+    }
+
+
+    // Check if this email has already been sent.
+    $archivefile = $maildir . '/' . md5($sub . $msg) . '.email';
+    if( file_exists( $archivefile ) )
+    {
+        echo printWarning( "This email has already been sent. Doing nothing" );
+        return;
+    }
+
+    echo printInfo( "... preparing email" );
+    $timestamp = date( 'r', strtotime( 'now' ) );
+
+    $msg .= mailFooter( );
+    $textMail = $msg; 
+
+    $msgfile = tempnam( '/tmp', 'hippo_msg' );
+    file_put_contents( $msgfile, $textMail );
+
+    $to =  implode( ' -t ', explode( ',', trim( $to ) ) );
+
+    // Use \" whenever possible. ' don't escape especial characters in bash.
+    $cmd= __DIR__ . "/sendmail.py -t $to -s \"$sub\" -i \"$msgfile\" ";
+
+    if( $cclist )
+    {
+        $cclist =  implode( ' -c ', explode( ',', trim( $cclist ) ) );
+        $cmd .= " -c $cclist";
+    }
+
+    if( $attachment )
+    {
+        foreach( explode( ',', $attachment ) as $f )
+            $cmd .= " -a \"$f\" ";
+    }
+
+    echo ( "<tt>Executing $cmd </tt>" );
+    $out = `$cmd`;
+
+    error_log( "<pre> $cmd </pre>" );
+    error_log( '... $out' );
+    error_log( "Saving the mail in archive" . $archivefile );
+
+    // generate md5 of email. And store it in archive.
+    file_put_contents( $archivefile, "SENT" );
+    unlink( $msgfile );
+    return true;
+}
+
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Send email as plain text.
+    *
+    * @Param $msg
+    * @Param $sub
+    * @Param $to
+    * @Param $cclist
+    * @Param $attachment
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
 function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null) 
 {
     global $maildir;
@@ -205,7 +294,7 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
     if( $pi )
         $templ[ 'cc' ] = $templ[ 'cc' ] . ",$pi";
 
-    return sendPlainTextEmail( $msg
+    return sendHTMLEmail( $msg
         , 'ATTN! Your AWS date has been fixed'
         , $to , $templ[ 'cc' ]
         );

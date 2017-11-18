@@ -30,7 +30,7 @@ if( $_POST )
 
         $to = 'acadoffice@ncbs.res.in';
         $cc = 'hippo@lists.ncbs.res.in';
-        sendPlainTextEmail( $email, $subject, $to, $cc );
+        sendHTMLEmail( $email, $subject, $to, $cc );
 
         goToPage( "user_aws.php", 1 );
         exit;

@@ -1,6 +1,10 @@
 <?php
+
 // Let user download it.
-$fileUrl= __DIR__ . '/data/' . $_GET['filename'];
+$fileUrl= $_GET['filename'];
+if( ! file_exists( $fileUrl) )
+    $fileUrl= __DIR__ . '/data/' . $_GET['filename'];
+
 header("Content-Type: application/octet-stream");
 header("Content-Disposition: attachment; filename=" . 
     urlencode(basename($fileUrl)));   

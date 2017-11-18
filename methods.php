@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once 'display_content.php';
 include_once 'logger.php' ;
@@ -37,7 +37,7 @@ function venueToText( $venue, $show_strength = true )
 
 
 // Convert an integer to color.
-function toColor($n) 
+function toColor($n)
 {
     $n = crc32($n % 1000);
     $n &= 0xffffffff;
@@ -47,7 +47,7 @@ function toColor($n)
 /**
     * @brief Data directory for temp storage.
     *
-    * @return 
+    * @return
  */
 function getDataDir( )
 {
@@ -61,10 +61,10 @@ function getDataDir( )
     * @param $ismultiple Do we want to select multiple entries.
     * @param $selected Pre-select these guys.
     *
-    * @return 
+    * @return
  */
 function venuesToHTMLSelect( $venues = null, $ismultiple = false
-    , $selectName = 'venue', $preSelected = array() 
+    , $selectName = 'venue', $preSelected = array()
     )
 {
     if( ! $venues )
@@ -103,7 +103,7 @@ function venuesToHTMLSelect( $venues = null, $ismultiple = false
     return $html;
 }
 
-function generateRandomString($length = 10) 
+function generateRandomString($length = 10)
 {
     $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $randomString = '';
@@ -119,10 +119,10 @@ function appRootDir( )
 }
 
 /**
-    * @brief From 
+    * @brief From
     * http://stackoverflow.com/questions/2820723/how-to-get-base-url-with-php
     *
-    * @return 
+    * @return
  */
 function appURL( )
 {
@@ -139,34 +139,6 @@ function goToPage($page="index.php", $delay = 3)
   else
       $url = "$baseurl/$page";
   header("Refresh: $delay, url=$url");
-}
-
-function goBackToPageLink( $url, $title = "Go back" )
-{
-
-    $html = "<br><br><div class=\"goback\">";
-    //$url = __get__( $_SERVER, 'HTTP_REFERER', $url );
-    $html .= "<a style=\"float: left\" href=\"$url\">
-            <font color=\"blue\" size=\"5\">$title</font>
-        </a></div><br>";
-    return $html;
-}
-
-/**
-    * @brief Go back to referer page.
-    *
-    * @param $defaultPage
-    *
-    * @return 
- */
-function goBack( $default = '', $delay = 0 )
-{
-    if( ! $default )
-        $url = __get__( $_SERVER, 'HTTP_REFERER', 'index.php' );
-    else
-        $url = $default;
-
-    goToPage( $url, $delay );
 }
 
 function __get__( $arr, $what, $default = NULL )
@@ -188,7 +160,7 @@ function __get__( $arr, $what, $default = NULL )
     * 0 (sun), day 2 (Tue), and day 4 (Thu), every 2nd and 3rd week for 5
     * months.
     *
-    * @return List of dates generated from this pattern. 
+    * @return List of dates generated from this pattern.
  */
 function repeatPatToDays( $pat, $start_day = 'today' )
 {
@@ -323,6 +295,27 @@ function getNumDaysInBetween( $startDate, $endDate )
     return intval($start->diff( $end )->format( "%R%a" ));
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Convert given date and time to google time. We substract the
+    * timezone time to make sure google gets the right time.
+    *
+    * @Param $date
+    * @Param $time
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function dateTimeToGOOGLE( $date, $time )
+{
+    $offset = 5.5 * 3600;
+    $format = 'Ymd\\THi00\\Z';
+    $timestamp = strtotime( $date . ' ' . $time ) - $offset;
+    $date = date($format, $timestamp);
+    return $date;
+}
+
+
 /**
     * @brief Construct a repeat pattern out of user queries.
     *
@@ -330,7 +323,7 @@ function getNumDaysInBetween( $startDate, $endDate )
     * @param $weekpat
     * @param $monthpat
     *
-    * @return 
+    * @return
  */
 function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
 {
@@ -376,7 +369,7 @@ function constructRepeatPattern( $daypat, $weekpat, $durationInMonths )
     * @param $from
     * @param $to
     *
-    * @return 
+    * @return
  */
 function computeDiff($from, $to)
 {
@@ -417,8 +410,8 @@ function computeDiff($from, $to)
             {
                 $diffValues[] = $to[$j];
                 $diffMask[] = 1;
-                $j--;  
-                continue;              
+                $j--;
+                continue;
             }
         }
         if ($i > -1)
@@ -428,7 +421,7 @@ function computeDiff($from, $to)
                 $diffValues[] = $from[$i];
                 $diffMask[] = -1;
                 $i--;
-                continue;              
+                continue;
             }
         }
         {
@@ -437,7 +430,7 @@ function computeDiff($from, $to)
             $i--;
             $j--;
         }
-    }    
+    }
 
     $diffValues = array_reverse($diffValues);
     $diffMask = array_reverse($diffMask);
@@ -451,7 +444,7 @@ function computeDiff($from, $to)
     * @param $line1
     * @param $line2
     *
-    * @return 
+    * @return
  */
 function diffline($line1, $line2)
 {
@@ -506,7 +499,7 @@ function isStringAValidDate( $date )
     return (strcasecmp( $d->format( 'Y-m-d' ), $date ) == 0);
 }
 
-function isMobile() 
+function isMobile()
 {
     return preg_match(
         "/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i"
@@ -522,7 +515,7 @@ function isMobile()
     * @param $outputImage
     * @param $quality
     *
-    * @return 
+    * @return
  */
 function saveImageAsPNG($originalImage, $ext, $outputImage, $quality = 9 )
 {
@@ -583,7 +576,7 @@ function saveImageAsJPEG($originalImage, $ext, $outputImage, $quality = 90 )
     *
     * @param $originalImage
     *
-    * @return 
+    * @return
  */
 function getThumbnail( $originalImage )
 {
@@ -604,7 +597,7 @@ function getThumbnail( $originalImage )
     *
     * @param $user
     *
-    * @return 
+    * @return
  */
 function getLoginPicturePath( $login, $default = 'null' )
 {
@@ -622,7 +615,7 @@ function getLoginPicturePath( $login, $default = 'null' )
     * @param $user
     * @param $default
     *
-    * @return 
+    * @return
  */
 function getUserPicture( $user, $default = 'null' )
 {
@@ -641,7 +634,7 @@ function getSpeakerPicturePath( $speaker )
 
     if( is_numeric( $speaker ) && intval( $speaker ) > 0 )
     {
-        // The speaker may not be inserted in database yet. Just return the 
+        // The speaker may not be inserted in database yet. Just return the
         // image by id.
         return $datadir . '/' . $speaker . '.jpg';
     }
@@ -649,12 +642,12 @@ function getSpeakerPicturePath( $speaker )
     else if( is_string( $speaker ) )
         $speaker = splitName( $speaker );
 
-    // If image exists by speaker id then return that else go back to old 
+    // If image exists by speaker id then return that else go back to old
     // model where emails are saved by name of the speaker.
     if( intval( __get__( $speaker, 'id', 0 ) )  > 0 )
         return $datadir . '/' . $speaker[ 'id' ] . '.jpg';
 
-    $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] . 
+    $filename = $speaker[ 'first_name' ] . $speaker[ 'middle_name' ] .
                 $speaker[ 'last_name' ] . '.jpg' ;
 
     $filename = str_replace( ' ', '', $filename );
@@ -671,7 +664,7 @@ function getSpeakerPicturePathById( $id )
 /**
     * @brief Reschedule AWS.
     *
-    * @return 
+    * @return
  */
 function rescheduleAWS( )
 {
@@ -697,7 +690,7 @@ function html2Markdown( $html, $strip_inline_image = false )
     if( file_exists( $outfile ) )
     {
         $cmd = __DIR__ . "/html2other.py $outfile md ";
-        $md = `$cmd`; 
+        $md = `$cmd`;
         unlink( $outfile );
         return $md;
     }
@@ -744,20 +737,20 @@ function saveDownloadableFile( $filename, $content )
 function getConf( )
 {
     $inifile = '/etc/hipporc';
-    if( ! isset( $_SESSION ) || ! array_key_exists( 'conf', $_SESSION) || ! $_SESSION[ 'conf' ] ) 
+    if( ! isset( $_SESSION ) || ! array_key_exists( 'conf', $_SESSION) || ! $_SESSION[ 'conf' ] )
         return parse_ini_file( $inifile, $process_section = True );
 
     return $_SESSION['conf'];
 }
 
 /**
-    * @brief Upload a given file. If filename is not absolute path then construct 
+    * @brief Upload a given file. If filename is not absolute path then construct
     * it.
     *
     * @param $pic Array from $_FILE['picture'], usually!
     * @param $filename
     *
-    * @return 
+    * @return
  */
 function uploadImage( $pic, $filename )
 {
@@ -785,12 +778,12 @@ function uploadImage( $pic, $filename )
 }
 
 /**
-* @brief Check if a booking request is valid.  
+* @brief Check if a booking request is valid.
 * NOTE: This function is incomplete.
 *
 * @param $request
 *
-* @return 
+* @return
  */
 function isBookingRequestValid( $request )
 {
@@ -798,7 +791,7 @@ function isBookingRequestValid( $request )
     $startT = $request[ 'start_time' ];
     $endT = $request[ 'end_time' ];
 
-    if( strtotime( $endT, strtotime( $date) ) - 
+    if( strtotime( $endT, strtotime( $date) ) -
         strtotime( $startT, strtotime( $date ) )  < 15
         )
     {
@@ -816,7 +809,7 @@ function isBookingRequestValid( $request )
     * @param $filename Filename.
     * @param $text  Text to save.
     *
-    * @return 
+    * @return
  */
 function saveDataFile( $filename, $text )
 {
@@ -830,7 +823,7 @@ function saveDataFile( $filename, $text )
     *
     * @param $date
     *
-    * @return 
+    * @return
  */
 function nextMonday( $date )
 {
@@ -840,8 +833,8 @@ function nextMonday( $date )
     $date = dbDate( $date );
     // check if dates are monday. If not assign next monday.
     if( $date && date( 'D', strtotime($date) ) !== 'Mon' )
-        $date = dbDate( 
-            strtotime( 'next monday', strtotime( $date ) ) 
+        $date = dbDate(
+            strtotime( 'next monday', strtotime( $date ) )
             );
     return $date;
 }
@@ -875,7 +868,7 @@ function getSemester( $date )
     *
     * @param $date
     *
-    * @return 
+    * @return
  */
 function getYear( $date )
 {
@@ -906,7 +899,7 @@ function getCourseInstanceId( $courseId, $sem = null, $year = null )
     *
     * @param $event
     *
-    * @return 
+    * @return
  */
 function isPublicEvent( $event )
 {
@@ -947,13 +940,13 @@ function verifyRequest( $request )
     }
     if( ! isset( $request['venue'] ) )
     {
-        return "No venue found in your request. If you think this is a bug, 
+        return "No venue found in your request. If you think this is a bug,
            please write to hippo@lists.ncbs.res.in " ;
     }
 
     if( strlen( $request[ 'title' ] ) < 8 )
     {
-        return "Request 'TITLE' must have at least 8 characters. Got <pre>" 
+        return "Request 'TITLE' must have at least 8 characters. Got <pre>"
             . $request[ 'title' ] . "</pre>";
     }
 
@@ -978,7 +971,7 @@ function verifyRequest( $request )
     {
         $error = "
             You did not select appropriate <tt>CLASS</tt> for your booking
-            request. By default it is set to <tt>UNKNOWN</tt> which is not 
+            request. By default it is set to <tt>UNKNOWN</tt> which is not
             acceptable.
             ";
         return $error;
@@ -988,12 +981,12 @@ function verifyRequest( $request )
 }
 
 /**
-    * @brief Detect host institute from Email id. It could be either NCBS or 
+    * @brief Detect host institute from Email id. It could be either NCBS or
     * INSTEM.
     *
     * @param $email
     *
-    * @return 
+    * @return
  */
 function emailInstitute( $email, $format = 'html' )
 {
@@ -1022,7 +1015,7 @@ function emailInstitute( $email, $format = 'html' )
     *
     * @param $name
     *
-    * @return 
+    * @return
  */
 function fixName( $name )
 {
@@ -1037,7 +1030,7 @@ function fixName( $name )
     *
     * @param $talk
     *
-    * @return 
+    * @return
  */
 function talkToEventTitle( $talk )
 {
@@ -1057,7 +1050,7 @@ function talkToShortEventTitle( $talk )
     *
     * @param $tags
     *
-    * @return 
+    * @return
  */
 function fixTags( $tags )
 {
@@ -1077,10 +1070,10 @@ function fixTags( $tags )
  */
 function isOverlappingTimeInterval( $start1, $end1, $start2, $end2 )
 {
-    $s1 = strtotime( $start1 );  
-    $e1 = strtotime( $end1 );  
-    $s2 = strtotime( $start2 );  
-    $e2 = strtotime( $end2 );  
+    $s1 = strtotime( $start1 );
+    $e1 = strtotime( $end1 );
+    $s2 = strtotime( $start2 );
+    $e2 = strtotime( $end2 );
 
     assert( $s1 < $e1 );
     assert( $s2 < $e2 );
@@ -1101,11 +1094,11 @@ function isOverlappingTimeInterval( $start1, $end1, $start2, $end2 )
     *
     * @param $name
     *
-    * @return 
+    * @return
  */
 function nameArrayToText( $name )
 {
-    $txt = __get__( $name, 'first_name', '' ) . ' ' 
+    $txt = __get__( $name, 'first_name', '' ) . ' '
                 . __get__( $name, 'middle_name', '' ) . ' '
                 . __get__( $name, 'last_name', '' );
     return $txt;
@@ -1140,7 +1133,7 @@ function contains($needle, $haystack)
     *
     * @param $event Given request of talk.
     *
-    * @return 
+    * @return
  */
 function isEventOfTalk( $event )
 {
@@ -1223,7 +1216,7 @@ function __substr__( $needle, $haystack )
     *
     * @Param $url
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function isImage( $url )
@@ -1264,7 +1257,7 @@ function isImage( $url )
     *
     * @Param $dir
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function random_jpeg( $dir )
@@ -1285,7 +1278,7 @@ function random_jpeg( $dir )
     *
     * @Param $course
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function isCourseActive( $course, $day = 'today' )
@@ -1307,7 +1300,7 @@ function cancelEventAndNotifyBookingParty( $ev )
     echo printInfo( "Cancelling and notifying the booking party" );
 
     $res = changeStatusOfEvent( $ev[ 'gid' ]
-        , $ev[ 'eid' ], $ev[ 'created_by' ], 'CANCELLED' 
+        , $ev[ 'eid' ], $ev[ 'created_by' ], 'CANCELLED'
     );
 
     $login = $ev[ 'created_by' ];
@@ -1319,14 +1312,14 @@ function cancelEventAndNotifyBookingParty( $ev )
         $subject = 'ATTN: Your booked event has been cancelled by Hippo';
         $msg = "<p> Greetings " . loginToHTML( $login ) . '</p>';
 
-        $msg .= "<p> Following events has been cancelled because it was on a 
+        $msg .= "<p> Following events has been cancelled because it was on a
             lecture hall and an  upcoming course has been scheduled here.
             Lecture Halls are given preference for courses. </p>";
 
         $msg .= arrayToTableHTML( $ev, 'event' );
 
         $msg .= "<p>Kindly find another venue for your event. </p>";
-        sendPlainTextEmail( $subject, $body, $to, $cc );
+        sendHTMLEmail( $subject, $body, $to, $cc );
     }
 }
 
@@ -1334,7 +1327,7 @@ function cancelRequesttAndNotifyBookingParty( $request )
 {
     echo printInfo( "Cancelling and notifying the booking party" );
     $res = changeRequestStatus( $request[ 'gid' ]
-        , $request[ 'eid' ], $request[ 'created_by' ], 'CANCELLED' 
+        , $request[ 'eid' ], $request[ 'created_by' ], 'CANCELLED'
     );
 
     $login = $request[ 'created_by' ];
@@ -1346,14 +1339,14 @@ function cancelRequesttAndNotifyBookingParty( $request )
         $subject = 'ATTN: Your booked event has been cancelled by Hippo';
         $msg = "<p> Greetings " . loginToHTML( $login ) . '</p>';
 
-        $msg .= "<p> Following events has been cancelled because it was on a 
+        $msg .= "<p> Following events has been cancelled because it was on a
             lecture hall and an  upcoming course has been scheduled here.
             Lecture Halls are given preference for courses. </p>";
 
         $msg .= arrayToTableHTML( $request, 'event' );
 
         $msg .= "<p>Kindly find another venue for your event. </p>";
-        sendPlainTextEmail( $subject, $body, $to, $cc );
+        sendHTMLEmail( $subject, $body, $to, $cc );
     }
 }
 
@@ -1366,7 +1359,7 @@ function cancelRequesttAndNotifyBookingParty( $request )
     * @Param $key
     * @Param $value
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function array_insert_at( $arr, $index, $key, $value )

@@ -1,10 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Roboto+Mono|Open+Sans|Palatino|Fira+Mono');
-h1, h2, h3, h4, h5, h6 { font-family : 'EB Garamond' ; }
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|EB+Garamond|Ubuntu');
+h1, h2, h3, h4, h5, h6 {
+    font-family : 'EB Garamond';
+    line-height: 120%;
+}
 
-:root { --background : rgba(255,255,251,0.8) ; --maxwidth : 800px }
+:root { --background : rgba(255,255,251,0.8);
+    --tabletdcolor: rgba(200,255,200,0.9);
+    --maxwidth : 800px }
 
 body {
-    font-family: Open Sans;
+    font-family: "Libre Baskerville";
+    font-size: 16px;
+    line-height: 140%;
     max-width: var(--maxwidth);
     min-width : 80%;
     display:block;
@@ -17,7 +24,7 @@ body {
 
 
 h1.aws {
-    font-size : 1.2em;
+    /* font-size : 1.2em; */
 }
 
 pre {
@@ -65,9 +72,8 @@ div.goback {
 }
 
 div.public_calendar {
-    position : absolute;
-    top: 50%;
-    left: 50%;
+    margin-top : 500px;
+    background: transparent;
 }
 
 table.user_float {
@@ -84,7 +90,7 @@ table.show_user {
     min-width : 100%;
 }
 
-table.show_user tr td 
+table.show_user tr td
 {
     /*border : 0.5px dotted; */
     min-width : 20%;
@@ -105,9 +111,10 @@ table.show_info {
     min-width: 400px;
     min-width: 90%;
     border: 1px solid;
+    background-color: lightyellow;
 }
 
-table.show_info tr td 
+table.show_info tr td
 {
     max-width : 25%;
 }
@@ -123,10 +130,11 @@ table.show_aws {
 
 table.show_aws tr td
 {
-    border : 0.5px dotted; 
+    border : 0.5px dotted;
     text-align : left;
     max-width : 500px;
     max-height: 3cm;
+    background-color:var(--tabletdcolor);
 }
 
 table.show_calendar {
@@ -137,7 +145,7 @@ table.show_calendar {
 
 table.show_calendar tr td:nth-child(1)
 {
-    border : 0.5px dotted; 
+    border : 0.5px dotted;
     max-width : 20%;
     text-align : right;
 }
@@ -151,6 +159,7 @@ table.show_aws_summary {
 table.show_aws_summary tr td
 {
     border : 1px dotted;
+    background-color:var(--tabletdcolor);
 }
 
 table.show_schedule {
@@ -161,6 +170,7 @@ table.show_schedule {
 table.show_schedule tr td
 {
     border : 1px dotted;
+    background-color:var(--tabletdcolor);
 }
 
 
@@ -169,19 +179,22 @@ table.show_schedule th
     font-size : x-small;
 }
 
-table.tasks 
+table.tasks
 {
-    max-width: var(--maxwidth);
+    max-width: 600px;
+    min-width : 500px;
 }
 
 table.tasks tr td:nth-child(1)
 {
     width:60%;
+    background-color: var(--tabletdcolor);
 }
 
 table.tasks tr td:nth-child(2)
 {
     width:40%;
+    background-color: var(--tabletdcolor);
 }
 
 table.standout {
@@ -192,6 +205,7 @@ table.standout {
 table.standout tr td
 {
     border : 1px dotted;
+    background-color:var(--tabletdcolor);
 }
 
 table.timetable {
@@ -201,6 +215,7 @@ table.timetable tr td {
     /*border: 1px dotted;*/
     min-width : 10px;
     max-width : 100px;
+    background-color:var(--tabletdcolor);
 }
 
 table.venue_slot {
@@ -212,15 +227,22 @@ table.venue_slot {
 table.venue_slot tr td {
     border : 0px;
     width: 400px;
+    background-color:var(--tabletdcolor);
+}
+
+table.chart {
+    max-width: 100%;
+}
+
+table.chart tr dt  {
+    max-width: 50%;
 }
 
 table {
-    font-family : 'Fira Sans';
-    font-size : small;
+    font-family : 'Ubuntu';
 }
 
 table tr td {
-    background-color: rgba(255,255,230,0.9);
     border: 0px;
 }
 
@@ -306,19 +328,19 @@ button.courseInfo {
 table.input {
     text-align : left;
     min-width : 400px;
-    max-width : var(--maxwidth); 
+    max-width : var(--maxwidth);
 }
 
 table.input tr td:nth-child(odd) {
     text-align : right;
-    min-width : 30%; 
+    min-width : 30%;
     vertical-align : top;
     font-size : small;
 }
 
 table.input tr td:nth-child(even) {
     text-align : left;
-    min-width : 70%; 
+    min-width : 70%;
 }
 
 table.request {
@@ -332,15 +354,13 @@ table.show_requests {
 }
 
 table.show_events {
-    border: 1px dotted;
     max-width : var(--maxwidth);
     min-width : 80%;
 }
 
 table.show_events tr td  {
     text-align : left;
-    /*border-collapse : separate;*/
-    /*border : 1px dotted;*/
+    background-color: var( --tabletdcolor );
 }
 
 
@@ -388,6 +408,7 @@ table.event_sticker
 table.event_sticker tr td
 {
     border : 1px dotted;
+    background-color:var(--tabletdcolor);
 }
 
 table.editable_logins {
@@ -398,6 +419,7 @@ table.editable_logins {
 table.editable_logins tr td {
     text-align: left;
     word-wrap: break-word;
+    background-color:var(--tabletdcolor);
 }
 
 table.editable_faculty {
@@ -406,7 +428,7 @@ table.editable_faculty {
 }
 
 
-table.editable_faculty tr td 
+table.editable_faculty tr td
 {
     /*border : 0.5px dotted; */
     /*min-width : 20%;*/
@@ -452,15 +474,15 @@ table.info {
     min-width : 600px;
 }
 
-table.info tr:nth-of-type( odd ) {
-    background: #eee;
-}
-
 table.info tr td {
     font-family : 'Fira Sans';
     font-size: 12px;
     padding-bottom: 10px;
     vertical-align:top;
+}
+
+table.info tr:nth-of-type( odd ) {
+    background-color: #eee;
 }
 
 
@@ -470,9 +492,9 @@ table.admin {
     max-width : 90%;
 }
 
-table.admin td {
-    border : 1px dotted;
+table.admin tr td {
     width : 50%;
+    background-color: var( --tabletdcolor );
 }
 
 .goback {
@@ -577,14 +599,14 @@ address {
 }
 
 
-a[href^="mailto:"] { 
+a[href^="mailto:"] {
 
   text-decoration: none;
   font-family : monospace;
   font-size: small;
 }
 
-a[href^="mailto:"]::before { 
+a[href^="mailto:"]::before {
     content: "\2709";
     font-size: x-large;
 }
@@ -604,6 +626,13 @@ a:hover {
 
 a:active {
     text-decoration: underline;
+}
+
+a.link_as_button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    padding: 5px;
 }
 
 footer {

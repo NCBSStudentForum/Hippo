@@ -82,7 +82,7 @@ else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
             </p>";
 
         $to = getLoginEmail( $_POST[ 'speaker' ] );
-        sendPlainTextEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+        sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
 
         // And reschedule AWS entry.
         rescheduleAWS( );

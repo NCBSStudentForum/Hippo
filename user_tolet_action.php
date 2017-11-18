@@ -64,7 +64,7 @@ else if( $_POST[ 'response' ] == 'Add new listing' ) // Add new apartment
                 alert you have created on TO-LET services </p>";
 
             echo printInfo( "Sending apartment alert to $to " );
-            sendPlainTextEmail( $msg, $subject, $to );
+            sendHTMLEmail( $msg, $subject, $to );
         }
 
         //echo goBack( 'user_tolet.php', 1 );

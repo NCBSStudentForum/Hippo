@@ -93,7 +93,7 @@ if( $_POST[ 'response' ] == 'submit' )
     $msg .= arrayToVerticalTableHTML( $_POST, 'info', NULL, 'response' );
 
     $email = getLoginEmail( $login );
-    sendPlainTextEmail( $msg, $subject, $email, 'hippo@lists.ncbs.res.in' );
+    sendHTMLEmail( $msg, $subject, $email, 'hippo@lists.ncbs.res.in' );
 }
 else if( $_POST[ 'response' ] == 'delete' )
 {

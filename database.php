@@ -1069,18 +1069,15 @@ function getLoginIds( )
 function getUserInfo( $user )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM logins WHERE login=:login" );
-    $stmt->bindValue( ":login", $user );
-    $stmt->execute( );
-    $res =  $stmt->fetch( PDO::FETCH_ASSOC );
+
+    $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
 
     // Get the user title. 
     $title = $res[ 'title' ];
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
 
-
-    if( $ldap )
+    if( is_array($ldap) && is_array( $res ) && $ldap  )
         $res = array_merge( $res, $ldap );
 
     // If title was found in database, overwrite ldap info.
@@ -1726,7 +1723,7 @@ function getAWSFromPast( $from  )
     *
     * @return Array containing AWS speakers.
  */
-function getAWSSpeakers( $sortby = False )
+function getAWSSpeakers( $sortby = '' )
 {
     global $db;
     $sortExpr = '';
@@ -2653,7 +2650,68 @@ function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
     return $courses;
 }
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get the specialization available for student.
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getAllSpecialization( )
+{
+    global $db;
+    $res = $db->query( 'SELECT DISTINCT(specialization) FROM faculty' );
+    return fetchEntries( $res );
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get specialization of given login. 
+    *
+    * @Param $speaker (usually student, could be faculty as well).
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getLoginSpecialization( $login )
+{
+    global $db;
+    $res = $db->query( "SELECT specialization FROM logins WHERE login='$login'");
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return trim( $res[ 'specialization' ] );
+}
+
+function getFacultySpecialization( $email )
+{
+    global $db;
+    $res = $db->query( "SELECT specialization FROM faculty WHERE email='$email'");
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return trim( $res[ 'specialization' ] );
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get login specialization, if not found, fetch the PIEmail
+    * specialization from faculty database.
+    *
+    * @Param $login
+    * @Param $PIEmail
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getSpecialization( $login, $PIEmail = '' )
+{
+    $specialization = getLoginSpecialization( $login );
+    if( ! $specialization )
+        if( $PIEmail )
+            $specialization = getFacultySpecialization( $PIEmail );
+
+    if( ! trim( $specialization ) )
+        $specialization = 'UNSPECIFIED';
+
+    return $specialization;
+}
+
 ?>
-
-
-

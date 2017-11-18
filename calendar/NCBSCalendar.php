@@ -50,13 +50,15 @@ class NCBSCalendar
 
     public function __construct( $calID )
     {
+        echo printInfo( "Constructed calendar with ID $calID" );
+
         $this->calID = $calID;
         $this->offset = 0.0; // (new DateTime())->format( 'Z' );
 
         $conf = getConf( );
-
         $secFile = $conf[ 'google calendar']['service_account_secret'];
         putenv( 'GOOGLE_APPLICATION_CREDENTIALS=' . $secFile );
+
         $this->client = new Google_Client( );
 
         $this->client->useApplicationDefaultCredentials( );
@@ -88,21 +90,21 @@ class NCBSCalendar
         echo "<p>Getting list of events from date  $from </p>";
         $eventGen = $this->service()->events->listEvents( $this->calID, $opt );
         $events = array();
-        while( true ) {
+        while( true ) 
+        {
             foreach( $eventGen->getItems() as $event ) 
-            {
-                array_push( $events, $event );
-            }
+                $events[] = $event;
 
             $pageToken = $eventGen->getNextPageToken();
-            if ($pageToken) {
+            if ($pageToken) 
+            {
                 $optParams = array('pageToken' => $pageToken);
                 $eventGen = $this->service->events->listEvents( 
                     $this->calID,  $opt 
                 );
-            } else {
+            } 
+            else 
                 break;
-            }
         }
         return $events;
     }
@@ -315,6 +317,7 @@ class NCBSCalendar
      */
     public function exists( $event )
     {
+
         if( ! array_key_exists( 'calendar_event_id', $event ) )
             return false;
 
@@ -322,11 +325,8 @@ class NCBSCalendar
         if( $eventId == '' )
             return false;
 
-        // Else check in calendar.
         $event = $this->service()->events->get( $this->calID, $eventId );
-        flush(); ob_flush( );
         return $event->getId( );
-
     }
 
     /**

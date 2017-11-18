@@ -3,7 +3,6 @@
 include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'database.php';
-include_once 'check_access_permissions.php';
 include_once './calendar/NCBSCalendar.php';
 
 // We come here from google-calendar 
@@ -47,13 +46,17 @@ function synchronize_google_calendar( )
     echo printInfo( "Putting local update to google calendar " );
     for ($i = 0; $i < $total; $i++) 
     {
+        echo printInfo( "+ Updating event index $i" );
         $event = $publicEvents[ $i ];
-        try {
+        try 
+        {
             if( $calendar->exists( $event ) )
                 $gevent = $calendar->updateEvent( $event );
             else 
                 $gevent = $calendar->addNewEvent( $event );
-        } catch ( Exception $e ) {
+        } 
+        catch ( Exception $e ) 
+        {
             echo printWarning( "Failed to add or update event: " . $e->getMessage( ) );
         }
 
@@ -86,6 +89,8 @@ function synchronize_google_calendar( )
 
     }
 }
+
+$res = synchronize_google_calendar( );
 
 ?>
 

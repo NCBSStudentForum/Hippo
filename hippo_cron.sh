@@ -1,19 +1,29 @@
 #!/usr/bin/env bash
 set -x
 set -e
-SCRIPT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -d /opt/rh/rh-php56/ ]; then
     source /opt/rh/rh-php56/enable 
 fi
 
-NOW=$(date +"%Y_%m_%d__%H_%M_%S")
-if [ -f /var/log/hippo.log ]; then
-    echo "$NOW Running $0: " >> /var/log/hippo.log
-fi
+export http_proxy=http://proxy.ncbs.res.in:3128 
+export https_proxy=http://proxy.ncbs.res.in:3128 
+LOG_FILE=/var/log/hippo.log
+
+function log_msg
+{
+    NOW=$(date +"%Y_%m_%d__%H_%M_%S")
+    if [ -f /var/log/hippo.log ]; then
+        echo "$NOW : $1" >> ${LOG_FILE}
+    fi
+}
+
+SCRIPT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 php -f ${SCRIPT_DIR}/hippo_cron.php
-#exit_status=$?
-#if [ ! $exit_status -eq 0 ]; then
-#    echo "Failed to run CRON job. Automatic notification will fail." > /tmp/__alert 
-#    python ${SCRIPT_DIR}/sendmail.py -s "Failed to run cron job" \
-#        -i /tmp/__altert -t "hippo@lists.ncbs.res.in"
-#fi
+# Now update the calendar. every six hours.
+HOUR=`date +%H`
+n=$((HOUR%6))
+if [ $n -eq 0 ]; then
+    log_msg "Updating google calendar."
+    php -f ${SCRIPT_DIR}/synchronize_calendar.php
+fi

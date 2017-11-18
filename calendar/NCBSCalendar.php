@@ -39,8 +39,8 @@ class NCBSCalendar
 
     public $timeZone = 'Asia/Kolkata';
 
-    // NOTE: This is needed to add to datetime before we send it to GOOGLE. 
-    // Google automatically add the timezone offset which we send to it. 
+    // NOTE: This is needed to add to datetime before we send it to GOOGLE.
+    // Google automatically add the timezone offset which we send to it.
     public $offset = null;
 
     /**
@@ -64,8 +64,8 @@ class NCBSCalendar
         $this->client->useApplicationDefaultCredentials( );
 
         // Mimic user (service account).
-        $this->client->setSubject( 
-            $conf[ 'google calendar']['service_account_email'] 
+        $this->client->setSubject(
+            $conf[ 'google calendar']['service_account_email']
         );
         $this->client->setScopes( 'https://www.googleapis.com/auth/calendar');
     }
@@ -81,7 +81,7 @@ class NCBSCalendar
     /**
         * @brief Return all events on this calendar.
         *
-        * @return 
+        * @return
      */
     public function getEvents( $from = '-1 month' )
     {
@@ -90,20 +90,20 @@ class NCBSCalendar
         echo "<p>Getting list of events from date  $from </p>";
         $eventGen = $this->service()->events->listEvents( $this->calID, $opt );
         $events = array();
-        while( true ) 
+        while( true )
         {
-            foreach( $eventGen->getItems() as $event ) 
+            foreach( $eventGen->getItems() as $event )
                 $events[] = $event;
 
             $pageToken = $eventGen->getNextPageToken();
-            if ($pageToken) 
+            if ($pageToken)
             {
                 $optParams = array('pageToken' => $pageToken);
-                $eventGen = $this->service->events->listEvents( 
-                    $this->calID,  $opt 
+                $eventGen = $this->service->events->listEvents(
+                    $this->calID,  $opt
                 );
-            } 
-            else 
+            }
+            else
                 break;
         }
         return $events;
@@ -132,9 +132,9 @@ class NCBSCalendar
         }
         catch ( InvalidArgumentException $e )
         {
-            echo minionEmbarrassed( 
+            echo minionEmbarrassed(
                 "I could not update public calendar"
-                , "Error was " .  $e->getMessage() 
+                , "Error was " .  $e->getMessage()
             );
         }
         flush();
@@ -166,19 +166,19 @@ class NCBSCalendar
 
         $gevent = $this->getEvent( $event['calendar_id' ] , $event['calendar_event_id'] );
 
-
         // Now update the summary and description of event. Changing time is not
         // allowed in any case.
         $gevent->setSummary( $event['title' ] );
 
-        $gevent->setDescription( 
-                fixHTML( $event['description'], $strip_inline_image = true )
-                );
+        $gevent->setDescription(
+                fixHTML( substr($event['description'],0,200 )
+                    , $strip_inline_image = true
+                ) );
         $gevent->setHtmlLink( $event['url'] );
-        
-        $startTimeUTC = strtotime( 
+
+        $startTimeUTC = strtotime(
             $event['date'] . ' ' . $event['start_time'] ) - $this->offset;
-        $endTimeUTC = strtotime( 
+        $endTimeUTC = strtotime(
             $event['date'] . ' ' . $event['end_time'] ) - $this->offset;
 
         $startDateTime = date( $this->format, $startTimeUTC );
@@ -207,7 +207,7 @@ class NCBSCalendar
         {
             $gevent = $this->service( )->events->update( $event['calendar_id']
                 , $gevent->getId( )
-                , $gevent 
+                , $gevent
             );
         }
         catch ( Google_ServiceException $e )
@@ -219,9 +219,9 @@ class NCBSCalendar
         }
         catch ( InvalidArgumentException $e )
         {
-            echo minionEmbarrassed( 
+            echo minionEmbarrassed(
                 "I could not update public calendar"
-                , "Error was " .  $e->getMessage() 
+                , "Error was " .  $e->getMessage()
             );
         }
 
@@ -245,13 +245,13 @@ class NCBSCalendar
         $endTime = strtotime( $event['date'] . ' ' . $event[ 'end_time' ] );
         $endTime = $endTime - $this->offset;
 
-        // We need to clean up the description. 
+        // We need to clean up the description.
         // A. Remove inline images. And put only first paragram.
         $event[ 'description' ] = fixHTML( $event[ 'description' ], true );
 
         $entry = array(
                      "summary" => $event['title']
-                     , "description" => $event['description']
+                     , "description" => substr( $event['description'], 0, 200)
                      , 'location' => venueSummary( getVenueById( $event['venue' ] ) )
                      , 'start' => array(
                          "dateTime" => date( $this->format, $startTime )
@@ -291,7 +291,7 @@ class NCBSCalendar
         *
         * @param $event
         *
-        * @return 
+        * @return
      */
     public function deleteEvent( $event )
     {
@@ -300,7 +300,7 @@ class NCBSCalendar
             $this->service->events->delete( $this->calID, $event['id'] );
             return true;
         } catch (Exception $e) {
-            echo alertUser( "Failed to delete event from calendar " . 
+            echo alertUser( "Failed to delete event from calendar " .
                 $e->getMessage( ) );
         }
         return false;
@@ -313,7 +313,7 @@ class NCBSCalendar
         *
         * @param $event
         *
-        * @return 
+        * @return
      */
     public function exists( $event )
     {
@@ -340,7 +340,7 @@ class NCBSCalendar
     {
         if( $event['is_public_event'] == 'NO' )
         {
-            echo printWarning( 'You are trying to add private event to public 
+            echo printWarning( 'You are trying to add private event to public
                 calendar. Ignoring ... ' );
             return;
         }
@@ -351,8 +351,8 @@ class NCBSCalendar
             else
                 return $this->updateEvent( $event );
         } catch (Exception $e) {
-            echo alertUser( 
-                "Failed to update or add new event. " . $e->getMessage( ) 
+            echo alertUser(
+                "Failed to update or add new event. " . $e->getMessage( )
             );
         }
     }

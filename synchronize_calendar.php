@@ -5,8 +5,8 @@ include_once 'tohtml.php';
 include_once 'database.php';
 include_once './calendar/NCBSCalendar.php';
 
-// We come here from google-calendar 
-// When we come here from ./authenticate_gcalendar.php page, the GOOGLE API 
+// We come here from google-calendar
+// When we come here from ./authenticate_gcalendar.php page, the GOOGLE API
 // sends us a GET response. Use this token to process all other queries.
 
 // Find event in list of events but comparing summary.
@@ -15,10 +15,6 @@ function findEvent( $events, $googleEvent )
     $found = false;
     foreach( $events as $e )
     {
-        // Database event compared with google event summary.
-        //echo "<pre>Comparing " . $e[ 'calendar_event_id' ] . " and " . 
-        //$googleEvent['id'] . "</pre><br/>" ;
-
         if( $e[ 'calendar_event_id' ] == $googleEvent[ 'id' ] )
         {
             $found = true;
@@ -44,34 +40,34 @@ function synchronize_google_calendar( )
 
     // Update all public events first.
     echo printInfo( "Putting local update to google calendar " );
-    for ($i = 0; $i < $total; $i++) 
+    for ($i = 0; $i < $total; $i++)
     {
         echo printInfo( "+ Updating event index $i" );
         $event = $publicEvents[ $i ];
-        try 
+        try
         {
             if( $calendar->exists( $event ) )
                 $gevent = $calendar->updateEvent( $event );
-            else 
+            else
                 $gevent = $calendar->addNewEvent( $event );
-        } 
-        catch ( Exception $e ) 
+        }
+        catch ( Exception $e )
         {
             echo printWarning( "Failed to add or update event: " . $e->getMessage( ) );
         }
 
     }
 
-    // Now get all events from google calendar and if some of them are not 
-    // in database, remove them if they are not available locally. This 
-    // means some events have been deleted locally, they should be deleted 
+    // Now get all events from google calendar and if some of them are not
+    // in database, remove them if they are not available locally. This
+    // means some events have been deleted locally, they should be deleted
     // from calendar as well.
     $eventsOnGoogleCalendar = $calendar->getEvents( $from = 'today' );
     $total = count( $eventsOnGoogleCalendar );
     $i = 0;
 
-    // Make sure you get the list of events here as well. Because if a new 
-    // events was added before, it was assigned a event id in hippo 
+    // Make sure you get the list of events here as well. Because if a new
+    // events was added before, it was assigned a event id in hippo
     // database.
     $publicEvents = getPublicEvents( 'today', 'VALID', 14 );
     foreach( $eventsOnGoogleCalendar as $event )
@@ -80,7 +76,7 @@ function synchronize_google_calendar( )
             continue;           // We are good.
         else
         {
-            echo printInfo( "Deleting event: " . $event[ 'summary' ] . 
+            echo printInfo( "Deleting event: " . $event[ 'summary' ] .
                 " because this event is not found in local database " );
             echo "</br>";
             $calendar->deleteEvent( $event );
@@ -93,4 +89,3 @@ function synchronize_google_calendar( )
 $res = synchronize_google_calendar( );
 
 ?>
-

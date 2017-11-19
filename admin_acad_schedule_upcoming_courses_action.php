@@ -15,7 +15,9 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
         echo printInfo( "Adding preference for $cid" );
         $_POST[ 'course_id' ] = getCourseCode( $_POST[ 'course_id' ] );
         insertOrUpdateTable( 'upcoming_course_schedule'
-             , 'course_id,slot,venue', 'course_id,slot,venue,weight,comment', $_POST
+                , 'weight,course_id,slot,venue'
+                , 'course_id,slot,venue,weight,comment'
+                , $_POST
             );
         goBack( "admin_acad_schedule_upcoming_courses.php" );
         exit;

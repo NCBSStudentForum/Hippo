@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once 'header.php';
 include_once 'tohtml.php';
@@ -21,8 +21,8 @@ $pendingScheduleRequest = getTableEntries( 'aws_scheduling_request'
 $(function() {
     var logins = <?php echo json_encode( $logins ); ?>;
     //console.log( logins );
-    $( "#autocomplete_user" ).autocomplete( { source : logins }); 
-    $( "#autocomplete_user1" ).autocomplete( { source : logins }); 
+    $( "#autocomplete_user" ).autocomplete( { source : logins });
+    $( "#autocomplete_user1" ).autocomplete( { source : logins });
 });
 </script>
 
@@ -44,7 +44,7 @@ echo '
     <tr>
         <td>Manage AWS scheduling requests</td>
         <td> <a href="admin_acad_manages_scheduling_request.php">
-            Manage ' . count( $pendingScheduleRequest ) .  
+            Manage ' . count( $pendingScheduleRequest ) .
             ' pending scheduling requests</a> </td>
     </tr>
   </table>';
@@ -53,7 +53,7 @@ echo '<h2>Edit and update AWS</h2>';
 echo '<table class="admin">
     <tr>
         <td>Manage AWS edit requests</td>
-        <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) . 
+        <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) .
             ' pending requests</a> </td>
     </tr>
     <tr>
@@ -71,7 +71,7 @@ echo '<table class="admin">
         <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
     </tr>
     <tr>
-        <td> Enter a login and optionally AWS date and you can delete that AWS entry 
+        <td> Enter a login and optionally AWS date and you can delete that AWS entry
         from my database.</td>
         <td> <form method="post" action="">
             <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
@@ -86,10 +86,10 @@ echo '<table class="admin">
         </td>
         <td>
             <form method="post" action="admin_acad_update_user.php">
-                <input id="autocomplete_user" name="login" 
+                <input id="autocomplete_user" name="login"
                     placeholder="I will autocomplete " >
                 <button title="Add or remove speakers from AWS list"
-                    name="response" value="edit">' . $symbUpdate . 
+                    name="response" value="edit">' . $symbUpdate .
                 '</button>
             </form>
         </td>
@@ -137,7 +137,7 @@ if( isset( $_POST[ 'response' ] ))
 
         $speaker = $aws[ 'speaker' ];
         $date = $aws['date'];
-        echo "<a>Entry for $speaker (" . loginToText( $speaker ) . ") on " . 
+        echo "<a>Entry for $speaker (" . loginToText( $speaker ) . ") on " .
             date( 'D M d, Y', strtotime( $date ) ) . "</a>";
 
         echo arrayToVerticalTableHTML( $aws, 'annual_work_seminars' );
@@ -147,7 +147,7 @@ if( isset( $_POST[ 'response' ] ))
         echo '<form method="post" action="">
             <input type="hidden" name="speaker" value="' . $speaker . '">
             <input type="hidden" name="date" value="' . $date . '" >
-            <button onclick="AreYouSure(this)" 
+            <button onclick="AreYouSure(this)"
                 style=\"float:right\" name="response" >'. $symbDelete . '</button>
             </form>
             ';
@@ -155,7 +155,7 @@ if( isset( $_POST[ 'response' ] ))
 }
 
 
-/* 
+/*
  * Course work,
  */
 echo '<h1>COURSES</h1>';
@@ -173,20 +173,26 @@ echo '
     <tr>
         <td>Manage running courses</td>
         <td>
-            <a href="admin_acad_manages_current_courses.php">Manage this semester courses</a> 
+            <a href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
         </td>
     </tr>
     <tr>
         <td>Manage course registration and submit grades.</td>
         <td>
-            <a href="admin_acad_manages_enrollments.php">Manage Enrollment</a> 
+            <a href="admin_acad_manages_enrollments.php">Manage Enrollment</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Schedule upcoming courses .</td>
+        <td>
+            <a href="./admin_acad_manages_requests.php> </a>
         </td>
     </tr>
   </table>
   ';
 
 
-echo '<h1>Extra</h1>';
+echo '<h1>EXTRA</h1>';
 echo "<h2>Automatic Housekeeping</h2>";
 
 $badEntries = doAWSHouseKeeping( );
@@ -196,7 +202,7 @@ else
 {
     // can't make two forms on same page with same action. They will merge.
     echo alertUser( "Following entries could not be moved to main AWS list. Most
-        likely these entries have no data. You need to fix them. " 
+        likely these entries have no data. You need to fix them. "
     );
 
     echo '<form action="./admin_acad_update_upcoming_aws.php" method="post">';
@@ -216,11 +222,11 @@ echo '
   <table border="0" class="admin">
     <tr>
         <td>AWS summary <small>
-            See the summary of all AWSs. You may be able to spot missing AWS entry 
+            See the summary of all AWSs. You may be able to spot missing AWS entry
             in "Date Wise" list.  </small>
         </td>
         <td>
-            <a href="admin_acad_summary_user_wise.php">User wise</a> 
+            <a href="admin_acad_summary_user_wise.php">User wise</a>
             <a href="admin_acad_summary_date_wise.php">Date wise</a>
         </td>
     </tr>
@@ -242,4 +248,3 @@ echo '
 echo goBackToPageLink( 'user.php', 'Go back' );
 
 ?>
-

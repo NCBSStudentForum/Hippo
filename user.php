@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once 'header.php';
 include_once 'database.php';
@@ -6,21 +6,21 @@ include_once 'methods.php';
 include_once 'tohtml.php';
 include_once 'check_access_permissions.php';
 
-mustHaveAnyOfTheseRoles( 
-    array( 'USER', 'ADMIN', 'BOOKMYVENUE_ADMIN' , 'AWS_ADMIN' ) 
-    ); 
+mustHaveAnyOfTheseRoles(
+    array( 'USER', 'ADMIN', 'BOOKMYVENUE_ADMIN' , 'AWS_ADMIN' )
+    );
 echo userHTML( );
 
 $html = '<table class="tasks">';
 $html .= '
    <tr>
       <td>
-      See and edit (most of) your details. <small>This is one time task. If 
+      See and edit (most of) your details. <small>This is one time task. If
       you are eligible to give AWS, please visit and check details.
       </small>
       </td>
-      <td> 
-         <a href="user_info.php"><i class="fa fa-user fa-3x"></i> My Profile</a> 
+      <td>
+         <a href="user_info.php"><i class="fa fa-user fa-3x"></i> My Profile</a>
       </td>
    </tr>
    </table>';
@@ -37,7 +37,7 @@ echo  "<tr>
             <small>Register/deregister courses for this semster. </small>
         </td>
         <td>
-            <a href=\"user_manages_courses.php\"><i class=\"fa fa-book fa-3x\"></i>My Courses</a> 
+            <a href=\"user_manages_courses.php\"><i class=\"fa fa-book fa-3x\"></i>My Courses</a>
         </td>
         </tr>";
 echo '</table>';
@@ -53,22 +53,22 @@ if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
         <td>
             Add/update your TCM members and supervisors. <br/>
             <small>
-            This is important for AWS speakers. You should do it before updating your 
+            This is important for AWS speakers. You should do it before updating your
             AWS entries.</small>
             </td>
-          <td> 
-             <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a> 
+          <td>
+             <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a>
           </td>
         </tr>
         <tr>
         <td>
             List of your Annual Work Seminar <br>
-            <small> See your previous AWSs and update them. Check 
+            <small> See your previous AWSs and update them. Check
             the details about upcoming AWS and provide preferred dates.
            </small>
         </td>
-          <td> 
-             <a href="user_aws.php">My AWS</a> 
+          <td>
+             <a href="user_aws.php">My AWS</a>
           </td>
         </tr>
         ';
@@ -88,13 +88,13 @@ $html .= '<tr>
       <td> <a href="quickbook.php"><i class="fa fa-hand-pointer-o fa-3x"></i>Book my venue</a> </td>
    </tr>
    <tr>
-   <td>You can see your unapproved requests. You can modify their description, and 
+   <td>You can see your unapproved requests. You can modify their description, and
         cancel them if neccessary.
       </td>
       <td> <a href="user_show_requests.php">My booking requests</a> </td>
    </tr>
    <tr>
-      <td>These booking requests have been approved (we call them events). You can 
+      <td>These booking requests have been approved (we call them events). You can
          still edit their title and description (and also cancel them). </td>
       <td> <a href="user_show_events.php">My approved events</a></td>
    </tr>
@@ -107,8 +107,8 @@ echo "<h1>Talks and Thesis Seminar </h1>";
 echo '<table class="tasks">
    <form action="user_register_talk.php" method="post">
     <tr>
-        <td> 
-        Register a new talk, seminar, or a thesis seminar. <small>Keep the 
+        <td>
+        Register a new talk, seminar, or a thesis seminar. <small>Keep the
         email and photograph of speaker handy, not neccessary but highly recommended.
         </small>
         </td><td>
@@ -116,7 +116,7 @@ echo '<table class="tasks">
             <i class="fa fa-comments fa-3x"></i> Register talk/seminar</a></td>
         </td>
     </tr><tr>
-        <td> 
+        <td>
             Edit/update a previously registered talk and book a venue for it
         </td><td>
             <a href="user_manage_talk.php">Manage my talks</a></td>
@@ -131,7 +131,7 @@ echo '<table class="tasks">
 //   <form action="user_register_talk.php" method="post">
 //   <tr>
 //        <td>Put a notification for selling or create an offer. </td>
-//        <td> <a href="user_sells.php">Sell</a> and 
+//        <td> <a href="user_sells.php">Sell</a> and
 //             <a href="user_buys.php">Put an offer</a></td>
 //    </tr><tr>
 //        <td> You can browse available TO-LET entries.
@@ -139,7 +139,7 @@ echo '<table class="tasks">
 //       <td> <a href="user_browse_tolet.php">Browse TO-LET list</a></td> </td>
 //   </tr>
 //    </tr><tr>
-//        <td>Create email-alerts so that when a new entry is created you recieve 
+//        <td>Create email-alerts so that when a new entry is created you recieve
 //        notification. Or create a TO-LET entry.
 //        </td>
 //       <td> <a href="user_tolet.php">My TO-LET</a></td> </td>
@@ -149,10 +149,10 @@ echo '<table class="tasks">
 
 
 if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
-, 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) ) 
+, 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) )
 )
 {
-   echo "<h2>Admin</h2>";
+   echo "<h1> <i class=\"fa fa-cogs\"></i>   Admin</h1>";
    $roles =  getRoles( $_SESSION['user'] );
 
    $html = "<table class=\"tasks\">";
@@ -164,7 +164,7 @@ if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
        $html .= '<tr><td>Approve/reject, modify or cancel booking requests.</td>
       <td> <a href="bookmyvenue_admin.php">BookMyVenue Admin</a></td> </tr>';
    if( in_array( "AWS_ADMIN", $roles ) )
-       $html .= '<tr><td>Schedule AWS. Update AWS speaker list. 
+       $html .= '<tr><td>Schedule AWS. Update AWS speaker list.
        Manage running courses and more ...
       </td>
       <td> <a href="admin_acad.php">Academic Admin</a></td> </tr>';

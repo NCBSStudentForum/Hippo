@@ -1,14 +1,14 @@
-<?php 
+<?php
 
 /**
     * @brief Create all tables.
     *
-    * @return 
+    * @return
  */
 
 function initialize( $db  )
 {
-    $res = $db->query( 
+    $res = $db->query(
         'CREATE TABLE IF NOT EXISTS holidays (
             date DATE NOT NULL PRIMARY KEY
             , description VARCHAR(100) NOT NULL
@@ -17,11 +17,11 @@ function initialize( $db  )
         ' );
 
     // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
-    $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS speakers 
+    $res = $db->query(
+        'CREATE TABLE IF NOT EXISTS speakers
         (   id INT NOT NULL PRIMARY KEY
             , honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
-            , email VARCHAR(100) 
+            , email VARCHAR(100)
             , first_name VARCHAR(100) NOT NULL CHECK( first_name <> "" )
             , middle_name VARCHAR(100)
             , last_name VARCHAR(100)
@@ -34,37 +34,37 @@ function initialize( $db  )
     // Other tables.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS logins (
-            id VARCHAR( 200 ) 
-            , login VARCHAR(100) 
+            id VARCHAR( 200 )
+            , login VARCHAR(100)
             , email VARCHAR(200)
             , alternative_email VARCHAR(200)
             , first_name VARCHAR(200)
             , last_name VARCHAR(100)
-            , roles SET( 
+            , roles SET(
                 'USER', 'ADMIN', 'MEETINGS', 'ACAD_ADMIN', 'BOOKMYVENUE_ADMIN'
             ) DEFAULT 'USER'
             , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            , created_on DATETIME 
+            , created_on DATETIME
             , joined_on DATE
             , eligible_for_aws ENUM ('YES', 'NO' ) DEFAULT 'NO'
             , valid_until DATE
-            , status SET( 'ACTIVE', 'INACTIVE', 'TEMPORARLY_INACTIVE', 'EXPIRED' ) DEFAULT 'ACTIVE' 
+            , status SET( 'ACTIVE', 'INACTIVE', 'TEMPORARLY_INACTIVE', 'EXPIRED' ) DEFAULT 'ACTIVE'
             , laboffice VARCHAR(200)
             -- The faculty fields here must match in faculty table.
-            , title ENUM( 
+            , title ENUM(
                 'FACULTY', 'POSTDOC'
                 , 'PHD', 'INTPHD', 'MSC'
                 , 'JRF', 'SRF'
                 , 'NONACADEMIC_STAFF'
                 , 'VISITOR', 'ALUMNI', 'OTHER'
-                , 'UNSPECIFIED' 
+                , 'UNSPECIFIED'
             ) DEFAULT 'UNSPECIFIED'
             , institute VARCHAR(300)
-            , PRIMARY KEY (login))" 
+            , PRIMARY KEY (login))"
         );
 
-    $res = $db->query( 
-        'CREATE TABLE IF NOT EXISTS talks 
+    $res = $db->query(
+        'CREATE TABLE IF NOT EXISTS talks
         -- id should not be auto_increment.
         ( id INT NOT NULL
             -- This will be prefixed in title of event. e.g. Thesis Seminar by
@@ -76,50 +76,50 @@ function initialize( $db  )
             , coordinator VARCHAR(100)
             -- Since this has to be unique key, this cannot be very large.
             , title VARCHAR(500) NOT NULL
-            , description MEDIUMTEXT 
-            , created_by VARCHAR(100) NOT NULL 
+            , description MEDIUMTEXT
+            , created_by VARCHAR(100) NOT NULL
                 CHECK( register_by <> "" )
             , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-            , status ENUM( "CANCELLED", "INVALID", "VALID", "DELIVERED" ) 
+            , status ENUM( "CANCELLED", "INVALID", "VALID", "DELIVERED" )
                 DEFAULT "VALID"
             , PRIMARY KEY (id)
             , UNIQUE KEY (speaker,title)
         )' );
 
     // This table holds the email template.
-    $res = $db->query( 
+    $res = $db->query(
         'CREATE TABLE IF NOT EXISTS email_templates
         ( id VARCHAR(100) NOT NULL
         , when_to_send VARCHAR(200)
         , recipients VARCHAR(200) NOT NULL
-        , cc VARCHAR(500) 
-        , description TEXT, PRIMARY KEY (id) )' 
+        , cc VARCHAR(500)
+        , description TEXT, PRIMARY KEY (id) )'
         );
 
     // Save the emails here. A bot should send these emails.
-    $res = $db->query( 
+    $res = $db->query(
         'CREATE TABLE IF NOT EXISTS emails
         ( id INT NOT NULL AUTO_INCREMENT
             , recipients VARCHAR(1000) NOT NULL
-            , cc VARCHAR(200) 
+            , cc VARCHAR(200)
             , subject VARCHAR(1000) NOT NULL
             , msg TEXT NOT NULL
             , when_to_send DATETIME NOT NULL
             , status ENUM( "PENDING", "SENT", "FAILED", "CANCELLED" ) DEFAULT "PENDING"
             , created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            , last_tried_on DATETIME 
-            , PRIMARY KEY (id) )' 
+            , last_tried_on DATETIME
+            , PRIMARY KEY (id) )'
         );
 
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
             gid INT NOT NULL
             , rid INT NOT NULL
-            , class VARCHAR(20) DEFAULT 'UNKNOWN' 
+            , class VARCHAR(20) DEFAULT 'UNKNOWN'
             , created_by VARCHAR(50) NOT NULL
             , title VARCHAR(100) NOT NULL
-            , external_id VARCHAR(50) 
-            , description TEXT 
+            , external_id VARCHAR(50)
+            , description TEXT
             , venue VARCHAR(80) NOT NULL
             , date DATE NOT NULL
             , start_time TIME NOT NULL
@@ -130,10 +130,10 @@ function initialize( $db  )
             , modified_by VARCHAR(50) -- Who modified the request last time.
             , last_modified_on DATETIME
             , timestamp DATETIME
-            , PRIMARY KEY (gid, rid) 
+            , PRIMARY KEY (gid, rid)
             , UNIQUE KEY (gid,rid,external_id)
             )
-           " ); 
+           " );
     $res = $db->query( "
         -- venues must created before events because events refer to venues key as
         -- foreign key.
@@ -143,32 +143,32 @@ function initialize( $db  )
             , institute VARCHAR(100) NOT NULL
             , building_name VARCHAR(100) NOT NULL
             , floor INT NOT NULL
-            , location VARCHAR(500) 
+            , location VARCHAR(500)
             , type VARCHAR(30) NOT NULL
             , strength INT NOT NULL
-            , distance_from_ncbs DECIMAL(3,3) DEFAULT 0.0 
+            , distance_from_ncbs DECIMAL(3,3) DEFAULT 0.0
             , has_projector ENUM( 'YES', 'NO' ) NOT NULL
             , suitable_for_conference ENUM( 'YES', 'NO' ) NOT NULL
             , has_skype ENUM( 'YES', 'NO' ) DEFAULT 'NO'
             -- How many events this venue have hosted so far. Meaure of popularity.
-            , total_events INT NOT NULL DEFAULT 0 
+            , total_events INT NOT NULL DEFAULT 0
             , PRIMARY KEY (id) )"
         );
 
     // All events are put on this table.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS events (
-            -- Sub event will be parent.children format. 
+            -- Sub event will be parent.children format.
             gid INT NOT NULL -- This is group id of events.
             , eid INT NOT NULL -- This is event id in that group.
-            -- If some details of this event are stored in some other table, use 
-            -- this field. Value of this field is formatted as tablename.id e.g. 
-            -- talks and aws can be referred as talks.3 and annual_work_seminars.5 
+            -- If some details of this event are stored in some other table, use
+            -- this field. Value of this field is formatted as tablename.id e.g.
+            -- talks and aws can be referred as talks.3 and annual_work_seminars.5
             -- here.
-            , external_id VARCHAR(50) 
+            , external_id VARCHAR(50)
             -- If yes, this entry will be put on google calendar.
-            , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO' 
-            , class VARCHAR(20) NOT NULL DEFAULT 'UNKNOWN' 
+            , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO'
+            , class VARCHAR(20) NOT NULL DEFAULT 'UNKNOWN'
             , title VARCHAR(200) NOT NULL
             , description TEXT
             , date DATE NOT NULL
@@ -176,7 +176,7 @@ function initialize( $db  )
             , created_by VARCHAR( 50 ) NOT NULL
             , start_time TIME NOT NULL
             , end_time TIME NOT NULL
-            , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID' 
+            , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
             , calendar_id VARCHAR(200)
             , calendar_event_id VARCHAR(200)
             , url VARCHAR(1000)
@@ -186,15 +186,15 @@ function initialize( $db  )
             , UNIQUE KEY (gid,eid,external_id)
             )"
         );
-            
+
     $res = $db->query( "
         create TABLE IF NOT EXISTS supervisors (
             email VARCHAR(200) PRIMARY KEY NOT NULL
             , first_name VARCHAR( 200 ) NOT NULL
             , middle_name VARCHAR(200)
-            , last_name VARCHAR( 200 ) 
+            , last_name VARCHAR( 200 )
             , affiliation VARCHAR( 1000 ) NOT NULL
-            , url VARCHAR(300) ) " 
+            , url VARCHAR(300) ) "
         );
 
     $res = $db->query( "
@@ -202,18 +202,18 @@ function initialize( $db  )
             email VARCHAR(200) PRIMARY KEY NOT NULL
             , first_name VARCHAR( 200 ) NOT NULL
             , middle_name VARCHAR(200)
-            , last_name VARCHAR( 200 ) 
+            , last_name VARCHAR( 200 )
             , affiliation ENUM ( 'NCBS', 'INSTEM', 'OTHER' ) DEFAULT 'INSTEM'
             , status ENUM ( 'ACTIVE', 'INACTIVE', 'INVALID' ) DEFAULT 'ACTIVE'
             , institute VARCHAR( 100 )
             , url VARCHAR(300)
             , specialization VARCHAR(100)
-            , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+            , created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             , modified_on DATETIME NOT NULL
             )"
         );
 
-    // This table keeps the archive. We only move complete AWS entry in to this 
+    // This table keeps the archive. We only move complete AWS entry in to this
     // table. Ideally this should not be touched manually.
     $res = $db->query( "
         create TABLE IF NOT EXISTS annual_work_seminars (
@@ -224,14 +224,14 @@ function initialize( $db  )
             , supervisor_1 VARCHAR( 200 ) NOT NULL -- first superviser must be from NCBS
             , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
             , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.
-            , tcm_member_2 VARCHAR( 200 ) -- optional 
-            , tcm_member_3 VARCHAR( 200 ) -- optional 
+            , tcm_member_2 VARCHAR( 200 ) -- optional
+            , tcm_member_3 VARCHAR( 200 ) -- optional
             , tcm_member_4 VARCHAR( 200 ) -- optional
             , title VARCHAR( 1000 )
             , abstract MEDIUMTEXT
             , FOREIGN KEY (speaker) REFERENCES logins(login)
             , UNIQUE KEY (speaker, date)
-            , FOREIGN KEY (supervisor_1) REFERENCES faculty(email) 
+            , FOREIGN KEY (supervisor_1) REFERENCES faculty(email)
             )"
         );
 
@@ -241,16 +241,16 @@ function initialize( $db  )
             , speaker VARCHAR(200) NOT NULL -- user
             , date DATE NOT NULL -- tentative date
             , time TIME NOT NULL DEFAULT '16:00'
-            , supervisor_1 VARCHAR( 200 ) 
-            , supervisor_2 VARCHAR( 200 ) 
-            , tcm_member_1 VARCHAR( 200 ) 
-            , tcm_member_2 VARCHAR( 200 ) 
-            , tcm_member_3 VARCHAR( 200 ) 
-            , tcm_member_4 VARCHAR( 200 ) 
+            , supervisor_1 VARCHAR( 200 )
+            , supervisor_2 VARCHAR( 200 )
+            , tcm_member_1 VARCHAR( 200 )
+            , tcm_member_2 VARCHAR( 200 )
+            , tcm_member_3 VARCHAR( 200 )
+            , tcm_member_4 VARCHAR( 200 )
             , title VARCHAR( 1000 )
             , abstract MEDIUMTEXT
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
-            , comment TEXT 
+            , comment TEXT
             , acknowledged ENUM( 'YES', 'NO' ) DEFAULT 'NO'
             , FOREIGN KEY (speaker) REFERENCES logins(login)
             , UNIQUE (speaker, date) )"
@@ -265,10 +265,10 @@ function initialize( $db  )
             , supervisor_1 VARCHAR( 200 ) -- first superviser must be from NCBS
             , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
             , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.
-            , tcm_member_2 VARCHAR( 200 ) -- optional 
-            , tcm_member_3 VARCHAR( 200 ) -- optional 
+            , tcm_member_2 VARCHAR( 200 ) -- optional
+            , tcm_member_3 VARCHAR( 200 ) -- optional
             , tcm_member_4 VARCHAR( 200 ) -- optional
-            , scheduled_on DATE 
+            , scheduled_on DATE
             , title VARCHAR( 1000 )
             , abstract MEDIUMTEXT
             , status ENUM( 'PENDING', 'APPROVED', 'REJECTED', 'INVALID', 'CANCELLED' ) DEFAULT 'PENDING'
@@ -276,13 +276,13 @@ function initialize( $db  )
             )"
         );
 
-    // This table keeps request for scheduling AWS. Do not allow deleting a 
+    // This table keeps request for scheduling AWS. Do not allow deleting a
     // request. It can be rejected or marked expired.
     $res = $db->query( "
         create TABLE IF NOT EXISTS aws_scheduling_request (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
-            , created_on DATETIME 
-            , speaker VARCHAR(200) NOT NULL 
+            , created_on DATETIME
+            , speaker VARCHAR(200) NOT NULL
             , first_preference DATE
             , second_preference DATE
             , reason TEXT NOT NULL
@@ -298,7 +298,7 @@ function initialize( $db  )
             , end_date DATE
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
             , comment TEXT
-        )" 
+        )"
         );
     // This entry keeps track if course registraction should be open/closed for
     // current semester.
@@ -306,7 +306,7 @@ function initialize( $db  )
         INSERT IGNORE INTO conditional_tasks (id) VALUES ('COURSE_REGISTRATION')
         ");
 
-    // Slots 
+    // Slots
     $res = $db->query( "
         create TABLE IF NOT EXISTS slots (
             id VARCHAR(4) NOT NULL
@@ -327,11 +327,11 @@ function initialize( $db  )
             , name VARCHAR(100) NOT NULL
             , description TEXT
             , instructor_1 VARCHAR(50) NOT NULL -- primary instructor.
-            , instructor_2 VARCHAR(50) 
-            , instructor_3 VARCHAR(50) 
-            , instructor_4 VARCHAR(50) 
-            , instructor_5 VARCHAR(50) 
-            , instructor_6 VARCHAR(50) 
+            , instructor_2 VARCHAR(50)
+            , instructor_3 VARCHAR(50)
+            , instructor_4 VARCHAR(50)
+            , instructor_5 VARCHAR(50)
+            , instructor_6 VARCHAR(50)
             , instructor_extras VARCHAR(500) -- comma separated list of extra
             , comment VARCHAR(100)
             )
@@ -353,13 +353,13 @@ function initialize( $db  )
             , note VARCHAR(200) DEFAULT ''  -- Add extra comment.
             , UNIQUE KEY(semester,year,course_id)
             )" );
-        
 
 
-    // Timetable 
+
+    // Timetable
     $res = $db->query( "
         create TABLE IF NOT EXISTS course_timetable  (
-            course VARCHAR(20) NOT NULL 
+            course VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
             , end_date DATE NOT NULL
             , slot VARCHAR(5) NOT NULL
@@ -367,10 +367,10 @@ function initialize( $db  )
             ) "
         );
 
-    // course registration. 
+    // course registration.
     $res = $db->query( "
         create TABLE IF NOT EXISTS course_registration  (
-             student_id VARCHAR(50) NOT NULL 
+             student_id VARCHAR(50) NOT NULL
             , semester ENUM ( 'AUTUMN', 'SPRING' ) NOT NULL
             , year VARCHAR(5) NOT NULL
             -- CHECK contraints are ignored by MYSQL.
@@ -379,53 +379,53 @@ function initialize( $db  )
             , status ENUM ( 'VALID', 'INVLALID', 'DROPPED' ) NOT NULL DEFAULT 'VALID'
             , registered_on DATETIME NOT NULL
             , last_modified_on DATETIME
-            , grade VARCHAR(2) 
+            , grade VARCHAR(2)
             , grade_is_given_on DATETIME  -- Do not show till feedback is given.
             , UNIQUE KEY (student_id,course_id,type)
             , PRIMARY KEY (student_id,semester,year,course_id)
             ) "
         );
 
-    // Nilami store 
+    // Nilami store
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS nilami_items (
             id INT NOT NULL PRIMARY KEY
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
             , item_name VARCHAR(300) NOT NULL
-            , description MEDIUMTEXT 
-            , price INT NOT NULL DEFAULT -1 
-            , status ENUM( 'AVAILABLE', 'SOLD', 'WITHDRAWN', 'EXPIRED' ) 
+            , description MEDIUMTEXT
+            , price INT NOT NULL DEFAULT -1
+            , status ENUM( 'AVAILABLE', 'SOLD', 'WITHDRAWN', 'EXPIRED' )
                     DEFAULT 'AVAILABLE'
-            , last_updated_on DATETIME 
+            , last_updated_on DATETIME
             , contact_info VARCHAR(20)
             , tags VARCHAR(100) -- tags must be separated by comma or space.
             , comment VARCHAR(200)
-            )" 
+            )"
         );
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS nilami_offer (
-            id INT PRIMARY KEY 
+            id INT PRIMARY KEY
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
             , item_id INT NOT NULL
-            , offer INT NOT NULL DEFAULT -1 
+            , offer INT NOT NULL DEFAULT -1
             , status ENUM( 'VALID', 'WITHDRAWN', 'EXPIRED' ) DEFAULT 'VALID'
             , contact_info VARCHAR(20)
             , FOREIGN KEY (id) REFERENCES nilami_items(id)
-            , UNIQUE KEY (created_by,item_id) 
-            )" 
+            , UNIQUE KEY (created_by,item_id)
+            )"
         );
 
     // TOLET.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS apartments (
-            id INT PRIMARY KEY 
+            id INT PRIMARY KEY
             , type ENUM( 'SHARE', 'SINGLE', '1BHK', '2BHK', '3BHK', '3+BHK' )
             , open_vacancies INT DEFAULT '1'
             , address VARCHAR( 200 ) NOT NULL
             , description MEDIUMTEXT
-            , status ENUM( 'AVAILABLE', 'TAKEN', 'WITHDRAWN', 'INVALID', 'EXPIRED' ) 
+            , status ENUM( 'AVAILABLE', 'TAKEN', 'WITHDRAWN', 'INVALID', 'EXPIRED' )
                     DEFAULT 'AVAILABLE'
             , owner_contact VARCHAR(200) NOT NULL
             , rent INT NOT NULL
@@ -433,7 +433,7 @@ function initialize( $db  )
             , created_by VARCHAR(50) NOT NULL -- Email of owner
             , created_on DATETIME NOT NULL -- timestamp
             , last_modified_on DATETIME
-            )" 
+            )"
         );
 
     $res = $db->query( "
@@ -443,7 +443,7 @@ function initialize( $db  )
                 , apartment_id INT NOT NULL
                 , comment VARCHAR(500) NOT NULL
                 , timestamp DATETIME
-            )" 
+            )"
         );
 
     $res = $db->query( "
@@ -453,9 +453,22 @@ function initialize( $db  )
             , on_field VARCHAR(50) NOT NULL
             , value VARCHAR(50) NOT NULL
             , UNIQUE KEY (login,on_table,on_field,value)
-        )" 
+        )"
         );
 
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS upcoming_course_schedule (
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+            , couse_id VARCHAR(100) NOT NULL
+            , slot VARCHAR(10) NOT NULL
+            , venue VARCHAR(50) NOT NULL
+            , weight INT DEFAULT 1
+            , alloted_slot VARCHAR(10)
+            , alloted_venue VARCHAR(50)
+            , comment VARCHAR(200)
+            , UNIQUE KEY(id,slot,venue)
+            )"
+        );
     return $res;
 }
 

@@ -468,9 +468,13 @@ function readOnlyEventLineHTML( $date, $venueid )
     *
     * @return
  */
-function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
+function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
 {
-    $row = '<tr>';
+    if( $withtr )
+        $row = '<tr>';
+    else
+        $row = '';
+
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ',', $tobefilterd );
 
@@ -488,7 +492,11 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
         $row .= "<td><div class=\"cell_content\">$v</div></td>";
     }
 
-    $row  .= "</tr>";
+    if( $withtr )
+        $row  .= "</tr>";
+    else
+        $row .= '';
+
     return $row;
 
 }

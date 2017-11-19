@@ -36,7 +36,7 @@ $( function() {
 
 echo slotTable( );
 
-echo "<h2>Scheduling for $sem, $year </h2>";
+echo "<h2>Add preferences for upcoming courses in $sem, $year </h2>";
 $editable = 'course_id,slot,venue,weight';
 
 $slotMap = getSlotMap( );

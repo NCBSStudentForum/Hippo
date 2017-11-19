@@ -216,6 +216,7 @@ table.timetable tr td {
     min-width : 10px;
     max-width : 100px;
     background-color:var(--tabletdcolor);
+    vertical-align: top;
 }
 
 table.venue_slot {

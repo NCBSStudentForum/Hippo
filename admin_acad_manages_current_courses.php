@@ -19,7 +19,6 @@ $allCourses = getTableEntries( 'courses_metadata', 'name' );
 $coursesId = array_map( function( $x ) { return $x['id']; }, $allCourses );
 asort( $coursesId );
 
-$coursesMap = array( );
 
 $slots = getTableEntries( 'slots', 'groupid' );
 $slotMap = array();
@@ -41,14 +40,14 @@ foreach( $slots as $s )
                                 . ')';
 }
 
-$slotSelect = arrayToSelectList( 'slot', array_keys($slotMap), $slotMap );
+$coursesMap = array( );
 foreach( $allCourses as $c )
     $coursesMap[ $c[ 'id' ] ] = $c[ 'name' ];
 
 $courseIdsSelect = arrayToSelectList( 'course_id', $coursesId, $coursesMap );
-
 $venues = getTableEntries( 'venues', '', "type='LECTURE HALL'" );
 $venueSelect = venuesToHTMLSelect( $venues );
+$slotSelect = arrayToSelectList( 'slot', array_keys($slotMap), $slotMap );
 
 
 // Running course for this semester.
@@ -58,18 +57,19 @@ $nextSemCourses = getSemesterCourses( $nextSem[ 'year' ], $nextSem[ 'semester' ]
 
 $runningCourses = array_merge( $runningCourses, $nextSemCourses );
 
-$runningCourseIds = array_map(
-            function( $x ) { return $x[ 'id']; }, $runningCourses
-        );
+// Auto-complete for JS.
+$runningCourseMapForAutoCompl = [ ];
+foreach( $runningCourses as $x )
+    $runningCourseMapForAutoCompl[ $x['id'] . ': '
+        . getCourseName( $x[ 'course_id' ] ) ] = $x['id'];
 
 ?>
 
 <script type="text/javascript" charset="utf-8">
-// Autocomplete running course.
+// Autocomplete running course. Append course name for better searching.
 $( function() {
-    var coursesDict = <?php echo json_encode( $coursesMap ) ?>;
-    var courses = <?php echo json_encode( $runningCourseIds ); ?>;
-    $( "#running_course" ).autocomplete( { source : courses });
+    var courses = <?php echo json_encode( array_keys($runningCourseMapForAutoCompl) ); ?>;
+    $( "#running_course" ).autocomplete({ source : courses } );
     $( "#running_course" ).attr( "placeholder", "Type course code" );
 });
 
@@ -83,22 +83,24 @@ $default = array(
     , 'semester' => $sem
 );
 
+// running course returned from autocomplete has extra information. Use the map
+// to add another parameter in $_POST 'running_course_id' which is used to get
+// the real course id.
 if( $_POST && array_key_exists( 'running_course', $_POST ) )
 {
-    $runningCourse = getTableEntry( 'courses', 'id'
-                            , array( 'id' =>  $_POST[ 'running_course' ] )
-                        );
+    $_POST[ 'running_course_id' ] = $runningCourseMapForAutoCompl[ $_POST[ 'running_course' ] ];
+    $runningCourse = getTableEntry(
+        'courses', 'id'
+        , array( 'id' =>  $_POST[ 'running_course_id' ] )
+    );
     if( $runningCourse )
         $default = array_merge( $default, $runningCourse );
-
     $action = 'Edit';
 }
 
 
 echo "<h1>Running courses</h1>";
-
 echo printInfo( "Current semester is $sem, $year." );
-
 echo '<table class="info">';
 $tobefilterd = 'id,semester,year';
 
@@ -153,7 +155,7 @@ $default[ 'semester' ] = $sem;
 if( __get__( $_POST, 'running_course', '') )
 {
     $action = 'Update';
-    $course = getTableEntry( 'courses', 'id', array( 'id' => $_POST[ 'running_course' ]) );
+    $course = getTableEntry( 'courses', 'id', array( 'id' => $_POST[ 'running_course_id' ]) );
     $default[ 'semester' ] = $sem;
 
     // Select the already assigned venue.
@@ -174,7 +176,7 @@ else
 
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'course_id,start_date,end_date,slot,venue,note,url,ignore_tiles', $action
+    , 'start_date,end_date,slot,venue,note,url,ignore_tiles', $action
     );
 
 /* If we are updating, we might also like to remove the entry. This button also

@@ -306,12 +306,12 @@ function eventSummaryHTML( $event, $talk = null)
 
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
-
-    // Add calendar link
-    $html .= '<tr><td>' . addToGoogleCalLink( $event ) . '</td><td>'
-                . eventToICALLink( $event ) . '</td></tr>';
-
     $html .= '</table>';
+
+    // Add google and ical links.
+    $html .= '<div class="strip_from_md">';
+    $html .=  addToGoogleCalLink( $event ) .  eventToICALLink( $event );
+    $html .= '</div>';
 
     return $html;
 }

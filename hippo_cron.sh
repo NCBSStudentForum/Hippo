@@ -12,7 +12,7 @@ LOG_FILE=/var/log/hippo.log
 function log_msg
 {
     NOW=$(date +"%Y_%m_%d__%H_%M_%S")
-    if [ -f /var/log/hippo.log ]; then
+    if [[ -f /var/log/hippo.log ]]; then
         echo "$NOW : $1" >> ${LOG_FILE}
     fi
 }
@@ -24,7 +24,7 @@ php -f ${SCRIPT_DIR}/hippo_cron.php
 HOUR=`date +%H`
 MINS=`date +%M`
 n=$((HOUR%6))
-if [ $n -eq 0 ]; then
+if [[ $n -eq 0 ]]; then
     if [[ $MINS -gt 0 && $MINS -lt 12 ]]; then
         log_msg "Updating google calendar."
         php -f ${SCRIPT_DIR}/synchronize_calendar.php

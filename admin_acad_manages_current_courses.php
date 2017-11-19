@@ -70,7 +70,7 @@ foreach( $runningCourses as $x )
 $( function() {
     var courses = <?php echo json_encode( array_keys($runningCourseMapForAutoCompl) ); ?>;
     $( "#running_course" ).autocomplete({ source : courses } );
-    $( "#running_course" ).attr( "placeholder", "Type course code" );
+    $( "#running_course" ).attr( "placeholder", "Type course code/name" );
 });
 
 </script>
@@ -99,12 +99,12 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
 }
 
 
-echo "<h1>Running courses</h1>";
-echo printInfo( "Current semester is $sem, $year." );
-echo '<table class="info">';
+$runningCoursesHTML = '';
+$runningCoursesHTML .= "<h1>Running courses</h1>";
+$runningCoursesHTML .= printInfo( "Current semester is $sem, $year." );
+$runningCoursesHTML .= '<table class="info">';
 $tobefilterd = 'id,semester,year';
-
-echo arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
+$runningCoursesHTML .= arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 foreach( $runningCourses as $course )
 {
     $cname = getCourseName( $course[ 'course_id'] );
@@ -113,9 +113,9 @@ foreach( $runningCourses as $course )
     if( isCourseActive( $course ) )
         $course[ 'course_id' ] = "<blink> $symbBell </blink>" . $course[ 'course_id' ];
 
-    echo arrayToRowHTML( $course, 'aws', $tobefilterd );
+    $runningCoursesHTML .= arrayToRowHTML( $course, 'aws', $tobefilterd );
 }
-echo '</table>';
+$runningCoursesHTML .= '</table>';
 
 
 
@@ -144,7 +144,7 @@ if( $action != 'Add' )
 echo '</table>';
 echo '</form>';
 
-echo "<h2>Add/edit runnuing courses </h2>";
+echo "<h1>Add/edit runnuing courses </h1>";
 echo '<form method="post" action="admin_acad_manages_current_courses_action.php">';
 
 // We will figure out the semester by start_date .
@@ -190,6 +190,8 @@ if( $action == 'Update' )
 
 echo '</form>';
 
+// Finally show running courses.
+echo $runningCoursesHTML;
 
 echo "<br/><br/>";
 echo goBackToPageLink( 'admin_acad.php', 'Go back' );

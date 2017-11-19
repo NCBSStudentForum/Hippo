@@ -56,15 +56,15 @@ $form .= dbTableToHTMLTable( 'upcoming_course_schedule'
 $form .= '</form>';
 echo $form;
 
-$entries = getTableEntries( 'upcoming_course_schedule' );
-
+// Print the table of entries.
 $tofilter = '';
+$entries = getTableEntries( 'upcoming_course_schedule', 'weight' );
 if( count( $entries ) > 0 )
 {
     echo '<h2>Current list of preferences</h2>';
     echo printInfo( "Total entries : " . count( $entries ) );
 
-    $table = ' <table class="info">';
+    $table = '<table class="info">';
     $table .= arrayHeaderRow( $entries[0], 'info' );
     foreach( $entries as $entry )
     {
@@ -82,5 +82,8 @@ if( count( $entries ) > 0 )
     echo $table;
 }
 
+echo '<form method="post" action="admin_acad_schedule_upcoming_courses_action.php">';
+echo '<button name="response" value="schedule_courses">Compute Schedule</button>';
+echo '</form>';
 
 ?>

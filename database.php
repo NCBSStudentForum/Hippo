@@ -1292,10 +1292,11 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " ORDER BY :orderby";
 
     $stmt = $db->prepare( $query );
-    if( $orderby )
+    if( strlen($orderby) > 0 )
         $stmt->bindValue( ":orderby", $orderby );
 
     $stmt->execute( );
+
     return fetchEntries( $stmt );
 }
 

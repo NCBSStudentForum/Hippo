@@ -25,9 +25,17 @@ else if( __get__( $_POST, 'response', '' ) == 'Delete' )
 {
     if( __get__( $_POST, 'id', 0 ) > 0 )
     {
-        echo printInfo( "Deleting the schedule with id " . $_POST['id'] );
-        deleteFromTable( 'upcoming_course_schedule', 'id', $_POST );
+        $_POST[ 'status' ] = 'DELETED';
+        updateTable( 'upcoming_course_schedule', 'id,status', $_POST );
     }
+    goBack( "admin_acad_schedule_upcoming_courses.php" );
+    exit;
+}
+else if( __get__( $_POST, 'response', '' ) == 'schedule_courses' )
+{
+    echo printInfo( "Computing best schedule" );
+    $res = __DIR__ . '/compute_course_schedule.py';
+    echo printInfo( $res );
     goBack( "admin_acad_schedule_upcoming_courses.php" );
     exit;
 }

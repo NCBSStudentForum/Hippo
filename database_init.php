@@ -466,6 +466,7 @@ function initialize( $db  )
             , alloted_slot VARCHAR(10)
             , alloted_venue VARCHAR(50)
             , comment VARCHAR(200)
+            , status ENUM( 'VALID', 'INVALID', 'DELETED' ) DEFAULT 'VALID'
             , UNIQUE KEY(course_id,slot,venue)
             )"
         );

@@ -81,7 +81,7 @@ function venuesToHTMLSelect( $venues = null, $ismultiple = false
 
     $html = "<select $multiple name=\"$selectName\">";
     if( ! $ismultiple )
-        $html .= "<option disabled selected value>$default</option>";
+        $html .= "<option selected value>$default</option>";
 
     foreach( $venues as $v )
     {

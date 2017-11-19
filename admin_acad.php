@@ -185,7 +185,7 @@ echo '
     <tr>
         <td>Schedule upcoming courses .</td>
         <td>
-            <a href="./admin_acad_manages_requests.php> </a>
+            <a href="./admin_acad_schedule_upcoming_courses.php">Schedule Upcoming Courses</a>
         </td>
     </tr>
   </table>

@@ -69,8 +69,6 @@ usort( $entries
 if( count( $entries ) > 0 )
 {
     echo '<h2>Current list of preferences</h2>';
-    echo printInfo( "Total entries : " . count( $entries ) );
-
     $table = '<table class="info">';
     $table .= arrayHeaderRow( $entries[0], 'info', $tofilter );
     foreach( $entries as $entry )
@@ -92,5 +90,20 @@ if( count( $entries ) > 0 )
 echo '<form method="post" action="admin_acad_schedule_upcoming_courses_action.php">';
 echo '<button name="response" value="schedule_courses">Compute Schedule</button>';
 echo '</form>';
+
+echo '<h1>Computed schedule</h1>';
+
+$rows = getTableEntries( 'upcoming_course_schedule', '', "status='VALID'" );
+
+$table = '<table class="info">';
+$table .= '<tr><th>Slot</th><th>Venue</th><th>Course</th></tr>';
+foreach( $rows as $row )
+{
+    $rowHTML = '<td>' . $row[ 'slot' ] . '</td><td>' . $row[ 'venue' ]
+                . '</td><td>' . getCourseName( $row['course_id'] ) . '</td>';
+    $table .= "<tr> $rowHTML </tr>";
+}
+$table .= '</table>';
+echo $table;
 
 ?>

@@ -62,6 +62,13 @@ def init( ):
                 continue
             assignments[ v ] = k.split( ':' )
 
+    # Remove all previous assignments.
+    cur.execute( """
+        UPDATE upcoming_course_schedule
+        SET alloted_slot=NULL AND alloted_venue=NULL
+        """ )
+    db_.commit( )
+
     for k in assignments:
         slot, venue =  assignments[k]
         query = """

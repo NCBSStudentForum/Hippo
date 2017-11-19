@@ -34,7 +34,7 @@ else if( __get__( $_POST, 'response', '' ) == 'Delete' )
 else if( __get__( $_POST, 'response', '' ) == 'schedule_courses' )
 {
     echo printInfo( "Computing best schedule" );
-    $res = __DIR__ . '/compute_course_schedule.py';
+    $res = shell_exec( __DIR__ . '/compute_course_schedule.py' );
     echo printInfo( $res );
     goBack( "admin_acad_schedule_upcoming_courses.php" );
     exit;

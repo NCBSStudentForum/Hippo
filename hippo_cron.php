@@ -40,7 +40,7 @@ $today = dbDate( strtotime( 'today' ) );
 }
 
 /*
- * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out 
+ * Task 1. If today is Friday. Then prepare a list of upcoming AWS and send out
  * and email at 4pm.
 */
 
@@ -110,7 +110,7 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
                 $name = arrayToName( $recipient );
                 $email = emailFromTemplate( 'NOTIFY_SUPERVISOR_TCM_ABOUT_AWS'
                     , array( 'FACULTY' => $name, 'AWS_SPEAKER' => $speaker
-                            , 'AWS_DATE' => humanReadableDate( $aws[ 'date' ] ) 
+                            , 'AWS_DATE' => humanReadableDate( $aws[ 'date' ] )
                             , 'AWS_DATE_DB' => $aws[ 'date' ]
                         )
                     );
@@ -180,8 +180,8 @@ if( $today == dbDate( strtotime( 'this sunday' ) ) )
 
         $html = "<p>Greetings!</p>";
 
-        $html .= printInfo( "List of events for the week starting " 
-                    . humanReadableDate( $thisMonday ) 
+        $html .= printInfo( "List of events for the week starting "
+                    . humanReadableDate( $thisMonday )
                 );
 
         $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
@@ -214,7 +214,7 @@ if( $today == dbDate( strtotime( 'this sunday' ) ) )
             // Generate email
             // getEmailTemplates
             $templ = emailFromTemplate( 'this_week_events'
-                , array( "EMAIL_BODY" => $html ) 
+                , array( "EMAIL_BODY" => $html )
             );
 
             sendHTMLEmail( $templ[ 'email_body'], $subject, $to, $cclist );
@@ -302,7 +302,7 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 $today = strtotime( 'today' );
 $endDay = strtotime( 'next friday' );
 $startDay = $endDay - (3 * 24 * 3600 );
-if( $today > $startDay && $today <= $endDay ) 
+if( $today > $startDay && $today <= $endDay )
 {
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
@@ -320,22 +320,22 @@ if( $today > $startDay && $today <= $endDay )
             $pi = getPIOrHost( $aws[ 'speaker' ] );
 
             $macros = array( 'USER' => loginToHTML( $aws['speaker'] )
-                            , 'DATE' => humanReadableDate( $today ) 
+                            , 'DATE' => humanReadableDate( $today )
                         );
 
             $templ = emailFromTemplate( 'hippo_annoys_aws_speaker', $macros );
 
             // Log it.
             error_log( "AWS entry incomplete. Annoy " . $to  );
-            sendHTMLEmail( 
-                $templ[ 'email_body' ], $subject, $to, $templ[ 'cc' ] 
+            sendHTMLEmail(
+                $templ[ 'email_body' ], $subject, $to, $templ[ 'cc' ]
                 );
         }
 
     }
 }
 
-/* Everyday check for recurrent events. On 7 days before last events send 
+/* Everyday check for recurrent events. On 7 days before last events send
  * and email to person who booked it.
  */
 {
@@ -358,8 +358,8 @@ if( $today > $startDay && $today <= $endDay )
             $createdBy = $e[ 'created_by' ];
             $eventHtml = arrayToVerticalTableHTML( $e, 'event' );
             $template = emailFromTemplate( 'event_expiring'
-                    , array( 'USER' => loginToText( $createdBy ) 
-                        , 'EVENT_BODY' => $eventHtml ) 
+                    , array( 'USER' => loginToText( $createdBy )
+                        , 'EVENT_BODY' => $eventHtml )
                     );
 
             $to = getLoginEmail( $createdBy );
@@ -421,9 +421,9 @@ if( $today > $startDay && $today <= $endDay )
                 );
 
             $subject = "Please confirm your annual work seminar (AWS) date";
-            $body = $email[ 'email_body' ] . 
-                "<p> This email was automatically generated and sent on " . 
-                humanReadableDate( 'now' ) . 
+            $body = $email[ 'email_body' ] .
+                "<p> This email was automatically generated and sent on " .
+                humanReadableDate( 'now' ) .
                 ". If this is mistake, please write to acadoffice@ncbs.res.in.</p>";
 
             // Add PI to cc list.
@@ -516,7 +516,7 @@ if( $intMonth % 2 == 0 )
 
                 $faculty = arrayToName( findAnyoneWithEmail( $fac ) );
                 $email = emailFromTemplate( 'NOTIFY_SUPERVISOR_AWS_CANDIDATES'
-                    , array( 'FACULTY' => $faculty, 'LIST_OF_AWS_SPEAKERS' => $table 
+                    , array( 'FACULTY' => $faculty, 'LIST_OF_AWS_SPEAKERS' => $table
                     , 'TIMESTAMP' => dbDateTime( 'now' ) )
                 );
 
@@ -528,19 +528,5 @@ if( $intMonth % 2 == 0 )
         }
     }
 }
-
-///* synchronize calendar every day at 6am and 6pm. */
-//$awayFrom = strtotime( 'now' ) - strtotime( '6:00' );
-//$today = dbDate( strtotime( 'today' ) );
-//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
-//{
-//    $res = synchronize_google_calendar( );
-//}
-//$awayFrom = strtotime( 'now' ) - strtotime( '18:00' );
-//$today = dbDate( strtotime( 'today' ) );
-//if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
-//{
-//    $res = synchronize_google_calendar( );
-//}
 
 ?>

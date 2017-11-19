@@ -306,6 +306,11 @@ function eventSummaryHTML( $event, $talk = null)
 
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
+
+    // Add calendar link
+    $html .= '<tr><td>' . addToGoogleCalLink( $event ) . '</td><td>'
+                . eventToICALLink( $event ) . '</td></tr>';
+
     $html .= '</table>';
 
     return $html;
@@ -1437,7 +1442,6 @@ function talkToHTML( $talk, $with_picture = false )
 
     $googleCalLink = addToGoogleCalLink( $event );
     $icalLink = eventToICALLink( $event );
-
 
     $html .= "</td>";
     $html .= '</tr>';

@@ -99,7 +99,11 @@ $table = '<table class="info">';
 $table .= '<tr><th>Slot</th><th>Venue</th><th>Course</th></tr>';
 foreach( $rows as $row )
 {
-    $rowHTML = '<td>' . $row[ 'slot' ] . '</td><td>' . $row[ 'venue' ]
+    if( ! trim($row['alloted_slot']) || ! trim($row[ 'alloted_venue' ]) )
+        continue;
+
+    $rowHTML = '<td>' . $row[ 'alloted_slot' ] . '</td><td>'
+                . $row[ 'alloted_venue' ]
                 . '</td><td>' . getCourseName( $row['course_id'] ) . '</td>';
     $table .= "<tr> $rowHTML </tr>";
 }

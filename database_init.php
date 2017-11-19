@@ -459,14 +459,14 @@ function initialize( $db  )
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS upcoming_course_schedule (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
-            , couse_id VARCHAR(100) NOT NULL
+            , course_id VARCHAR(100) NOT NULL
             , slot VARCHAR(10) NOT NULL
             , venue VARCHAR(50) NOT NULL
-            , weight INT DEFAULT 1
+            , weight INT DEFAULT 10
             , alloted_slot VARCHAR(10)
             , alloted_venue VARCHAR(50)
             , comment VARCHAR(200)
-            , UNIQUE KEY(id,slot,venue)
+            , UNIQUE KEY(course_id,slot,venue)
             )"
         );
     return $res;

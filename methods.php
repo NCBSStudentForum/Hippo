@@ -1,6 +1,6 @@
 <?php
-
 include_once 'display_content.php';
+include_once 'methods.php';
 include_once 'logger.php' ;
 include_once 'html2text.php';
 
@@ -1376,4 +1376,15 @@ function array_insert_at( $arr, $index, $key, $value )
         $newarr[ $k ] = $v;
     }
     return $newarr;
+}
+
+/**
+* @name Get the course code from a html string. It is usually in the front
+* of the string.
+*/
+function getCourseCode( $cc, $delim = ':' )
+{
+    if( strlen( trim( $cc ) ) < 1 )
+        return '';
+    return trim( explode( $delim, $cc )[0] );
 }

@@ -2038,8 +2038,9 @@ function addOrUpdateSpeaker( $data )
 }
 
 
-function getCourseName( $cid )
+function getCourseName( $cexpr )
 {
+    $cid = explode( '-', $cexpr )[0];
     $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
     return $c['name'];
 }

@@ -52,20 +52,27 @@ $default = array( 'slot' => $slotSelectList, 'venue' => $venueSelectList );
 $form = '<form action="admin_acad_schedule_upcoming_courses_action.php"
             method="post" accept-charset="utf-8">';
 $form .= dbTableToHTMLTable( 'upcoming_course_schedule'
-            , $default, $editable, $action );
+            , $default, $editable, $action
+        );
 $form .= '</form>';
 echo $form;
 
 // Print the table of entries.
-$tofilter = '';
-$entries = getTableEntries( 'upcoming_course_schedule', 'weight' );
+$tofilter = 'id,status';
+$entries = getTableEntries( 'upcoming_course_schedule' );
+
+// SORT the array for easy viewing.
+usort( $entries
+    , function( $a, $b) { return $a['course_id'] > $b['course_id']; }
+);
+
 if( count( $entries ) > 0 )
 {
     echo '<h2>Current list of preferences</h2>';
     echo printInfo( "Total entries : " . count( $entries ) );
 
     $table = '<table class="info">';
-    $table .= arrayHeaderRow( $entries[0], 'info' );
+    $table .= arrayHeaderRow( $entries[0], 'info', $tofilter );
     foreach( $entries as $entry )
     {
         $cname = getCourseName( $entry[ 'course_id' ] );

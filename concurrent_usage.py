@@ -11,8 +11,6 @@ __status__           = "Development"
 
 import sys
 import os
-import matplotlib.pyplot as plt
-import numpy as np
 from db_connect import db_
 import datetime
 
@@ -34,7 +32,7 @@ def overlapping( venueA, venueB ):
     return overlapping
 
 cur = db_.cursor( dictionary = True )
-cur.execute( 'SELECT * FROM events WHERE status="VALID"' )
+cur.execute( 'SELECT * FROM events WHERE status="VALID" AND class!="CLASS"' )
 entries = [ ]
 venues_ = set( )
 for row in cur.fetchall( ):

@@ -1750,7 +1750,7 @@ function slotTable( $width = "15px" )
 
 }
 
-function coursesTable( )
+function coursesTable( $editable = false )
 {
     $courses = getTableEntries( 'courses_metadata' );
     $html = '<div style="font-size:small">';
@@ -1768,6 +1768,12 @@ function coursesTable( )
         $html .= "<td>" . $c[ 'name' ] . "</td>";
         $html .= "<td>" . $c[ 'description' ] . "</td>";
         $html .= "<td>" . implode('<br>', $instructors) . "</td>";
+        if( $editable )
+        {
+            $html .= '<td> <button name="response" value="Edit">Edit</button> </td>';
+            $html .= '<input type="hidden" name="id" value="' . $c['id'] . '">';
+        }
+
         $html .= "</tr>";
 
     }
@@ -2011,11 +2017,11 @@ function piSpecializationHTML( $pi, $specialization )
 function goBackToPageLink( $url, $title = "Go back" )
 {
 
-    $html = "<br><br><div class=\"goback\">";
+    $html = "<div class=\"goback\">";
     $html .= "<a style=\"float: left\" href=\"$url\">
             <i class=\"fa fa-step-backward fa-3x\"></i>
             <font color=\"blue\" size=\"5\">$title</font>
-        </a></div><br>";
+        </a></div><br/><br/>";
     return $html;
 }
 

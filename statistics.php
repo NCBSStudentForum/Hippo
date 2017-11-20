@@ -134,8 +134,9 @@ $(function( ) {
         yAxis: { title: { text: 'Time in hours' } },
         xAxis : { categories : venues },
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Venue usage', data: venueUsage
-                    , pointPlacement: 'middle',
+        series: [{ name: 'Venue usage'
+                    , data: venueUsage
+                    , pointPlacement: 'middle'
                     , showInLegend:false
                  }],
         });
@@ -147,7 +148,8 @@ $(function( ) {
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
         series: [{ name: 'Venue usage'
                     , data: venueUsagePie
-                    , showInLegend:false }],
+                    , showInLegend:false
+                }],
     });
 
 });
@@ -506,11 +508,11 @@ echo $bookingTable;
 <h3></h3>
 
 <table class="chart">
-<tr> <td> <div id="events_class1"></div> </td>
+<tr>
+    <td> <div id="events_class1"></div> </td>
     <td> <div id="events_class2" ></div> </td>
 </tr>
 </table>
-
 
 <?php
 

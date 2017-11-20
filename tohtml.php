@@ -796,11 +796,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         $ctype = $col['Type'];
 
-        // If not in editables list, make field readonly.
-        $readonly = True;
-        if( in_array($keyName , $editableKeys ) )
-            $readonly = False;
-
         // Add row to table
         $columnText = strtoupper( prettify( $keyName ) );
 
@@ -819,10 +814,9 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
-
         // DIRTY HACK: If value is already a html entity then don't use a input
         // tag. Currently only '<select></select> is supported
-        if( preg_match( '#<select.*?>(.*?)</select>#', $default ) )
+        if( preg_match( '/\<select.*?\>(.*?)\<\/select\>/', $default ) )
             $val = $default;
         else
             $val = "<input class=\"editable\"
@@ -908,11 +902,18 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         else if( strcasecmp( $ctype, 'time' ) == 0 )
             $val = "<input class=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
 
+        // If not in editables list, make field readonly.
         // When the value is readonly. Just send the value as hidden input and
         // display the default value.
+        $readonly = True;
+        if( in_array($keyName , $editableKeys ) )
+            $readonly = False;
+
         if( $readonly )
+        {
             $val = "<input type=\"hidden\" id=\"$inputId\"
                     name=\"$keyName\" value=\"$default\"/>$default";
+        }
 
 
         $html .= "<td>" . $val . "</td>";

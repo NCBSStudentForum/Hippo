@@ -60,8 +60,10 @@ $( function() {
 
 // Array to hold runnig course.
 $default = array(
-    'course_id' => $courseIdsSelect, 'venue' => $venueSelect
+    'venue' => $venueSelect
     , 'semester' => $sem
+    , 'year' => $year
+    , 'course_id' => $courseIdsSelect
 );
 
 // running course returned from autocomplete has extra information. Use the map
@@ -157,7 +159,7 @@ else
 
 echo dbTableToHTMLTable( 'courses'
     , $default
-    , 'start_date,end_date,slot,venue,note,url,ignore_tiles', $action
+    , 'start_date,end_date,slot,venue,note,url,ignore_tiles,course_id', $action, ''
     );
 
 /* If we are updating, we might also like to remove the entry. This button also

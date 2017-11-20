@@ -40,7 +40,7 @@ $(function() {
         </tr>
         `
     );
-    $( "input[id^=courses_metadata_instructor]" ).autocomplete( { source : instructors }); 
+    $( "input[id^=courses_metadata_instructor]" ).autocomplete( { source : instructors });
     $( "input[id^=courses_metadata_instructor]" ).attr( "placeholder", "autocomplete" );
   });
 });
@@ -49,9 +49,9 @@ $(function() {
 $( function() {
     var coursesDict = <?php echo json_encode( $coursesMap ) ?>;
     var courses = <?php echo json_encode( $coursesId ); ?>;
-    $( "#course" ).autocomplete( { source : courses }); 
+    $( "#course" ).autocomplete( { source : courses });
     $( "#course" ).attr( "placeholder", "autocomplete" );
-    $( "input[id^=courses_metadata_instructor]" ).autocomplete( { source : instructors }); 
+    $( "input[id^=courses_metadata_instructor]" ).autocomplete( { source : instructors });
     $( "input[id^=courses_metadata_instructor]" ).attr( "placeholder", "autocomplete" );
 });
 </script>
@@ -63,7 +63,7 @@ $course = array( 'id' => '', 'day' => '', 'start_time' => '', 'end_time' => '' )
 
 $buttonVal = 'Add';
 
-echo '<form method="post" action="">';
+echo '<form method="post" action="#">';
 echo '<input id="course" name="id" type="text" value="" >';
 echo '<button type="submit" name="response" value="show">Edit Course</button>';
 echo '</form>';
@@ -81,10 +81,10 @@ echo '<h3>Add/Edit course details</h3>';
 echo '<form method="post" action="admin_acad_manages_courses_action.php">';
 
 
-echo dbTableToHTMLTable( 'courses_metadata', $course 
-    , 'id,credits:required,name:required,description,' 
-        . 'instructor_1:required,instructor_2,instructor_3' 
-        . ',instructor_4,instructor_5,instructor_6,instructor_extras' 
+echo dbTableToHTMLTable( 'courses_metadata', $course
+    , 'id,credits:required,name:required,description,'
+        . 'instructor_1:required,instructor_2,instructor_3'
+        . ',instructor_4,instructor_5,instructor_6,instructor_extras'
         . ',comment'
         , $buttonVal
     );
@@ -100,9 +100,14 @@ echo '</form>';
 
 echo "<br/><br/>";
 echo goBackToPageLink( 'admin_acad.php', 'Go back' );
+echo '<br>';
 
 
 echo "<h1>All courses</h1>";
 
-echo coursesTable( );
+echo '<form action="#" method="post" accept-charset="utf-8">';
+echo coursesTable( $editable = true );
+echo '</form>';
+
+
 ?>

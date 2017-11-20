@@ -1,5 +1,7 @@
 <!-- <script src="http://code.highcharts.com/highcharts.js"></script> -->
 <script src="./node_modules/highcharts/highcharts.js"></script>
+<script src="./node_modules/highcharts/modules/exporting.js"></script>
+
 <?php
 
 include_once 'header.php';
@@ -54,7 +56,7 @@ $rateOfRequests = 24 * 3600.0 * count( $requests ) / (1.0 * $timeInterval);
  * Venue usage timne.
  */
 $events = getTableEntries( 'events', 'date'
-                , "status='VALID' AND date >= '2017-02-28' AND date < '$upto'" );
+                , "status='VALID' AND date < '$upto'" );
 
 $venueUsageTime = array( );
 // How many events, as per class.
@@ -67,6 +69,40 @@ foreach( $events as $e )
 
     $venueUsageTime[ $venue ] = __get__( $venueUsageTime, $venue, 0.0 ) + $time;
     $eventsByClass[ $e[ 'class' ] ] = __get__( $eventsByClass, $e['class'], 0 ) + 1;
+}
+$allVenues = array_keys( $venueUsageTime );
+
+// Venue usage at particular time from 8am to 8pm. AND concurrent events as
+// well.
+// For each 15 min gap, for 12 hours.
+$venueUsageAtTime = array( );
+$begin = strtotime( '8:00 am' );
+$timevec = array( );
+for ($i = 0; $i < 48; $i++)
+    $timevec[ ] = dbTime( $begin + 15 * 60 * $i );
+
+foreach( $allVenues as $venue )
+{
+    $data = array( );
+    foreach( $timevec as $t )
+    {
+        $res = array_filter( $events
+            , function( $v ) {
+                global $venue;
+                global $t;
+                return ($v['venue'] == $venue)
+                    && (strtotime($v['start_time']) <= strtotime($t))
+                    && (strtotime( $v['end_time']) > strtotime($t));
+            });
+        $data[] = count( $res );
+    }
+
+    // Make few of series visible by default ~ 10% (randomly).
+    $visible = false;
+    if( rand(1, 10 ) < 2 )
+        $visible = true;
+    $venueUsageAtTime[ ] = array( 'name' => $venue , 'visible' => $visible
+        , 'data' => $data);
 }
 
 // AWS to this list.
@@ -134,8 +170,9 @@ $(function( ) {
         yAxis: { title: { text: 'Time in hours' } },
         xAxis : { categories : venues },
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
-        series: [{ name: 'Venue usage', data: venueUsage
-                    , pointPlacement: 'middle',
+        series: [{ name: 'Venue usage'
+                    , data: venueUsage
+                    , pointPlacement: 'middle'
                     , showInLegend:false
                  }],
         });
@@ -147,7 +184,8 @@ $(function( ) {
         legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
         series: [{ name: 'Venue usage'
                     , data: venueUsagePie
-                    , showInLegend:false }],
+                    , showInLegend:false
+                }],
     });
 
 });
@@ -182,8 +220,20 @@ $(function( ) {
     });
 
 });
-
 </script>
+
+<script type="text/javascript" charset="utf-8">
+$(function( ) {
+    var data = <?php echo json_encode( $venueUsageAtTime ); ?>;
+    var xlabels = <?php echo json_encode( $timevec ); ?>;
+    Highcharts.chart('venues_busy_time', {
+        title: { text: 'Number of events V/s Time' },
+        xAxis : { categories : xlabels },
+        series: data,
+        });
+});
+</script>
+
 
 <script type="text/javascript" charset="utf-8">
 $(function( ) {
@@ -498,24 +548,30 @@ echo $bookingTable;
 
 <h3></h3>
 <table class="chart">
-<tr> <td> <div id="venue_usage1"></div> </td>
+<tr>
+    <td> <div id="venue_usage1"></div> </td>
     <td> <div id="venue_usage2" ></div> </td>
 </tr>
 </table>
 
 <h3></h3>
-
 <table class="chart">
-<tr> <td> <div id="events_class1"></div> </td>
+<tr>
+    <td> <div id="events_class1"></div> </td>
     <td> <div id="events_class2" ></div> </td>
 </tr>
 </table>
 
+<h3></h3>
+<table class="chart">
+<tr>
+    <td> <div id="venues_busy_time"></div> </td>
+</tr>
+</table>
 
 <?php
 
 echo '<h1>Community interaction via Annual Work Seminar </h1>';
-
 if( isset( $_POST['months'] ) )
     $howManyMonths = intval( $_POST[ 'months' ] );
 else

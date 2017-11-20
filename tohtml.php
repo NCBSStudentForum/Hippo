@@ -308,6 +308,11 @@ function eventSummaryHTML( $event, $talk = null)
     $html .= "<tr><td> When </td><td>" . $date . ", " . $time . " </td></tr>";
     $html .= '</table>';
 
+    // Add google and ical links.
+    $html .= '<div class="strip_from_md">';
+    $html .=  addToGoogleCalLink( $event ) .  eventToICALLink( $event );
+    $html .= '</div>';
+
     return $html;
 }
 
@@ -468,9 +473,13 @@ function readOnlyEventLineHTML( $date, $venueid )
     *
     * @return
  */
-function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
+function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
 {
-    $row = '<tr>';
+    if( $withtr )
+        $row = '<tr>';
+    else
+        $row = '';
+
     if( is_string( $tobefilterd ) )
         $tobefilterd = explode( ',', $tobefilterd );
 
@@ -488,7 +497,11 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '' )
         $row .= "<td><div class=\"cell_content\">$v</div></td>";
     }
 
-    $row  .= "</tr>";
+    if( $withtr )
+        $row  .= "</tr>";
+    else
+        $row .= '';
+
     return $row;
 
 }
@@ -783,11 +796,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         $ctype = $col['Type'];
 
-        // If not in editables list, make field readonly.
-        $readonly = True;
-        if( in_array($keyName , $editableKeys ) )
-            $readonly = False;
-
         // Add row to table
         $columnText = strtoupper( prettify( $keyName ) );
 
@@ -806,10 +814,9 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         $default = __get__( $defaults, $keyName, $col['Default'] );
 
-
         // DIRTY HACK: If value is already a html entity then don't use a input
         // tag. Currently only '<select></select> is supported
-        if( preg_match( '#<select.*?>(.*?)</select>#', $default ) )
+        if( preg_match( '/\<select.*?\>(.*?)\<\/select\>/', $default ) )
             $val = $default;
         else
             $val = "<input class=\"editable\"
@@ -895,11 +902,18 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         else if( strcasecmp( $ctype, 'time' ) == 0 )
             $val = "<input class=\"timepicker\" name=\"$keyName\" value=\"$default\" />";
 
+        // If not in editables list, make field readonly.
         // When the value is readonly. Just send the value as hidden input and
         // display the default value.
+        $readonly = True;
+        if( in_array($keyName , $editableKeys ) )
+            $readonly = False;
+
         if( $readonly )
+        {
             $val = "<input type=\"hidden\" id=\"$inputId\"
                     name=\"$keyName\" value=\"$default\"/>$default";
+        }
 
 
         $html .= "<td>" . $val . "</td>";
@@ -1430,7 +1444,6 @@ function talkToHTML( $talk, $with_picture = false )
     $googleCalLink = addToGoogleCalLink( $event );
     $icalLink = eventToICALLink( $event );
 
-
     $html .= "</td>";
     $html .= '</tr>';
 
@@ -1737,7 +1750,7 @@ function slotTable( $width = "15px" )
 
 }
 
-function coursesTable( )
+function coursesTable( $editable = false )
 {
     $courses = getTableEntries( 'courses_metadata' );
     $html = '<div style="font-size:small">';
@@ -1755,6 +1768,12 @@ function coursesTable( )
         $html .= "<td>" . $c[ 'name' ] . "</td>";
         $html .= "<td>" . $c[ 'description' ] . "</td>";
         $html .= "<td>" . implode('<br>', $instructors) . "</td>";
+        if( $editable )
+        {
+            $html .= '<td> <button name="response" value="Edit">Edit</button> </td>';
+            $html .= '<input type="hidden" name="id" value="' . $c['id'] . '">';
+        }
+
         $html .= "</tr>";
 
     }
@@ -1998,11 +2017,11 @@ function piSpecializationHTML( $pi, $specialization )
 function goBackToPageLink( $url, $title = "Go back" )
 {
 
-    $html = "<br><br><div class=\"goback\">";
+    $html = "<div class=\"goback\">";
     $html .= "<a style=\"float: left\" href=\"$url\">
             <i class=\"fa fa-step-backward fa-3x\"></i>
             <font color=\"blue\" size=\"5\">$title</font>
-        </a></div><br>";
+        </a></div><br/><br/>";
     return $html;
 }
 

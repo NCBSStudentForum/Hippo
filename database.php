@@ -5,7 +5,7 @@ include_once "methods.php";
 include_once 'ldap.php';
 
 // Option values for event/request.
-$dbChoices = array( 
+$dbChoices = array(
     'bookmyvenue_requests.class' =>
         'UNKNOWN,TALK,INFORMAL TALK' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
@@ -19,7 +19,7 @@ $dbChoices = array(
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     , 'venues.type' =>
-        'OPEN AIR,MEETING ROOM,CAFETERIA,LECTURE HALL,SPORTS,AUDITORIUM,CENTER' . 
+        'OPEN AIR,MEETING ROOM,CAFETERIA,LECTURE HALL,SPORTS,AUDITORIUM,CENTER' .
         ',UNKNOWN,CONFERENCE ROOM'
     , 'talks.class' =>
         'TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
@@ -41,7 +41,7 @@ $dbChoices = array(
     * @param $default
     * @param $sorted
     *
-    * @return 
+    * @return
  */
 function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorted = true )
 {
@@ -58,7 +58,7 @@ function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorte
 }
 
 
-class BMVPDO extends PDO 
+class BMVPDO extends PDO
 {
     function __construct( $host = 'localhost'  )
     {
@@ -72,13 +72,13 @@ class BMVPDO extends PDO
         $user = $conf['mysql']['user'];
         $password = $conf['mysql']['password'];
         $dbname = $conf['mysql']['database'];
-        
+
         try {
             parent::__construct( 'mysql:host=' . $host . ";dbname=$dbname"
-                , $user, $password, $options 
+                , $user, $password, $options
             );
         } catch( PDOException $e) {
-            echo minionEmbarrassed( 
+            echo minionEmbarrassed(
                 "failed to connect to database: ".  $e->getMessage()
             );
             $this->error = $e->getMessage( );
@@ -103,7 +103,7 @@ function getEventsOfTalkId( $talkId )
     $externalId = getTalkExternalId( $talkId );
 
     $entry = getTableEntry( 'events', 'external_id,status'
-        , array( 'external_id' => "$externalId" , 'status' => 'VALID' ) 
+        , array( 'external_id' => "$externalId" , 'status' => 'VALID' )
         );
     return $entry;
 }
@@ -113,7 +113,7 @@ function getBookingRequestOfTalkId( $talkId )
     global $db;
     $externalId = getTalkExternalId( $talkId );
     $entry = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
-        , array( 'external_id' => "$externalId", 'status' => 'PENDING' ) 
+        , array( 'external_id' => "$externalId", 'status' => 'PENDING' )
         );
     return $entry;
 }
@@ -122,14 +122,14 @@ function getBookingRequestOfTalkId( $talkId )
  * @brief It does the following tasks.
  *  1. Move the entruies from upcoming_aws to annual_work_seminars lists.
  *
- * @return 
+ * @return
  */
 function doAWSHouseKeeping( )
 {
     global $db;
     $oldAwsOnUpcomingTable = getTableEntries( 'upcoming_aws'
         , $orderby = 'date'
-        , $where = "status='VALID' AND date < NOW( )" 
+        , $where = "status='VALID' AND date < NOW( )"
         );
 
     $badEntries = array( );
@@ -142,22 +142,22 @@ function doAWSHouseKeeping( )
         }
 
         // First copy the entry to AWS table.
-        // id           | int(11)       | NO   | PRI | NULL     | auto_increment 
-        // | speaker      | varchar(200)  | NO   | MUL | NULL     |                
-        // | date         | date          | NO   |     | NULL     |                
-        // | time         | time          | NO   |     | 16:00:00 |                
-        // | supervisor_1 | varchar(200)  | NO   | MUL | NULL     |                
-        // | supervisor_2 | varchar(200)  | YES  |     | NULL     |                
-        // | tcm_member_1 | varchar(200)  | YES  |     | NULL     |                
-        // | tcm_member_2 | varchar(200)  | YES  |     | NULL     |                
-        // | tcm_member_3 | varchar(200)  | YES  |     | NULL     |                
-        // | tcm_member_4 | varchar(200)  | YES  |     | NULL     |                
-        // | title        | varchar(1000) | YES  |     | NULL     |                
-        // | abstract     | text    
+        // id           | int(11)       | NO   | PRI | NULL     | auto_increment
+        // | speaker      | varchar(200)  | NO   | MUL | NULL     |
+        // | date         | date          | NO   |     | NULL     |
+        // | time         | time          | NO   |     | 16:00:00 |
+        // | supervisor_1 | varchar(200)  | NO   | MUL | NULL     |
+        // | supervisor_2 | varchar(200)  | YES  |     | NULL     |
+        // | tcm_member_1 | varchar(200)  | YES  |     | NULL     |
+        // | tcm_member_2 | varchar(200)  | YES  |     | NULL     |
+        // | tcm_member_3 | varchar(200)  | YES  |     | NULL     |
+        // | tcm_member_4 | varchar(200)  | YES  |     | NULL     |
+        // | title        | varchar(1000) | YES  |     | NULL     |
+        // | abstract     | text
         $res1 = insertIntoTable( 'annual_work_seminars'
-            , 'speaker,date,time,supervisor_1,supervisor_2' . 
-                ',tcm_member_1,tcm_member_2,tcm_member_3,tcm_member_4' . 
-                ',title,abstract', $aws 
+            , 'speaker,date,time,supervisor_1,supervisor_2' .
+                ',tcm_member_1,tcm_member_2,tcm_member_3,tcm_member_4' .
+                ',title,abstract', $aws
             );
 
         if( $res1 )
@@ -184,6 +184,10 @@ function getVenues( $sortby = 'total_events DESC, id' )
     return fetchEntries( $res );
 }
 
+function getVenuesByType( $type )
+{
+    return getTableEntries( 'venues', 'id', "type='$type'" );
+}
 
 function getTableSchema( $tableName )
 {
@@ -196,6 +200,7 @@ function getTableSchema( $tableName )
 function getVenuesGroupsByType(  )
 {
     global $db;
+
     // Sort according to total_events hosted by venue
     $venues = getVenues( );
     $newVenues = Array( );
@@ -238,7 +243,7 @@ function getPendingRequestsGroupedByGID( )
 function getRequestsGroupedByGID( $status  )
 {
     global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests 
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests
         WHERE status=:status  GROUP BY gid ORDER BY date,start_time' );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
@@ -273,19 +278,19 @@ function getEventsById( $gid, $eid )
 }
 
 /**
-    * @brief Get list of requests made by this users. These requests must be 
+    * @brief Get list of requests made by this users. These requests must be
     * newer than the current date minus 2 days and time else they won't show up.
     *
     * @param $userid
     * @param $status
     *
-    * @return 
+    * @return
  */
 function getRequestOfUser( $userid, $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( 
-        'SELECT * FROM bookmyvenue_requests WHERE created_by=:created_by 
+    $stmt = $db->prepare(
+        'SELECT * FROM bookmyvenue_requests WHERE created_by=:created_by
         AND status=:status AND date >= NOW() - INTERVAL 2 DAY
         GROUP BY gid ORDER BY date,start_time' );
     $stmt->bindValue( ':created_by', $userid );
@@ -298,7 +303,7 @@ function getEventsOfUser( $userid, $from = 'today', $status = 'VALID' )
 {
     global $db;
     $from = dbDate( $from );
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:created_by 
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:created_by
         AND date >= :from
         AND status=:status
         GROUP BY gid ORDER BY date,start_time' );
@@ -316,7 +321,7 @@ function getEventsOfUser( $userid, $from = 'today', $status = 'VALID' )
     * @param $from
     * @param $duration
     *
-    * @return 
+    * @return
  */
 function getEventsBeteen( $from , $duration )
 {
@@ -387,7 +392,7 @@ function getRequestByGroupIdAndStatus( $gid, $status )
 function changeRequestStatus( $gid, $rid, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET 
+    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET
         status=:status,last_modified_on=NOW() WHERE gid=:gid AND rid=:rid"
     );
     $stmt->bindValue( ':status', $status );
@@ -402,7 +407,7 @@ function changeRequestStatus( $gid, $rid, $status )
     * @param $gid
     * @param $status
     *
-    * @return 
+    * @return
  */
 function changeStatusOfRequests( $gid, $status )
 {
@@ -416,7 +421,7 @@ function changeStatusOfRequests( $gid, $status )
 function changeStatusOfEventGroup( $gid, $user, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE 
+    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE
         gid=:gid AND created_by=:created_by" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
@@ -427,7 +432,7 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 function changeStatusOfEvent( $gid, $eid, $user, $status )
 {
     global $db;
-    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE 
+    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE
         gid=:gid AND eid=:eid created_by=:created_by" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
@@ -443,7 +448,7 @@ function getEvents( $from = 'today', $status = 'VALID' )
 {
     global $db;
     $from = dbDate( $from );
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND
         status=:status ORDER BY date,start_time " );
     $stmt->bindValue( ':date', $from );
     $stmt->bindValue( ':status', $status );
@@ -465,9 +470,9 @@ function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
         $sortExpr = 'ORDER BY ' . implode( ', ', $sortby);
 
     $nowTime = dbTime( $from );
-    $stmt = $db->prepare( 
-        "SELECT * FROM events WHERE date >= :date 
-            AND status=:status GROUP BY gid $sortExpr" 
+    $stmt = $db->prepare(
+        "SELECT * FROM events WHERE date >= :date
+            AND status=:status GROUP BY gid $sortExpr"
         );
     $stmt->bindValue( ':date', $nowTime );
     $stmt->bindValue( ':status', $status );
@@ -483,7 +488,7 @@ function getPublicEvents( $from = 'today', $status = 'VALID', $ndays = 1 )
     global $db;
     $from = dbDate( $from );
     $end = dbDate( strtotime( $from . " +$ndays day" ) );
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND 
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND
         date <= :end_date AND
         status=:status AND is_public_event='YES' ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $from );
@@ -499,14 +504,14 @@ function getPublicEvents( $from = 'today', $status = 'VALID', $ndays = 1 )
     * @param $date
     * @param $status
     *
-    * @return 
+    * @return
  */
 function getPublicEventsOnThisDay( $date = 'today', $status = 'VALID' )
 {
     global $db;
     $from = date( 'Y-m-d', strtotime( 'today' ));
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date AND 
-        status=:status AND is_public_event='YES' ORDER BY date,start_time" 
+    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date AND
+        status=:status AND is_public_event='YES' ORDER BY date,start_time"
         );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':status', $status );
@@ -517,7 +522,7 @@ function getPublicEventsOnThisDay( $date = 'today', $status = 'VALID' )
 function getEventsOn( $day, $status = 'VALID')
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM events 
+    $stmt = $db->prepare( "SELECT * FROM events
         WHERE status=:status AND date = :date ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $day );
     $stmt->bindValue( ':status', $status );
@@ -528,8 +533,8 @@ function getEventsOn( $day, $status = 'VALID')
 function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM events 
-        WHERE venue=:venue AND status=:status AND date=:date ORDER 
+    $stmt = $db->prepare( "SELECT * FROM events
+        WHERE venue=:venue AND status=:status AND date=:date ORDER
             BY date,start_time" );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':status', $status );
@@ -542,19 +547,19 @@ function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
     * @brief get overlapping requests or events.
     *
     * @param $venue
-    * @param 
+    * @param
     * @param $start_time
-    * @param 
+    * @param
     * @param $status
     *
-    * @return 
+    * @return
  */
 function getEventsOnThisVenueBetweenTime( $venue, $date
     , $start_time, $end_time
    ,  $status = 'VALID' )
 {
     global $db;
-    $stmt = $db->prepare( 
+    $stmt = $db->prepare(
         "SELECT * FROM events
         WHERE venue=:venue AND status=:status AND date=:date AND status='VALID'
         AND ( (start_time < :start_time AND end_time > :start_time )
@@ -575,7 +580,7 @@ function getEventsOnThisVenueBetweenTime( $venue, $date
 function getRequestsOnThisVenueOnThisday( $venue, $date, $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests 
+    $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests
         WHERE venue=:venue AND status=:status AND date=:date" );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':status', $status );
@@ -589,8 +594,8 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
     , $status = 'PENDING' )
 {
     global $db;
-    $stmt = $db->prepare( 
-        "SELECT * FROM bookmyvenue_requests 
+    $stmt = $db->prepare(
+        "SELECT * FROM bookmyvenue_requests
         WHERE venue=:venue AND status=:status AND date=:date
         AND ( (start_time < :start_time AND end_time > :start_time )
               OR ( start_time < :end_time AND end_time > :end_time )
@@ -612,7 +617,7 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
     * @param $tablename
     * @param $column
     *
-    * @return 
+    * @return
  */
 function getNumberOfEntries( $tablename, $column = 'id' )
 {
@@ -653,7 +658,7 @@ function submitRequest( $request )
 
     if( strlen( $repeatPat ) > 0 )
         $days = repeatPatToDays( $repeatPat, $request[ 'date' ] );
-    else 
+    else
         $days = Array( $request['date'] );
 
     if( count( $days ) < 1 )
@@ -666,7 +671,7 @@ function submitRequest( $request )
     $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
     $prevGid = $res->fetch( PDO::FETCH_ASSOC);
     $gid = intval( $prevGid['gid'] ) + 1;
-    foreach( $days as $day ) 
+    foreach( $days as $day )
     {
         $rid += 1;
         $request[ 'gid' ] = $gid;
@@ -688,9 +693,9 @@ function submitRequest( $request )
 
         $request[ 'timestamp' ] = dbDateTime( 'now' );
         $res = insertIntoTable( 'bookmyvenue_requests'
-            , 'gid,rid,external_id,created_by,venue,title,description' . 
+            , 'gid,rid,external_id,created_by,venue,title,description' .
                 ',date,start_time,end_time,timestamp,is_public_event,class'
-            , $request 
+            , $request
         );
 
         if( ! $res )
@@ -718,18 +723,18 @@ function increaseEventHostedByVenueByOne( $venueId )
     *
     * @param $resques
     *
-    * @return 
+    * @return
  */
 function checkCollision( $request )
 {
 
     // Make sure this request is not clashing with another event or request.
-    $events = getEventsOnThisVenueBetweenTime( 
-        $request[ 'venue' ] , $request[ 'date' ] 
+    $events = getEventsOnThisVenueBetweenTime(
+        $request[ 'venue' ] , $request[ 'date' ]
         , $request[ 'start_time' ], $request[ 'end_time' ]
         );
-    $reqs = getRequestsOnThisVenueBetweenTime( 
-        $request[ 'venue' ] , $request[ 'date' ] 
+    $reqs = getRequestsOnThisVenueBetweenTime(
+        $request[ 'venue' ] , $request[ 'date' ]
         , $request[ 'start_time' ], $request[ 'end_time' ]
         );
 
@@ -747,15 +752,15 @@ function checkCollision( $request )
 }
 
 /**
-    * @brief Create a new event in dateabase. The group id and event id of event 
-    * is same as group id (gid) and rid of request which created it. If there is 
-    * alreay a event or request pending which collides with this request, REJECT 
+    * @brief Create a new event in dateabase. The group id and event id of event
+    * is same as group id (gid) and rid of request which created it. If there is
+    * alreay a event or request pending which collides with this request, REJECT
     * it.
     *
     * @param $gid
     * @param $rid
     *
-    * @return 
+    * @return
  */
 function approveRequest( $gid, $rid )
 {
@@ -765,7 +770,7 @@ function approveRequest( $gid, $rid )
     $collideWith = checkCollision( $request );
     if( ! $collideWith )
     {
-        echo alertUser( "Following request is colliding with another 
+        echo alertUser( "Following request is colliding with another
             event or request. Rejecting it.." );
         echo arrayToTableHTML( $collideWith, 'request' );
         rejectRequest( $gid, $rid );
@@ -775,8 +780,8 @@ function approveRequest( $gid, $rid )
     $stmt = $db->prepare( 'INSERT INTO events (
         gid, eid, class, external_id, title, description, date, venue, start_time, end_time
         , created_by, last_modified_on
-    ) VALUES ( 
-        :gid, :eid, :class, :external_id, :title, :description, :date, :venue, :start_time, :end_time 
+    ) VALUES (
+        :gid, :eid, :class, :external_id, :title, :description, :date, :venue, :start_time, :end_time
         , :created_by, NOW()
     )');
     $stmt->bindValue( ':gid', $gid );
@@ -815,7 +820,7 @@ function actOnRequest( $gid, $rid, $status )
     elseif( $status == 'REJECT' )
         rejectRequest( $gid, $rid );
     else
-        echo( printWarning( "unknown request " . $gid . '.' . $rid . 
+        echo( printWarning( "unknown request " . $gid . '.' . $rid .
         " or status " . $status ) );
 }
 
@@ -844,8 +849,8 @@ function eventsAtThisVenue( $venue, $date, $time )
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE 
-        status=:status AND date=:date AND 
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE
+        status=:status AND date=:date AND
         venue=:venue AND start_time <= :time AND end_time > :time' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
@@ -870,10 +875,10 @@ function requestsForThisVenue( $venue, $date, $time )
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE 
-        status=:status 
+    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE
+        status=:status
         AND date=:date AND venue=:venue
-        AND start_time <= :time AND end_time > :time' 
+        AND start_time <= :time AND end_time > :time'
     );
     $stmt->bindValue( ':status', 'PENDING' );
     $stmt->bindValue( ':date', $hDate );
@@ -889,7 +894,7 @@ function requestsForThisVenue( $venue, $date, $time )
     * @param $date
     * @param $time
     *
-    * @return 
+    * @return
  */
 function publicEvents( $date, $time )
 {
@@ -903,7 +908,7 @@ function publicEvents( $date, $time )
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE 
+    $stmt = $db->prepare( 'SELECT * FROM events WHERE
         date=:date AND start_time <= :time AND end_time > :time' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
@@ -912,11 +917,11 @@ function publicEvents( $date, $time )
 }
 
 /**
-    * @brief Update a group of requests. It can only modify fields which are set 
-    * editable in function. 
+    * @brief Update a group of requests. It can only modify fields which are set
+    * editable in function.
     *
     * @param $gid
-    * @param $options Any array as long as it contains fields with name in 
+    * @param $options Any array as long as it contains fields with name in
     * editables.
     *
     * @return  On success True, else False.
@@ -941,7 +946,7 @@ function updateRequestGroup( $gid, $options )
 
     $stmt = $db->prepare( $query );
 
-    foreach( $fields as $f ) 
+    foreach( $fields as $f )
         $stmt->bindValue( ":$f", $options[ $f ] );
 
     $stmt->bindValue( ':gid', $gid );
@@ -985,7 +990,7 @@ function updateEvent( $gid, $eid, $options )
 
     $stmt = $db->prepare( $query );
 
-    foreach( $fields as $f ) 
+    foreach( $fields as $f )
         $stmt->bindValue( ":$f", $options[ $f ] );
 
     $stmt->bindValue( ':gid', $gid );
@@ -1004,16 +1009,16 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     if( $ldapInfo[ 'last_name' ] == 'NA' )
         $ldapInfo[ 'last_name' ] = '';
 
-    $stmt = $db->prepare( 
+    $stmt = $db->prepare(
        "INSERT IGNORE INTO logins
-        (id, login, first_name, last_name, email, created_on, institute, laboffice) 
-            VALUES 
+        (id, login, first_name, last_name, email, created_on, institute, laboffice)
+            VALUES
             (:id, :login, :fname, :lname, :email,  NOW(), :institute, :laboffice)
         "
         );
 
     $institute = NULL;
-    if( count( $ldapInfo ) > 0 ) 
+    if( count( $ldapInfo ) > 0 )
         $institute = 'NCBS Bangalore';
 
     $stmt->bindValue( ':login', $userid );
@@ -1033,7 +1038,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
 /**
     * @brief Get all logins.
     *
-    * @return 
+    * @return
  */
 function getLogins( $status = ''  )
 {
@@ -1072,7 +1077,7 @@ function getUserInfo( $user )
 
     $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
 
-    // Get the user title. 
+    // Get the user title.
     $title = $res[ 'title' ];
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
@@ -1141,8 +1146,8 @@ function getMyAws( $user )
 {
     global $db;
 
-    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
-        ORDER BY date DESC "; 
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker
+        ORDER BY date DESC ";
     $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $user );
     $stmt->execute( );
@@ -1154,8 +1159,8 @@ function getMyAwsOn( $user, $date )
 {
     global $db;
 
-    $query = "SELECT * FROM annual_work_seminars 
-        WHERE speaker=:speaker AND date=:date ORDER BY date DESC "; 
+    $query = "SELECT * FROM annual_work_seminars
+        WHERE speaker=:speaker AND date=:date ORDER BY date DESC ";
     $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $user );
     $stmt->bindValue( ':date', $date );
@@ -1179,12 +1184,12 @@ function getAwsById( $id )
     *
     * @param $speaker
     *
-    * @return 
+    * @return
  */
 function getLastAwsOfSpeaker( $speaker )
 {
     global $db;
-    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker
         ORDER BY date DESC LIMIT 1";
     $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $speaker );
@@ -1199,12 +1204,12 @@ function getLastAwsOfSpeaker( $speaker )
     *
     * @param $speaker
     *
-    * @return 
+    * @return
  */
 function getAwsOfSpeaker( $speaker )
 {
     global $db;
-    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker 
+    $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker
         ORDER BY date DESC" ;
     $stmt = $db->prepare( $query );
     $stmt->bindValue( ':speaker', $speaker );
@@ -1215,7 +1220,7 @@ function getAwsOfSpeaker( $speaker )
 function getSupervisors( )
 {
     global $db;
-    // First get all faculty members 
+    // First get all faculty members
     $faculty = getFaculty( $status = 'ACTIVE' );
 
     // And then all supervisors.
@@ -1233,7 +1238,7 @@ function getSupervisors( )
     *
     * @param $email
     *
-    * @return 
+    * @return
  */
 function findAnyoneWithEmail( $email )
 {
@@ -1252,7 +1257,7 @@ function findAnyoneWithEmail( $email )
     * @param $keys
     * @param $data
     *
-    * @return 
+    * @return
  */
 function whereExpr( $keys, $data )
 {
@@ -1267,13 +1272,13 @@ function whereExpr( $keys, $data )
 }
 
 /**
-    * @brief 
+    * @brief
     *
     * @param $tablename
     * @param $orderby
     * @param $where
     *
-    * @return 
+    * @return
  */
 function getTableEntries( $tablename, $orderby = '', $where = '' )
 {
@@ -1284,13 +1289,9 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " WHERE $where ";
 
     if( strlen($orderby) > 0 )
-        $query .= " ORDER BY :orderby";
+        $query .= " ORDER BY '$orderby'";
 
-    $stmt = $db->prepare( $query );
-    if( $orderby )
-        $stmt->bindValue( ":orderby", $orderby );
-
-    $stmt->execute( );
+    $stmt = $db->query( $query );
     return fetchEntries( $stmt );
 }
 
@@ -1362,10 +1363,10 @@ function insertIntoTable( $tablename, $keys, $data )
         $stmt->bindValue( ":$k", $value );
     }
 
-    try 
+    try
     {
         $res = $stmt->execute( );
-    } 
+    }
     catch (Exception $e )
     {
         echo minionEmbarrassed(
@@ -1446,16 +1447,18 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
     }
 
     $res = null;
-    try {
+    try
+    {
         $res = $stmt->execute( );
-    } catch ( PDOException $e ) {
-        //echo $stmt->debugDumpParams( );
+    }
+    catch ( PDOException $e )
+    {
         echo minionEmbarrassed( "Failed to execute <pre> " . $query . "</pre>"
             , $e->getMessage( )
         );
     }
 
-    // This is MYSQL specific. Only try this if table has an AUTO_INCREMENT 
+    // This is MYSQL specific. Only try this if table has an AUTO_INCREMENT
     // id field.
     if( array_key_exists( 'id', $data) && $res )
     {
@@ -1465,7 +1468,7 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         $res = $stmt->fetch( PDO::FETCH_ASSOC );
         $lastInsertId = intval( __get__($res, 'LAST_INSERT_ID()', 0 ) );
 
-        // Store the LAST_INSERT_ID if insertion happened else the id of update 
+        // Store the LAST_INSERT_ID if insertion happened else the id of update
         // execution.
         if( $lastInsertId > 0 )
             $res['id'] = $lastInsertId;
@@ -1473,13 +1476,12 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
             $res['id' ] = $data[ 'id' ];
         return $res;
     }
-    else
 
     return $res;
 }
 
 /**
-    * @brief Delete an entry from table. 
+    * @brief Delete an entry from table.
     *
     * @param $tableName
     * @param $keys
@@ -1536,7 +1538,7 @@ function deleteFromTable( $tablename, $keys, $data )
     * @param $keys Keys to be updated.
     * @param $data An array having all data.
     *
-    * @return 
+    * @return
  */
 function updateTable( $tablename, $wherekeys, $keys, $data )
 {
@@ -1589,7 +1591,7 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
 
 
 /**
-    * @brief Get the AWS scheduled in future for this speaker. 
+    * @brief Get the AWS scheduled in future for this speaker.
     *
     * @param $speaker The speaker.
     *
@@ -1598,9 +1600,9 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
 function  scheduledAWSInFuture( $speaker )
 {
     global $db;
-    $stmt = $db->prepare( 
+    $stmt = $db->prepare(
         "SELECT * FROM upcoming_aws WHERE
-        speaker=:speaker AND date > NOW() 
+        speaker=:speaker AND date > NOW()
         " );
     $stmt->bindValue( ":speaker", $speaker );
     $stmt->execute( );
@@ -1612,14 +1614,14 @@ function  scheduledAWSInFuture( $speaker )
     *
     * @param $speaker
     *
-    * @return 
+    * @return
  */
 function temporaryAwsSchedule( $speaker )
 {
     global $db;
-    $stmt = $db->prepare( 
+    $stmt = $db->prepare(
         "SELECT * FROM aws_temp_schedule WHERE
-        speaker=:speaker AND date > NOW() 
+        speaker=:speaker AND date > NOW()
         " );
     $stmt->bindValue( ":speaker", $speaker );
     $stmt->execute( );
@@ -1631,7 +1633,7 @@ function temporaryAwsSchedule( $speaker )
     *
     * @param $status
     *
-    * @return 
+    * @return
  */
 function getFaculty( $status = '', $order_by = 'first_name' )
 {
@@ -1661,7 +1663,7 @@ function getFaculty( $status = '', $order_by = 'first_name' )
     * @param $user Name of the user.
     * @param $status status of the request.
     *
-    * @return 
+    * @return
  */
 function getAwsRequestsByUser( $user, $status = 'PENDING' )
 {
@@ -1710,7 +1712,7 @@ function getAllAWS( )
 function getAWSFromPast( $from  )
 {
     global $db;
-    $stmt = $db->query( "SELECT * FROM annual_work_seminars 
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars
         WHERE date >= '$from' ORDER BY date DESC, speaker
     " );
     $stmt->execute( );
@@ -1730,8 +1732,8 @@ function getAWSSpeakers( $sortby = '' )
     if( $sortby )
         $sortExpr = " ORDER BY '$sortby'";
 
-    $stmt = $db->query( 
-        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES' $sortExpr " 
+    $stmt = $db->query(
+        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES' $sortExpr "
     );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -1740,7 +1742,7 @@ function getAWSSpeakers( $sortby = '' )
 /**
     * @brief Return AWS entries schedules by my minion..
     *
-    * @return 
+    * @return
  */
 function getTentativeAWSSchedule( $monday = null )
 {
@@ -1759,7 +1761,7 @@ function getTentativeAWSSchedule( $monday = null )
 
 /**
     * @brief Get all upcoming AWSes. Closest to today first (Ascending date).
-    * 
+    *
     * @return Array of upcming AWS.
  */
 function getUpcomingAWS( $monday = null )
@@ -1773,8 +1775,8 @@ function getUpcomingAWS( $monday = null )
         $whereExpr = "date = '$monday'";
     }
 
-    $stmt = $db->query( 
-        "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date" 
+    $stmt = $db->query(
+        "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date"
         );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -1789,22 +1791,22 @@ function getUpcomingAWSById( $id )
 }
 
 /**
-    * @brief Accept a auto generated schedule. We put the entry into table 
-    * upcoming_aws and delete this entry from aws_temp_schedule tables. In case 
+    * @brief Accept a auto generated schedule. We put the entry into table
+    * upcoming_aws and delete this entry from aws_temp_schedule tables. In case
     * of any failure, leave everything untouched.
     *
     * @param $speaker
     * @param $date
     *
-    * @return 
+    * @return
  */
 function acceptScheduleOfAWS( $speaker, $date )
 {
     global $db;
     $db->beginTransaction( );
 
-    $stmt = $db->prepare( 
-        'INSERT INTO upcoming_aws ( speaker, date ) VALUES ( :speaker, :date )' 
+    $stmt = $db->prepare(
+        'INSERT INTO upcoming_aws ( speaker, date ) VALUES ( :speaker, :date )'
     );
 
     $stmt->bindValue( ':speaker', $speaker );
@@ -1814,7 +1816,7 @@ function acceptScheduleOfAWS( $speaker, $date )
 
         $res = $stmt->execute( );
         // delete this row from temp table.
-        $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE 
+        $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE
             speaker=:speaker AND date=:date
             ' );
         $stmt->bindValue( ':speaker', $speaker );
@@ -1827,12 +1829,12 @@ function acceptScheduleOfAWS( $speaker, $date )
             $db->rollBack( );
             return False;
         }
-    } 
-    catch (Exception $e) 
+    }
+    catch (Exception $e)
     {
         $db->rollBack( );
-        echo minionEmbarrassed( 
-            "Failed to insert $speaker, $date into database: " . $e->getMessage() 
+        echo minionEmbarrassed(
+            "Failed to insert $speaker, $date into database: " . $e->getMessage()
         );
         return False;
     }
@@ -1860,9 +1862,9 @@ function queryAWS( $query )
     }
 
     global $db;
-    $stmt = $db->query( "SELECT * FROM annual_work_seminars 
-        WHERE LOWER(abstract) LIKE LOWER('%$query%')" 
-    ); 
+    $stmt = $db->query( "SELECT * FROM annual_work_seminars
+        WHERE LOWER(abstract) LIKE LOWER('%$query%')"
+    );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1873,13 +1875,13 @@ function queryAWS( $query )
     * @param $speaker
     * @param $date
     *
-    * @return 
+    * @return
  */
 function clearUpcomingAWS( $speaker, $date )
 {
     global $db;
-    $stmt = $db->prepare( 
-        "DELETE FROM upcoming_aws WHERE speaker=:speaker AND date=:date" 
+    $stmt = $db->prepare(
+        "DELETE FROM upcoming_aws WHERE speaker=:speaker AND date=:date"
     );
 
     $stmt->bindValue( ':speaker', $speaker );
@@ -1898,8 +1900,8 @@ function clearUpcomingAWS( $speaker, $date )
 function deleteAWSEntry( $speaker, $date )
 {
     global $db;
-    $stmt = $db->prepare( 
-        "DELETE FROM annual_work_seminars WHERE speaker=:speaker AND date=:date" 
+    $stmt = $db->prepare(
+        "DELETE FROM annual_work_seminars WHERE speaker=:speaker AND date=:date"
     );
     $stmt->bindValue( ':speaker', $speaker );
     $stmt->bindValue( ':date', $date );
@@ -1918,7 +1920,7 @@ function getHolidays( $from = NULL )
 /**
     * @brief Fetch all existing email templates.
     *
-    * @return 
+    * @return
  */
 function getEmailTemplates( )
 {
@@ -1973,7 +1975,7 @@ function getSpeakers( )
     *
     * @param $data
     *
-    * @return 
+    * @return
  */
 function addNewTalk( $data )
 {
@@ -1986,7 +1988,7 @@ function addNewTalk( $data )
     $data[ 'id' ] = $id;
     $res = insertIntoTable( 'talks'
         , 'id,host,class,coordinator,title,speaker,speaker_id,description,created_by,created_on'
-        , $data ); 
+        , $data );
 
     // Return the id of talk.
     if( $res )
@@ -2000,7 +2002,7 @@ function addNewTalk( $data )
     *
     * @param $data
     *
-    * @return 
+    * @return
  */
 function addOrUpdateSpeaker( $data )
 {
@@ -2012,7 +2014,7 @@ function addOrUpdateSpeaker( $data )
             $res = updateTable(
                 'speakers', 'id'
                 , 'honorific,email,first_name,middle_name,last_name,department,institute,homepage'
-                , $data 
+                , $data
             );
             return getTableEntry( 'speakers', 'id', $speaker) ;
         }
@@ -2025,15 +2027,16 @@ function addOrUpdateSpeaker( $data )
     $res = insertIntoTable( 'speakers'
         , 'id,email,honorific,first_name,middle_name,last_name,'
             . 'department,institute,homepage'
-        , $data 
+        , $data
         );
 
     return getTableEntry( 'speakers', 'id', $data );
 }
 
 
-function getCourseName( $cid )
+function getCourseName( $cexpr )
 {
+    $cid = explode( '-', $cexpr )[0];
     $c =  getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
     return $c['name'];
 }
@@ -2050,7 +2053,7 @@ function getSemesterCourses( $year, $sem )
     }
 
     global $db;
-    $res = $db->query( "SELECT * FROM courses WHERE 
+    $res = $db->query( "SELECT * FROM courses WHERE
                     start_date >= '$sDate' AND end_date <= '$eDate' " );
 
     return fetchEntries( $res );
@@ -2059,7 +2062,7 @@ function getSemesterCourses( $year, $sem )
 /**
     * @brief Get all the courses running this semester.
     *
-    * @return 
+    * @return
  */
 function getRunningCourses( )
 {
@@ -2126,7 +2129,7 @@ function addBookings( $runningCourseId )
             $endTime = $tile[ 'end_time' ];
             $msg = "$title at $venue on $date, $startTime, $endTime";
 
-            $data = array( 
+            $data = array(
                 'gid' => $gid, 'eid' => $eid
                 , 'date' => dbDate( $date )
                 , 'start_time' => $startTime
@@ -2174,7 +2177,7 @@ function addBookings( $runningCourseId )
     *
     * @Param $course
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function updateBookings( $course )
@@ -2197,7 +2200,7 @@ function getMyCourses( $sem, $year, $user  )
     *
     * @param $day
     *
-    * @return 
+    * @return
  */
 function getActiveRecurrentEvents( $day )
 {
@@ -2206,8 +2209,8 @@ function getActiveRecurrentEvents( $day )
     $from = dbDate( $day );
 
     // We get gid of events which are still valid.
-    $res = $db->query( "SELECT gid FROM events WHERE 
-                date >= '$from' AND status='VALID' ORDER BY date" 
+    $res = $db->query( "SELECT gid FROM events WHERE
+                date >= '$from' AND status='VALID' ORDER BY date"
             );
     $gids = fetchEntries( $res );
 
@@ -2219,7 +2222,7 @@ function getActiveRecurrentEvents( $day )
         // Must order by date.
         $gEvents = getTableEntries( 'events', 'date', "gid='$gid'" );
 
-        // Definately there has to be more than 1 event in group to be qualified 
+        // Definately there has to be more than 1 event in group to be qualified
         // as group event.
         if( count( $gEvents ) > 1 )
             $upcomingRecurrentEvents[ $gid ] = $gEvents;
@@ -2233,7 +2236,7 @@ function getActiveRecurrentEvents( $day )
     *
     * @param $name
     *
-    * @return 
+    * @return
  */
 function getLoginByName( $name )
 {
@@ -2280,7 +2283,7 @@ function getWeeklyEventByClass( $classes )
     $whereExp = implode( ' OR ', $whereExp );
 
     $today = dbDate( 'today' );
-    $query = "SELECT * FROM events WHERE 
+    $query = "SELECT * FROM events WHERE
                 ( $whereExp ) AND status='VALID' AND date > '$today' GROUP BY gid";
     $res = $db->query( $query );
     $entries = fetchEntries( $res );
@@ -2309,7 +2312,7 @@ function getLabmeetAndJC( )
     * @param $endtime
     * @param $entries
     *
-    * @return 
+    * @return
  */
 function isThereAClashOnThisVenueSlot( $day, $starttime, $endtime, $venue, $entries )
 {
@@ -2359,11 +2362,11 @@ function getOccupiedSlots( $year = null, $sem = null )
     if( ! $sem )
         $sem = getCurrentSemester( );
 
-    $res = $db->query( 
+    $res = $db->query(
         "SELECT slot FROM courses WHERE year='$year' AND semester='$sem'"
     );
 
-    $slots = array_map( 
+    $slots = array_map(
         function($x) { return $x['slot']; }
         , fetchEntries( $res, PDO::FETCH_ASSOC )
         );
@@ -2412,7 +2415,7 @@ function getRunningCoursesOnTheseSlotTiles( $date, $tile )
     * @param $startTime
     * @param $endTime
     *
-    * @return 
+    * @return
  */
 function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
 {
@@ -2467,7 +2470,7 @@ function getSlotInfo( $id, $ignore = '' )
         if( in_array( $sl['id'], $ignoreTiles ) )
             continue;
 
-        $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-' 
+        $res[ ] = $sl[ 'day' ] . ' ' . dbTime( $sl[ 'start_time' ] ) . '-'
             . dbTime( $sl[ 'end_time' ] );
     }
     return  implode( ', ', $res );
@@ -2477,9 +2480,9 @@ function getSlotInfo( $id, $ignore = '' )
 /**
     * @brief Get the slot of given slot.
     *
-    * @param $cid 
+    * @param $cid
     *
-    * @return 
+    * @return
  */
 function getCourseSlot( $cid )
 {
@@ -2499,7 +2502,7 @@ function getCourseById( $cid )
 /**
     * @brief Check if registration for courses is open.
     *
-    * @return 
+    * @return
  */
 function isRegistrationOpen( )
 {
@@ -2528,7 +2531,7 @@ function getSlotTiles( $id )
     * @param $course
     * @param $tile
     *
-    * @return 
+    * @return
  */
 function isCourseRunningOnThisTile( $course, $tile )
 {
@@ -2554,7 +2557,7 @@ function getCourseSlotTiles( $course )
 /**
     * @Synopsis  So far how many CLASS events have happened.
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function totalClassEvents( )
@@ -2583,7 +2586,7 @@ function totalClassEvents( )
     * @Param $tablename
     * @Param $columnname
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function getTableColumnTypes( $tableName, $columnName )
@@ -2639,12 +2642,12 @@ function getPIOrHost( $login )
     * @Param $start
     * @Param $end
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
 {
-    $whereExpr = "( end_date > '$start' AND start_date < '$end' ) 
+    $whereExpr = "( end_date > '$start' AND start_date < '$end' )
                     AND slot='$slot' AND venue='$venue'";
     $courses = getTableEntries( 'courses', 'start_date' , $whereExpr );
     return $courses;
@@ -2655,7 +2658,7 @@ function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
 /**
     * @Synopsis  Get the specialization available for student.
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function getAllSpecialization( )
@@ -2667,11 +2670,11 @@ function getAllSpecialization( )
 
 /* --------------------------------------------------------------------------*/
 /**
-    * @Synopsis  Get specialization of given login. 
+    * @Synopsis  Get specialization of given login.
     *
     * @Param $speaker (usually student, could be faculty as well).
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function getLoginSpecialization( $login )
@@ -2698,7 +2701,7 @@ function getFacultySpecialization( $email )
     * @Param $login
     * @Param $PIEmail
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function getSpecialization( $login, $PIEmail = '' )
@@ -2712,6 +2715,39 @@ function getSpecialization( $login, $PIEmail = '' )
         $specialization = 'UNSPECIFIED';
 
     return $specialization;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Generate slot map.
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function getSlotMap( $slots = array( ) )
+{
+    if( ! $slots )
+        $slots = getTableEntries( 'slots', 'groupid' );
+
+    $slotMap = array();
+    foreach( $slots as $s )
+    {
+        if( intval($s[ 'groupid' ]) == 0 )
+            continue;
+
+        $slotGroupId = $s[ 'groupid' ];
+        if( ! array_key_exists( $slotGroupId, $slotMap ) )
+            $slotMap[ $slotGroupId ] = $slotGroupId .  ' (' . $s['day'] . ':'
+            . humanReadableTime( $s[ 'start_time' ] )
+            . '-' . humanReadableTime( $s['end_time'] )
+            . ')';
+        else
+            $slotMap[ $slotGroupId ] .= ' (' . $s['day'] . ':'
+            . humanReadableTime( $s[ 'start_time' ] )
+            . '-' . humanReadableTime( $s['end_time'] )
+            . ')';
+    }
+    return $slotMap;
 }
 
 ?>

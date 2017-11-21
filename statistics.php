@@ -72,8 +72,8 @@ foreach( $events as $e )
 }
 $allVenues = array_keys( $venueUsageTime );
 
-// Venue usage at particular time from 8am to 8pm.
-
+// Venue usage at particular time from 8am to 8pm. AND concurrent events as
+// well.
 // For each 15 min gap, for 12 hours.
 $venueUsageAtTime = array( );
 $begin = strtotime( '8:00 am' );
@@ -572,7 +572,6 @@ echo $bookingTable;
 <?php
 
 echo '<h1>Community interaction via Annual Work Seminar </h1>';
-
 if( isset( $_POST['months'] ) )
     $howManyMonths = intval( $_POST[ 'months' ] );
 else

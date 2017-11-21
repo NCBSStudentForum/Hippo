@@ -11,8 +11,6 @@ __status__           = "Development"
 
 import sys
 import os
-import matplotlib.pyplot as plt
-import numpy as np
 from db_connect import db_
 import datetime
 

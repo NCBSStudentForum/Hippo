@@ -22,10 +22,11 @@ SCRIPT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 php -f ${SCRIPT_DIR}/hippo_cron.php
 # Now update the calendar. every six hours.
 HOUR=`date +%H`
-MINS=`date +%M`
 n=$((HOUR%6))
 if [[ $n -eq 0 ]]; then
-    if [[ $MINS -gt 0 && $MINS -lt 12 ]]; then
+    log_msg "MOD 6 is zero."
+    MINS=`date +%M`
+    if [[ $MINS -gt -5 && $MINS -lt 10 ]]; then
         log_msg "Updating google calendar."
         php -f ${SCRIPT_DIR}/synchronize_calendar.php
     fi

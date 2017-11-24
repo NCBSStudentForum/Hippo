@@ -116,7 +116,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
         return;
     }
 
-    echo printInfo( "Trying to send email to $to, $cclist with subject $sub" );
+    //echo printInfo( "Trying to send email to $to, $cclist with subject $sub" );
     if( strlen( trim( $msg ) ) < 1 )
         return;
 
@@ -168,7 +168,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
             $cmd .= " -a \"$f\" ";
     }
 
-    echo ( "<tt>Executing $cmd </tt>" );
+    //echo ( "<tt>Executing $cmd </tt>" );
     $out = `$cmd`;
 
     error_log( "<pre> $cmd </pre>" );

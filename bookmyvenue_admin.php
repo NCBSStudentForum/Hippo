@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // This is admin interface for book my venue.
 // We are here to manage the requests.
@@ -15,7 +15,9 @@ echo userHTML( );
 echo bookmyVenueAdminTaskTable( );
 
 echo '<h1> Pending requests </h1>';
-$requests = getPendingRequestsGroupedByGID( ); 
+
+
+$requests = getPendingRequestsGroupedByGID( );
 
 if( count( $requests ) == 0 )
     echo printInfo( "Cool! No request is pending for review" );
@@ -51,7 +53,7 @@ foreach( $requests as $r )
     $html .= arrayToTableHTML( $r, 'events', $color,  $tohide );
     $html .= '</td>';
     $html .= '<td style="background:white">
-        <button name="response" value="Review" title="Review request"> ' . 
+        <button name="response" value="Review" title="Review request"> ' .
             $symbReview . '</button> </td>';
     $html .= '</tr>';
     $html .= '</form>';
@@ -67,14 +69,37 @@ echo goBackToPageLink( "user.php", "Go back" );
 
 <?php
 
-$events = getEventsBeteen( 'today', '+2 week' );
+// Let admin search.
+echo '<form action="" method="post" accept-charset="utf-8">
+    <input name="query" value="" placeholder="Search using creator or title"></input>
+    <button type="submit" name="response" value="search">Search</button>
+</form>';
+
+if( __get__( $_POST, 'response', '' ) == 'search' )
+{
+    $query = trim( $_POST[ 'query' ] );
+    if( trim( $query ) )
+    {
+        $day = dbDate( 'yesterday' );
+        $events = getTableEntries( 'events', 'date'
+            , "status='VALID' AND date >= '$day' AND
+                (created_by='$query' OR title LIKE '%$query%')"
+        );
+    }
+    else
+        $events = getEventsBeteen( 'today', '+2 week' );
+}
+else
+    $events = getEventsBeteen( 'today', '+2 week' );
+
+
 if( count( $events ) > 0 )
 {
     $html = '<div style="font-size:small;">';
     $event = $events[0];
     $html .= "<table class=\"show_events\">";
 
-    $tofilter = 'eid,calendar_id,calendar_event_id' .  
+    $tofilter = 'eid,calendar_id,calendar_event_id' .
         ',external_id,gid,last_modified_on,status,url';
 
 
@@ -90,7 +115,7 @@ if( count( $events ) > 0 )
         $gid = $event['gid'];
         $eid = $event['eid'];
         $html .= "<tr><form method=\"post\" action=\"bookmyvenue_admin_edit.php\">";
-        $event[ 'edit' ] = "<td> <button title=\"Edit this entry\"  name=\"response\" 
+        $event[ 'edit' ] = "<td> <button title=\"Edit this entry\"  name=\"response\"
                 value=\"edit\">" . $symbEdit .  "</button></td>";
 
         $html .= arrayToRowHTML( $event, 'events', $tofilter );
@@ -109,4 +134,3 @@ if( count( $events ) > 0 )
 echo goBackToPageLink( "user.php", "Go back" );
 
 ?>
-

@@ -395,8 +395,9 @@ if( $today > $startDay && $today <= $endDay )
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00' );
     $dayNo = date( 'N', strtotime( 'today' ) );
 
-    // Send this reminder only on even days.
-    if( $dayNo % 3 == 0 && $awayFrom > -1 && $awayFrom < 15 * 60 )
+    // Send this reminder only on Monday and Friday only.
+    // 1. Is monday, 7 is sunday.
+    if( ($dayNo + 3) % 4 == 0 && $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
         echo printInfo( "Checking for upcoming aws which has not been acknowleged" );
 

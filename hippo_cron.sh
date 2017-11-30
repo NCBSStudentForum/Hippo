@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-set -x
-set -e
-if [ -d /opt/rh/rh-php56/ ]; then
+
+if [ -d /opt/rh/rh-php56 ]; then
     source /opt/rh/rh-php56/enable 
 fi
 
-export http_proxy=http://proxy.ncbs.res.in:3128 
-export https_proxy=http://proxy.ncbs.res.in:3128 
-LOG_FILE=/var/log/hippo.log
 
 function log_msg
 {
@@ -18,6 +14,9 @@ function log_msg
 }
 
 SCRIPT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export http_proxy=http://proxy.ncbs.res.in:3128 
+export https_proxy=http://proxy.ncbs.res.in:3128 
+LOG_FILE=/var/log/hippo.log
 
 php -f ${SCRIPT_DIR}/hippo_cron.php
 # Now update the calendar. every six hours.

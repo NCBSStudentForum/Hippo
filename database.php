@@ -1289,7 +1289,7 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " WHERE $where ";
 
     if( strlen($orderby) > 0 )
-        $query .= " ORDER BY '$orderby'";
+        $query .= " ORDER BY '$orderby' ASC";
 
     $stmt = $db->query( $query );
     return fetchEntries( $stmt );

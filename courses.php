@@ -32,7 +32,7 @@ $runningCourses = getSemesterCourses( $year, $sem );
 foreach( $runningCourses as $c )
 {
     $cid = $c[ 'course_id' ];
-    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
+    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) );
     if( $course )
     {
         $slotId = $c[ 'slot' ];
@@ -54,7 +54,7 @@ $upcomingCourses = getSemesterCourses( $nextSem[ 'year' ], $nextSem['semester'] 
 foreach( $upcomingCourses as $c )
 {
     $cid = $c[ 'course_id' ];
-    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) ); 
+    $course = getTableEntry( 'courses_metadata', 'id' , array('id' => $cid) );
     if( $course )
     {
         $slotId = $c[ 'slot' ];
@@ -78,7 +78,7 @@ $tileCoursesJSON = json_encode( $tileCourses );
 <script type="text/javascript" charset="utf-8">
 function showCourseInfo( x )
 {
-    swal({ 
+    swal({
         title : x.title
         , html : "<div align=\"left\">" + x.value + "</div>"
     });
@@ -95,9 +95,9 @@ function showRunningCourse( x )
 
     if( runningCourses && runningCourses.length > 0 )
     {
-        runningCoursesTxt = runningCourses.map( 
-            function(x, index) { return (1 + index) + '. ' + x.name 
-            + ' at ' + x.venue ; } 
+        runningCoursesTxt = runningCourses.map(
+            function(x, index) { return (1 + index) + '. ' + x.name
+            + ' at ' + x.venue ; }
         ).join( "<br>");
 
         title = "Following courses are running in slot " + slotId;
@@ -108,7 +108,7 @@ function showRunningCourse( x )
         runningCoursesTxt = "";
     }
 
-    swal({ 
+    swal({
         title : title
         , html : runningCoursesTxt
         , type : "info"
@@ -116,21 +116,21 @@ function showRunningCourse( x )
 }
 </script>
 
- 
+
 
 <?php
 
 
 echo '<h1>Slots </h1>';
 
-echo printInfo( 
+echo printInfo(
     "Some courses may modify these slot timings. In case of any discrepency
     please notify " . mailto( 'acadoffice@ncbs.res.in', 'Academic Office' ) . "."
 );
 
 
-echo printInfo( 
-    "Click on tile <button class=\"invisible\" disabled>1A</button> etc to see the 
+echo printInfo(
+    "Click on tile <button class=\"invisible\" disabled>1A</button> etc to see the
     list of courses running at this time.
     ");
 $table = slotTable(  );
@@ -141,8 +141,8 @@ echo "<h1>Running courses in " . __ucwords__( $sem) . ", $year semester</h1>";
 
 $showEnrollText = 'Show Enrollement';
 echo printInfo(
-    "Click on the button <button disabled>$showEnrollText</button>to see the 
-    list of enrolled students" 
+    "Click on the button <button disabled>$showEnrollText</button>to see the
+    list of enrolled students"
     );
 
 
@@ -187,12 +187,12 @@ echo '</div>';
 
 if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
 {
-    $courseName = getCourseName( $cid );
     $cid = $_POST[ 'course_id'];
+    $courseName = getCourseName( $cid );
     $rows = [ ];
     $allEmails = array( );
 
-    echo '<h3>Enrollment for course ' . $courseName .'</h3>';
+    echo '<h3>Enrollment list for "' . $courseName .'"</h3>';
     foreach( __get__($enrollments, $cid, array()) as $r )
     {
         $studentId = $r[ 'student_id' ];
@@ -251,7 +251,7 @@ foreach( $slotUpcomingCourses as $slot => $ucs )
         $year = getYear( $uc[ 'end_date' ] );
 
         $newTab .= courseToHTMLRow( $uc, $slot, $sem, $year, $upcomingEnrollments);
-                        
+
         $newTab .= '</tr>';
     }
 }

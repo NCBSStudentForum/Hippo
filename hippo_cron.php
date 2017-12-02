@@ -522,9 +522,10 @@ if( $intMonth % 2 == 0 )
                 );
 
                 $body = $email[ 'email_body' ];
+                $cc = $email[ 'cc' ];
                 $subject = 'List of AWS speakers from your lab';
                 $to = $fac;
-                sendHTMLEmail( $subject, $body, $to );
+                sendHTMLEmail( $body, $subject, $to, $cc );
             }
         }
     }

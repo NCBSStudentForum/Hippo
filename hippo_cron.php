@@ -522,7 +522,7 @@ if( $intMonth % 2 == 0 )
                 );
 
                 $body = $email[ 'email_body' ];
-                $subject = 'Review the list of AWS speakers of your lab';
+                $subject = 'List of AWS speakers from your lab';
                 $to = $fac;
                 sendHTMLEmail( $subject, $body, $to );
             }

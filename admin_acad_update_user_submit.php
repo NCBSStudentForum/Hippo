@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once 'header.php' ;
 include_once 'check_access_permissions.php' ;
@@ -12,28 +12,40 @@ echo userHTML( );
 
 mustHaveAnyOfTheseRoles( Array( 'AWS_ADMIN' ) );
 
-$toUpdate = array( 'title', 'joined_on', 'eligible_for_aws', 'status' );
-$res = updateTable( 'logins', 'login', $toUpdate, $_POST ); 
+$toUpdate = 'title,joined_on,eligible_for_aws,status,pi_or_host';
+$res = updateTable( 'logins', 'login', $toUpdate, $_POST );
 if( $res )
 {
-    echo printInfo( "Successfully updated : " . implode(',', $toUpdate)  );
-    if( $_POST[ 'eligible_for_aws' ] == 'YES' )
-    {
-        $login = $_POST[ 'login' ];
-        $msg = initUserMsg( $login );
-        $msg .= "<p>Your name has been added to the list of AWS spakers. 
-            If this is a mistake, please contact academic office </p>";
-        $subject = "Your name has been added to AWS list";
-        $to = getLoginEmail( $login );
-        sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
-    }
+    $login = $_POST[ 'login' ];
+
+    echo printInfo( "Successfully updated profile. " );
+    echo printInfo( "Notifying $login by email." );
+
+    // Get previous status of student.
+    $msg = initUserMsg( $login );
+    $msg .= "<p>Your Hippo profile has been updated by Admin.</>";
+    $msg .= "<p>You current profile is following </p>";
+    $msg .= arrayToTableHTML(
+        getTableEntry( 'logins', 'login', array( 'login' => $login ) )
+        , 'profile'
+    );
+
+    $msg .= "<p>If there is any mistake, please contact academic office. You can
+            also update your profile after login to Hippo
+            </p>";
+
+    $subject = "Your Hippo profile has been updated by admin";
+    $to = getLoginEmail( $login );
+    $cc = 'hippo@lists.ncbs.res.in';
+    sendHTMLEmail( $msg, $subject, $to, $cc );
 
     // Rerun the scheduling script every time a change is made.
     rescheduleAWS( );
+
     goToPage( 'admin_acad.php', 1 );
     exit;
 }
 
-echo goBackToPageLink( 'admin.php', 'Go back' );
+echo goBackToPageLink( 'admin_acad.php', 'Go back' );
 
 ?>

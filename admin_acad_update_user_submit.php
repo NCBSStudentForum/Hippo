@@ -25,7 +25,7 @@ if( $res )
     $msg = initUserMsg( $login );
     $msg .= "<p>Your Hippo profile has been updated by Admin.</>";
     $msg .= "<p>You current profile is following </p>";
-    $msg .= arrayToTableHTML(
+    $msg .= arrayToVerticalTableHTML(
         getTableEntry( 'logins', 'login', array( 'login' => $login ) )
         , 'profile'
     );

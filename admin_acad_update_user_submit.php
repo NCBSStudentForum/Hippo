@@ -23,7 +23,7 @@ if( $res )
 
     // Get previous status of student.
     $msg = initUserMsg( $login );
-    $msg .= "<p>Your Hippo profile has been updated by Admin.</>";
+    $msg .= "<p>Your Hippo profile has been updated by Academic Admin.</p>";
     $msg .= "<p>You current profile is following </p>";
     $msg .= arrayToVerticalTableHTML(
         getTableEntry( 'logins', 'login', array( 'login' => $login ) )

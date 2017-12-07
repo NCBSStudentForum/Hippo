@@ -187,13 +187,13 @@ foreach( $awsRequests as $awsr )
     echo "</form>";
 }
 
-echo '<h2>Write my AWS abstract!</h2>';
-echo "<p>I have been trained using deep-learning methods to write AWS abstract.
-    Ask me to write your AWS abstract by pressing the button below (puny human)!</p>
+echo '<h2><i class="fa fa-leanpub"></i> I have learnt \'deeply\' from AWS</h2>';
+echo "<p>I have been trained using Artificial Intelligence algorithms to write 
+    AWS abstract. Ask me to write your AWS abstract by pressing the button below (puny human)!</p>
     ";
 echo ' <form action="" method="post" accept-charset="utf-8">
         <button type="submit" name="response" value="write_my_aws">Write My AWS</button>
-        <button type="submit" name="response" value="clean_up">Clean up</button>
+        <button type="submit" name="response" value="clean_up">Cleap up</button>
     </form>';
 
 if( __get__( $_POST, 'response', '' ) == 'write_my_aws' )
@@ -201,6 +201,8 @@ if( __get__( $_POST, 'response', '' ) == 'write_my_aws' )
     $cmd = __DIR__ . '/write_aws.sh';
     $awsText = `$cmd`;
     echo "<p> $awsText </p>";
+    echo "<br>";
+    echo "<p> I will only get better! </p>";
 }
 
 

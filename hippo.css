@@ -552,6 +552,10 @@ div.bordered {
     border: 1px dotted blue;
 }
 
+div.show_aws {
+    width: 600px;
+}
+
 
 table.summary {
     font-size : small;

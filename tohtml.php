@@ -1293,8 +1293,8 @@ function awsToHTML( $aws, $with_picture = false )
     if( strlen( $abstract ) == 0 )
         $abstract = "Not yet disclosed!";
 
-    $html = "<div style=\"width:500px\">";
-    $html .= "<div width=500px><hr width=500px align=left> </div>";
+    $html = "<div class=\"show_aws\">";
+    $html .= "<div width=600px><hr width=600px align=left> </div>";
 
     // Adding css inline screw up the email view. Dont do it.
 

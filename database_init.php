@@ -470,6 +470,18 @@ function initialize( $db  )
             , UNIQUE KEY(course_id,slot,venue)
             )"
         );
+
+    // This table keep queries which user can excecute after login.
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS user_queries (
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+            , user VARCHAR(100) NOT NULL
+            , query_type VARCHAR(50) NOT NULL -- Which type of query
+            , query VARCHAR(1000) NOT NULL
+            , status ENUM( 'VALID', 'INVALID', 'EXECUTED' ) DEFAULT 'VALID'
+            , comment VARCHAR(200)
+            )"
+        );
     return $res;
 }
 

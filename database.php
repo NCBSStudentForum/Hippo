@@ -2093,7 +2093,7 @@ function deleteBookings( $course )
  * @Returns True if successful.
  */
 /* ----------------------------------------------------------------------------*/
-function addBookings( $runningCourseId )
+function addCourseBookings( $runningCourseId )
 {
     // Fetch the course name.
     $course = getTableEntry( 'courses', 'id', array( 'id' => $runningCourseId ) );
@@ -2114,15 +2114,15 @@ function addBookings( $runningCourseId )
     $endDate = $course[ 'end_date' ];
 
     // Select unique gid.
-    $gid = intval( getUniqueFieldValue( 'events', 'gid' ) ) + 1;
+    $gid = intval( getUniqueFieldValue( 'bookmyvenue_requests', 'gid' ) ) + 1;
 
     $temp = $startDate;
-    $eid = 0;
+    $rid = 0;
     while( strtotime($temp) <= strtotime( $endDate ) )
     {
         foreach( $tiles as $tile )
         {
-            $eid += 1;
+            $rid += 1;
             $day = $tile[ 'day' ];
             $date = dbDate( strtotime( "this $day", strtotime( $temp ) ) );
             $startTime = $tile[ 'start_time' ];
@@ -2130,7 +2130,7 @@ function addBookings( $runningCourseId )
             $msg = "$title at $venue on $date, $startTime, $endTime";
 
             $data = array(
-                'gid' => $gid, 'eid' => $eid
+                'gid' => $gid, 'rid' => $rid
                 , 'date' => dbDate( $date )
                 , 'start_time' => $startTime
                 , 'end_time' => $endTime
@@ -2159,7 +2159,10 @@ function addBookings( $runningCourseId )
                 cancelRequesttAndNotifyBookingParty( $req );
             }
 
-            $res = insertIntoTable( 'events', array_keys( $data ), $data );
+            // Create request and approve it. Direct entry in event is
+            // prohibited because then gid and eid are not synched.
+            $res = insertIntoTable( 'bookmyvenue_requests', array_keys( $data ), $data );
+            $res = approveRequest( $gid, $rid );
             if( ! $res )
                 echo printWarning( "Could not book: $msg" );
         }
@@ -2183,7 +2186,7 @@ function addBookings( $runningCourseId )
 function updateBookings( $course )
 {
     deleteBookings( $course );
-    $res = addBookings( $course );
+    $res = addCourseBookings( $course );
     return $res;
 }
 

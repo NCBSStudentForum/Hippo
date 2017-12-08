@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 (
-    cd ./torch-rnn
+    cd ./hippo-ai
     make --quiet generate_sample
 )

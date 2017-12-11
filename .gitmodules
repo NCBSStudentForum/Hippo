@@ -1,6 +1,0 @@
-[submodule "torch-rnn"]
-	path = torch-rnn
-	url = https://github.com/dilawar/torch-rnn
-[submodule "hippo-ai"]
-	path = hippo-ai
-	url = git@github.com:dilawar/hippo-ai

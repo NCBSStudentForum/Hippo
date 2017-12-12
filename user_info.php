@@ -3,7 +3,6 @@
 include_once 'header.php';
 include_once 'tohtml.php' ;
 include_once './check_access_permissions.php';
-include_once './snippets/pi_specialization.php';
 
 echo userHTML( );
 

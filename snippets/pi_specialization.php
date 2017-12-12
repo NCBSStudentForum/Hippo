@@ -21,10 +21,9 @@ $( function() {
     // These emails must not be key value array.
     var emails = <?php echo json_encode( $facEmails ); ?>;
     var specialization = <?php echo json_encode( $specialization ); ?>;
-    $( "#logins_pi_or_host" ).autocomplete( { source : emails }); 
-    $( "#logins_pi_or_host" ).attr( "placeholder", "type email of your supervisor" );
-    $( "#logins_specialization" ).autocomplete( { source : specialization }); 
+    $( "#logins_pi_or_host" ).autocomplete( { source : emails });
+    $( "#logins_pi_or_host" ).attr( "placeholder", "type email of supervisor" );
+    $( "#logins_specialization" ).autocomplete( { source : specialization });
     $( "#logins_specialization" ).attr( "placeholder", "Your specialization" );
 });
 </script>
-

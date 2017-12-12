@@ -227,8 +227,13 @@ echo '
         </td>
         <td>
             <a href="admin_acad_summary_user_wise.php">User wise</a>
+            <br />
             <a href="admin_acad_summary_date_wise.php">Date wise</a>
         </td>
+    </tr>
+    <tr>
+        <td>List of AWS speakers</td>
+        <td> <a href="admin_acad_aws_speakers.php">AWS speaker</a> </td>
     </tr>
   </table>';
 
@@ -241,7 +246,7 @@ echo '
     </tr>
     <tr>
         <td>Add or update speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+        <td> <a href="admin_acad_manages_speakers.php">Manage talk/seminar speakers</td>
     </tr>
     </table>';
 

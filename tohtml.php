@@ -1333,7 +1333,7 @@ function awsToHTML( $aws, $with_picture = false )
 
 }
 
-function speakerName( $speaker )
+function speakerName( $speaker, $with_email = false )
 {
     // NOTE: Do not use is_int here.
     if( is_numeric( $speaker ) )                        // Got an id.
@@ -1342,18 +1342,28 @@ function speakerName( $speaker )
                     );
 
     $name = __get__( $speaker, 'honorific', '' );
-    $name .= ' ' . $speaker[ 'first_name' ];
+    if( $name )
+        $name .= ' ';
+
+    $name .= $speaker[ 'first_name' ];
 
     if( __get__( $speaker, 'middle_name', '' ) )
         $name .= ' ' . $speaker[ 'middle_name' ];
 
     $name .= ' ' . $speaker[ 'last_name' ];
+
+    if( $with_email )
+    {
+        $email = __get__( $speaker, 'email', '' );
+        if( $email )
+            $name .= " <$email>";
+    }
     return $name;
 }
 
-function arrayToName( $arr )
+function arrayToName( $arr, $with_email = false )
 {
-    return speakerName( $arr );
+    return speakerName( $arr, $with_email );
 }
 
 

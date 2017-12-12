@@ -1079,11 +1079,16 @@ function getUserInfo( $user )
 
     // Get the user title.
     $title = $res[ 'title' ];
+
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
 
     if( is_array($ldap) && is_array( $res ) && $ldap  )
-        $res = array_merge( $res, $ldap );
+    {
+        foreach( $ldap as $key => $val )
+            if( trim($val) )
+                $res[ $key ] = $val;
+    }
 
     // If title was found in database, overwrite ldap info.
     if( $title )

@@ -13,6 +13,17 @@ $awsSpeakers = getTableEntries( 'logins', 'login'
     " );
 
 $speakerPiMap = array( );
+// Collect all faculty
+$faculty = getFaculty( );
+$facultyByEmail = array( );
+foreach( $faculty as $fac )
+{
+    $facultyByEmail[ $fac[ 'email' ] ] = $fac;
+    $speakerPiMap[ $fac['email' ] ] = array( );
+}
+
+
+$facEmails = array_keys( $facultyByEmail );
 $logins = array( );
 foreach( $awsSpeakers as $login )
 {
@@ -22,12 +33,6 @@ foreach( $awsSpeakers as $login )
 }
 ksort( $speakerPiMap );
 
-// Collect all faculty
-$faculty = getFaculty( );
-$facultyByEmail = array( );
-foreach( $faculty as $fac )
-    $facultyByEmail[ $fac[ 'email' ] ] = $fac;
-$facEmails = array_keys( $facultyByEmail );
 
 ?>
 

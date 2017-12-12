@@ -53,7 +53,8 @@ $( function() {
 /**  @} */
 
 echo '
-    <form action="#" method="post" accept-charset="utf-8">
+    <form action="admin_acad_aws_speakers_action.php" 
+        method="post" accept-charset="utf-8">
     <table border="0">
     <tr>
         <td><input type="text" name="login" id="login" placeholder="Speaker id"/></td>
@@ -64,32 +65,6 @@ echo '
     </form>
     ';
 
-if( __get__( $_POST, 'response', '' )  == 'update_pi_or_host' )
-{
-    // Show only this user.
-    $login = $_POST[ 'login' ];
-    $pi = $_POST[ 'pi_or_host' ];
-    if( $login )
-        updateTable( 'logins', 'login', 'pi_or_host', $_POST );
-
-
-    // Now display the updated list.
-    $speakers = $speakerPiMap[ $_POST[ 'pi_or_host' ] ];
-    echo '<h2> Updated AWS list for ' . $_POST[ 'pi_or_host' ] . '</h2>';
-
-    $table = '<table class="info">';
-    $table .= '<tr>';
-    foreach( $speakers as $i => $login )
-    {
-        $speaker = getUserInfo( $login[ 'login' ] );
-        $table .= "<td>" . arrayToName( $speaker ) . '</td>';
-        if( ($i + 1 ) % 10 == 0 )
-            $table .= "</tr><tr>";
-    }
-    $table .= '</tr>';
-    $table .= '</table>';
-    echo $table;
-}
 
 echo ' <h2>Table of active speakers</h2> ';
 foreach( $speakerPiMap as $pi => $speakers )

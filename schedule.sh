@@ -26,4 +26,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #fi
 
 python2.7  $DIR/schedule_aws_groupwise.py
+
+# Following algorithm does not honour groupwise AWS. This has been deprecated on
+# Dec 12, 2017. 
 #python2.7  $DIR/schedule_aws.py

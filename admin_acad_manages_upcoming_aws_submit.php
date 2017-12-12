@@ -99,8 +99,17 @@ else if( $_POST[ 'response' ] == 'delete' )
         rescheduleAWS( );
         echo printInfo( "Successfully cleared upcoming AWS" );
 
+        $admin = $_SESSION[ 'user' ];
+
         // Notify the hippo list.
-        $msg = '<p> The entry is following </p>';
+        $msg = "<p>Hello " . loginToHTML( $_POST[ 'speaker' ] ) . "</p>";
+        $msg .= "<p>
+            Your upcoming AWS schedule has been removed by Hippo admin ($admin).
+             If this is a  mistake, please write to acadoffice@ncbs.res.in
+            as soon as possible.
+            </p>
+            <p> The AWS schedule which is removed is the following </p>
+            ";
 
         $data = array( );
         $data[ 'id' ] = $_POST[ 'id' ];
@@ -110,10 +119,10 @@ else if( $_POST[ 'response' ] == 'delete' )
         $msg .= arrayToVerticalTableHTML( $data, 'info' );
 
         sendHTMLEmail( $msg
-            , "Entry from AWS schedule has been removed by " . $_SESSION[ 'user' ]
-            , $to = "acadoffice@ncbs.res.in"
-            , $cclist = "hippo@lists.ncbs.res.in"
-                        );
+            , "Your AWS schedule has been removed from upcoming AWS list"
+            , $to = getLoginEmail( $_POST[ 'speaker' ] )
+            , $cclist = "acadoffice@ncbs.res.in,hippo@lists.ncbs.res.in"
+            );
         goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
         exit;
     }

@@ -53,8 +53,8 @@ $( function() {
 
 <?php
 
+// Auto update PI_OR_HOST.
 // If pi_or_host is not found, use ldap info.
-
 foreach( $speakerPiMap as $pi => $logins )
 {
     if( ! $pi or $pi == 'UNSPECIFIED' or strpos( $pi, '@' ) === false )
@@ -99,8 +99,10 @@ echo '
 echo ' <h2>Table of active speakers</h2> ';
 foreach( $speakerPiMap as $pi => $speakers )
 {
-    echo "<h3>AWS Speaker list for " . $pi . "</h3>";
+    if( count( $speakers ) < 1 )
+        continue;
 
+    echo "<h3>AWS Speaker list for " . $pi . "</h3>";
     $table = "<table class=\"info\">";
     $table .="<tr>";
 

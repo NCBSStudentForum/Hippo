@@ -640,6 +640,10 @@ a.link_as_button {
     padding: 5px;
 }
 
+a {
+    max-width : var(--maxwidth);
+}
+
 footer {
     position: fixed;
     top: 94%;

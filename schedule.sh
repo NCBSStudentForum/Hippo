@@ -25,5 +25,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #    source /opt/rh/python27/enable
 #fi
 
-python2.7  $DIR/schedule_aws_groupwise.py
-#python2.7  $DIR/schedule_aws.py
+#python2.7  $DIR/schedule_aws_groupwise.py
+python2.7  $DIR/schedule_aws.py

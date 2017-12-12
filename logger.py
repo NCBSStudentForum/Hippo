@@ -1,9 +1,9 @@
-"""logger.py: 
+"""logger.py:
 
 Hippo logger.
 
 """
-    
+
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh"
 __credits__          = ["NCBS Bangalore"]
@@ -26,7 +26,7 @@ except Exception as e:
     pass
 
 console = logging.StreamHandler()
-console.setLevel(logging.INFO)
+console.setLevel(logging.WARNING)
 formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 console.setFormatter(formatter)
 

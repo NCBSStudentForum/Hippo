@@ -1957,6 +1957,30 @@ function getEmailById( $id )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getEmailByName( $name )
+{
+    $name = preg_replace( '#(Drs*|Mrs*|NA).?\s*#i', '', $name );
+    if( ! $name )
+        return '';
+
+    $nameArr = explode( ' ', $name );
+    $fname = $nameArr[0];
+    $lname = $nameArr[ count($nameArr) - 1 ];
+    $data = array( 'first_name' => $fname, 'last_name' => $lname );
+    $res = getTableEntry( 'logins', 'first_name,last_name', $data );
+    if( ! $res )
+        $res = getTableEntry( 'faculty', 'first_name,last_name', $data );
+    if( ! $res )
+        $res = getTableEntry( 'logins', 'first_name', $data );
+    if( ! $res )
+        $res = getTableEntry( 'faculty', 'first_name', $data );
+
+    if( ! $res )
+        return '';
+
+    return $res['email'];
+}
+
 
 function getUpcomingEmails( $from = null )
 {

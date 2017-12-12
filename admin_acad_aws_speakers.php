@@ -53,13 +53,37 @@ $( function() {
 
 <?php
 
+// If pi_or_host is not found, use ldap info.
+
+foreach( $speakerPiMap as $pi => $logins )
+{
+    if( ! $pi or $pi == 'UNSPECIFIED' or strpos( $pi, '@' ) === false )
+    {
+        foreach( $logins as $login )
+        {
+            $ldap = getUserInfoFromLdap( $login[ 'login' ] );
+            $email = getEmailByName( $ldap[ 'laboffice' ] );
+            if( $email )
+            {
+                // Update the table with laboffice from intranet.
+                updateTable( 'logins', 'login', 'pi_or_host'
+                    , array( 'login' => $login[ 'login' ], 'pi_or_host' => $email )
+                );
+            }
+        }
+    }
+
+}
+
+
+
 /**
     * @name User interface.
     * @{ */
 /**  @} */
 
 echo '
-    <form action="admin_acad_aws_speakers_action.php" 
+    <form action="admin_acad_aws_speakers_action.php"
         method="post" accept-charset="utf-8">
     <table border="0">
     <tr>

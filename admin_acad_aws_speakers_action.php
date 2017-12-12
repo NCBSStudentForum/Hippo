@@ -1,5 +1,10 @@
 <?php
 
+include_once 'methods.php';
+include_once 'check_access_permissions.php';
+
+mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
+
 if( __get__( $_POST, 'response', '' )  == 'update_pi_or_host' )
 {
     // Show only this user.

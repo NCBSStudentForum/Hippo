@@ -33,6 +33,7 @@ foreach( $awsSpeakers as $login )
 }
 ksort( $speakerPiMap );
 
+echo userHTML( );
 
 ?>
 

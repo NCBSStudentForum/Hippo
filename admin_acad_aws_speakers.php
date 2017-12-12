@@ -97,6 +97,8 @@ echo '
 
 
 echo ' <h2>Table of active speakers</h2> ';
+
+$index = 0;
 foreach( $speakerPiMap as $pi => $speakers )
 {
     if( count( $speakers ) < 1 )
@@ -115,7 +117,8 @@ foreach( $speakerPiMap as $pi => $speakers )
         $speaker = getLoginInfo( $login['login'] );
 
         $i ++;
-        $table .= "<td> $i " . arrayToName( $speaker ) . "<br />
+        $index ++;
+        $table .= "<td> $index: " . arrayToName( $speaker ) . "<br />
             <tt>(" .  $speaker[ 'email' ] . ")</tt></td>";
         if( $i % 4 == 0 )
             $table .= "<tr></tr>";

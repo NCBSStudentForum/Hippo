@@ -457,8 +457,12 @@ function initialize( $db  )
         CREATE TABLE IF NOT EXISTS journal_clubs (
             id VARCHAR(100) NOT NULL PRIMARY KEY
             , title VARCHAR(200) NOT NULL
+            , day ENUM( 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN' ) NOT NULL
             , status SET( 'ACTIVE', 'INVALID', 'INACTIVE' ) DEFAULT 'ACTIVE'
+            , time TIME
+            , venue VARCHAR(100) NOT NULL
             , description TEXT
+            , UNIQUE KEY(id,day,time,venue)
             )"
         );
 

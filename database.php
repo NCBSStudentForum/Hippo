@@ -2789,4 +2789,13 @@ function getSlotMap( $slots = array( ) )
     return $slotMap;
 }
 
+function getJCAdmins( $jc_id )
+{
+    return getTableEntries(
+        'jc_subscriptions', 'login'
+        , "jc_id='$jc_id' AND subscription_type='ADMIN'"
+    );
+}
+
+
 ?>

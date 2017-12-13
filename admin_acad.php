@@ -199,6 +199,10 @@ echo '
         <td>Add/Update Journal Club </td>
         <td> <a href="admin_acad_manages_jc.php">Add/Update Journal Clubs</a> </td>
     </tr>
+    <tr>
+        <td>Manage Journal Club Admins</td>
+        <td><a href="admin_acad_manages_jc_admins.php">Manage Journal Club Admins</a></td>
+    </tr>
   </table>
   ';
 

@@ -37,24 +37,26 @@ foreach( $jcs as $jc )
 $table .= '</table>';
 echo $table;
 
-echo '<h1>Upcoming Presentations </h1>';
 
 $mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
 foreach( $mySubs as $mySub )
 {
     echo "<h2>" . $mySub[ 'jc_id' ] . "</h2>";
     $jcID = $mySub['jc_id' ];
-    $upcomingPresentations = getUpcomingJCPresentations( $jcID );
-    if( count( $upcomingPresentations ) > 0 )
+    echo '<h3>Upcoming Presentations </h3>';
+
+    $upcomings = getUpcomingJCPresentationsOfUser( $_SESSION['user'], $jcID );
+    if( $upcomings )
     {
-        foreach( $upcomingPresentations as $presentation )
+        echo printInfo( "You have following upcoming presentation" );
+        foreach( $upcomings as $upcoming )
         {
-            echo arrayToTableHTML( $presentation, 'info' );
+            echo arrayToVerticalTableHTML( $upcoming, 'info' );
         }
     }
     else
     {
-        echo printInfo( "No upcoming presentation is found in database!" );
+        echo printInfo( "There is no upcoming presentation assigned to you" );
     }
 }
 

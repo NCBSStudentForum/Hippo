@@ -601,6 +601,22 @@ function requestToHTML( $request )
     return arrayToTableHTML( $request, "request" );
 }
 
+
+function arrayToHtmlTableOfLogins( $logins )
+{
+    $table = '<table>';
+
+    foreach( $logins as $i => $login )
+    {
+        $table .= "<tr><td> " . ($i + 1) . "</td><td>"
+            . arrayToName( $login ) . "</td><td>" . $login['email']
+            . "</td></tr>";
+
+    }
+    $table.= '</table>';
+    return $table;
+}
+
 function userHTML( )
 {
     $html = "<table class=\"user_float\">";
@@ -2051,5 +2067,6 @@ function goBack( $default = '', $delay = 0 )
 
     goToPage( $url, $delay );
 }
+
 
 ?>

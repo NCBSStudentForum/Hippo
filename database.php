@@ -1730,16 +1730,19 @@ function getAWSFromPast( $from  )
     *
     * @return Array containing AWS speakers.
  */
-function getAWSSpeakers( $sortby = '' )
+function getAWSSpeakers( $sortby = '', $where_extra = '' )
 {
     global $db;
+
     $sortExpr = '';
     if( $sortby )
         $sortExpr = " ORDER BY '$sortby'";
 
-    $stmt = $db->query(
-        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES' $sortExpr "
-    );
+    $whereExpr = "status='ACTIVE' AND eligible_for_aws='YES'";
+    if( $where_extra )
+        $whereExpr .= " AND $where_extra";
+
+    $stmt = $db->query( "SELECT * FROM logins WHERE $whereExpr $sortExpr " );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }

@@ -13,6 +13,19 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/var/log/hippo.log' );
 
+function trueOnGivenDayAndTime( $day, $time )
+{
+    $now = strtotime( 'today' );
+    if( $now != strtotime( $day ) )
+        return false;
+
+    $away = strtotime( 'now' ) - strtotime( "$time" );
+    if( $away >= -1 && $away < 15 * 60 )
+        return true;
+
+    return false;
+}
+
 
 // Directory to store the mdsum of sent emails.
 $maildir = getDataDir( ) . '/_mails';
@@ -27,16 +40,14 @@ echo( "Running cron at $now" );
 /* Task 0. Send email to hippo mailing list that Hippo is alive.
  */
 $today = dbDate( strtotime( 'today' ) );
+
+if( trueOnGivenDayAndTime( 'today', '7:00 am' ) )
 {
-    $awayFrom = strtotime( 'now' ) - strtotime( '7:00 am' );
-    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
-    {
-        $day = humanReadableDate( $today );
-        sendHTMLEmail( "<p>Hippo is alive on $day </p>"
-            , "Hippo is ALIVE on $day"
-            , 'hippo@lists.ncbs.res.in'
-            );
-    }
+    $day = humanReadableDate( $today );
+    sendHTMLEmail( "<p>Hippo is alive on $day </p>"
+        , "Hippo is ALIVE on $day"
+        , 'hippo@lists.ncbs.res.in'
+    );
 }
 
 /*
@@ -47,48 +58,46 @@ $today = dbDate( strtotime( 'today' ) );
 $today = dbDate( strtotime( 'today' ) );
 echo printInfo( "Today is " . humanReadableDate( $today ) );
 
-if( $today == dbDate( strtotime( 'this friday' ) ) )
+if( trueOnGivenDayAndTime( 'this friday', '4:00 pm' ) )
 {
-    // Send any time between 4pm and 4:15 pm.
-    $awayFrom = strtotime( 'now' ) - strtotime( '4:00 pm' );
-    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
+    $nextMonday = dbDate( strtotime( 'next monday' ) );
+    $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
+
+    $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
+    $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
+    $to = 'academic@lists.ncbs.res.in';
+
+    $res = generateAWSEmail( $nextMonday );
+
+    if( $res[ 'speakers'] )
     {
-        echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
-        $nextMonday = dbDate( strtotime( 'next monday' ) );
-        $subject = 'Next Week AWS (' . humanReadableDate( $nextMonday) . ') by ';
+        $subject = 'Next week Annual Work Seminar (' . humanReadableDate( $nextMonday) . ') by ';
+        $subject .= implode( ', ', $res[ 'speakers'] );
+        $mail = $res[ 'email' ];
 
-        $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-        $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-        $to = 'academic@lists.ncbs.res.in';
+        $pdffile = $res[ 'pdffile' ];
 
-        $res = generateAWSEmail( $nextMonday );
+        echo $mail[ 'email_body' ];
 
-        if( $res[ 'speakers'] )
-        {
-            $subject = 'Next week Annual Work Seminar (' . humanReadableDate( $nextMonday) . ') by ';
-            $subject .= implode( ', ', $res[ 'speakers'] );
-            $mail = $res[ 'email' ];
-
-            $pdffile = $res[ 'pdffile' ];
-
-            echo $mail[ 'email_body' ];
-
-            $res = sendHTMLEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
-            ob_flush( );
-        }
-        else
-        {
-            // There is no AWS this monday.
-            $subject = 'No Annual Work Seminar next week (' .
-                            humanReadableDate( $nextMonday ) . ')';
-
-            $mail = $res[ 'email' ];
-            echo( "Sending to $to, $cclist with subject $subject" );
-            echo( "$mail" );
-            sendHTMLEmail( $mail, $subject, $to, $cclist );
-        }
+        $res = sendHTMLEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
+        ob_flush( );
     }
+    else
+    {
+        // There is no AWS this monday.
+        $subject = 'No Annual Work Seminar next week (' .
+                        humanReadableDate( $nextMonday ) . ')';
 
+        $mail = $res[ 'email' ];
+        echo( "Sending to $to, $cclist with subject $subject" );
+        echo( "$mail" );
+        sendHTMLEmail( $mail, $subject, $to, $cclist );
+    }
+}
+
+if( trueOnGivenDayAndTime( 'this friday', '15:00' ) )
+{
     /* Send out email to TCM members and faculty about upcoming AWS. */
     $awayFrom = strtotime( 'now' ) - strtotime( '15:00' );
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
@@ -124,107 +133,95 @@ if( $today == dbDate( strtotime( 'this friday' ) ) )
     }
 }
 
-if( $today == dbDate( strtotime( 'this monday' ) ) )
+if( trueOnGivenDayAndTime( 'this monday', '10:00 am' ) )
 {
-    // Send on 10 am about AWS
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
-    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    error_log( "Monday 10amm. Notify about AWS" );
+    echo printInfo( "Today is Monday. Send out emails for AWS" );
+    $thisMonday = dbDate( strtotime( 'this monday' ) );
+    $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
+    $res = generateAWSEmail( $thisMonday );
+    $to = 'academic@lists.ncbs.res.in';
+
+    if( $res[ 'speakers' ] )
     {
-        error_log( "Monday 8am. Notify about AWS" );
-        echo printInfo( "Today is Monday 8am. Send out emails for AWS" );
-        $thisMonday = dbDate( strtotime( 'this monday' ) );
-        $subject = 'Today\'s AWS (' . humanReadableDate( $thisMonday) . ') by ';
-        $res = generateAWSEmail( $thisMonday );
+        echo printInfo( "Sending mail about today's AWS" );
+        $subject .= implode( ', ', $res[ 'speakers'] );
 
-        $cclist = 'ins@ncbs.res.in,reception@ncbs.res.in';
-        $cclist .= ',multimedia@ncbs.res.in,hospitality@ncbs.res.in';
-        $to = 'academic@lists.ncbs.res.in';
+        $mail = $res[ 'email' ]['email_body'];
 
-        if( $res[ 'speakers' ] )
-        {
-            echo printInfo( "Sending mail about today's AWS" );
-            $subject .= implode( ', ', $res[ 'speakers'] );
+        error_log( "Sending to $to, $cclist with subject $subject" );
+        echo( "Sending to $to, $cclist with subject $subject" );
 
-            $mail = $res[ 'email' ]['email_body'];
-
-            error_log( "Sending to $to, $cclist with subject $subject" );
-            echo( "Sending to $to, $cclist with subject $subject" );
-
-            $pdffile = $res[ 'pdffile' ];
-            $ret = sendHTMLEmail( $mail, $subject, $to, $cclist, $pdffile );
-            ob_flush( );
-        }
-        else
-        {
-            // There is no AWS this monday.
-            $subject = 'No Annual Work Seminar today : ' .
-                            humanReadableDate( $nextMonday );
-            $mail = $res[ 'email' ]['email_body'];
-            sendHTMLEmail( $mail, $subject, $to, $cclist );
-        }
+        $pdffile = $res[ 'pdffile' ];
+        $ret = sendHTMLEmail( $mail, $subject, $to, $cclist, $pdffile );
+        ob_flush( );
+    }
+    else
+    {
+        // There is no AWS this monday.
+        $subject = 'No Annual Work Seminar today : ' .
+            humanReadableDate( $nextMonday );
+        $mail = $res[ 'email' ]['email_body'];
+        sendHTMLEmail( $mail, $subject, $to, $res['email']['CC'] );
     }
 }
 
-if( $today == dbDate( strtotime( 'this sunday' ) ) )
+
+if( trueOnGivenDayAndTime( 'this sunday', '7:00 pm' ) )
 {
-    // Send on 7pm about this week events.
-    $awayFrom = strtotime( 'now' ) - strtotime( '7:00 pm' );
-    if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+    echo printInfo( "Today is Sunday 7pm. Send out emails for week events." );
+    $thisMonday = dbDate( strtotime( 'this monday' ) );
+    $subject = 'This week ( ' . humanReadableDate( $thisMonday) . ' ) events ';
+
+    $cclist = '';
+    $to = 'academic@lists.ncbs.res.in';
+
+    $html = "<p>Greetings!</p>";
+
+    $html .= printInfo( "List of events for the week starting "
+        . humanReadableDate( $thisMonday )
+    );
+
+    $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
+
+    if( count( $events ) > 0 )
     {
-        echo printInfo( "Today is Sunday 7pm. Send out emails for week events." );
-        $thisMonday = dbDate( strtotime( 'this monday' ) );
-        $subject = 'This week ( ' . humanReadableDate( $thisMonday) . ' ) events ';
-
-        $cclist = '';
-        $to = 'academic@lists.ncbs.res.in';
-
-        $html = "<p>Greetings!</p>";
-
-        $html .= printInfo( "List of events for the week starting "
-                    . humanReadableDate( $thisMonday )
-                );
-
-        $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
-
-        if( count( $events ) > 0 )
+        foreach( $events as $event )
         {
-            foreach( $events as $event )
-            {
-                if( $event[ 'is_public_event' ] == 'NO' )
-                    continue;
+            if( $event[ 'is_public_event' ] == 'NO' )
+                continue;
 
-                $externalId = $event[ 'external_id'];
-                if( ! $externalId )
-                    continue;
+            $externalId = $event[ 'external_id'];
+            if( ! $externalId )
+                continue;
 
-                $id = explode( '.', $externalId);
-                $id = $id[1];
-                if( intval( $id ) < 0 )
-                    continue;
+            $id = explode( '.', $externalId);
+            $id = $id[1];
+            if( intval( $id ) < 0 )
+                continue;
 
-                $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
+            $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
 
-                // We just need the summary of every event here.
-                $html .= eventSummaryHTML( $event, $talk );
-                $html .= "<br>";
-            }
-
-            $html .= "<br><br>";
-
-            // Generate email
-            // getEmailTemplates
-            $templ = emailFromTemplate( 'this_week_events'
-                , array( "EMAIL_BODY" => $html )
-            );
-
-            sendHTMLEmail( $templ[ 'email_body'], $subject, $to, $cclist );
+            // We just need the summary of every event here.
+            $html .= eventSummaryHTML( $event, $talk );
+            $html .= "<br>";
         }
-        else
-        {
-            $html .= "<p> I could not find any event in my database! </p>";
-            $html .=  "<p> -- Hippo </p>";
-            sendHTMLEmail( $html, $subject, $to, $cclist );
-        }
+
+        $html .= "<br><br>";
+
+        // Generate email
+        // getEmailTemplates
+        $templ = emailFromTemplate( 'this_week_events'
+            , array( "EMAIL_BODY" => $html )
+        );
+
+        sendHTMLEmail( $templ[ 'email_body'], $subject, $to, $cclist );
+    }
+    else
+    {
+        $html .= "<p> I could not find any event in my database! </p>";
+        $html .=  "<p> -- Hippo </p>";
+        sendHTMLEmail( $html, $subject, $to, $cclist );
     }
 }
 
@@ -439,33 +436,100 @@ if( $today > $startDay && $today <= $endDay )
     }
 }
 
-/* Assign AWS after 10 weeks . */
-if( dbDate( 'today' ) == dbDate( strtotime( 'this monday' ) ) )
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Send email to PI. From 10 weeks from now, a slot has been open
+    * up for his lab. He must ask her students to sign up.
+    *
+    * NOTE: If no one signs up for next two weeks, assign the student by itself.
+    * @Param 'today'
+ */
+/* ----------------------------------------------------------------------------*/
+if( trueOnGivenDayAndTime( 'this wednesday', '11:00' ) )
 {
-    $awayFrom = strtotime( 'now' ) - strtotime( '13:00' );
-    if( $awayFrom > -1 && $awayFrom < 15 * 60 )
+    // Get the monday after 10 weeks.
+    $afterNWeeks = dbDate( strtotime( 'this monday' ) + 10 * 7 * 86400 );
+    echo printInfo( "Today is wednedsay and after 10 weeks $afterNWeeks" );
+
+    echo humanReadableDate( $afterNWeeks );
+
+    // Get scheduled AWS on this week.
+    $awses = getTentativeAWSSchedule( $afterNWeeks );
+
+    // Assign these AWS and send email to speaker.
+    $piSlots = array( );
+    foreach( $awses as $aws )
     {
-        $afterEightWeeks = dbDate( strtotime( $today ) + 10 * 7 * 86400 );
-        echo printInfo( "Today is monday and after 8 weeks $afterEightWeeks" );
+        $speaker = $aws[ 'speaker' ];
+        $piOrHost = getPIOrHost( $speaker );
+        $piSlots[ $piOrHost ][] = getLoginInfo( $speaker );
+        $specialization = getFacultySpecialization( $piOrHost );
+    }
 
-        echo humanReadableDate( $afterEightWeeks );
-        // Get scheduled AWS on this week.
-        $awses = getTentativeAWSSchedule( $afterEightWeeks );
+    foreach( $piSlots as $piOrHost => $speakers )
+    {
+        $numSpeakers = count( $speakers );
 
-        // Assign these AWS and send email to speaker.
-        foreach( $awses as $aws )
+        $numSlotExpr = "$numSpeakers slot is ";
+        if( count( $numSpeakers ) > 1 )
+            $numSlotExpr = "$numSpeakers slots are ";
+
+        $defaultAssignmentTable = arrayToHtmlTableOfLogins( $speakers );
+
+        $listSpeakers = getAWSSpeakers( 'login', "pi_or_host='$piOrHost'" );
+        $allSpeakersTable = arrayToHtmlTableOfLogins( $listSpeakers );
+
+        $date = $aws[ 'date' ];
+        echo "$speaker on $date $piOrHost <br> ";
+
+        $pi = findAnyoneWithEmail( $piOrHost );
+        $piHTML = arrayToName( $pi );
+
+
+        $macros = array( "FACULTY" => $piHTML
+            , 'AWS_DATE' => humanReadableDate( $afterNWeeks )
+            , 'AWS_THEME' => "'$specialization'"
+            , 'NUMBER_OF_SLOTS_EXPR' => $numSlotExpr
+            , 'DEFAULT_ASSIGNMENT_TABLE' => $defaultAssignmentTable
+            , 'AWS_SPEAKERS_TABLE' => $allSpeakersTable
+        );
+
+        $templ = emailFromTemplate(
+            'NOTIFY_SUPERVISOR_ABOUT_AWS_SLOT_N_WEEKS_IN_ADVANCE'
+            , $macros
+        );
+
+        // Send email.
+        $to = $piOrHost;
+        $subject = "Assignment of Annual Work Seminar slot(s) on $afterNWeeks";
+        sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'CC' ] );
+    }
+}
+
+/* 8 weeks earlier, if student fails to sign-up, select one from the list */
+if( trueOnGivenDayAndTime( 'this monday', '13:00' ) )
+{
+    $afterNWeeks = dbDate( strtotime( $today ) + 8 * 7 * 86400 );
+    echo printInfo( "Today is monday and after 8 weeks $afterNWeeks" );
+
+    echo humanReadableDate( $afterNWeeks );
+    // Get scheduled AWS on this week.
+    $awses = getTentativeAWSSchedule( $afterNWeeks );
+
+    // Assign these AWS and send email to speaker.
+    foreach( $awses as $aws )
+    {
+        $speaker = $aws[ 'speaker' ];
+        $date = $aws[ 'date' ];
+        $res = acceptScheduleOfAWS( $speaker, $date );
+        if( $res )
         {
-            $speaker = $aws[ 'speaker' ];
-            $date = $aws[ 'date' ];
-            $res = acceptScheduleOfAWS( $speaker, $date );
-            if( $res )
-            {
-                echo printInfo( "Successfully assigned" );
-                rescheduleAWS( );
-                $res = notifyUserAboutUpcomingAWS( $speaker, $date );
-            }
+            echo printInfo( "Successfully assigned" );
+            $res = notifyUserAboutUpcomingAWS( $speaker, $date );
         }
     }
+    rescheduleAWS( );
 }
 
 /* --------------------------------------------------------------------------*/
@@ -474,7 +538,6 @@ if( dbDate( 'today' ) == dbDate( strtotime( 'this monday' ) ) )
     * about their AWS candidates.
  */
 /* ----------------------------------------------------------------------------*/
-
 $intMonth = intval( date( 'm', strtotime( 'today' ) ) );
 // Nothing to do on odd months.
 if( $intMonth % 2 == 0 )
@@ -482,51 +545,47 @@ if( $intMonth % 2 == 0 )
     $year = getCurrentYear( );
     $month = date( 'M', strtotime( 'today' ));
     $firstSat = strtotime( 'first Saturday', strtotime( "$month $year" ) );
-    if( dbDate( $firstSat ) == dbDate( 'today' ) )
-    {
-        // At 10 am.
-        $awayFrom = strtotime( 'now' ) - strtotime( '10:00' );
-        if( $awayFrom > -1 && $awayFrom < 15 * 60 )
-        {
-            $speakers = getAWSSpeakers( );
-            $facultyMap = array( );
-            foreach( $speakers as $speaker )
-            {
-                $login = $speaker[ 'login' ];
-                $pi = getPIOrHost( $login );
-                if( $pi )
-                    $facultyMap[ $pi ] =  __get__($facultyMap, $pi, '' ) . ',' . $login;
-            }
 
-            // Now print the names.
-            foreach( $facultyMap as $fac => $speakers )
+    if( trueOnGivenDayAndTime( 'first Saturday', '10:00 am' ) )
+    {
+        $speakers = getAWSSpeakers( );
+        $facultyMap = array( );
+        foreach( $speakers as $speaker )
+        {
+            $login = $speaker[ 'login' ];
+            $pi = getPIOrHost( $login );
+            if( $pi )
+                $facultyMap[ $pi ] =  __get__($facultyMap, $pi, '' ) . ',' . $login;
+        }
+
+        // Now print the names.
+        foreach( $facultyMap as $fac => $speakers )
+        {
+            if( count( $speakers ) < 1 )
+                continue;
+
+            $table = '<table border="1">';
+            foreach( explode( ",", $speakers ) as $login )
             {
-                if( count( $speakers ) < 1 )
+                if( ! trim( $login ) )
                     continue;
 
-                $table = '<table border="1">';
-                foreach( explode( ",", $speakers ) as $login )
-                {
-                    if( ! trim( $login ) )
-                        continue;
-
-                    $speaker = loginToHTML( $login, true );
-                    $table .= " <tr> <td>$speaker</td> </tr>";
-                }
-                $table .= "</table>";
-
-                $faculty = arrayToName( findAnyoneWithEmail( $fac ) );
-                $email = emailFromTemplate( 'NOTIFY_SUPERVISOR_AWS_CANDIDATES'
-                    , array( 'FACULTY' => $faculty, 'LIST_OF_AWS_SPEAKERS' => $table
-                    , 'TIMESTAMP' => dbDateTime( 'now' ) )
-                );
-
-                $body = $email[ 'email_body' ];
-                $cc = $email[ 'cc' ];
-                $subject = 'List of AWS speakers from your lab';
-                $to = $fac;
-                sendHTMLEmail( $body, $subject, $to, $cc );
+                $speaker = loginToHTML( $login, true );
+                $table .= " <tr> <td>$speaker</td> </tr>";
             }
+            $table .= "</table>";
+
+            $faculty = arrayToName( findAnyoneWithEmail( $fac ) );
+            $email = emailFromTemplate( 'NOTIFY_SUPERVISOR_AWS_CANDIDATES'
+                , array( 'FACULTY' => $faculty, 'LIST_OF_AWS_SPEAKERS' => $table
+                , 'TIMESTAMP' => dbDateTime( 'now' ) )
+            );
+
+            $body = $email[ 'email_body' ];
+            $cc = $email[ 'cc' ];
+            $subject = 'List of AWS speakers from your lab';
+            $to = $fac;
+            sendHTMLEmail( $body, $subject, $to, $cc );
         }
     }
 }

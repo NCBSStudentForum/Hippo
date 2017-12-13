@@ -8,10 +8,6 @@ include_once 'check_access_permissions.php';
 
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
-$awsSpeakers = getTableEntries( 'logins', 'login'
-    , "eligible_for_aws='YES' AND status='ACTIVE'
-    " );
-
 $speakerPiMap = array( );
 // Collect all faculty
 $faculty = getFaculty( );
@@ -25,7 +21,7 @@ foreach( $faculty as $fac )
 
 $facEmails = array_keys( $facultyByEmail );
 $logins = array( );
-foreach( $awsSpeakers as $login )
+foreach( getAWSSpeakers( ) as $login )
 {
     $piOrHost = getPIOrHost( $login[ 'login' ] );
     $logins[] = $login[ 'login' ];

@@ -39,15 +39,24 @@ foreach( $jcIds as $currentJC )
     $subTable = '<table class="info">';
     foreach( $subs as $i => $sub )
     {
+        $subTable .= '<tr>';
         $login = $sub['login'];
         $info = getLoginInfo( $login );
         $name = arrayToName( $info );
         $email = mailto( $info[ 'email' ] );
-        $subTable .= '<tr>';
+        $subTable .= '<td>' . ($i+1) . "</td><td> $login </td>
+            <td>$name ($email) </td>";
 
-        $subTable .= '<td>' . ($i+1) . "</td><td> $name ($email) </td>";
+        $subTable .= '<form method="post" action="user_jc_admin_submit.php">';
+        $subTable .= '<td>';
+        $subTable .= '<input type="hidden" name="login" value="' . $login . '" />';
+        $subTable .= '<input type="hidden" name="jc_id" value="' . $currentJC . '" />';
+        $subTable .= '<button style="float:right;" onclick="AreYouSure(this)" 
+                              name="response" >' . $symbDelete . '</button>';
+        $subTable .= '</td>';
+        $subTable .= '</form>';
+
         $subTable .= '</tr>';
-
     }
 
     $subTable .= '</table>';

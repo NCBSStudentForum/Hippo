@@ -4,7 +4,6 @@ include_once 'header.php';
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
-require_once 'class.Diff.php';
 
 echo "<h3>Manage pending requests</h3>";
 

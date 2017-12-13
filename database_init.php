@@ -41,7 +41,7 @@ function initialize( $db  )
             , first_name VARCHAR(200)
             , last_name VARCHAR(100)
             , roles SET(
-                'USER', 'ADMIN', 'MEETINGS', 'ACAD_ADMIN', 'BOOKMYVENUE_ADMIN'
+                'USER', 'ADMIN', 'MEETINGS', 'ACAD_ADMIN', 'BOOKMYVENUE_ADMIN', 'JC_ADMIN'
             ) DEFAULT 'USER'
             , last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             , created_on DATETIME
@@ -386,38 +386,7 @@ function initialize( $db  )
             ) "
         );
 
-    // Nilami store
-    $res = $db->query( "
-        CREATE TABLE IF NOT EXISTS nilami_items (
-            id INT NOT NULL PRIMARY KEY
-            , created_by VARCHAR(50) NOT NULL -- Email of owner
-            , created_on DATETIME NOT NULL -- timestamp
-            , item_name VARCHAR(300) NOT NULL
-            , description MEDIUMTEXT
-            , price INT NOT NULL DEFAULT -1
-            , status ENUM( 'AVAILABLE', 'SOLD', 'WITHDRAWN', 'EXPIRED' )
-                    DEFAULT 'AVAILABLE'
-            , last_updated_on DATETIME
-            , contact_info VARCHAR(20)
-            , tags VARCHAR(100) -- tags must be separated by comma or space.
-            , comment VARCHAR(200)
-            )"
-        );
-    $res = $db->query( "
-        CREATE TABLE IF NOT EXISTS nilami_offer (
-            id INT PRIMARY KEY
-            , created_by VARCHAR(50) NOT NULL -- Email of owner
-            , created_on DATETIME NOT NULL -- timestamp
-            , item_id INT NOT NULL
-            , offer INT NOT NULL DEFAULT -1
-            , status ENUM( 'VALID', 'WITHDRAWN', 'EXPIRED' ) DEFAULT 'VALID'
-            , contact_info VARCHAR(20)
-            , FOREIGN KEY (id) REFERENCES nilami_items(id)
-            , UNIQUE KEY (created_by,item_id)
-            )"
-        );
-
-    // TOLET.
+    // DEPRECATED: TOLET.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS apartments (
             id INT PRIMARY KEY
@@ -470,6 +439,72 @@ function initialize( $db  )
             , UNIQUE KEY(course_id,slot,venue)
             )"
         );
+
+    // TODO: This table keep queries which user can excecute after login.
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS user_queries (
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+            , user VARCHAR(100) NOT NULL
+            , query_type VARCHAR(50) NOT NULL -- Which type of query
+            , query VARCHAR(1000) NOT NULL
+            , status ENUM( 'VALID', 'INVALID', 'EXECUTED' ) DEFAULT 'VALID'
+            , comment VARCHAR(200)
+            )"
+        );
+
+    // This table keep journal club subscription
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS journal_clubs (
+            id VARCHAR(100) NOT NULL PRIMARY KEY
+            , title VARCHAR(200) NOT NULL
+            , day ENUM( 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN' ) NOT NULL
+            , status SET( 'ACTIVE', 'INVALID', 'INACTIVE' ) DEFAULT 'ACTIVE'
+            , time TIME
+            , venue VARCHAR(100) NOT NULL
+            , description TEXT
+            , UNIQUE KEY(id,day,time,venue)
+            )"
+        );
+
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS jc_subscriptions (
+            login VARCHAR(100) NOT NULL
+            , jc_id VARCHAR(100) NOT NULL
+            , status ENUM( 'VALID', 'INVALID', 'UNSUBSCRIBED' ) DEFAULT 'VALID'
+            , subscription_type SET( 'NORMAL', 'ADMIN' ) DEFAULT 'NORMAL'
+            , last_modified_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            , UNIQUE KEY(login,jc_id)
+            )"
+        );
+
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS jc_presentations (
+            jc_id VARCHAR(100) NOT NULL
+            , title VARCHAR(300) NOT NULL
+            , presenter VARCHAR(100) NOT NULL -- login from logins table.
+            , description TEXT
+            , date DATE NOT NULL
+            , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) default 'VALID'
+            , url VARCHAR(500) -- URL to download the presentation.
+            , UNIQUE KEY(presenter,jc_id)
+            , FOREIGN KEY (presenter) REFERENCES logins(login)
+            )"
+        );
+
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS jc_requests (
+            jc_id VARCHAR(100) NOT NULL
+            , presenter VARCHAR(100) NOT NULL -- login from logins
+            , title VARCHAR(300) NOT NULL
+            , description TEXT
+            , date DATE NOT NULL
+            , url VARCHAR(500) -- URL to download the presentation.
+            , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
+            , UNIQUE KEY(presenter,jc_id)
+            , FOREIGN KEY (presenter) REFERENCES logins(login)
+            )"
+        );
+
     return $res;
 }
 

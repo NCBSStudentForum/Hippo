@@ -50,20 +50,6 @@ echo '
   </table>';
 
 echo '<h2>Edit and update AWS</h2>';
-echo '<table class="admin">
-    <tr>
-        <td>Manage AWS edit requests</td>
-        <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) .
-            ' pending requests</a> </td>
-    </tr>
-    <tr>
-        <td>Generate emails and documents</td>
-        <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
-    </tr>
-    <tr>
-    </table>';
-
-echo '<br/>';
 
 echo '<table class="admin">
     <tr>
@@ -81,13 +67,14 @@ echo '<table class="admin">
         </td>
     </tr>
     <tr>
-        <td>Add, Update a student (AWS) <br>
+        <td><strong>Update AWS list</strong><br>
             <small>Type a login name and press the button.</small>
         </td>
         <td>
             <form method="post" action="admin_acad_update_user.php">
+                <i fa class="fa fa-graduation-cap"></i>
                 <input id="autocomplete_user" name="login"
-                    placeholder="I will autocomplete " >
+                    placeholder="student login" >
                 <button title="Add or remove speakers from AWS list"
                     name="response" value="edit">' . $symbUpdate .
                 '</button>
@@ -96,6 +83,19 @@ echo '<table class="admin">
     </tr>
     </table>';
 
+echo '<br>';
+echo '<table class="admin">
+    <tr>
+        <td>Manage AWS edit requests</td>
+        <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) .
+            ' pending requests</a> </td>
+    </tr>
+    <tr>
+        <td>Generate emails and documents</td>
+        <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
+    </tr>
+    <tr>
+    </table>';
 
 $login = null;
 $date = null;
@@ -191,6 +191,22 @@ echo '
   </table>
   ';
 
+// Journal clubs.
+echo '<h1>Journal Clubs</h1>';
+echo '
+  <table border="0" class="admin">
+    <tr>
+        <td>Add/Update Journal Club </td>
+        <td> <a href="admin_acad_manages_jc.php">Add/Update Journal Clubs</a> </td>
+    </tr>
+    <tr>
+        <td>Manage Journal Club Admins</td>
+        <td><a href="admin_acad_manages_jc_admins.php">Manage Journal Club Admins</a></td>
+    </tr>
+  </table>
+  ';
+
+
 
 echo '<h1>EXTRA</h1>';
 echo "<h2>Automatic Housekeeping</h2>";
@@ -227,8 +243,13 @@ echo '
         </td>
         <td>
             <a href="admin_acad_summary_user_wise.php">User wise</a>
+            <br />
             <a href="admin_acad_summary_date_wise.php">Date wise</a>
         </td>
+    </tr>
+    <tr>
+        <td>List of AWS speakers</td>
+        <td> <a href="admin_acad_aws_speakers.php">AWS speaker</a> </td>
     </tr>
   </table>';
 
@@ -241,7 +262,7 @@ echo '
     </tr>
     <tr>
         <td>Add or update speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
+        <td> <a href="admin_acad_manages_speakers.php">Manage talk/seminar speakers</td>
     </tr>
     </table>';
 

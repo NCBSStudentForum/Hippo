@@ -49,7 +49,7 @@ else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
 else if( $_POST[ 'response' ] == 'format_abstract' )
 {
     // Update the user entry
-    echo printInfo( "Admin is allowed to reformat the entry. That is why only 
+    echo printInfo( "Admin is allowed to reformat the entry. That is why only
         abstract can be modified here" );
 
     $aws = getTableEntry( 'upcoming_aws', "speaker,date", $_POST );
@@ -65,20 +65,20 @@ else if( $_POST[ 'response' ] == 'format_abstract' )
 else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
 {
     $data = array( 'eligible_for_aws' => 'NO', 'login' => $_POST[ 'speaker' ] );
-    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data ); 
+    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data );
     if( $res )
     {
-        echo printInfo( 
+        echo printInfo(
             "Successfully removed user from AWS list.
-            Recomputing schedule ... " 
+            Recomputing schedule ... "
             );
         ob_flush( );
         // Send email to speaker.
         $subject = "Your name has been removed from AWS list";
         $msg = "<p>Dear " . loginToText( $_POST[ 'speaker' ] ) . " </p>";
-        $msg .= "<p> 
-            Your name has been removed from the list of potential AWS 
-            speaker. If this is a mistake, please write to Academic Office. 
+        $msg .= "<p>
+            Your name has been removed from the list of potential AWS
+            speaker. If this is a mistake, please write to Academic Office.
             </p>";
 
         $to = getLoginEmail( $_POST[ 'speaker' ] );
@@ -98,6 +98,31 @@ else if( $_POST[ 'response' ] == 'delete' )
     {
         rescheduleAWS( );
         echo printInfo( "Successfully cleared upcoming AWS" );
+
+        $admin = $_SESSION[ 'user' ];
+
+        // Notify the hippo list.
+        $msg = "<p>Hello " . loginToHTML( $_POST[ 'speaker' ] ) . "</p>";
+        $msg .= "<p>
+            Your upcoming AWS schedule has been removed by Hippo admin ($admin).
+             If this is a  mistake, please write to acadoffice@ncbs.res.in
+            as soon as possible.
+            </p>
+            <p> The AWS schedule which is removed is the following </p>
+            ";
+
+        $data = array( );
+        $data[ 'id' ] = $_POST[ 'id' ];
+        $data[ 'speaker' ] = $_POST[ 'speaker' ];
+        $data[ 'date' ] = $_POST[ 'date' ];
+
+        $msg .= arrayToVerticalTableHTML( $data, 'info' );
+
+        sendHTMLEmail( $msg
+            , "Your AWS schedule has been removed from upcoming AWS list"
+            , $to = getLoginEmail( $_POST[ 'speaker' ] )
+            , $cclist = "acadoffice@ncbs.res.in,hippo@lists.ncbs.res.in"
+            );
         goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
         exit;
     }
@@ -116,4 +141,3 @@ else
 echo goBackToPageLink( "admin_acad_manages_upcoming_aws.php", "Go back" );
 
 ?>
-

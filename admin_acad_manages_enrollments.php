@@ -91,8 +91,15 @@ $_POST[ 'semester' ] = $sem;
 $_POST[ 'year' ] = $year;
 
 $whereExpr = whereExpr( 'semester,year,course_id', $_POST  );
-$enrollments = getTableEntries( 'course_registration' ,'', $whereExpr);
-ksort( $enrollments );
+
+// Even when students have dropped the course, show it here. Admin
+// should be aware of it.
+// $whereExpr .= " AND type != 'DROPPED'";
+$enrollments = getTableEntries( 'course_registration' ,'student_id', $whereExpr);
+
+//usort( $enrollments
+//    , function( $x, $y ) { strcasecmp($x['student_id'], $y['student_id']); }
+//);
 
 if( $_POST[ 'task' ] == '' )
 {

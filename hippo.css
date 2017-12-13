@@ -552,6 +552,10 @@ div.bordered {
     border: 1px dotted blue;
 }
 
+div.show_aws {
+    width: 600px;
+}
+
 
 table.summary {
     font-size : small;
@@ -634,6 +638,10 @@ a.link_as_button {
     -moz-appearance: button;
     appearance: button;
     padding: 5px;
+}
+
+a {
+    max-width : var(--maxwidth);
 }
 
 footer {

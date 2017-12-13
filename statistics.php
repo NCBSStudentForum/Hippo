@@ -72,39 +72,40 @@ foreach( $events as $e )
 }
 $allVenues = array_keys( $venueUsageTime );
 
-// Venue usage at particular time from 8am to 8pm. AND concurrent events as
-// well.
-// For each 15 min gap, for 12 hours.
-$venueUsageAtTime = array( );
-$begin = strtotime( '8:00 am' );
-$timevec = array( );
-for ($i = 0; $i < 48; $i++)
-    $timevec[ ] = dbTime( $begin + 15 * 60 * $i );
-
-foreach( $allVenues as $venue )
-{
-    $data = array( );
-    foreach( $timevec as $t )
-    {
-        $res = array_filter( $events
-            , function( $v ) {
-                global $venue;
-                global $t;
-                return ($v['venue'] == $venue)
-                    && (strtotime($v['start_time']) <= strtotime($t))
-                    && (strtotime( $v['end_time']) > strtotime($t));
-            });
-        $data[] = count( $res );
-    }
-
-    // Make few of series visible by default ~ 10% (randomly).
-    $visible = false;
-    if( rand(1, 10 ) < 2 )
-        $visible = true;
-    $venueUsageAtTime[ ] = array( 'name' => $venue , 'visible' => $visible
-        , 'data' => $data);
-}
-
+//// NOTE: This statistics takes too much time.
+//// Venue usage at particular time from 8am to 8pm. AND concurrent events as
+//// well.
+//// For each 15 min gap, for 12 hours.
+//$venueUsageAtTime = array( );
+//$begin = strtotime( '8:00 am' );
+//$timevec = array( );
+//for ($i = 0; $i < 48; $i++)
+//    $timevec[ ] = dbTime( $begin + 15 * 60 * $i );
+//
+//foreach( $allVenues as $venue )
+//{
+//    $data = array( );
+//    foreach( $timevec as $t )
+//    {
+//        $res = array_filter( $events
+//            , function( $v ) {
+//                global $venue;
+//                global $t;
+//                return ($v['venue'] == $venue)
+//                    && (strtotime($v['start_time']) <= strtotime($t))
+//                    && (strtotime( $v['end_time']) > strtotime($t));
+//            });
+//        $data[] = count( $res );
+//    }
+//
+//    // Make few of series visible by default ~ 10% (randomly).
+//    $visible = false;
+//    if( rand(1, 10 ) < 2 )
+//        $visible = true;
+//    $venueUsageAtTime[ ] = array( 'name' => $venue , 'visible' => $visible
+//        , 'data' => $data);
+//}
+//
 // AWS to this list.
 $eventsByClass[ 'ANNUAL WORK SEMINAR' ] = count(
     getTableEntries( 'annual_work_seminars', 'date', "date>'2017-03-21'" ) );
@@ -594,7 +595,6 @@ echo "<p>
     Following graph shows the interaction among faculty since $fromD.
     Number on edges are number of AWSs between two faculty, either of them is involved
     in an AWS as co-supervisor or as a thesis committee member.
-
     </p>";
 
 $awses = getAWSFromPast( $from  );
@@ -603,9 +603,9 @@ $network = array( 'nodes' => array(), 'edges' => array( ) );
 echo printInfo( "Total " . count( $awses) . " AWSs found in database since $fromD" );
 
 echo '
-    <strong>
+    <p> <strong>
     Hover over a node to see the interaction of particular faculty.
-    </strong>
+    </strong> </p>
     ';
 
 $community = array();

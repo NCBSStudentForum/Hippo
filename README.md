@@ -12,6 +12,14 @@ AWS scheduler cum even manager for NCBS.
 - pandoc >= 1.19.2.1
 - python-PIL (for background image processing).
 
+## Optional 
+
+To train the NN with AWS abstract.
+
+- torch-rnn 
+
+
+
 # Apache behind proxy
 
 To communicate to google-calendar, apache needs to know proxy server. Write

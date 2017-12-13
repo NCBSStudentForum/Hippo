@@ -10,12 +10,14 @@ $dbChoices = array(
         'UNKNOWN,TALK,INFORMAL TALK' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,SIMONS SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
+        ',SIMON COLLOQUIA,SIMON LECTURE SERIES' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     , 'events.class' =>
         'UNKNOWN,TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
+        ',SIMON COLLOQUIA,SIMON LECTURE SERIES' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     , 'venues.type' =>
@@ -24,11 +26,13 @@ $dbChoices = array(
     , 'talks.class' =>
         'TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',SEMINAR,THESIS SEMINAR,SIMONS SEMINAR,ANNUAL WORK SEMINAR' .
+        ',SIMON COLLOQUIA,SIMON LECTURE SERIES' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL'
     , 'bookmyvenue.class' =>
         'UNKNOWN,TALK,INFORMAL TALK' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,SIMONS SEMINAR,THESIS SEMINAR,' .
+        ',SEMINAR,THESIS SEMINAR,SIMONS SEMINAR,ANNUAL WORK SEMINAR' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     );
@@ -1079,11 +1083,16 @@ function getUserInfo( $user )
 
     // Get the user title.
     $title = $res[ 'title' ];
+
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
 
     if( is_array($ldap) && is_array( $res ) && $ldap  )
-        $res = array_merge( $res, $ldap );
+    {
+        foreach( $ldap as $key => $val )
+            if( trim($val) )
+                $res[ $key ] = $val;
+    }
 
     // If title was found in database, overwrite ldap info.
     if( $title )
@@ -1289,7 +1298,7 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " WHERE $where ";
 
     if( strlen($orderby) > 0 )
-        $query .= " ORDER BY '$orderby'";
+        $query .= " ORDER BY '$orderby' ASC";
 
     $stmt = $db->query( $query );
     return fetchEntries( $stmt );
@@ -1725,16 +1734,19 @@ function getAWSFromPast( $from  )
     *
     * @return Array containing AWS speakers.
  */
-function getAWSSpeakers( $sortby = '' )
+function getAWSSpeakers( $sortby = '', $where_extra = '' )
 {
     global $db;
+
     $sortExpr = '';
     if( $sortby )
         $sortExpr = " ORDER BY '$sortby'";
 
-    $stmt = $db->query(
-        "SELECT * FROM logins WHERE status='ACTIVE' AND eligible_for_aws='YES' $sortExpr "
-    );
+    $whereExpr = "status='ACTIVE' AND eligible_for_aws='YES'";
+    if( $where_extra )
+        $whereExpr .= " AND $where_extra";
+
+    $stmt = $db->query( "SELECT * FROM logins WHERE $whereExpr $sortExpr " );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1952,6 +1964,30 @@ function getEmailById( $id )
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getEmailByName( $name )
+{
+    $name = preg_replace( '#(Drs*|Mrs*|NA).?\s*#i', '', $name );
+    if( ! $name )
+        return '';
+
+    $nameArr = explode( ' ', $name );
+    $fname = $nameArr[0];
+    $lname = $nameArr[ count($nameArr) - 1 ];
+    $data = array( 'first_name' => $fname, 'last_name' => $lname );
+    $res = getTableEntry( 'logins', 'first_name,last_name', $data );
+    if( ! $res )
+        $res = getTableEntry( 'faculty', 'first_name,last_name', $data );
+    if( ! $res )
+        $res = getTableEntry( 'logins', 'first_name', $data );
+    if( ! $res )
+        $res = getTableEntry( 'faculty', 'first_name', $data );
+
+    if( ! $res )
+        return '';
+
+    return $res['email'];
+}
+
 
 function getUpcomingEmails( $from = null )
 {
@@ -2093,7 +2129,7 @@ function deleteBookings( $course )
  * @Returns True if successful.
  */
 /* ----------------------------------------------------------------------------*/
-function addBookings( $runningCourseId )
+function addCourseBookings( $runningCourseId )
 {
     // Fetch the course name.
     $course = getTableEntry( 'courses', 'id', array( 'id' => $runningCourseId ) );
@@ -2114,15 +2150,15 @@ function addBookings( $runningCourseId )
     $endDate = $course[ 'end_date' ];
 
     // Select unique gid.
-    $gid = intval( getUniqueFieldValue( 'events', 'gid' ) ) + 1;
+    $gid = intval( getUniqueFieldValue( 'bookmyvenue_requests', 'gid' ) ) + 1;
 
     $temp = $startDate;
-    $eid = 0;
+    $rid = 0;
     while( strtotime($temp) <= strtotime( $endDate ) )
     {
         foreach( $tiles as $tile )
         {
-            $eid += 1;
+            $rid += 1;
             $day = $tile[ 'day' ];
             $date = dbDate( strtotime( "this $day", strtotime( $temp ) ) );
             $startTime = $tile[ 'start_time' ];
@@ -2130,7 +2166,7 @@ function addBookings( $runningCourseId )
             $msg = "$title at $venue on $date, $startTime, $endTime";
 
             $data = array(
-                'gid' => $gid, 'eid' => $eid
+                'gid' => $gid, 'rid' => $rid
                 , 'date' => dbDate( $date )
                 , 'start_time' => $startTime
                 , 'end_time' => $endTime
@@ -2159,7 +2195,10 @@ function addBookings( $runningCourseId )
                 cancelRequesttAndNotifyBookingParty( $req );
             }
 
-            $res = insertIntoTable( 'events', array_keys( $data ), $data );
+            // Create request and approve it. Direct entry in event is
+            // prohibited because then gid and eid are not synched.
+            $res = insertIntoTable( 'bookmyvenue_requests', array_keys( $data ), $data );
+            $res = approveRequest( $gid, $rid );
             if( ! $res )
                 echo printWarning( "Could not book: $msg" );
         }
@@ -2183,7 +2222,7 @@ function addBookings( $runningCourseId )
 function updateBookings( $course )
 {
     deleteBookings( $course );
-    $res = addBookings( $course );
+    $res = addCourseBookings( $course );
     return $res;
 }
 
@@ -2748,6 +2787,63 @@ function getSlotMap( $slots = array( ) )
             . ')';
     }
     return $slotMap;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// JOURNAL CLUBS
+//
+///////////////////////////////////////////////////////////////////////////////
+
+function getJCAdmins( $jc_id )
+{
+    return getTableEntries(
+        'jc_subscriptions', 'login'
+        , "jc_id='$jc_id' AND subscription_type='ADMIN'"
+    );
+}
+
+function getJournalClubs( $status = 'ACTIVE' )
+{
+    return getTableEntries( 'journal_clubs', 'id', "status='$status'" );
+}
+
+function isSubscribedToJC( $login, $jc_id )
+{
+    $res = getTableEntry( 'jc_subscriptions'
+            , 'login,jc_id,status'
+            , array( 'login' => $login, 'jc_id' => $jc_id, 'status' => 'VALID' )
+    );
+
+    if( $res )
+        return true;
+
+   return false;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Return the list of JC user is subscribed to.
+    *
+    * @Param $login
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function getUserJCs( $login )
+{
+    if( ! $login )
+        return array( );
+
+    return getTableEntries( 'jc_subscriptions', 'login', "login='$login'" );
+}
+
+function getUpcomingJCPresentations( $jcID, $date = 'today' )
+{
+    $date = dbDate( $date );
+    return getTableEntries(
+        'jc_presentations'
+            , 'date', "date >= '$date' AND status='VALID' "
+    );
 }
 
 ?>

@@ -5,7 +5,7 @@
 #
 #         USAGE: ./schedule.sh
 #
-#   DESCRIPTION: 
+#   DESCRIPTION:
 #
 #       OPTIONS: ---
 #  REQUIREMENTS: ---
@@ -22,8 +22,11 @@ set -o nounset                              # Treat unset variables as an error
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 #if [ -f /opt/rh/python27/enable ]; then
-#    source /opt/rh/python27/enable 
+#    source /opt/rh/python27/enable
 #fi
 
-#python2.7  $DIR/schedule_aws_groupwise.py
-python2.7  $DIR/schedule_aws.py
+python2.7  $DIR/schedule_aws_groupwise.py
+
+# Following algorithm does not honour groupwise AWS. This has been deprecated on
+# Dec 12, 2017. 
+#python2.7  $DIR/schedule_aws.py

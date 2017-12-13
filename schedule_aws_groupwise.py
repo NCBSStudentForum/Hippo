@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-"""schedule_aws.py: 
+"""schedule_aws.py:
 
 Query the database and schedule AWS.
 
@@ -9,8 +9,8 @@ TODO:
 
 """
 
-from __future__ import print_function 
-    
+from __future__ import print_function
+
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar singh <dilawars@ncbs.res.in>"
 __credits__          = ["NCBS Bangalore"]
@@ -25,9 +25,9 @@ import os
 import math
 import numpy as np
 from collections import defaultdict, OrderedDict, Counter
-import datetime 
+import datetime
 import copy
-import tempfile 
+import tempfile
 from logger import _logger
 from db_connect import db_
 import networkx as nx
@@ -67,6 +67,10 @@ specialization_ = [ ]
 speakersSpecialization_ = { }
 specializationFreqs_ = { }
 
+def short( line, maxchars = 4 ):
+    words = list( filter( lambda x: x.split( ), line.split( ) ) )
+    chars = [ x[0] for x in words ]
+    return ''.join( chars )[:maxchars]
 
 def init( cur ):
     """
@@ -76,17 +80,17 @@ def init( cur ):
     global db_, speakers_
     global holidays_
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
-    cur.execute( 
+    cur.execute(
             '''
-            CREATE TABLE IF NOT EXISTS aws_temp_schedule 
-            ( speaker VARCHAR(40) PRIMARY KEY, date DATE NOT NULL ) 
-            ''' 
+            CREATE TABLE IF NOT EXISTS aws_temp_schedule
+            ( speaker VARCHAR(40) PRIMARY KEY, date DATE NOT NULL )
+            '''
         )
     db_.commit( )
-    cur.execute( 
+    cur.execute(
         """
         SELECT * FROM logins WHERE eligible_for_aws='YES' AND status='ACTIVE'
-        ORDER BY login 
+        ORDER BY login
         """
         )
     for a in cur.fetchall( ):
@@ -114,8 +118,8 @@ def getAllAWSPlusUpcoming( ):
         cur = db_.cursor( dictionary = True )
     except Exception as e:
         print( e )
-        print( 
-        '''If complain is about dictionary keyword. Install 
+        print(
+        '''If complain is about dictionary keyword. Install
         https://pypi.python.org/pypi/mysql-connector-python-rf/2.2.2
         using easy_install'''
         )
@@ -132,7 +136,8 @@ def getAllAWSPlusUpcoming( ):
         upcoming_aws_slots_[ a['date'] ].append( a['speaker'] )
 
     # Now get all the previous AWSs happened so far. Also fetch the
-    # specialization of student depending on the PI of AWS.
+    # specialization of student depending on what student has specified or by
+    # reading PI.
     cur.execute( 'SELECT * FROM annual_work_seminars' )
     for a in cur.fetchall( ):
         aws_[ a[ 'speaker' ].lower() ].append( a )
@@ -144,7 +149,7 @@ def getAllAWSPlusUpcoming( ):
         cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % pi )
         spec = cur.fetchone( )
         if spec:
-            specialization = spec.get('specialization', 'UNSPECIFIED' ) 
+            specialization = spec.get('specialization', 'UNSPECIFIED' )
             if specialization and specialization != 'UNSPECIFIED':
                 speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
 
@@ -160,7 +165,7 @@ def getAllAWSPlusUpcoming( ):
         aws_scheduling_requests_[ a[ 'speaker' ].lower( ) ] = a
 
     # Get specialization of each student. If no specified, fetch the
-    # specialization of current PI. 
+    # specialization of current PI.
     # IMP: This will overwrite the specialization fetched from previous AWS. It
     # is required.
     for st in speakers_:
@@ -168,7 +173,7 @@ def getAllAWSPlusUpcoming( ):
         a = cur.fetchone( )
         if not a[ 'specialization' ]:
             # Ok. Not specified; use faculty specialization.
-            piOrHost = speakers_[ st ]['pi_or_host']  
+            piOrHost = speakers_[ st ]['pi_or_host']
             if piOrHost:
                 cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % piOrHost )
                 a = cur.fetchone( )
@@ -176,7 +181,7 @@ def getAllAWSPlusUpcoming( ):
         if a is not None and a[ 'specialization' ]:
             speakersSpecialization_[ st ] = a[ 'specialization' ]
 
-    
+
     ## Compute the frequencies of specialization.
     ## Print specialization
     freq = Counter( speakersSpecialization_.values( ) )
@@ -240,7 +245,7 @@ def construct_flow_graph(  ):
     One important scheduling aim is to minimize number of freshers on the same
     day. Ideally no more than 1 freshers should be allowed on same day. This can
     be achieved by modifying the solution later : swapping freshers with
-    experienced speaker from other days. We avoid that by drawing two edges 
+    experienced speaker from other days. We avoid that by drawing two edges
     from freshers to a 'date' i.e. maximum of 2 slots can be filled by freshers.
     For others we let them fill all three slots.
 
@@ -250,6 +255,7 @@ def construct_flow_graph(  ):
     global aws_
     global speakers_
     global holidays_
+    global specialization_
 
     g_.add_node( 'source', pos = (0,0) )
     g_.add_node( 'sink', pos = (10, 10) )
@@ -257,15 +263,18 @@ def construct_flow_graph(  ):
     lastDate = None
     freshers = set( )
     for i, speaker in enumerate( speakers_ ):
+        if speakersSpecialization_.get( speaker, 'UNSPECIFIED' ) == 'UNSPECIFIED':
+            _logger.warning( "Could not find specialization for %s" % speaker )
+
         # Last entry is most recent
         if speaker not in aws_.keys( ):
-            # We are here because this speaker has not given any AWS yet. 
+            # We are here because this speaker has not given any AWS yet.
             freshers.add( speaker )
 
             # If this user has PHD/POSTDOC, or INTPHD title. We create  a dummy
             # last date to bring her into potential speakers.
             # First make sure, I have their date of joining. Otherwise I
-            # can't continue. For MSc By Research/INTPHD assign their first AWS 
+            # can't continue. For MSc By Research/INTPHD assign their first AWS
             # after 18 months. For PHD and POSTDOC, it should be after 12 months.
             if speakers_[ speaker ]['title'] == 'INTPHD':
                 # InPhd should get their first AWS after 15 months of
@@ -299,13 +308,13 @@ def construct_flow_graph(  ):
                     except Exception as e:
                         # Else its date
                         lastDate = joinDate
-        else: 
+        else:
             # We are here because this speaker has given AWS before
             # If this speaker is already on upcoming AWS list, ignore it.
             if speaker in upcoming_aws_:
-                _logger.info( 
-                        'Speaker %s is already scheduled on %s' % ( 
-                            speaker, upcoming_aws_[ speaker ] 
+                _logger.info(
+                        'Speaker %s is already scheduled on %s' % (
+                            speaker, upcoming_aws_[ speaker ]
                             )
                         )
                 continue
@@ -350,13 +359,13 @@ def construct_flow_graph(  ):
         _logger.info( " -- Specialization for this week is %s" % specForWeek )
         for j in range( nSlots ):
             dateSlot = '%s,%d' % (monday, j)
-            g_.add_node( 
+            g_.add_node(
                     dateSlot, date = monday, pos = (5, 10*(3*i + j)),
-                    specialization = specForWeek 
+                    specialization = specForWeek
                     )
             g_.add_edge( dateSlot, 'sink', capacity = 1, weight = 0 )
             slots.append( dateSlot )
-    
+
     # Now for each student, add potential edges.
     idealGap = 357
 
@@ -376,15 +385,15 @@ def construct_flow_graph(  ):
 
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
-            # If this slot does not belong to same specialization then ignore
+            # If this slot does not belong to some specialization then ignore
             # it.
-            if speakerSpecialization and g_.node[ slot ]['specialization'] != speakerSpecialization:
+            if g_.node[ slot ]['specialization'] != speakerSpecialization:
                 continue
 
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
             if weight:
-                # If the speaker is fresher, do not draw edges to all three 
+                # If the speaker is fresher, do not draw edges to all three
                 # slots. Draw just one but make sure that they get this slot. We
                 # reduce the cost to almost zero.
                 if speaker in freshers:
@@ -408,11 +417,16 @@ def construct_flow_graph(  ):
                             _logger.debug( 'Using first preference for %s' % speaker )
                             addEdge(speaker, slot, 1, 0 + ndays / 7 )
                     if second:
-                        ndays = diffInDays(date, second, True) 
+                        ndays = diffInDays(date, second, True)
                         if ndays <= 14:
                             _logger.info( 'Using second preference for %s' % speaker )
                             addEdge(speaker, slot, 1, 2 + ndays / 7 )
-                    
+
+    # Each slot node must have at least 3 nodes.
+    for slot in slots:
+        inDegree = g_.in_degree( slot )
+        assert inDegree >= 3, "Each slot must have 3 options"
+
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
@@ -425,7 +439,7 @@ def addEdge( speaker, slot, capacity, weight ):
 
     """
     whichSlot = int( slot.split( ',' )[-1] )
-    g_.add_edge( speaker, slot, capacity = 1, weight = weight + whichSlot ) 
+    g_.add_edge( speaker, slot, capacity = 1, weight = weight + whichSlot )
 
 def write_graph( outfile  = 'network.dot' ):
     # Convert datetime to string before writing to file.
@@ -435,7 +449,7 @@ def write_graph( outfile  = 'network.dot' ):
     for n in g_.nodes():
         nodeText = '\t"%s" [' % n
         for attr in g_.node[ n ]:
-            nodeText += '%s="%s", ' % (attr, g_.node[n][attr] ) 
+            nodeText += '%s="%s", ' % (attr, g_.node[n][attr] )
         nodeText += ']'
         dotText.append( nodeText )
 
@@ -452,7 +466,7 @@ def write_graph( outfile  = 'network.dot' ):
 
 def test_graph( graph ):
     """Test that this graph is valid """
-    # Each edge must have a capcity and weight 
+    # Each edge must have a capcity and weight
     for u, v in graph.edges():
         if 'capacity' not in  graph[u][v]:
             _logger.info( 'Error: %s -> %s no capacity assigned' % (u, v) )
@@ -482,7 +496,7 @@ def potentialSpeakerToSwap( speaker, date, candidates
     with someone else.
     """
     global fmt_
-    
+
     swapWith = [ ]
     for speaker2, date2 in candidates.iteritems( ):
         d2, d = [ datetime.datetime.strptime( x, fmt_ ) for x in [ date2, date] ]
@@ -516,23 +530,23 @@ def fresherIndex( schedule ):
         nFreshers = 0
         for i, speaker in enumerate( speakers ) :
             naws = len( aws_.get( speaker, [] ) )
-            if naws == 0: 
+            if naws == 0:
                 nFreshers += 1
         freshers.append( nFreshers )
     return np.std( freshers )
 
 def swapSpeakers( speakersA, speakersB, schedule, low = -21, high = 21):
-    """Swap speakersA with speakersB 
+    """Swap speakersA with speakersB
     """
     alreadySwapped = [ ]
     for speaker, date in speakersA.iteritems( ):
         swapWith = potentialSpeakerToSwap( speaker, date, speakersB
-                , alreadySwapped, low, high 
+                , alreadySwapped, low, high
                 )
         if swapWith:
             _logger.info( 'Swapping %s with %s' % ( speaker, swapWith ) )
             alreadySwapped.append( swapWith )
-            swapInSchedule( speaker, swapWith, schedule ) 
+            swapInSchedule( speaker, swapWith, schedule )
 
     _logger.info( "After swapping %f" % fresherIndex( schedule ) )
     return schedule
@@ -562,7 +576,7 @@ def avoidClusteringOfFreshers( schedule ):
         nFreshers = 0
         for i, speaker in enumerate( speakers ) :
             naws = len( aws_.get( speaker, [] ) )
-            if naws == 0: 
+            if naws == 0:
                 nFreshers += 1
             if nFreshers > 1:
                 # Take this speaker from here and put it into to swap with list.
@@ -589,7 +603,7 @@ def avoidClusteringOfFreshers( schedule ):
         nFreshers = 0
         for i, speaker in enumerate( speakers ) :
             naws = len( aws_.get( speaker, [] ) )
-            if naws == 0: 
+            if naws == 0:
                 nFreshers += 1
             if nFreshers > 1:
                 speakersToSwap[ speaker ] = date
@@ -634,22 +648,24 @@ def computeSchedule( ):
 
 def print_schedule( schedule, outfile ):
     global g_, aws_
+    global speakersSpecialization_
     with open( outfile, 'w' ) as f:
-        f.write( "This is what is got \n" )
+        f.write( "This is what we got \n" )
 
     cost = 0
     for date in  sorted(schedule):
         line = "%s :" % date
         totalFreshers = 0
         for speaker in schedule[ date ]:
-            line += '%13s (%10s, %1d)' % (speaker
-                , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
+            line += '%13s (%10s, %1d) %4s' % (speaker
+                , g_.node[speaker]['last_date'].strftime('%Y-%m-%d')
                 , len( aws_[ speaker ] )
+                , short( speakersSpecialization_[speaker])
                 )
             if len( aws_[speaker] ) == 0:
                 totalFreshers += 1
             cost += totalFreshers
-        line += ',%d' % totalFreshers 
+        line += ',%d' % totalFreshers
 
         with open( outfile, 'a' ) as f:
             f.write( '%s\n' % line )
@@ -663,9 +679,9 @@ def commit_schedule( schedule ):
     for date in sorted(schedule):
         for speaker in schedule[date]:
             query = """
-                INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}') 
+                INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}')
                 ON DUPLICATE KEY UPDATE date='{1}'
-                """.format( speaker, date ) 
+                """.format( speaker, date )
             # _logger.debug( query )
             cur.execute( query )
     db_.commit( )

@@ -16,8 +16,8 @@ if( $_POST['response'] == 'DO_NOTHING' )
 }
 else if( $_POST['response'] == 'delete' )
 {
-    // We may or may not get email here. Email will be null if autocomplete was 
-    // used in previous page. In most cases, user is likely to use autocomplete 
+    // We may or may not get email here. Email will be null if autocomplete was
+    // used in previous page. In most cases, user is likely to use autocomplete
     // feature.
     if( strlen($_POST[ 'id' ]) > 0 )
     {
@@ -62,11 +62,11 @@ else // Add or Update here.
     $_POST[ 'year' ] = $year;
 
     $coursesAtThisVenue = getCoursesAtThisVenueSlotBetweenDates(
-        $_POST[ 'venue' ], $_POST[ 'slot' ], $startDate, $endDate 
+        $_POST[ 'venue' ], $_POST[ 'slot' ], $startDate, $endDate
     );
 
-    $collisionCourses = array_filter( 
-            $coursesAtThisVenue 
+    $collisionCourses = array_filter(
+            $coursesAtThisVenue
             , function( $c ) { return $c['course_id'] != $_POST[ 'course_id' ]; }
             );
 
@@ -84,7 +84,7 @@ else // Add or Update here.
     }
 
     // No collision. Add or update now.
-    if ( $_POST[ 'response' ] == 'Add' ) 
+    if ( $_POST[ 'response' ] == 'Add' )
     {
         echo printInfo( "Adding a new course in current course list" );
 
@@ -99,7 +99,7 @@ else // Add or Update here.
                 echo printWarning( "Could not add course to list" );
             else
             {
-                $res = addBookings( $_POST[ 'id' ] );
+                $res = addCourseBookings( $_POST[ 'id' ] );
                 goBack( 'admin_acad_manages_current_courses.php', 1 );
                 exit;
             }
@@ -107,7 +107,7 @@ else // Add or Update here.
         else
             echo printWarning( "Could ID can not be empty" );
     }
-    else if ( $_POST[ 'response' ] == 'Update' ) 
+    else if ( $_POST[ 'response' ] == 'Update' )
     {
         $res = updateTable( 'courses', 'course_id', $updatable , $_POST );
         if( $res )

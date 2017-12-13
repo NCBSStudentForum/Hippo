@@ -310,7 +310,7 @@ function eventSummaryHTML( $event, $talk = null)
 
     // Add google and ical links.
     $html .= '<div class="strip_from_md">';
-    $html .=  addToGoogleCalLink( $event ) .  eventToICALLink( $event );
+    $html .=  addToGoogleCalLink( $event );
     $html .= '</div>';
 
     return $html;
@@ -599,6 +599,22 @@ function arrayToVerticalTableHTML( $array, $tablename
 function requestToHTML( $request )
 {
     return arrayToTableHTML( $request, "request" );
+}
+
+
+function arrayToHtmlTableOfLogins( $logins )
+{
+    $table = '<table>';
+
+    foreach( $logins as $i => $login )
+    {
+        $table .= "<tr><td> " . ($i + 1) . "</td><td>"
+            . arrayToName( $login ) . "</td><td>" . $login['email']
+            . "</td></tr>";
+
+    }
+    $table.= '</table>';
+    return $table;
 }
 
 function userHTML( )
@@ -1293,8 +1309,8 @@ function awsToHTML( $aws, $with_picture = false )
     if( strlen( $abstract ) == 0 )
         $abstract = "Not yet disclosed!";
 
-    $html = "<div style=\"width:500px\">";
-    $html .= "<div width=500px><hr width=500px align=left> </div>";
+    $html = "<div class=\"show_aws\">";
+    $html .= "<div width=600px><hr width=600px align=left> </div>";
 
     // Adding css inline screw up the email view. Dont do it.
 
@@ -1333,7 +1349,7 @@ function awsToHTML( $aws, $with_picture = false )
 
 }
 
-function speakerName( $speaker )
+function speakerName( $speaker, $with_email = false )
 {
     // NOTE: Do not use is_int here.
     if( is_numeric( $speaker ) )                        // Got an id.
@@ -1342,18 +1358,28 @@ function speakerName( $speaker )
                     );
 
     $name = __get__( $speaker, 'honorific', '' );
-    $name .= ' ' . $speaker[ 'first_name' ];
+    if( $name )
+        $name .= ' ';
+
+    $name .= $speaker[ 'first_name' ];
 
     if( __get__( $speaker, 'middle_name', '' ) )
         $name .= ' ' . $speaker[ 'middle_name' ];
 
     $name .= ' ' . $speaker[ 'last_name' ];
+
+    if( $with_email )
+    {
+        $email = __get__( $speaker, 'email', '' );
+        if( $email )
+            $name .= " <$email>";
+    }
     return $name;
 }
 
-function arrayToName( $arr )
+function arrayToName( $arr, $with_email = false )
 {
-    return speakerName( $arr );
+    return speakerName( $arr, $with_email );
 }
 
 
@@ -2041,5 +2067,6 @@ function goBack( $default = '', $delay = 0 )
 
     goToPage( $url, $delay );
 }
+
 
 ?>

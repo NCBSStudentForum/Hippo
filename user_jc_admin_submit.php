@@ -65,7 +65,40 @@ else if( $_POST['response'] == 'delete' )
         echo printInfo( ' ... success.' );
         goToPage( 'user_jc_admin.php', 1 );
     }
-
+}
+else if( $_POST['response'] == 'Assign Presentation' )
+{
+    echo printInfo( 'Assigning schedule' );
+    $_POST[ 'title' ] = 'NA';
+    $_POST[ 'status' ] = 'VALID';
+    $res = insertOrUpdateTable( 'jc_presentations'
+        , 'presenter,jc_id,date,title', 'status'
+        , $_POST 
+    );
+    if( $res )
+    {
+        echo printInfo( "Successfully assigned to schedule" );
+        goToPage( 'user_jc_admin.php', 1 );
+        exit;
+    }
+}
+else if( $_POST[ 'response' ] == 'Remove Presentation' )
+{
+    $data = json_decode( $_POST[ 'json_data' ], true );
+    $data[ 'status' ] = 'INVALID';
+    $res = updateTable( 'jc_presentations', 'jc_id,presenter,date', 'status', $data );
+    if( $res )
+    {
+        echo printInfo( "Successfully invalidated entry." );
+        goToPage( 'user_jc_admin.php', 1 );
+        exit( 1 );
+    }
+}
+else
+{
+    var_dump( $_POST );
+    echo alertUser( "Response " . $_POST[ 'response' ] . ' is not known or not 
+        supported yet' );
 }
 
 echo goBackToPageLink( 'user_jc_admin.php', 'Go Back' );

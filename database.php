@@ -1289,7 +1289,7 @@ function whereExpr( $keys, $data )
     *
     * @return
  */
-function getTableEntries( $tablename, $orderby = '', $where = '' )
+function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = true )
 {
     global $db;
     $query = "SELECT * FROM $tablename";
@@ -1298,7 +1298,13 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " WHERE $where ";
 
     if( strlen($orderby) > 0 )
-        $query .= " ORDER BY '$orderby' ASC";
+    {
+        $query .= " ORDER BY '$orderby'";
+        if( $ascending )
+            $query .= ' ASC';
+        else
+            $query .= ' DESC';
+    }
 
     $stmt = $db->query( $query );
     return fetchEntries( $stmt );

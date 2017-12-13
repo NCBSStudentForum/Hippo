@@ -18,6 +18,10 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 
 // Otherwise continue.
 $jcs = getJCForWhichUserIsAdmin( $_SESSION['user'] );
+$jcIds = array_map( function( $x ) { return $x['jc_id']; }, $jcs );
+$jcSelect = arrayToSelectList( 'jc_id', $jcIds, array(), false, $jcIds[0] );
+
+
 $allPresentations = getTableEntries( 'jc_presentations', 'login'
     , "status='VALID'" );
 
@@ -28,16 +32,64 @@ foreach( $allPresentations as $p )
     $presentationMap[ $p['presenter'] ][] = $p;
 }
 
-$jcIds = array_map( function( $x ) { return $x['jc_id']; }, $jcs );
 
-$currentJC = $jcIds[0];
+echo '<h1>Manage JC schedule</h1>';
+
+echo '<h2>Assign presenter a date manually</h2>';
+
+$table = '<table>';
+$table .= '<tr>';
+$table .= '<td> <input class="datepicker" name="date" 
+    placeholder="pick date" /> </td>';
+$table .= '<td> <input name="presenter" placeholder="login id" /> </td>';
+$table .= "<td> $jcSelect </td>";
+$table .= '<td><button name="response" value="Assign Presentation">
+    Assign</button></td>';
+$table .= '</tr></table>';
+
+echo '<form action="user_jc_admin_submit.php" method="post">';
+echo $table;
+echo '</form>';
+
+// Show current schedule.
+$upcomingJCs = array( );
+
+foreach( $jcIds as $jc_id )
+{
+    $today = dbDate( 'today' );
+    $upcoming = getTableEntries( 
+        'jc_presentations'
+        , 'date'
+        , "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
+    );
+    $upcomingJCs = array_merge( $upcomingJCs, $upcoming );
+}
+
+echo '<h2> Upcoming JC schedule </h2>';
+echo '<table class="info">';
+foreach( $upcomingJCs as $upcoming )
+{
+    echo '<tr>';
+    echo '<form method="post" action="user_jc_admin_submit.php">';
+    echo arrayToRowHTML( $upcoming, 'info', 'title,description,status,url',false );
+    echo '<td> <button name="response" value="Remove Presentation">Remove Schedule
+        </button> </td>';
+
+    // Use ' for HTML fields; since json_encode uses ".
+    echo "<input type='hidden' name='json_data' value='" 
+            . json_encode( $upcoming ) . "' />";
+    echo '</form>';
+    echo '</tr>';
+}
+echo '</table>';
+
 
 echo "<h1>Manage subscriptions</h1>";
 
 // Show table and task here.
 $form = '<form method="post" action="user_jc_admin_submit.php">';
 $form .= '<input type="text" name="logins" placeholder="ram,shyam,jack" />';
-$form .= arrayToSelectList( 'jc_id', $jcIds, array(), false, $jcIds[0] );
+$form .= $jcSelect;
 $form .= ' <button name="response" value="Add">Add Subscription</button>';
 $form .= '</form>';
 echo $form;

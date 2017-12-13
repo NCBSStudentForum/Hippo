@@ -478,12 +478,13 @@ function initialize( $db  )
         );
 
     $res = $db->query( "
-        CREATE TABLE IF NOT EXISTS jc_archives (
+        CREATE TABLE IF NOT EXISTS jc_presentations (
             jc_id VARCHAR(100) NOT NULL
             , title VARCHAR(300) NOT NULL
             , presenter VARCHAR(100) NOT NULL -- login from logins table.
             , description TEXT
             , date DATE NOT NULL
+            , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) default 'VALID'
             , url VARCHAR(500) -- URL to download the presentation.
             , UNIQUE KEY(presenter,jc_id)
             , FOREIGN KEY (presenter) REFERENCES logins(login)

@@ -50,6 +50,12 @@ echo '<table class="tasks">
         <a href="user_manages_jc.php">My Journal Club</a>
     </td>
     </tr>
+    <tr>
+        <td>Create a JC presentation  request </td>
+    <td>
+        <a href="user_manages_jc_presentation_requests.php">My Presentation Requests</a>
+    </td>
+    </tr>
     </table>';
 
 

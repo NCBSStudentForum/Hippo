@@ -11,7 +11,7 @@ echo userHTML( );
 
 $jcs = getJournalClubs( );
 
-echo '<h1>Table of Journal Clubs</h1>';
+echo '<h1>Table of All Journal Clubs</h1>';
 $table = '<table class="info">';
 foreach( $jcs as $jc )
 {
@@ -31,6 +31,24 @@ foreach( $jcs as $jc )
 $table .= '</table>';
 echo $table;
 
+echo '<h1>Upcoming Presentations </h1>';
 
+$mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
+foreach( $mySubs as $mySub )
+{
+    $jcID = $mySub['jc_id' ];
+    $upcomingPresentations = getUpcomingJCPresentations( $jcID );
+    if( count( $upcomingPresentations ) > 0 )
+    {
+        foreach( $upcomingPresentations as $presentation )
+        {
+            echo arrayToTableHTML( $presentation, 'info' );
+        }
+    }
+    else
+    {
+        echo printInfo( "No upcoming presentation is found in database!" );
+    }
+}
 
 ?>

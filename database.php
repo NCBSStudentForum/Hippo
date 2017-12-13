@@ -2820,4 +2820,30 @@ function isSubscribedToJC( $login, $jc_id )
    return false;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Return the list of JC user is subscribed to.
+    *
+    * @Param $login
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function getUserJCs( $login )
+{
+    if( ! $login )
+        return array( );
+
+    return getTableEntries( 'jc_subscriptions', 'login', "login='$login'" );
+}
+
+function getUpcomingJCPresentations( $jcID, $date = 'today' )
+{
+    $date = dbDate( $date );
+    return getTableEntries(
+        'jc_presentations'
+            , 'date', "date >= '$date' AND status='VALID' "
+    );
+}
+
 ?>

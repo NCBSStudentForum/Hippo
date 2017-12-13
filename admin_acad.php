@@ -191,6 +191,18 @@ echo '
   </table>
   ';
 
+// Journal clubs.
+echo '<h1>Journal Clubs</h1>';
+echo '
+  <table border="0" class="admin">
+    <tr>
+        <td>Add/Update Journal Club </td>
+        <td> <a href="admin_acad_manages_jc.php">Add/Update Journal Clubs</a> </td>
+    </tr>
+  </table>
+  ';
+
+
 
 echo '<h1>EXTRA</h1>';
 echo "<h2>Automatic Housekeeping</h2>";

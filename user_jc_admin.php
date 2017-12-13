@@ -18,6 +18,15 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 
 // Otherwise continue.
 $jcs = getJCForWhichUserIsAdmin( $_SESSION['user'] );
+$allPresentations = getTableEntries( 'jc_presentations', 'login'
+    , "status='VALID'" );
+
+// Use presenter as key.
+$presentationMap = array( );
+foreach( $allPresentations as $p )
+{
+    $presentationMap[ $p['presenter'] ][] = $p;
+}
 
 $jcIds = array_map( function( $x ) { return $x['jc_id']; }, $jcs );
 
@@ -37,6 +46,8 @@ foreach( $jcIds as $currentJC )
 {
     $subs = getJCSubscriptions( $currentJC );
     $subTable = '<table class="info">';
+    $subTable .= '<th>Index</th><th>Login ID</th><th>Name</th>
+        <th>#Presentation</th><th>Last Presented On</th><th></th>';
     foreach( $subs as $i => $sub )
     {
         $subTable .= '<tr>';
@@ -44,8 +55,19 @@ foreach( $jcIds as $currentJC )
         $info = getLoginInfo( $login );
         $name = arrayToName( $info );
         $email = mailto( $info[ 'email' ] );
+
+        $presentations =  __get__( $presentationMap, $login, array() );
+        $numPresentations = count( $presentations );
+
+        $lastPresentedOn = 'NA';
+        if( count( $presentations ) > 0 )
+            $lastPresentedOn = humanReadableDate( $presentations[0]['date'] );
+
+
         $subTable .= '<td>' . ($i+1) . "</td><td> $login </td>
             <td>$name ($email) </td>";
+        $subTable .= "<td> $numPresentations </td>";
+        $subTable .= "<td> $lastPresentedOn </td>";
 
         $subTable .= '<form method="post" action="user_jc_admin_submit.php">';
         $subTable .= '<td>';

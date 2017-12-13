@@ -446,7 +446,7 @@ if( $today > $startDay && $today <= $endDay )
     * @Param 'today'
  */
 /* ----------------------------------------------------------------------------*/
-if( trueOnGivenDayAndTime( 'this wednesday', '11:00' ) )
+if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
 {
     // Get the monday after 10 weeks.
     $afterNWeeks = dbDate( strtotime( 'this monday' ) + 10 * 7 * 86400 );
@@ -502,7 +502,7 @@ if( trueOnGivenDayAndTime( 'this wednesday', '11:00' ) )
 
         // Send email.
         $to = $piOrHost;
-        $subject = "Assignment of Annual Work Seminar slot(s) on $afterNWeeks";
+        $subject = "Your lab has been assigned Annual Work Seminar slot(s) on $afterNWeeks";
         sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'CC' ] );
     }
 }

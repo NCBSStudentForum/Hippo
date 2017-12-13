@@ -15,16 +15,22 @@ echo '<h1>Table of All Journal Clubs</h1>';
 $table = '<table class="info">';
 foreach( $jcs as $jc )
 {
+    $jcInfo = getJCInfo( $jc );
+
     $buttonVal = 'Subscribe';
     if( isSubscribedToJC( $_SESSION['user'], $jc['id'] ) )
         $buttonVal = 'Unsubscribe';
 
     $table .= '<tr>';
     $table .= '<td>' . $jc['id'] . '</td>';
-    $table .=  '<form action="user_manages_jc_action.php" method="post" accept-charset="utf-8">';
-    $table .= "<td> <button name=\"response\" value=\"$buttonVal\">$buttonVal</button></td>";
+    $table .= '<td>' . $jcInfo[ 'title' ] . '</td>';
+    $table .=  '<form action="user_manages_jc_action.php"
+        method="post" accept-charset="utf-8">';
+    $table .= "<td> <button name=\"response\" 
+        value=\"$buttonVal\">$buttonVal</button></td>";
     $table .= '<input type="hidden" name="jc_id" value="' . $jc['id'] . '" />';
-    $table .= '<input type="hidden" name="login" value="' . $_SESSION['user'] . '" />';
+    $table .= '<input type="hidden" name="login" value="' 
+                .  $_SESSION['user'] . '" />';
     $table .= '</form>';
     $table .= '</tr>';
 }
@@ -36,6 +42,7 @@ echo '<h1>Upcoming Presentations </h1>';
 $mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
 foreach( $mySubs as $mySub )
 {
+    echo "<h2>" . $mySub[ 'jc_id' ] . "</h2>";
     $jcID = $mySub['jc_id' ];
     $upcomingPresentations = getUpcomingJCPresentations( $jcID );
     if( count( $upcomingPresentations ) > 0 )

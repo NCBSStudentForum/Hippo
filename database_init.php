@@ -487,7 +487,6 @@ function initialize( $db  )
             , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) default 'VALID'
             , url VARCHAR(500) -- URL to download the presentation.
             , UNIQUE KEY(presenter,jc_id)
-            , FOREIGN KEY (presenter) REFERENCES logins(login)
             )"
         );
 
@@ -501,7 +500,6 @@ function initialize( $db  )
             , url VARCHAR(500) -- URL to download the presentation.
             , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
             , UNIQUE KEY(presenter,jc_id)
-            , FOREIGN KEY (presenter) REFERENCES logins(login)
             )"
         );
 

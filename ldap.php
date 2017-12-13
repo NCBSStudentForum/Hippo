@@ -13,7 +13,7 @@ function findGroup( $laboffice )
 
 function serviceping($host, $port=389, $timeout=1)
 {
-    $op = fsockopen($host, $port, $errno, $errstr, $timeout);
+    $op = @fsockopen($host, $port, $errno, $errstr, $timeout);
     if (!$op) return 0; //DC is N/A
     else {
         fclose($op); //explicitly close open socket connection
@@ -33,7 +33,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 
     if( 0 == serviceping( $ldap_ip, $port, 2 ) )
     {
-        echo alertUser( "Could not connect to $ldap_ip : $port . Timeout ... " );
+        error_log( "Could not connect to $ldap_ip : $port . Timeout ... " );
         return NULL;
     }
 

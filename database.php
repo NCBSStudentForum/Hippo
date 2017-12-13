@@ -1304,6 +1304,17 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     return fetchEntries( $stmt );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get a single entry from table.
+    *
+    * @Param $tablename
+    * @Param $whereKeys
+    * @Param $data
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
 function getTableEntry( $tablename, $whereKeys, $data )
 {
     global $db;
@@ -2819,6 +2830,17 @@ function isSubscribedToJC( $login, $jc_id )
 
    return false;
 }
+
+function getJCInfo( $jc )
+{
+    if( is_array( $jc ) )
+        $jc_id = $jc[ 'id' ];
+    else
+        $jc_id = $jc;
+
+    return getTableEntry( 'journal_clubs', 'id', array( 'id' => $jc_id ));
+}
+
 
 /* --------------------------------------------------------------------------*/
 /**

@@ -51,4 +51,6 @@ foreach( $mySubs as $mySub )
     }
 }
 
+echo goBackToPageLink( 'user.php', 'Go Back' );
+
 ?>

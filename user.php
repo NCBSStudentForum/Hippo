@@ -45,9 +45,12 @@ echo '</table>';
 echo '<h1>Journal Club </h1>';
 echo '<table class="tasks">
     <tr>
-        <td> Manage my journal club </td>
+        <td>
+            Subscribe/Unsubscribe from journal club. See upcoming presentation.
+            Vote on presentation requests.
+         </td>
     <td>
-        <a href="user_manages_jc.php">My Journal Club</a>
+        <a href="user_manages_jc.php">My Journal Clubs</a>
     </td>
     </tr>
     <tr>

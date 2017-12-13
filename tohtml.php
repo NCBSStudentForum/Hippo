@@ -310,7 +310,7 @@ function eventSummaryHTML( $event, $talk = null)
 
     // Add google and ical links.
     $html .= '<div class="strip_from_md">';
-    $html .=  addToGoogleCalLink( $event ) .  eventToICALLink( $event );
+    $html .=  addToGoogleCalLink( $event );
     $html .= '</div>';
 
     return $html;

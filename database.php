@@ -2834,7 +2834,7 @@ function isSubscribedToJC( $login, $jc_id )
 function getJCInfo( $jc )
 {
     if( is_array( $jc ) )
-        $jc_id = $jc[ 'id' ];
+        $jc_id = $jc[ 'jc_id' ];
     else
         $jc_id = $jc;
 
@@ -2867,5 +2867,30 @@ function getUpcomingJCPresentations( $jcID, $date = 'today' )
             , 'date', "date >= '$date' AND status='VALID' "
     );
 }
+
+function isJCAdmin( $user )
+{
+    $res = getTableEntry( 'jc_subscriptions', 'login,subscription_type'
+        , array( 'login' => $user, 'subscription_type' => 'ADMIN' )
+    );
+    if( $res )
+        return true;
+    return false;
+}
+
+function getJCForWhichUserIsAdmin( $user )
+{
+    return getTableEntries( 'jc_subscriptions', 'jc_id'
+        , "login='$user' AND subscription_type='ADMIN' AND status='VALID'"
+    );
+}
+
+function getJCSubscriptions( $jc_id )
+{
+    return getTableEntries( 'jc_subscriptions', 'login'
+        , "jc_id='$jc_id' AND status='VALID'" );
+
+}
+
 
 ?>

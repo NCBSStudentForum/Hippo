@@ -43,24 +43,36 @@ echo '</table>';
 
 // Journal club entry.
 echo '<h1>Journal Club </h1>';
-echo '<table class="tasks">
+$table = '<table class="tasks">
     <tr>
         <td>
             Subscribe/Unsubscribe from journal club. See upcoming presentation.
             Vote on presentation requests.
          </td>
-    <td>
-        <a href="user_manages_jc.php">My Journal Clubs</a>
-    </td>
+        <td>
+            <a href="user_manages_jc.php">My Journal Clubs</a>
+        </td>
     </tr>
     <tr>
         <td>Create a JC presentation  request </td>
-    <td>
-        <a href="user_manages_jc_presentation_requests.php">My Presentation Requests</a>
-    </td>
-    </tr>
-    </table>';
+        <td><a href="user_manages_jc_presentation_requests.php">
+                My Presentation Requests</a>
+        </td>
+    </tr>';
 
+if( isJCAdmin( $_SESSION[ 'user' ] ) )
+{
+    $table .= '<tr>
+        <td><strong>Journal club admin </strong></td>
+        <td><a href="user_jc_admin.php">JC Admin</a>
+        </td>
+    </tr>';
+}
+
+
+$table .= '</table>';
+
+echo $table;
 
 // Only show this section if user is eligible for AWS.
 $userInfo = getLoginInfo( $_SESSION[ 'user' ] );
@@ -168,9 +180,7 @@ echo '<table class="tasks">
 //   </table>';
 
 
-if( anyOfTheseRoles( Array('ADMIN', 'BOOKMYVENUE_ADMIN'
-, 'JOURNALCLUB_ADMIN', 'AWS_ADMIN' ) )
-)
+if( anyOfTheseRoles( 'ADMIN,BOOKMYVENUE_ADMIN,JOURNALCLUB_ADMIN,AWS_ADMIN' ) )
 {
    echo "<h1> <i class=\"fa fa-cogs\"></i>   Admin</h1>";
    $roles =  getRoles( $_SESSION['user'] );

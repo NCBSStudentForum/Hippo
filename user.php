@@ -30,7 +30,6 @@ echo "<h1> Manage courses </h1>";
 
 $thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
 echo '<table class="tasks">';
-
 echo  "<tr>
         <td>
             Manage courses for semester ( $thisSem )
@@ -41,6 +40,18 @@ echo  "<tr>
         </td>
         </tr>";
 echo '</table>';
+
+// Journal club entry.
+echo '<h1>Journal Club </h1>';
+echo '<table class="tasks">
+    <tr>
+        <td> Manage my journal club </td>
+    <td>
+        <a href="user_manages_jc.php">My Journal Club</a>
+    </td>
+    </tr>
+    </table>';
+
 
 // Only show this section if user is eligible for AWS.
 $userInfo = getLoginInfo( $_SESSION[ 'user' ] );

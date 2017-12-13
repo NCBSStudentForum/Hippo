@@ -2789,6 +2789,11 @@ function getSlotMap( $slots = array( ) )
     return $slotMap;
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+// JOURNAL CLUBS
+//
+///////////////////////////////////////////////////////////////////////////////
+
 function getJCAdmins( $jc_id )
 {
     return getTableEntries(
@@ -2797,5 +2802,22 @@ function getJCAdmins( $jc_id )
     );
 }
 
+function getJournalClubs( $status = 'ACTIVE' )
+{
+    return getTableEntries( 'journal_clubs', 'id', "status='$status'" );
+}
+
+function isSubscribedToJC( $login, $jc_id )
+{
+    $res = getTableEntry( 'jc_subscriptions'
+            , 'login,jc_id,status'
+            , array( 'login' => $login, 'jc_id' => $jc_id, 'status' => 'VALID' )
+    );
+
+    if( $res )
+        return true;
+
+   return false;
+}
 
 ?>

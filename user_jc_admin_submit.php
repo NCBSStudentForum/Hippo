@@ -7,7 +7,7 @@ include_once 'methods.php';
 
 echo userHTML( );
 
-// If current user does not have the privileges, send her back to  home 
+// If current user does not have the privileges, send her back to  home
 // page.
 if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 {
@@ -20,7 +20,10 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 if( __get__( $_POST, 'response', '' ) == 'Add' )
 {
     // Add new members
-    $logins = explode( ',', $_POST[ 'logins'] );
+    $logins = $_POST[ 'logins'];
+    $logins = preg_replace( '/\s+/', ',', $logins );
+    $logins = explode( ',', $logins );
+
     $anyWarning = false;
     foreach( $logins as $login )
     {
@@ -73,7 +76,7 @@ else if( $_POST['response'] == 'Assign Presentation' )
     $_POST[ 'status' ] = 'VALID';
     $res = insertOrUpdateTable( 'jc_presentations'
         , 'presenter,jc_id,date,title', 'status'
-        , $_POST 
+        , $_POST
     );
     if( $res )
     {
@@ -97,7 +100,7 @@ else if( $_POST[ 'response' ] == 'Remove Presentation' )
 else
 {
     var_dump( $_POST );
-    echo alertUser( "Response " . $_POST[ 'response' ] . ' is not known or not 
+    echo alertUser( "Response " . $_POST[ 'response' ] . ' is not known or not
         supported yet' );
 }
 

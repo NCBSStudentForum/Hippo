@@ -38,7 +38,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <table class="public_links">
     <tr>
     <td>
-    <a href="allevents.php" target="_blank">All Bookings</a>
+    <a href="allevents.php" target="_blank">Bookings</a>
     </td>
     <td>
     <a href="aws.php" target="_blank">AWSs</a>
@@ -46,7 +46,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     <td>
     <a href="events.php" target="_blank">Talks</a>
     </td>
-    <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td>
+    <!-- <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td> -->
     <td> <a href="statistics.php" target="_blank" >Statistics </a> </td>
     <!-- <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td> -->
     <td> <a href="courses.php" target="_blank" >Courses</a></td>

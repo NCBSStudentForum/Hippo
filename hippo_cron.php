@@ -590,4 +590,82 @@ if( $intMonth % 2 == 0 )
     }
 }
 
+////////////////////////////////////////////////////////////////////////////
+// JOURNAL CLUB
+/////
+
+// At 3PM, we send notification about upcoming JC on 3 days in advance.
+if( trueOnGivenDayAndTime( 'today', '1500' ) )
+{
+    $upcomingPresentations = getUpcomingJCPresentations( );
+
+    foreach( $upcomingPresentations as $i => $presentation )
+    {
+        // If they are exactly after 3 days; send an email.
+        if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 3 )
+        {
+            $jcID = $presentation['jc_id'];
+            $jcInfo = getJCInfo( $jcID );
+
+            $listOfAdmins = array_values( getAllAdminsOfJC( $jcID ) );
+            $tableOfJCCoords = arrayToVerticalTableHTML( $listOfAdmins, 'info' );
+
+            $macro = array( 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
+                , 'DATE' => humanReadableDate( $presentation['date'] )
+                , 'TIME' => humanReadableTime( $jcInfo[ 'time' ] )
+                , 'PRESENTER' => loginToHTML( $presentation[ 'presenter' ] )
+                , 'DESCRIPTION' => presentationToHTML( $presentation )
+                , 'TABLE_OF_JC_COORDINATORS' => $tableOfJCCoords
+            );
+
+            $title = $presentation[ 'title' ];
+            $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
+
+            $presenter = loginToText( $presentation[ 'presenter' ], false );
+            $mail = emailFromTemplate( 'NOTIFY_ACADEMIC_UPCOMING_JC', $macro );
+
+            $subject = "$jcID | This $day '$title' by $presenter";
+            $msg = $mail[ 'email_body' ];
+            sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
+        }
+    }
+}
+
+// Send reminder about today JC.
+if( trueOnGivenDayAndTime( 'today', '9:00' ) )
+{
+    $upcomingPresentations = getUpcomingJCPresentations( );
+
+    foreach( $upcomingPresentations as $i => $presentation )
+    {
+        if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 0 )
+        {
+            $jcID = $presentation['jc_id'];
+            $jcInfo = getJCInfo( $jcID );
+
+            $listOfAdmins = array_values( getAllAdminsOfJC( $jcID ) );
+            $tableOfJCCoords = arrayToVerticalTableHTML( $listOfAdmins, 'info' );
+
+            $macro = array( 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
+                , 'DATE' => humanReadableDate( $presentation['date'] )
+                , 'TIME' => humanReadableTime( $jcInfo[ 'time' ] )
+                , 'PRESENTER' => loginToHTML( $presentation[ 'presenter' ] )
+                , 'DESCRIPTION' => presentationToHTML( $presentation )
+                , 'TABLE_OF_JC_COORDINATORS' => $tableOfJCCoords
+            );
+
+            $title = $presentation[ 'title' ];
+            $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
+
+            $presenter = loginToText( $presentation[ 'presenter' ], false );
+            $mail = emailFromTemplate( 'NOTIFY_ACADEMIC_UPCOMING_JC', $macro );
+
+            $subject = "$jcID | Today '$title' by $presenter";
+            $msg = $mail[ 'email_body' ];
+            sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
+        }
+    }
+}
+
+
 ?>

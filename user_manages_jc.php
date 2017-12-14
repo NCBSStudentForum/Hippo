@@ -37,30 +37,38 @@ foreach( $jcs as $jc )
 $table .= '</table>';
 echo $table;
 
-
 $mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
 foreach( $mySubs as $mySub )
 {
-    echo "<h2>" . $mySub[ 'jc_id' ] . "</h2>";
+    echo "<h2>Upcoming presentations for " . $mySub[ 'jc_id' ] . "</h2>";
     $jcID = $mySub['jc_id' ];
-    echo '<h3>Upcoming Presentations </h3>';
-
-    $upcomings = getUpcomingJCPresentationsOfUser( $_SESSION['user'], $jcID );
+    $upcomings = getUpcomingJCPresentations( $jcID );
+    echo '<table>';
+    echo '<tr>';
     if( $upcomings )
     {
-        echo printInfo( "You have following upcoming presentation" );
-        foreach( $upcomings as $upcoming )
+        foreach( $upcomings as $i => $upcoming )
         {
-            echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
-            echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', 'Edit' );
-            echo '</form>';
+            echo '<td>';
+            // If it is MINE then make it editable.
+            if( $upcoming[ 'presenter' ] == whoAmI( ) )
+            {
+                echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
+                echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', 'Edit' );
+                echo '</form>';
+            }
+            else
+                echo arrayToVerticalTableHTML( $upcoming, 'info' );
+            echo '</td>';
+
+            if( ($i+1) % 3  == 0 )
+                echo '</tr><tr>';
         }
     }
-    else
-    {
-        echo printInfo( "There is no upcoming presentation assigned to you" );
-    }
+    echo '</tr>';
+    echo '</table>';
 }
+
 
 echo '<h1> NBJC presentation requests </h1>';
 echo printInfo( "Upvote the paper(s) you find interesting" );

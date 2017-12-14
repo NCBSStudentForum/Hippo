@@ -2843,6 +2843,8 @@ function getJCInfo( $jc )
 {
     if( is_array( $jc ) )
         $jc_id = __get__( $jc, 'jc_id', $jc['id'] );
+    else if( is_string( $jc ) )
+        $jc_id = $jc;
 
     return getTableEntry( 'journal_clubs', 'id', array( 'id' => $jc_id ));
 }
@@ -2871,14 +2873,18 @@ function getMyJCs( )
     return getUserJCs( $_SESSION[ 'user' ] );
 }
 
-function getUpcomingJCPresentations( $jcID, $date = 'today' )
+function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
 {
     $date = dbDate( $date );
-    return getTableEntries(
-        'jc_presentations'
-            , 'date', "date >= '$date' AND jc_id='$jcID' AND status='VALID' "
-    );
+
+    $whereExpr = "date >= '$date'";
+    if( $jcID )
+        $whereExpr .= " AND jc_id='$jc_id' ";
+
+    $whereExpr .= " AND status='VALID'";
+    return getTableEntries( 'jc_presentations' , 'date', $whereExpr );
 }
+
 
 function getUpcomingJCPresentationsOfUser( $presenter, $jcID, $date = 'today' )
 {
@@ -2921,6 +2927,19 @@ function getAllPresentationsBefore( $date )
     return getTableEntries( 'jc_presentations'
         , 'date', "status='VALID' AND date <= '$date'"
     );
+}
+
+function getAllAdminsOfJC( $jc_id )
+{
+    $admins = getTableEntries( 'jc_subscriptions', 'login'
+        , "status='VALID' AND subscription_type='ADMIN' AND jc_id='$jc_id'"
+    );
+
+    $res = array( );
+    foreach( $admins as $admin )
+        $res[ $admin['login'] ] = loginToHTML( $admin['login'] );
+
+    return $res;
 }
 
 ?>

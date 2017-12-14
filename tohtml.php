@@ -2077,5 +2077,16 @@ function goBack( $default = '', $delay = 0 )
     goToPage( $url, $delay );
 }
 
+function presentationToHTML( $presentation )
+{
+    $html = $presentation[ 'description' ];
+    if( $presentation[ 'url' ] )
+    {
+        $html .= ' <br /> ';
+        $html .= '<p>More information/resources may be available at <a href="' . $presentation[ 'url' ] . '">
+                    this link</a>';
+    }
+    return $html;
+}
 
 ?>

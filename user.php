@@ -54,8 +54,10 @@ $table = '<table class="tasks">
         </td>
     </tr>
     <tr>
-        <td>Submit a journal paper and a preferred date to present it. You can submit multiple presentations
-        requests for the same date. The community will see the listing and vote on papers.
+        <td>
+            Submit a journal paper and a preferred date to present it. You can submit
+        one presentations requests for nay date. The community can vote on the
+        presentation requests.
          </td>
         <td><a href="user_manages_jc_presentation_requests.php">
                 My JC Presentation Requests</a>

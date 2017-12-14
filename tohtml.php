@@ -2079,7 +2079,10 @@ function goBack( $default = '', $delay = 0 )
 
 function presentationToHTML( $presentation )
 {
-    $html = $presentation[ 'description' ];
+    $html = __get__( $presentation, 'description', '' );
+    if( ! trim($html) )
+        $html .= '<p>Not disclosed yet</p>';
+
     if( $presentation[ 'url' ] )
     {
         $html .= ' <br /> ';

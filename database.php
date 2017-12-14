@@ -638,6 +638,15 @@ function getUniqueFieldValue( $tablename, $column = 'id' )
     return __get__( $res, $column , 0 );
 }
 
+function getUniqueID( $tablename )
+{
+    $column = 'id';
+    global $db;
+    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return intval( __get__( $res, $column , 0  )) + 1;
+}
+
 /**
     * @brief Sunmit a request for review.
     *
@@ -2879,7 +2888,7 @@ function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
 
     $whereExpr = "date >= '$date'";
     if( $jcID )
-        $whereExpr .= " AND jc_id='$jc_id' ";
+        $whereExpr .= " AND jc_id='$jcID' ";
 
     $whereExpr .= " AND status='VALID'";
     return getTableEntries( 'jc_presentations' , 'date', $whereExpr );

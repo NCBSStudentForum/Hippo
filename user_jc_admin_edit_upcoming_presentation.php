@@ -41,7 +41,7 @@ echo '</form>';
 
 if( __get__( $_POST, 'response', '' ) == 'submit' )
 {
-    $res = updateTable( 'jc_presentations', 'jc_id,presenter,date'
+    $res = updateTable( 'jc_presentations', 'id,jc_id,presenter,date'
         , 'title,description,url', $_POST
     );
 

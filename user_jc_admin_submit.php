@@ -71,13 +71,18 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'Assign Presentation' )
 {
-    echo printInfo( 'Assigning user to present a paper' );
+    $newId = getUniqueID( 'jc_presentations' );
     $_POST[ 'title' ] = 'NA';
     $_POST[ 'status' ] = 'VALID';
+    $_POST[ 'id' ] = $newId;
+
     $res = insertOrUpdateTable( 'jc_presentations'
-        , 'presenter,jc_id,date,title', 'status'
+        , 'id,presenter,jc_id,date,title', 'status'
         , $_POST
     );
+
+    echo printInfo( 'Assigning user ' . $_POST[ 'presenter' ] .
+        ' to present a paper' );
 
     // If res then send email
     if( $res )

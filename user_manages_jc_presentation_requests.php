@@ -11,14 +11,14 @@ echo userHTML( );
 
 $myJCS = getMyJCs( );
 $myJCIds = getValuesByKey( $myJCS, 'jc_id' );
-
 $jcSelect = arrayToSelectList( 'jc_id', $myJCIds, array(), false, $myJCIds[0] );
-
 
 $default = array(
     'presenter' => $_SESSION[ 'user' ]
     , 'jc_id' => $jcSelect
+    , 'id' => getUniqueID( 'jc_requests' )
 );
+
 
 // On this page below, we let user edit the entry here only.
 if( __get__( $_POST, 'response', '' ) == 'Edit' )
@@ -40,7 +40,7 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
 {
     $_POST[ 'status' ] = 'VALID';
     $res = insertOrUpdateTable( 'jc_requests'
-        , 'jc_id,presenter,date,title,description,url'
+        , 'id,jc_id,presenter,date,title,description,url'
         , 'title,description,date,status,url'
         , $_POST
     );
@@ -55,7 +55,7 @@ else if( __get__( $_POST, 'response', '' ) == 'delete' )
     $data = json_decode( $_POST[ 'json_data' ], true );
     $data[ 'status' ] = 'CANCELLED';
     $res = updateTable( 'jc_requests'
-        , 'jc_id,presenter,date', 'status', $data
+        , 'id,jc_id,presenter,date', 'status', $data
         );
 
     if( $res )

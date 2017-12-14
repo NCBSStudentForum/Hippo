@@ -1080,13 +1080,13 @@ function getUserInfo( $user )
     global $db;
 
     $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
+    $title = __get__( $res, 'title', '' );
 
-    // Get the user title.
-    $title = $res[ 'title' ];
+    if( ! $res )
+        $res = array( );
 
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
-
     if( is_array($ldap) && is_array( $res ) && $ldap  )
     {
         foreach( $ldap as $key => $val )

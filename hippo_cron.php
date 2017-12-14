@@ -162,7 +162,7 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00 am' ) )
         $subject = 'No Annual Work Seminar today : ' .
             humanReadableDate( $nextMonday );
         $mail = $res[ 'email' ]['email_body'];
-        sendHTMLEmail( $mail, $subject, $to, $res['email']['CC'] );
+        sendHTMLEmail( $mail, $subject, $to, $res['email']['cc'] );
     }
 }
 
@@ -503,7 +503,7 @@ if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
         // Send email.
         $to = $piOrHost;
         $subject = "Your lab has been assigned Annual Work Seminar slot(s) on $afterNWeeks";
-        sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'CC' ] );
+        sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'cc' ] );
     }
 }
 

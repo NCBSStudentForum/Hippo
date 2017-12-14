@@ -4,6 +4,7 @@ include_once 'header.php';
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
+include_once 'mail.php';
 
 echo userHTML( );
 
@@ -47,8 +48,8 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
 
     if( ! $anyWarning )
     {
-        goToPage( "user_jc_admin.php", 1 );
-        exit;
+        //goToPage( "user_jc_admin.php", 1 );
+        //exit;
     }
 }
 else if( $_POST['response'] == 'DO_NOTHING' )
@@ -77,23 +78,29 @@ else if( $_POST['response'] == 'Assign Presentation' )
         , 'presenter,jc_id,date,title', 'status'
         , $_POST
     );
+
+    // If res then send email
     if( $res )
     {
         $macros = array(
             'PRESENTER' => arrayToName( getLoginInfo( $_POST[ 'presenter' ] ) )
             , 'THIS_JC' => $_POST[ 'jc_id' ]
-            , 'JC_ADMIN' => arrayToName( getLoginInfo( $_SESSION[ 'user'] ) )
+            , 'JC_ADMIN' => arrayToName( getLoginInfo( whoAmI( ) ) )
             , 'DATE' => humanReadableDate( $_POST[ 'date' ] )
         );
-        $mail = emailFromTemplate( 'NOTIFY_PRESENTER_JC_ASSIGNMENT', $macros );
 
+        $mail = emailFromTemplate( 'NOTIFY_PRESENTER_JC_ASSIGNMENT', $macros );
         $to = getLoginEmail( $_POST[ 'presenter' ] );
-        $cclist = $mail['CC'];
+        $cclist = $mail['cc'];
         $subject = $_POST[ 'jc_id' ] . ' | Your presentation date has been fixed';
-        sendHTMLEmail( $mail[ 'email_body' ], $subject, $to, $cclist );
-        echo printInfo( "Successfully assigned to schedule" );
-        goToPage( 'user_jc_admin.php', 1 );
-        exit;
+
+        $res = sendHTMLEmail( $mail[ 'email_body' ], $subject, $to, $cclist );
+        if( $res )
+        {
+            echo printInfo( "Successfully assigned to schedule" );
+            goToPage( 'user_jc_admin.php', 1 );
+            exit;
+        }
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )
@@ -103,20 +110,23 @@ else if( $_POST[ 'response' ] == 'Remove Presentation' )
     $res = updateTable( 'jc_presentations', 'jc_id,presenter,date', 'status', $data );
     if( $res )
     {
-        $to = getLoginEmail( $_POST[ 'presenter' ] );
+        $to = getLoginEmail( $data[ 'presenter' ] );
         $cclist = 'hippo@ncbs.res.in,jccoords@ncbs.res.in';
 
-        $subject = $_POST[ 'jc_id' ] . ' | Your presentation date has been removed';
+        $subject = $data[ 'jc_id' ] . ' | Your presentation date has been removed';
         $msg = '<p>
-            Your presentation scheduled on ' . humanReadableDate( $_POST['date'] )
+            Your presentation scheduled on ' . humanReadableDate( $data['date'] )
             . ' has been removed by JC coordinator ' . $_SESSION[ 'user' ]
             . '</p>';
 
         $msg .= '<p> If it is a mistake, please contant your JC coordinator. </p>';
-        sendHTMLEmail( $msg, $subject, $to, $cclist );
-        echo printInfo( "Successfully invalidated entry." );
-        goToPage( 'user_jc_admin.php', 1 );
-        exit( 1 );
+        $res = sendHTMLEmail( $msg, $subject, $to, $cclist );
+        if( $res )
+        {
+            echo printInfo( "Successfully invalidated entry." );
+            goToPage( 'user_jc_admin.php', 1 );
+            exit( 1 );
+        }
     }
 }
 else

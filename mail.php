@@ -119,19 +119,22 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
 
     //echo printInfo( "Trying to send email to $to, $cclist with subject $sub" );
     if( strlen( trim( $msg ) ) < 1 )
-        return;
+    {
+        echo printInfo( "Message is too small" );
+        return false;
+    }
 
     if( ! array_key_exists( 'send_emails', $conf['global' ] ) )
     {
         echo printInfo( "Email service has not been configured." );
         error_log( "Mail service is not configured" );
-        return;
+        return false;
     }
 
     if( $conf['global']['send_emails' ] == false )
     {
         echo alertUser( "<br>Sending emails has been disabled in this installation" );
-        return;
+        return false;
     }
 
 
@@ -140,7 +143,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     if( file_exists( $archivefile ) )
     {
         echo printWarning( "This email has already been sent. Doing nothing" );
-        return;
+        return false;
     }
 
     echo printInfo( "... preparing email" );

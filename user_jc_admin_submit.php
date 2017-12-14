@@ -16,7 +16,6 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
     exit;
 }
 
-// Hand the $_POST here as only.
 if( __get__( $_POST, 'response', '' ) == 'Add' )
 {
     // Add new members
@@ -71,7 +70,7 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'Assign Presentation' )
 {
-    echo printInfo( 'Assigning schedule' );
+    echo printInfo( 'Assigning user to present a paper' );
     $_POST[ 'title' ] = 'NA';
     $_POST[ 'status' ] = 'VALID';
     $res = insertOrUpdateTable( 'jc_presentations'
@@ -80,6 +79,18 @@ else if( $_POST['response'] == 'Assign Presentation' )
     );
     if( $res )
     {
+        $macros = array(
+            'PRESENTER' => arrayToName( getLoginInfo( $_POST[ 'presenter' ] ) )
+            , 'THIS_JC' => $_POST[ 'jc_id' ]
+            , 'JC_ADMIN' => arrayToName( getLoginInfo( $_SESSION[ 'user'] ) )
+            , 'DATE' => humanReadableDate( $_POST[ 'date' ] )
+        );
+        $mail = emailFromTemplate( 'NOTIFY_PRESENTER_JC_ASSIGNMENT', $macros );
+
+        $to = getLoginEmail( $_POST[ 'presenter' ] );
+        $cclist = $mail['CC'];
+        $subject = $_POST[ 'jc_id' ] . ' | Your presentation date has been fixed';
+        sendHTMLEmail( $mail[ 'email_body' ], $subject, $to, $cclist );
         echo printInfo( "Successfully assigned to schedule" );
         goToPage( 'user_jc_admin.php', 1 );
         exit;
@@ -92,6 +103,17 @@ else if( $_POST[ 'response' ] == 'Remove Presentation' )
     $res = updateTable( 'jc_presentations', 'jc_id,presenter,date', 'status', $data );
     if( $res )
     {
+        $to = getLoginEmail( $_POST[ 'presenter' ] );
+        $cclist = 'hippo@ncbs.res.in,jccoords@ncbs.res.in';
+
+        $subject = $_POST[ 'jc_id' ] . ' | Your presentation date has been removed';
+        $msg = '<p>
+            Your presentation scheduled on ' . humanReadableDate( $_POST['date'] )
+            . ' has been removed by JC coordinator ' . $_SESSION[ 'user' ]
+            . '</p>';
+
+        $msg .= '<p> If it is a mistake, please contant your JC coordinator. </p>';
+        sendHTMLEmail( $msg, $subject, $to, $cclist );
         echo printInfo( "Successfully invalidated entry." );
         goToPage( 'user_jc_admin.php', 1 );
         exit( 1 );

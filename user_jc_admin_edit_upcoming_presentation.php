@@ -44,9 +44,13 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
     $res = updateTable( 'jc_presentations', 'jc_id,presenter,date'
         , 'title,description,url', $_POST
     );
+
     if( $res )
+    {
         echo printInfo( 'Successfully updated presentation entry' );
+    }
 }
+
 
 echo " <br /> <br /> ";
 echo "<strong>Afer your are finished editing </strong>";

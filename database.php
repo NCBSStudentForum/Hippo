@@ -1090,8 +1090,7 @@ function getUserInfo( $user )
     if( is_array($ldap) && is_array( $res ) && $ldap  )
     {
         foreach( $ldap as $key => $val )
-            if( trim($val) )
-                $res[ $key ] = $val;
+            $res[ $key ] = $val;
     }
 
     // If title was found in database, overwrite ldap info.

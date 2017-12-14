@@ -46,6 +46,24 @@ foreach( $jcIds as $jc_id )
 
 echo '<h1>Manage JC schedule</h1>';
 
+echo '<h1>Schedule JC presentations</h1>';
+// Manage presentation.
+echo printInfo( 'Assign a presentation manually.' );
+
+$table = '<table>';
+$table .= '<tr>';
+$table .= '<td> <input class="datepicker" name="date"
+    placeholder="pick date" /> </td>';
+$table .= '<td> <input name="presenter" placeholder="login id" /> </td>';
+$table .= "<td> $jcSelect </td>";
+$table .= '<td><button name="response" value="Assign Presentation">
+    Assign</button></td>';
+$table .= '</tr></table>';
+
+echo '<form action="user_jc_admin_submit.php" method="post">';
+echo $table;
+echo '</form>';
+
 // For each JC for which user is admin, show the latest entry for editing.
 // NOTE: We assume that arrays are sorted according to DATE.
 echo printInfo( 'Ideally the presenter should update this entry. If presenter
@@ -71,27 +89,8 @@ foreach( $upcomingJCs as $jcID => $upcomings )
 echo '</tr>';
 echo '</table>';
 
-echo '<h1>Presentation Assignment</h1>';
-// Manage presentation.
-echo printInfo( 'Assign a presentation manually.' );
-
-$table = '<table>';
-$table .= '<tr>';
-$table .= '<td> <input class="datepicker" name="date"
-    placeholder="pick date" /> </td>';
-$table .= '<td> <input name="presenter" placeholder="login id" /> </td>';
-$table .= "<td> $jcSelect </td>";
-$table .= '<td><button name="response" value="Assign Presentation">
-    Assign</button></td>';
-$table .= '</tr></table>';
-
-echo '<form action="user_jc_admin_submit.php" method="post">';
-echo $table;
-echo '</form>';
-
 
 // Show current schedule.
-
 echo '<h2> Upcoming JC schedule </h2>';
 echo '<table class="info">';
 foreach( $upcomingJCs as $jcID => $upcomings )
@@ -112,6 +111,40 @@ foreach( $upcomingJCs as $jcID => $upcomings )
     }
 }
 echo '</table>';
+
+echo '<h1>List of presentation requests</h1>';
+$requests = getTableEntries( 'jc_requests', 'date'
+    , "date>='$today' AND status='VALID' "
+    );
+echo '<table class="show_events">';
+echo '<th>Request</th><th>Votes</th>';
+
+foreach( $requests as $i => $req )
+{
+    echo '<tr>';
+    echo '<td>';
+    echo ' <form action="#" method="post" accept-charset="utf-8">';
+    echo dbTableToHTMLTable( 'jc_requests', $req, '', 'Edit', 'status,presenter' );
+    echo '</form>';
+
+    // Another form to delete this request.
+    echo ' <form action="#" method="post" accept-charset="utf-8">';
+
+    // Using ' instead of " because of json_encode uses " by default.
+    echo "<button name='response' onclick='AreYouSure(this)'
+            title='Cancel this request'>Cancel</button>";
+    echo "<input type='hidden' name='json_data'
+        value='" . json_encode( $req ) . "' />";
+    echo '</form>';
+    echo "</td>";
+
+    $votes = count( getVotes( "jc_requests." .  $req['id'] ) );
+    echo "<td> $votes </td>";
+
+    echo '</tr>';
+}
+echo '</table>';
+
 
 
 echo "<h1>Manage subscriptions</h1>";

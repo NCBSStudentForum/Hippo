@@ -2951,4 +2951,22 @@ function getAllAdminsOfJC( $jc_id )
     return $res;
 }
 
+function getUserVote( $voteId, $voter )
+{
+    $res = getTableEntry( 'votes', 'id,voter,status'
+        , array( 'id' => $voteId, 'voter' => $voter, 'status' => 'VALID' )
+    );
+    return $res;
+}
+
+function getMyVote( $voteId )
+{
+    return getUserVote( $voteId, whoAmI( ) );
+}
+
+function getVotes( $voteId )
+{
+    return getTableEntries('votes', '', "id='$voteId' AND status='VALID'" );
+}
+
 ?>

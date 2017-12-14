@@ -505,6 +505,16 @@ function initialize( $db  )
             )"
         );
 
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS votes (
+            id VARCHAR(50) NOT NULL  -- table.id
+            , voter VARCHAR(20) NOT NULL
+            , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
+            , voted_on DATE
+            , UNIQUE KEY(voter,id)
+            )"
+        );
+
     return $res;
 }
 

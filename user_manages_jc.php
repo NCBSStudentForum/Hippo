@@ -40,7 +40,12 @@ echo $table;
 $mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
 foreach( $mySubs as $mySub )
 {
-    echo "<h2>Upcoming presentations for " . $mySub[ 'jc_id' ] . "</h2>";
+    echo "<h1>Upcoming presentations for " . $mySub[ 'jc_id' ] . "</h1>";
+
+    echo printInfo( "Following presentations are fixed. If any of these
+        presentation belongs to you, you can edit it by pressing the 'Edit' button. "
+    );
+
     $jcID = $mySub['jc_id' ];
     $upcomings = getUpcomingJCPresentations( $jcID );
     echo '<table>';
@@ -58,7 +63,7 @@ foreach( $mySubs as $mySub )
                 echo '</form>';
             }
             else
-                echo arrayToVerticalTableHTML( $upcoming, 'info' );
+                echo arrayToVerticalTableHTML( $upcoming, 'info', '', 'id,status' );
             echo '</td>';
 
             if( ($i+1) % 3  == 0 )
@@ -70,17 +75,39 @@ foreach( $mySubs as $mySub )
 }
 
 
-echo '<h1> NBJC presentation requests </h1>';
-echo printInfo( "Upvote the paper(s) you find interesting" );
+echo '<h1>JC presentation requests </h1>';
+echo printInfo(
+    "Following requests have been made for presentation. If you like any
+    presentation, please vote for it. JC  coordinators only see the number of
+    votes."
+    );
 
 $today = dbDate( 'today' );
 $requests = getTableEntries( 'jc_requests', 'date'
     , "status='VALID' AND date >= '$today'"
     );
+
+echo '<table>';
 foreach( $requests as $req )
 {
-    echo arrayToVerticalTableHTML( $req, 'info' );
+    echo '<tr>';
+    echo '<td>';
+    echo arrayToVerticalTableHTML( $req, 'info', '', 'id,status' );
+
+    $voteId = "jc_requests." . $req['id'];
+    $action = 'Add My Vote';
+    if( getMyVote( $voteId ) )
+        $action = 'Remove My Vote';
+
+    echo '</td>';
+    echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
+    echo ' <input type="hidden" name="id" value="' . $voteId . '" />';
+    echo ' <input type="hidden" name="voter" value="' . whoAmI( ) . '" />';
+    echo "<td> <button name='response' value='$action'>$action</button></td>";
+    echo '</form>';
+    echo '</tr>';
 }
+echo '<table>';
 
 echo goBackToPageLink( 'user.php', 'Go Back' );
 

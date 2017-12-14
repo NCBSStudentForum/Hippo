@@ -69,11 +69,13 @@ $requests = getTableEntries( 'jc_requests', 'date'
     , "status='VALID' AND presenter='$me'"
 );
 
-echo '<table border="1">';
-echo '<th>Request</th><th>Score</th> <th></th>';
-foreach( $requests as $req )
+echo '<table class="show_events">';
+echo '<th>Request</th><th>Score</th><th>Feedback</th>';
+
+foreach( $requests as $i => $req )
 {
-    echo '<tr><td>';
+    echo '<tr>';
+    echo '<td>';
     echo ' <form action="#" method="post" accept-charset="utf-8">';
     echo dbTableToHTMLTable( 'jc_requests', $req, '', 'Edit', 'status,presenter' );
     echo '</form>';
@@ -82,14 +84,19 @@ foreach( $requests as $req )
     echo ' <form action="#" method="post" accept-charset="utf-8">';
 
     // Using ' instead of " because of json_encode uses " by default.
-    echo "<button name='response' onclick='AreYouSure(this)'>Cancel</button>";
+    echo "<button name='response' onclick='AreYouSure(this)'
+            title='Cancel this request'>Cancel</button>";
     echo "<input type='hidden' name='json_data'
         value='" . json_encode( $req ) . "' />";
     echo '</form>';
+    echo "</td>";
 
     $score = "NA";
-    echo "</td>";
     echo "<td> $score </td>";
+
+    $feedback = 'NA';
+    echo "<td> $feedback </td>";
+
     echo '</tr>';
 }
 echo '</table>';

@@ -12,39 +12,63 @@ echo userHTML( );
 
 echo '<h1>Edit presentation entry</h1>';
 
-echo printInfo( "
-    Consider adding <tt>URL</tt>. This is the place user can find material related
-    to this presentation e.g. link to github repo, slideshare, drive etc..
-    " );
 
-echo alertUser( "We do not keep backup for your entry!" );
 
-// If current user does not have the privileges, send her back to  home
-// page.
-if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
+if( __get__( $_POST, 'response', '' ) == 'Edit' )
 {
-    echo printWarning( "You don't have permission to access this page" );
-    echo goToPage( "user.php", 2 );
-    exit;
-}
+    echo printInfo( "
+        Consider adding <tt>URL</tt>. This is the place user can find material related
+        to this presentation e.g. link to github repo, slideshare, drive etc..
+        " );
+    echo alertUser( "We do not keep backup for your entry!" );
+    $editables = 'title,description,url';
+    echo '<form action="#" method="post" accept-charset="utf-8">';
+    echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables, 'Edit' );
+    echo '</form>';
 
-$editables = 'title,description,url';
-
-echo '<form action="#" method="post" accept-charset="utf-8">';
-echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables );
-echo '</form>';
-
-if( __get__( $_POST, 'response', '' ) == 'submit' )
-{
     $res = updateTable( 'jc_presentations', 'jc_id,presenter,date'
         , 'title,description,url', $_POST
     );
     if( $res )
+    {
         echo printInfo( 'Successfully updated presentation entry' );
+        // We do not exit from here. User might want to edit some more.
+        echo " <br /> ";
+        echo "<strong>Afer your are finished editing, use 'Go Back' link
+           to back.</strong>";
+    }
+}
+else if( __get__( $_POST, 'response', '' ) == 'Add My Vote' )
+{
+    $_POST[ 'status' ] = 'VALID';
+    $_POST[ 'voted_on' ] = dbDate( 'today' );
+    $res = insertOrUpdateTable( 'votes', 'id,voter,voted_on'
+        , 'status,voted_on', $_POST );
+    if( $res )
+    {
+        echo printInfo( 'Successfully voted.' );
+        goToPage( 'user_manages_jc.php', 1 );
+        exit;
+    }
+}
+else if( __get__( $_POST, 'response', '' ) == 'Remove My Vote' )
+{
+    $_POST[ 'status' ] = 'CANCELLED';
+    $res = updateTable( 'votes', 'id,voter', 'status', $_POST );
+    if( $res )
+    {
+        echo printInfo( 'Successfully removed  your vote.' );
+        goToPage( 'user_manages_jc.php', 1 );
+        exit;
+    }
+}
+else
+{
+    echo alertUser( 'This action ' . $_POST[ 'response' ] . ' is not supported yet' );
+    goToPage( 'user_manages_jc.php', 3 );
+    exit;
 }
 
-echo " <br /> <br /> ";
-echo "<strong>Afer your are finished editing </strong>";
 echo goBackToPageLink( 'user_manages_jc.php', 'Go Back' );
 
 ?>

@@ -52,12 +52,10 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
 }
 else if( __get__( $_POST, 'response', '' ) == 'delete' )
 {
-    $data = json_decode( $_POST[ 'json_data' ], true );
+    $id = $_POST[ 'id' ];
+    $data[ 'id' ] = $id;
     $data[ 'status' ] = 'CANCELLED';
-    $res = updateTable( 'jc_requests'
-        , 'id,jc_id,presenter,date', 'status', $data
-        );
-
+    $res = updateTable( 'jc_requests', 'id', 'status', $data);
     if( $res )
         echo printInfo( "Your request has been cancelled/invalidated." );
 }
@@ -70,7 +68,7 @@ $requests = getTableEntries( 'jc_requests', 'date'
 );
 
 echo '<table class="show_events">';
-echo '<th>Request</th><th>Score</th><th>Feedback</th>';
+echo '<th>Request</th><th>Votes</th>';
 
 foreach( $requests as $i => $req )
 {
@@ -86,17 +84,12 @@ foreach( $requests as $i => $req )
     // Using ' instead of " because of json_encode uses " by default.
     echo "<button name='response' onclick='AreYouSure(this)'
             title='Cancel this request'>Cancel</button>";
-    echo "<input type='hidden' name='json_data'
-        value='" . json_encode( $req ) . "' />";
+    echo "<input type='hidden' name='id' value='" . $req['id'] . "' />";
     echo '</form>';
     echo "</td>";
 
-    $score = "NA";
-    echo "<td> $score </td>";
-
-    $feedback = 'NA';
-    echo "<td> $feedback </td>";
-
+    $votes = count( getVotes( "jc_requests." . $req['id'] ));
+    echo "<td> $votes </td>";
     echo '</tr>';
 }
 echo '</table>';

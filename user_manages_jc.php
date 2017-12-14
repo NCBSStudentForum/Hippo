@@ -77,10 +77,11 @@ foreach( $mySubs as $mySub )
 
 echo '<h1>JC presentation requests </h1>';
 echo printInfo(
-    "Following requests have been made for presentation. If you like any
-    presentation, please vote for it. JC  coordinators only see the number of
-    votes."
-    );
+    "Following presentation requests have been made. If you like any paper to 
+    be presented, please vote for it. JC coordinators only see the number of
+    votes which might helps them breaking the tie if any.
+    "
+);
 
 $today = dbDate( 'today' );
 $requests = getTableEntries( 'jc_requests', 'date'

@@ -5,15 +5,10 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
 
+include_once 'check_access_permissions.php';
+mustHaveAnyOfTheseRoles( array( 'USER' ) );
+
 echo userHTML( );
-
-if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
-{
-    echo printWarning( "You do not have permission to access this page." );
-    goToPage( 'user.php' );
-    exit;
-}
-
 
 echo '<h1>Edit presentation entry</h1>';
 
@@ -50,6 +45,6 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
 
 echo " <br /> <br /> ";
 echo "<strong>Afer your are finished editing </strong>";
-echo goBackToPageLink( 'user_jc_admin.php', 'Go Back' );
+echo goBackToPageLink( 'user_manages_jc.php', 'Go Back' );
 
 ?>

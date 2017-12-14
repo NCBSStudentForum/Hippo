@@ -26,10 +26,10 @@ foreach( $jcs as $jc )
     $table .= '<td>' . $jcInfo[ 'title' ] . '</td>';
     $table .=  '<form action="user_manages_jc_action.php"
         method="post" accept-charset="utf-8">';
-    $table .= "<td> <button name=\"response\" 
+    $table .= "<td> <button name=\"response\"
         value=\"$buttonVal\">$buttonVal</button></td>";
     $table .= '<input type="hidden" name="jc_id" value="' . $jc['id'] . '" />';
-    $table .= '<input type="hidden" name="login" value="' 
+    $table .= '<input type="hidden" name="login" value="'
                 .  $_SESSION['user'] . '" />';
     $table .= '</form>';
     $table .= '</tr>';
@@ -51,7 +51,9 @@ foreach( $mySubs as $mySub )
         echo printInfo( "You have following upcoming presentation" );
         foreach( $upcomings as $upcoming )
         {
-            echo arrayToVerticalTableHTML( $upcoming, 'info' );
+            echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
+            echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', 'Edit' );
+            echo '</form>';
         }
     }
     else

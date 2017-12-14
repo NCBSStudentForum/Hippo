@@ -132,13 +132,13 @@ function appURL( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
-  echo printInfo( "Going to page $page in $delay seconds" );
-  $baseurl = appRootDir( );
-  if( strpos( $page, "http" ) == 0 )
-      $url = $page;
-  else
-      $url = "$baseurl/$page";
-  header("Refresh: $delay, url=$url");
+    echo printInfo( "Going to page $page in $delay seconds" );
+    $baseurl = appRootDir( );
+    if( strpos( $page, "http" ) == 0 )
+        $url = $page;
+    else
+        $url = "$baseurl/$page";
+    header("Refresh: $delay, url=$url");
 }
 
 function __get__( $arr, $what, $default = NULL )

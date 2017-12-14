@@ -1318,7 +1318,7 @@ function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = t
     * @Param $whereKeys
     * @Param $data
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function getTableEntry( $tablename, $whereKeys, $data )
@@ -1359,15 +1359,18 @@ function insertIntoTable( $tablename, $keys, $data )
 {
     global $db;
 
-    if( gettype( $keys ) == "string" )
+    if( is_string( $keys ) )
         $keys = explode( ',', $keys );
 
     $values = Array( );
     $cols = Array( );
     foreach( $keys as $k )
     {
+        if( ! is_string( $k ) )
+            continue;
+
         // If values for this key in $data is null then don't use it here.
-        if( array_key_exists( $k, $data) && strlen($data[$k]) > 0 )
+        if( __get__( $data, $k, '' ) )
         {
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );
@@ -2878,7 +2881,7 @@ function getUpcomingJCPresentationsOfUser( $presenter, $jcID, $date = 'today' )
     $date = dbDate( $date );
     return getTableEntries( 'jc_presentations'
         , 'date'
-        , "date >= '$date' AND presenter='$presenter' 
+        , "date >= '$date' AND presenter='$presenter'
             AND jc_id='$jcID' AND status='VALID' "
     );
 }

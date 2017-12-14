@@ -13,30 +13,31 @@ echo userHTML( );
 
 $venues = getVenues( );
 
-echo "<h1>Journal Clubs</h1>";
+echo "<h1>List of Journal Clubs</h1>";
 $jcs = getTableEntries( 'journal_clubs', 'id', "status!='INVALID'" );
+
+echo '<table>';
 foreach( $jcs as $jc )
 {
-    echo '<table>';
     echo '<tr><td>';
     echo arrayToTableHTML( $jc, 'info' );
+    echo '</td>';
 
     // Form to update.
-    echo '</td>';
-    echo ' <form action="#" method="post" accept-charset="utf-8">';
-    echo '<td><button type="submit" name="response" value="Edit">Edit</button></td>';
+    echo '<form action="#" method="post" accept-charset="utf-8">';
+    echo '<td><button type="submit" name="response" value="Edit">Edit</button>';
     echo '<input type="hidden" name="id" value="' . $jc['id'] . '" />';
     echo '</form>';
 
     // Form to detele.
-    echo ' <form action="./admin_acad_manages_jc_action.php" method="post" accept-charset="utf-8">';
-    echo '<td><button type="submit" name="response" value="Delete">Delete</button></td>';
+    echo '<form action="./admin_acad_manages_jc_action.php" method="post" accept-charset="utf-8">';
+    echo '<button type="submit" name="response" value="Delete">Delete</button></td>';
     echo '<input type="hidden" name="id" value="' . $jc['id'] . '" />';
     echo '</form>';
+    echo '</tr>';
 
-    echo '</table>';
 }
-
+echo '</table>';
 
 $editables = 'id,title,status,description,day,time,venue';
 $action = 'Add';

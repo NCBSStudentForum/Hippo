@@ -536,6 +536,11 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '' )
     return $hrow;
 }
 
+function arrayToTHRow( $array, $tablename, $tobefilterd = '' )
+{
+    return arrayHeaderRow( $array, $tablename, $tobefilterd );
+}
+
 // Convert an array to HTML
 function arrayToTableHTML( $array, $tablename, $background = ''
         , $tobefilterd = '', $header = true )

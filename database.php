@@ -2910,5 +2910,12 @@ function getJCSubscriptions( $jc_id )
 
 }
 
+function getAllPresentationsBefore( $date )
+{
+    $date = dbDate( $date );
+    return getTableEntries( 'jc_presentations'
+        , 'date', "status='VALID' AND date <= '$date'"
+    );
+}
 
 ?>

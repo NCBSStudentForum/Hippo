@@ -22,8 +22,7 @@ $jcIds = array_map( function( $x ) { return $x['jc_id']; }, $jcs );
 $jcSelect = arrayToSelectList( 'jc_id', $jcIds, array(), false, $jcIds[0] );
 
 
-$allPresentations = getTableEntries( 'jc_presentations', 'login'
-    , "status='VALID'" );
+$allPresentations = getAllPresentationsBefore( 'today' );
 
 // Use presenter as key.
 $presentationMap = array( );

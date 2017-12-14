@@ -401,6 +401,14 @@ table.editable_course_registration {
     /*max-width : 90%;*/
 }
 
+table.editable_jc_presentations {
+    text-align : left;
+    /*max-width : 90%;*/
+}
+table.editable_jc_presentations tr td {
+    background-color: var(--tabletdcolor);
+}
+
 table.event_sticker
 {
     width : 100px;

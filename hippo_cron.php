@@ -618,7 +618,7 @@ if( trueOnGivenDayAndTime( 'today', '1500' ) )
                 , 'TABLE_OF_JC_COORDINATORS' => $tableOfJCCoords
             );
 
-            $title = $presentation[ 'title' ];
+            $title = getPresentationTitle( $presentation );
             $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
 
             $presenter = loginToText( $presentation[ 'presenter' ], false );
@@ -654,7 +654,7 @@ if( trueOnGivenDayAndTime( 'today', '9:00' ) )
                 , 'TABLE_OF_JC_COORDINATORS' => $tableOfJCCoords
             );
 
-            $title = $presentation[ 'title' ];
+            $title = getPresentationTitle( $presentation );
             $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
 
             $presenter = loginToText( $presentation[ 'presenter' ], false );

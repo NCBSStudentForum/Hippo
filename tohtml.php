@@ -2092,4 +2092,14 @@ function presentationToHTML( $presentation )
     return $html;
 }
 
+function getPresentationTitle( $presentation )
+{
+    $title = __get__( $presentation, 'title', '' );
+    if( ! $title )
+        $title = 'Not disclosed yet';
+
+    return $title;
+}
+
+
 ?>

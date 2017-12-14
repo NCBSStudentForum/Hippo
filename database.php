@@ -2866,6 +2866,11 @@ function getUserJCs( $login )
         , "login='$login' AND status='VALID' " );
 }
 
+function getMyJCs( )
+{
+    return getUserJCs( $_SESSION[ 'user' ] );
+}
+
 function getUpcomingJCPresentations( $jcID, $date = 'today' )
 {
     $date = dbDate( $date );

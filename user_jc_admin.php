@@ -48,6 +48,11 @@ echo '<h1>Manage JC schedule</h1>';
 
 // For each JC for which user is admin, show the latest entry for editing.
 // NOTE: We assume that arrays are sorted according to DATE.
+echo printInfo( 'Ideally the presenter should update this entry. If presenter
+    has sent data over email then you need to edit this entry by yourself. Press
+    <button disabled>' .  $symbEdit . '</button> below  to update.'
+);
+
 echo '<table>';
 echo '<tr>';
 foreach( $upcomingJCs as $jcID => $upcomings )
@@ -56,7 +61,7 @@ foreach( $upcomingJCs as $jcID => $upcomings )
         continue;
 
     echo '<td>';
-    echo "<h3>Upcoming entry for $jcID </h3>";
+    echo "<h3>Next week entry for $jcID </h3>";
     echo ' <form action="user_jc_admin_edit_upcoming_presentation.php"
         method="post" accept-charset="utf-8">';
     echo dbTableToHTMLTable( 'jc_presentations', $upcomings[0], '', 'Edit' );
@@ -66,8 +71,9 @@ foreach( $upcomingJCs as $jcID => $upcomings )
 echo '</tr>';
 echo '</table>';
 
+echo '<h1>Presentation Assignment</h1>';
 // Manage presentation.
-echo '<h2>Assign a date manually</h2>';
+echo printInfo( 'Assign a presentation manually.' );
 
 $table = '<table>';
 $table .= '<tr>';

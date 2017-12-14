@@ -62,6 +62,18 @@ foreach( $mySubs as $mySub )
     }
 }
 
+echo '<h1> NBJC presentation requests </h1>';
+echo printInfo( "Upvote the paper(s) you find interesting" );
+
+$today = dbDate( 'today' );
+$requests = getTableEntries( 'jc_requests', 'date'
+    , "status='VALID' AND date >= '$today'"
+    );
+foreach( $requests as $req )
+{
+    echo arrayToVerticalTableHTML( $req, 'info' );
+}
+
 echo goBackToPageLink( 'user.php', 'Go Back' );
 
 ?>

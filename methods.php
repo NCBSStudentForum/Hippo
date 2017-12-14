@@ -19,6 +19,10 @@ $phpFileUploadErrors = array(
     8 => 'A PHP extension stopped the file upload.',
 );
 
+function whoAmI( )
+{
+    return $_SESSION[ 'user' ];
+}
 
 function venueToText( $venue, $show_strength = true )
 {
@@ -1387,4 +1391,13 @@ function getCourseCode( $cc, $delim = ':' )
     if( strlen( trim( $cc ) ) < 1 )
         return '';
     return trim( explode( $delim, $cc )[0] );
+}
+
+function getValuesByKey( $arr, $key )
+{
+    $res = array( );
+    foreach( $arr as $row )
+        $res[] = $row[ $key ];
+
+    return $res;
 }

@@ -7,7 +7,7 @@ include_once 'methods.php';
 
 echo userHTML( );
 
-// If current user does not have the privileges, send her back to  home 
+// If current user does not have the privileges, send her back to  home
 // page.
 if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 {
@@ -32,14 +32,47 @@ foreach( $allPresentations as $p )
     $presentationMap[ $p['presenter'] ][] = $p;
 }
 
+// Get all upcoming presentation for all JCs I am an admin.
+$upcomingJCs = array( );
+foreach( $jcIds as $jc_id )
+{
+    $today = dbDate( 'today' );
+    $upcoming = getTableEntries(
+        'jc_presentations'
+        , 'date'
+        , "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
+    );
+    $upcomingJCs[ $jc_id ] = $upcoming;
+}
 
 echo '<h1>Manage JC schedule</h1>';
 
-echo '<h2>Assign presenter a date manually</h2>';
+// For each JC for which user is admin, show the latest entry for editing.
+// NOTE: We assume that arrays are sorted according to DATE.
+echo '<table>';
+echo '<tr>';
+foreach( $upcomingJCs as $jcID => $upcomings )
+{
+    if( count( $upcomings ) <  1 )
+        continue;
+
+    echo '<td>';
+    echo "<h3>Upcoming entry for $jcID </h3>";
+    echo ' <form action="user_jc_admin_edit_upcoming_presentation.php"
+        method="post" accept-charset="utf-8">';
+    echo dbTableToHTMLTable( 'jc_presentations', $upcomings[0], '', 'Edit' );
+    echo '</form>';
+    echo '</td>';
+}
+echo '</tr>';
+echo '</table>';
+
+// Manage presentation.
+echo '<h2>Assign a date manually</h2>';
 
 $table = '<table>';
 $table .= '<tr>';
-$table .= '<td> <input class="datepicker" name="date" 
+$table .= '<td> <input class="datepicker" name="date"
     placeholder="pick date" /> </td>';
 $table .= '<td> <input name="presenter" placeholder="login id" /> </td>';
 $table .= "<td> $jcSelect </td>";
@@ -51,35 +84,27 @@ echo '<form action="user_jc_admin_submit.php" method="post">';
 echo $table;
 echo '</form>';
 
-// Show current schedule.
-$upcomingJCs = array( );
 
-foreach( $jcIds as $jc_id )
-{
-    $today = dbDate( 'today' );
-    $upcoming = getTableEntries( 
-        'jc_presentations'
-        , 'date'
-        , "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
-    );
-    $upcomingJCs = array_merge( $upcomingJCs, $upcoming );
-}
+// Show current schedule.
 
 echo '<h2> Upcoming JC schedule </h2>';
 echo '<table class="info">';
-foreach( $upcomingJCs as $upcoming )
+foreach( $upcomingJCs as $jcID => $upcomings )
 {
-    echo '<tr>';
-    echo '<form method="post" action="user_jc_admin_submit.php">';
-    echo arrayToRowHTML( $upcoming, 'info', 'title,description,status,url',false );
-    echo '<td> <button name="response" value="Remove Presentation">Remove Schedule
-        </button> </td>';
+    foreach( $upcomings as $i => $upcoming )
+    {
+        echo '<tr>';
+        echo '<form method="post" action="user_jc_admin_submit.php">';
+        echo arrayToRowHTML( $upcoming, 'info', 'title,description,status,url',false );
+        echo '<td> <button name="response" value="Remove Presentation"
+                    title="Remove this schedule" >' . $symbDelete . '</button></td>';
 
-    // Use ' for HTML fields; since json_encode uses ".
-    echo "<input type='hidden' name='json_data' value='" 
-            . json_encode( $upcoming ) . "' />";
-    echo '</form>';
-    echo '</tr>';
+        // Use ' for HTML fields; since json_encode uses ".
+        echo "<input type='hidden' name='json_data' value='"
+                . json_encode( $upcoming ) . "' />";
+        echo '</form>';
+        echo '</tr>';
+    }
 }
 echo '</table>';
 
@@ -125,7 +150,7 @@ foreach( $jcIds as $currentJC )
         $subTable .= '<td>';
         $subTable .= '<input type="hidden" name="login" value="' . $login . '" />';
         $subTable .= '<input type="hidden" name="jc_id" value="' . $currentJC . '" />';
-        $subTable .= '<button style="float:right;" onclick="AreYouSure(this)" 
+        $subTable .= '<button style="float:right;" onclick="AreYouSure(this)"
                               name="response" >' . $symbDelete . '</button>';
         $subTable .= '</td>';
         $subTable .= '</form>';

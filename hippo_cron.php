@@ -612,7 +612,7 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
             $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
             $presenter = loginToText( $presentation[ 'presenter' ], false );
 
-            $macro = array( 
+            $macro = array(
                 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
                 , 'TITLE' => $title
                 , 'DATE' => humanReadableDate( $presentation['date'] )
@@ -629,9 +629,7 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
 
             $res = sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
             if( $res )
-            {
                 echo printInfo( 'Email sent successfully' );
-            }
         }
     }
 }
@@ -671,9 +669,7 @@ if( trueOnGivenDayAndTime( 'today', '9:00' ) )
             $msg = $mail[ 'email_body' ];
             $res = sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
             if( $res )
-            {
                 echo printInfo( 'Email sent successfully' );
-            }
         }
     }
 }

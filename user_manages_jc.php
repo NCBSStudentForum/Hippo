@@ -50,7 +50,7 @@ foreach( $mySubs as $mySub )
     $upcomings = getUpcomingJCPresentations( $jcID );
     echo '<table>';
     echo '<tr>';
-    if( $upcomings )
+    if( count( $upcomings ) > 0 )
     {
         foreach( $upcomings as $i => $upcoming )
         {
@@ -76,39 +76,48 @@ foreach( $mySubs as $mySub )
 
 
 echo '<h1>JC presentation requests </h1>';
-echo printInfo(
-    "Following presentation requests have been made. If you like any paper to 
-    be presented, please vote for it. JC coordinators only see the number of
-    votes which might helps them breaking the tie if any.
-    "
-);
 
 $today = dbDate( 'today' );
 $requests = getTableEntries( 'jc_requests', 'date'
     , "status='VALID' AND date >= '$today'"
     );
-
-echo '<table>';
-foreach( $requests as $req )
+if( count( $requests ) > 0 )
 {
-    echo '<tr>';
-    echo '<td>';
-    echo arrayToVerticalTableHTML( $req, 'info', '', 'id,status' );
+    echo printInfo(
+        "Following presentation requests have been made. If you like any paper to
+        be presented, please vote for it. JC coordinators only see the number of
+        votes which might helps them breaking the tie if any.
+        "
+    );
 
-    $voteId = "jc_requests." . $req['id'];
-    $action = 'Add My Vote';
-    if( getMyVote( $voteId ) )
-        $action = 'Remove My Vote';
+    echo '<table>';
+    foreach( $requests as $req )
+    {
+        echo '<tr>';
+        echo '<td>';
+        echo arrayToVerticalTableHTML( $req, 'info', '', 'id,status' );
 
-    echo '</td>';
-    echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
-    echo ' <input type="hidden" name="id" value="' . $voteId . '" />';
-    echo ' <input type="hidden" name="voter" value="' . whoAmI( ) . '" />';
-    echo "<td> <button name='response' value='$action'>$action</button></td>";
-    echo '</form>';
-    echo '</tr>';
+        $voteId = "jc_requests." . $req['id'];
+        $action = 'Add My Vote';
+        if( getMyVote( $voteId ) )
+            $action = 'Remove My Vote';
+
+        echo '</td>';
+        echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
+        echo ' <input type="hidden" name="id" value="' . $voteId . '" />';
+        echo ' <input type="hidden" name="voter" value="' . whoAmI( ) . '" />';
+        echo "<td> <button name='response' value='$action'>$action</button></td>";
+        echo '</form>';
+        echo '</tr>';
+    }
+    echo '<table>';
 }
-echo '<table>';
+else
+{
+    echo printInfo( "No presentation request has been made yet
+        or the existing ones have been cancelled by users."
+    );
+}
 
 echo goBackToPageLink( 'user.php', 'Go Back' );
 

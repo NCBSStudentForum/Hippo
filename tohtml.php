@@ -3,6 +3,7 @@
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'ICS.php';
+include_once 'linkify.php';
 
 $useCKEditor = false;
 
@@ -489,12 +490,13 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
     $toDisplay = Array();
     foreach( $keys as $k )
         if( ! in_array( $k, $tobefilterd ) )
-            array_push( $toDisplay, $array[$k] );
+            $toDisplay[] = $array[ $k ];
 
     foreach( $toDisplay as $v )
     {
         if( isStringAValidDate( $v ) )
             $v = humanReadableDate( $v );
+        $v = linkify( $v );
 
         $row .= "<td><div class=\"cell_content\">$v</div></td>";
     }
@@ -606,7 +608,7 @@ function arrayToVerticalTableHTML( $array, $tablename
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
 
             // Escape some special chars speacial characters.
-            $text = $array[ $k ];
+            $text = linkify( $array[ $k ] );
 
             $table .= "<td><div class=\"cell_content\">$text</div></td>";
             $table .= "</tr>";

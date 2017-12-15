@@ -41,11 +41,6 @@ $mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
 foreach( $mySubs as $mySub )
 {
     echo "<h1>Upcoming presentations for " . $mySub[ 'jc_id' ] . "</h1>";
-
-    echo printInfo( "Following presentations are fixed. If any of these
-        presentation belongs to you, you can edit it by pressing the 'Edit' button. "
-    );
-
     $jcID = $mySub['jc_id' ];
     $upcomings = getUpcomingJCPresentations( $jcID );
     echo '<table>';
@@ -58,7 +53,7 @@ foreach( $mySubs as $mySub )
             // If it is MINE then make it editable.
             if( $upcoming[ 'presenter' ] == whoAmI( ) )
             {
-                echo ' <form action="user_manages_jc_update_presentation.php" 
+                echo ' <form action="user_manages_jc_update_presentation.php"
                     method="post" accept-charset="utf-8">';
                 echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', 'Edit' );
                 echo '</form>';
@@ -86,8 +81,8 @@ if( count( $requests ) > 0 )
 {
     echo printInfo(
         "Following presentation requests have been made. If you like any paper to
-        be presented, please vote for it. JC coordinators only see the number of
-        votes which might helps them breaking the tie if any.
+        be presented, please vote for it. Voting is anonymous and only seen by
+        JC coordinators.
         "
     );
 

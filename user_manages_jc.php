@@ -58,7 +58,8 @@ foreach( $mySubs as $mySub )
             // If it is MINE then make it editable.
             if( $upcoming[ 'presenter' ] == whoAmI( ) )
             {
-                echo ' <form action="user_manages_jc_update_presentation.php" method="post" accept-charset="utf-8">';
+                echo ' <form action="user_manages_jc_update_presentation.php" 
+                    method="post" accept-charset="utf-8">';
                 echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', 'Edit' );
                 echo '</form>';
             }

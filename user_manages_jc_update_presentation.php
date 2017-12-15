@@ -26,9 +26,7 @@ if( __get__( $_POST, 'response', '' ) == 'Edit' )
     echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables, 'Edit' );
     echo '</form>';
 
-    $res = updateTable( 'jc_presentations', 'jc_id,presenter,date'
-        , 'title,description,url', $_POST
-    );
+    $res = updateTable( 'jc_presentations', 'id', 'title,description,url', $_POST);
     if( $res )
     {
         echo printInfo( 'Successfully updated presentation entry' );

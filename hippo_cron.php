@@ -78,8 +78,6 @@ if( trueOnGivenDayAndTime( 'this friday', '4:00 pm' ) )
 
         $pdffile = $res[ 'pdffile' ];
 
-        echo $mail[ 'email_body' ];
-
         $res = sendHTMLEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
         ob_flush( );
     }
@@ -595,7 +593,7 @@ if( $intMonth % 2 == 0 )
 /////
 
 // At 3PM, we send notification about upcoming JC on 3 days in advance.
-if( trueOnGivenDayAndTime( 'today', '1500' ) )
+if( trueOnGivenDayAndTime( 'today', '16:00' ) )
 {
     $upcomingPresentations = getUpcomingJCPresentations( );
 
@@ -610,7 +608,10 @@ if( trueOnGivenDayAndTime( 'today', '1500' ) )
             $listOfAdmins = array_values( getAllAdminsOfJC( $jcID ) );
             $tableOfJCCoords = arrayToVerticalTableHTML( $listOfAdmins, 'info' );
 
-            $macro = array( 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
+            var_dump( $jcInfo);
+
+            $macro = array( 
+                'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
                 , 'DATE' => humanReadableDate( $presentation['date'] )
                 , 'TIME' => humanReadableTime( $jcInfo[ 'time' ] )
                 , 'PRESENTER' => loginToHTML( $presentation[ 'presenter' ] )
@@ -626,7 +627,8 @@ if( trueOnGivenDayAndTime( 'today', '1500' ) )
 
             $subject = "$jcID | This $day '$title' by $presenter";
             $msg = $mail[ 'email_body' ];
-            sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
+            echo $msg;
+            //sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
         }
     }
 }

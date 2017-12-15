@@ -2161,5 +2161,20 @@ function getPresentationTitle( $presentation )
     return $title;
 }
 
+function jcToHTML( $jc )
+{
+    $jcInfo = getJCInfo( $jc[ 'jc_id' ] );
+    $html = '<h3>' . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
+
+    $presenter = getLoginInfo( $jc[ 'presenter' ] );
+    $pName = arrayToName( $presenter );
+    $html .= "<strong> $pName </strong>";
+    $html .= $jc['description'];
+    $html .= "URL: " . linkify( $jc['url'] );
+    $html .= '<hr>';
+
+    return $html;
+
+}
 
 ?>

@@ -46,6 +46,9 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
     <td>
     <a href="events.php" target="hippo_popup">Talks</a>
     </td>
+    <td>
+    <a href="jc.php" target="hippo_popup">JCs</a>
+    </td>
     <!-- <td> <a href="user_aws_search.php" target="hippo_popup">Search AWS</a> </td> -->
     <td> <a href="statistics.php" target="hippo_popup" >Statistics </a> </td>
     <!-- <td> <a href="active_speakers.php" target="hippo_popup" >AWS speakers</a></td> -->

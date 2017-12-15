@@ -84,7 +84,7 @@ function eventToICALLink( $event )
     $prop = array( );
     $prop[ 'dtstart' ] = $event[ 'date' ] . ' ' . $event[ 'start_time' ];
     $prop[ 'dtend' ] = $event[ 'date' ] . ' ' . $event[ 'end_time' ];
-    $prop[ 'description' ] = substr( $event[ 'description' ], 0, 200 );
+    $prop[ 'description' ] = substr( html2Markdown( $event[ 'description' ]), 0, 200 );
     $prop[ 'location' ] = venueToText( $event[ 'venue' ] );
     $prop[ 'summary' ] = $event[ 'title' ];
 
@@ -513,7 +513,7 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
 function arraysToTable( $arrs, $with_index = false )
 {
     $html = '<table>';
-    
+
     foreach( $arrs as $i => $row )
     {
         $tr = '';
@@ -2136,6 +2136,19 @@ function presentationToHTML( $presentation )
         $html .= '<p>More information/resources may be available at <a href="' . $presentation[ 'url' ] . '">
                     this link</a>';
     }
+
+    $jcId = $presentation[ 'jc_id'];
+    $jcInfo = getJCInfo( $jcId );
+
+    $presentation['venue' ] = $jcInfo['venue'];
+    $presentation['start_time' ] = $jcInfo['time'];
+    $presentation['end_time' ] = dbTime( strtotime($jcInfo['time'] ) + 3600 );
+    $presentation[ 'title' ] = "$jcId | '" . $presentation[ 'title' ] . "' by " .
+        arrayToName( getLoginInfo( $presentation[ 'presenter' ] ) );
+
+    $html .= '<br> <br />';
+    $html .= addToGoogleCalLink( $presentation );
+
     return $html;
 }
 

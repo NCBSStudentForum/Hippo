@@ -593,7 +593,7 @@ if( $intMonth % 2 == 0 )
 /////
 
 // At 3PM, we send notification about upcoming JC on 3 days in advance.
-if( trueOnGivenDayAndTime( 'today', '15:00' ) )
+if( trueOnGivenDayAndTime( 'today', '17:00' ) )
 {
     $upcomingPresentations = getUpcomingJCPresentations( );
 
@@ -612,7 +612,7 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
             $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
             $presenter = loginToText( $presentation[ 'presenter' ], false );
 
-            $macro = array( 
+            $macro = array(
                 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
                 , 'TITLE' => $title
                 , 'DATE' => humanReadableDate( $presentation['date'] )
@@ -626,6 +626,8 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
 
             $subject = "$jcID (This $day) | '$title' by $presenter";
             $msg = $mail[ 'email_body' ];
+
+            echo $msg;
 
             $res = sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
             if( $res )

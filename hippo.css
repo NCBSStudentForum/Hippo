@@ -554,7 +554,7 @@ p  {
 
 p.info {
     min-width : 90%;
-    max-width : 500px;
+    max-width : var(--maxwidth);
 }
 
 p.warn {

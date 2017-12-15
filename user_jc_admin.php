@@ -110,22 +110,27 @@ foreach( $upcomingJCs as $jcID => $upcomings )
 echo '</table>';
 
 echo '<h1>List of presentation requests</h1>';
+echo printInfo( 'You can reschedule or cancel the request. Please let the
+    requester know before doing anything evil.'
+);
+
 $requests = getTableEntries( 'jc_requests', 'date'
     , "date>='$today' AND status='VALID' "
     );
-echo '<table class="show_events">';
+echo '<table class="info">';
 echo '<th>Request</th><th>Votes</th>';
 
 foreach( $requests as $i => $req )
 {
     echo '<tr>';
     echo '<td>';
-    echo arrayToVerticalTableHTML( $req, 'info' );
+    echo arrayToVerticalTableHTML( $req, 'info', '', 'id,status' );
 
     // Another form to delete this request.
-    echo ' <form action="#" method="post" accept-charset="utf-8">';
+    echo ' <form action="user_jc_admin_edit_jc_request.php" method="post">';
     echo "<button name='response' onclick='AreYouSure(this)'
-            title='Cancel this request'>TODO: Cancel</button>";
+            title='Cancel this request'>Cancel</button>";
+    echo "<button name='response' title='Reschedule' value='Reschedule'>Reschdule</button>";
     echo "<input type='hidden' name='id' value='" . $req[ 'id' ] . "' />";
     echo '</form>';
     echo "</td>";

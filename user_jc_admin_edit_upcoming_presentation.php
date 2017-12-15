@@ -35,12 +35,18 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 
 $editables = 'title,description,url';
 
+if( __get__( $_POST, 'response', '' ) == 'Reschdule' )
+{
+    $editables = 'date';
+}
+
 echo '<form action="#" method="post" accept-charset="utf-8">';
 echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables );
 echo '</form>';
 
 if( __get__( $_POST, 'response', '' ) == 'submit' )
 {
+
     $res = updateTable( 'jc_presentations', 'id,jc_id,presenter,date'
         , 'title,description,url', $_POST
     );

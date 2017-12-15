@@ -81,7 +81,6 @@ foreach( $requests as $i => $req )
     // Another form to delete this request.
     echo ' <form action="#" method="post" accept-charset="utf-8">';
 
-    // Using ' instead of " because of json_encode uses " by default.
     echo "<button name='response' onclick='AreYouSure(this)'
             title='Cancel this request'>Cancel</button>";
     echo "<input type='hidden' name='id' value='" . $req['id'] . "' />";

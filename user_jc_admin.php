@@ -44,8 +44,6 @@ foreach( $jcIds as $jc_id )
     $upcomingJCs[ $jc_id ] = $upcoming;
 }
 
-echo '<h1>Manage JC schedule</h1>';
-
 echo '<h1>Schedule JC presentations</h1>';
 // Manage presentation.
 echo printInfo( 'Assign a presentation manually.' );

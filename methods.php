@@ -39,6 +39,27 @@ function venueToText( $venue, $show_strength = true )
     return $txt;
 }
 
+function sortByKey( &$array, $key, $ascending = true )
+{
+    if( ! $array )
+        return false;
+
+    if( $ascending )
+        usort( $array , function( $x, $y ) {
+            global $key;
+            return __get__( $x, $key, '') < __get__($y, $key, '' );
+        }
+    );
+    else
+        usort( $array , function( $x, $y ) {
+            global $key;
+            return __get__( $x, $key, '') > __get__($y, $key, '' );
+        }
+    );
+
+    return true;
+}
+
 
 // Convert an integer to color.
 function toColor($n)
@@ -1415,5 +1436,7 @@ function diffDates( $date1, $date2, $unit = 'second' )
         return $d / (24*3600);
     else if( $unit == 'week' )
         return $d / (7*24*3600);
+    else if( $unit == 'month' )
+        return intval( $d / (30.41*24*3600));
     return -1;
 }

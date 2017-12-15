@@ -1,6 +1,6 @@
 {
-  "name": "bootstrap-calendar",
-  "version": "0.2.5",
+  "name": "hippo",
+  "version": "0.1.0",
   "description": "Calendar module based on Bootsrap and jQuery",
   "main": "./js/calendar.js",
   "dependencies": {
@@ -22,11 +22,13 @@
   "keywords": [
     "calendar"
   ],
-  "readmeFilename": "README.md",
   "author": "Sergey Romanov",
-  "license": "AML",
+  "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/Serhioromano/bootstrap-calendar/issues"
   },
-  "homepage": "https://github.com/Serhioromano/bootstrap-calendar#readme"
+  "homepage": "https://github.com/Serhioromano/bootstrap-calendar#readme",
+  "directories": {
+    "test": "tests"
+  }
 }

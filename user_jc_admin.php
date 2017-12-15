@@ -154,47 +154,63 @@ echo $form;
 foreach( $jcIds as $currentJC )
 {
     $subs = getJCSubscriptions( $currentJC );
-    $subTable = '<table class="info">';
-    $subTable .= '<th>Index</th><th>Login ID</th><th>Name</th>
-        <th>#Presentation</th><th>Last Presented On</th><th></th>';
-
     $allEmails = array( );
+
+    // Create a subscription table.
+    $allSubs = array( );
     foreach( $subs as $i => $sub )
     {
-        $subTable .= '<tr>';
         $login = $sub['login'];
         $info = getLoginInfo( $login );
-        $allEmails[] = $info['email'];
-        $name = arrayToName( $info );
         $email = mailto( $info[ 'email' ] );
+        $allEmails[] = $info['email'];
 
         $presentations =  __get__( $presentationMap, $login, array() );
         $numPresentations = count( $presentations );
 
-        $lastPresentedOn = 'NA';
+        $lastPresentedOn = '0';
         if( count( $presentations ) > 0 )
             $lastPresentedOn = humanReadableDate( $presentations[0]['date'] );
 
+        $row = array(
+            'Name' => arrayToName( $info )
+            , 'Email' => $email
+            , 'PI/HOST' => getPIOrHost( $login )
+            , '#Presentations' => $numPresentations
+            , 'Last Presented On' => humanReadableDate( $lastPresentedOn )
+            //, 'Months On Campus' => diffDates( 'today', $info['joined_on'], 'month' )
+        );
+        $allSubs[] = $row;
+    }
 
-        $subTable .= '<td>' . ($i+1) . "</td><td> $login </td>
-            <td>$name ($email) </td>";
-        $subTable .= "<td> $numPresentations </td>";
-        $subTable .= "<td> $lastPresentedOn </td>";
+    if( __get__($_POST, 'response', '' ) == 'sort' )
+    {
 
+    }
+
+    // Sort by last presented on.
+    sortByKey( $allSubs, 'Last Presented On' );
+
+    $subTable = '<table class="sortable info">';
+    $subTable .= arrayToTHRow( $allSubs[0], 'sorttable', '' );
+    foreach( $allSubs as $i => $sub )
+    {
         $subTable .= '<form method="post" action="user_jc_admin_submit.php">';
-        $subTable .= '<td>';
+        $subTable .= '<tr>';
+        $subTable .= arrayToRowHTML( $sub, 'sorttable', '', false );
         $subTable .= '<input type="hidden" name="login" value="' . $login . '" />';
         $subTable .= '<input type="hidden" name="jc_id" value="' . $currentJC . '" />';
+        $subTable .= '<td>';
         $subTable .= '<button style="float:right;" onclick="AreYouSure(this)"
                               name="response" >' . $symbDelete . '</button>';
         $subTable .= '</td>';
-        $subTable .= '</form>';
-
         $subTable .= '</tr>';
+        $subTable .= '</form>';
     }
     $subTable .= '</table>';
 
     echo '<h2>Subscription list of ' . $currentJC . '</h2>';
+    echo printInfo( 'Total subscriptions: ' . count( $allSubs ) . '.' );
 
     // Link to write to all members.
     if( count( $allEmails ) > 0 )

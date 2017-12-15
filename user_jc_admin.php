@@ -157,11 +157,14 @@ foreach( $jcIds as $currentJC )
     $subTable = '<table class="info">';
     $subTable .= '<th>Index</th><th>Login ID</th><th>Name</th>
         <th>#Presentation</th><th>Last Presented On</th><th></th>';
+
+    $allEmails = array( );
     foreach( $subs as $i => $sub )
     {
         $subTable .= '<tr>';
         $login = $sub['login'];
         $info = getLoginInfo( $login );
+        $allEmails[] = $info['email'];
         $name = arrayToName( $info );
         $email = mailto( $info[ 'email' ] );
 
@@ -189,9 +192,16 @@ foreach( $jcIds as $currentJC )
 
         $subTable .= '</tr>';
     }
-
     $subTable .= '</table>';
+
     echo '<h2>Subscription list of ' . $currentJC . '</h2>';
+
+    // Link to write to all members.
+    if( count( $allEmails ) > 0 )
+    {
+        $mailtext = implode( ",", $allEmails );
+        echo '<div>' .  mailto( $mailtext, 'Send email to all subscribers' ) . "</div>";
+    }
     echo $subTable;
 }
 

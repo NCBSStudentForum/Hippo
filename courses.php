@@ -227,7 +227,7 @@ if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
     {
         $mailtext = implode( ",", $allEmails );
         echo '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
-        }
+    }
 }
 
 

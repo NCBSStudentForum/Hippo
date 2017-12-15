@@ -14,7 +14,7 @@ echo '<h1>Edit presentation entry</h1>';
 
 
 
-if( __get__( $_POST, 'response', '' ) == 'Edit' )
+if( __get__( $_POST, 'response', '' ) == 'Edit' or __get__( $_POST, 'response', '') == 'Save' )
 {
     echo printInfo( "
         Consider adding <tt>URL</tt>. This is the place user can find material related
@@ -22,18 +22,25 @@ if( __get__( $_POST, 'response', '' ) == 'Edit' )
         " );
     echo alertUser( "We do not keep backup for your entry!" );
     $editables = 'title,description,url';
+
+    //echo printInfo( 'Current entry is following' );
+    //$jcEntry = getTableEntry( 'jc_presentations', 'jc_id,presenter,date', $_POST );
+    //echo arrayToVerticalTableHTML( $jcEntry, 'info', '', 'id,status' );
+    //echo ' <br />';
+
     echo '<form action="#" method="post" accept-charset="utf-8">';
-    echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables, 'Edit' );
+    echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables, 'Save' );
     echo '</form>';
 
     $res = updateTable( 'jc_presentations', 'id', 'title,description,url', $_POST);
     if( $res )
     {
-        echo printInfo( 'Successfully updated presentation entry' );
-        // We do not exit from here. User might want to edit some more.
-        echo " <br /> ";
-        echo "<strong>Afer your are finished editing, use 'Go Back' link
-           to back.</strong>";
+        if( $_POST[ 'response' ] == 'Save' )
+        {
+            echo printInfo( 'Successfully saved your presentation entry.' );
+            // We do not exit from here. User might want to edit some more.
+            echo goBackToPageLink( "user_manages_jc.php", "Done editing" );
+        }
     }
 }
 else if( __get__( $_POST, 'response', '' ) == 'Add My Vote' )
@@ -67,6 +74,7 @@ else
     exit;
 }
 
+echo ' <br />';
 echo goBackToPageLink( 'user_manages_jc.php', 'Go Back' );
 
 ?>

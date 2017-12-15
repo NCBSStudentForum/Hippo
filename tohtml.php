@@ -951,12 +951,13 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     // user pass an empty value
     $buttonSym = ucfirst( $button_val );
 
-    if( strtolower($button_val) == 'submit' )
-        $buttonSym = "&#10003";
-    else if( strtolower( $button_val ) == 'update' )
-        $buttonSym = $symbUpdate;
-    else if( strtolower( $button_val ) == 'edit' )
-        $buttonSym = $symbEdit;
+    // DONT use symbols. They are not visible.
+    //if( strtolower($button_val) == 'submit' )
+    //    $buttonSym = "&#10003";
+    //else if( strtolower( $button_val ) == 'update' )
+    //    $buttonSym = $symbUpdate;
+    //else if( strtolower( $button_val ) == 'edit' )
+    //    $buttonSym = $symbEdit;
 
     // Let JS add extra rows here.
     $html .= '<tr><td></td><td><table id="' . $tablename . '_extra_rows"> </table></td>';

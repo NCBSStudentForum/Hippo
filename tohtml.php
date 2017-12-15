@@ -752,7 +752,7 @@ function editor_script( $id, $default = '' )
         tinymce.init( { selector : '#" . $id . "'
         , init_instance_callback: \"insert_content\"
         , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
-        , paste_as_text : false
+        , paste_as_text : true
         , paste_enable_default_filters: false
         , height : 300
         , paste_data_images: true

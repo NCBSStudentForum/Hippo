@@ -44,8 +44,6 @@ foreach( $jcIds as $jc_id )
     $upcomingJCs[ $jc_id ] = $upcoming;
 }
 
-echo '<h1>Manage JC schedule</h1>';
-
 echo '<h1>Schedule JC presentations</h1>';
 // Manage presentation.
 echo printInfo( 'Assign a presentation manually.' );
@@ -168,24 +166,21 @@ foreach( $jcIds as $currentJC )
         $presentations =  __get__( $presentationMap, $login, array() );
         $numPresentations = count( $presentations );
 
-        $lastPresentedOn = 'NA';
+        $lastPresentedOn = '0';
         if( count( $presentations ) > 0 )
             $lastPresentedOn = humanReadableDate( $presentations[0]['date'] );
 
         $row = array(
             'Name' => arrayToName( $info )
+            , 'Email' => $email
             , 'PI/HOST' => getPIOrHost( $login )
             , '#Presentations' => $numPresentations
             , 'Last Presented On' => humanReadableDate( $lastPresentedOn )
-            , 'Months On Campus' => diffDates( 'today', $info['joined_on'], 'month' )
+            //, 'Months On Campus' => diffDates( 'today', $info['joined_on'], 'month' )
         );
         $allSubs[] = $row;
     }
 
-    if( __get__($_POST, 'response', '' ) == 'sort' )
-    {
-
-    }
 
     // Sort by last presented on.
     sortByKey( $allSubs, 'Last Presented On' );

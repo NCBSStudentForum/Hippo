@@ -2169,7 +2169,7 @@ function jcToHTML( $jc )
     $presenter = getLoginInfo( $jc[ 'presenter' ] );
     $pName = arrayToName( $presenter );
     $html .= "<strong> $pName </strong>";
-    $html .= $jc['description'];
+    $html .= '<div class="justify">' . $jc['description'] . '</div>';
     $html .= "URL: " . linkify( $jc['url'] );
     $html .= '<hr>';
 

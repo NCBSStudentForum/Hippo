@@ -76,6 +76,12 @@ div.public_calendar {
     background: transparent;
 }
 
+div.justify {
+    max-width: 600px;
+    min-width: 400px;
+    text-align: justify;
+}
+
 table.user_float {
     position : fixed;
     top : 1%;
@@ -549,6 +555,11 @@ table.admin tr td {
 p  {
     min-width : 100%;
     max-width : 500px;
+}
+
+p.justify {
+    max-width: var(--maxwidth);
+    text-align: justify;
 }
 
 

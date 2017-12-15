@@ -517,7 +517,7 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
     *
     * @return
  */
-function arrayHeaderRow( $array, $tablename, $tobefilterd = '' )
+function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = false )
 {
     $hrow = '';
     $keys = array_keys( $array );
@@ -532,15 +532,30 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '' )
         {
             $kval = prettify( $k );
             $label = strtoupper( $kval );
-            $hrow .= "<th class=\"db_table_fieldname\">$label</th>";
+            $sortButton = '';
+            if( $sort_button )
+            {
+                $sortButton = '<table class="sort_button"><tr>';
+                $sortButton .= "<td><button class='sort' name='response' value='sort'>
+                    <i class='fa fa-sort-asc'></i>
+                    </button></td>";
+                $sortButton .= "<td><button class='sort' name='response' value='sort'>
+                    <i class='fa fa-sort-desc'></i>
+                    </button></td>";
+                $sortButton .= '<input type="hidden" name="key" value="' . $k . '" />';
+                $sortButton .= '</tr></table>';
+            }
+            $hrow .= "<th class=\"db_table_fieldname\">$label $sortButton</th>";
         }
 
     return $hrow;
 }
 
-function arrayToTHRow( $array, $tablename, $tobefilterd = '' )
+function arrayToTHRow( $array, $tablename, $tobefilterd = '', $sort_button  = false )
 {
-    return arrayHeaderRow( $array, $tablename, $tobefilterd );
+    return arrayHeaderRow( $array, $tablename, $tobefilterd
+                , $sort_button
+            );
 }
 
 // Convert an array to HTML

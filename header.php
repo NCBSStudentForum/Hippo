@@ -91,6 +91,10 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <!-- Font awesome -->
 <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css"/>
 
+<!-- sort table. -->
+<script src="./node_modules/sorttable/sorttable.js"></script>
+
+
 <script>
 $( function() {
     $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );

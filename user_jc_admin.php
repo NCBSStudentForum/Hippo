@@ -103,9 +103,8 @@ foreach( $upcomingJCs as $jcID => $upcomings )
         echo '<td> <button name="response" value="Remove Presentation"
                     title="Remove this schedule" >' . $symbDelete . '</button></td>';
 
-        // Use ' for HTML fields; since json_encode uses ".
-        echo "<input type='hidden' name='json_data' value='"
-                . json_encode( $upcoming ) . "' />";
+        echo "<input type='hidden' name='id' value='"
+                . $upcoming['id'] . "' />";
         echo '</form>';
         echo '</tr>';
     }
@@ -123,18 +122,13 @@ foreach( $requests as $i => $req )
 {
     echo '<tr>';
     echo '<td>';
-    echo ' <form action="#" method="post" accept-charset="utf-8">';
-    echo dbTableToHTMLTable( 'jc_requests', $req, '', 'Edit', 'status,presenter' );
-    echo '</form>';
+    echo arrayToVerticalTableHTML( $req, 'info' );
 
     // Another form to delete this request.
     echo ' <form action="#" method="post" accept-charset="utf-8">';
-
-    // Using ' instead of " because of json_encode uses " by default.
     echo "<button name='response' onclick='AreYouSure(this)'
-            title='Cancel this request'>Cancel</button>";
-    echo "<input type='hidden' name='json_data'
-        value='" . json_encode( $req ) . "' />";
+            title='Cancel this request'>TODO: Cancel</button>";
+    echo "<input type='hidden' name='id' value='" . $req[ 'id' ] . "' />";
     echo '</form>';
     echo "</td>";
 

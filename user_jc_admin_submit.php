@@ -110,9 +110,9 @@ else if( $_POST['response'] == 'Assign Presentation' )
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )
 {
-    $data = json_decode( $_POST[ 'json_data' ], true );
+    $data = array( 'id' => $_POST[ 'id' ] );
     $data[ 'status' ] = 'INVALID';
-    $res = updateTable( 'jc_presentations', 'jc_id,presenter,date', 'status', $data );
+    $res = updateTable( 'jc_presentations', 'id', 'status', $data );
     if( $res )
     {
         $to = getLoginEmail( $data[ 'presenter' ] );
@@ -136,7 +136,6 @@ else if( $_POST[ 'response' ] == 'Remove Presentation' )
 }
 else
 {
-    var_dump( $_POST );
     echo alertUser( "Response " . $_POST[ 'response' ] . ' is not known or not
         supported yet' );
 }

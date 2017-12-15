@@ -2171,7 +2171,7 @@ function jcToHTML( $jc )
     $html .= "<strong> $pName </strong>";
     $html .= '<div class="justify">' . $jc['description'] . '</div>';
     $html .= "URL: " . linkify( $jc['url'] );
-    $html .= '<hr>';
+    $html .= "<div width=600px><hr width=600px align=left> </div>";
 
     return $html;
 

@@ -94,8 +94,6 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <!-- sort table. -->
 <script src="./node_modules/sorttable/sorttable.js"></script>
 
-<!-- Linkify -->
-<script src="./node_modules/linkifyjs/dist/linkify.js"></script>
 
 
 <script>

@@ -508,6 +508,29 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
 
 }
 
+function arraysToTable( $arrs, $with_index = false )
+{
+    $html = '<table>';
+    
+    foreach( $arrs as $i => $row )
+    {
+        $tr = '';
+
+        if( $with_index )
+            $tr .= "<td> $i </td>";
+
+        if( is_string( $row ) )
+            $tr .= "<td>" . $row . "</td>";
+        else
+            foreach( $row as $j => $val )
+                $tr .= "<td>" . $val . "</td>";
+
+        $html .= "<tr> $tr </tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
+
 /**
     * @brief Convert an array to HTML header row. Only th fields are used.
     *

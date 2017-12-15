@@ -40,13 +40,10 @@ def writeOnImage( img, caption ):
     # font = ImageFont.truetype(<font-file>, <font-size>)
     font = ImageFont.truetype("./data/OpenSans-Regular.ttf", 12 )
     fontCaption = ImageFont.truetype("./data/OpenSans-Regular.ttf", 20 )
-    draw.text((10, img.size[1] - 50)
-            , caption[0:80]
-            , (255,255,255)
-            , font=fontCaption
+    draw.text((10, 15) , caption[0:80]
+            , (255,255,255) , font=fontCaption
             )
-    draw.text((10, img.size[1] - 15)
-            , '(c) NCBS Photography Club'
+    draw.text((10, 50) , '(c) NCBS Photography Club'
             , (255,255,255)
             , font=font
             )

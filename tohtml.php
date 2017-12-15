@@ -78,6 +78,8 @@ function eventToICAL( $event )
 
 function eventToICALLink( $event )
 {
+    return '';
+
     $prop = array( );
     $prop[ 'dtstart' ] = $event[ 'date' ] . ' ' . $event[ 'start_time' ];
     $prop[ 'dtend' ] = $event[ 'date' ] . ' ' . $event[ 'end_time' ];
@@ -1080,9 +1082,13 @@ function loginToText( $login, $withEmail = true, $autofix = true )
 
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
-        $ldap = getUserInfoFromLdap( $user[ 'email'] );
-        if( $ldap )
-            $user = array_merge( $user, $ldap );
+        $email = __get__( $user, 'email', '' );
+        if( $email )
+        {
+            $ldap = getUserInfoFromLdap( $user[ 'email'] );
+            if( $ldap )
+                $user = array_merge( $user, $ldap );
+        }
     }
 
     if( is_bool( $user ) )

@@ -486,7 +486,8 @@ function initialize( $db  )
             , description TEXT
             , date DATE NOT NULL
             , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) default 'VALID'
-            , url VARCHAR(500) -- URL to download the presentation.
+            , url VARCHAR(500) -- URL of paper
+            , presentation_url -- URL of presentation
             , UNIQUE KEY(presenter,jc_id,date)
             )"
         );

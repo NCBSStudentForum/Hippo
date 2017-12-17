@@ -135,5 +135,28 @@ function authenticateUsingLDAP( $user, $pass )
     return $auth;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  PING ldap server.
+    *
+    * @Param $server
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function pingLDAP( $server, $port )
+{
+    // echo "Pinging $server:$port";
+    $fp = @fsockopen( $server, $port, $errCode, $errStr, 1 );
+    return $fp;
+}
+
+function ldapAlive( $server )
+{
+    $res = @pingLDAP( $server, 389 );
+    if( $res )
+        return true;
+    return false;
+}
 
 ?>

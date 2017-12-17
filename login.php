@@ -18,8 +18,12 @@ $pass = $_POST['pass'];
 
 $_SESSION['AUTHENTICATED'] = FALSE;
 
-$auth = authenticateUsingLDAP( $ldap, $pass );
-if(! $auth) 
+// Check if ldap is available. If it is use LDAP else fallback to imap based 
+// authentication.
+$auth = null;
+if( ldapAlive( 'ldap.ncbs.res.in' ) )
+    $auth = authenticateUsingLDAP( $ldap, $pass );
+else
 {
     // Try login using IMAP.
     $auth = authenticateUsingIMAP( $ldap, $pass );
@@ -62,6 +66,12 @@ if( $auth )
     }
 
     goToPage( "user.php", 0 );
+    exit;
+}
+else 
+{
+    echo printWarning( "Loging unsucessful. Going back" );
+    goToPage( "index.php", 3 );
     exit;
 }
 

@@ -2180,7 +2180,12 @@ function jcToHTML( $jc )
     $pName = arrayToName( $presenter );
     $html .= "<strong> $pName </strong>";
     $html .= '<div class="justify">' . $jc['description'] . '</div>';
-    $html .= "URL: " . linkify( $jc['url'] );
+
+    $html .=  '<table>';
+    $html .= "<tr><td>URL</td><td>" . linkify( $jc['url'] ) . '</td></tr>';
+    $html .= "<tr><td>Presentation URL</td><td>" . 
+        linkify( $jc['presentation_url'] ) . '</td></tr>';
+    $html .= '</table>';
     $html .= "<div width=600px><hr width=600px align=left> </div>";
 
     return $html;

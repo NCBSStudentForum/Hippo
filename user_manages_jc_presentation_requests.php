@@ -16,7 +16,9 @@ $jcSelect = arrayToSelectList( 'jc_id', $myJCIds, array(), false, $myJCIds[0] );
 $default = array(
     'presenter' => $_SESSION[ 'user' ]
     , 'jc_id' => $jcSelect
-    , 'id' => getUniqueID( 'jc_requests' )
+    // If there is no Id in $_POST, create one. This is most likely to be new 
+    // entry.
+    , 'id' => __get__( $_POST, 'id', getUniqueID( 'jc_requests' ) )
 );
 
 
@@ -39,6 +41,8 @@ echo '</form>';
 if( __get__( $_POST, 'response', '' ) == 'submit' )
 {
     $_POST[ 'status' ] = 'VALID';
+
+
     $res = insertOrUpdateTable( 'jc_requests'
         , 'id,jc_id,presenter,date,title,description,url'
         , 'title,description,date,status,url'

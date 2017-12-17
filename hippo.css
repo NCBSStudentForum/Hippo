@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|EB+Garamond|Ubuntu');
+class='sort' @import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|EB+Garamond|Ubuntu');
 h1, h2, h3, h4, h5, h6 {
     font-family : 'EB Garamond';
     line-height: 120%;
@@ -74,6 +74,12 @@ div.goback {
 div.public_calendar {
     margin-top : 500px;
     background: transparent;
+}
+
+div.justify {
+    max-width: 600px;
+    min-width: 400px;
+    text-align: justify;
 }
 
 table.user_float {
@@ -262,6 +268,11 @@ button.invisible {
     font-size : small;
 }
 
+button.sort {
+    font-size: x-small;
+    width: 2px;
+}
+
 
 button.add_event {
     width : 20px;
@@ -401,6 +412,14 @@ table.editable_course_registration {
     /*max-width : 90%;*/
 }
 
+table.editable_jc_presentations {
+    text-align : left;
+    /*max-width : 90%;*/
+}
+table.editable_jc_presentations tr td {
+    background-color: var(--tabletdcolor);
+}
+
 table.event_sticker
 {
     width : 100px;
@@ -428,6 +447,10 @@ table.editable_faculty {
     min-width : 500px;
 }
 
+table.sortable thead {
+    background-color: #eee;
+    cursor: default;
+}
 
 table.editable_faculty tr td
 {
@@ -470,10 +493,26 @@ table.request tr:nth-of-type( odd ) {
     background: #eee;
 }
 
+/* This implements auto row number in table */
+/* https://stackoverflow.com/a/28320927/1805129 */
 table.info {
     max-width : 90%;
     min-width : 600px;
+    /*counter-reset: rowNumber;*/
 }
+
+/* Not TH */
+table.info tr:not(:first-child) {
+    counter-increment: rowNumber;
+}
+
+/*
+table tr td:first-child::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
+}
+*/
 
 table.info tr td {
     font-family : 'Fira Sans';
@@ -518,10 +557,15 @@ p  {
     max-width : 500px;
 }
 
+p.justify {
+    max-width: var(--maxwidth);
+    text-align: justify;
+}
+
 
 p.info {
     min-width : 90%;
-    max-width : 500px;
+    max-width : var(--maxwidth);
 }
 
 p.warn {
@@ -625,8 +669,8 @@ a:visited {
 }
 
 a:hover {
-    text-decoration: none;
-    font-variant: small-caps;
+    text-decoration: underline;
+    /*font-variant: small-caps; */
 }
 
 a:active {

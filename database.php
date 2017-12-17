@@ -10,14 +10,14 @@ $dbChoices = array(
         'UNKNOWN,TALK,INFORMAL TALK' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,SIMONS SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
-        ',SIMON COLLOQUIA,SIMON LECTURE SERIES' .
+        ',SIMONS COLLOQUIA,SIMONS LECTURE SERIES' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     , 'events.class' =>
         'UNKNOWN,TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',MEETING,LAB MEETING,THESIS COMMITTEE MEETING,JOURNAL CLUB MEETING' .
         ',SEMINAR,THESIS SEMINAR,ANNUAL WORK SEMINAR' .
-        ',SIMON COLLOQUIA,SIMON LECTURE SERIES' .
+        ',SIMONS COLLOQUIA,SIMONS LECTURE SERIES' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL' .
         ',INTERVIEW,SPORT EVENT,CULTURAL EVENT,OTHER'
     , 'venues.type' =>
@@ -26,7 +26,7 @@ $dbChoices = array(
     , 'talks.class' =>
         'TALK,INFORMAL TALK,LECTURE,PUBLIC LECTURE' .
         ',SEMINAR,THESIS SEMINAR,SIMONS SEMINAR,ANNUAL WORK SEMINAR' .
-        ',SIMON COLLOQUIA,SIMON LECTURE SERIES' .
+        ',SIMONS COLLOQUIA,SIMONS LECTURE SERIES' .
         ',LECTURE,PUBLIC LECTURE,CLASS,TUTORIAL'
     , 'bookmyvenue.class' =>
         'UNKNOWN,TALK,INFORMAL TALK' .
@@ -638,6 +638,15 @@ function getUniqueFieldValue( $tablename, $column = 'id' )
     return __get__( $res, $column , 0 );
 }
 
+function getUniqueID( $tablename )
+{
+    $column = 'id';
+    global $db;
+    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    $res = $res->fetch( PDO::FETCH_ASSOC );
+    return intval( __get__( $res, $column , 0  )) + 1;
+}
+
 /**
     * @brief Sunmit a request for review.
     *
@@ -1080,18 +1089,17 @@ function getUserInfo( $user )
     global $db;
 
     $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
+    $title = __get__( $res, 'title', '' );
 
-    // Get the user title.
-    $title = $res[ 'title' ];
+    if( ! $res )
+        $res = array( );
 
     // Fetch ldap as well.
     $ldap = getUserInfoFromLdap( $user );
-
     if( is_array($ldap) && is_array( $res ) && $ldap  )
     {
         foreach( $ldap as $key => $val )
-            if( trim($val) )
-                $res[ $key ] = $val;
+            $res[ $key ] = $val;
     }
 
     // If title was found in database, overwrite ldap info.
@@ -1289,7 +1297,7 @@ function whereExpr( $keys, $data )
     *
     * @return
  */
-function getTableEntries( $tablename, $orderby = '', $where = '' )
+function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = true )
 {
     global $db;
     $query = "SELECT * FROM $tablename";
@@ -1298,12 +1306,29 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " WHERE $where ";
 
     if( strlen($orderby) > 0 )
-        $query .= " ORDER BY '$orderby' ASC";
+    {
+        $query .= " ORDER BY '$orderby'";
+        if( $ascending )
+            $query .= ' ASC';
+        else
+            $query .= ' DESC';
+    }
 
     $stmt = $db->query( $query );
     return fetchEntries( $stmt );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get a single entry from table.
+    *
+    * @Param $tablename
+    * @Param $whereKeys
+    * @Param $data
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
 function getTableEntry( $tablename, $whereKeys, $data )
 {
     global $db;
@@ -1342,15 +1367,18 @@ function insertIntoTable( $tablename, $keys, $data )
 {
     global $db;
 
-    if( gettype( $keys ) == "string" )
+    if( is_string( $keys ) )
         $keys = explode( ',', $keys );
 
     $values = Array( );
     $cols = Array( );
     foreach( $keys as $k )
     {
+        if( ! is_string( $k ) )
+            continue;
+
         // If values for this key in $data is null then don't use it here.
-        if( array_key_exists( $k, $data) && strlen($data[$k]) > 0 )
+        if( __get__( $data, $k, '' ) )
         {
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );
@@ -2820,6 +2848,17 @@ function isSubscribedToJC( $login, $jc_id )
    return false;
 }
 
+function getJCInfo( $jc )
+{
+    if( is_array( $jc ) )
+        $jc_id = __get__( $jc, 'jc_id', $jc['id'] );
+    else if( is_string( $jc ) )
+        $jc_id = $jc;
+
+    return getTableEntry( 'journal_clubs', 'id', array( 'id' => $jc_id ));
+}
+
+
 /* --------------------------------------------------------------------------*/
 /**
     * @Synopsis  Return the list of JC user is subscribed to.
@@ -2834,16 +2873,100 @@ function getUserJCs( $login )
     if( ! $login )
         return array( );
 
-    return getTableEntries( 'jc_subscriptions', 'login', "login='$login'" );
+    return getTableEntries( 'jc_subscriptions', 'login'
+        , "login='$login' AND status='VALID' " );
 }
 
-function getUpcomingJCPresentations( $jcID, $date = 'today' )
+function getMyJCs( )
+{
+    return getUserJCs( $_SESSION[ 'user' ] );
+}
+
+function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
 {
     $date = dbDate( $date );
-    return getTableEntries(
-        'jc_presentations'
-            , 'date', "date >= '$date' AND status='VALID' "
+
+    $whereExpr = "date >= '$date'";
+    if( $jcID )
+        $whereExpr .= " AND jc_id='$jcID' ";
+
+    $whereExpr .= " AND status='VALID'";
+    return getTableEntries( 'jc_presentations' , 'date', $whereExpr );
+}
+
+
+function getUpcomingJCPresentationsOfUser( $presenter, $jcID, $date = 'today' )
+{
+    $date = dbDate( $date );
+    return getTableEntries( 'jc_presentations'
+        , 'date'
+        , "date >= '$date' AND presenter='$presenter'
+            AND jc_id='$jcID' AND status='VALID' "
     );
+}
+
+
+function isJCAdmin( $user )
+{
+    $res = getTableEntry( 'jc_subscriptions', 'login,subscription_type'
+        , array( 'login' => $user, 'subscription_type' => 'ADMIN' )
+    );
+    if( $res )
+        return true;
+    return false;
+}
+
+function getJCForWhichUserIsAdmin( $user )
+{
+    return getTableEntries( 'jc_subscriptions', 'jc_id'
+        , "login='$user' AND subscription_type='ADMIN' AND status='VALID'"
+    );
+}
+
+function getJCSubscriptions( $jc_id )
+{
+    return getTableEntries( 'jc_subscriptions', 'login'
+        , "jc_id='$jc_id' AND status='VALID'" );
+
+}
+
+function getAllPresentationsBefore( $date )
+{
+    $date = dbDate( $date );
+    return getTableEntries( 'jc_presentations'
+        , 'date', "status='VALID' AND date <= '$date'"
+    );
+}
+
+function getAllAdminsOfJC( $jc_id )
+{
+    $admins = getTableEntries( 'jc_subscriptions', 'login'
+        , "status='VALID' AND subscription_type='ADMIN' AND jc_id='$jc_id'"
+    );
+
+    $res = array( );
+    foreach( $admins as $admin )
+        $res[ $admin['login'] ] = loginToHTML( $admin['login'] );
+
+    return $res;
+}
+
+function getUserVote( $voteId, $voter )
+{
+    $res = getTableEntry( 'votes', 'id,voter,status'
+        , array( 'id' => $voteId, 'voter' => $voter, 'status' => 'VALID' )
+    );
+    return $res;
+}
+
+function getMyVote( $voteId )
+{
+    return getUserVote( $voteId, whoAmI( ) );
+}
+
+function getVotes( $voteId )
+{
+    return getTableEntries('votes', '', "id='$voteId' AND status='VALID'" );
 }
 
 ?>

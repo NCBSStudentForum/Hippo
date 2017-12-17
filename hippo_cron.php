@@ -78,8 +78,6 @@ if( trueOnGivenDayAndTime( 'this friday', '4:00 pm' ) )
 
         $pdffile = $res[ 'pdffile' ];
 
-        echo $mail[ 'email_body' ];
-
         $res = sendHTMLEmail( $mail[ 'email_body'], $subject, $to, $cclist, null );
         ob_flush( );
     }
@@ -162,7 +160,7 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00 am' ) )
         $subject = 'No Annual Work Seminar today : ' .
             humanReadableDate( $nextMonday );
         $mail = $res[ 'email' ]['email_body'];
-        sendHTMLEmail( $mail, $subject, $to, $res['email']['CC'] );
+        sendHTMLEmail( $mail, $subject, $to, $res['email']['cc'] );
     }
 }
 
@@ -503,7 +501,7 @@ if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
         // Send email.
         $to = $piOrHost;
         $subject = "Your lab has been assigned Annual Work Seminar slot(s) on $afterNWeeks";
-        sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'CC' ] );
+        sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'cc' ] );
     }
 }
 
@@ -589,5 +587,92 @@ if( $intMonth % 2 == 0 )
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////////////
+// JOURNAL CLUB
+/////
+
+// At 3PM, we send notification about upcoming JC on 3 days in advance.
+if( trueOnGivenDayAndTime( 'today', '15:00' ) )
+{
+    $upcomingPresentations = getUpcomingJCPresentations( );
+
+    foreach( $upcomingPresentations as $i => $presentation )
+    {
+        // If they are exactly after 3 days; send an email.
+        if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 3 )
+        {
+            $jcID = $presentation['jc_id'];
+            $jcInfo = getJCInfo( $jcID );
+
+            $listOfAdmins = array_values( getAllAdminsOfJC( $jcID ) );
+            $tableOfJCCoords = arraysToTable( $listOfAdmins );
+
+            $title = getPresentationTitle( $presentation );
+            $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
+            $presenter = loginToText( $presentation[ 'presenter' ], false );
+
+            $macro = array(
+                'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
+                , 'TITLE' => $title
+                , 'DATE' => humanReadableDate( $presentation['date'] )
+                , 'TIME' => humanReadableTime( $jcInfo[ 'time' ] )
+                , 'PRESENTER' => loginToHTML( $presentation[ 'presenter' ] )
+                , 'DESCRIPTION' => presentationToHTML( $presentation )
+                , 'TABLE_OF_JC_COORDINATORS' => $tableOfJCCoords
+            );
+
+            $mail = emailFromTemplate( 'NOTIFY_ACADEMIC_UPCOMING_JC', $macro );
+
+            $subject = "$jcID (This $day) | '$title' by $presenter";
+            $msg = $mail[ 'email_body' ];
+
+            $res = sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
+            if( $res )
+                echo printInfo( 'Email sent successfully' );
+        }
+    }
+}
+
+// Send reminder about today JC.
+if( trueOnGivenDayAndTime( 'today', '9:00' ) )
+{
+    $upcomingPresentations = getUpcomingJCPresentations( );
+
+    foreach( $upcomingPresentations as $i => $presentation )
+    {
+        if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 0 )
+        {
+            $jcID = $presentation['jc_id'];
+            $jcInfo = getJCInfo( $jcID );
+
+            $listOfAdmins = array_values( getAllAdminsOfJC( $jcID ) );
+            $tableOfJCCoords = arraysToTable( $listOfAdmins );
+
+            $title = getPresentationTitle( $presentation );
+            $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
+
+            $macro = array( 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )
+                , 'TITLE' => $title
+                , 'DATE' => humanReadableDate( $presentation['date'] )
+                , 'TIME' => humanReadableTime( $jcInfo[ 'time' ] )
+                , 'PRESENTER' => loginToHTML( $presentation[ 'presenter' ] )
+                , 'DESCRIPTION' => presentationToHTML( $presentation )
+                , 'TABLE_OF_JC_COORDINATORS' => $tableOfJCCoords
+            );
+
+
+            $presenter = loginToText( $presentation[ 'presenter' ], false );
+            $mail = emailFromTemplate( 'NOTIFY_ACADEMIC_UPCOMING_JC', $macro );
+
+            $subject = "$jcID (Today) | '$title' by $presenter";
+            $msg = $mail[ 'email_body' ];
+            $res = sendHTMLEmail( $msg, $subject, $mail['recipients'], $mail['cc' ] );
+            if( $res )
+                echo printInfo( 'Email sent successfully' );
+        }
+    }
+}
+
 
 ?>

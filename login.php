@@ -5,6 +5,8 @@ include_once( "methods.php" );
 include_once( "database.php" );
 include_once( "ldap.php" );
 
+include_once "./helper/imap.php";
+
 $conf = $_SESSION['conf'];
 $login = $_POST['username'];
 
@@ -17,13 +19,19 @@ $pass = $_POST['pass'];
 $_SESSION['AUTHENTICATED'] = FALSE;
 
 $auth = authenticateUsingLDAP( $ldap, $pass );
-
 if(! $auth) 
 {
-    echo printErrorSevere("FATAL : Username or password is incorrect.");
-    goToPage( 'index.php', 2 );
+    // Try login using IMAP.
+    $auth = authenticateUsingIMAP( $ldap, $pass );
+    if( ! $auth )
+    {
+        echo printErrorSevere("FATAL : Username or password is incorrect.");
+        goToPage( 'index.php', 2 );
+        $auth = null;
+    }
 }
-else 
+
+if( $auth )
 {
     echo printInfo( "Login successful" );
 
@@ -56,4 +64,5 @@ else
     goToPage( "user.php", 0 );
     exit;
 }
+
 ?>

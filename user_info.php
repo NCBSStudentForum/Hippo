@@ -56,8 +56,12 @@ $editables = Array( 'title', 'first_name', 'last_name', 'alternative_email'
     , 'institute', 'valid_until', 'joined_on', 'pi_or_host', 'specialization'
     );
 
+$specializations = array_map(
+    function( $x ) { return $x['specialization']; }, getAllSpecialization( )
+);
+
 $info[ 'specialization' ] = arrayToSelectList( 'specialization'
-    , $specialization, array(), false, $info[ 'specialization' ]
+    , $specializations, array(), false, $info[ 'specialization' ]
     );
 
 // Prepare select list of faculty.

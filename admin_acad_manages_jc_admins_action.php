@@ -10,8 +10,11 @@ include_once 'tohtml.php';
 
 if( $_POST[ 'response' ] == 'Add New Admin' )
 {
-    $res = insertIntoTable( 'jc_subscriptions'
-        , 'login,jc_id,subscription_type,current_timestamp'
+    // The user may alredy be subscribed to this JC. If yes, then update the 
+    // subscription_type to ADMIN.
+    $res = insertOrUpdateTable( 'jc_subscriptions'
+        , 'login,jc_id,subscription_type,last_modified_on'
+        , 'subscription_type,last_modified_on'
         , $_POST
     );
 

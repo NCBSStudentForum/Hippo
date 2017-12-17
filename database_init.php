@@ -457,10 +457,10 @@ function initialize( $db  )
         CREATE TABLE IF NOT EXISTS journal_clubs (
             id VARCHAR(100) NOT NULL PRIMARY KEY
             , title VARCHAR(200) NOT NULL
-            , day ENUM( 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN' ) NOT NULL
             , status SET( 'ACTIVE', 'INVALID', 'INACTIVE' ) DEFAULT 'ACTIVE'
-            , time TIME
+            , day ENUM( 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN' ) NOT NULL
             , venue VARCHAR(100) NOT NULL
+            , time TIME
             , description TEXT
             , UNIQUE KEY(id,day,time,venue)
             )"
@@ -479,29 +479,40 @@ function initialize( $db  )
 
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS jc_presentations (
-            jc_id VARCHAR(100) NOT NULL
+            id INT NOT NULL PRIMARY KEY
+            , jc_id VARCHAR(100) NOT NULL
             , title VARCHAR(300) NOT NULL
             , presenter VARCHAR(100) NOT NULL -- login from logins table.
             , description TEXT
             , date DATE NOT NULL
             , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) default 'VALID'
-            , url VARCHAR(500) -- URL to download the presentation.
-            , UNIQUE KEY(presenter,jc_id)
-            , FOREIGN KEY (presenter) REFERENCES logins(login)
+            , url VARCHAR(500) -- URL of paper
+            , presentation_url VARCHAR(500) -- URL of presentation
+            , UNIQUE KEY(presenter,jc_id,date)
             )"
         );
 
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS jc_requests (
-            jc_id VARCHAR(100) NOT NULL
+            id INT NOT NULL PRIMARY KEY
+            , jc_id VARCHAR(100) NOT NULL
             , presenter VARCHAR(100) NOT NULL -- login from logins
             , title VARCHAR(300) NOT NULL
             , description TEXT
             , date DATE NOT NULL
-            , url VARCHAR(500) -- URL to download the presentation.
+            , url VARCHAR(500) -- Paper URL.
             , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
-            , UNIQUE KEY(presenter,jc_id)
-            , FOREIGN KEY (presenter) REFERENCES logins(login)
+            , UNIQUE KEY(presenter,jc_id,date)
+            )"
+        );
+
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS votes (
+            id VARCHAR(50) NOT NULL  -- table.id
+            , voter VARCHAR(20) NOT NULL
+            , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
+            , voted_on DATE
+            , UNIQUE KEY(voter,id)
             )"
         );
 

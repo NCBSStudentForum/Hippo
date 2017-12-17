@@ -25,6 +25,9 @@ function requiredPrivilege( $role )
 
 function anyOfTheseRoles( $roles )
 {
+    if( is_string( $roles ) )
+        $roles = explode( ',', $roles );
+
     $user = $_SESSION[ 'user' ];
     assert( strlen( $user ) > 0 );
     $userRoles = getRoles( $_SESSION['user'] );

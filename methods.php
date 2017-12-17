@@ -19,6 +19,10 @@ $phpFileUploadErrors = array(
     8 => 'A PHP extension stopped the file upload.',
 );
 
+function whoAmI( )
+{
+    return $_SESSION[ 'user' ];
+}
 
 function venueToText( $venue, $show_strength = true )
 {
@@ -33,6 +37,27 @@ function venueToText( $venue, $show_strength = true )
 
     $txt .= '[' . $venue['type'] . ']' ;
     return $txt;
+}
+
+function sortByKey( &$array, $key, $ascending = true )
+{
+    if( ! $array )
+        return false;
+
+    if( $ascending )
+        usort( $array , function( $x, $y ) {
+            global $key;
+            return __get__( $x, $key, '') < __get__($y, $key, '' );
+        }
+    );
+    else
+        usort( $array , function( $x, $y ) {
+            global $key;
+            return __get__( $x, $key, '') > __get__($y, $key, '' );
+        }
+    );
+
+    return true;
 }
 
 
@@ -132,13 +157,13 @@ function appURL( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
-  echo printInfo( "Going to page $page in $delay seconds" );
-  $baseurl = appRootDir( );
-  if( strpos( $page, "http" ) == 0 )
-      $url = $page;
-  else
-      $url = "$baseurl/$page";
-  header("Refresh: $delay, url=$url");
+    echo printInfo( "Going to page $page in $delay seconds" );
+    $baseurl = appRootDir( );
+    if( strpos( $page, "http" ) == 0 )
+        $url = $page;
+    else
+        $url = "$baseurl/$page";
+    header("Refresh: $delay, url=$url");
 }
 
 function __get__( $arr, $what, $default = NULL )
@@ -1387,4 +1412,31 @@ function getCourseCode( $cc, $delim = ':' )
     if( strlen( trim( $cc ) ) < 1 )
         return '';
     return trim( explode( $delim, $cc )[0] );
+}
+
+function getValuesByKey( $arr, $key )
+{
+    $res = array( );
+    foreach( $arr as $row )
+        $res[] = $row[ $key ];
+
+    return $res;
+}
+
+function diffDates( $date1, $date2, $unit = 'second' )
+{
+    $d = strtotime( $date1 ) - strtotime( $date2 );
+    if( $unit == 'second' )
+        return $d;
+    else if( $unit == 'minute' )
+        return $d / 60;
+    else if( $unit == 'hour' )
+        return $d / 3600;
+    else if( $unit == 'day' )
+        return $d / (24*3600);
+    else if( $unit == 'week' )
+        return $d / (7*24*3600);
+    else if( $unit == 'month' )
+        return intval( $d / (30.41*24*3600));
+    return -1;
 }

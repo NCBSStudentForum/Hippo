@@ -3,6 +3,7 @@
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'ICS.php';
+include_once 'linkify.php';
 
 $useCKEditor = false;
 
@@ -78,10 +79,12 @@ function eventToICAL( $event )
 
 function eventToICALLink( $event )
 {
+    return '';
+
     $prop = array( );
     $prop[ 'dtstart' ] = $event[ 'date' ] . ' ' . $event[ 'start_time' ];
     $prop[ 'dtend' ] = $event[ 'date' ] . ' ' . $event[ 'end_time' ];
-    $prop[ 'description' ] = substr( $event[ 'description' ], 0, 200 );
+    $prop[ 'description' ] = substr( html2Markdown( $event[ 'description' ]), 0, 200 );
     $prop[ 'location' ] = venueToText( $event[ 'venue' ] );
     $prop[ 'summary' ] = $event[ 'title' ];
 
@@ -487,12 +490,13 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
     $toDisplay = Array();
     foreach( $keys as $k )
         if( ! in_array( $k, $tobefilterd ) )
-            array_push( $toDisplay, $array[$k] );
+            $toDisplay[] = $array[ $k ];
 
     foreach( $toDisplay as $v )
     {
         if( isStringAValidDate( $v ) )
             $v = humanReadableDate( $v );
+        $v = linkify( $v );
 
         $row .= "<td><div class=\"cell_content\">$v</div></td>";
     }
@@ -506,6 +510,29 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
 
 }
 
+function arraysToTable( $arrs, $with_index = false )
+{
+    $html = '<table>';
+
+    foreach( $arrs as $i => $row )
+    {
+        $tr = '';
+
+        if( $with_index )
+            $tr .= "<td> $i </td>";
+
+        if( is_string( $row ) )
+            $tr .= "<td>" . $row . "</td>";
+        else
+            foreach( $row as $j => $val )
+                $tr .= "<td>" . $val . "</td>";
+
+        $html .= "<tr> $tr </tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
+
 /**
     * @brief Convert an array to HTML header row. Only th fields are used.
     *
@@ -515,7 +542,7 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
     *
     * @return
  */
-function arrayHeaderRow( $array, $tablename, $tobefilterd = '' )
+function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = false )
 {
     $hrow = '';
     $keys = array_keys( $array );
@@ -530,10 +557,30 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '' )
         {
             $kval = prettify( $k );
             $label = strtoupper( $kval );
-            $hrow .= "<th class=\"db_table_fieldname\">$label</th>";
+            $sortButton = '';
+            if( $sort_button )
+            {
+                $sortButton = '<table class="sort_button"><tr>';
+                $sortButton .= "<td><button class='sort' name='response' value='sort'>
+                    <i class='fa fa-sort-asc'></i>
+                    </button></td>";
+                $sortButton .= "<td><button class='sort' name='response' value='sort'>
+                    <i class='fa fa-sort-desc'></i>
+                    </button></td>";
+                $sortButton .= '<input type="hidden" name="key" value="' . $k . '" />';
+                $sortButton .= '</tr></table>';
+            }
+            $hrow .= "<th class=\"db_table_fieldname\">$label $sortButton</th>";
         }
 
     return $hrow;
+}
+
+function arrayToTHRow( $array, $tablename, $tobefilterd = '', $sort_button  = false )
+{
+    return arrayHeaderRow( $array, $tablename, $tobefilterd
+                , $sort_button
+            );
 }
 
 // Convert an array to HTML
@@ -584,7 +631,7 @@ function arrayToVerticalTableHTML( $array, $tablename
             $table .= "<td class=\"db_table_fieldname\">$label</td>";
 
             // Escape some special chars speacial characters.
-            $text = $array[ $k ];
+            $text = linkify( $array[ $k ] );
 
             $table .= "<td><div class=\"cell_content\">$text</div></td>";
             $table .= "</tr>";
@@ -832,12 +879,16 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         // DIRTY HACK: If value is already a html entity then don't use a input
         // tag. Currently only '<select></select> is supported
-        if( preg_match( '/\<select.*?\>(.*?)\<\/select\>/', $default ) )
+        if( preg_match( '/\<select.*?\>(.+?)\<\/select\>/', $default ) )
+        {
             $val = $default;
+        }
         else
+        {
             $val = "<input class=\"editable\"
                    name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
                    />";
+        }
 
         // Genearte a select list of ENUM type class.
         $match = Array( );
@@ -940,12 +991,13 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     // user pass an empty value
     $buttonSym = ucfirst( $button_val );
 
-    if( strtolower($button_val) == 'submit' )
-        $buttonSym = "&#10003";
-    else if( strtolower( $button_val ) == 'update' )
-        $buttonSym = $symbUpdate;
-    else if( strtolower( $button_val ) == 'edit' )
-        $buttonSym = $symbEdit;
+    // DONT use symbols. They are not visible.
+    //if( strtolower($button_val) == 'submit' )
+    //    $buttonSym = "&#10003";
+    //else if( strtolower( $button_val ) == 'update' )
+    //    $buttonSym = $symbUpdate;
+    //else if( strtolower( $button_val ) == 'edit' )
+    //    $buttonSym = $symbEdit;
 
     // Let JS add extra rows here.
     $html .= '<tr><td></td><td><table id="' . $tablename . '_extra_rows"> </table></td>';
@@ -1010,7 +1062,7 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
  */
 function arrayToSelectList( $name, $options
         , $display = array()
-        , $multiple_select = FALSE
+        , $multiple_select = false
         , $selected = ''
     )
 {
@@ -1071,9 +1123,13 @@ function loginToText( $login, $withEmail = true, $autofix = true )
 
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
-        $ldap = getUserInfoFromLdap( $user[ 'email'] );
-        if( $ldap )
-            $user = array_merge( $user, $ldap );
+        $email = __get__( $user, 'email', '' );
+        if( $email )
+        {
+            $ldap = getUserInfoFromLdap( $user[ 'email'] );
+            if( $ldap )
+                $user = array_merge( $user, $ldap );
+        }
     }
 
     if( is_bool( $user ) )
@@ -2068,5 +2124,72 @@ function goBack( $default = '', $delay = 0 )
     goToPage( $url, $delay );
 }
 
+function presentationToHTML( $presentation )
+{
+    $html = __get__( $presentation, 'description', '' );
+
+    if( ! trim($html) )
+        $html .= '<p>Not disclosed yet</p>';
+
+    if( $presentation[ 'url' ] )
+    {
+        $html .= ' <br /> ';
+        $html .= '<p>URL(s)' . linkify( $presentation['url'] )
+            . '</p>';
+    }
+
+
+    if( $presentation[ 'presentation_url' ] )
+    {
+        $html .= ' <br /> ';
+        $html .= '<p>More information/resources may be available at '
+            . linkify( $presentation[ 'presentation_url' ] )
+            . '</p>';
+    }
+
+    $jcId = $presentation[ 'jc_id'];
+    $jcInfo = getJCInfo( $jcId );
+
+    $presentation['venue' ] = $jcInfo['venue'];
+    $presentation['start_time' ] = $jcInfo['time'];
+    $presentation['end_time' ] = dbTime( strtotime($jcInfo['time'] ) + 3600 );
+    $presentation[ 'title' ] = "$jcId | '" . $presentation[ 'title' ] . "' by " .
+        arrayToName( getLoginInfo( $presentation[ 'presenter' ] ) );
+
+    $html .= '<br> <br />';
+    $html .= addToGoogleCalLink( $presentation );
+
+    return $html;
+}
+
+function getPresentationTitle( $presentation )
+{
+    $title = __get__( $presentation, 'title', '' );
+    if( ! $title )
+        $title = 'Not disclosed yet';
+
+    return $title;
+}
+
+function jcToHTML( $jc )
+{
+    $jcInfo = getJCInfo( $jc[ 'jc_id' ] );
+    $html = '<h3>' . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
+
+    $presenter = getLoginInfo( $jc[ 'presenter' ] );
+    $pName = arrayToName( $presenter );
+    $html .= "<strong> $pName </strong>";
+    $html .= '<div class="justify">' . $jc['description'] . '</div>';
+
+    $html .=  '<table>';
+    $html .= "<tr><td>URL</td><td>" . linkify( $jc['url'] ) . '</td></tr>';
+    $html .= "<tr><td>Presentation URL</td><td>" . 
+        linkify( $jc['presentation_url'] ) . '</td></tr>';
+    $html .= '</table>';
+    $html .= "<div width=600px><hr width=600px align=left> </div>";
+
+    return $html;
+
+}
 
 ?>

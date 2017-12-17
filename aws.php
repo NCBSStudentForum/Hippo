@@ -5,6 +5,8 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 
+echo '<a href="user_aws_search.php" target="_blank"><small>Click to search AWS database.</small></a>';
+
 if( strtotime( 'today' ) == strtotime( 'this monday' ) )
     $today = dbDate( 'this monday' );
 else
@@ -25,11 +27,11 @@ echo '
     <table class="aws" border="0">
         <tr>
             <td>Select a Monday</td>
-            <td><input class="datepicker" type="text" name="date" value="' . 
+            <td><input class="datepicker" type="text" name="date" value="' .
                     $default[ 'date' ] . '" ></td>
-            <td><button type="submit" name="response" 
+            <td><button type="submit" name="response"
                     title="Show AWS on this day"
-                    value="show">' . 
+                    value="show">' .
                 $symbScan . '</button></td>
         </tr>
     </table>
@@ -57,7 +59,7 @@ if( count( $awses ) < 1 )
     echo printInfo( "That's all I know!" );
     echo "<br><br>";
 }
-else 
+else
 {
     foreach( $awses as $aws )
     {
@@ -71,5 +73,6 @@ else
 }
 
 echo closePage( );
+
 
 ?>

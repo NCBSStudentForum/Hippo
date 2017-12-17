@@ -38,27 +38,30 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 <table class="public_links">
     <tr>
     <td>
-    <a href="allevents.php" target="_blank">All Bookings</a>
+    <a href="allevents.php" target="hippo_popup">Bookings</a>
     </td>
     <td>
-    <a href="aws.php" target="_blank">AWSs</a>
+    <a href="aws.php" target="hippo_popup">AWSs</a>
     </td>
     <td>
-    <a href="events.php" target="_blank">Talks</a>
+    <a href="events.php" target="hippo_popup">Talks</a>
     </td>
-    <td> <a href="user_aws_search.php" target="_blank">Search AWS</a> </td>
-    <td> <a href="statistics.php" target="_blank" >Statistics </a> </td>
-    <!-- <td> <a href="active_speakers.php" target="_blank" >AWS speakers</a></td> -->
-    <td> <a href="courses.php" target="_blank" >Courses</a></td>
-    <td> <a href="map.php" target="_blank" >Map</a></td>
+    <td>
+    <a href="jc.php" target="hippo_popup">JCs</a>
+    </td>
+    <!-- <td> <a href="user_aws_search.php" target="hippo_popup">Search AWS</a> </td> -->
+    <td> <a href="statistics.php" target="hippo_popup" >Statistics </a> </td>
+    <!-- <td> <a href="active_speakers.php" target="hippo_popup" >AWS speakers</a></td> -->
+    <td> <a href="courses.php" target="hippo_popup" >Courses</a></td>
+    <td> <a href="map.php" target="hippo_popup" >Map</a></td>
     <!--
     RSS has been thorougly abused to make it work with NCBS screen.
-    <td> <a href="rss.php" target="_blank" >
+    <td> <a href="rss.php" target="hippo_popup" >
             <img src="data/feed-icon-14x14.2168a573d0d4.png"
                 alt="Subscribe to public events">
             </a></td>
     -->
-    <td> <a href="howto.php" target="_blank" >HOWTO</a></td>
+    <td> <a href="howto.php" target="hippo_popup" >HOWTO</a></td>
     </tr>
 </table>
 </div>
@@ -90,6 +93,11 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <!-- Font awesome -->
 <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css"/>
+
+<!-- sort table. -->
+<script src="./node_modules/sorttable/sorttable.js"></script>
+
+
 
 <script>
 $( function() {

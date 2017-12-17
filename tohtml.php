@@ -2127,14 +2127,24 @@ function goBack( $default = '', $delay = 0 )
 function presentationToHTML( $presentation )
 {
     $html = __get__( $presentation, 'description', '' );
+
     if( ! trim($html) )
         $html .= '<p>Not disclosed yet</p>';
 
     if( $presentation[ 'url' ] )
     {
         $html .= ' <br /> ';
-        $html .= '<p>More information/resources may be available at <a href="' . $presentation[ 'url' ] . '">
-                    this link</a>';
+        $html .= '<p>URL(s)' . linkify( $presentation['url'] )
+            . '</p>';
+    }
+
+
+    if( $presentation[ 'presentation_url' ] )
+    {
+        $html .= ' <br /> ';
+        $html .= '<p>More information/resources may be available at '
+            . linkify( $presentation[ 'presentation_url' ] )
+            . '</p>';
     }
 
     $jcId = $presentation[ 'jc_id'];
@@ -2170,9 +2180,10 @@ function jcToHTML( $jc )
     $pName = arrayToName( $presenter );
     $html .= "<strong> $pName </strong>";
     $html .= '<div class="justify">' . $jc['description'] . '</div>';
-    $html .= "URL: " . linkify( $jc['url'] );
-    $html .= '<hr>';
-
+    $html .= "Paper(s): " . linkify( $jc['url'] );
+    $html .= '<br />';
+    $html .= "Additonal Resources: " . linkify( $jc['presentation_url'] );
+    $html .= '<div width=\"600px\"><hr></div>';
     return $html;
 
 }

@@ -21,7 +21,7 @@ if( __get__( $_POST, 'response', '' ) == 'Edit' or __get__( $_POST, 'response', 
         to this presentation e.g. link to github repo, slideshare, drive etc..
         " );
     echo alertUser( "We do not keep backup for your entry!" );
-    $editables = 'title,description,url';
+    $editables = 'title,description,url,presentation_url';
 
     //echo printInfo( 'Current entry is following' );
     //$jcEntry = getTableEntry( 'jc_presentations', 'jc_id,presenter,date', $_POST );
@@ -32,7 +32,8 @@ if( __get__( $_POST, 'response', '' ) == 'Edit' or __get__( $_POST, 'response', 
     echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables, 'Save' );
     echo '</form>';
 
-    $res = updateTable( 'jc_presentations', 'id', 'title,description,url', $_POST);
+    $res = updateTable( 'jc_presentations', 'id'
+        , 'title,description,url,presentation_url', $_POST);
     if( $res )
     {
         if( $_POST[ 'response' ] == 'Save' )

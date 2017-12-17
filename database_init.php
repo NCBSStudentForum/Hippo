@@ -487,7 +487,7 @@ function initialize( $db  )
             , date DATE NOT NULL
             , status ENUM( 'VALID', 'INVALID', 'CANCELLED' ) default 'VALID'
             , url VARCHAR(500) -- URL of paper
-            , presentation_url -- URL of presentation
+            , presentation_url VARCHAR(500) -- URL of presentation
             , UNIQUE KEY(presenter,jc_id,date)
             )"
         );
@@ -500,7 +500,7 @@ function initialize( $db  )
             , title VARCHAR(300) NOT NULL
             , description TEXT
             , date DATE NOT NULL
-            , url VARCHAR(500) -- URL to download the presentation.
+            , url VARCHAR(500) -- Paper URL.
             , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
             , UNIQUE KEY(presenter,jc_id,date)
             )"

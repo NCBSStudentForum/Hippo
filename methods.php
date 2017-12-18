@@ -1,4 +1,5 @@
 <?php
+
 include_once 'display_content.php';
 include_once 'methods.php';
 include_once 'logger.php' ;

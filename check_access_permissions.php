@@ -5,7 +5,7 @@ include_once 'database.php' ;
 
 function loginOrIntranet( )
 {
-    return "<p>You must either <a href=\"index.php\">login</a> or use 
+    return "<p>You must either <a href=\"index.php\">login</a> or use
         intranet to access this page<p>";
 }
 
@@ -17,7 +17,7 @@ function isAuthenticated( )
     return false;
 }
 
-function requiredPrivilege( $role ) 
+function requiredPrivilege( $role )
 {
     $roles = getRoles( $_SESSION['user'] );
     return in_array( $role, $roles );
@@ -39,6 +39,12 @@ function anyOfTheseRoles( $roles )
 
 function allOfTheseRoles( $roles )
 {
+    if( is_string( $roles ) )
+        $roles = explode( ',', $roles );
+
+    if( ! $roles )
+        return false;
+
     $userRoles = getRoles( $_SESSION['user'] );
     foreach( $roles as $role )
         if( ! in_array( $role, $userRoles ) )
@@ -48,7 +54,7 @@ function allOfTheseRoles( $roles )
 
 function mustHaveAnyOfTheseRoles( $roles )
 {
-    if( anyOfTheseRoles( $roles ) ) 
+    if( anyOfTheseRoles( $roles ) )
         return true;
     else
     {
@@ -60,7 +66,7 @@ function mustHaveAnyOfTheseRoles( $roles )
 
 function mustHaveAllOfTheseRoles( $roles )
 {
-    if( allOfTheseRoles( $roles ) ) 
+    if( allOfTheseRoles( $roles ) )
         return true;
     else
     {
@@ -90,10 +96,10 @@ function getRealIpAddr()
 }
 
 /**
-    * @brief Check if user is logged in from intranet. FIXME: This may be a 
+    * @brief Check if user is logged in from intranet. FIXME: This may be a
     * foolproof way to do this.
     *
-    * @return 
+    * @return
  */
 function isIntranet( )
 {
@@ -102,9 +108,9 @@ function isIntranet( )
 
     //echo alertUser( "Accessing page from IP address: " . implode('.', $localIP));
 
-    $isIntranet = ($serverIP[0] == $localIP[0]) 
+    $isIntranet = ($serverIP[0] == $localIP[0])
                         && ($serverIP[1] == $localIP[1])
-                        && ( in_array($localIP[0], array('127','10','172','192') ) 
+                        && ( in_array($localIP[0], array('127','10','172','192') )
                    );
 
     return $isIntranet;

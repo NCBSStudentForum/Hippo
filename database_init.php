@@ -502,7 +502,6 @@ function initialize( $db  )
             , date DATE NOT NULL
             , url VARCHAR(500) -- Paper URL.
             , status SET( 'VALID', 'INVALID', 'CANCELLED' ) DEFAULT 'VALID'
-            , UNIQUE KEY(presenter,jc_id,date)
             )"
         );
 

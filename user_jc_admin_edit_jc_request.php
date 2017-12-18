@@ -20,17 +20,22 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 if( __get__( $_POST, 'response', '' ) == 'submit' )
 {
 
-    $res = updateTable( 'jc_requests', 'id', 'date', $_POST);
+    $_POST[ 'status' ] = 'VALID';
+
+    // In rare case the speaker 'A' may have one invalid entry on date D for
+    // which this table is being updated.
+    $res = updateTable( 'jc_requests', 'id', 'status,date', $_POST);
     if( $res )
     {
         $entry = getTableEntry( 'jc_requests', 'id', $_POST );
-
         $presenter = getLoginInfo( $entry[ 'presenter' ] );
         $entryHTML = arrayToVerticalTableHTML($entry, 'info');
 
         $msg = "<p>Dear " . arrayToName( $presenter ) . "</p>";
-        $msg .= "<p>Your presentation request has been rescheduled by admin.
-            the latest entry is following. </p>";
+        $msg .= "<p>
+            Your presentation request has been rescheduled by admin.
+            the latest entry is following.
+            </p>";
         $msg .= $entryHTML;
         $subject = 'Your presentation request date is changed by JC admin';
         $to = $presenter['email'];

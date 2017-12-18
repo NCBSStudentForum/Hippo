@@ -1151,6 +1151,9 @@ function getLoginEmail( $login )
 
 function getRoles( $user )
 {
+    if( ! trim( $user ) )
+        return array( );
+
     global $db;
     $stmt = $db->prepare( 'SELECT roles FROM logins WHERE login=:login' );
     $stmt->bindValue( ':login', $user );

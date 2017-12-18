@@ -1324,6 +1324,21 @@ function __ucwords__( $text )
     return ucwords( strtolower( $text ) );
 }
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Draw a horizontal line.
+    *
+    * @Param $width
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function horizontalLine( $width = "600px" )
+{
+    return "<div width=$width><hr width=$width align=left> </div>";
+}
+
 /**
     * @brief NOTE: Must not have any decoration. Used in sending emails.
     * Squirrel mail html2text may not work properly.
@@ -1365,10 +1380,8 @@ function awsToHTML( $aws, $with_picture = false )
         $abstract = "Not yet disclosed!";
 
     $html = "<div class=\"show_aws\">";
-    $html .= "<div width=600px><hr width=600px align=left> </div>";
 
     // Adding css inline screw up the email view. Dont do it.
-
     $user = $aws[ 'speaker' ];
 
     // Add a table only if there is a picture. Adding TD when there is no picture
@@ -1384,7 +1397,7 @@ function awsToHTML( $aws, $with_picture = false )
         $html .= "</table>";
     }
     else
-        $html .= "<h2>$speaker on '$title' </h2>";
+        $html .= "<h1 class=\"title\">$speaker on '$title' </h1>";
 
 
     $html .=  '<table class="email" style="width:500px">';

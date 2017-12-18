@@ -5,7 +5,8 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 
-echo '<a href="user_aws_search.php" target="_blank"><small>Click to search AWS database.</small></a>';
+echo '<a href="user_aws_search.php" target="_blank">
+    <small>Click to search AWS database.</small></a>';
 
 if( strtotime( 'today' ) == strtotime( 'this monday' ) )
     $today = dbDate( 'this monday' );
@@ -21,7 +22,6 @@ if( $_GET )
         $default = array( 'date' => $today );
 }
 
-echo "<h2>Annual Work Seminars on " . humanReadableDate( $default[ 'date' ] ) . " </h2>";
 echo '
     <form method="get" action="">
     <table class="aws" border="0">
@@ -31,8 +31,7 @@ echo '
                     $default[ 'date' ] . '" ></td>
             <td><button type="submit" name="response"
                     title="Show AWS on this day"
-                    value="show">' .
-                $symbScan . '</button></td>
+                    value="show">Show AWSs on This Day</button></td>
         </tr>
     </table>
     </form>
@@ -41,6 +40,9 @@ echo '
 echo '<br><br>';
 
 $whichDay = $default[ 'date' ];
+
+echo "<h2>Annual Work Seminars on " .
+    humanReadableDate( $default[ 'date' ] ) . " </h2>";
 
 $awses = getTableEntries( 'annual_work_seminars', 'date' , "date='$whichDay'" );
 $upcoming = getTableEntries( 'upcoming_aws', 'date', "date='$whichDay'" );
@@ -69,6 +71,7 @@ else
         // Link to pdf file.
         $awstext .= awsPdfURL( $aws[ 'speaker' ], $aws['date' ] );
         echo $awstext;
+        echo horizontalLine( );
     }
 }
 

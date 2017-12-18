@@ -5,7 +5,6 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 
-echo "<h2>Browse events on a particular day</h2>";
 $today = dbDate( 'today' );
 $default = array( 'date' => $today );
 
@@ -27,11 +26,13 @@ echo '
                     $default[ 'date' ] . '" ></td>
             <td><button type="submit" name="response"
                     title="Show events on this day"
-                    value="show">Show me</button></td>
+                    value="show">Show Events on This Day</button></td>
         </tr>
     </table>
     </form>
     ';
+
+echo ' <br /> <br />';
 
 $whichDay = $default[ 'date' ];
 $eventTalks = getTableEntries( 'events', 'date,start_time' , "date='$whichDay'
@@ -61,15 +62,13 @@ else
                         target="_blank" href="generate_pdf_talk.php?date='
                         . $default[ 'date' ] . '&id=' . $talkId . '">
                         <i class="fa fa-download ">PDF</i></a>';
+            $talkHtml .= horizontalLine( );
         }
     }
     echo $talkHtml;
-
     echo '<br>';
-
 }
 
-echo '<br><br>';
 echo closePage( );
 
 ?>

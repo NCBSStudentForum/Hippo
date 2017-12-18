@@ -199,7 +199,7 @@ function loginForm()
 function sanitiesForTinyMCE( $text )
 {
     $text = preg_replace( "/\r\n|\r|\n/", " ", $text );
-    $text = str_replace( "'", "\'", $text );
+    //$text = str_replace( "'", "\'", $text );
     $text = htmlspecialchars_decode( $text );
     return $text;
 }
@@ -757,6 +757,9 @@ function editor_script( $id, $default = '' )
         , paste_remove_styles_if_webkit: true
         , paste_strip_class_attributes : true
         , paste_enable_default_filters: false
+        , paste_preprocess : function( p1, o ) {
+            o.content = strip_tags( o.content, \"a br\" )
+        }
         , height : 300
         , paste_data_images: true
         , cleanup : false
@@ -981,8 +984,10 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         if( $readonly )
         {
+            $hiddenValue = htmlspecialchars( $default );
             $val = "<input type=\"hidden\" id=\"$inputId\"
-                    name=\"$keyName\" value=\"$default\"/>$default";
+                    name=\"$keyName\" value=\"$hiddenValue\"/>"
+                . sanitiesForTinyMCE( $default) . '"';
         }
 
 

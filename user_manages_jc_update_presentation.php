@@ -12,21 +12,18 @@ echo userHTML( );
 
 echo '<h1>Edit presentation entry</h1>';
 
-
-
-if( __get__( $_POST, 'response', '' ) == 'Edit' or __get__( $_POST, 'response', '') == 'Save' )
+if( __get__( $_POST, 'response', '' ) == 'Edit'
+    or __get__( $_POST, 'response', '') == 'Save'
+    )
 {
+    $_POST[ 'description' ] = htmlspecialchars( $_POST[ 'description' ] );
+
     echo printInfo( "
         Consider adding <tt>URL</tt>. This is the place user can find material related
         to this presentation e.g. link to github repo, slideshare, drive etc..
         " );
     echo alertUser( "We do not keep backup for your entry!" );
     $editables = 'title,description,url,presentation_url';
-
-    //echo printInfo( 'Current entry is following' );
-    //$jcEntry = getTableEntry( 'jc_presentations', 'jc_id,presenter,date', $_POST );
-    //echo arrayToVerticalTableHTML( $jcEntry, 'info', '', 'id,status' );
-    //echo ' <br />';
 
     echo '<form action="#" method="post" accept-charset="utf-8">';
     echo dbTableToHTMLTable( 'jc_presentations', $_POST, $editables, 'Save' );
@@ -70,7 +67,10 @@ else if( __get__( $_POST, 'response', '' ) == 'Remove My Vote' )
 }
 else
 {
-    echo alertUser( 'This action ' . $_POST[ 'response' ] . ' is not supported yet' );
+    echo alertUser(
+        'This action ' . $_POST[ 'response' ]
+        . ' is not supported yet'
+    );
     goToPage( 'user_manages_jc.php', 3 );
     exit;
 }

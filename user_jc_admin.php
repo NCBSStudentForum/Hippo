@@ -221,6 +221,32 @@ foreach( $jcIds as $currentJC )
 }
 
 
+// Rate tasks.
+echo '<h1>Rare tasks</h1>';
+echo '
+    <form action="user_jc_admin_edit_jc_request.php"
+        method="post" accept-charset="utf-8">
+
+    <table border="0">
+        <tr>
+            <td> <input type="text" name="new_admin"
+                placeholder="email or login id"
+                id="" value="" />
+            </td>
+            <td>' .  $jcSelect . '</td>' .
+            '</td>
+            <td>
+                <button type="submit" name="response"
+                value="transfer_admin">
+                    Transfer Admin Rights</button>
+            </td>
+        </tr>
+    </table>
+
+    </form>';
+
+echo '<br />';
+echo '<br />';
 echo goBackToPageLink( "user.php", "Go back" );
 
 ?>

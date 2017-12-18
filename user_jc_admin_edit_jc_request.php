@@ -72,6 +72,63 @@ else if( __get__( $_POST, 'response', '' ) == 'delete' )
 
     }
 }
+else if( __get__( $_POST, 'response', '' ) == 'transfer_admin' )
+{
+    $newAdmin = explode( '@', $_POST[ 'new_admin' ])[0];
+
+    if( ! getLoginInfo( $newAdmin ) )
+    {
+        echo printWarning( "Error: $newAdmin is not a valid user." );
+        goToPage( "user_jc_admin.php", 2 );
+        exit;
+    }
+
+
+    $jcID = $_POST[ 'jc_id'];
+    // Check the new owner is already admin of this JC.
+    $admins = getJCAdmins( $jcID );
+
+    $continue = true;
+    foreach( $admins as $admin )
+    {
+        if( $admin[ 'login' ] == $newAdmin )
+        {
+            echo printWarning(
+                "$newAdmin is already ADMIN of this JC.
+                Please pick someone else."
+            );
+            $continue = false;
+            goToPage( "user_jc_admin.php", 2 );
+            exit;
+        }
+    }
+
+    if( $continue )
+    {
+        // Add new user to admin.
+        $data = array( 'login' => newAdmin, 'subscription_type' => 'ADMIN' );
+        $res = updateTable( 'jc_subscriptions', 'login', 'subscription_type', $data );
+
+        // Remove myself.
+        $data = array( 'login' => whoAmI( ), 'subscription_type' => 'NORMAL' );
+        $res = updateTable( 'jc_subscriptions', 'login', 'subscription_type', $data );
+
+        if( $res )
+        {
+            echo printInfo( "Sucessfully assigned $newAdmin as admin" );
+            $subject = "You have been made ADMIN of $jcID by " . loginToText( whoAmI() );
+            $msg = "<p>Dear " . loginToText( $newAdmin ) . "</p>";
+            $msg .= "<p>You have been given admin rights to $jcID. In case this is
+                a mistake, " . loginToText( whoAmI( ) ) . ' is to blame!</p>';
+
+            $cclist = 'hippo@lists.ncbs.res.in';
+            $to = getLoginEmail( $newAdmin );
+            sendHTMLEmail( $msg, $subject, $to, $cclist );
+            goToPage( "user_jc_admin.php", 1 );
+            exit;
+        }
+    }
+}
 else if( __get__( $_POST, 'response', '' ) == 'DO_NOTHING' )
 {
     goToPage( 'user_jc_admin.php', 1 );
@@ -79,7 +136,6 @@ else if( __get__( $_POST, 'response', '' ) == 'DO_NOTHING' )
 }
 
 echo '<h1>Edit presentation request</h1>';
-
 $editables = 'date';
 if( __get__( $_POST, 'response', '' ) == 'Reschedule' )
 {

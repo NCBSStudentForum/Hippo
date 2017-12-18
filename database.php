@@ -1399,7 +1399,7 @@ function insertIntoTable( $tablename, $keys, $data )
 
         if( isHTML( $value ) )
         {
-            $value = htmlspecialchars( purifyHTML( $value ) );
+            $value = purifyHTML( $value );
         }
         $stmt->bindValue( ":$k", $value );
     }
@@ -1486,7 +1486,7 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
             $value = implode( ',', $value );
 
         if( isHTML( $value ) )
-            $value = htmlspecialchars( purifyHTML( $value ) );
+            $value = purifyHTML( $value );
 
         $stmt->bindValue( ":$k", $value );
     }
@@ -1623,7 +1623,7 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
             $value = implode( ',', $value );
 
         if( isHTML( $value ) )
-            $value = htmlspecialchars( purifyHTML( $value ) );
+            $value = purifyHTML( $value );
 
         $stmt->bindValue( ":$k", $value );
     }

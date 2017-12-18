@@ -30,7 +30,7 @@ function purifyHTML( $html )
 {
     $config = HTMLPurifier_Config::createDefault();
     $purifier = new HTMLPurifier($config);
-    $clean_html = $purifier->purify($dirty_html);
+    $clean_html = $purifier->purify($html);
     return $clean_html;
 }
 
@@ -761,15 +761,7 @@ function editor_script( $id, $default = '' )
         tinymce.init( { selector : '#" . $id . "'
         , init_instance_callback: \"insert_content\"
         , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
-        , paste_as_text : false
-        , paste_auto_cleanup_on_paste : true
-        , paste_remove_styles : true
-        , paste_remove_styles_if_webkit: true
-        , paste_strip_class_attributes : true
-        , paste_enable_default_filters: false
-        , paste_preprocess : function( p1, o ) {
-            o.content = strip_tags( o.content, \"a br\" )
-        }
+        , paste_as_text : true
         , height : 300
         , paste_data_images: true
         , cleanup : false
@@ -813,7 +805,7 @@ function editor_script( $id, $default = '' )
             function insert_content( inst ) {
                 inst.setContent( '$default' );
             }
-                                    </script>";
+    </script>";
 
     return $editor;
 
@@ -957,13 +949,14 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
             }
             $val .= "</select>";
         }
-        else if( strpos( strtolower($ctype), 'text' ) !== false )     // TEXT or MEDIUMTEXT
+        // TEXT or MEDIUMTEXT
+        else if( strpos( strtolower($ctype), 'text' ) !== false )
         {
             // NOTE: name and id should be same of ckeditor to work properly.
             // Sometimes we have two fileds with same name in two tables, thats
             // a sticky situation.
-            $showValue = sanitiesForTinyMCE( $default );
 
+            $showValue = sanitiesForTinyMCE( $default );
             $val = "<textarea class=\"editable\" \
                 id=\"$inputId\" name=\"$keyName\" >" . $showValue . "</textarea>";
 
@@ -972,7 +965,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
                 $val .= "<script> CKEDITOR.replace( '$inputId' ); </script>";
             else
             {
-                $val .= editor_script( $inputId, $default );
+                $val .= editor_script( $inputId, $showValue );
             }
         }
         else if( strcasecmp( $ctype, 'date' ) == 0 )
@@ -996,7 +989,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
             $showValue = $default;
             if( isHTML( $default ) )
             {
-                $hiddenValue = htmlspecialchars( $default );
+                $hiddenValue = purifyHTML( $default );
                 $showValue = sanitiesForTinyMCE( $default );
             }
 

@@ -492,6 +492,7 @@ function initialize( $db  )
             )"
         );
 
+    // Not put many contraints.
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS jc_requests (
             id INT NOT NULL PRIMARY KEY

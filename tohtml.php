@@ -59,6 +59,7 @@ function addToGoogleCalLink( $event )
     $res .= inlineImage( __DIR__ . '/data/gc_button6.png' );
     $res .= '</a>';
 
+    $res = '<div class="strip_from_md">' . $res . "</div>";
     return $res;
 }
 
@@ -312,9 +313,7 @@ function eventSummaryHTML( $event, $talk = null)
     $html .= '</table>';
 
     // Add google and ical links.
-    $html .= '<div class="strip_from_md">';
     $html .=  addToGoogleCalLink( $event );
-    $html .= '</div>';
 
     return $html;
 }
@@ -1540,14 +1539,7 @@ function talkToHTML( $talk, $with_picture = false )
 
     // Add the calendar links
     $html .= "<br><br>";
-
-    $html .=  "<div class=\"strip_from_md\">
-        <table><tr>
-        <td> $googleCalLink </td>
-        <td> $icalLink </td>
-        </tr></table>
-        </div>";
-
+    $html .=  $googleCalLink;
 
     return $html;
 }
@@ -2131,21 +2123,14 @@ function presentationToHTML( $presentation )
     if( ! trim($html) )
         $html .= '<p>Not disclosed yet</p>';
 
-    if( $presentation[ 'url' ] )
-    {
-        $html .= ' <br /> ';
-        $html .= '<p>URL(s)' . linkify( $presentation['url'] )
-            . '</p>';
-    }
-
-
-    if( $presentation[ 'presentation_url' ] )
-    {
-        $html .= ' <br /> ';
-        $html .= '<p>More information/resources may be available at '
-            . linkify( $presentation[ 'presentation_url' ] )
-            . '</p>';
-    }
+    // Add URL and PRESENTATION URL in table.
+    $html .= ' <br /> ';
+    $html .= '<table class="info">';
+    $html .= '<tr><td>URL(s)</td><td>'
+                .  linkify( $presentation['url'] ) . '</td></tr>';
+    $html .= '<tr><td>Presention URL</td><td>'
+                .  linkify( $presentation['presentation_url'] ) . '</td></tr>';
+    $html .= '</table>';
 
     $jcId = $presentation[ 'jc_id'];
     $jcInfo = getJCInfo( $jcId );
@@ -2156,7 +2141,7 @@ function presentationToHTML( $presentation )
     $presentation[ 'title' ] = "$jcId | '" . $presentation[ 'title' ] . "' by " .
         arrayToName( getLoginInfo( $presentation[ 'presenter' ] ) );
 
-    $html .= '<br> <br />';
+    $html .= '<br />';
     $html .= addToGoogleCalLink( $presentation );
 
     return $html;
@@ -2178,18 +2163,13 @@ function jcToHTML( $jc )
 
     $presenter = getLoginInfo( $jc[ 'presenter' ] );
     $pName = arrayToName( $presenter );
-    $html .= "<strong> $pName </strong>";
-    $html .= '<div class="justify">' . $jc['description'] . '</div>';
 
-    $html .=  '<table>';
-    $html .= "<tr><td>URL</td><td>" . linkify( $jc['url'] ) . '</td></tr>';
-    $html .= "<tr><td>Presentation URL</td><td>" . 
-        linkify( $jc['presentation_url'] ) . '</td></tr>';
-    $html .= '</table>';
+
+    $html .= "<strong> $pName </strong>";
+    $html .= presentationToHTML( $jc );
     $html .= "<div width=600px><hr width=600px align=left> </div>";
 
     return $html;
-
 }
 
 ?>

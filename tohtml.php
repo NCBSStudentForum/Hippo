@@ -761,10 +761,12 @@ function editor_script( $id, $default = '' )
         tinymce.init( { selector : '#" . $id . "'
         , init_instance_callback: \"insert_content\"
         , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
-        , paste_as_text : true
+        , paste_as_text : false
         , height : 300
         , paste_data_images: true
-        , cleanup : false
+        , cleanup : true
+        , paste_auto_cleanup_on_paste : true
+        , paste_use_dialog: true
         , verify_html : false
         , cleanup_on_startup : false
         , toolbar1 : 'undo redo | insert | stylesheet | bold italic'
@@ -956,7 +958,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
             // Sometimes we have two fileds with same name in two tables, thats
             // a sticky situation.
 
-            $showValue = sanitiesForTinyMCE( $default );
+            $showValue =  sanitiesForTinyMCE( $default );
             $val = "<textarea class=\"editable\" \
                 id=\"$inputId\" name=\"$keyName\" >" . $showValue . "</textarea>";
 
@@ -989,7 +991,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
             $showValue = $default;
             if( isHTML( $default ) )
             {
-                $hiddenValue = purifyHTML( $default );
+                $hiddenValue = htmlspecialchars( $default );
                 $showValue = sanitiesForTinyMCE( $default );
             }
 

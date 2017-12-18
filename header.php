@@ -162,6 +162,10 @@ function AreYouSure( button )
   })();
 </script>
 
+<script type="text/javascript" charset="utf-8" src="./template/clean_html.js">
+</script>
+
+
 <!-- load basic unicode chara -->
 <?php
 

@@ -16,8 +16,6 @@ if( __get__( $_POST, 'response', '' ) == 'Edit'
     or __get__( $_POST, 'response', '') == 'Save'
     )
 {
-    $_POST[ 'description' ] = htmlspecialchars( $_POST[ 'description' ] );
-
     echo printInfo( "
         Consider adding <tt>URL</tt>. This is the place user can find material related
         to this presentation e.g. link to github repo, slideshare, drive etc..

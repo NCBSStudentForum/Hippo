@@ -6,9 +6,7 @@ include_once 'tohtml.php';
 include_once 'html2text.php';
 
 echo "<h2>Browse events on a particular day</h2>";
-
 $today = dbDate( 'today' );
-
 $default = array( 'date' => $today );
 
 if( $_GET )
@@ -18,6 +16,7 @@ if( $_GET )
     else
         $default = array( 'date' => $today );
 }
+
 
 echo '
     <form method="get" action="">

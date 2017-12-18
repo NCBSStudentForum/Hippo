@@ -1482,7 +1482,7 @@ function talkToHTML( $talk, $with_picture = false )
 
     $html = '<div style="width:550px;text-align:justify">';
     $html .= '<table border="0"><tr>';
-    $html .= '<td colspan="2"><h1>' . $title . '</h1></td>';
+    $html .= '<td colspan="2"><h1 class="title">' . $title . '</h1></td>';
     $html .= "</tr><tr>";
 
     if( $with_picture )

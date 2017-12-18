@@ -4,6 +4,8 @@ include_once 'methods.php';
 include_once 'database.php';
 include_once 'ICS.php';
 include_once 'linkify.php';
+require_once './vendor/htmlpurifier-4.9.3/library/HTMLPurifier.auto.php';
+
 
 $useCKEditor = false;
 
@@ -23,6 +25,14 @@ function displayRequest( button )
 </script>
 
 <?php
+
+function purifyHTML( $html )
+{
+    $config = HTMLPurifier_Config::createDefault();
+    $purifier = new HTMLPurifier($config);
+    $clean_html = $purifier->purify($dirty_html);
+    return $clean_html;
+}
 
 function fixHTML( $html, $strip_tags = false )
 {
@@ -199,7 +209,7 @@ function loginForm()
 function sanitiesForTinyMCE( $text )
 {
     $text = preg_replace( "/\r\n|\r|\n/", " ", $text );
-    //$text = str_replace( "'", "\'", $text );
+    $text = str_replace( "'", "\'", $text );
     $text = htmlspecialchars_decode( $text );
     return $text;
 }
@@ -850,7 +860,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
             $attribMap[ $temp[0] ] = array_slice( $temp, 1 );
     }
 
-
     if( is_string( $hide ) )
         $hide = explode( ",", $hide );
 
@@ -886,13 +895,12 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
         // DIRTY HACK: If value is already a html entity then don't use a input
         // tag. Currently only '<select></select> is supported
         if( preg_match( '/\<select.*?\>(.+?)\<\/select\>/', $default ) )
-        {
             $val = $default;
-        }
         else
         {
             $val = "<input class=\"editable\"
-                   name=\"$keyName\" type=\"text\" value=\"$default\" id=\"$inputId\"
+                   name=\"$keyName\" type=\"text\"
+                    value=\"$default\" id=\"$inputId\"
                    />";
         }
 
@@ -954,11 +962,10 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
             // NOTE: name and id should be same of ckeditor to work properly.
             // Sometimes we have two fileds with same name in two tables, thats
             // a sticky situation.
-
-            $default = sanitiesForTinyMCE( $default );
+            $showValue = sanitiesForTinyMCE( $default );
 
             $val = "<textarea class=\"editable\" \
-                id=\"$inputId\" name=\"$keyName\" >" . $default . "</textarea>";
+                id=\"$inputId\" name=\"$keyName\" >" . $showValue . "</textarea>";
 
             // Either use CKEDITOR or tinymce.
             if( $useCKEditor )
@@ -984,10 +991,18 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
 
         if( $readonly )
         {
-            $hiddenValue = htmlspecialchars( $default );
+            // Escape only if it is a html.
+            $hiddenValue = $default;
+            $showValue = $default;
+            if( isHTML( $default ) )
+            {
+                $hiddenValue = htmlspecialchars( $default );
+                $showValue = sanitiesForTinyMCE( $default );
+            }
+
             $val = "<input type=\"hidden\" id=\"$inputId\"
-                    name=\"$keyName\" value=\"$hiddenValue\"/>"
-                . sanitiesForTinyMCE( $default) . '"';
+                    name=\"$keyName\" value=\"$hiddenValue\" >"
+                    . $showValue . '</input>';
         }
 
 
@@ -2140,8 +2155,8 @@ function goBack( $default = '', $delay = 0 )
 
 function presentationToHTML( $presentation )
 {
-    $html = "<div class=\"human_readable\">" 
-        . __get__( $presentation, 'description', '' ) 
+    $html = "<div class=\"human_readable\">"
+        . __get__( $presentation, 'description', '' )
         . "</div>";
 
     if( ! trim($html) )

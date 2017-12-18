@@ -1397,6 +1397,10 @@ function insertIntoTable( $tablename, $keys, $data )
         if( is_array( $value ) )
             $value = implode( ',', $value );
 
+        if( isHTML( $value ) )
+        {
+            $value = htmlspecialchars( purifyHTML( $value ) );
+        }
         $stmt->bindValue( ":$k", $value );
     }
 
@@ -1480,6 +1484,10 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         $value = $data[$k];
         if( is_array( $value ) )
             $value = implode( ',', $value );
+
+        if( isHTML( $value ) )
+            $value = htmlspecialchars( purifyHTML( $value ) );
+
         $stmt->bindValue( ":$k", $value );
     }
 
@@ -1613,6 +1621,9 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
         $value = $data[$k];
         if( gettype( $value ) == 'array' )
             $value = implode( ',', $value );
+
+        if( isHTML( $value ) )
+            $value = htmlspecialchars( purifyHTML( $value ) );
 
         $stmt->bindValue( ":$k", $value );
     }

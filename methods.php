@@ -1440,3 +1440,20 @@ function diffDates( $date1, $date2, $unit = 'second' )
         return intval( $d / (30.41*24*3600));
     return -1;
 }
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Check if given string is HTML.
+    *
+    * @Param $string
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function isHTML( $text )
+{
+    $processed = htmlentities($text);
+    if( $processed == $text ) return false;
+
+    return true;
+}

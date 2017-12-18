@@ -2140,7 +2140,9 @@ function goBack( $default = '', $delay = 0 )
 
 function presentationToHTML( $presentation )
 {
-    $html = __get__( $presentation, 'description', '' );
+    $html = "<div class=\"human_readable\">" 
+        . __get__( $presentation, 'description', '' ) 
+        . "</div>";
 
     if( ! trim($html) )
         $html .= '<p>Not disclosed yet</p>';
@@ -2185,7 +2187,6 @@ function jcToHTML( $jc )
 
     $presenter = getLoginInfo( $jc[ 'presenter' ] );
     $pName = arrayToName( $presenter );
-
 
     $html .= "<strong> $pName </strong>";
     $html .= presentationToHTML( $jc );

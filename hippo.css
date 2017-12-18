@@ -57,6 +57,12 @@ div.aws_preference {
     font-size : x-small;
 }
 
+div.human_readable {
+    width: 600px;
+    text-align: justify;
+    line-height: 1.5;
+}
+
 div.bottom {
     font-size : xx-small;
     float: bottom;

@@ -3046,5 +3046,29 @@ function getConfigValue( $key, $config = null )
     return $val;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get a clickbale url for a query.
+    *
+    * @Param $idOrExternalId
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function getClickableURL( $idOrExternalId )
+{
+    $query = executeQuery(
+        "SELECT  * FROM queries WHERE
+        (id='$idOrExternalId' OR external_id='$idOrExternalId')
+            AND status='PENDING'"
+        );
+
+    if( ! $query )
+        return '';
+
+    $url = appRootDir( ) . '/execute.php?id=' . $query['id'];
+    $html = '<a href="$url" target="_blank">' . $url . '</a>';
+    return $html;
+}
 
 ?>

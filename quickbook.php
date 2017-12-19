@@ -174,8 +174,8 @@ if( count( $publicEvents ) > 0 )
 {
     echo alertUser(
         "<h3>Alert: Public events on selected date</h3>
-        It is advisable not to book any academic event which clashes with these 
-        events.
+        It is advisable not to book any academic event clashing with any of the 
+        following events.
         "
     );
 

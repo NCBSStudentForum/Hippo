@@ -191,6 +191,22 @@ function getVenues( $sortby = 'total_events DESC, id' )
     return fetchEntries( $res );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Execute given query.
+    *
+    * @Param $query
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function executeQuery( $query )
+{
+    global $db;
+    $res = $db->query( $query );
+    return $res;
+}
+
 function getVenuesByType( $type )
 {
     return getTableEntries( 'venues', 'id', "type='$type'" );
@@ -1835,6 +1851,7 @@ function getUpcomingAWS( $monday = null )
     $stmt = $db->query(
         "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date"
         );
+
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1886,6 +1903,14 @@ function acceptScheduleOfAWS( $speaker, $date )
             $db->rollBack( );
             return False;
         }
+
+        // If successful add a query in queries to create a clickable query.
+        $aws = getTableEntry( 'upcoming_aws', 'speaker,date'
+            , array( 'speaker' => $speaker, 'date' => $date )
+            );
+        $awsID = $aws[ 'id' ];
+        $clickableQ = "UPDATE upcoming_aws SET acknowledged='YES' WHERE id='$awsID'";
+        insertClickableQuery( $speaker, "upcoming_aws.$awsID", $clickableQ );
     }
     catch (Exception $e)
     {
@@ -1899,6 +1924,18 @@ function acceptScheduleOfAWS( $speaker, $date )
     $db->commit( );
     return True;
 }
+
+function insertClickableQuery( $who_can_execute, $external_id, $query )
+{
+    $id = getUniqueID( 'queries' );
+    $res = insertIntoTable( 'queries', 'id,who_can_execute,external_id,query'
+        , array( 'query' => $query, 'external_id' => $external_id
+            , 'who_can_execute' => $who_can_execute
+            , 'last_modified_on' => dbDateTime( 'now' )
+            )
+        );
+}
+
 
 /**
     * @brief Query AWS database of given query.

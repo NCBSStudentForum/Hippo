@@ -13,6 +13,9 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 ini_set( 'log_errors', 1 );
 ini_set( 'error_log', '/var/log/hippo.log' );
 
+$now = dbDateTime( strtotime( 'now' ) );
+error_log( "Executed by cron at $now" );
+
 function trueOnGivenDayAndTime( $day, $time )
 {
     $now = strtotime( 'today' );
@@ -34,8 +37,6 @@ if( ! file_exists( $maildir ) )
 
 $now = dbDateTime( strtotime( "now" ) );
 
-error_log( "Running cron job at $now" );
-echo( "Running cron at $now" );
 
 /* Task 0. Send email to hippo mailing list that Hippo is alive.
  */

@@ -1,6 +1,7 @@
 <?php
 
 include_once 'methods.php';
+include_once 'database.php';
 
 function findGroup( $laboffice )
 {

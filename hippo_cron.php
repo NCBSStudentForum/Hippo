@@ -230,10 +230,9 @@ $awayFrom = strtotime( 'now' ) - strtotime( '8:00' );
 $today = dbDate( strtotime( 'today' ) );
 if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
 {
+    error_log( "8am. Event for today" );
     $todaysEvents = getPublicEventsOnThisDay( $today );
-
     $nTalks = 0;
-
     if( count( $todaysEvents ) > 0 )
     {
         foreach( $todaysEvents as $event )
@@ -264,27 +263,12 @@ if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
                         $to = $template[ 'recipients' ];
                         $ccs = $template[ 'cc' ];
                         $msg = $template[ 'email_body' ];
+                        $attachment = '';
                         sendHTMLEmail( $msg, $subject, $to, $ccs, $attachment );
                     }
                 }
             }
         }
-
-        // Generate pdf now.
-        $pdffile = getDataDir( ) . "/EVENTS_$today.pdf";
-        $script = __DIR__ . '/generate_pdf_talk.php';
-        $cmd = "php -q -f $script date=$today";
-        echo "Executing <pre> $cmd </pre>";
-        $res = `$cmd`;
-
-        $attachment = '';
-        if( file_exists( $pdffile ) )
-        {
-            echo printInfo( "Successfully generated PDF file" );
-            // DO NOT SEND attachment.
-            //$attachment = $pdffile;
-        }
-
         ob_flush( );
     }
     else

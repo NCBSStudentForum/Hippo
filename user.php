@@ -27,7 +27,6 @@ $html .= '
 echo $html;
 
 echo "<h1> Manage courses </h1>";
-
 $thisSem = getCurrentSemester( ) . ' ' . getCurrentYear( );
 echo '<table class="tasks">';
 echo  "<tr>

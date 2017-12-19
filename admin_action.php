@@ -1,43 +1,33 @@
-<?php 
+<?php
 
-include_once( 'calendar/calendar.php' );
-include_once( 'vendor/autoload.php' );
-include_once( 'template/google-api/base.php' );
+include_once 'header.php';
+include_once 'check_access_permissions.php';
+include_once 'tohtml.php';
+include_once 'methods.php';
+
+mustHaveAllOfTheseRoles( 'ADMIN' );
 
 echo userHTML( );
 
-//if( $_POST['response'] == 'add_all_events' ) 
+if( $_POST['response'] == 'Add Configuration' )
 {
-    $client = new Google_Client();
-
-    // Authenticate the client now.
-    if (!$oauth_credentials = getOAuthCredentialsFile()) {
-        echo missingOAuth2CredentialsWarning();
-        return;
+    $res = insertOrUpdateTable( 'config'
+        , 'id,value,comment', 'value,comment'
+        , $_POST );
+    if( $res )
+    {
+        echo printInfo( 'Successfully added new config' );
+        goToPage( 'admin.php', 2 );
+        exit;
     }
 
-    $client->setAuthConfig($oauth_credentials);
-    //$redirectURI = 'http://ghevar.ncbs.res.in/minion/admin.php';
-    //$client->setRedirectURI( $redirectURI );
-    $client->setScopes(
-        'https://www.googleapis.com/auth/calendar'
-    );
-
-    $token = $client->fetchAccessTokenWithAuthCode($_SESSION['gcal_token']);
-    $client->setAccessToken($token);
-
-    if ($client->getAccessToken())
-        $token_data = $client->verifyIdToken();
-
-    addAllEventsToCalednar( 'NCBS Calendar', $client );
 }
-//else
-//{
-    //echo printWarning( 'Invalid response by user' . $_POST['response'] );
-//}
+else
+{
+    echo printWarning( 'Invalid response by user' . $_POST['response'] );
+}
 
-//var_dump( $_SESSION );
 
-//echo goBackToPageLink( 'admin.php', 'Go back' );
+echo goBackToPageLink( 'admin.php', 'Go back' );
 
 ?>

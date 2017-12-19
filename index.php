@@ -19,12 +19,8 @@ if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' 
     }
 }
 
-$_SESSION['user'] = 'anonymous'; // This for testing purpose.
-$_SESSION[ 'calendar_id'] =
-    'd2jud2r7bsj0i820k0f6j702qo@group.calendar.google.com';
-
-$_SESSION[ 'timezone' ] = 'Asia/Kolkata';
-ini_set( 'date.timezone', 'Asia/Kolkata' );
+$_SESSION['user'] = 'anonymous';
+$_SESSION[ 'timezone' ] = getConfigFromDB(  'TIMEZONE' );
 
 // Now create a login form.
 echo "<table class=\"index\">";

@@ -8,14 +8,13 @@ mustHaveAllOfTheseRoles( Array( 'ADMIN' ) );
 // Get logins. We'll use them to autocomplete the list of users while modifying
 // the privileges.
 $logins = getLoginIds( );
-
 ?>
 
 <!-- Script to autocomplete user -->
 <script>
 $(function() {
     var logins = <?php echo json_encode( $logins ); ?>;
-    $( "#autocomplete_user" ).autocomplete( { source : logins }); 
+    $( "#autocomplete_user" ).autocomplete( { source : logins });
 });
 </script>
 
@@ -31,10 +30,10 @@ if( ! requiredPrivilege( 'ADMIN' ) )
 }
 
 
-echo "<h2>Hello admin</h2>";
+echo "<h1>Hello admin</h1>";
 
 
-echo '<h3>User management</h3>';
+echo '<h2>User management</h2>';
 echo "<table class=\"admin\">";
 echo '
     <tr>
@@ -58,7 +57,7 @@ echo '
 
 echo "</table>";
 
-echo '<h3>Email management</h3>';
+echo '<h2>Email management</h2>';
 echo '
     <table class="admin">
     <tr>
@@ -71,7 +70,7 @@ echo '
     ';
 
 
-echo "<h3>Database management </h3>";
+echo "<h2>Database management </h2>";
 
 echo '
     <table class="admin">
@@ -90,7 +89,19 @@ echo '
     </table>
     ';
 
+
+echo '<h2>Hippo Configuration</h2>';
+
+echo printInfo( "Current Hippo configuration is following." );
+echo showConfigTableHTML( );
+
+echo '<h1>Update the config table</h1>';
+$editable = 'id,value,comment';
+$default = array( );
+echo ' <form action="admin_action.php" method="post" accept-charset="utf-8">';
+echo dbTableToHTMLTable( 'config', $default, $editable, 'Add Configuration' );
+echo '</form>';
+
 echo goBackToPageLink( 'user.php', 'Go back' );
 
 ?>
-

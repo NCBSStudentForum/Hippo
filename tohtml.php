@@ -485,7 +485,8 @@ function readOnlyEventLineHTML( $date, $venueid )
     *
     * @return
  */
-function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
+function arrayToRowHTML( $array, $tablename
+    , $tobefilterd = '' , $linkify = true, $withtr=true )
 {
     if( $withtr )
         $row = '<tr>';
@@ -496,6 +497,7 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
         $tobefilterd = explode( ',', $tobefilterd );
 
     $keys = array_keys( $array );
+
     $toDisplay = Array();
     foreach( $keys as $k )
         if( ! in_array( $k, $tobefilterd ) )
@@ -505,7 +507,9 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = '', $withtr=true )
     {
         if( isStringAValidDate( $v ) )
             $v = humanReadableDate( $v );
-        $v = linkify( $v );
+
+        if( $linkify )
+            $v = linkify( $v );
 
         $row .= "<td><div class=\"cell_content\">$v</div></td>";
     }
@@ -2202,6 +2206,54 @@ function jcToHTML( $jc )
     $html .= presentationToHTML( $jc );
     $html .= "<div width=600px><hr width=600px align=left> </div>";
 
+    return $html;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Remove sensitive data from the row.
+    *
+    * @Param $arr
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function removeSensitiveInfomation( $arr )
+{
+    $id = $arr[ 'id' ];
+    $res = array( 'id' => $id );
+
+    if( __substr__( 'password', $id, true ) )
+        $res[ 'value' ] = 'Not Displayed';
+    else if( __substr__( 'secret', $id, true ) )
+        $res[ 'value' ] = 'Not Displayed';
+    else
+        $res[ 'value' ] = $arr['value'];
+
+    return $res;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Remove sensitive data from the table.
+    *
+    * @Param $configs
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function showConfigTableHTML( $configs = null )
+{
+    if( ! $configs )
+        $configs = getTableEntries( 'config' );
+
+    $html = '<table class="info">';
+    foreach( $configs as $config )
+    {
+        $config = removeSensitiveInfomation( $config );
+        $html .= arrayToRowHTML( $config, 'info', '', false );
+    }
+    $html .= '</table>';
     return $html;
 }
 

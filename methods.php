@@ -1231,8 +1231,24 @@ function getNextSemester( $sem = null, $year = null )
     return $nextSem;
 }
 
-function __substr__( $needle, $haystack )
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  See if substring is found in given string.
+    *
+    * @Param $needle
+    * @Param $haystack
+    * @Param $case_insensitive
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function __substr__( $needle, $haystack, $case_insensitive = false )
 {
+    if( $case_insensitive )
+    {
+        $needle = strtolower( $needle );
+        $haystack = strtolower( $haystack );
+    }
     return ( strpos( strtolower( $haystack ), strtolower( $needle) ) !== false );
 }
 

@@ -23,10 +23,10 @@ function serviceping($host, $port=389, $timeout=1)
 
 function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 {
-    $port = 8862;
+    $ldap_ip = $ldap_ip or getConfigValue( 'LDAP_QUERY_SERVER' );
+    $port = getConfigValue( 'LDAP_QUERY_SERVER_PORT' );
 
-    $ldapArr = explode( "@", $query );
-    $ldap = $ldapArr[0];
+    $login = explode( "@", $query )[0];
 
     // Search on all ports.
     $info = array( 'count' => 0 );
@@ -38,7 +38,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     }
 
     $ds = @ldap_connect($ldap_ip, $port );
-    $r = @ldap_bind($ds); 
+    $r = @ldap_bind($ds);
 
     if( ! $r )
     {
@@ -47,7 +47,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     }
 
     $base_dn = "dc=ncbs,dc=res,dc=in";
-    $sr = @ldap_search($ds, $base_dn, "uid=$ldap");
+    $sr = @ldap_search($ds, $base_dn, "uid=$login");
     $info = @ldap_get_entries($ds, $sr);
 
     $result = array();
@@ -59,8 +59,8 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
         $laboffice = __get__( $i, 'profilelaboffice', array( 'NA') );
         $joinedOn = __get__( $i, 'profiledateofjoin', array( 'NA' ) );
 
-        // We construct an array with ldap entries. Some are dumplicated with 
-        // different keys to make it suitable to pass to other functions as 
+        // We construct an array with ldap entries. Some are dumplicated with
+        // different keys to make it suitable to pass to other functions as
         // well.
         if( trim( $i['sn'][0] ) == 'NA' )
             $i['sn'][0] = '';
@@ -100,7 +100,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     * @Param $user
     * @Param $pass
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function authenticateUsingLDAP( $user, $pass )
@@ -113,7 +113,7 @@ function authenticateUsingLDAP( $user, $pass )
     foreach(  $ports as $dc => $port )
     {
         echo printInfo( "Trying to connect to port $port" );
-        $res = @ldap_connect( "ldap.ncbs.res.in", $port ) or 
+        $res = @ldap_connect( "ldap.ncbs.res.in", $port ) or
             die( "Could not connect to ldap on port $port" );
 
         $ldapQuery = "uid=$user,ou=People,dc=$dc,dc=res,dc=in";
@@ -141,7 +141,7 @@ function authenticateUsingLDAP( $user, $pass )
     *
     * @Param $server
     *
-    * @Returns   
+    * @Returns
  */
 /* ----------------------------------------------------------------------------*/
 function pingLDAP( $server, $port )

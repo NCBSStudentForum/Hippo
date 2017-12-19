@@ -70,12 +70,16 @@ class BMVPDO extends PDO
         $options = array ( PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION );
         $host = $conf['mysql']['host'];
         $port = $conf['mysql']['port'];
+
         if( $port == -1 )
             $port = 3306;
 
         $user = $conf['mysql']['user'];
         $password = $conf['mysql']['password'];
         $dbname = $conf['mysql']['database'];
+
+        if( $port == -1 )
+            $port = 3306;
 
         try {
             parent::__construct( 'mysql:host=' . $host . ";dbname=$dbname"
@@ -98,7 +102,6 @@ $db = new BMVPDO( "localhost" );
 
 // And initiaze the database.
 initialize( $db  );
-
 
 function getEventsOfTalkId( $talkId )
 {
@@ -2982,5 +2985,29 @@ function getVotes( $voteId )
 {
     return getTableEntries('votes', '', "id='$voteId' AND status='VALID'" );
 }
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get the config parameters from database.
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function getConfigFromDB( )
+{
+    $config = array( );
+    foreach( getTableEntries( 'config' ) as $row )
+        $config[ $row['id'] ] = $row[ 'value' ];
+    return $config;
+}
+
+function getConfigValue( $key, $config = null )
+{
+    if( ! $config )
+        $config = getConfigFromDB( );
+    $val = __get__( $config, $key, '' );
+    return $val;
+}
+
 
 ?>

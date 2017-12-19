@@ -7,14 +7,18 @@ include_once( 'tohtml.php' );
 
 function calendarIFrame( )
 {
-    return '
-        <iframe class="google_calendar"
-            allowtransparency="true"
-            src="' . calendarURL() . '&mode=WEEK"
-            style="border: 0" width="800" height="400" frameborder="0"
-            scrolling="yes">
-        </iframe>
-    ';
+    $url = calendarURL( );
+    if( $url )
+        return '
+            <iframe class="google_calendar"
+                allowtransparency="true"
+                src="' . calendarURL() . '&mode=WEEK"
+                style="border: 0" width="800" height="400" frameborder="0"
+                scrolling="yes">
+            </iframe>
+        ';
+
+    return '';
 }
 
 

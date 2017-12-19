@@ -18,7 +18,9 @@ export http_proxy=http://proxy.ncbs.res.in:3128
 export https_proxy=http://proxy.ncbs.res.in:3128 
 LOG_FILE=/var/log/hippo.log
 
+log_msg "Running CRON hippo_cron.php"
 php -f ${SCRIPT_DIR}/hippo_cron.php
+
 # Now update the calendar. every six hours.
 HOUR=`date +%H`
 n=$((HOUR%6))

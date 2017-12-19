@@ -18,11 +18,7 @@ if( $_POST[ 'response' ] == 'Execute' )
         exit;
     }
 
-    echo printInfo( "Authentication successful." );
-
     $query = getTableEntry( 'queries', 'id', $_POST );
-    echo $query[ 'query' ];
-
     $res = executeQuery( $query['query'] );
     if( $res )
     {

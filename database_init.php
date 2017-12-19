@@ -16,6 +16,16 @@ function initialize( $db  )
         )
         ' );
 
+    // Configuration
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS config (
+            , key VARCHAR(100) NOT NULL PRIMARY KEY
+            , value VARCHAR(1000) NOT NULL
+            , comment TEXT
+            , UNIQUE KEY (key,value)
+        )"
+        );
+
     // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
     $res = $db->query(
         'CREATE TABLE IF NOT EXISTS speakers
@@ -424,6 +434,8 @@ function initialize( $db  )
             , UNIQUE KEY (login,on_table,on_field,value)
         )"
         );
+
+
 
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS upcoming_course_schedule (

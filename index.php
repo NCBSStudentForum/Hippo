@@ -20,7 +20,7 @@ if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' 
 }
 
 $_SESSION['user'] = 'anonymous';
-$_SESSION[ 'timezone' ] = getConfigFromDB(  'TIMEZONE' );
+$_SESSION[ 'timezone' ] = getConfigFromDB(  'TIMEZONE' ) or 'Asia/Kolkata';
 
 // Now create a login form.
 echo "<table class=\"index\">";

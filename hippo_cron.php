@@ -1,9 +1,8 @@
 <?php
 /*
- * This file is run by cron every 15 minutes.
- */
+* This file is run by cron every 15 minutes.
+*/
 
-include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
@@ -15,6 +14,7 @@ ini_set( 'error_log', '/var/log/hippo.log' );
 
 $now = dbDateTime( strtotime( 'now' ) );
 error_log( "Executed by cron at $now" );
+printInfo( "PHP: Executed by cron at $now" );
 
 function trueOnGivenDayAndTime( $day, $time )
 {
@@ -227,9 +227,7 @@ if( trueOnGivenDayAndTime( 'this sunday', '7:00 pm' ) )
 /*
  * Task 2. Send today's event every day at 8am.
  */
-$awayFrom = strtotime( 'now' ) - strtotime( '8:00' );
-$today = dbDate( strtotime( 'today' ) );
-if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
+if( trueOnGivenDayAndTime( 'today', '8:00' ) )
 {
     error_log( "8am. Event for today" );
     $todaysEvents = getPublicEventsOnThisDay( $today );
@@ -287,6 +285,7 @@ if( $today > $startDay && $today <= $endDay )
     $awayFrom = strtotime( 'now' ) - strtotime( '10:00 am' );
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
+        printInfo( 'Annoy AWS speakers' );
         // Every day 10 am. Annoy.
         $upcomingAws = getUpcomingAWS( 'next monday' );
         foreach( $upcomingAws as $aws )
@@ -324,8 +323,8 @@ if( $today > $startDay && $today <= $endDay )
 
     if( $awayFrom > -1 && $awayFrom < 15 * 60 )
     {
-        echo printInfo( "Checking for recurrent events expiring in 7 days" );
-        echo printInfo( "Checking for recurrent events expirings in future" );
+        echo printInfo( "1PM. Checking for recurrent events expiring in 7 days" );
+        echo printInfo( "1PM. Checking for recurrent events expirings in future" );
 
         // Get all events which are grouped.
         $groupEvents = getActiveRecurrentEvents( 'today' );
@@ -370,14 +369,12 @@ if( $today > $startDay && $today <= $endDay )
 /* If user has not acknowledged their aws date, send them this reminder on even
  * days; at 10 AM.
  */
+if( trueOnGivenDayAndTime( 'today', '10:00' ) )
 {
-    $today = 'today';
-    $awayFrom = strtotime( 'now' ) - strtotime( '10:00' );
     $dayNo = date( 'N', strtotime( 'today' ) );
-
     // Send this reminder only on Monday and Friday only.
     // 1. Is monday, 7 is sunday.
-    if( ($dayNo + 3) % 4 == 0 && $awayFrom > -1 && $awayFrom < 15 * 60 )
+    if( ($dayNo + 3) % 4 == 0 )
     {
         echo printInfo( "Checking for upcoming aws which has not been acknowleged" );
 
@@ -431,6 +428,7 @@ if( $today > $startDay && $today <= $endDay )
 /* ----------------------------------------------------------------------------*/
 if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
 {
+    printInfo( ' Monday and 9am. Send todays AWSes to academic' );
     // Get the monday after 10 weeks.
     $afterNWeeks = dbDate( strtotime( 'this monday' ) + 10 * 7 * 86400 );
     echo printInfo( "Today is wednedsay and after 10 weeks $afterNWeeks" );
@@ -493,6 +491,7 @@ if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
 /* 8 weeks earlier, if student fails to sign-up, select one from the list */
 if( trueOnGivenDayAndTime( 'this monday', '13:00' ) )
 {
+    printInfo( 'Monday and 1pm. Notify users about upcoming AWS' );
     $afterNWeeks = dbDate( strtotime( $today ) + 8 * 7 * 86400 );
     echo printInfo( "Today is monday and after 8 weeks $afterNWeeks" );
 
@@ -580,6 +579,7 @@ if( $intMonth % 2 == 0 )
 // At 3PM, we send notification about upcoming JC on 3 days in advance.
 if( trueOnGivenDayAndTime( 'today', '15:00' ) )
 {
+    printInfo( '3pm. Check for presentations after 3 days' );
     $upcomingPresentations = getUpcomingJCPresentations( );
 
     foreach( $upcomingPresentations as $i => $presentation )
@@ -622,8 +622,8 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
 // Send reminder about today JC.
 if( trueOnGivenDayAndTime( 'today', '9:00' ) )
 {
+    printInfo( "9am. Check for today's presentations' );
     $upcomingPresentations = getUpcomingJCPresentations( );
-
     foreach( $upcomingPresentations as $i => $presentation )
     {
         if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 0 )

@@ -16,7 +16,7 @@ $jcSelect = arrayToSelectList( 'jc_id', $myJCIds, array(), false, $myJCIds[0] );
 $default = array(
     'presenter' => $_SESSION[ 'user' ]
     , 'jc_id' => $jcSelect
-    // If there is no Id in $_POST, create one. This is most likely to be new 
+    // If there is no Id in $_POST, create one. This is most likely to be new
     // entry.
     , 'id' => __get__( $_POST, 'id', getUniqueID( 'jc_requests' ) )
 );
@@ -24,7 +24,9 @@ $default = array(
 
 // On this page below, we let user edit the entry here only.
 if( __get__( $_POST, 'response', '' ) == 'Edit' )
-    $default = array_merge( $_POST, $default );
+{
+    $default = array_merge( $default, $_POST );
+}
 
 
 echo '<h1> Submit a presentation request </h1>';
@@ -41,8 +43,6 @@ echo '</form>';
 if( __get__( $_POST, 'response', '' ) == 'submit' )
 {
     $_POST[ 'status' ] = 'VALID';
-
-
     $res = insertOrUpdateTable( 'jc_requests'
         , 'id,jc_id,presenter,date,title,description,url'
         , 'title,description,date,status,url'
@@ -50,9 +50,7 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
     );
 
     if( $res )
-    {
-        echo printInfo( 'Successfully added your entry' );
-    }
+        echo printInfo( 'Successfully added/updated your entry' );
 }
 else if( __get__( $_POST, 'response', '' ) == 'delete' )
 {
@@ -71,34 +69,25 @@ $requests = getTableEntries( 'jc_requests', 'date'
     , "status='VALID' AND presenter='$me'"
 );
 
-echo '<table class="show_events">';
-echo '<th>Request</th><th>Votes</th>';
-
+echo '<table class="admin">';
 foreach( $requests as $i => $req )
 {
     echo '<tr>';
-    echo '<td>';
+    echo '<td colspan="2">';
+    $req['votes'] = count( getVotes( 'jc_requests', $req['id'] ) );
+
     echo ' <form action="#" method="post" accept-charset="utf-8">';
-    echo dbTableToHTMLTable( 'jc_requests', $req, '', 'Edit', 'status,presenter' );
-    echo '</form>';
-
-    // Another form to delete this request.
-    echo ' <form action="#" method="post" accept-charset="utf-8">';
-
-    echo "<button name='response' onclick='AreYouSure(this)'
-            title='Cancel this request'>Cancel</button>";
-    echo "<input type='hidden' name='id' value='" . $req['id'] . "' />";
-    echo '</form>';
-    echo "</td>";
-
-    $votes = count( getVotes( "jc_requests." . $req['id'] ));
-    echo "<td> $votes </td>";
+    echo arrayToTableHTML( $req, 'info', '' );
+    echo '</tr><tr>';
+    echo "<td><button name='response' onclick='AreYouSure(this)'
+            title='Cancel this request'>Cancel</button> </td>";
+    echo ' <td> <button name="response" value="Edit">Edit</button> </td>';
     echo '</tr>';
+    echo '</form>';
+
 }
 echo '</table>';
-
-
-
+echo ' <br /> ';
 
 echo goBackToPageLink( 'user.php', 'Go Back' );
 

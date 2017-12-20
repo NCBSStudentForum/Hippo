@@ -566,6 +566,10 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = f
         $tobefilterd = explode( ',', $tobefilterd );
 
     foreach( $keys as $k )
+    {
+
+        // Create a hidden field just in case.
+        $hrow .= '<input type="hidden" name="' . $k . '"  value="' . __get__($array, $k) .'" />';
         if( ! in_array( $k, $tobefilterd ) )
         {
             $kval = prettify( $k );
@@ -585,6 +589,7 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = f
             }
             $hrow .= "<th class=\"db_table_fieldname\">$label $sortButton</th>";
         }
+    }
 
     return $hrow;
 }
@@ -636,6 +641,9 @@ function arrayToVerticalTableHTML( $array, $tablename
     $keys = array_keys( $array );
     $toDisplay = Array();
     foreach( $keys as $k )
+    {
+        // Create a hidden field just in case.
+        $table .= '<input type="hidden" name="' . $k . '"  value="' . __get__($array, $k) .'" />';
         if( ! in_array( $k, $tobefilterd ) )
         {
             $table .= "<tr>";
@@ -649,6 +657,7 @@ function arrayToVerticalTableHTML( $array, $tablename
             $table .= "<td><div class=\"cell_content\">$text</div></td>";
             $table .= "</tr>";
         }
+    }
 
     // Also set the content as div element which can be formatted using css
     $table .= "</table>";

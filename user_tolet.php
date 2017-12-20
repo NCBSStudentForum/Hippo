@@ -54,18 +54,18 @@ $myAlerts = getTableEntries( 'alerts', 'login', $where );
 echo '<table><tr>';
 if( count( $myAlerts ) > 0 )
 {
-    echo '<td>';
     foreach( $myAlerts as $alert )
     {
+        echo '<td>';
         echo ' <form action="user_tolet_action.php" method="post" > ';
         echo dbTableToHTMLTable( 'alerts', $alert, '', 'Delete Alert', 'on_field,on_table' );
         echo '</form>';
+        echo '</td>';
     }
-    echo '</td>';
 }
 echo '</tr></table>';
 
-echo '<h3>Create new alerts</h3>';
+echo '<h2>Create new alerts</h2>';
 // New alert.
 echo ' <form action="user_tolet_action.php" method="post" > ';
 echo '<table> <tr> ';
@@ -79,8 +79,8 @@ echo '</form>';
 
 
 // Show all apartments.
-echo ' <h2>My TO-LET listing </h2> ';
-
+echo ' <br /> <br />';
+echo ' <h2>My TO-LET entries </h2> ';
 $action = 'Add new listing';
 
 $myApartments = getTableEntries( 'apartments', 'type'
@@ -96,8 +96,7 @@ foreach( $myApartments as $apt )
     echo '<td>' . arrayToTableHTML( $apt, 'info', ''
                     , 'status,last_modified_on,created_by'  ) . '</td>';
     echo ' <td>
-            <button name="response" value="Update" > ' . $symbEdit . '
-        </button> </td> ';
+            <button name="response" value="Update" > Edit </button> </td> ';
     echo '<input type="hidden" name="id" value="' . $apt[ 'id' ] . '" />';
     echo ' </form> ';
     echo '</tr>';
@@ -125,7 +124,7 @@ echo '<div style="font-size:small;">';
 echo ' <form method="post" action="user_tolet_action.php">';
 
 // Create an editable entry.
-$editable = 'type,open_vacancies,address,description,owner_contact,rent,advance';
+$editable = 'type,available_from,open_vacancies,address,description,owner_contact,rent,advance';
 if( 'Update listing' == $action )
     $editable .= ',status';
 

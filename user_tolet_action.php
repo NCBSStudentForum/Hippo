@@ -49,7 +49,7 @@ else if( $_POST[ 'response' ] == 'Add new listing' ) // Add new apartment
     $aptId = getNumberOfEntries( 'apartments', 'id' );
     $_POST[ 'id' ] = intval( $aptId[ 'id' ] ) + 1;
     $res = insertIntoTable( 'apartments'
-            , 'id,open_vacancies,type,created_by,created_on,address,description'
+            , 'id,open_vacancies,available_from,type,created_by,created_on,address,description'
                 . ',owner_contact,rent,advance'
             , $_POST
             );
@@ -66,21 +66,19 @@ else if( $_POST[ 'response' ] == 'Add new listing' ) // Add new apartment
         echo printInfo( "Sending alerts to subcriber. Total " . count( $alerts ));
         foreach( $alerts as $alt )
         {
-            $subject = 'A new apartment listing has been created';
+            $subject = 'A new apartment listing has been created which matches your preference.';
             $msg = initUserMsg( $alt['login'] );
             $to = getLoginEmail( $alt[ 'login' ] );
 
             $apt = getTableEntry( 'apartments', 'id', $_POST );
             $msg .= arrayToVerticalTableHTML( $apt, 'info' );
-            $msg .= "<p> You recieved this message because it matches one of the
-                alert you have created on TO-LET services </p>";
+            $msg .= "<p> You have recieved this message because it matches one of the
+                alerts you have created on Hippo. </p>";
 
-            echo printInfo( "Sending apartment alert to $to " );
             sendHTMLEmail( $msg, $subject, $to );
         }
-
-        //echo goBack( 'user_tolet.php', 1 );
-        //exit;
+        echo goBack( 'user_tolet.php', 1 );
+        exit;
     }
     else
         echo minionEmbarrassed( 'Failed to insert apartment entry' );
@@ -90,7 +88,7 @@ else if( $_POST[ 'response' ] == 'Update listing' ) // Update apartment entry.
     echo printInfo( "Updatng apartment listing" );
     $res = updateTable( 'apartments'
                 , 'id'
-                , 'type,open_vacancies,address,description'
+                , 'type,available_from,open_vacancies,address,description'
                 . ',owner_contact,rent,advance,status'
             , $_POST
             );

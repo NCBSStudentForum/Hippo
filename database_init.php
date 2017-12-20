@@ -401,6 +401,7 @@ function initialize( $db  )
         CREATE TABLE IF NOT EXISTS apartments (
             id INT PRIMARY KEY
             , type ENUM( 'SHARE', 'SINGLE', '1BHK', '2BHK', '3BHK', '3+BHK' )
+            , available_from DATE NOT NULL
             , open_vacancies INT DEFAULT '1'
             , address VARCHAR( 200 ) NOT NULL
             , description MEDIUMTEXT

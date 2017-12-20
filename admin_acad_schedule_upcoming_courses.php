@@ -77,7 +77,7 @@ if( count( $entries ) > 0 )
         $entry['comment'] .= '<br>' . $cname;
         $table .= '<form action="admin_acad_schedule_upcoming_courses_action.php"
             method="post" accept-charset="utf-8">';
-        $table .= '<tr>' . arrayToRowHTML( $entry, 'info', $tofilter, false );
+        $table .= '<tr>' . arrayToRowHTML( $entry, 'info', $tofilter, false, false );
         $table .= '<td><button name="response" value="Delete">Delete</button></td>';
         $table .= '<input type="hidden" name="id" value="' . $entry['id'] . '">';
         $table .= '</tr>';

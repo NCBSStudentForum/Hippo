@@ -31,7 +31,7 @@ foreach( $allPresentations as $p )
     $presentationMap[ $p['presenter'] ][] = $p;
 }
 
-// Get all upcoming presentation for all JCs I am an admin.
+// Get all upcoming presentation for all JCs for which I am an admin.
 $upcomingJCs = array( );
 foreach( $jcIds as $jc_id )
 {
@@ -41,6 +41,7 @@ foreach( $jcIds as $jc_id )
         , 'date'
         , "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
     );
+    sortByKey( $upcoming, 'date' );
     $upcomingJCs[ $jc_id ] = $upcoming;
 }
 
@@ -90,14 +91,16 @@ echo '</table>';
 
 // Show current schedule.
 echo '<h2> Upcoming JC schedule </h2>';
-echo '<table class="info">';
+echo '<table class="show_info">';
 foreach( $upcomingJCs as $jcID => $upcomings )
 {
+    $tofilter = 'title,description,status,url,presentation_url';
+    echo arrayToTHRow( $upcomings[0], 'show_info', $tofilter );
     foreach( $upcomings as $i => $upcoming )
     {
         echo '<tr>';
         echo '<form method="post" action="user_jc_admin_submit.php">';
-        echo arrayToRowHTML( $upcoming, 'info', 'title,description,status,url',false );
+        echo arrayToRowHTML( $upcoming, 'show_info', $tofilter,  false, false );
         echo '<td> <button name="response" value="Remove Presentation"
                     title="Remove this schedule" >' . $symbDelete . '</button></td>';
 
@@ -196,7 +199,7 @@ foreach( $jcIds as $currentJC )
     {
         $subTable .= '<form method="post" action="user_jc_admin_submit.php">';
         $subTable .= '<tr>';
-        $subTable .= arrayToRowHTML( $sub, 'sorttable', '', false );
+        $subTable .= arrayToRowHTML( $sub, 'sorttable', '', false, false );
         $subTable .= '<input type="hidden" name="login" value="' . $login . '" />';
         $subTable .= '<input type="hidden" name="jc_id" value="' . $currentJC . '" />';
         $subTable .= '<td>';

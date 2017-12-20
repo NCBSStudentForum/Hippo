@@ -407,22 +407,17 @@ table.show_venue {
     font-size: x-small;
 }
 
+table[class*='editable_'] {
+    text-align: left;
+    background: rgba(250,250,255,1);
+}
 
 table.editable_events {
     text-align : left;
-    border : 0px;
-    /*max-width : 90%;*/
-}
-
-table.editable_course_registration {
-    text-align : left;
-    border : 1px dotted;
-    /*max-width : 90%;*/
 }
 
 table.editable_jc_presentations {
     text-align : left;
-    /*max-width : 90%;*/
 }
 table.editable_jc_presentations tr td {
     background-color: var(--tabletdcolor);

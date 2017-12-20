@@ -20,15 +20,3 @@ LOG_FILE=/var/log/hippo.log
 
 log_msg "Running CRON hippo_cron.php"
 php -f ${SCRIPT_DIR}/hippo_cron.php
-
-# Now update the calendar. every six hours.
-HOUR=`date +%H`
-n=$((HOUR%6))
-if [[ $n -eq 0 ]]; then
-    log_msg "MOD 6 is zero."
-    MINS=`date +%M`
-    if [[ $MINS -gt -5 && $MINS -lt 10 ]]; then
-        log_msg "Updating google calendar."
-        php -f ${SCRIPT_DIR}/synchronize_calendar.php
-    fi
-fi

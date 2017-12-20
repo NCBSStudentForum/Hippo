@@ -160,27 +160,23 @@ echo '<table class="tasks">
     </form>
     </table>';
 
-//// Nilami store.
-//echo "<h3>Community services</h3>";
-//echo '<table class="tasks">
-//   <form action="user_register_talk.php" method="post">
-//   <tr>
-//        <td>Put a notification for selling or create an offer. </td>
-//        <td> <a href="user_sells.php">Sell</a> and
-//             <a href="user_buys.php">Put an offer</a></td>
-//    </tr><tr>
-//        <td> You can browse available TO-LET entries.
-//        </td>
-//       <td> <a href="user_browse_tolet.php">Browse TO-LET list</a></td> </td>
-//   </tr>
-//    </tr><tr>
-//        <td>Create email-alerts so that when a new entry is created you recieve
-//        notification. Or create a TO-LET entry.
-//        </td>
-//       <td> <a href="user_tolet.php">My TO-LET</a></td> </td>
-//   </tr>
-//   </form>
-//   </table>';
+echo "<h1>Community services</h1>";
+echo '<table class="tasks">
+    <tr>
+        <td> You can browse available TO-LET entries.
+        </td>
+       <td> <a href="user_browse_tolet.php">
+            <i class="fa fa-building fa-3x"></i>
+            Browse TO-LET list</a>
+        </td>
+   </tr>
+    </tr><tr>
+        <td>Create email-alerts and create a TO-LET entry for community.
+            Email is sent to registered user.
+        </td>
+       <td> <a href="user_tolet.php">My TO-LET and Alerts</a></td> </td>
+   </tr>
+   </table>';
 
 
 if( anyOfTheseRoles( 'ADMIN,BOOKMYVENUE_ADMIN,JOURNALCLUB_ADMIN,AWS_ADMIN' ) )

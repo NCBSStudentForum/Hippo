@@ -4,6 +4,8 @@ include_once 'display_content.php';
 include_once 'methods.php';
 include_once 'logger.php' ;
 include_once 'html2text.php';
+include_once 'helper/imap.php';
+include_once 'ldap.php';
 
 date_default_timezone_set('Asia/Kolkata');
 
@@ -23,6 +25,21 @@ $phpFileUploadErrors = array(
 function whoAmI( )
 {
     return $_SESSION[ 'user' ];
+}
+
+function authenticate( $ldap, $pass )
+{
+    $auth = null;
+    if( ldapAlive( 'ldap.ncbs.res.in' ) )
+        $auth = @authenticateUsingLDAP( $ldap, $pass );
+    else
+    {
+        // Try login using IMAP.
+        $auth = @authenticateUsingIMAP( $ldap, $pass );
+        if( ! $auth )
+            $auth = null;
+    }
+    return $auth;
 }
 
 function venueToText( $venue, $show_strength = true )

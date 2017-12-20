@@ -14,7 +14,7 @@ $speakers = getLoginIds( );
 <script type="text/javascript" charset="utf-8">
 $(function() {
     var speakers = <?php echo json_encode( $speakers ); ?>;
-    $( "#autocomplete_speaker" ).autocomplete( { source : speakers }); 
+    $( "#autocomplete_speaker" ).autocomplete( { source : speakers });
 });
 </script>
 
@@ -22,9 +22,7 @@ $(function() {
 <?php
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
-
 echo userHTML( );
-
 
 echo '<h3>AWS for next week</h3>';
 
@@ -42,7 +40,7 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '<table>';
     echo '<tr><td>';
 
-    echo arrayToVerticalTableHTML( $upcomingAWS, 'aws' 
+    echo arrayToVerticalTableHTML( $upcomingAWS, 'aws'
         , '', array( 'id', 'status', 'comment' )
     );
 
@@ -52,11 +50,11 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '</td><td>';
     echo '<button name="response" value="Reassign">Reassign</button>';
     echo "<br>";
-    echo '<button name="response" title="Edit/fromat the abstract" 
+    echo '<button name="response" title="Edit/fromat the abstract"
                 value="format_abstract">' . $symbEdit . '</button>';
     echo '<br>';
-    echo '<button onclick="AreYouSure(this)" 
-            name="response" title="Remove this entry from schedule" 
+    echo '<button onclick="AreYouSure(this)"
+            name="response" title="Remove this entry from schedule"
             value="delete">' . $symbCancel . '</button>';
     echo '</td></tr>';
     echo '</table>';
@@ -66,7 +64,7 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
 
 
 echo '<h3>Manually assign AWS</h3>';
-echo printInfo( 
+echo printInfo(
     'Here you can manually assign speakers to an AWS slot After assignment,
     ' );
 
@@ -77,7 +75,7 @@ echo '
     <tr>
         <td> <input class="datepicker"  name="date" value="" > </td>
         <td>
-            <input id="autocomplete_speaker" name="speaker" 
+            <input id="autocomplete_speaker" name="speaker"
                 placeholder="I will autocomplete" />
         </td>
         <td> <button name="response" value="Assign">Assign</button> </td>
@@ -142,8 +140,8 @@ echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 echo "<h3>Temporary assignments </h3>";
 echo '
-    <p> Following table shows the best possible schedule I could 
-    come up with for next 12 months starting today. Pressing <button 
+    <p> Following table shows the best possible schedule I could
+    come up with for next 12 months starting today. Pressing <button
     disabled>' . $symbAccept . '</button> will put them into upcoming
     AWS list.
     </p>';
@@ -154,7 +152,7 @@ echo "<table class=\"show_schedule\">";
 $header = "<tr>
     <th>Speaker</th>
     <th>Scheduled On</th>
-    <th>Last AWS on</th><th># Day</th> 
+    <th>Last AWS on</th><th># Day</th>
     <th>#AWS</th>
     </tr>";
 echo $header;
@@ -179,7 +177,7 @@ foreach( $schedule as $upcomingAWS )
         echo "</table>";
         echo "<br>";
         echo "<table class=\"show_schedule\">";
-        $weekDate = $upcomingAWS[ 'date' ]; 
+        $weekDate = $upcomingAWS[ 'date' ];
         echo $header;
     }
 
@@ -192,7 +190,7 @@ foreach( $schedule as $upcomingAWS )
     $pi = getPIOrHost( $speaker );
     $specialization = getSpecialization( $speaker, $pi );
 
-    // This user may have not given any AWS in the past. We consider their 
+    // This user may have not given any AWS in the past. We consider their
     // joining date as last AWS date.
     if( count( $pastAWSes ) > 0 )
     {
@@ -207,7 +205,7 @@ foreach( $schedule as $upcomingAWS )
     $speakerInfo = $speaker . '<br>'. loginToText( $speaker, $withEmail = false );
 
     $csvLine .= loginToText( $speaker, true ) . ',';
-    
+
     echo "<tr><td>";
     echo $speakerInfo;
 
@@ -216,11 +214,11 @@ foreach( $schedule as $upcomingAWS )
 
     $intranetLink = getIntranetLink( $speaker );
     echo "<br>$intranetLink ";
-    echo '<form action="admin_acad_manages_upcoming_aws_submit.php" 
+    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
             method="post" accept-charset="utf-8">
           <input type="hidden" name="speaker" value="' . $speaker . '" />
           <button name="response"  value="RemoveSpeaker"
-                title="Remove this speaker from AWS speaker list" >' 
+                title="Remove this speaker from AWS speaker list" >'
                 . $symbDelete . '</button>';
     echo '</form>';
     // Check if user has requested AWS schedule and has it been approved.
@@ -256,7 +254,7 @@ foreach( $schedule as $upcomingAWS )
     echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
     echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
     echo '<td style="background:white;border:0px;">
-        <button name="response" title="Confirm this slot" 
+        <button name="response" title="Confirm this slot"
             value="Accept" >' . $symbAccept . '</button>
         </td>';
     echo "</tr>";

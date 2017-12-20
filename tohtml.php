@@ -833,8 +833,6 @@ function editor_script( $id, $default = '' )
 function dbTableToHTMLTable( $tablename, $defaults=Array()
     , $editables = '', $button_val = 'submit', $hide = '' )
 {
-    global $symbUpdate, $symbCheck;
-    global $symbEdit;
     global $dbChoices;
     global $useCKEditor;
 
@@ -1013,14 +1011,6 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     // user pass an empty value
     $buttonSym = ucfirst( $button_val );
 
-    // DONT use symbols. They are not visible.
-    //if( strtolower($button_val) == 'submit' )
-    //    $buttonSym = "&#10003";
-    //else if( strtolower( $button_val ) == 'update' )
-    //    $buttonSym = $symbUpdate;
-    //else if( strtolower( $button_val ) == 'edit' )
-    //    $buttonSym = $symbEdit;
-
     // Let JS add extra rows here.
     $html .= '<tr><td></td><td><table id="' . $tablename . '_extra_rows"> </table></td>';
 
@@ -1028,7 +1018,7 @@ function dbTableToHTMLTable( $tablename, $defaults=Array()
     {
         $html .= "<tr style=\"background:white;\"><td></td><td>";
         $html .= "<button style=\"float:right\" value=\"$button_val\"
-                 title=\"$button_val\" name=\"response\">" . $buttonSym . "</button>";
+                 title=\"$button_val\" name=\"response\">" . $button_val . "</button>";
         $html .= "</td></tr>";
     }
     $html .= "</table>";

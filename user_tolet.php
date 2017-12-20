@@ -17,11 +17,11 @@
 
         });
     }
-    google.maps.event.addDomListener(window, 'load', initialize); 
+    google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 -->
 
-<?php 
+<?php
 
 include_once( "header.php" );
 include_once( "methods.php" );
@@ -32,8 +32,7 @@ include_once 'check_access_permissions.php';
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
 echo userHTML( );
-$user = $_SESSION[ 'user' ];
-
+$user = whoAmI( );
 
 // All alerts.
 $allAlerts = getTableEntries( 'alerts' );
@@ -46,34 +45,35 @@ $apartmentSelect = arrayToSelectList( 'value', $apartmentTypes );
 
 
 // Create alerts.
-echo " <h2>My alerts on apartment types</h2> ";
+echo " <h2>My Email Alerts</h2> ";
+echo printInfo( "You will recieve email whenever following types of listings are added by others." );
+
 $where = "login='$user' AND on_table='apartments' AND  on_field='type'";
 $myAlerts = getTableEntries( 'alerts', 'login', $where );
 
+echo '<table><tr>';
 if( count( $myAlerts ) > 0 )
 {
-    echo ' <table border="1"> ';
-    echo '<tr>';
+    echo '<td>';
     foreach( $myAlerts as $alert )
     {
         echo ' <form action="user_tolet_action.php" method="post" > ';
-        echo '<td> ';
-        echo $alert[ 'value' ];
-        echo '<button name="response" 
-            title="Delete this alert" 
-            value="Delete">'. $symbDelete .'</button>';
-        echo '</td>';
+        echo dbTableToHTMLTable( 'alerts', $alert, '', 'Delete Alert', 'on_field,on_table' );
         echo '</form>';
     }
-    echo '</tr></table>';
+    echo '</td>';
 }
+echo '</tr></table>';
+
+echo '<h3>Create new alerts</h3>';
+// New alert.
 echo ' <form action="user_tolet_action.php" method="post" > ';
 echo '<table> <tr> ';
-echo '<td> Add new alert: ' . $apartmentSelect . '</td>';
+echo '<td>Apartment Type : ' . $apartmentSelect . '</td>';
 echo ' <input type="hidden" name="login" value="' . $user . '" />';
 echo ' <input type="hidden" name="on_table" value="apartments" />';
 echo ' <input type="hidden" name="on_field" value="type" />';
-echo '<td> <button name="response" value="New Alert">Add new alert </button> </td>';
+echo '<td> <button name="response" value="New Alert">Add Alert </button> </td>';
 echo ' </tr></table>';
 echo '</form>';
 
@@ -84,7 +84,7 @@ echo ' <h2>My TO-LET listing </h2> ';
 $action = 'Add new listing';
 
 $myApartments = getTableEntries( 'apartments', 'type'
-            , "status='AVAILABLE' AND created_by='$user' " 
+            , "status='AVAILABLE' AND created_by='$user' "
         );
 
 echo '<div style="font-size:small;">';
@@ -102,7 +102,7 @@ foreach( $myApartments as $apt )
     echo ' </form> ';
     echo '</tr>';
 }
-    
+
 echo '</table>';
 echo '</div>';
 

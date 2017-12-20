@@ -17,7 +17,7 @@ if( $_POST['response'] == "Reschedule" )
     exit;
 }
 
-else if( $_POST[ 'response' ] == 'Accept' || $_POST[ 'response' ] == 'Assign' )
+else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )
 {
     $speaker = $_POST[ 'speaker' ];
     $date = $_POST[ 'date' ];

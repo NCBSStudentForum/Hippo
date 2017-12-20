@@ -528,6 +528,19 @@ function initialize( $db  )
             )"
         );
 
+    // Clickable queries
+    $res = $db->query( "
+        CREATE TABLE IF NOT EXISTS queries (
+            id INT PRIMARY KEY
+            , external_id VARCHAR(8)  -- associated table.id in some other table
+            , who_can_execute VARCHAR(100) NOT NULL -- which login can execute.
+            , query VARCHAR(1000) NOT NULL -- query to execute.
+            , status ENUM( 'EXECUTED', 'INVALID', 'PENDING' ) DEFAULT 'PENDING'
+            , last_edited_on DATETIME
+            , edited_by VARCHAR(100) default 'HIPPO'
+            )"
+        );
+
     return $res;
 }
 

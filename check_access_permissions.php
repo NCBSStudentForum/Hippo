@@ -2,6 +2,7 @@
 
 include_once 'header.php';
 include_once 'database.php' ;
+include_once 'methods.php';
 
 function loginOrIntranet( )
 {
@@ -11,15 +12,18 @@ function loginOrIntranet( )
 
 function isAuthenticated( )
 {
-    if( array_key_exists( 'AUTHENTICATED', $_SESSION ) )
-        if( $_SESSION[ 'AUTHENTICATED' ] )
-            return true;
+    if( __get__( $_SESSION, 'AUTHENTICATED', false ) )
+        return true;
     return false;
 }
 
 function requiredPrivilege( $role )
 {
-    $roles = getRoles( $_SESSION['user'] );
+    $user = __get__( $_SESSION, 'user', '' );
+    if( ! $user )
+        return false;
+
+    $roles = getRoles( $user );
     return in_array( $role, $roles );
 }
 
@@ -28,12 +32,15 @@ function anyOfTheseRoles( $roles )
     if( is_string( $roles ) )
         $roles = explode( ',', $roles );
 
-    $user = $_SESSION[ 'user' ];
-    assert( strlen( $user ) > 0 );
+    $user = __get__( $_SESSION, 'user', '' );
+    if( ! $user )
+        return false;
+
     $userRoles = getRoles( $_SESSION['user'] );
     foreach( $roles as $role )
         if( in_array( $role, $userRoles ) )
             return true;
+
     return false;
 }
 
@@ -43,6 +50,10 @@ function allOfTheseRoles( $roles )
         $roles = explode( ',', $roles );
 
     if( ! $roles )
+        return false;
+
+    $user = __get__( $_SESSION, 'user', '' );
+    if( ! $user )
         return false;
 
     $userRoles = getRoles( $_SESSION['user'] );

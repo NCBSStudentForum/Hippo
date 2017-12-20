@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "header.php";
 include_once "methods.php";
@@ -31,15 +31,27 @@ if( $_POST[ 'response' ] == 'New Alert' )
 
 
 }
+if( $_POST[ 'response' ] == 'Delete Alert' )
+{
+    $res = deleteFromTable( 'alerts', 'login,value', $_POST );
+    if ($res) {
+        printInfo( "Successfully deleted alert." );
+        goToPage( "user_tolet.php", 1 );
+       exit;
+    }
+    else
+        echo printWarning( "Failed to delete your alert. Please contact hippo@lists.ncbs.res.in" );
+
+}
 else if( $_POST[ 'response' ] == 'Add new listing' ) // Add new apartment
 {
     echo printInfo( "Creating a new apartment listing" );
     $aptId = getNumberOfEntries( 'apartments', 'id' );
     $_POST[ 'id' ] = intval( $aptId[ 'id' ] ) + 1;
     $res = insertIntoTable( 'apartments'
-            , 'id,open_vacancies,type,created_by,created_on,address,description' 
-                . ',owner_contact,rent,advance' 
-            , $_POST 
+            , 'id,open_vacancies,type,created_by,created_on,address,description'
+                . ',owner_contact,rent,advance'
+            , $_POST
             );
     if( $res )
     {
@@ -60,7 +72,7 @@ else if( $_POST[ 'response' ] == 'Add new listing' ) // Add new apartment
 
             $apt = getTableEntry( 'apartments', 'id', $_POST );
             $msg .= arrayToVerticalTableHTML( $apt, 'info' );
-            $msg .= "<p> You recieved this message because it matches one of the 
+            $msg .= "<p> You recieved this message because it matches one of the
                 alert you have created on TO-LET services </p>";
 
             echo printInfo( "Sending apartment alert to $to " );
@@ -77,10 +89,10 @@ else if( $_POST[ 'response' ] == 'Update listing' ) // Update apartment entry.
 {
     echo printInfo( "Updatng apartment listing" );
     $res = updateTable( 'apartments'
-                , 'id' 
-                , 'type,open_vacancies,address,description' 
-                . ',owner_contact,rent,advance,status' 
-            , $_POST 
+                , 'id'
+                , 'type,open_vacancies,address,description'
+                . ',owner_contact,rent,advance,status'
+            , $_POST
             );
     if( $res )
     {

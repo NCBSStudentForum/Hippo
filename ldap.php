@@ -113,7 +113,6 @@ function authenticateUsingLDAP( $user, $pass )
     $ports = array( "ncbs" => 389, "instem" => 18288, "ccamp" => 19554 );
     foreach(  $ports as $dc => $port )
     {
-        echo printInfo( "Trying to connect to port $port" );
         $res = @ldap_connect( "ldap.ncbs.res.in", $port ) or
             die( "Could not connect to ldap on port $port" );
 

@@ -393,14 +393,24 @@ if( trueOnGivenDayAndTime( 'today', '10:00' ) )
             $speaker = $aws[ 'speaker' ];
             $table = arrayToVerticalTableHTML( $aws, 'aws' );
             $to = getLoginEmail( $speaker );
+
+
             $email = emailFromTemplate( 'REMIND_SPEAKER_TO_CONFIRM_AWS_DATE'
-                , array( 'USER' => loginToHTML( $speaker )
+                        , array( 'USER' => loginToHTML( $speaker )
                         , 'AWS_DATE' => humanReadableDate( $aws[ 'date' ] ) )
                 );
 
             $subject = "Please confirm your annual work seminar (AWS) date";
-            $body = $email[ 'email_body' ] .
-                "<p> This email was automatically generated and sent on " .
+
+            // Added timestamp so that this can be send again.
+            $body = $email[ 'email_body' ];
+
+            // Get if a clickable query has been created.
+            $clickURL = getClickableURL( 'upcoming_aws.' . $aws['id' ] );
+            if( $clickURL )
+                $body .= "<p>Click here to acknowledge your AWS: $url</p>";
+
+            $body .= "<p> This email was automatically generated and sent on " .
                 humanReadableDate( 'now' ) .
                 ". If this is mistake, please write to acadoffice@ncbs.res.in.</p>";
 

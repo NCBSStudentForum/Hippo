@@ -10,9 +10,9 @@ include_once 'methods.php';
 echo userHTML( );
 
 $jcs = getJournalClubs( );
-
 echo '<h1>Table of All Journal Clubs</h1>';
 $table = '<table class="info">';
+
 foreach( $jcs as $jc )
 {
     $jcInfo = getJCInfo( $jc );
@@ -43,31 +43,50 @@ foreach( $mySubs as $mySub )
     echo "<h1>Upcoming presentations for " . $mySub[ 'jc_id' ] . "</h1>";
     $jcID = $mySub['jc_id' ];
     $upcomings = getUpcomingJCPresentations( $jcID );
-    echo '<table>';
-    echo '<tr>';
-    if( count( $upcomings ) > 0 )
-    {
-        foreach( $upcomings as $i => $upcoming )
-        {
-            echo '<td>';
-            // If it is MINE then make it editable.
-            if( $upcoming[ 'presenter' ] == whoAmI( ) )
-            {
-                echo ' <form action="user_manages_jc_update_presentation.php"
-                    method="post" accept-charset="utf-8">';
-                echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', 'Edit' );
-                echo '</form>';
-            }
-            else
-                echo arrayToVerticalTableHTML( $upcoming, 'info', '', 'id,status' );
-            echo '</td>';
+    sortByKey( $upcomings, 'date' );
 
-            if( ($i+1) % 3  == 0 )
-                echo '</tr><tr>';
-        }
+    echo '<table>';
+    foreach( $upcomings as $i => $upcoming )
+    {
+        echo '<tr>';
+        echo '<td>';
+        echo arrayToVerticalTableHTML(
+            $upcoming, 'info', '', 'id,status,acknowledged' );
+        echo '</td>';
+        echo '</tr>';
     }
-    echo '</tr>';
     echo '</table>';
+}
+
+
+// Check if I have any upcoming presentation.
+$myPresentations = getUpcomingPresentationsOfUser( whoAmI( ) );
+if( count( $myPresentations ) > 0 )
+{
+    echo '<h1>Your upcoming presentation(s)</h1>';
+
+    foreach( $myPresentations as $upcoming )
+    {
+        if( $upcoming[ 'acknowledged' ] == 'NO' )
+        {
+            echo printWarning(
+                "You need to 'Acknowledge' the presentation before you
+                can edit this entry. "
+            );
+        }
+        // If it is MINE then make it editable.
+        echo ' <form action="user_manages_jc_update_presentation.php"
+            method="post" accept-charset="utf-8">';
+        $action = 'Edit';
+        if( $upcoming[ 'acknowledged' ] == 'NO' )
+            $action = 'Acknowledge';
+        echo dbTableToHTMLTable( 'jc_presentations', $upcoming, '', $action );
+        echo '</form>';
+    }
+}
+else
+{
+    echo printInfo( "You have no upcoming JC presentation. <i class=\"fa fa-frown\"></i>" );
 }
 
 

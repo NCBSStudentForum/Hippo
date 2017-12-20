@@ -122,15 +122,15 @@ table.public_links tr td {
 
 table.show_info {
     max-width: var(--maxwidth);
-    min-width: 400px;
-    min-width: 90%;
-    border: 1px solid;
-    background-color: lightyellow;
 }
 
+table.show_info tr td:nth-child(1)
+{
+    width : 25%;
+}
 table.show_info tr td
 {
-    max-width : 25%;
+    background-color: var(--tabletdcolor);
 }
 
 table.show_speaker tr td  {
@@ -504,18 +504,6 @@ table.info {
     /*counter-reset: rowNumber;*/
 }
 
-/* Not TH */
-table.info tr:not(:first-child) {
-    counter-increment: rowNumber;
-}
-
-/*
-table tr td:first-child::before {
-    content: counter(rowNumber);
-    min-width: 1em;
-    margin-right: 0.5em;
-}
-*/
 
 table.info tr td {
     font-family : 'Fira Sans';
@@ -528,6 +516,16 @@ table.info tr:nth-of-type( odd ) {
     background-color: #eee;
 }
 
+table.show_card {
+    max-width : 50%;
+    min-width : 300px;
+    border: 1px dotted;
+}
+
+table.show_card tr td {
+    font-size: x-small;
+    vertical-align:top;
+}
 
 table.admin {
     width : 80%;

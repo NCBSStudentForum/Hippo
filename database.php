@@ -2948,7 +2948,6 @@ function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
     return getTableEntries( 'jc_presentations' , 'date', $whereExpr );
 }
 
-
 function getUpcomingJCPresentationsOfUser( $presenter, $jcID, $date = 'today' )
 {
     $date = dbDate( $date );
@@ -2956,6 +2955,15 @@ function getUpcomingJCPresentationsOfUser( $presenter, $jcID, $date = 'today' )
         , 'date'
         , "date >= '$date' AND presenter='$presenter'
             AND jc_id='$jcID' AND status='VALID' "
+    );
+}
+
+function getUpcomingPresentationsOfUser( $presenter, $date = 'today' )
+{
+    $date = dbDate( $date );
+    return getTableEntries( 'jc_presentations'
+        , 'date'
+        , "date >= '$date' AND presenter='$presenter' AND status='VALID' "
     );
 }
 

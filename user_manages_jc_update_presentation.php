@@ -63,6 +63,17 @@ else if( __get__( $_POST, 'response', '' ) == 'Remove My Vote' )
         exit;
     }
 }
+else if( __get__( $_POST, 'response', '' ) == 'Acknowledge' )
+{
+    $_POST[ 'acknowledged' ] = 'YES';
+    $res = updateTable( 'jc_presentations', 'id', 'acknowledged', $_POST );
+    if( $res )
+    {
+        echo printInfo( 'Successfully acknowleged  your JC presentation.' );
+        //goToPage( 'user_manages_jc.php', 1 );
+        //exit;
+    }
+}
 else
 {
     echo alertUser(

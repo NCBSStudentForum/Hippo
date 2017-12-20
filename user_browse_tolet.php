@@ -17,15 +17,15 @@
 
         });
     }
-    google.maps.event.addDomListener(window, 'load', initialize); 
+    google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 -->
 
-<?php 
+<?php
 
-include_once( "header.php" );
-include_once( "methods.php" );
-include_once( "database.php" );
+include_once "header.php" ;
+include_once "methods.php" ;
+include_once "database.php" ;
 include_once 'tohtml.php';
 include_once 'mail.php';
 include_once 'check_access_permissions.php';
@@ -53,26 +53,23 @@ echo ' <h2>All available TO-LET listing </h2> ';
 
 $myApartments = getTableEntries( 'apartments', 'type,rent,advance', "status='AVAILABLE'" );
 
-echo printInfo( "Here you can send yourself details of a listing. Click on 
-    <button disabled>Email me</button> in front of an entry to send details to
-    yourself. Images will not be send.
-    " );
-
 echo '<div style="font-size:small;">';
-echo '<table border="0">';
+echo '<table class="sortable info">';
+
+$hide = 'status,last_modified_on,id';
+echo arrayToTHRow( $myApartments[0], 'info', $hide );
 foreach( $myApartments as $apt )
 {
     echo '<tr>';
     echo ' <form method="post" action=""> ';
-    echo '<td>' . arrayToTableHTML( $apt, 'info', ''
-                    , 'status,last_modified_on'  ) . '</td>';
-    echo ' <td>
-            <button name="response" value="Email me" > Email me </button> </td> ';
+    echo arrayToRowHTML( $apt, 'info', $hide, true, false );
+    echo '<td>';
+    echo ' <button name="response" value="Email me" > Email me </button> ';
+    echo '</td>';
     echo '<input type="hidden" name="id" value="' . $apt[ 'id' ] . '" />';
     echo ' </form> ';
     echo '</tr>';
 }
-    
 echo '</table>';
 echo '</div>';
 

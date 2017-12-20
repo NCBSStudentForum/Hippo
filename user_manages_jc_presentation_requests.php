@@ -45,7 +45,7 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
     $_POST[ 'status' ] = 'VALID';
     $res = insertOrUpdateTable( 'jc_requests'
         , 'id,jc_id,presenter,date,title,description,url'
-        , 'title,description,date,status,url'
+        , 'jc_id,title,description,date,status,url'
         , $_POST
     );
 
@@ -77,7 +77,7 @@ foreach( $requests as $i => $req )
     $req['votes'] = count( getVotes( 'jc_requests', $req['id'] ) );
 
     echo ' <form action="#" method="post" accept-charset="utf-8">';
-    echo arrayToTableHTML( $req, 'info', '' );
+    echo arrayToVerticalTableHTML( $req, 'info', '' );
     echo '</tr><tr>';
     echo "<td><button name='response' onclick='AreYouSure(this)'
             title='Cancel this request'>Cancel</button> </td>";

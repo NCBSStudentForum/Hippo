@@ -1543,8 +1543,15 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
             $res['id' ] = $data[ 'id' ];
         return $res;
     }
-
     return $res;
+}
+
+function getTableUniqueIndices( $tableName )
+{
+    return executeQuery( "SELECT DISTINCT CONSTRAINT_NAME
+        FROM information_schema.TABLE_CONSTRAINTS
+        WHERE table_name = '$tableName' AND constraint_type = 'UNIQUE'"
+    );
 }
 
 /**
@@ -1925,19 +1932,44 @@ function acceptScheduleOfAWS( $speaker, $date )
     return True;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Insert a query which user can execute by clicking on URL.
+    *
+    * @Param $who_can_execute
+    * @Param $external_id
+    * @Param $query
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
 function insertClickableQuery( $who_can_execute, $external_id, $query )
 {
-    $id = getUniqueID( 'queries' );
-    $res = insertOrUpdateTable(
-        'queries', 'id,who_can_execute,external_id,query,last_modified_on'
-        , 'last_modified_on'
-        , array( 'query' => $query
-            , 'external_id' => $external_id
-            , 'who_can_execute' => $who_can_execute
-            , 'last_modified_on' => dbDateTime( 'now' )
-            )
+    $data =  array(
+        'query' => $query
+        , 'external_id' => $external_id
+        , 'who_can_execute' => $who_can_execute
+        , 'last_modified_on' => dbDateTime( 'now' )
+        , 'status' => 'PENDING'
         );
-    return $id;
+
+    $res = getTableEntry('queries', 'who_can_execute,query,external_id,status', $data );
+    if( $res )
+    {
+        echo printInfo( "Clickable URL still unused." );
+        return $res['id'];
+    }
+
+    $data['id'] = getUniqueID( 'queries' );
+    $res = insertIntoTable( 'queries'
+        , 'id,who_can_execute,external_id,query,last_modified_on,status'
+        , $data
+        );
+
+    // Now fetch the query and return its ID. It may not be the ID which we have
+    // generated above. The UNIQUE contraints may not allow creating a new
+    // entry.
+    return $data[ 'id' ];
 }
 
 
@@ -2968,6 +3000,15 @@ function getUpcomingPresentationsOfUser( $presenter, $date = 'today' )
     return getTableEntries( 'jc_presentations'
         , 'date'
         , "date >= '$date' AND presenter='$presenter' AND status='VALID' "
+    );
+}
+
+function getJCPresentation( $jc, $user, $date )
+{
+    $date = dbDate( $date );
+    return getTableEntry( 'jc_presentations'
+        , 'date,jc_id,presenter'
+        , array( 'jc_id' => $jc, 'presenter' => $user, 'date' => $date )
     );
 }
 

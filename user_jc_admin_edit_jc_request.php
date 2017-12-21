@@ -83,7 +83,6 @@ else if( __get__( $_POST, 'response', '' ) == 'transfer_admin' )
         exit;
     }
 
-
     $jcID = $_POST[ 'jc_id'];
     // Check the new owner is already admin of this JC.
     $admins = getJCAdmins( $jcID );
@@ -98,20 +97,17 @@ else if( __get__( $_POST, 'response', '' ) == 'transfer_admin' )
                 Please pick someone else."
             );
             $continue = false;
-            goToPage( "user_jc_admin.php", 2 );
-            exit;
+            break;
         }
     }
 
     if( $continue )
     {
         // Add new user to admin.
-        $data = array( 'login' => newAdmin, 'subscription_type' => 'ADMIN' );
-        $res = updateTable( 'jc_subscriptions', 'login', 'subscription_type', $data );
-
-        // Remove myself.
-        $data = array( 'login' => whoAmI( ), 'subscription_type' => 'NORMAL' );
-        $res = updateTable( 'jc_subscriptions', 'login', 'subscription_type', $data );
+        $data = array( 'login' => newAdmin, 'subscription_type' => 'ADMIN'
+            , 'status' => 'VALID' , 'jc_id' => $jcID
+        );
+        $res = updateTable( 'jc_subscriptions', 'jc_id,login', 'status,subscription_type', $data );
 
         if( $res )
         {
@@ -123,8 +119,21 @@ else if( __get__( $_POST, 'response', '' ) == 'transfer_admin' )
 
             $cclist = 'hippo@lists.ncbs.res.in';
             $to = getLoginEmail( $newAdmin );
-            sendHTMLEmail( $msg, $subject, $to, $cclist );
-            goToPage( "user_jc_admin.php", 1 );
+            $res = sendHTMLEmail( $msg, $subject, $to, $cclist );
+            if( $res )
+                echo printInfo( "New admin has been notified" );
+        }
+
+        // Remove myself.
+        $data = array( 'login' => whoAmI( ), 'subscription_type' => 'NORMAL'
+            , 'status' => 'VALID' , 'jc_id' => $jcID
+        );
+        $res = updateTable( 'jc_subscriptions', 'login,jc_id', 'subscription_type', $data );
+
+        if( $res )
+        {
+            echo printInfo( "You are removed from ADMIN list of this JC" );
+            goToPage( "user_jc_admin.php", 3 );
             exit;
         }
     }

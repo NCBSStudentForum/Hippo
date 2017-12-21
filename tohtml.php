@@ -2274,4 +2274,10 @@ function queryToClickableURL( $qid, $msg = 'Click here' )
         href="' . $url . '" target="_blank">' . $msg . '</a>';
 }
 
+function addClickabelURLToMail( $html, $clickable )
+{
+    return $html . "<br /><div>" . $clickable . "</div>";
+}
+
+
 ?>

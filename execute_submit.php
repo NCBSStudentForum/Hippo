@@ -23,8 +23,9 @@ if( $_POST[ 'response' ] == 'Execute' )
     if( $res )
     {
         $_POST[ 'status' ] = 'EXECUTED';
-        updateTable( 'queries', 'id', 'status', $_POST );
-        echo printInfo( "Success!" );
+        $res = updateTable( 'queries', 'id', 'status', $_POST );
+        if( $res )
+            echo printInfo( "Success! " );
     }
 }
 

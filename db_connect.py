@@ -33,8 +33,14 @@ class MySQLCursorDict(mysql.connector.cursor.MySQLCursor):
         return None
 
 user = config.get( 'mysql', 'user' )
+host = config.get( 'mysql', 'host' ) 
 passwd = config.get( 'mysql', 'password' ).replace( '"', '')
-db_ = mysql.connector.connect( 
-        host = config.get( 'mysql', 'host' ) 
-        , user = user , password = passwd , db = 'hippo'
-        )
+try:
+    db_ = mysql.connector.connect( 
+            host = host
+            , user = user , password = passwd , db = 'hippo'
+            )
+except Exception as e:
+    print( 'Could not connect for %s@%s -p%s' % (user, host, passwd) )
+    print( 'Error was %s' % e )
+    quit( )

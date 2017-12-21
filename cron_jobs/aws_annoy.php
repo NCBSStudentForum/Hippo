@@ -1,6 +1,6 @@
 <?php
 
-require_once './cron_jobs/helper.php';
+require_once 'cron_jobs/helper.php';
 
 /*
  * Task 3: Annoy AWS speaker if they have not completed their entry.

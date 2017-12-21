@@ -21,10 +21,14 @@ export http_proxy=http://proxy.ncbs.res.in:3128
 export https_proxy=http://proxy.ncbs.res.in:3128
 LOG_FILE=/var/log/hippo.log
 
-log_msg "Running CRON hippo_cron.php"
-FILES=`find ${SCRIPT_DIR}/cron_jobs -name "*.php"`
-for _file in $FILES; do
-    log_msg "Executing $_file"
-    $PHP -f $_file
-    log_msg "Status of previous command $?"
-done
+# We must CD to script dir else include paths will not work.
+( 
+    cd $SCRIPT_DIR
+    log_msg "$USER running all cron jobs"
+    FILES=`find ${SCRIPT_DIR}/cron_jobs -name "*.php"`
+    for _file in $FILES; do
+        log_msg "Executing $_file"
+        $PHP -f $_file
+        log_msg "Status of previous command $?"
+    done
+)

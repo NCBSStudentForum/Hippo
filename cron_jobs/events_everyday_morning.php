@@ -1,6 +1,6 @@
 <?php
 
-require_once './cron_jobs/helper.php';
+require_once 'cron_jobs/helper.php';
 
 /*
  * Task 2. Send today's event every day at 8am.

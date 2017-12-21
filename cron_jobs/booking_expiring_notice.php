@@ -1,6 +1,6 @@
 <?php
 
-require './cron_jobs/helper.php';
+require 'cron_jobs/helper.php';
 
 /* Everyday check for recurrent events. On 7 days before last events send
  * and email to person who booked it.

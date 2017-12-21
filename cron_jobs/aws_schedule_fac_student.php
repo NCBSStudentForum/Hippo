@@ -1,6 +1,6 @@
 <?php
 
-require_once './cron_jobs/helper.php';
+require_once 'cron_jobs/helper.php';
 
 /* --------------------------------------------------------------------------*/
 /**

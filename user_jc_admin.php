@@ -59,23 +59,23 @@ $table .= '<td><button name="response" value="Assign Presentation">
     Assign</button></td>';
 $table .= '</tr></table>';
 
+// Manage ADMIN.
 echo '<form action="user_jc_admin_submit.php" method="post">';
 echo $table;
 echo '</form>';
 
 // For each JC for which user is admin, show the latest entry for editing.
 // NOTE: We assume that arrays are sorted according to DATE.
-echo printInfo( 'Ideally the presenter should update this entry. If presenter
-    has sent data over email then you need to edit this entry by yourself. Press
-    <button disabled>' .  $symbEdit . '</button> below  to update.'
-);
-
 echo '<table>';
 echo '<tr>';
+echo "<h2>Next presentation in your JCs</h2>";
 foreach( $upcomingJCs as $jcID => $upcomings )
 {
     if( count( $upcomings ) <  1 )
+    {
+        echo alertUser( "Nothing found for $jcID" );
         continue;
+    }
 
     echo '<td>';
     echo "<h3>Next week entry for $jcID </h3>";
@@ -90,11 +90,18 @@ echo '</table>';
 
 
 // Show current schedule.
-echo '<h2> Upcoming JC schedule </h2>';
+$tofilter = 'title,description,status,url,presentation_url';
+
+echo '<h2> Upcoming schedule </h2>';
 echo '<table class="show_info">';
 foreach( $upcomingJCs as $jcID => $upcomings )
 {
-    $tofilter = 'title,description,status,url,presentation_url';
+    if( count( $upcomings ) <  1 )
+    {
+        echo alertUser( "None found for $jcID" );
+        continue;
+    }
+
     echo arrayToTHRow( $upcomings[0], 'show_info', $tofilter );
     foreach( $upcomings as $i => $upcoming )
     {
@@ -102,15 +109,16 @@ foreach( $upcomingJCs as $jcID => $upcomings )
         echo '<form method="post" action="user_jc_admin_submit.php">';
         echo arrayToRowHTML( $upcoming, 'show_info', $tofilter,  false, false );
         echo '<td> <button name="response" value="Remove Presentation"
-                    title="Remove this schedule" >' . $symbDelete . '</button></td>';
+            title="Remove this schedule" >' . $symbDelete . '</button></td>';
 
         echo "<input type='hidden' name='id' value='"
-                . $upcoming['id'] . "' />";
+            . $upcoming['id'] . "' />";
         echo '</form>';
         echo '</tr>';
     }
 }
 echo '</table>';
+
 
 echo '<h1>List of presentation requests</h1>';
 echo printInfo( 'You can reschedule or cancel the request. Please let the

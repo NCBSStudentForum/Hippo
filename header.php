@@ -2,6 +2,7 @@
 
 <?php
 ob_start();
+set_include_path( __DIR__ . '/actions' );
 
 /**
  * @brief Return link to calendar.

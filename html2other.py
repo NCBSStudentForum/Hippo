@@ -52,11 +52,10 @@ def fix( msg ):
 def tomd( msg ):
     msg = fix( msg )
     # remove <div class="strip_from_md"> </div>
-    pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL ) 
+    pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
+
     for s in pat.findall( msg ):
         msg = msg.replace( s, '' )
-        print( '============' )
-        print( s )
 
 
     if PYMAJOR == 2:
@@ -78,6 +77,7 @@ def tomd( msg ):
         except Exception as e:
             _logger.warn( 'Failed to convert to html using html2text. %s' % e )
 
+    msg = msg.replace( r'\\', '' )
     return msg.decode( 'utf-8' )
 
 def fixInlineImage( msg ):

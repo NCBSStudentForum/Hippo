@@ -5,6 +5,7 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
 include_once 'mail.php';
+include_once 'actions/jc_admin.php';
 
 echo userHTML( );
 
@@ -43,13 +44,17 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
         if( ! $res )
             $anyWarning = true;
         else
+        {
             echo printInfo( "$login is successfully added to JC" );
+
+            // TODO: Notify user that he/she has been added to JC?
+        }
     }
 
     if( ! $anyWarning )
     {
-        //goToPage( "user_jc_admin.php", 1 );
-        //exit;
+        goToPage( "user_jc_admin.php", 1 );
+        exit;
     }
 }
 else if( $_POST['response'] == 'DO_NOTHING' )
@@ -71,48 +76,28 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'Assign Presentation' )
 {
-    $newId = getUniqueID( 'jc_presentations' );
-    $_POST[ 'title' ] = 'NA';
-    $_POST[ 'status' ] = 'VALID';
-    $_POST[ 'id' ] = $newId;
-
-    $res = insertOrUpdateTable( 'jc_presentations'
-        , 'id,presenter,jc_id,date,title', 'status'
-        , $_POST
-    );
-
-    echo printInfo( 'Assigning user ' . $_POST[ 'presenter' ] .
-        ' to present a paper' );
+    $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
+    if( $ers )
+    {
+        echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
+            ' to present a paper on ' . dbDate( $_POST['date' ] )
+        );
+    }
 
     // If res then send email
     if( $res )
     {
-        $macros = array(
-            'PRESENTER' => arrayToName( getLoginInfo( $_POST[ 'presenter' ] ) )
-            , 'THIS_JC' => $_POST[ 'jc_id' ]
-            , 'JC_ADMIN' => arrayToName( getLoginInfo( whoAmI( ) ) )
-            , 'DATE' => humanReadableDate( $_POST[ 'date' ] )
-        );
-
-        $mail = emailFromTemplate( 'NOTIFY_PRESENTER_JC_ASSIGNMENT', $macros );
-        $to = getLoginEmail( $_POST[ 'presenter' ] );
-        $cclist = $mail['cc'];
-        $subject = $_POST[ 'jc_id' ] . ' | Your presentation date has been fixed';
-
-        $res = sendHTMLEmail( $mail[ 'email_body' ], $subject, $to, $cclist );
-        if( $res )
-        {
-            echo printInfo( "Successfully assigned to schedule" );
-            goToPage( 'user_jc_admin.php', 1 );
-            exit;
-        }
+        echo printInfo( "Successfully assigned to schedule" );
+        //goToPage( 'user_jc_admin.php', 1 );
+        //exit;
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )
 {
-    $data = array( 'id' => $_POST[ 'id' ] );
+    $data = $_POST;
     $data[ 'status' ] = 'INVALID';
     $res = updateTable( 'jc_presentations', 'id', 'status', $data );
+
     if( $res )
     {
         $to = getLoginEmail( $data[ 'presenter' ] );
@@ -130,7 +115,7 @@ else if( $_POST[ 'response' ] == 'Remove Presentation' )
         {
             echo printInfo( "Successfully invalidated entry." );
             goToPage( 'user_jc_admin.php', 1 );
-            exit( 1 );
+            exit;
         }
     }
 }

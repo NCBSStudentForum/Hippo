@@ -241,9 +241,7 @@ function requestsToHTMLReviewForm( $requests )
         // Hide some buttons to send information to next page.
         $html .= '<input type="hidden" name="gid" value="' . $r['gid'] . '" />';
         $html .= '<input type="hidden" name="rid" value="' . $r['rid'] . '" />';
-        $html .= arrayToTableHTML( $r, 'events'
-                                   , ' ',  array( 'status', 'modified_by', 'timestamp', 'url' )
-                                 );
+        $html .= arrayToTableHTML( $r, 'events', '',  'status,modified_by,timestamp,url' );
         $html .= '</td>';
         $html .= '<td style="background:white">
                  <button name="response" value="Review">Review</button>
@@ -485,8 +483,8 @@ function readOnlyEventLineHTML( $date, $venueid )
     *
     * @return
  */
-function arrayToRowHTML( $array, $tablename
-    , $tobefilterd = '' , $linkify = true, $withtr=true )
+function arrayToRowHTML( $array, $tablename, $tobefilterd = ''
+    , $linkify = true, $withtr=true )
 {
     if( $withtr )
         $row = '<tr>';
@@ -500,8 +498,14 @@ function arrayToRowHTML( $array, $tablename
 
     $toDisplay = Array();
     foreach( $keys as $k )
+    {
+        // For cases if we ever want to wrap the table in a form. Good to carry
+        // arround the values.
+        $val = htmlspecialchars( __get__( $array, $k, '' ) );
+        $row .= '<input type="hidden" name="' . $k . '" value="'. $val . '" />';
         if( ! in_array( $k, $tobefilterd ) )
             $toDisplay[] = $array[ $k ];
+    }
 
     foreach( $toDisplay as $v )
     {
@@ -567,9 +571,6 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = f
 
     foreach( $keys as $k )
     {
-
-        // Create a hidden field just in case.
-        $hrow .= '<input type="hidden" name="' . $k . '"  value="' . __get__($array, $k) .'" />';
         if( ! in_array( $k, $tobefilterd ) )
         {
             $kval = prettify( $k );
@@ -596,9 +597,7 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = f
 
 function arrayToTHRow( $array, $tablename, $tobefilterd = '', $sort_button  = false )
 {
-    return arrayHeaderRow( $array, $tablename, $tobefilterd
-                , $sort_button
-            );
+    return arrayHeaderRow( $array, $tablename, $tobefilterd , $sort_button);
 }
 
 // Convert an array to HTML
@@ -617,7 +616,7 @@ function arrayToTableHTML( $array, $tablename, $background = ''
     if( $header )
     {
         $table .= "<tr>";
-        $table .= arrayHeaderRow( $array, $tablename, $tobefilterd );
+        $table .= arrayToTHRow( $array, $tablename, $tobefilterd );
         $table .= "</tr>";
     }
     $table .= arrayToRowHTML( $array, $tablename, $tobefilterd );
@@ -643,7 +642,8 @@ function arrayToVerticalTableHTML( $array, $tablename
     foreach( $keys as $k )
     {
         // Create a hidden field just in case.
-        $table .= '<input type="hidden" name="' . $k . '"  value="' . __get__($array, $k) .'" />';
+        $val = htmlspecialchars( __get__( $array, $k ) );
+        $table .= '<input type="hidden" name="' . $k . '"  value="' . $val .'" />';
         if( ! in_array( $k, $tobefilterd ) )
         {
             $table .= "<tr>";
@@ -2254,6 +2254,24 @@ function showConfigTableHTML( $configs = null )
     }
     $html .= '</table>';
     return $html;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Reutrn a clickable URL for a given query id.
+    *
+    * @Param $qid
+    * @Param $msg
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function queryURL( $qid, $msg = 'Click here' )
+{
+    $url = appRootDir( ) . '/execute_submit.php?id=' . $qid;
+    return '<a
+        style="border:1px solid;border-radius:5px;background-color:#cc0000;padding:10px 10px 10px 10px;"
+        href="' . $url . '" target="_blank">' . $msg . '</a>';
 }
 
 ?>

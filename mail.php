@@ -146,7 +146,6 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
         return false;
     }
 
-    echo printInfo( "... preparing email" );
     $timestamp = date( 'r', strtotime( 'now' ) );
 
     $msg .= mailFooter( );
@@ -182,6 +181,8 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     // generate md5 of email. And store it in archive.
     file_put_contents( $archivefile, "SENT" );
     unlink( $msgfile );
+
+    echo printInfo( "Email is sent! <br />" );
     return true;
 }
 

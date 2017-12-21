@@ -565,8 +565,8 @@ p.justify {
 
 
 p.info {
-    min-width : 90%;
-    max-width : var(--maxwidth);
+    min-width : 500px;
+    width: var(--maxwidth);
 }
 
 p.warn {

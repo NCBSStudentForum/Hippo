@@ -453,18 +453,6 @@ function initialize( $db  )
             )"
         );
 
-    // TODO: This table keep queries which user can excecute after login.
-    $res = $db->query( "
-        CREATE TABLE IF NOT EXISTS user_queries (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
-            , user VARCHAR(100) NOT NULL
-            , query_type VARCHAR(50) NOT NULL -- Which type of query
-            , query VARCHAR(1000) NOT NULL
-            , status ENUM( 'VALID', 'INVALID', 'EXECUTED' ) DEFAULT 'VALID'
-            , comment VARCHAR(200)
-            )"
-        );
-
     // This table keep journal club subscription
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS journal_clubs (
@@ -535,10 +523,11 @@ function initialize( $db  )
             id INT PRIMARY KEY
             , external_id VARCHAR(8)  -- associated table.id in some other table
             , who_can_execute VARCHAR(100) NOT NULL -- which login can execute.
-            , query VARCHAR(1000) NOT NULL -- query to execute.
+            , query VARCHAR(300) NOT NULL -- query to execute.
             , status ENUM( 'EXECUTED', 'INVALID', 'PENDING' ) DEFAULT 'PENDING'
-            , last_edited_on DATETIME
+            , last_modified_on DATETIME
             , edited_by VARCHAR(100) default 'HIPPO'
+            , UNIQUE KEY (who_can_execute,query)
             )"
         );
 

@@ -1928,12 +1928,16 @@ function acceptScheduleOfAWS( $speaker, $date )
 function insertClickableQuery( $who_can_execute, $external_id, $query )
 {
     $id = getUniqueID( 'queries' );
-    $res = insertIntoTable( 'queries', 'id,who_can_execute,external_id,query'
-        , array( 'query' => $query, 'external_id' => $external_id
+    $res = insertOrUpdateTable(
+        'queries', 'id,who_can_execute,external_id,query,last_modified_on'
+        , 'last_modified_on'
+        , array( 'query' => $query
+            , 'external_id' => $external_id
             , 'who_can_execute' => $who_can_execute
             , 'last_modified_on' => dbDateTime( 'now' )
             )
         );
+    return $id;
 }
 
 

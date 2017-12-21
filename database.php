@@ -1893,6 +1893,7 @@ function acceptScheduleOfAWS( $speaker, $date )
     $stmt->bindValue( ':speaker', $speaker );
     $stmt->bindValue( ':date', $date );
 
+    $awsID = -1;
     try {
 
         $res = $stmt->execute( );
@@ -1929,7 +1930,7 @@ function acceptScheduleOfAWS( $speaker, $date )
     }
 
     $db->commit( );
-    return True;
+    return $awsID;
 }
 
 /* --------------------------------------------------------------------------*/
@@ -3151,7 +3152,7 @@ function getConfigValue( $key, $config = null )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function getClickableURL( $idOrExternalId )
+function getQueryWithIdOrExtId( $idOrExternalId )
 {
     $query = executeQuery(
         "SELECT  * FROM queries WHERE
@@ -3160,11 +3161,10 @@ function getClickableURL( $idOrExternalId )
         );
 
     if( ! $query )
-        return '';
+        return -1;
 
     $url = appRootDir( ) . '/execute.php?id=' . $query['id'];
-    $html = '<a href="$url" target="_blank">' . $url . '</a>';
-    return $html;
+    return $url;
 }
 
 function getActiveJCs( )

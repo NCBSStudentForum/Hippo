@@ -279,12 +279,19 @@ function sendPlainTextEmail($msg, $sub, $to, $cclist='', $attachment = null)
     return true;
 }
 
-function notifyFacultyAboutAWS( $email, $aws )
-{
 
-}
-
-function notifyUserAboutUpcomingAWS( $speaker, $date )
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Notify user about Upcoming AWS.
+    *
+    * @Param $speaker
+    * @Param $date
+    * @Param $aws_id
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function notifyUserAboutUpcomingAWS( $speaker, $date, $aws_id = -1 )
 {
     // Now insert a entry into email database.
     $templ = getEmailTemplateById( 'aws_confirmed_notify_speaker' );
@@ -299,11 +306,18 @@ function notifyUserAboutUpcomingAWS( $speaker, $date )
     if( $pi )
         $templ[ 'cc' ] = $templ[ 'cc' ] . ",$pi";
 
+    // check if there is any clickable url in queries table.
+    if( $aws_id >= 0 )
+    {
+        $qID = getQueryWithIdOrExtId( 'upcoming_aws.' . $aws_id );
+        if( $qID >= 0 )
+            $msg = addClickabelURLToMail( $msg, queryToClickableURL( $qid, 'Click here to acknowledge' ) );
+    }
+
     return sendHTMLEmail( $msg
         , 'ATTN! Your AWS date has been fixed'
         , $to , $templ[ 'cc' ]
         );
 }
-
 
 ?>

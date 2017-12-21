@@ -38,8 +38,11 @@ echo '
   <table border="0" class="admin">
     <tr>
       <td>Manage upcoming AWS</td>
-      <td><a href="admin_acad_manages_upcoming_aws.php">Manage
-      upcoming AWSes</a></td>
+      <td>
+        <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+        <a href="admin_acad_manages_upcoming_aws.php">
+        Manage upcoming AWSes</a>
+        </td>
     </tr>
     <tr>
         <td>Manage AWS scheduling requests</td>

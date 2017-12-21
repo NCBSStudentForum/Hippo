@@ -22,9 +22,9 @@ else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )
     $speaker = $_POST[ 'speaker' ];
     $date = $_POST[ 'date' ];
     echo printInfo( "Assigning $speaker to $date" );
-    $res = acceptScheduleOfAWS( $speaker, $date );
+    $awsID = acceptScheduleOfAWS( $speaker, $date );
 
-    if( $res )
+    if( $awsID >= 0 )
     {
         echo printInfo( "Successfully assigned" );
 
@@ -34,7 +34,7 @@ else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )
             rescheduleAWS( );
 
         // Send email to user.
-        $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ] );
+        $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ], $awsID );
         if( $res )
         {
             goToPage( "admin_acad_manages_upcoming_aws.php", 1 );

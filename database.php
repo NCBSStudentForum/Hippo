@@ -1473,7 +1473,7 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
     foreach( $keys as $k )
     {
         // If values for this key in $data is null then don't use it here.
-        if( $data[$k] && strlen( $data[ $k ] ) > 0 )
+        if( __get__($data, $k, '' ) )
         {
             array_push( $cols, "$k" );
             array_push( $values, ":$k" );

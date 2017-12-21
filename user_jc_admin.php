@@ -36,11 +36,9 @@ $upcomingJCs = array( );
 foreach( $jcIds as $jc_id )
 {
     $today = dbDate( 'today' );
-    $upcoming = getTableEntries(
-        'jc_presentations'
-        , 'date'
-        , "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
-    );
+    $upcoming = getTableEntries( 'jc_presentations'
+        , 'date', "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
+        );
     sortByKey( $upcoming, 'date' );
     $upcomingJCs[ $jc_id ] = $upcoming;
 }

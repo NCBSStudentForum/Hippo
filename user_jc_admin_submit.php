@@ -77,7 +77,7 @@ else if( $_POST['response'] == 'delete' )
 else if( $_POST['response'] == 'Assign Presentation' )
 {
     $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
-    if( $ers )
+    if( $res )
     {
         echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
             ' to present a paper on ' . dbDate( $_POST['date' ] )

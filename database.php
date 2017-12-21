@@ -2972,6 +2972,16 @@ function getMyJCs( )
     return getUserJCs( $_SESSION[ 'user' ] );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get JC presentations for given Journal Club for given day.
+    *
+    * @Param $jcID
+    * @Param $date
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
 function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
 {
     $date = dbDate( $date );
@@ -3003,13 +3013,44 @@ function getUpcomingPresentationsOfUser( $presenter, $date = 'today' )
     );
 }
 
-function getJCPresentation( $jc, $user, $date )
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get JC presentations.
+    *
+    * @Param $jc
+    * @Param $user
+    * @Param $date
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function getJCPresentation( $jc, $user = '', $date = 'today' )
 {
     $date = dbDate( $date );
-    return getTableEntry( 'jc_presentations'
-        , 'date,jc_id,presenter'
+    $keys = 'jc_id,date';
+
+    if( $user )
+        $keys .= ',user';
+
+    return getTableEntry( 'jc_presentations', $keys
         , array( 'jc_id' => $jc, 'presenter' => $user, 'date' => $date )
     );
+}
+
+function getJCPresentations( $jc, $date = '', $presenter = '' )
+{
+    $whereExpr = "status='VALUD' AND jc_id='$jc' ";
+    if( $date )
+    {
+        $date = dbDate( $date );
+        $whereExpr .= " AND date='$date' ";
+    }
+
+    if( $user )
+        $whereExpr .= " AND presenter='$presenter' ";
+
+    return getTableEntries( 'jc_presentations', 'date', $whereExpr );
+
 }
 
 
@@ -3037,12 +3078,14 @@ function getJCSubscriptions( $jc_id )
 
 }
 
-function getAllPresentationsBefore( $date )
+function getAllPresentationsBefore( $date, $presenter = '' )
 {
     $date = dbDate( $date );
-    return getTableEntries( 'jc_presentations'
-        , 'date', "status='VALID' AND date <= '$date'"
-    );
+    $whereExpr = " status='VALID' AND date <= '$date' ";
+    if( $user )
+        $whereExpr .= " AND presenter='$user' ";
+
+    return getTableEntries( 'jc_presentations', 'date', $whereExpr );
 }
 
 function getAllAdminsOfJC( $jc_id )
@@ -3123,5 +3166,47 @@ function getClickableURL( $idOrExternalId )
     $html = '<a href="$url" target="_blank">' . $url . '</a>';
     return $html;
 }
+
+function getActiveJCs( )
+{
+    return getTableEntries( 'journal_clubs', 'id', "status='ACTIVE'" );
+}
+
+function pickPresenter( $jcID, $picker = 'round_robin', $gap_between_presentations_in_months = 6 )
+{
+    $logins = getJCSubscriptions( $jcID );
+
+    $suitable = array( );
+    foreach( $logins as $login )
+    {
+        $presenter = $login[ 'login' ];
+        $onOrBefore = strtotime( 'now' ) + $gap_between_presentations_in_months * 30 * 24 * 3600;
+
+        // Get presentations of this USER in lats
+        // gap_between_presentations_in_months months. It does not matter in
+        // which JC she has given presentations.
+        $presentations = getAllPresentationsBefore( $onOrBefore, $presenter );
+        if( count( $presentations )  > 0 )
+            continue;
+
+        $upcoming = getUpcomingJCPresentationsOfUser(  $jcID, $presenter );
+        if( $upcoming )
+        {
+            echo printInfo( "user $presenter has upcoming JC" );
+            continue;
+        }
+
+        $suitable[] = $presenter;
+        if( $picker == 'round_robin' )
+        {
+            return $presenter;
+        }
+    }
+
+    // Else return a random sample.
+    $res =  array_rand( $suitable, 1 );
+    return $res[0];
+}
+
 
 ?>

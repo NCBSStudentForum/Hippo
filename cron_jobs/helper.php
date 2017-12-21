@@ -26,4 +26,10 @@ function trueOnGivenDayAndTime( $day, $time )
     return false;
 }
 
+function isNowEqualsGivenDayAndTime( $day, $time )
+{
+    return trueOnGivenDayAndTime( $day, $time );
+
+}
+
 ?>

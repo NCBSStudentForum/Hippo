@@ -499,10 +499,6 @@ function arrayToRowHTML( $array, $tablename, $tobefilterd = ''
     $toDisplay = Array();
     foreach( $keys as $k )
     {
-        // For cases if we ever want to wrap the table in a form. Good to carry
-        // arround the values.
-        $val = htmlspecialchars( __get__( $array, $k, '' ) );
-        $row .= '<input type="hidden" name="' . $k . '" value="'. $val . '" />';
         if( ! in_array( $k, $tobefilterd ) )
             $toDisplay[] = $array[ $k ];
     }

@@ -37,10 +37,12 @@ foreach( $myCourses as $c )
     else
     {
         // This course is no longer running. Drop it.
-        updateTable( 'course_registration', 'student_id,year,semester,course_id'
+        updateTable( 
+            'course_registration'
+            , 'student_id,year,semester,course_id'
             , 'status'
             , array( 'student_id' => $_SESSION[ 'user' ], 'year' => $year
-                , 'semster' => $sem, 'course_id' => $c[ 'course_id' ]
+                , 'semester' => $sem, 'course_id' => $c[ 'course_id' ]
                 , 'status' => 'INVALID'
             )
         );
@@ -153,9 +155,12 @@ foreach( $myCourses as $c )
 
     $cid = $c[ 'course_id' ];
     $course = getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
+    if( ! $course )
+        continue;
 
     // If more than 30 days have passed, do not allow dropping courses.
-    if( strtotime( 'today' ) > strtotime( '+30 day',strtotime($runningCourses[ $cid][ 'start_date' ])))
+    if( strtotime( 'today' ) > 
+        strtotime( '+30 day',strtotime($runningCourses[ $cid][ 'start_date' ])))
         $action = '';
 
     // TODO: Don't show grades unless student has given feedback.

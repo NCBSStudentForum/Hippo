@@ -1196,11 +1196,7 @@ function loginToHTML( $login, $withEmail = true ) {
         return $login;
 
     // Return first name + middle name + last name.
-    $name = array( );
-    foreach( explode( ',', 'first_name,middle_name,last_name' ) as $key )
-        if( array_key_exists( $key, $user ) )
-            array_push( $name, $user[ $key ] );
-    $text = implode( ' ', $name );
+    $text = fixName( arrayToName( $user ) );
 
     if( $withEmail )
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
@@ -1209,7 +1205,7 @@ function loginToHTML( $login, $withEmail = true ) {
     if( strlen( trim($text) ) < 1 )
         return $login;
 
-    return fixName( $text );
+    return $text;
 }
 
 /**
@@ -1515,7 +1511,7 @@ function talkToHTML( $talk, $with_picture = false )
 
     $title = '(' . __ucwords__($talk[ 'class' ]) . ') ' . $talk[ 'title' ];
 
-    $html = '<div style="width:550px;text-align:justify">';
+    $html = '<div style="width:600px">';
     $html .= '<table border="0"><tr>';
     $html .= '<td colspan="2"><h1 class="title">' . $title . '</h1></td>';
     $html .= "</tr><tr>";
@@ -1536,9 +1532,9 @@ function talkToHTML( $talk, $with_picture = false )
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )
-        $html .= '<br><br> Supervisor: ' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br><br><strong>Supervisor:</strong>' . loginToHTML( $talk[ 'host' ] );
     else
-        $html .= '<br><br> Host: ' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br><br><strong>Host:</strong> ' . loginToHTML( $talk[ 'host' ] );
 
     $html .= '<br><br>';
     $html .= '<div style="font-variant:small-caps;text-decoration:none;">';

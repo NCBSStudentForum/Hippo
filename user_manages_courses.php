@@ -159,7 +159,7 @@ foreach( $myCourses as $c )
         $action = ''; 
 
     // TODO: Don't show grades unless student has given feedback.
-    if( strlen( $c[ 'grade' ] == 0 ) )
+    if( strlen( $c[ 'grade' ] ) == 0 )
         $tofilter .= ',grade,grade_is_given_on';
 
     echo dbTableToHTMLTable( 'course_registration', $c, '', $action, $tofilter );

@@ -22,14 +22,10 @@ if PYMAJOR == 2:
 
 import os
 import re
-import textwrap
 import html2text
-import pypandoc
 import string
-import codecs
 import tempfile
 import base64
-import locale
 from logger import _logger
 
 pandoc_ = True
@@ -77,7 +73,7 @@ def tomd( msg ):
         except Exception as e:
             _logger.warn( 'Failed to convert to html using html2text. %s' % e )
 
-    msg = msg.replace( r'\\', '' )
+    msg = re.sub( r'\\+\n', '\n', msg )
     return msg.decode( 'utf-8' )
 
 def fixInlineImage( msg ):

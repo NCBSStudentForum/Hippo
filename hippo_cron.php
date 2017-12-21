@@ -632,7 +632,7 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
 // Send reminder about today JC.
 if( trueOnGivenDayAndTime( 'today', '9:00' ) )
 {
-    printInfo( "9am. Check for today's presentations' );
+    printInfo( "9am. Check for today's presentations" );
     $upcomingPresentations = getUpcomingJCPresentations( );
     foreach( $upcomingPresentations as $i => $presentation )
     {

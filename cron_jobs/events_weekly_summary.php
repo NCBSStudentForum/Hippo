@@ -1,6 +1,6 @@
 <?php
 
-require_once './cron_jobs/helper.php';
+require_once 'cron_jobs/helper.php';
 
 if( trueOnGivenDayAndTime( 'this sunday', '7:00 pm' ) )
 {

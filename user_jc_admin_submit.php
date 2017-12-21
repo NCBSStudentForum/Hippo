@@ -82,14 +82,8 @@ else if( $_POST['response'] == 'Assign Presentation' )
         echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
             ' to present a paper on ' . dbDate( $_POST['date' ] )
         );
-    }
-
-    // If res then send email
-    if( $res )
-    {
-        echo printInfo( "Successfully assigned to schedule" );
-        //goToPage( 'user_jc_admin.php', 1 );
-        //exit;
+        goToPage( 'user_jc_admin.php', 1 );
+        exit;
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )

@@ -60,8 +60,6 @@ function fixJCSchedule( $login, $data )
     $body = $mail[ 'email_body' ];
     $body = addClickabelURLToMail( $body, $clickableURL );
     $res = sendHTMLEmail( $body, $subject, $to, $cclist );
-
-    echo "<tt> $body </tt>";
     return $res;
 }
 

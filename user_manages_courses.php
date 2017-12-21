@@ -29,19 +29,19 @@ $myCourses = getMyCourses( $sem, $year, $user = $_SESSION[ 'user' ] );
 $mySlots = array( );
 foreach( $myCourses as $c )
 {
-    // Get the running courses.  In rare case, use may have enrolled in course 
+    // Get the running courses.  In rare case, use may have enrolled in course
     // which is not running anymore.
     $course = __get__( $runningCourses, $c['course_id'], null );
     if( $course )
         $mySlots[ ] = $runningCourses[ $c[ 'course_id' ] ]['slot'];
-    else 
+    else
     {
         // This course is no longer running. Drop it.
         updateTable( 'course_registration', 'student_id,year,semester,course_id'
             , 'status'
             , array( 'student_id' => $_SESSION[ 'user' ], 'year' => $year
                 , 'semster' => $sem, 'course_id' => $c[ 'course_id' ]
-                , 'status' => 'INVALID' 
+                , 'status' => 'INVALID'
             )
         );
     }
@@ -80,11 +80,11 @@ foreach( $runningCourses as $c )
             $blockedCourses[ $cid ] = $cname;
             continue;
         }
-        
+
         if( $cid )
         {
             $options[] = $cid ;
-            $courseMap[ $cid ] = getCourseName( $cid ) . 
+            $courseMap[ $cid ] = getCourseName( $cid ) .
                 " (slot " . getCourseSlotTiles( $c ) . ")";
         }
     }
@@ -93,7 +93,7 @@ foreach( $runningCourses as $c )
 // Get the list of valid courses.
 echo "<h2>Registration form</h2>";
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
-$default = array( 'student_id' => $_SESSION[ 'user' ] 
+$default = array( 'student_id' => $_SESSION[ 'user' ]
                 , 'semester' => $sem
                 , 'year' => $year
                 , 'course_id' => $courseSelect
@@ -101,7 +101,7 @@ $default = array( 'student_id' => $_SESSION[ 'user' ]
 echo '<form method="post" action="user_manages_courses_action.php">';
 echo dbTableToHTMLTable( 'course_registration'
     , $default
-    , 'course_id:required,type' 
+    , 'course_id:required,type'
     , 'submit'
     , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
 );
@@ -124,18 +124,18 @@ if( count( $myCourses ) > 0 )
     echo "<h1>You are registered for following courses for $sem $year</h1>";
 
     // Show user which slots have been blocked.
-    echo alertUser( 
-        "You have registered for courses running on following slots: " 
+    echo alertUser(
+        "You have registered for courses running on following slots: "
         . implode( ", ", $mySlots )
-        . ". <br> All courses running these slots will not appear in your 
+        . ". <br> All courses running these slots will not appear in your
         registration form."
         );
 }
 
 // Dropping policy
 echo printInfo( "
-    <h3>Policy for dropping courses </h3> 
-    Upto 30 days from starting of course, you are free to drop a course. 
+    <h3>Policy for dropping courses </h3>
+    Upto 30 days from starting of course, you are free to drop a course.
     After that, you need to write to your course instructor and academic office.
     " );
 
@@ -154,11 +154,12 @@ foreach( $myCourses as $c )
     $cid = $c[ 'course_id' ];
     $course = getTableEntry( 'courses_metadata', 'id', array( 'id' => $cid ) );
 
-    // If more than 30 days have passed, do not allow dropping courses. 
+    // If more than 30 days have passed, do not allow dropping courses.
     if( strtotime( 'today' ) > strtotime( '+30 day',strtotime($runningCourses[ $cid][ 'start_date' ])))
-        $action = ''; 
+        $action = '';
 
     // TODO: Don't show grades unless student has given feedback.
+    $tofilter = 'student_id,registered_on,last_modified_on';
     if( strlen( $c[ 'grade' ] ) == 0 )
         $tofilter .= ',grade,grade_is_given_on';
 
@@ -168,7 +169,7 @@ foreach( $myCourses as $c )
 
     $count += 1;
 }
-    
+
 echo '</tr></table>';
 echo '</div>';
 

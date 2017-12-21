@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+PHP=/usr/bin/php
 if [ -d /opt/rh/rh-php56 ]; then
     source /opt/rh/rh-php56/enable
+    PHP=/opt/rh/rh-php56/root/usr/bin/php
 fi
 
 
@@ -21,7 +23,8 @@ LOG_FILE=/var/log/hippo.log
 
 log_msg "Running CRON hippo_cron.php"
 FILES=`find ${SCRIPT_DIR}/cron_jobs -name "*.php"`
-for cronf in $FILES; do
-    log_msg "Executing $cronf"
-    php -f $cronf
+for _file in $FILES; do
+    log_msg "Executing $_file"
+    $PHP -f $_file
+    log_msg "Status of previous command $?"
 done

@@ -3083,8 +3083,8 @@ function getAllPresentationsBefore( $date, $presenter = '' )
 {
     $date = dbDate( $date );
     $whereExpr = " status='VALID' AND date <= '$date' ";
-    if( $user )
-        $whereExpr .= " AND presenter='$user' ";
+    if( $presenter )
+        $whereExpr .= " AND presenter='$presenter' ";
 
     return getTableEntries( 'jc_presentations', 'date', $whereExpr );
 }

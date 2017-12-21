@@ -77,7 +77,8 @@ foreach( $requests as $i => $req )
     $req['votes'] = count( getVotes( 'jc_requests', $req['id'] ) );
 
     echo ' <form action="#" method="post" accept-charset="utf-8">';
-    echo arrayToVerticalTableHTML( $req, 'info', '' );
+    // set last argument to true to has hidden value in table.
+    echo arrayToVerticalTableHTML( $req, 'info', '', '', true );
     echo '</tr><tr>';
     echo "<td><button name='response' onclick='AreYouSure(this)'
             title='Cancel this request'>Cancel</button> </td>";

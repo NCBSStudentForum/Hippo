@@ -17,10 +17,9 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 }
 
 // Otherwise continue.
-$jcs = getJCForWhichUserIsAdmin( $_SESSION['user'] );
+$jcs = getJCForWhichUserIsAdmin( whoAmI( ) );
 $jcIds = array_map( function( $x ) { return $x['jc_id']; }, $jcs );
 $jcSelect = arrayToSelectList( 'jc_id', $jcIds, array(), false, $jcIds[0] );
-
 
 $allPresentations = getAllPresentationsBefore( 'today' );
 
@@ -42,6 +41,7 @@ foreach( $jcIds as $jc_id )
     sortByKey( $upcoming, 'date' );
     $upcomingJCs[ $jc_id ] = $upcoming;
 }
+
 
 echo '<h1>Schedule JC presentations</h1>';
 // Manage presentation.
@@ -117,6 +117,8 @@ foreach( $upcomingJCs as $jcID => $upcomings )
 }
 echo '</table>';
 
+echo ' <br />';
+echo goBackToPageLink( 'user.php', 'Go Back' );
 
 echo '<h1>List of presentation requests</h1>';
 echo printInfo( 'You can reschedule or cancel the request. Please let the
@@ -152,7 +154,8 @@ foreach( $requests as $i => $req )
 echo '</table>';
 
 
-
+echo ' <br />';
+echo goBackToPageLink( 'user.php', 'Go Back' );
 echo "<h1>Manage subscriptions</h1>";
 
 // Show table and task here.

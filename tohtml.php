@@ -626,7 +626,9 @@ function arrayToTableHTML( $array, $tablename, $background = ''
 
 // Convert an array to HTML table (vertical)
 function arrayToVerticalTableHTML( $array, $tablename
-                                   , $background = NULL, $tobefilterd = '' )
+    , $background = NULL, $tobefilterd = ''
+    , $with_hidden_input = false
+)
 {
     if( $background )
         $background = "style=\"background:$background;\"";
@@ -641,9 +643,12 @@ function arrayToVerticalTableHTML( $array, $tablename
     $toDisplay = Array();
     foreach( $keys as $k )
     {
-        // Create a hidden field just in case.
-        $val = htmlspecialchars( __get__( $array, $k ) );
-        $table .= '<input type="hidden" name="' . $k . '"  value="' . $val .'" />';
+        if( $with_hidden_input )
+        {
+            // Create a hidden field just in case.
+            $val = htmlspecialchars( __get__( $array, $k ) );
+            $table .= '<input type="hidden" name="' . $k . '"  value="' . $val .'" />';
+        }
         if( ! in_array( $k, $tobefilterd ) )
         {
             $table .= "<tr>";

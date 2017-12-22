@@ -204,7 +204,7 @@ function executeQuery( $query )
 {
     global $db;
     $res = $db->query( $query );
-    return $res;
+    return fetchEntries( $res );
 }
 
 function getVenuesByType( $type )
@@ -1884,6 +1884,20 @@ function getUpcomingAWSById( $id )
 function acceptScheduleOfAWS( $speaker, $date )
 {
     global $db;
+
+    // If there is already a schedule for this person.
+    $res = getTableEntry( 'upcoming_aws', 'speaker,date'
+        , array( 'speaker' => $speaker, 'date' => dbDate( $date ) )
+    );
+
+    if( $res )
+    {
+        echo printInfo( "Already assigned for $speaker on $date" );
+        return $res[ 'id' ];
+    }
+
+    // Else add to table.
+
     $db->beginTransaction( );
 
     $stmt = $db->prepare(
@@ -3154,17 +3168,16 @@ function getConfigValue( $key, $config = null )
 /* ----------------------------------------------------------------------------*/
 function getQueryWithIdOrExtId( $idOrExternalId )
 {
-    $query = executeQuery(
+    $res = executeQuery(
         "SELECT  * FROM queries WHERE
         (id='$idOrExternalId' OR external_id='$idOrExternalId')
             AND status='PENDING'"
         );
 
-    if( ! $query )
+    if( ! $res )
         return -1;
 
-    $url = appRootDir( ) . '/execute.php?id=' . $query['id'];
-    return $url;
+    return intval( $res[0]['id'] );
 }
 
 function getActiveJCs( )

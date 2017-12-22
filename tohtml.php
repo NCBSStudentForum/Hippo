@@ -2265,7 +2265,7 @@ function showConfigTableHTML( $configs = null )
 /* ----------------------------------------------------------------------------*/
 function queryToClickableURL( $qid, $msg = 'Click here' )
 {
-    $url = appRootDir( ) . '/execute.php?id=' . $qid;
+    $url = appURL( ) . '/execute.php?id=' . $qid;
     return '<a
         style="border:1px solid;border-radius:5px;background-color:#cc0000;padding:10px 10px 10px 10px;"
         href="' . $url . '" target="_blank">' . $msg . '</a>';

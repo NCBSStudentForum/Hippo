@@ -62,7 +62,7 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
                 alt="Subscribe to public events">
             </a></td>
     -->
-    <td> <a href="https://github.dilawar.io/Hippo" target="_blank" >Docs</a></td>
+    <td> <a href="https://dilawar.github.io/Hippo" target="_blank" >Docs</a></td>
     </tr>
 </table>
 </div>

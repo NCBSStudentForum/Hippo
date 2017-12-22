@@ -181,7 +181,7 @@ function appURL( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
-    $baseurl = appRootDir( );
+    $baseurl = appURL( );
 
     $url = '';
     if( __substr__( 'http', $page ) )

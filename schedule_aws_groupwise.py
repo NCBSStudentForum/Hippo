@@ -35,9 +35,6 @@ import networkx as nx
 import random
 import compute_cost
 
-random.seed( 2017 )
-np.random.seed( 2017 )
-
 fmt_ = '%Y-%m-%d'
 
 cwd = os.path.dirname( os.path.realpath( __file__ ) )

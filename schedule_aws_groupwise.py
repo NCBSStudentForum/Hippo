@@ -34,8 +34,8 @@ import networkx as nx
 import random
 import compute_cost
 
-random.seed( 2017 )
-np.random.seed( 2017 )
+random.seed( 0 )
+np.random.seed( 0 )
 
 fmt_ = '%Y-%m-%d'
 

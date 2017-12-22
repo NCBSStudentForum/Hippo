@@ -154,7 +154,6 @@ def getAllAWSPlusUpcoming( ):
             if specialization and specialization != 'UNSPECIFIED':
                 speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
 
-
     for a in aws_:
         # Sort a list in place.
         aws_[a].sort( key = lambda x : x['date'] )
@@ -376,8 +375,10 @@ def construct_flow_graph(  ):
 
     for speaker in speakers_:
         speakerSpecialization = speakersSpecialization_.get( speaker, '' )
-        preferences = aws_scheduling_requests_.get( speaker, {} )
+        if speakersSpecialization == 'UNSPECIFIED':
+            continue
 
+        preferences = aws_scheduling_requests_.get( speaker, {} )
         if preferences:
             _logger.info( "%s has preferences %s " % (speaker,preferences) )
 

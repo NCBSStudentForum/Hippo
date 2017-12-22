@@ -38,7 +38,7 @@ def computeCost( slot_date, lastDate, nAWS ):
     if ndays < 365.0:
         cost = max_cost_
     else:
-        cost = min(max_cost_, calc_cost( nyears, nAWS ))
+        cost =  calc_cost( nyears, nAWS )
 
     return int( cost )
 

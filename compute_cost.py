@@ -19,22 +19,28 @@ import math
 
 __fmt__ = '%Y-%m-%d'
 
+max_cost_ = 500
+
 def calc_cost( gap, naws ):
     x0 = max( 1.0, naws * 0.6 )
     c = (gap - x0)  ** 2.0
-    return c
+    return 100 * c
+
+def maxCost( ):
+    global max_cost_
+    return max_cost_
 
 def computeCost( slot_date, lastDate, nAWS ):
+    global max_cost_
     ndays = ( slot_date - lastDate ).days
     nyears = ndays / 365.0
-    maxCost = 5
     cost = 0
     if ndays < 365.0:
-        cost = maxCost
+        cost = max_cost_
     else:
-        cost = min(maxCost, calc_cost( nyears, nAWS ))
+        cost = min(max_cost_, calc_cost( nyears, nAWS ))
 
-    return int(100*cost)
+    return int( cost )
 
 def random_date(start, end):
     """

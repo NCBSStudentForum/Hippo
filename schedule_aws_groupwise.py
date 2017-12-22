@@ -30,11 +30,13 @@ import copy
 import tempfile
 from logger import _logger
 from db_connect import db_
+import copy
 import networkx as nx
 import random
 import compute_cost
 
 random.seed( 2017 )
+np.random.seed( 2017 )
 
 fmt_ = '%Y-%m-%d'
 
@@ -388,9 +390,10 @@ def construct_flow_graph(  ):
 
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
-            # If this slot does not belong to some specialization then ignore
-            # it.
+            # If this slot does not belong to some specialization then assign
+            # maximum cost to this.
             if g_.node[ slot ]['specialization'] != speakerSpecialization:
+                addEdge(speaker, slot, 1, compute_cost.maxCost( ) )
                 continue
 
             date = g_.node[ slot ][ 'date' ]
@@ -610,12 +613,13 @@ def avoidClusteringOfFreshers( schedule ):
 
     return schedule
 
-def getMatches( res, g):
+def getMatches( res ):
     """
     In this case residue is date in values and not in keys. Compare with
     getMatches
     """
-    gg = g.copy( )
+    global g_
+    gg = g_.copy( )
     result = defaultdict( list )
     for u in res:
         if u in [ 'sink', 'source']:
@@ -632,16 +636,18 @@ def getMatches( res, g):
                 # Remove this user as well. He is taken.
                 gg.remove_node( u )
 
-    for n in gg.nodes( ):
-        if gg.nodes[n].get( 'date', False):
-            # This slot is still not assigned. Let get all the potential
-            # speakers for this slot.
-            neighs = [ u for (u,v) in gg.in_edges( n ) ]
-            if not neighs:
-                continue
-            # Else get one from these.
-            date, slot = n.split( ',' )
-            result[date].append( neighs[0] )
+    ## If a slot is empty, it did not have enough edges in first palce.
+    ## for n in gg.nodes( ):
+    ##     if gg.node[n].get( 'date', False):
+    ##         # This slot is still not assigned. Let get all the potential
+    ##         # speakers for this slot.
+    ##         neighs = [ u for (u,v) in gg.in_edges( n ) ]
+    ##         _logger.warning( '%s Slot can have these %s' % (n, neighs) )
+    ##         if not neighs:
+    ##             continue
+    ##         # Else get one from these.
+    ##         date, slot = n.split( ',' )
+    ##         result[date].append( neighs[0] )
     return result
 
 def cost_of_flow( g, res ):
@@ -662,7 +668,7 @@ def computeSchedule( ):
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
-    sch = getMatches( res, g_ )
+    sch = getMatches( res )
     _logger.warn( 'Cost of flow %f' % cost_of_flow( g_, res ) )
     return sch
 
@@ -713,15 +719,9 @@ def main( outfile ):
     _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )
     ans = None
-    try:
-        construct_flow_graph( )
-        ans = computeSchedule( )
-    except Exception as e:
-        _logger.warn( "Failed to schedule. Error was %s" % e )
-    try:
-        print_schedule( ans, outfile )
-    except Exception as e:
-        _logger.error( "Could not print schedule. %s" % e )
+    construct_flow_graph( )
+    ans = computeSchedule( )
+    print_schedule( ans, outfile )
 
     if ans:
         commit_schedule( ans )

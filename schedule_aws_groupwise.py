@@ -412,13 +412,13 @@ def construct_flow_graph(  ):
                     first = preferences.get( 'first_preference', None )
                     second = preferences.get( 'second_preference', None )
                     if first:
-                        ndays = diffInDays(date, first, True)
-                        if ndays <= 14:
+                        ndays = diffInDays(date, first)
+                        if ndays >= 0:
                             _logger.debug( 'Using first preference for %s' % speaker )
                             addEdge(speaker, slot, 1, 0 + ndays / 7 )
                     if second:
-                        ndays = diffInDays(date, second, True)
-                        if ndays <= 14:
+                        ndays = diffInDays(date, second)
+                        if ndays >= 0:
                             _logger.info( 'Using second preference for %s' % speaker )
                             addEdge(speaker, slot, 1, 2 + ndays / 7 )
 

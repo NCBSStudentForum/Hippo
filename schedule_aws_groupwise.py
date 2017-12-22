@@ -375,7 +375,7 @@ def construct_flow_graph(  ):
 
     for speaker in speakers_:
         speakerSpecialization = speakersSpecialization_.get( speaker, '' )
-        if speakersSpecialization == 'UNSPECIFIED':
+        if speakerSpecialization == 'UNSPECIFIED':
             continue
 
         preferences = aws_scheduling_requests_.get( speaker, {} )

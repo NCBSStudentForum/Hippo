@@ -307,11 +307,11 @@ function notifyUserAboutUpcomingAWS( $speaker, $date, $aws_id = -1 )
         $templ[ 'cc' ] = $templ[ 'cc' ] . ",$pi";
 
     // check if there is any clickable url in queries table.
-    if( $aws_id >= 0 )
+    if( intval($aws_id) >= 0 )
     {
         $qID = getQueryWithIdOrExtId( 'upcoming_aws.' . $aws_id );
         if( $qID >= 0 )
-            $msg = addClickabelURLToMail( $msg, queryToClickableURL( $qid, 'Click here to acknowledge' ) );
+            $msg = addClickabelURLToMail( $msg, queryToClickableURL( $qID, 'Click here to acknowledge' ) );
     }
 
     return sendHTMLEmail( $msg

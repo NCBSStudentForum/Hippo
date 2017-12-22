@@ -21,7 +21,6 @@ else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )
 {
     $speaker = $_POST[ 'speaker' ];
     $date = $_POST[ 'date' ];
-    echo printInfo( "Assigning $speaker to $date" );
     $awsID = acceptScheduleOfAWS( $speaker, $date );
 
     if( $awsID >= 0 )

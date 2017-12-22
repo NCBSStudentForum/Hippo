@@ -35,7 +35,6 @@ import random
 import compute_cost
 
 random.seed( 2017 )
-np.random.seed( 2017 )
 
 fmt_ = '%Y-%m-%d'
 
@@ -336,7 +335,7 @@ def construct_flow_graph(  ):
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
 
     # Compute totalWeeks of schedule starting today.
-    totalWeeks = int( 365 / 7.0 )
+    totalWeeks = 30
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
@@ -611,13 +610,12 @@ def avoidClusteringOfFreshers( schedule ):
 
     return schedule
 
-
-def getMatches( res ):
+def getMatches( res, g):
     """
     In this case residue is date in values and not in keys. Compare with
     getMatches
     """
-
+    gg = g.copy( )
     result = defaultdict( list )
     for u in res:
         if u in [ 'sink', 'source']:
@@ -629,7 +627,34 @@ def getMatches( res ):
             if f > 0:
                 date, slot = v.split(',')
                 result[date].append( u )
+                # Remove v. This slot has been assigned.
+                gg.remove_node( v )
+                # Remove this user as well. He is taken.
+                gg.remove_node( u )
+
+    for n in gg.nodes( ):
+        if gg.nodes[n].get( 'date', False):
+            # This slot is still not assigned. Let get all the potential
+            # speakers for this slot.
+            neighs = [ u for (u,v) in gg.in_edges( n ) ]
+            if not neighs:
+                continue
+            # Else get one from these.
+            date, slot = n.split( ',' )
+            result[date].append( neighs[0] )
     return result
+
+def cost_of_flow( g, res ):
+    cost = 0.0
+    for u in res:
+        if u in [ 'sink', 'source' ]:
+            continue
+        for v in res[u]:
+            if v in [ 'source' , 'sink' ]:
+                continue
+            cost += float( g[u][v]['weight'] )
+    return cost
+
 
 def computeSchedule( ):
     global g_
@@ -637,9 +662,8 @@ def computeSchedule( ):
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
-    _logger.warn( 'Cost of flow %f' % nx.cost_of_flow( g_, res ) )
-    _logger.info( '\t Computed. Getting schedules now ...' )
-    sch = getMatches( res )
+    sch = getMatches( res, g_ )
+    _logger.warn( 'Cost of flow %f' % cost_of_flow( g_, res ) )
     return sch
 
 def print_schedule( schedule, outfile ):

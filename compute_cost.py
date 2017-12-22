@@ -1,7 +1,7 @@
-"""compute_cost.py: 
+"""compute_cost.py:
 
 """
-    
+
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh"
 __credits__          = ["NCBS Bangalore"]
@@ -19,24 +19,26 @@ import math
 
 __fmt__ = '%Y-%m-%d'
 
-def parabola( x0, offset, x ):
-    ys = offset + offset * (x-x0) ** 2.0
-    return ys
+def calc_cost( gap, naws ):
+    x0 = max( 1.0, naws * 0.5 )
+    c = (gap - x0)  ** 2.0
+    return c
+
 
 def computeCost( slot_date, lastDate, nAWS ):
-    ndays = ( slot_date - lastDate ).days 
+    ndays = ( slot_date - lastDate ).days
     nyears = ndays / 365.0
     cost = 0
     if ndays < 365.0:
-        cost = 15
+        cost = 10
     else:
-        cost = parabola( nAWS, nAWS + 1, nyears ) 
+        cost = calc_cost( nyears, nAWS )
 
     return int(10 * cost)
 
 def random_date(start, end):
     """
-    This function will return a random datetime between two datetime 
+    This function will return a random datetime between two datetime
     objects.
     """
     delta = end - start
@@ -45,8 +47,14 @@ def random_date(start, end):
     return start + datetime.timedelta(seconds=random_second)
 
 def test( ):
-    import pylab
-    pylab.style.use( 'ggplot' )
+    import matplotlib as mpl
+    mpl.use( "Agg" )
+    import matplotlib.pyplot as plt
+    mpl.style.use( 'bmh' )
+    mpl.rcParams['axes.linewidth'] = 0.2
+    mpl.rcParams['lines.linewidth'] = 1.0
+    mpl.rcParams['text.usetex'] = False
+
     # Generate random test data.
     start = datetime.datetime.strptime( '2017-03-18', __fmt__ )
     end = datetime.datetime.strptime( '2021-03-18', __fmt__  )
@@ -56,12 +64,12 @@ def test( ):
             date = start + datetime.timedelta( days = i * 7 )
             xval.append( (date - start).days / 365.0 )
             yval.append( computeCost( date, start, naws ) )
-        pylab.xlabel( 'Gap in years between slot and last AWS' )
-        pylab.ylabel( 'Cost' )
-        pylab.plot( xval, yval, alpha = 0.7, label = '#AWS = %d' % naws )
-        pylab.legend( framealpha = 0.4, fontsize = 8 )
+        plt.xlabel( 'Gap in years between slot and last AWS' )
+        plt.ylabel( 'Cost' )
+        plt.plot( xval, yval, alpha = 0.7, label = '#AWS = %d' % naws )
+        plt.legend( framealpha = 0.4, fontsize = 8 )
 
-    pylab.savefig( "%s.png" % sys.argv[0] )
+    plt.savefig( "%s.png" % sys.argv[0] )
 
 
 if __name__ == '__main__':

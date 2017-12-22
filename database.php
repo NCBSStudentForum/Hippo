@@ -3006,7 +3006,9 @@ function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
         $whereExpr .= " AND jc_id='$jcID' ";
 
     $whereExpr .= " AND status='VALID'";
-    return getTableEntries( 'jc_presentations' , 'date', $whereExpr );
+    $jcs = getTableEntries( 'jc_presentations' , 'date', $whereExpr );
+    sortByKey( $jcs, 'date' );
+    return $jcs;
 }
 
 function getUpcomingJCPresentationsOfUser( $presenter, $jcID, $date = 'today' )

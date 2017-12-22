@@ -375,6 +375,7 @@ def construct_flow_graph(  ):
     # Keep edges from freshers to dates here. We allow maximum of 2 out of 3
     # slots to be taken by freshers (maximum ).
     freshersDate = defaultdict( list )
+
     for speaker in speakers_:
         speakerSpecialization = speakersSpecialization_.get( speaker, '' )
         preferences = aws_scheduling_requests_.get( speaker, {} )
@@ -395,41 +396,32 @@ def construct_flow_graph(  ):
 
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
-            if weight:
-                # If the speaker is fresher, do not draw edges to all three
-                # slots. Draw just one but make sure that they get this slot. We
-                # reduce the cost to almost zero.
-                if speaker in freshers:
-                    # Let two freshers take maximum of two slots on same day.
-                    # The weight should be low but not lower than user
-                    # preference.
-                    if freshersDate.get(speaker, []).count( date ) < 2:
-                        addEdge(speaker, slot, 1, 5 )
-                        # This date is taken by this fresher.
-                        freshersDate[ speaker ].append( date )
-                else:
-                    addEdge(speaker, slot, 1, weight )
-
-                # Honour user preferences..
-                if preferences:
-                    first = preferences.get( 'first_preference', None )
-                    second = preferences.get( 'second_preference', None )
-                    if first:
-                        ndays = diffInDays(date, first)
-                        if ndays >= 0:
-                            _logger.debug( 'Using first preference for %s' % speaker )
-                            addEdge(speaker, slot, 1, 0 + ndays / 7 )
-                    if second:
-                        ndays = diffInDays(date, second)
-                        if ndays >= 0:
-                            _logger.info( 'Using second preference for %s' % speaker )
-                            addEdge(speaker, slot, 1, 2 + ndays / 7 )
+            if weight is None:
+                continue
+            addEdge(speaker, slot, 1, weight )
+            # Honour user preferences..
+            if preferences:
+                first = preferences.get( 'first_preference', None )
+                second = preferences.get( 'second_preference', None )
+                if first:
+                    ndays = diffInDays(date, first)
+                    if ndays >= 0:
+                        _logger.debug( 'Using first preference for %s' % speaker )
+                        addEdge(speaker, slot, 1, 0 + ndays / 7 )
+                if second:
+                    ndays = diffInDays(date, second)
+                    if ndays >= 0:
+                        _logger.info( 'Using second preference for %s' % speaker )
+                        addEdge(speaker, slot, 1, 2 + ndays / 7 )
 
     # Each slot node must have at least 3 nodes.
+    degs = [ ]
     for slot in slots:
         inDegree = g_.in_degree( slot )
-        assert inDegree >= 3, "Each slot must have 3 options"
+        degs.append(  (slot, inDegree) )
+        assert inDegree >= 3, "Each slot must at least 3 speakers assigned."
 
+    print( sorted(degs) )
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
@@ -444,7 +436,7 @@ def addEdge( speaker, slot, capacity, weight ):
     whichSlot = int( slot.split( ',' )[-1] )
     g_.add_edge( speaker, slot, capacity = 1, weight = weight + whichSlot )
 
-def write_graph( outfile  = 'network.dot' ):
+def write_graph( outfile  = '/tmp/network.dot' ):
     # Convert datetime to string before writing to file.
     # This operation should be done at the very end.
     # This operation should be done at the very end.

@@ -315,7 +315,7 @@ def construct_flow_graph(  ):
             # We are here because this speaker has given AWS before
             # If this speaker is already on upcoming AWS list, ignore it.
             if speaker in upcoming_aws_:
-                _logger.info(
+                _logger.warn(
                         'Speaker %s is already scheduled on %s' % (
                             speaker, upcoming_aws_[ speaker ]
                             )
@@ -421,7 +421,7 @@ def construct_flow_graph(  ):
         degs.append(  (slot, inDegree) )
         assert inDegree >= 3, "Each slot must at least 3 speakers assigned."
 
-    print( sorted(degs) )
+    _logger.debug( sorted(degs) )
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
@@ -637,6 +637,7 @@ def computeSchedule( ):
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
+    _logger.warn( 'Cost of flow %f' % nx.cost_of_flow( g_, res ) )
     _logger.info( '\t Computed. Getting schedules now ...' )
     sch = getMatches( res )
     return sch

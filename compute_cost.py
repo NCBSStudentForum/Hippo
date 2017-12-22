@@ -24,7 +24,6 @@ def calc_cost( gap, naws ):
     c = (gap - x0)  ** 2.0
     return c
 
-
 def computeCost( slot_date, lastDate, nAWS ):
     ndays = ( slot_date - lastDate ).days
     nyears = ndays / 365.0
@@ -34,7 +33,7 @@ def computeCost( slot_date, lastDate, nAWS ):
     else:
         cost = calc_cost( nyears, nAWS )
 
-    return int(10 * cost)
+    return int(10*cost)
 
 def random_date(start, end):
     """

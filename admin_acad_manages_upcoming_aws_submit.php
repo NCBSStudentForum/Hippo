@@ -1,6 +1,5 @@
 <?php
 
-include_once 'header.php';
 include_once 'database.php';
 include_once 'methods.php';
 include_once "check_access_permissions.php";
@@ -68,10 +67,13 @@ else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
     if( $res )
     {
         echo printInfo(
-            "Successfully removed user from AWS list.
+            "Successfully removed user " . $_POST[ 'speaker' ] . " from AWS list.
             Recomputing schedule ... "
             );
-        ob_flush( );
+
+        // And reschedule AWS entry.
+        rescheduleAWS( );
+
         // Send email to speaker.
         $subject = "Your name has been removed from AWS list";
         $msg = "<p>Dear " . loginToText( $_POST[ 'speaker' ] ) . " </p>";
@@ -81,12 +83,12 @@ else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
             </p>";
 
         $to = getLoginEmail( $_POST[ 'speaker' ] );
-        sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+        $res = sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+        if( ! $res )
+            echo printWarning( "Could not notify user" );
 
-        // And reschedule AWS entry.
-        rescheduleAWS( );
         goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
-        exit;
+        exit(1);
     }
 }
 

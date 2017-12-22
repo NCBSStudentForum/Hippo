@@ -181,13 +181,21 @@ function appURL( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
-    echo printInfo( "Going to page $page in $delay seconds" );
     $baseurl = appRootDir( );
-    if( strpos( $page, "http" ) == 0 )
+
+    $url = '';
+    if( __substr__( 'http', $page ) )
         $url = $page;
     else
-        $url = "$baseurl/$page";
-    header("Refresh: $delay, url=$url");
+        $url = $baseurl . "/" . $page;
+
+    try {
+        header("Refresh: $delay, url=$url");
+
+    } catch (Exception $e) {
+        echo printWarning( "Failed to redirect" );
+        return;
+    }
 }
 
 function __get__( $arr, $what, $default = NULL )

@@ -30,7 +30,6 @@ import copy
 import tempfile
 from logger import _logger
 from db_connect import db_
-import copy
 import networkx as nx
 import random
 import compute_cost
@@ -153,6 +152,7 @@ def getAllAWSPlusUpcoming( ):
             specialization = spec.get('specialization', 'UNSPECIFIED' )
             if specialization and specialization != 'UNSPECIFIED':
                 speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
+
 
     for a in aws_:
         # Sort a list in place.
@@ -312,7 +312,7 @@ def construct_flow_graph(  ):
             # We are here because this speaker has given AWS before
             # If this speaker is already on upcoming AWS list, ignore it.
             if speaker in upcoming_aws_:
-                _logger.warn(
+                _logger.info(
                         'Speaker %s is already scheduled on %s' % (
                             speaker, upcoming_aws_[ speaker ]
                             )
@@ -333,7 +333,7 @@ def construct_flow_graph(  ):
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
 
     # Compute totalWeeks of schedule starting today.
-    totalWeeks = 30
+    totalWeeks = int( 365 / 7.0 )
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
@@ -372,13 +372,10 @@ def construct_flow_graph(  ):
     # Keep edges from freshers to dates here. We allow maximum of 2 out of 3
     # slots to be taken by freshers (maximum ).
     freshersDate = defaultdict( list )
-
     for speaker in speakers_:
         speakerSpecialization = speakersSpecialization_.get( speaker, '' )
-        if speakerSpecialization == 'UNSPECIFIED':
-            continue
-
         preferences = aws_scheduling_requests_.get( speaker, {} )
+
         if preferences:
             _logger.info( "%s has preferences %s " % (speaker,preferences) )
 
@@ -388,40 +385,48 @@ def construct_flow_graph(  ):
 
         prevAWSDate = g_.node[ speaker ][ 'last_date' ]
         for slot in slots:
-            # If this slot does not belong to some specialization then assign
-            # maximum cost to this.
+            # If this slot does not belong to some specialization then ignore
+            # it.
             if g_.node[ slot ]['specialization'] != speakerSpecialization:
-                addEdge(speaker, slot, 1, compute_cost.maxCost( ) )
                 continue
 
             date = g_.node[ slot ][ 'date' ]
             weight = computeCost( speaker, date, prevAWSDate )
-            if weight is None:
-                continue
-            addEdge(speaker, slot, 1, weight )
-            # Honour user preferences..
-            if preferences:
-                first = preferences.get( 'first_preference', None )
-                second = preferences.get( 'second_preference', None )
-                if first:
-                    ndays = diffInDays(date, first)
-                    if ndays >= 0:
-                        _logger.debug( 'Using first preference for %s' % speaker )
-                        addEdge(speaker, slot, 1, 0 + ndays / 7 )
-                if second:
-                    ndays = diffInDays(date, second)
-                    if ndays >= 0:
-                        _logger.info( 'Using second preference for %s' % speaker )
-                        addEdge(speaker, slot, 1, 2 + ndays / 7 )
+            if weight:
+                # If the speaker is fresher, do not draw edges to all three
+                # slots. Draw just one but make sure that they get this slot. We
+                # reduce the cost to almost zero.
+                if speaker in freshers:
+                    # Let two freshers take maximum of two slots on same day.
+                    # The weight should be low but not lower than user
+                    # preference.
+                    if freshersDate.get(speaker, []).count( date ) < 2:
+                        addEdge(speaker, slot, 1, 5 )
+                        # This date is taken by this fresher.
+                        freshersDate[ speaker ].append( date )
+                else:
+                    addEdge(speaker, slot, 1, weight )
+
+                # Honour user preferences..
+                if preferences:
+                    first = preferences.get( 'first_preference', None )
+                    second = preferences.get( 'second_preference', None )
+                    if first:
+                        ndays = diffInDays(date, first, True)
+                        if ndays <= 14:
+                            _logger.debug( 'Using first preference for %s' % speaker )
+                            addEdge(speaker, slot, 1, 0 + ndays / 7 )
+                    if second:
+                        ndays = diffInDays(date, second, True)
+                        if ndays <= 14:
+                            _logger.info( 'Using second preference for %s' % speaker )
+                            addEdge(speaker, slot, 1, 2 + ndays / 7 )
 
     # Each slot node must have at least 3 nodes.
-    degs = [ ]
     for slot in slots:
         inDegree = g_.in_degree( slot )
-        degs.append(  (slot, inDegree) )
-        assert inDegree >= 3, "Each slot must at least 3 speakers assigned."
+        assert inDegree >= 3, "Each slot must have 3 options"
 
-    _logger.debug( sorted(degs) )
     _logger.info( 'Constructed flow graph' )
 
 def addEdge( speaker, slot, capacity, weight ):
@@ -436,7 +441,7 @@ def addEdge( speaker, slot, capacity, weight ):
     whichSlot = int( slot.split( ',' )[-1] )
     g_.add_edge( speaker, slot, capacity = 1, weight = weight + whichSlot )
 
-def write_graph( outfile  = '/tmp/network.dot' ):
+def write_graph( outfile  = 'network.dot' ):
     # Convert datetime to string before writing to file.
     # This operation should be done at the very end.
     # This operation should be done at the very end.
@@ -611,13 +616,13 @@ def avoidClusteringOfFreshers( schedule ):
 
     return schedule
 
+
 def getMatches( res ):
     """
     In this case residue is date in values and not in keys. Compare with
     getMatches
     """
-    global g_
-    gg = g_.copy( )
+
     result = defaultdict( list )
     for u in res:
         if u in [ 'sink', 'source']:
@@ -629,36 +634,7 @@ def getMatches( res ):
             if f > 0:
                 date, slot = v.split(',')
                 result[date].append( u )
-                # Remove v. This slot has been assigned.
-                gg.remove_node( v )
-                # Remove this user as well. He is taken.
-                gg.remove_node( u )
-
-    ## If a slot is empty, it did not have enough edges in first palce.
-    ## for n in gg.nodes( ):
-    ##     if gg.node[n].get( 'date', False):
-    ##         # This slot is still not assigned. Let get all the potential
-    ##         # speakers for this slot.
-    ##         neighs = [ u for (u,v) in gg.in_edges( n ) ]
-    ##         _logger.warning( '%s Slot can have these %s' % (n, neighs) )
-    ##         if not neighs:
-    ##             continue
-    ##         # Else get one from these.
-    ##         date, slot = n.split( ',' )
-    ##         result[date].append( neighs[0] )
     return result
-
-def cost_of_flow( g, res ):
-    cost = 0.0
-    for u in res:
-        if u in [ 'sink', 'source' ]:
-            continue
-        for v in res[u]:
-            if v in [ 'source' , 'sink' ]:
-                continue
-            cost += float( g[u][v]['weight'] )
-    return cost
-
 
 def computeSchedule( ):
     global g_
@@ -666,8 +642,8 @@ def computeSchedule( ):
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
     res = nx.max_flow_min_cost( g_, 'source', 'sink' )
+    _logger.info( '\t Computed. Getting schedules now ...' )
     sch = getMatches( res )
-    _logger.warn( 'Cost of flow %f' % cost_of_flow( g_, res ) )
     return sch
 
 def print_schedule( schedule, outfile ):
@@ -717,9 +693,15 @@ def main( outfile ):
     _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )
     ans = None
-    construct_flow_graph( )
-    ans = computeSchedule( )
-    print_schedule( ans, outfile )
+    try:
+        construct_flow_graph( )
+        ans = computeSchedule( )
+    except Exception as e:
+        _logger.warn( "Failed to schedule. Error was %s" % e )
+    try:
+        print_schedule( ans, outfile )
+    except Exception as e:
+        _logger.error( "Could not print schedule. %s" % e )
 
     if ans:
         commit_schedule( ans )

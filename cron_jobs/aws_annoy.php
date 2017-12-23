@@ -51,8 +51,9 @@ if( trueOnGivenDayAndTime( 'today', '10:00' ) )
     $dayNo = date( 'N', strtotime( 'today' ) );
     // Send this reminder only on Monday and Friday only.
     // 1. Is monday, 7 is sunday.
-    if( ($dayNo + 3) % 4 == 0 )
+    if( ($dayNo + 3) % 4 == 0 ) // Monday and Friday.
     {
+        error_log( "Checking for upcoming aws which has not been acknowleged" );
         echo printInfo( "Checking for upcoming aws which has not been acknowleged" );
 
         // Get all events which are grouped.

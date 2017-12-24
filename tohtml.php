@@ -775,12 +775,10 @@ function editor_script( $id, $default = '' )
         tinymce.init( { selector : '#" . $id . "'
         , init_instance_callback: \"insert_content\"
         , plugins : [ 'image imagetools link paste code wordcount fullscreen table' ]
-        , paste_as_text : false
+        , paste_as_text : true
         , height : 300
         , paste_data_images: true
         , cleanup : true
-        , paste_auto_cleanup_on_paste : true
-        , paste_use_dialog: true
         , verify_html : false
         , cleanup_on_startup : false
         , toolbar1 : 'undo redo | insert | stylesheet | bold italic'

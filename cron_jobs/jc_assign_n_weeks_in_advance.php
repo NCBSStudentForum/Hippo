@@ -21,8 +21,8 @@ foreach( $jcs as $jc )
 
     if( isNowEqualsGivenDayAndTime( $jcDay, '10:00' ) )
     {
+        error_log( "Scheduling for $jcID" );
         echo printInfo( "Scheduling for $jcID" );
-
         // check if there is anyone scheduled on nWeeksFromjcDay
         $schedule = getJCPresentations( $jcID, $nWeeksFromjcDay, '' );
         if( count( $schedule ) > 0 )

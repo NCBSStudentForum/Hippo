@@ -20,7 +20,8 @@ import math
 __fmt__ = '%Y-%m-%d'
 
 def parabola( x0, offset, x ):
-    ys = offset + offset * (x-x0) ** 2.0
+    minX = x0 * 0.6
+    ys = offset + offset * (x-minX) ** 2.0
     return ys
 
 def computeCost( slot_date, lastDate, nAWS ):
@@ -31,8 +32,8 @@ def computeCost( slot_date, lastDate, nAWS ):
         cost = 15
     else:
         cost = parabola( nAWS, nAWS + 1, nyears )
-
     return int(10 * cost)
+
 
 def random_date(start, end):
     """
@@ -45,8 +46,12 @@ def random_date(start, end):
     return start + datetime.timedelta(seconds=random_second)
 
 def test( ):
-    import pylab
-    pylab.style.use( 'ggplot' )
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    mpl.style.use( 'bmh' )
+    mpl.rcParams['axes.linewidth'] = 0.2
+    mpl.rcParams['lines.linewidth'] = 1.0
+    mpl.rcParams['text.usetex'] = False
     # Generate random test data.
     start = datetime.datetime.strptime( '2017-03-18', __fmt__ )
     end = datetime.datetime.strptime( '2021-03-18', __fmt__  )
@@ -56,12 +61,12 @@ def test( ):
             date = start + datetime.timedelta( days = i * 7 )
             xval.append( (date - start).days / 365.0 )
             yval.append( computeCost( date, start, naws ) )
-        pylab.xlabel( 'Gap in years between slot and last AWS' )
-        pylab.ylabel( 'Cost' )
-        pylab.plot( xval, yval, alpha = 0.7, label = '#AWS = %d' % naws )
-        pylab.legend( framealpha = 0.4, fontsize = 8 )
+        plt.xlabel( 'Gap in years between slot and last AWS' )
+        plt.ylabel( 'Cost' )
+        plt.plot( xval, yval, alpha = 0.7, label = '#AWS = %d' % naws )
+        plt.legend( framealpha = 0.4, fontsize = 8 )
 
-    pylab.savefig( "%s.png" % sys.argv[0] )
+    plt.savefig( "%s.png" % sys.argv[0] )
 
 
 if __name__ == '__main__':

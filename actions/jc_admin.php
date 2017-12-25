@@ -32,7 +32,7 @@ function fixJCSchedule( $login, $data )
     $macros = array(
         'PRESENTER' => arrayToName( getLoginInfo( $login ) )
         , 'THIS_JC' => $data[ 'jc_id' ]
-        , 'JC_ADMIN' => arrayToName( getLoginInfo( whoAmI( ) ) )
+        , 'JC_ADMIN' => arrayToName( getLoginInfo( whoAmI( ) ) ) or 'NCBS Hippo'
         , 'DATE' => humanReadableDate( $data[ 'date' ] )
     );
 

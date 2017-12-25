@@ -77,10 +77,13 @@ foreach( $awsGroupedBySpeaker as $speaker => $awses )
     $speaker = getLoginInfo( $speaker );
     $fname = $speaker['first_name'];
     $lname = $speaker['last_name'];
-    $login = $speaker['login'];
+    $login = __get__( $speaker, 'login', '' );
+    if( ! $login )
+        continue;
 
+    $piOrHost = $speaker[ 'pi_or_host'];
     $table .= "<tr> <td>$i</td> <td> " . $fname . ' ' . $lname 
-                . "<br><small> $login </small>" . "</td>";
+                . "<br><small> PI: $piOrHost </small>" . "</td>";
     $when = array( );
     foreach( $awses as $aws )
     {

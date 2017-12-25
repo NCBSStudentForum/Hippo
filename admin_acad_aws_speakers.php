@@ -53,10 +53,13 @@ $( function() {
 // If pi_or_host is not found, use ldap info.
 foreach( $speakerPiMap as $pi => $logins )
 {
-    if( ! $pi or $pi == 'UNSPECIFIED' or strpos( $pi, '@' ) === false )
+    if( (! $pi) or $pi == 'UNSPECIFIED' or strpos( $pi, '@' ) === false )
     {
         foreach( $logins as $login )
         {
+            if( ! $login['login'] )
+                continue;
+
             $ldap = getUserInfoFromLdap( $login[ 'login' ] );
             $email = getEmailByName( $ldap[ 'laboffice' ] );
             if( $email )
@@ -75,9 +78,7 @@ foreach( $speakerPiMap as $pi => $logins )
             }
         }
     }
-
 }
-
 
 
 /**

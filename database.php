@@ -2798,6 +2798,14 @@ function getPIOrHost( $login )
     if( count( $awses ) > 0 )
     {
         $mostRecentAWS = $awses[0];
+        $piOrHost = $mostRecentAWS[ 'supervisor_1'];
+        if( $piOrHost )
+        {
+            // Update PI or HOST table.
+            updateTable( 'logins', 'login', 'pi_or_host'
+                , array( 'login' => $login, 'pi_or_host' => $piOrHost )
+            );
+        }
         return $mostRecentAWS[ 'supervisor_1'];
     }
 

@@ -11,9 +11,10 @@ require_once 'cron_jobs/helper.php';
     * @Param 'today'
  */
 /* ----------------------------------------------------------------------------*/
-if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
+if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
 {
-    printInfo( ' Monday and 9am. Send todays AWSes to academic' );
+    printInfo( ' Monday and 9am. Tell faculty that their lab has been selected.' );
+
     // Get the monday after 10 weeks.
     $afterNWeeks = dbDate( strtotime( 'this monday' ) + 10 * 7 * 86400 );
     echo printInfo( "Today is wednedsay and after 10 weeks $afterNWeeks" );
@@ -69,7 +70,7 @@ if( trueOnGivenDayAndTime( 'this monday', '9:00 am' ) )
         // Send email.
         $to = $piOrHost;
         $subject = "Your lab has been assigned Annual Work Seminar slot(s) on $afterNWeeks";
-        sendHTMLEmail( $temp['email_body'], $subject, $to, $templ[ 'cc' ] );
+        sendHTMLEmail( $templ['email_body'], $subject, $to, $templ[ 'cc' ] );
     }
 }
 

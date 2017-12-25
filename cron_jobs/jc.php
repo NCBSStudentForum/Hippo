@@ -15,6 +15,9 @@ if( trueOnGivenDayAndTime( 'today', '15:00' ) )
 
     foreach( $upcomingPresentations as $i => $presentation )
     {
+        if(! $presentation[ 'presenter'] )
+            continue;
+
         // If they are exactly after 3 days; send an email.
         if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 3 )
         {

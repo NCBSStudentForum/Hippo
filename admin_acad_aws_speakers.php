@@ -62,9 +62,16 @@ foreach( $speakerPiMap as $pi => $logins )
             if( $email )
             {
                 // Update the table with laboffice from intranet.
-                updateTable( 'logins', 'login', 'pi_or_host'
+                $res = updateTable( 'logins', 'login', 'pi_or_host'
                     , array( 'login' => $login[ 'login' ], 'pi_or_host' => $email )
                 );
+
+                if( $res )
+                {
+                    echo printInfo(
+                        "Successfully updated PI_OR_HOST for " . $login[ 'login' ] .  " to $email"
+                    );
+                }
             }
         }
     }

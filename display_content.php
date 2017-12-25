@@ -18,8 +18,8 @@ function printWarning($msg)
 
 function printInfo( $msg )
 {
-    $info ="<p class=\"info\">".$msg."<br></p>";
     error_log( $msg );
+    $info ="<p class=\"info\">".$msg."<br></p>";
     return $info;
 }
 

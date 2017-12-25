@@ -36,6 +36,9 @@ import compute_cost
 
 fmt_ = '%Y-%m-%d'
 
+random.seed( 0 )
+np.random.seed( 0 )
+
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
 sys.path.insert(0, networkxPath )

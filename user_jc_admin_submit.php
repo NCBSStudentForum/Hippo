@@ -72,6 +72,7 @@ else if( $_POST['response'] == 'delete' )
     {
         echo printInfo( ' ... success.' );
         goToPage( 'user_jc_admin.php', 1 );
+        exit;
     }
 }
 else if( $_POST['response'] == 'Assign Presentation' )

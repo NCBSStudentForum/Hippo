@@ -196,6 +196,7 @@ foreach( $jcIds as $currentJC )
             , 'PI/HOST' => getPIOrHost( $login )
             , '#Presentations' => $numPresentations
             , 'Last Presented On' => humanReadableDate( $lastPresentedOn )
+            , 'status' => $sub['status']
             //, 'Months On Campus' => diffDates( 'today', $info['joined_on'], 'month' )
         );
         $allSubs[] = $row;

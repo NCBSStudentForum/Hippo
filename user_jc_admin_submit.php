@@ -65,12 +65,13 @@ else if( $_POST['response'] == 'DO_NOTHING' )
 }
 else if( $_POST['response'] == 'delete' )
 {
+    var_dump( $_POST );
     echo printInfo( "Removing user from subscription list" );
     $_POST[ 'status' ] = 'UNSUBSCRIBED';
     $res = updateTable( 'jc_subscriptions', 'login,jc_id', 'status', $_POST );
     if( $res )
     {
-        echo printInfo( ' ... success.' );
+        echo printInfo( ' ... successfully removed ' . $_POST[ 'login' ] );
         goToPage( 'user_jc_admin.php', 1 );
         exit;
     }

@@ -191,12 +191,11 @@ foreach( $jcIds as $currentJC )
             $lastPresentedOn = humanReadableDate( $presentations[0]['date'] );
 
         $row = array(
-            'Name' => arrayToName( $info )
-            , 'Email' => $email
+            'login' => $login
+            , 'Name' => arrayToName( $info ) . "<br> $email"
             , 'PI/HOST' => getPIOrHost( $login )
             , '#Presentations' => $numPresentations
             , 'Last Presented On' => humanReadableDate( $lastPresentedOn )
-            , 'status' => $sub['status']
             //, 'Months On Campus' => diffDates( 'today', $info['joined_on'], 'month' )
         );
         $allSubs[] = $row;
@@ -213,7 +212,7 @@ foreach( $jcIds as $currentJC )
         $subTable .= '<form method="post" action="user_jc_admin_submit.php">';
         $subTable .= '<tr>';
         $subTable .= arrayToRowHTML( $sub, 'sorttable', '', false, false );
-        $subTable .= '<input type="hidden" name="login" value="' . $login . '" />';
+        $subTable .= '<input type="hidden" name="login" value="' . $sub[ 'login' ] . '" />';
         $subTable .= '<input type="hidden" name="jc_id" value="' . $currentJC . '" />';
         $subTable .= '<td>';
         $subTable .= '<button style="float:right;" onclick="AreYouSure(this)"

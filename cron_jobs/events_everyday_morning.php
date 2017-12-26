@@ -7,6 +7,7 @@ require_once 'cron_jobs/helper.php';
  */
 if( trueOnGivenDayAndTime( 'today', '8:00' ) )
 {
+    $today = dbDate( 'today' );
     error_log( "8am. Event for today" );
     $todaysEvents = getPublicEventsOnThisDay( $today );
     $nTalks = 0;
@@ -41,7 +42,9 @@ if( trueOnGivenDayAndTime( 'today', '8:00' ) )
                         $ccs = $template[ 'cc' ];
                         $msg = $template[ 'email_body' ];
                         $attachment = '';
-                        sendHTMLEmail( $msg, $subject, $to, $ccs, $attachment );
+                        $res = sendHTMLEmail( $msg, $subject, $to, $ccs, $attachment );
+                        if( $res )
+                            echo printInfo( "Email sent successfully" );
                     }
                 }
             }

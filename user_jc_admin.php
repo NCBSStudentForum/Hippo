@@ -176,6 +176,9 @@ foreach( $jcIds as $currentJC )
     foreach( $subs as $i => $sub )
     {
         $login = $sub['login'];
+        if( ! $login )
+            continue;
+
         $info = getLoginInfo( $login );
         $email = mailto( $info[ 'email' ] );
         $allEmails[] = $info['email'];

@@ -119,16 +119,17 @@ def htmlfile2md( filename ):
 
     md = tomd( text )
     md = md.decode( 'utf-8' )
-    md = md.replace( '\\', '' )
 
     # Style ect.
     pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )
     md = pat.sub( '', md )
+    md = md.replace( '\\', '' )
     return md
 
 def main( infile, outfmt ):
     if outfmt in [ 'md', 'markdown', 'text', 'txt' ]:
         md = htmlfile2md( infile )
+        md = md.replace( '\\', '' )
         print( md )
         return md
     elif outfmt == 'tex':

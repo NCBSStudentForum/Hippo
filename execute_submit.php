@@ -19,7 +19,8 @@ if( $_POST[ 'response' ] == 'Execute' )
     }
 
     $query = getTableEntry( 'queries', 'id', $_POST );
-    $res = executeQuery( $query['query'] );
+
+    $res = executeURlQueries( $query['query'] );
     if( $res )
     {
         $_POST[ 'status' ] = 'EXECUTED';

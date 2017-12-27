@@ -207,6 +207,13 @@ function executeQuery( $query )
     return fetchEntries( $res );
 }
 
+function executeURlQueries( $query )
+{
+    global $db;
+    $res = $db->query( $query );
+    return $res;
+}
+
 function getVenuesByType( $type )
 {
     return getTableEntries( 'venues', 'id', "type='$type'" );

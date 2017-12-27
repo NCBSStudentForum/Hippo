@@ -3049,16 +3049,16 @@ function getUpcomingPresentationsOfUser( $presenter, $date = 'today' )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function getJCPresentation( $jc, $user = '', $date = 'today' )
+function getJCPresentation( $jc, $presenter = '', $date = 'today' )
 {
     $date = dbDate( $date );
     $keys = 'jc_id,date';
 
-    if( $user )
-        $keys .= ',user';
+    if( $presenter )
+        $keys .= ',presenter';
 
     return getTableEntry( 'jc_presentations', $keys
-        , array( 'jc_id' => $jc, 'presenter' => $user, 'date' => $date )
+        , array( 'jc_id' => $jc, 'presenter' => $presenter, 'date' => $date )
     );
 }
 
@@ -3071,7 +3071,7 @@ function getJCPresentations( $jc, $date = '', $presenter = '' )
         $whereExpr .= " AND date='$date' ";
     }
 
-    if( $user )
+    if( $presenter )
         $whereExpr .= " AND presenter='$presenter' ";
 
     return getTableEntries( 'jc_presentations', 'date', $whereExpr );

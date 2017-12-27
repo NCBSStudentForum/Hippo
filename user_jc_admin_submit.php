@@ -46,7 +46,6 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
         else
         {
             echo printInfo( "$login is successfully added to JC" );
-
             // TODO: Notify user that he/she has been added to JC?
         }
     }
@@ -89,12 +88,12 @@ else if( $_POST['response'] == 'Assign Presentation' )
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )
 {
-    $data = $_POST;
-    $data[ 'status' ] = 'INVALID';
-    $res = updateTable( 'jc_presentations', 'id', 'status', $data );
+    $_POST[ 'status' ] = 'INVALID';
+    $res = updateTable( 'jc_presentations', 'id', 'status', $_POST );
 
     if( $res )
     {
+        $data = getTableEntry( 'jc_presentations', 'id', $_POST );
         $to = getLoginEmail( $data[ 'presenter' ] );
         $cclist = 'hippo@ncbs.res.in,jccoords@ncbs.res.in';
 

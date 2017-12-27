@@ -32,7 +32,7 @@ function fixJCSchedule( $login, $data )
     $macros = array(
         'PRESENTER' => arrayToName( getLoginInfo( $login ) )
         , 'THIS_JC' => $data[ 'jc_id' ]
-        , 'JC_ADMIN' => arrayToName( getLoginInfo( whoAmI( ) ) ) or 'NCBS Hippo'
+        , 'JC_ADMIN' => arrayToName( getLoginInfo( whoAmI( ) ) )
         , 'DATE' => humanReadableDate( $data[ 'date' ] )
     );
 
@@ -53,7 +53,6 @@ function fixJCSchedule( $login, $data )
     $to = getLoginEmail( $login );
     $cclist = $mail['cc'];
     $subject = $data[ 'jc_id' ] . ' | Your presentation date has been fixed';
-
 
     // Add clickableQuery to outgoing mail.
     $body = $mail[ 'email_body' ];

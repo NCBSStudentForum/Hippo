@@ -29,10 +29,6 @@ if( ! requiredPrivilege( 'ADMIN' ) )
     exit( 0 );
 }
 
-
-echo "<h1>Hello admin</h1>";
-
-
 echo '<h2>User management</h2>';
 echo "<table class=\"admin\">";
 echo '
@@ -90,10 +86,10 @@ echo '
     ';
 
 
-echo '<h2>Hippo Configuration</h2>';
+echo ' <br /> <br />';
+echo '<h1>Hippo Configuration</h1>';
 
-echo printInfo( "Current Hippo configuration is following." );
-echo showConfigTableHTML( );
+echo '<table><tr><td>';
 
 echo '<h1>Update the config table</h1>';
 $editable = 'id,value,comment';
@@ -101,6 +97,12 @@ $default = array( );
 echo ' <form action="admin_action.php" method="post" accept-charset="utf-8">';
 echo dbTableToHTMLTable( 'config', $default, $editable, 'Add Configuration' );
 echo '</form>';
+
+echo '</td><td>';
+echo printInfo( "Current Hippo configuration is following." );
+echo showConfigTableHTML( );
+
+echo '</td></tr></table>';
 
 echo goBackToPageLink( 'user.php', 'Go back' );
 

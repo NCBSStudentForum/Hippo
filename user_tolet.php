@@ -1,26 +1,3 @@
-<!--
-<script src="http://maps.googleapis.com/maps/api/js?libraries=places" type="text/javascript">
-</script>
-
-<script type="text/javascript">
-    function initialize() {
-        var input = document.getElementById('apartments_address');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            var place = autocomplete.getPlace();
-            document.getElementById('city2').value = place.name;
-            document.getElementById('cityLat').value = place.geometry.location.lat();
-            document.getElementById('cityLng').value = place.geometry.location.lng();
-            alert("This function is working!");
-            alert(place.name);
-            alert(place.address_components[0].long_name);
-
-        });
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
-</script>
--->
-
 <?php
 
 include_once( "header.php" );
@@ -31,9 +8,27 @@ include_once 'check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
+$googleMapAPIKey = getConfigValue( 'GOOGLE_MAP_API_KEY' );
+
 echo userHTML( );
 $user = whoAmI( );
 
+?>
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=<?php echo $googleMapAPIKey ?>"></script>
+</head>
+<body>
+    <script>
+        function init() {
+            var input = document.getElementById('apartments_address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        }
+        google.maps.event.addDomListener(window, 'load', init);
+    </script>
+</body>
+</html>
+
+<?php
 // All alerts.
 $allAlerts = getTableEntries( 'alerts' );
 $count = array( );

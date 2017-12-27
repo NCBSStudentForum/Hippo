@@ -20,15 +20,12 @@ if( ! isJCAdmin( $_SESSION[ 'user' ] ) )
 $jcs = getJCForWhichUserIsAdmin( whoAmI( ) );
 $jcIds = array_map( function( $x ) { return $x['jc_id']; }, $jcs );
 $jcSelect = arrayToSelectList( 'jc_id', $jcIds, array(), false, $jcIds[0] );
-
 $allPresentations = getAllPresentationsBefore( 'today' );
 
 // Use presenter as key.
 $presentationMap = array( );
 foreach( $allPresentations as $p )
-{
     $presentationMap[ $p['presenter'] ][] = $p;
-}
 
 // Get all upcoming presentation for all JCs for which I am an admin.
 $upcomingJCs = array( );
@@ -90,7 +87,7 @@ echo '</table>';
 // Show current schedule.
 $tofilter = 'title,description,status,url,presentation_url';
 
-echo '<h2> Upcoming schedule </h2>';
+echo '<h2>Upcoming schedule </h2>';
 echo '<table class="show_info">';
 foreach( $upcomingJCs as $jcID => $upcomings )
 {
@@ -116,6 +113,26 @@ foreach( $upcomingJCs as $jcID => $upcomings )
     }
 }
 echo '</table>';
+
+$badJCs = getTableEntries( 'jc_presentations', 'id', "LENGTH(title)<5 AND jc_id='$jcID'" );
+if( count( $badJCs ) > 0 )
+{
+    echo '<h2>Incomplete entries </h2>';
+    echo '<table class="show_info">';
+    foreach( $badJCs as $i => $jc )
+    {
+        echo '<tr>';
+        echo '<form method="post" action="user_jc_admin_submit.php">';
+        echo arrayToTableHTML( $jc, 'show_info', $tofilter,  false );
+        echo '<td> <button name="response" value="Remove Presentation"
+            title="Remove this schedule" >' . $symbDelete . '</button></td>';
+        echo "<input type='hidden' name='id' value='" . $jc['id'] . "' />";
+        echo '</form>';
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+
 
 echo ' <br />';
 echo goBackToPageLink( 'user.php', 'Go Back' );

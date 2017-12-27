@@ -119,8 +119,7 @@ def htmlfile2md( filename ):
 
     md = tomd( text )
     md = md.decode( 'utf-8' )
-    md = md.replace( r'\\', '' )
-    md = re.sub( r'\n\n+', r'\n\n', md )
+    md = md.replace( '\\', '' )
 
     # Style ect.
     pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )

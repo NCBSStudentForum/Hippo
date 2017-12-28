@@ -114,16 +114,19 @@ foreach( $upcomingJCs as $jcID => $upcomings )
 }
 echo '</table>';
 
-$badJCs = getTableEntries( 'jc_presentations', 'id', "LENGTH(title)<5 AND jc_id='$jcID'" );
+$today = dbDate( 'today' );
+$badJCs = getTableEntries( 'jc_presentations', 'id'
+    , "LENGTH(title)<5 AND jc_id='$jcID' AND date<'$today'" );
 if( count( $badJCs ) > 0 )
 {
     echo '<h2>Incomplete entries </h2>';
     echo '<table class="show_info">';
+    echo arrayToTHRow( $badJCs[0], 'show_info', $tofilter );
     foreach( $badJCs as $i => $jc )
     {
         echo '<tr>';
         echo '<form method="post" action="user_jc_admin_submit.php">';
-        echo arrayToTableHTML( $jc, 'show_info', $tofilter,  false );
+        echo arrayToRowHTML( $jc, 'show_info', $tofilter,  false, false );
         echo '<td> <button name="response" value="Remove Presentation"
             title="Remove this schedule" >' . $symbDelete . '</button></td>';
         echo "<input type='hidden' name='id' value='" . $jc['id'] . "' />";

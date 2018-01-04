@@ -52,6 +52,7 @@ export default moment.defineLocale('az', {
         future : '%s sonra',
         past : '%s əvvəl',
         s : 'birneçə saniyyə',
+        ss : '%d saniyə',
         m : 'bir dəqiqə',
         mm : '%d dəqiqə',
         h : 'bir saat',
@@ -93,4 +94,3 @@ export default moment.defineLocale('az', {
         doy : 7  // The week that contains Jan 1st is the first week of the year.
     }
 });
-

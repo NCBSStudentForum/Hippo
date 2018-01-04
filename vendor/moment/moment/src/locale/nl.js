@@ -56,6 +56,7 @@ export default moment.defineLocale('nl', {
         future : 'over %s',
         past : '%s geleden',
         s : 'een paar seconden',
+        ss : '%d seconden',
         m : 'één minuut',
         mm : '%d minuten',
         h : 'één uur',
@@ -76,4 +77,3 @@ export default moment.defineLocale('nl', {
         doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

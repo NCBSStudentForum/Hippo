@@ -43,6 +43,7 @@ export default moment.defineLocale('eo', {
         future : 'post %s',
         past : 'antaŭ %s',
         s : 'sekundoj',
+        ss : '%d sekundoj',
         m : 'minuto',
         mm : '%d minutoj',
         h : 'horo',
@@ -61,4 +62,3 @@ export default moment.defineLocale('eo', {
         doy : 7  // The week that contains Jan 1st is the first week of the year.
     }
 });
-

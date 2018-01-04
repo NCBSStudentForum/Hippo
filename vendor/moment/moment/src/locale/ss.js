@@ -32,6 +32,7 @@ export default moment.defineLocale('ss', {
         future : 'nga %s',
         past : 'wenteka nga %s',
         s : 'emizuzwana lomcane',
+        ss : '%d mzuzwana',
         m : 'umzuzu',
         mm : '%d emizuzu',
         h : 'lihora',
@@ -77,4 +78,3 @@ export default moment.defineLocale('ss', {
         doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

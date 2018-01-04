@@ -37,6 +37,7 @@ export default moment.defineLocale('hy-am', {
         future : '%s հետո',
         past : '%s առաջ',
         s : 'մի քանի վայրկյան',
+        ss : '%d վայրկյան',
         m : 'րոպե',
         mm : '%d րոպե',
         h : 'ժամ',
@@ -83,4 +84,3 @@ export default moment.defineLocale('hy-am', {
         doy : 7  // The week that contains Jan 1st is the first week of the year.
     }
 });
-

@@ -37,7 +37,7 @@ class Google_Service_Dataproc extends Google_Service
   public $projects_regions_clusters;
   public $projects_regions_jobs;
   public $projects_regions_operations;
-  
+
   /**
    * Constructs the internal representation of the Dataproc service.
    *
@@ -182,6 +182,10 @@ class Google_Service_Dataproc extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'gracefulDecommissionTimeout' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),
           )
@@ -267,6 +271,14 @@ class Google_Service_Dataproc extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
                 'clusterName' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -278,14 +290,6 @@ class Google_Service_Dataproc extends Google_Service
                 'jobStateMatcher' => array(
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
                 ),
               ),
             ),'patch' => array(

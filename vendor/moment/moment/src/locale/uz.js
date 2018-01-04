@@ -30,6 +30,7 @@ export default moment.defineLocale('uz', {
         future : 'Якин %s ичида',
         past : 'Бир неча %s олдин',
         s : 'фурсат',
+        ss : '%d фурсат',
         m : 'бир дакика',
         mm : '%d дакика',
         h : 'бир соат',
@@ -46,4 +47,3 @@ export default moment.defineLocale('uz', {
         doy : 7  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

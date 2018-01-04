@@ -54,7 +54,7 @@ class Google_Service_Storage extends Google_Service
   public $objectAccessControls;
   public $objects;
   public $projects_serviceAccount;
-  
+
   /**
    * Constructs the internal representation of the Storage service.
    *
@@ -300,6 +300,25 @@ class Google_Service_Storage extends Google_Service
                 'projection' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'userProject' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'lockRetentionPolicy' => array(
+              'path' => 'b/{bucket}/lockRetentionPolicy',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'bucket' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'ifMetagenerationMatch' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'required' => true,
                 ),
                 'userProject' => array(
                   'location' => 'query',

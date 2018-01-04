@@ -47,6 +47,7 @@ export default moment.defineLocale('vi', {
         future : '%s tới',
         past : '%s trước',
         s : 'vài giây',
+        ss : '%d giây' ,
         m : 'một phút',
         mm : '%d phút',
         h : 'một giờ',
@@ -67,4 +68,3 @@ export default moment.defineLocale('vi', {
         doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

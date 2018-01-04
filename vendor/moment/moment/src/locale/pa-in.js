@@ -56,6 +56,7 @@ export default moment.defineLocale('pa-in', {
         future : '%s ਵਿੱਚ',
         past : '%s ਪਿਛਲੇ',
         s : 'ਕੁਝ ਸਕਿੰਟ',
+        ss : '%d ਸਕਿੰਟ',
         m : 'ਇਕ ਮਿੰਟ',
         mm : '%d ਮਿੰਟ',
         h : 'ਇੱਕ ਘੰਟਾ',
@@ -112,4 +113,3 @@ export default moment.defineLocale('pa-in', {
         doy : 6  // The week that contains Jan 1st is the first week of the year.
     }
 });
-

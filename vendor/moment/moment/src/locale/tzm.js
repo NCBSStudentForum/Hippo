@@ -30,6 +30,7 @@ export default moment.defineLocale('tzm', {
         future : 'ⴷⴰⴷⵅ ⵙ ⵢⴰⵏ %s',
         past : 'ⵢⴰⵏ %s',
         s : 'ⵉⵎⵉⴽ',
+        ss : '%d ⵉⵎⵉⴽ',
         m : 'ⵎⵉⵏⵓⴺ',
         mm : '%d ⵎⵉⵏⵓⴺ',
         h : 'ⵙⴰⵄⴰ',
@@ -46,4 +47,3 @@ export default moment.defineLocale('tzm', {
         doy : 12  // The week that contains Jan 1st is the first week of the year.
     }
 });
-

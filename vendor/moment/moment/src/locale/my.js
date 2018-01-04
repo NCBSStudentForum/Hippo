@@ -57,6 +57,7 @@ export default moment.defineLocale('my', {
         future: 'လာမည့် %s မှာ',
         past: 'လွန်ခဲ့သော %s က',
         s: 'စက္ကန်.အနည်းငယ်',
+        ss : '%d စက္ကန့်',
         m: 'တစ်မိနစ်',
         mm: '%d မိနစ်',
         h: 'တစ်နာရီ',
@@ -83,4 +84,3 @@ export default moment.defineLocale('my', {
         doy: 4 // The week that contains Jan 1st is the first week of the year.
     }
 });
-

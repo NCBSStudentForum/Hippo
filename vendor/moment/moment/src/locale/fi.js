@@ -14,6 +14,8 @@ function translate(number, withoutSuffix, key, isFuture) {
     switch (key) {
         case 's':
             return isFuture ? 'muutaman sekunnin' : 'muutama sekunti';
+        case 'ss':
+            return isFuture ? 'sekunnin' : 'sekuntia';
         case 'm':
             return isFuture ? 'minuutin' : 'minuutti';
         case 'mm':
@@ -77,6 +79,7 @@ export default moment.defineLocale('fi', {
         future : '%s päästä',
         past : '%s sitten',
         s : translate,
+        ss : translate,
         m : translate,
         mm : translate,
         h : translate,
@@ -95,4 +98,3 @@ export default moment.defineLocale('fi', {
         doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

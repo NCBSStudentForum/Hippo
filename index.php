@@ -5,8 +5,6 @@ include_once 'tohtml.php' ;
 include_once 'methods.php' ;
 include_once 'calendar/calendar.php' ;
 
-session_save_path("/tmp/");
-
 // If user is already authenticated, redirect him to user.php
 // NOTE: DO NOT put this block before loading configuration files.
 if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )

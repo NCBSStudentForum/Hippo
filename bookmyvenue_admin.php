@@ -8,10 +8,88 @@ include_once "database.php";
 include_once "tohtml.php";
 include_once "check_access_permissions.php";
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Geneate task table for bookmyvenue admin.
+    *
+    * @Returns
+    */
+/* ----------------------------------------------------------------------------*/
+function bookmyVenueAdminTaskTable( )
+{
+    $html = '<table class="tasks">
+        <tr>
+        <td>
+            Book using old interface  <br />
+            <small>
+                You can browse all venues and see the pending requests and approved events.
+            </small>
+        </td>
+        <td>
+            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a>
+        </td>
+        </tr>
+        </table>'
+    ;
+
+    $html .= '<br>';
+    $html .= '<table class="tasks">
+        <tr>
+        <td>
+           <strong>Make sure you are logged-in using correct google account </strong>
+            </strong>
+        </td>
+            <td>
+                <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
+                <i class="fa fa-calendar fa-2x"></i> Synchronize public calendar </a>
+            </td>
+        </tr>
+        <tr>
+        <td>
+            Add/Update/Delete venues
+        </td>
+            <td>
+                <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a>
+            </td>
+        </tr>
+        <tr>
+            <td>Send emails manually (and generate documents)</td>
+            <td>
+                <i class="fa fa-share fa-2x"></i>
+                <a href="admin_acad_email_and_docs.php">Send emails
+            </td>
+        </tr>
+        <tr>
+            <td>Manage talks and seminars. </td>
+            <td>
+                <i class="fa fa-comments-o fa-2x"></i>
+                <a href="admin_acad_manages_talks.php">Manage talks/seminar
+            </td>
+        </tr>
+        <tr>
+            <td>Add or update speakers. </td>
+            <td>
+                <i class="fa fa-users fa-2x"></i>
+                <a href="admin_acad_manages_speakers.php">Manage speakers
+            </td>
+        </tr>
+        <tr>
+            <td>Block venues <br />
+                <small> Block venues on certain days/times. </small>
+            </td>
+            <td>
+                <i class="fa fa-ban fa-2x"></i>
+                <a href="bookmyvenue_admin_block_venues.php">Block venues</a>
+            </td>
+        </tr>
+        </table>' ;
+    return $html;
+}
+
+
 mustHaveAnyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN' ) );
 
 echo userHTML( );
-
 echo bookmyVenueAdminTaskTable( );
 
 echo '<h1> Pending requests </h1>';
@@ -33,7 +111,7 @@ foreach( $requests as $r )
     // If request date has passed, ignore it.
     if( strtotime( $r[ 'date' ] ) < strtotime( '-2 days' ) )
     {
-        // Do not show requests which are more than 1 days old. Their status
+        // TODO: Do not show requests which are more than 1 days old. Their status
         // remains PENDING all the time. Dont know what to do such
         // unapproved/expired requests.
         continue;

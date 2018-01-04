@@ -127,7 +127,7 @@ if( count( $badJCs ) > 0 )
         echo '<tr>';
         echo '<form method="post" action="user_jc_admin_submit.php">';
         echo arrayToRowHTML( $jc, 'show_info', $tofilter,  false, false );
-        echo '<td> <button name="response" value="Remove Presentation"
+        echo '<td> <button name="response" value="Remove Incomplete Presentation"
             title="Remove this schedule" >' . $symbDelete . '</button></td>';
         echo "<input type='hidden' name='id' value='" . $jc['id'] . "' />";
         echo '</form>';

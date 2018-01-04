@@ -76,14 +76,22 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'Assign Presentation' )
 {
-    $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
-    if( $res )
+    if( strtotime( $_POST[ 'date' ]) < strtotime( 'today' ) )
     {
-        echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
-            ' to present a paper on ' . dbDate( $_POST['date' ] )
-        );
-        goToPage( 'user_jc_admin.php', 1 );
-        exit;
+        echo printWarning( "You cannot assign JC presentation in past." );
+        echo printInfo( " Assignment date: " . humanReadableDate( $_POST[ 'date' ] ) );
+    }
+    else
+    {
+        $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
+        if( $res )
+        {
+            echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
+                ' to present a paper on ' . dbDate( $_POST['date' ] )
+            );
+            goToPage( 'user_jc_admin.php', 1 );
+            exit;
+        }
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )
@@ -111,6 +119,16 @@ else if( $_POST[ 'response' ] == 'Remove Presentation' )
             goToPage( 'user_jc_admin.php', 1 );
             exit;
         }
+    }
+}
+else if( $_POST[ 'response' ] == 'Remove Incomplete Presentation' )
+{
+    $res = deleteFromTable( 'jc_presentations', 'id', $_POST );
+    if( $res )
+    {
+        echo printInfo( "Successfully deleted entry!" );
+        goToPage( 'user_jc_admin.php', 1 );
+        exit;
     }
 }
 else

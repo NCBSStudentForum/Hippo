@@ -35,7 +35,7 @@ function todayTomorrow( $date, $venue )
 
 function sanitize( $title )
 {
-    $title = preg_replace('/[^A-Za-z0-9\-\ \'\",]/', '', $title);
+    $title = preg_replace('/[^A-Za-z0-9\-\ \'\",\<\>]/', '', $title);
     return $title;
 }
 
@@ -86,28 +86,31 @@ foreach( $events as $e )
         if( strtotime( $e['end_time'] ) < strtotime( 'now' ) )
             continue;
 
-    $feed .= "<item>";
+    $eventXML = "<item>";
 
     $date =  feedDate( $e[ 'date' ] );
 
     if( strlen( $e[ 'title' ] ) < 2 )
         continue;
 
-    $feed .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
+    $eventXML .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
                     sanitize( $e[ 'title'] ) . "</title>";
 
-    $feed .= "<link> https://ncbs.res.in/hippo/events.php?date=" . $e['date'] . 
+    $eventXML .= "<link> https://ncbs.res.in/hippo/events.php?date=" . $e['date'] . 
                 "</link>";
 
-    $feed .= "<description>" 
+    $eventXML .= "<description>" 
                     .  feedDate( $e[ 'date' ] ) . ", " 
                     . humanReadableTime( $e['start_time' ] ) 
                     .  " to " . humanReadableTime( $e[ 'end_time' ] )
                     . ', ' . venueText( $e[ 'venue' ], false )
                     . "</description>";
 
-    $feed .= "<pubDate> " . date( 'r', strtotime($e['date'] . ' ' . $e['start_time'] ) ) . "</pubDate>";
-    $feed .= "</item>";
+    $eventXML .= "<pubDate> " . date( 'r', strtotime($e['date'] . ' ' . $e['start_time'] ) ) . "</pubDate>";
+    $eventXML .= "</item>";
+
+    $feed .= $eventXML;
+
 }
 
 $feed .= '</channel>';

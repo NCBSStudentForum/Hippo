@@ -44,7 +44,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     if( ! $r )
     {
         echo "LDAP binding failed. TODO: Ask user to edit details ";
-        continue;
+        return null;
     }
 
     $base_dn = "dc=ncbs,dc=res,dc=in";

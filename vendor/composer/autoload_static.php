@@ -20,84 +20,107 @@ class ComposerStaticInite1888158aa47bd0bbfc973101953a37d
         '30eee86291d721c2174ad40239331e78' => __DIR__ . '/..' . '/spipu/html2pdf/_class/parsingCss.class.php',
     );
 
-    public static $firstCharsPsr4 = array (
-        'p' => true,
-        'S' => true,
-        'P' => true,
-        'M' => true,
-        'G' => true,
-        'F' => true,
+    public static $prefixLengthsPsr4 = array (
+        'p' => 
+        array (
+            'phpseclib\\' => 10,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Component\\Process\\' => 26,
+        ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Cache\\' => 10,
+        ),
+        'M' => 
+        array (
+            'Monolog\\' => 8,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
+            'Google\\Auth\\' => 12,
+        ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib\\' =>
+        'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'Symfony\\Component\\Process\\' =>
+        'Symfony\\Component\\Process\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
         ),
-        'Psr\\Log\\' =>
+        'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'Psr\\Http\\Message\\' =>
+        'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Cache\\' =>
+        'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'Monolog\\' =>
+        'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'GuzzleHttp\\Psr7\\' =>
+        'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' =>
+        'GuzzleHttp\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' =>
+        'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Google\\Auth\\' =>
+        'Google\\Auth\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
         ),
-        'Firebase\\JWT\\' =>
+        'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'G' =>
+        'G' => 
         array (
-            'Google_Service_' =>
+            'Google_Service_' => 
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient-services/src',
             ),
-            'Google_' =>
+            'Google_' => 
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient/src',
             ),
         ),
-        'C' =>
+        'C' => 
         array (
-            'ComponentInstaller' =>
+            'ComponentInstaller' => 
             array (
                 0 => __DIR__ . '/..' . '/robloach/component-installer/src',
             ),
         ),
-        'A' =>
+        'A' => 
         array (
-            'Assetic' =>
+            'Assetic' => 
             array (
                 0 => __DIR__ . '/..' . '/kriswallsmith/assetic/src',
             ),
@@ -126,7 +149,7 @@ class ComposerStaticInite1888158aa47bd0bbfc973101953a37d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->firstCharsPsr4 = ComposerStaticInite1888158aa47bd0bbfc973101953a37d::$firstCharsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite1888158aa47bd0bbfc973101953a37d::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInite1888158aa47bd0bbfc973101953a37d::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInite1888158aa47bd0bbfc973101953a37d::$prefixesPsr0;
             $loader->classMap = ComposerStaticInite1888158aa47bd0bbfc973101953a37d::$classMap;

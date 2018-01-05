@@ -25,6 +25,19 @@ function displayRequest( button )
 
 <?php
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  This does nothing (now).
+    *
+    * @Param $html
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function purifyHTML( $html )
+{
+    return $html;
+}
 
 function fixHTML( $html, bool $strip_tags = false ) : string
 {

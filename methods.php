@@ -6,6 +6,7 @@ include_once 'logger.php' ;
 include_once 'html2text.php';
 include_once 'helper/imap.php';
 include_once 'ldap.php';
+include_once 'mail.php';
 
 date_default_timezone_set('Asia/Kolkata');
 

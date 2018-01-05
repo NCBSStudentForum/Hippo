@@ -19,7 +19,7 @@
     "components/underscore": "~1",
     "twbs/bootstrap": ">2.0.0",
     "moment/moment": "~2",
-    "google/apiclient": "^2.0",
+    "google/apiclient": "^2.2",
     "spipu/html2pdf": "^4.6"
   },
   "extra" : {

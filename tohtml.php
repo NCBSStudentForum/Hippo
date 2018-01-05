@@ -4,8 +4,6 @@ include_once 'methods.php';
 include_once 'database.php';
 include_once 'ICS.php';
 include_once 'linkify.php';
-require_once './vendor/htmlpurifier-4.9.3/library/HTMLPurifier.auto.php';
-
 
 $useCKEditor = false;
 
@@ -27,16 +25,12 @@ function displayRequest( button )
 
 <?php
 
-function purifyHTML( $html )
-{
-    $config = HTMLPurifier_Config::createDefault();
-    $purifier = new HTMLPurifier($config);
-    $clean_html = $purifier->purify($html);
-    return $clean_html;
-}
 
-function fixHTML( string $html, bool $strip_tags = false ) : string
+function fixHTML( $html, bool $strip_tags = false ) : string
 {
+    if( ! $html )
+        return '';
+
     $res = $html;
     if( $strip_tags )
         $res = strip_tags(  $res, '<br><p><a><strong><tt>' );
@@ -45,8 +39,6 @@ function fixHTML( string $html, bool $strip_tags = false ) : string
     $res = str_replace( '<br />', ' ', $res );
     $res = str_replace( '<br/>', ' ', $res );
     $res = str_replace( '<br>', ' ', $res );
-
-
     return $res;
 }
 

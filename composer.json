@@ -20,7 +20,8 @@
     "twbs/bootstrap": ">2.0.0",
     "moment/moment": "~2",
     "google/apiclient": "^2.2",
-    "spipu/html2pdf": "^4.6"
+    "spipu/html2pdf": "^4.6",
+    "guzzlehttp/guzzle": ">6.0.0"
   },
   "extra" : {
     "component" : {

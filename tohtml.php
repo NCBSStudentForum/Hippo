@@ -18,6 +18,7 @@ function displayEvent( button )
 {
     alert( button.value );
 };
+
 function displayRequest( button )
 {
     alert( button.value );
@@ -34,7 +35,7 @@ function purifyHTML( $html )
     return $clean_html;
 }
 
-function fixHTML( $html, $strip_tags = false )
+function fixHTML( string $html, bool $strip_tags = false ) : string
 {
     $res = $html;
     if( $strip_tags )
@@ -50,7 +51,7 @@ function fixHTML( $html, $strip_tags = false )
 }
 
 
-function addToGoogleCalLink( $event )
+function addToGoogleCalLink( array $event )
 {
     $location = venueToText( $event[ 'venue' ] );
     $date = dateTimeToGOOGLE( $event[ 'date' ], $event[ 'start_time' ] )
@@ -82,7 +83,7 @@ function addToGoogleCalLink( $event )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function eventToICAL( $event )
+function eventToICAL( array $event ) : string
 {
     $ics = new ICS( $event );
     return $ics;

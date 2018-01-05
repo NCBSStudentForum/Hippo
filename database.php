@@ -664,6 +664,15 @@ function getUniqueFieldValue( $tablename, $column = 'id' )
     return __get__( $res, $column , 0 );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get unique ID for a table.
+    *
+    * @Param $tablename
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
 function getUniqueID( $tablename )
 {
     $column = 'id';

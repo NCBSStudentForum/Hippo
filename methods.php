@@ -108,7 +108,7 @@ function getDataDir( )
  */
 function venuesToHTMLSelect( $venues = null, $ismultiple = false
     , $selectName = 'venue', $preSelected = array()
-    )
+    ) : string
 {
     if( ! $venues )
         $venues = getVenues( );

@@ -126,7 +126,7 @@ table.show_info {
 
 table.show_info tr td:nth-child(1)
 {
-    width : 25%;
+    max-width : 25%;
 }
 table.show_info tr td
 {

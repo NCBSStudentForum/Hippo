@@ -55,10 +55,7 @@ if( __get__( $_POST, 'response', '' ) == 'Block' )
     {
         foreach( $dates as $date )
         {
-
-            echo " Venues $venue on $date from $startTime to $endTime ";
-            echo ' <br />';
-
+            $date = dbDate( trim( $date ) );
             $title = __get__( $_POST, 'reason', '' );
             $class = __get__( $_POST, 'class', 'UNKNOWN' );
 
@@ -86,13 +83,11 @@ if( __get__( $_POST, 'response', '' ) == 'Block' )
             );
 
             $res = insertIntoTable( 'bookmyvenue_requests', array_keys( $data ), $data );
-            $rid ++;
-        }
+            $res = approveRequest( $gid, $rid );
+            if( $res )
+                echo printInfo( "Request $gid.$rid is approved." );
 
-        $res = changeStatusOfRequests( $gid, 'APPROVED' );
-        if( $res )
-        {
-            echo printInfo( "Request $gid is approved." );
+            $rid ++;
         }
     }
 }

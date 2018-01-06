@@ -23,7 +23,7 @@ if( $scheduledAWS )
     $disabled = '';
     if( $scheduledAWS[ 'acknowledged' ] == 'YES' )
     {
-        echo "You have already confirmed your schedule. Be sure to mark your calendar as well.";
+        echo "You've acknowledged your AWS schedule.";
         $disabled = 'disabled';
     }
     else
@@ -187,7 +187,10 @@ foreach( $awsRequests as $awsr )
 }
 
 echo ' <br /> <br />';
-echo '<h2><i class="fa fa-leanpub"></i> I have learnt \'deeply\' from AWS</h2>';
+echo goBackToPageLink( "user.php", "Go back" );
+
+echo '<h2><i class="fa fa-leanpub"></i> I have learnt \'deeply\' from previous AWSs</h2>';
+
 echo "<p>I have been trained using Artificial Intelligence algorithms to write
     AWS abstract. Ask me to write your AWS abstract by pressing the button below (puny human)!</p>
     ";

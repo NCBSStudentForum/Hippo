@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <?php
-
 include_once 'database.php';
 
 function venueText( $venue )
@@ -115,8 +114,9 @@ foreach( $events as $e )
 
 $feed .= '</channel>';
 $feed .= '</rss>';
-header( 'Content-Type: application/xhtml+xml' );
 
+// Display it now.
+header( 'Content-Type: application/xhtml+xml' );
 echo $feed;
 
 ?>

@@ -6,7 +6,6 @@ if [ -d /opt/rh/rh-php56 ]; then
     PHP=/opt/rh/rh-php56/root/usr/bin/php
 fi
 
-
 function log_msg
 {
     echo $1

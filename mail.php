@@ -1,7 +1,6 @@
 <?php
 
 include_once 'database.php';
-include_once 'tohtml.php';
 include_once 'methods.php';
 
 // Directory to store the mdsum of sent emails.

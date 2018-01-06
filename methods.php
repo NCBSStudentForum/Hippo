@@ -1,7 +1,6 @@
 <?php
 
 include_once 'display_content.php';
-include_once 'methods.php';
 include_once 'logger.php' ;
 include_once 'html2text.php';
 include_once 'helper/imap.php';

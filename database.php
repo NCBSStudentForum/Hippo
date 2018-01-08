@@ -3207,7 +3207,7 @@ function getActiveJCs( )
     return getTableEntries( 'journal_clubs', 'id', "status='ACTIVE'" );
 }
 
-function pickPresenter( $jcID, $picker = 'round_robin', $gap_between_presentations_in_months = 6 )
+function pickPresenter( $jcID, $picker = 'random', $gap_between_presentations_in_months = 6 )
 {
     $logins = getJCSubscriptions( $jcID );
 
@@ -3215,6 +3215,10 @@ function pickPresenter( $jcID, $picker = 'round_robin', $gap_between_presentatio
     foreach( $logins as $login )
     {
         $presenter = $login[ 'login' ];
+
+        if( ! $presenter )
+            continue;
+
         $onOrBefore = strtotime( 'now' ) + $gap_between_presentations_in_months * 30 * 24 * 3600;
 
         // Get presentations of this USER in lats

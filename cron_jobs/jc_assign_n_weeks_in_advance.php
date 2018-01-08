@@ -17,7 +17,7 @@ foreach( $jcs as $jc )
     $jcDay =  'This ' . $jc[ 'day' ];
     $nWeeksFromjcDay = strtotime($jcDay) + 3 * 7 * 24 * 3600;  // Three weeks from this monday.
 
-    if( isNowEqualsGivenDayAndTime( $jcDay, '10:00' ) )
+    if( isNowEqualsGivenDayAndTime( $jcDay, '12:00' ) )
     {
         echo printInfo( "JcID is $jcID with $jcDay." );
         error_log( "Scheduling for $jcID" );

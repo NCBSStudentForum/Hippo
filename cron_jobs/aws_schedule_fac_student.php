@@ -49,7 +49,6 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
         $allSpeakersTable = arrayToHtmlTableOfLogins( $listSpeakers );
 
         $date = $aws[ 'date' ];
-        echo "$speaker on $date $piOrHost <br> ";
 
         $pi = findAnyoneWithEmail( $piOrHost );
         $piHTML = arrayToName( $pi );
@@ -78,9 +77,8 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
 /* 9 weeks earlier, if student fails to sign-up, select one from the list */
 if( trueOnGivenDayAndTime( 'this monday', '11:30' ) )
 {
-    $today = 'today';
     echo printInfo( 'Monday and 11:30am. Assign AWS' );
-    $afterNWeeks = dbDate( strtotime( $today ) + 9 * 7 * 86400 );
+    $afterNWeeks = dbDate( strtotime( 'this monday' ) + 9 * 7 * 86400 );
     echo printInfo( "Today is monday and after 9 weeks $afterNWeeks" );
 
     echo humanReadableDate( $afterNWeeks );

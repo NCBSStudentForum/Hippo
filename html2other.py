@@ -51,10 +51,10 @@ def tomd( msg ):
     pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
 
     # remove all 'style' too.
-    stylePat = re.compile( r'style\s*=\s*".+?;"', re.DOTALL )
+    stylePat = re.compile( r'style\s*=\s*"[\w\s;]+?"', re.DOTALL )
 
     # remove all 'class' too.
-    classPat = re.compile( r'class\s*=\s*"\w+"', re.DOTALL )
+    classPat = re.compile( r'class\s*=\s*"\w+?"', re.DOTALL )
 
     for pat in [ pat, stylePat, classPat ]:
         for s in pat.findall( msg ):

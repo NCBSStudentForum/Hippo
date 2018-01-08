@@ -50,8 +50,15 @@ def tomd( msg ):
     # remove <div class="strip_from_md"> </div>
     pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
 
-    for s in pat.findall( msg ):
-        msg = msg.replace( s, '' )
+    # remove all 'style' too.
+    stylePat = re.compile( r'style\s*=\s*".+?;"', re.DOTALL )
+
+    # remove all 'class' too.
+    classPat = re.compile( r'class\s*=\s*"\w+"', re.DOTALL )
+
+    for pat in [ pat, stylePat, classPat ]:
+        for s in pat.findall( msg ):
+            msg = msg.replace( s, '' )
 
 
     if PYMAJOR == 2:

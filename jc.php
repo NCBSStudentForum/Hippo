@@ -35,7 +35,9 @@ echo '<br><br>';
 
 $whichDay = $default[ 'date' ];
 
-$jcs = getTableEntries( 'jc_presentations', 'date' , "date='$whichDay'" );
+$jcs = getTableEntries( 'jc_presentations', 'date'
+    , "date='$whichDay' AND status='VALID'" 
+    );
 
 if( count( $jcs ) < 1 )
 {

@@ -1452,12 +1452,12 @@ function speakerName( $speaker, $with_email = false )
     if( $name )
         $name .= ' ';
 
-    $name .= $speaker[ 'first_name' ];
+    $name .= __ucwords__( $speaker[ 'first_name' ] );
 
     if( __get__( $speaker, 'middle_name', '' ) )
-        $name .= ' ' . $speaker[ 'middle_name' ];
+        $name .= ' ' . __ucwords__( $speaker[ 'middle_name' ] );
 
-    $name .= ' ' . $speaker[ 'last_name' ];
+    $name .= ' ' . __ucwords__( $speaker[ 'last_name' ] );
 
     if( $with_email )
     {
@@ -2148,14 +2148,15 @@ function getPresentationTitle( $presentation )
 function jcToHTML( $jc )
 {
     $jcInfo = getJCInfo( $jc[ 'jc_id' ] );
-    $html = '<h3>' . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
+    $html = '<h3 style="width:600px">' 
+        . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
 
     $presenter = getLoginInfo( $jc[ 'presenter' ] );
     $pName = arrayToName( $presenter );
 
     $html .= "<strong> $pName </strong>";
     $html .= presentationToHTML( $jc );
-    $html .= "<div width=600px><hr width=600px align=left> </div>";
+    $html .= "<div width=600px><hr width=800px align=left> </div>";
 
     return $html;
 }

@@ -13,11 +13,12 @@ require_once 'cron_jobs/helper.php';
 /* ----------------------------------------------------------------------------*/
 if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
 {
+    $today = 'today';
     printInfo( ' Monday and 9am. Tell faculty that their lab has been selected.' );
 
     // Get the monday after 10 weeks.
-    $afterNWeeks = dbDate( strtotime( 'this monday' ) + 10 * 7 * 86400 );
-    echo printInfo( "Today is wednedsay and after 10 weeks $afterNWeeks" );
+    $afterNWeeks = dbDate( strtotime( 'today' ) + 10 * 7 * 86400 );
+    echo printInfo( "Today is monday and after 10 weeks $afterNWeeks" );
 
     echo humanReadableDate( $afterNWeeks );
 
@@ -74,13 +75,13 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
     }
 }
 
-/* 8 weeks earlier, if student fails to sign-up, select one from the list */
-if( trueOnGivenDayAndTime( 'this monday', '11:00' ) )
+/* 9 weeks earlier, if student fails to sign-up, select one from the list */
+if( trueOnGivenDayAndTime( 'this monday', '11:30' ) )
 {
     $today = 'today';
-    echo printInfo( 'Monday and 11am. Assign AWS' );
-    $afterNWeeks = dbDate( strtotime( $today ) + 8 * 7 * 86400 );
-    echo printInfo( "Today is monday and after 8 weeks $afterNWeeks" );
+    echo printInfo( 'Monday and 11:30am. Assign AWS' );
+    $afterNWeeks = dbDate( strtotime( $today ) + 9 * 7 * 86400 );
+    echo printInfo( "Today is monday and after 9 weeks $afterNWeeks" );
 
     echo humanReadableDate( $afterNWeeks );
     // Get scheduled AWS on this week.

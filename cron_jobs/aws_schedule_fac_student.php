@@ -75,9 +75,10 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
 }
 
 /* 8 weeks earlier, if student fails to sign-up, select one from the list */
-if( trueOnGivenDayAndTime( 'this monday', '11:00' ) )
+if( trueOnGivenDayAndTime( 'this monday', '11:15' ) )
 {
-    printInfo( 'Monday and 1pm. Notify users about upcoming AWS' );
+    $today = 'today';
+    echo printInfo( 'Monday and 11am. Assign AWS' );
     $afterNWeeks = dbDate( strtotime( $today ) + 8 * 7 * 86400 );
     echo printInfo( "Today is monday and after 8 weeks $afterNWeeks" );
 

@@ -48,10 +48,12 @@ foreach( $mySubs as $mySub )
     echo '<table>';
     foreach( $upcomings as $i => $upcoming )
     {
+        if( ! $upcoming[ 'presenter' ] )
+            continue;
+
         echo '<tr>';
         echo '<td>';
-        echo arrayToVerticalTableHTML(
-            $upcoming, 'info', '', 'id,status,acknowledged' );
+        echo arrayToVerticalTableHTML( $upcoming, 'info', '', 'id,status' );
         echo '</td>';
         echo '</tr>';
     }

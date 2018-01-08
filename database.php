@@ -1343,17 +1343,14 @@ function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = t
     if( is_string( $where) && strlen( $where ) > 0 )
         $query .= " WHERE $where ";
 
-    if( strlen($orderby) > 0 )
-    {
-        $query .= " ORDER BY '$orderby'";
-        if( $ascending )
-            $query .= ' ASC';
-        else
-            $query .= ' DESC';
-    }
+    $res = $db->query( $query );
+    $entries = fetchEntries( $res );
 
-    $stmt = $db->query( $query );
-    return fetchEntries( $stmt );
+
+    if( strlen($orderby) > 0 )
+        sortByKey( $entries, $orderby );
+
+    return $entries;
 }
 
 /* --------------------------------------------------------------------------*/
@@ -3031,7 +3028,6 @@ function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
 
     $whereExpr .= " AND status='VALID'";
     $jcs = getTableEntries( 'jc_presentations' , 'date', $whereExpr );
-    sortByKey( $jcs, 'date' );
     return $jcs;
 }
 
@@ -3237,9 +3233,7 @@ function pickPresenter( $jcID, $picker = 'round_robin', $gap_between_presentatio
 
         $suitable[] = $presenter;
         if( $picker == 'round_robin' )
-        {
             return $presenter;
-        }
     }
 
     // Else return a random sample.

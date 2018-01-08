@@ -57,21 +57,27 @@ function venueToText( $venue, $show_strength = true )
     return $txt;
 }
 
-function sortByKey( &$array, $key, $ascending = true )
+function sortByKey( &$arr, $key, $ascending = true )
 {
-    if( ! $array )
+    if( ! $arr )
         return false;
 
     if( $ascending )
-        usort( $array , function( $x, $y ) {
+        usort( $arr , function( $x, $y ) {
             global $key;
-            return __get__( $x, $key, '') < __get__($y, $key, '' );
+            if( $key == 'date' or $key == 'time' )
+                return strtotime( $x[$key] ) < strtotime( $y[$key] );
+            else
+                return $x[$key] < $y[$key];
         }
     );
     else
-        usort( $array , function( $x, $y ) {
+        usort( $arr , function( $x, $y ) {
             global $key;
-            return __get__( $x, $key, '') > __get__($y, $key, '' );
+            if( $key == 'date' or $key == 'time' )
+                return strtotime( $x[$key] ) >= strtotime( $y[$key] );
+            else
+                return $x[$key] >= $y[$key];
         }
     );
 

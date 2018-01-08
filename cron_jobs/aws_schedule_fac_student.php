@@ -75,7 +75,7 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00' ) )
 }
 
 /* 8 weeks earlier, if student fails to sign-up, select one from the list */
-if( trueOnGivenDayAndTime( 'this monday', '11:15' ) )
+if( trueOnGivenDayAndTime( 'this monday', '11:00' ) )
 {
     $today = 'today';
     echo printInfo( 'Monday and 11am. Assign AWS' );

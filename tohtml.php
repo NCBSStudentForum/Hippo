@@ -1420,7 +1420,7 @@ function awsToHTML( $aws, $with_picture = false )
         $html .= "</table>";
     }
     else
-        $html .= "<h1 class=\"title\">$speaker on '$title' </h1>";
+        $html .= "<h1>$speaker on '$title' </h1>";
 
 
     $html .=  '<table class="email" style="width:500px">';
@@ -2148,7 +2148,7 @@ function getPresentationTitle( $presentation )
 function jcToHTML( $jc )
 {
     $jcInfo = getJCInfo( $jc[ 'jc_id' ] );
-    $html = '<h3 style="width:600px">' 
+    $html = '<h3 style="width:600px">'
         . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
 
     $presenter = getLoginInfo( $jc[ 'presenter' ] );

@@ -62,13 +62,16 @@ function sortByKey( &$arr, $key, $ascending = true )
     if( ! $arr )
         return false;
 
+    if( ! array_key_exists( $key, $arr[0] ) )
+        return false;
+
     if( $ascending )
         usort( $arr , function( $x, $y ) {
             global $key;
             if( $key == 'date' or $key == 'time' )
                 return strtotime( $x[$key] ) < strtotime( $y[$key] );
             else
-                return $x[$key] < $y[$key];
+                return __get__( $x, $key) < __get__($y, $key, '' );
         }
     );
     else
@@ -77,7 +80,7 @@ function sortByKey( &$arr, $key, $ascending = true )
             if( $key == 'date' or $key == 'time' )
                 return strtotime( $x[$key] ) >= strtotime( $y[$key] );
             else
-                return $x[$key] >= $y[$key];
+                return __get__( $x, $key) >= __get__($y, $key, '' );
         }
     );
 

@@ -50,7 +50,6 @@ def tomd( msg ):
     # remove <div class="strip_from_md"> </div>
     pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
     for s in pat.findall( msg ):
-        print( s )
         msg = msg.replace( s, '' )
 
     if PYMAJOR == 2:
@@ -60,7 +59,7 @@ def tomd( msg ):
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
 
     if pandoc_:
-        md = pypandoc.convert_text( msg, 'md', format = 'html'
+        md = pypandoc.convert_text( msg, 'plain', format = 'html'
                 , extra_args = [ '--atx-headers' ]
                 )
         return md.encode( 'ascii', 'ignore' )

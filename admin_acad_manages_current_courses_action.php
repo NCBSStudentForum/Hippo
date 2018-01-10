@@ -32,12 +32,12 @@ else if( $_POST['response'] == 'delete' )
             $sem = getCurrentSemester( );
 
             $res = deleteFromTable( 'course_registration', 'semester,year,course_id'
-                , array( 'year' => $year, 'semester' => $semester, 'course_id' => $_POST[ 'course_id'] )
+                , array( 'year' => $year, 'semester' => $sem, 'course_id' => $_POST[ 'course_id'] )
                 );
             if( $res )
             {
                 printInfo( "Successfully removed enrollments." );
-                goBack( 'admin_acad_manages_current_courses.php', 0 );
+                goBack( 'admin_acad_manages_current_courses.php', 2 );
                 exit;
             }
         }
@@ -100,7 +100,7 @@ else // Add or Update here.
             else
             {
                 $res = addCourseBookings( $_POST[ 'id' ] );
-                goBack( 'admin_acad_manages_current_courses.php', 1 );
+                goBack( 'admin_acad_manages_current_courses.php', 2 );
                 exit;
             }
         }
@@ -114,7 +114,7 @@ else // Add or Update here.
         {
             $res = updateBookings( $_POST[ 'id' ] );
             echo printInfo( 'Updated course' );
-            goBack( 'admin_acad_manages_current_courses.php', 1);
+            goBack( 'admin_acad_manages_current_courses.php', 2);
             exit;
         }
     }

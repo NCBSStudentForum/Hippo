@@ -19,7 +19,7 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
                 , 'course_id,slot,venue,weight,comment'
                 , $_POST
             );
-        goBack( "admin_acad_schedule_upcoming_courses.php" );
+        goToPage( "admin_acad_schedule_upcoming_courses.php", 1 );
         exit;
     }
 }
@@ -30,7 +30,7 @@ else if( __get__( $_POST, 'response', '' ) == 'Delete' )
         $_POST[ 'status' ] = 'DELETED';
         updateTable( 'upcoming_course_schedule', 'id,status', $_POST );
     }
-    goBack( "admin_acad_schedule_upcoming_courses.php" );
+    goToPage( "admin_acad_schedule_upcoming_courses.php", 1);
     exit;
 }
 else if( __get__( $_POST, 'response', '' ) == 'schedule_courses' )
@@ -38,7 +38,7 @@ else if( __get__( $_POST, 'response', '' ) == 'schedule_courses' )
     echo printInfo( "Computing best schedule" );
     $res = shell_exec( __DIR__ . '/compute_course_schedule.py' );
     echo printInfo( $res );
-    goBack( "admin_acad_schedule_upcoming_courses.php" );
+    goToPage( "admin_acad_schedule_upcoming_courses.php", 1);
     exit;
 }
 else

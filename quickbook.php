@@ -1,7 +1,7 @@
 <?php
 
-/* We use this interface for booking venue. We may also come here from manage 
- * talks page. If a user creates a talk and we come here for a booking; we use 
+/* We use this interface for booking venue. We may also come here from manage
+ * talks page. If a user creates a talk and we come here for a booking; we use
  * the external_id _GET variable.
  */
 
@@ -16,7 +16,7 @@ echo userHTML( );
 
 $roundedTimeNow = round( time( ) / (15 * 60) ) * (15 * 60 );
 
-$defaults = array( 
+$defaults = array(
     "date" => dbDate( strtotime( 'today' ) )
     , "start_time" => date( 'H:i', $roundedTimeNow )
     , "end_time" => date( 'H:i', $roundedTimeNow + 3600 )
@@ -28,7 +28,7 @@ $defaults = array(
     );
 
 
-/* NOTE: We can come here from a $_GET or $_POST request. Usually this happend when 
+/* NOTE: We can come here from a $_GET or $_POST request. Usually this happend when
  * admin is scheduling a talk.
  */
 $external_id = null;
@@ -55,7 +55,7 @@ if( array_key_exists( 'external_id', $_GET ) )
 
 
     // Update the title of booking request.
-    $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by ' 
+    $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by '
             . $defaults[ 'speaker' ] . " on '" . $defaults[ 'title' ] . "'";
 
     // Description is just the title of the talk. Keep it short.
@@ -63,12 +63,16 @@ if( array_key_exists( 'external_id', $_GET ) )
 }
 else
 {
-    echo alertUser( colored('To book TALK or SEMINAR, please use 
-        <a href="user_register_talk.php">this interface</a>.', 'darkred' )
-        );
+    echo alertUser( '<p style="font-size:large;width:700px;">
+        <i class="fa fa-flag fa-3x"></i>
+        If email are to be sent to Academic community for your event
+        such as various <strong><tt>TALK</tt>s, <tt>SEMINAR/THESIS SEMINAR</tt>s, <tt>LECTURE</tt>s</strong> etc.,
+        <a href="user_register_talk.php"> <i class="fa fa-spinner fa-spin"></i> click here</a>.
+        </p>'
+    );
 }
 
-// Since we come back to this page again and again, we reuse the previous values 
+// Since we come back to this page again and again, we reuse the previous values
 // provided by user.
 foreach( $defaults as $key => $val )
     if( array_key_exists( $key, $_POST ) )
@@ -76,20 +80,20 @@ foreach( $defaults as $key => $val )
 
 $skypeYes = ''; $skypeNo = '';
 if( $defaults[ 'has_skype' ] == 'YES' )
-    $skypeYes = 'checked'; 
-else 
+    $skypeYes = 'checked';
+else
     $skypeNo = 'checked';
 
 $projectorYes = ''; $projectorNo = '';
 if( $defaults[ 'has_projector' ] == 'YES' )
-    $projectorYes = 'checked'; 
-else 
+    $projectorYes = 'checked';
+else
     $projectorNo = 'checked';
 
 $openAirNo = ''; $openAirYes = '';
 if( $defaults[ 'openair' ] == 'YES' )
-    $openAirYes = 'checked'; 
-else 
+    $openAirYes = 'checked';
+else
     $openAirNo = 'checked';
 
 
@@ -101,22 +105,22 @@ echo '<form action="" method="post" accept-charset="utf-8">';
 echo '
     <tr>
         <td>Pick a date</td>
-        <td><input  class="datepicker" name="date" 
+        <td><input  class="datepicker" name="date"
             value="' . $defaults[ 'date' ] . '" /> </td>
     </tr>
     <tr>
         <td>Start time </td>
-        <td><input  class="timepicker" name="start_time" 
+        <td><input  class="timepicker" name="start_time"
             value="' . $defaults[ 'start_time'] . '" /> </td>
     </tr>
     <tr>
         <td>End time </td>
-        <td><input  class="timepicker" name="end_time" 
+        <td><input  class="timepicker" name="end_time"
             value="' . $defaults[ 'end_time'] . '" /> </td>
     </tr>
     <tr>
         <td>Mininum seatings required? </td>
-        <td><input type="text" name="strength" 
+        <td><input type="text" name="strength"
             value="' . $defaults[ 'strength' ] . '" /> </td>
     </tr>
     <tr>
@@ -129,9 +133,9 @@ echo '
     <tr>
         <td>Do you need a projector?</td>
         <td>
-        <input type="radio" name="has_projector" 
+        <input type="radio" name="has_projector"
             value="NO" ' . $projectorNo . ' /> No
-        <input type="radio" name="has_projector" 
+        <input type="radio" name="has_projector"
                 value="YES" ' .$projectorYes . ' /> Yes
         </td>
     </tr>
@@ -145,7 +149,7 @@ echo '
     <tr>
         <td></td>
         <td style="text-align:right">
-        <button title="Scan for venues" 
+        <button title="Scan for venues"
             style="font-size:large" name="Response" value="scan">
                 Show me <br> available venues</button>
         </td>
@@ -167,14 +171,14 @@ if( ! anyOfTheseRoles( array( 'BOOKMYVENUE_ADMIN', 'AWS_ADMIN' ) ) )
     }
 }
 
-// Get list of public events on user request day and show them to him. So he can 
+// Get list of public events on user request day and show them to him. So he can
 // decides if some other timeslot should be used.
 $publicEvents = getPublicEventsOnThisDay( $date );
 if( count( $publicEvents ) > 0 )
 {
     echo alertUser(
         "<h3>Alert: Public events on selected date</h3>
-        It is advisable not to book any academic event clashing with any of the 
+        It is advisable not to book any academic event clashing with any of the
         following events.
         "
     );
@@ -191,7 +195,7 @@ if( count( $publicEvents ) > 0 )
 }
 
 /******************************************************************************
- * Get the list of labmeets and JC 
+ * Get the list of labmeets and JC
  * ***************************************************************************/
 $jcAndMeets = getLabmeetAndJC( );
 
@@ -206,7 +210,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
 
     $table = '<table class="info">';
-    foreach ($venues as $venue) 
+    foreach ($venues as $venue)
     {
         $venueId = $venue[ 'id' ];
         $date = dbDate( $_POST['date'] );
@@ -217,14 +221,14 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         $skipMsg = '<tt>' . $venueId . '</tt> does not meet your requirements: ';
         if( $venue[ 'strength' ] < $_POST[ 'strength' ] )
         {
-            $msg = "Required strength=" . $_POST[ 'strength' ] . 
+            $msg = "Required strength=" . $_POST[ 'strength' ] .
                 ' but venue strength=' . $venue[ 'strength' ] . '.';
             $skipMsg .= $msg;
             $skip = true;
         }
 
         // One can reduce a Kernaugh map here. The expression is A' + B where
-        // A is request for skype variable and B is has_skype field of 
+        // A is request for skype variable and B is has_skype field of
         // venue. We take its negative and use continue.
         if( $_POST[ 'has_skype' ] == 'YES' && ! ($venue[ 'has_skype' ] == 'YES') )
         {
@@ -249,7 +253,7 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         if( $skip )
         {
-            $table .= '<tr><td colspan="2"><small>' 
+            $table .= '<tr><td colspan="2"><small>'
                    . colored( $skipMsg, 'grey' ) . '</small></td></tr>';
             continue;
         }
@@ -258,11 +262,11 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             * @name Now check if any request or booking is already made on this
             * slot/venue. If yes, then do not book.
         */
-        $events = getEventsOnThisVenueBetweenTime( 
+        $events = getEventsOnThisVenueBetweenTime(
             $venueId , $date , $startTime, $endTime
         );
 
-        $reqs = getRequestsOnThisVenueBetweenTime( 
+        $reqs = getRequestsOnThisVenueBetweenTime(
             $venueId, $date, $startTime, $endTime
             );
 
@@ -282,9 +286,9 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         if( count( $all ) > 0 )
         {
             $tr = '<tr><td colspan="2">';
-            $tr .= "<tt> Venue <font color=\"red\">" 
-                . strtoupper( $venue['id']) 
-                . " </font> has been taken by following booking request/event</tt>" 
+            $tr .= "<tt> Venue <font color=\"red\">"
+                . strtoupper( $venue['id'])
+                . " </font> has been taken by following booking request/event</tt>"
                 ;
 
             $tr .= '<div style="font-size:x-small">';
@@ -301,16 +305,16 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
         /*
          * Also check if a course is running on this slot/venue.
          */
-        $clashingCourses = runningCoursesOnThisVenueSlot( 
-            $venue[ 'id' ], $date, $startTime, $endTime 
+        $clashingCourses = runningCoursesOnThisVenueSlot(
+            $venue[ 'id' ], $date, $startTime, $endTime
         );
 
         if( $clashingCourses )
         {
             $tr = '<tr><td colspan="2">';
-            $tr .= "<tt> Venue <font color=\"red\">" 
-                . strtoupper( $venue['id']) 
-                . " </font> has following course(s)</tt>" 
+            $tr .= "<tt> Venue <font color=\"red\">"
+                . strtoupper( $venue['id'])
+                . " </font> has following course(s)</tt>"
                 ;
 
             $tr .= '<div style="font-size:x-small">';
@@ -328,8 +332,8 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         // Now construct a table and form
         // check if there is a labmeet or JC at this slot/venue.
-        $jclabmeets = clashesOnThisVenueSlot( 
-                $date, $startTime, $endTime, $venueId, $jcAndMeets 
+        $jclabmeets = clashesOnThisVenueSlot(
+                $date, $startTime, $endTime, $venueId, $jcAndMeets
             );
 
         $block = '<form method="post" action="user_submit_booking_request.php">';
@@ -340,10 +344,10 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
             {
                 $block .= '<div class="">';
                 $block .= '<tr><td colspan="1">';
-                $block .= '<font color=\"red\">ALERT: Though ' . $venue[ 'id' ] 
+                $block .= '<font color=\"red\">ALERT: Though ' . $venue[ 'id' ]
                     . ' is available
                     , it is usually booked for following JC/Labmeet. Make sure to check
-                    with booking party before you book this slot. They may book it 
+                    with booking party before you book this slot. They may book it
                     later. </font>';
 
                 $block .= '<div style="font-size:x-small">';
@@ -356,21 +360,21 @@ if( array_key_exists( 'Response', $_POST ) && $_POST['Response'] == "scan" )
 
         // Create hidden fields from defaults. The description must be cleaned
         // otherwise it will be displayed on the screen.
-        $block .= '<input type="hidden" name="title" 
+        $block .= '<input type="hidden" name="title"
             value="' . $defaults['title' ] . '">';
-        $block .= '<input type="hidden" name="description" 
+        $block .= '<input type="hidden" name="description"
             value="' . __get__( $defaults, 'description', '')  . '">';
-        $block .= '<input type="hidden" name="external_id" 
+        $block .= '<input type="hidden" name="external_id"
             value="' . $external_id . '">';
 
         // Insert all information into form.
         $block .= '<input type="hidden" name="date" value="' . $defaults[ 'date' ] . '" >';
 
-        $block .= '<input type="hidden" 
+        $block .= '<input type="hidden"
             name="start_time" value="' . $defaults[ 'start_time' ] . '" >';
-        $block .= '<input type="hidden" 
+        $block .= '<input type="hidden"
             name="end_time" value="' . $defaults[ 'end_time' ] . '" >';
-        $block .= '<input type="hidden" 
+        $block .= '<input type="hidden"
             name="venue" value="' . $venue[ 'id' ] . '" >';
         $venueT = venueSummary( $venue );
         $block .= "<td>$venueT</td>";

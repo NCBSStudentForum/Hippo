@@ -23,7 +23,7 @@ foreach( $speakers as $visitor )
     if( strlen( $visitor[ 'email' ] ) > 0 )
         $speakersMap[ $visitor[ 'email' ] ] = $visitor;
 
-// This must not be a key => value array else autocomplete won't work. Or have 
+// This must not be a key => value array else autocomplete won't work. Or have
 // any null value,
 $speakersIds = array( );
 foreach( $speakers as $x )
@@ -46,17 +46,17 @@ $( function() {
     var emails = <?php echo json_encode( $speakersIds ); ?>;
     //console.log( emails );
 
-    $( "#talks_host" ).autocomplete( { source : host }); 
-    $( "#talks_host" ).attr( "placeholder", "autocomplete" );
+    $( "#talks_host" ).autocomplete( { source : host });
+    $( "#talks_host" ).attr( "placeholder", "email e.g. gabbar@sholay.com" );
 
-    $( "#talks_coordinator" ).autocomplete( { source : logins.concat( host ) }); 
-    $( "#talks_coordinator" ).attr( "placeholder", "autocomplete" );
+    $( "#talks_coordinator" ).autocomplete( { source : logins.concat( host ) });
+    $( "#talks_coordinator" ).attr( "placeholder", "email of coordinator" );
 
 
     // Once email is matching we need to fill other fields.
     $( "#speakers_email" ).autocomplete( { source : emails
         , focus : function( ) { return false; }
-    }).on( 'autocompleteselect', function( e, ui ) 
+    }).on( 'autocompleteselect', function( e, ui )
         {
             var email = ui.item.value;
             $('#speakers_first_name').val( speakersDict[ email ]['first_name'] );
@@ -69,20 +69,20 @@ $( function() {
             $('#talks_speaker_id').val( speakersDict[ email ]['id'] );
         }
     );
-    $( "#speakers_email" ).attr( "placeholder", "autocomplete" );
+    $( "#speakers_email" ).attr( "placeholder", "email" );
 });
 </script>
 
 <?php
 
 // Logic for POST requests.
-$speaker = array( 
+$speaker = array(
     'first_name' => '', 'middle_name' => '', 'last_name' => '', 'email' => ''
     , 'department' => '', 'institute' => '', 'title' => '', 'id' => ''
     , 'homepage' => ''
     );
 
-$talk = array( 'created_by' => $_SESSION[ 'user' ] 
+$talk = array( 'created_by' => $_SESSION[ 'user' ]
             , 'created_on' => dbDateTime( 'now' )
         );
 
@@ -90,17 +90,14 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 
 // Form to upload a picture
 
-echo '<form method="post" enctype="multipart/form-data" 
+echo '<form method="post" enctype="multipart/form-data"
         action="user_register_talk_action.php">';
 
-echo "<h3>Speaker details</h3>";
-echo printInfo( 
-    "Email id of speaker is desirable. It helps in keeping database clean 
-    by avoidling duplicate entries. It also makes autocompletion possible.
-    ");
+echo "<h2>Speaker details</h2>";
+echo printInfo( "Email id of speaker is desirable but not required.  ");
 
-echo alertUser( 
-    "<strong>First name</strong> and <strong>institute</strong> are required 
+echo alertUser(
+    "<strong>First name</strong> and <strong>institute</strong> are required
     fields.  ");
 
 echo '<table><tr>';
@@ -108,25 +105,26 @@ echo '<td class="db_table_fieldname">Speaker picture</td><td>';
 echo '<input type="file" name="picture" id="picture" value="" />';
 echo '</td></tr></table>';
 
-echo dbTableToHTMLTable( 'speakers', $speaker 
+echo dbTableToHTMLTable( 'speakers', $speaker
     , 'honorific,email,homepage,first_name:required,middle_name,last_name,department,institute:required'
     , ''
     );
 
 
-echo "<h3>Talk information</h3>" ;
+echo "<h2>Talk information</h2>" ;
 echo dbTableToHTMLTable( 'talks', $talk
     , 'class,host,coordinator,title,description'
     , ''
     , $hide = 'id,speaker,status'
     );
 
-echo "<h3>Optionally create a booking request</h3>" ;
+echo "<h2>Submit booking request</h2>" ;
 echo alertUser( "
-    $symbWarn I may not be able to book if there is already a pending 
-    booking request at your preferred venue/slot. I'll register your talk and
-    you can book venue later by clicking on <strong>Manage my talks</strong> in your 
-    HOME page.
+    <i class=\"fa fa-flag\"></i>
+    I may not be able to book if there is already a pending
+    booking request at your preferred venue/slot. However, I'll register your
+    talk and you can book venue later by visiting <strong>Manage my talks</strong> link
+    in your HOME page.
     <br />
     "
     );
@@ -137,20 +135,20 @@ echo '<tr>
         <td class="db_table_fieldname">Venue</td> <td>' . $venueSelect . '</td>
     </tr>';
 echo '<tr>
-        <td class="db_table_fieldname">date</td> 
+        <td class="db_table_fieldname">date</td>
         <td><input name="date" class="datepicker" type=\"date\" ></td>
     </tr>';
 echo '<tr>
-        <td class="db_table_fieldname">start time</td> 
+        <td class="db_table_fieldname">start time</td>
         <td><input name="start_time" class="timepicker" type=\"time\" ></td>
     </tr>';
 echo '<tr>
-        <td class="db_table_fieldname">end time</td> 
+        <td class="db_table_fieldname">end time</td>
         <td><input name="end_time" class="timepicker" type=\"time\" ></td>
     </tr>';
 echo "</table>";
-echo '<button class="submit" title="Submit talk" 
-    name="response" value="submit">' . $symbCheck . "</button>";
+echo '<button class="submit" title="Submit talk"
+    name="response" value="submit">Register (and Book)</button>"';
 echo '</form>';
 
 echo "<br/><br/>";

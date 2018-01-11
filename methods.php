@@ -822,7 +822,7 @@ function uploadImage( $pic, $filename )
     $type = explode( '/', $pic[ 'type' ] );
     $ext = $type[1];
 
-    if( strlen( count( $tmpfile ) ) < 1 )
+    if( strlen( $tmpfile ) < 1 )
         return false;
 
     $conf = getConf( );

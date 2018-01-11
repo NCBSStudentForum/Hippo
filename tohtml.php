@@ -156,11 +156,11 @@ function speakerToHTML( $speaker )
     // If there is url. create a clickable link.
     if( $speaker )
     {
-        if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
+        if( __get__( $speaker, 'homepage', '' ) )
             $html .=  '<br /><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
 
         if( __get__( $speaker, 'designation', '' ) )
-            $html .= "<br />" . $speaker[ 'designation' ];
+            $html .= "<br /><small><strong>" . $speaker[ 'designation' ] . "</strong></small>";
 
         if( $speaker[ 'department' ] )
             $html .= "<br />" . $speaker[ 'department' ];
@@ -1184,18 +1184,20 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     if( is_array( $name ) )
         $text = implode( ' ', $name );
 
+    if( $withEmail )
+    {
+        if( __get__( $user, 'email', '' ) )
+            $text .= " (" . $user['email'] . ")";
+    }
+
     if( $autofix )
         $text = fixName( $text );
-
-    if( $withEmail )
-        if( array_key_exists( 'email', $user) && $user[ 'email' ] )
-            $text .= " (" . $user['email'] . ")";
 
     if( strlen( trim($text) ) < 1 )
         return $login;
 
     // If honorific exits in login/speaker; then prefix it.
-    if( is_array( $user) && array_key_exists( 'honorific', $user ) )
+    if( __get__( $user, 'honorific', '' ) )
         $text = trim( $user[ 'honorific' ] . ' ' . $text );
 
     return $text;
@@ -1536,7 +1538,7 @@ function talkToHTML( $talk, $with_picture = false )
     if( $with_picture )
     {
         $imgpath = getSpeakerPicturePath( $speakerId );
-        $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
+        $html .= '<td>' . showImage( $imgpath, 'auto', '250px' ) . '</td>';
     }
 
     // Speaker info
@@ -1545,22 +1547,25 @@ function talkToHTML( $talk, $with_picture = false )
     else
         $speakerHMTL = speakerToHTML( $speakerArr );
 
-    $html .= '<td> <br>' . $speakerHMTL ;
+    $html .= '<td> <br />' . $speakerHMTL ;
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )
-        $html .= '<br><br><strong>Supervisor:</strong>' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br /><br /><strong>Supervisor:</strong>' . loginToHTML( $talk[ 'host' ] );
     else
-        $html .= '<br><br><strong>Host:</strong> ' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br /><br /><strong>Host:</strong> ' . loginToHTML( $talk[ 'host' ] );
 
-    $html .= '<br><br>';
-    $html .= '<div style="font-variant:small-caps;text-decoration:none;">';
+    $html .= '<br /><br />';
+    $html .= '<div style="text-decoration:none;">';
     $html .= '<table><tr>
                 <td class="when"> <i class="fa fa-clock-o fs-spin"></i> ' . $when . '</td>
             </tr><tr>
                 <td class="where"> <i class="fa fa-globe"></i> ' . $where . '</td>
-            </tr><tr>
-                <td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) . '</td>';
+            </tr>
+            <tr></tr>
+            <tr>
+                <td><strong>Coordinator: </strong>'
+                .  loginToText( $talk[ 'coordinator' ], false, true ) . '</td>';
     $html .= '</tr>';
 
 

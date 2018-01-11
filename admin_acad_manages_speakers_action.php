@@ -15,8 +15,8 @@ if( $_POST['response'] == 'DO_NOTHING' )
 }
 else if( $_POST['response'] == 'delete' )
 {
-    // We may or may not get email here. Email will be null if autocomplete was 
-    // used in previous page. In most cases, user is likely to use autocomplete 
+    // We may or may not get email here. Email will be null if autocomplete was
+    // used in previous page. In most cases, user is likely to use autocomplete
     // feature.
     if( strlen($_POST[ 'id' ]) > 0 )
         $res = deleteFromTable( 'speakers', 'id', $_POST );
@@ -42,8 +42,8 @@ else if( $_POST['response'] == 'submit' )
         $sid = $_POST[ 'id' ];
         $res = insertIntoTable( 'speakers'
                     , 'id,honorific,email,first_name,middle_name,last_name,' .
-                        'department,homepage,institute'
-                    , $_POST 
+                        'designation,department,homepage,institute'
+                    , $_POST
                     );
     }
     else // Update the speaker.
@@ -59,7 +59,7 @@ else if( $_POST['response'] == 'submit' )
             // Update the entry
             $res = updateTable( 'speakers', $whereKey
                 , 'honorific,email,first_name,middle_name,last_name,' .
-                'department,homepage,institute'
+                'designation,department,homepage,institute'
                 , $_POST
             );
 
@@ -89,7 +89,7 @@ else if( $_POST['response'] == 'submit' )
         echo printInfo( "Failed to update/insert speaker" );
 
 }
-else   
+else
 {
     echo alertUser( "Unknown/unsupported operation " . $_POST[ 'response' ] );
 }

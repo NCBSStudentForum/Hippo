@@ -131,7 +131,16 @@ function eventToICALLink( $event )
 function speakerToHTML( $speaker )
 {
     if( ! $speaker )
+    {
         return alertUser( "Error: Speaker not found" );
+    }
+
+    // Most likely speaker id.
+    if( is_string( $speaker ) )
+    {
+        $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $speaker ) );
+        return speakerToHTML( $speaker );  // call recursively
+    }
 
     // Get name of the speaker.
     $name = array( );
@@ -148,12 +157,15 @@ function speakerToHTML( $speaker )
     if( $speaker )
     {
         if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
-            $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+            $html .=  '<br /><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+
+        if( __get__( $speaker, 'designation', '' ) )
+            $html .= "<br />" . $speaker[ 'designation' ];
 
         if( $speaker[ 'department' ] )
-            $html .= "<small><br>" . $speaker[ 'department' ];
+            $html .= "<br />" . $speaker[ 'department' ];
 
-        $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
+        $html .= "<br />" . $speaker[ 'institute' ];
     }
 
     return $html;
@@ -1544,9 +1556,9 @@ function talkToHTML( $talk, $with_picture = false )
     $html .= '<br><br>';
     $html .= '<div style="font-variant:small-caps;text-decoration:none;">';
     $html .= '<table><tr>
-                <td class="when"> <i class="fa fa-clock-o fs-spin"></i>' . $when . '</td>
+                <td class="when"> <i class="fa fa-clock-o fs-spin"></i> ' . $when . '</td>
             </tr><tr>
-                <td class="where"> <i class="fa fa-thumb-tack fs-spin fa-fw"></i>' . $where . '</td>
+                <td class="where"> <i class="fa fa-globe"></i> ' . $where . '</td>
             </tr><tr>
                 <td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) . '</td>';
     $html .= '</tr>';

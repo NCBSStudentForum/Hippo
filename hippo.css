@@ -1,12 +1,14 @@
-class='sort' @import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|EB+Garamond|Ubuntu');
-h1, h2, h3, h4, h5, h6 {
-    font-family : 'EB Garamond';
-    line-height: 120%;
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|EB+Garamond|Ubuntu');
+:root {
+    --background : rgba(255,255,251,0.8);
+    --tabletdcolor: rgba(200,255,200,0.9);
+    --maxwidth : 800px
 }
 
-:root { --background : rgba(255,255,251,0.8);
-    --tabletdcolor: rgba(200,255,200,0.9);
-    --maxwidth : 800px }
+h1, h2, h3, h4, h5, h6 {
+    font-family : 'EB Garamond';
+    line-height: 140%;
+}
 
 body {
     font-family: "Libre Baskerville";

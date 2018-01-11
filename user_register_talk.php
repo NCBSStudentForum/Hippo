@@ -47,7 +47,7 @@ $( function() {
     //console.log( emails );
 
     $( "#talks_host" ).autocomplete( { source : host });
-    $( "#talks_host" ).attr( "placeholder", "email e.g. gabbar@sholay.com" );
+    $( "#talks_host" ).attr( "placeholder", "email of speaker" );
 
     $( "#talks_coordinator" ).autocomplete( { source : logins.concat( host ) });
     $( "#talks_coordinator" ).attr( "placeholder", "email of coordinator" );
@@ -62,6 +62,7 @@ $( function() {
             $('#speakers_first_name').val( speakersDict[ email ]['first_name'] );
             $('#speakers_middle_name').val( speakersDict[ email ]['middle_name'] );
             $('#speakers_last_name').val( speakersDict[ email ]['last_name'] );
+            $('#speakers_designation').val( speakersDict[ email ]['designation'] );
             $('#speakers_department').val( speakersDict[ email ]['department'] );
             $('#speakers_institute').val( speakersDict[ email ]['institute'] );
             $('#speakers_homepage').val( speakersDict[ email ]['homepage'] );
@@ -79,7 +80,7 @@ $( function() {
 $speaker = array(
     'first_name' => '', 'middle_name' => '', 'last_name' => '', 'email' => ''
     , 'department' => '', 'institute' => '', 'title' => '', 'id' => ''
-    , 'homepage' => ''
+    , 'designation' => '', 'homepage' => ''
     );
 
 $talk = array( 'created_by' => $_SESSION[ 'user' ]
@@ -106,7 +107,8 @@ echo '<input type="file" name="picture" id="picture" value="" />';
 echo '</td></tr></table>';
 
 echo dbTableToHTMLTable( 'speakers', $speaker
-    , 'honorific,email,homepage,first_name:required,middle_name,last_name,department,institute:required'
+    , 'honorific,email,homepage,first_name:required,middle_name,last_name'
+        . ',designation,department,institute:required'
     , ''
     );
 

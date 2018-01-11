@@ -97,7 +97,7 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 
 // Form to upload a picture
 
-echo "<h3>Speaker details</h3>";
+echo "<h1>Speaker details</h1>";
 
 echo '<form method="post" action="">';
 echo '<input id="speakers_id" name="id" type="text" value="" >';
@@ -127,7 +127,7 @@ if( __get__( $_POST, 'id', '' ) )
         echo alertUser( "No speaker is found for entry : " . $_POST[ 'email' ] );
 }
 
-echo '<h3>Edit speaker details</h3>';
+echo '<h1>Edit speaker details</h1>';
 
 echo printInfo(
     "Email id of speaker is very desirable but not neccessary. <br>

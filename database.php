@@ -2195,7 +2195,8 @@ function addOrUpdateSpeaker( $data )
         {
             $res = updateTable(
                 'speakers', 'id'
-                , 'honorific,email,first_name,middle_name,last_name,department,institute,homepage'
+                , 'honorific,email,first_name,middle_name,last_name'
+                    . ',designation,department,institute,homepage'
                 , $data
             );
             return getTableEntry( 'speakers', 'id', $speaker) ;
@@ -2208,7 +2209,7 @@ function addOrUpdateSpeaker( $data )
     $data[ 'id' ] = $uid;
     $res = insertIntoTable( 'speakers'
         , 'id,email,honorific,first_name,middle_name,last_name,'
-            . 'department,institute,homepage'
+            . 'designation,department,institute,homepage'
         , $data
         );
 

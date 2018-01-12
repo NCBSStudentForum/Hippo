@@ -338,7 +338,7 @@ def construct_flow_graph(  ):
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
 
     # Compute totalWeeks of schedule starting today.
-    totalWeeks = 35
+    totalWeeks = 50
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []

@@ -90,12 +90,7 @@ def init( cur ):
             '''
         )
     db_.commit( )
-    cur.execute(
-        """
-        SELECT * FROM logins WHERE eligible_for_aws='YES' AND status='ACTIVE'
-        ORDER BY login
-        """
-        )
+    cur.execute( "SELECT * FROM logins WHERE eligible_for_aws='YES' AND status='ACTIVE'" )
     for a in cur.fetchall( ):
         login = a[ 'login' ].lower( )
         speakers_[ login ] = a
@@ -112,10 +107,10 @@ def init( cur ):
 
     _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
-
 def getAllAWSPlusUpcoming( ):
     global aws_, db_
     global upcoming_aws_
+    global speakers_
     # cur = db_.cursor( cursor_class = MySQLCursorDict )
     try:
         cur = db_.cursor( dictionary = True )
@@ -143,8 +138,11 @@ def getAllAWSPlusUpcoming( ):
     # reading PI.
     cur.execute( 'SELECT * FROM annual_work_seminars' )
     for a in cur.fetchall( ):
-        aws_[ a[ 'speaker' ].lower() ].append( a )
+        # If this speaker is not eligible anymore ignore.
+        if a['speaker'] not in speakers_:
+            continue
 
+        aws_[ a[ 'speaker' ].lower() ].append( a )
         # Also get the specialization by reading the supervisor_1 .
         pi = a[ 'supervisor_1' ]
         if not pi:
@@ -187,11 +185,15 @@ def getAllAWSPlusUpcoming( ):
 
     ## Compute the frequencies of specialization.
     ## Print specialization
+    print( len( speakersSpecialization_ ) )
+    for i, s in enumerate( speakersSpecialization_ ):
+        print( i, s, speakersSpecialization_[s] )
     freq = Counter( speakersSpecialization_.values( ) )
     for k in freq:
         specializationFreqs_[k] = 1.0 * freq[k] / sum( freq.values( ) )
 
     _logger.info( specializationFreqs_ )
+    print( specializationFreqs_ )
 
     #for s in speakersSpecialization_:
     #    print( s, speakersSpecialization_[s] )

@@ -522,15 +522,16 @@ function initialize( $db  )
     // inventroy
     $res = $db->query( "
         CREATE TABLE IF NOT EXISTS inventory (
-            id INT PRIMARY KEY 
-            , name VARCHAR(50) NOT NULL 
-            , scientific_name VARCHAR(100) 
+            id INT PRIMARY KEY
+            , common_name VARCHAR(50) NOT NULL
+            , exact_name VARCHAR(100)
+            , vendor VARCHAR(200)
             , description TEXT
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
             , last_modified_on DATETIME -- DEFAULT NOW()
             , edited_by VARCHAR(100) default 'HIPPO'
             , owner VARCHAR(50) NOT NULL
-            , UNIQUE KEY (owner,commond_name,status)
+            , UNIQUE KEY (owner,common_name,vendor,status)
             )"
         );
 

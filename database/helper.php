@@ -1,6 +1,6 @@
 <?php
 
-include_once 'database_init.php';
+include_once 'database/init.php';
 include_once "methods.php";
 include_once 'ldap.php';
 

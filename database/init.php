@@ -526,9 +526,9 @@ function initialize( $db  )
             , common_name VARCHAR(50) NOT NULL
             , exact_name VARCHAR(100)
             , vendor VARCHAR(200)
-            , quantity_with_units VARCHAR(40) NOT NULL
+            , quantity_with_unit VARCHAR(40) NOT NULL
             , description TEXT
-            , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
+            , status ENUM( 'VALID', 'INVALID', 'DELETED' ) DEFAULT 'VALID'
             , last_modified_on DATETIME
             , edited_by VARCHAR(100) default 'HIPPO'
             , owner VARCHAR(50) NOT NULL

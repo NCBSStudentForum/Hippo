@@ -135,6 +135,21 @@ table.show_info tr td
     background-color: var(--tabletdcolor);
 }
 
+table.show_db_entry_long {
+    max-width: var(--maxwidth);
+    min-width: 500px;
+    font-size: small;
+}
+
+table.show_db_entry_long th {
+    font-size: xx-small;
+}
+
+table.show_db_entry_long tr td {
+    border: 1px dotted;
+    background-color: var(--tabletdcolor);
+}
+
 table.show_speaker tr td  {
 }
 

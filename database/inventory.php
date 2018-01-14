@@ -5,8 +5,7 @@ include_once 'methods.php';
 
 function getUserInventory( $user ) : array
 {
-    return array( );
-
+    return getTableEntries( 'inventory', 'common_name', "status='VALID'" );
 }
 
 

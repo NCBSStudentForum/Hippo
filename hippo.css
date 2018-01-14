@@ -199,7 +199,9 @@ table.tasks
 {
     max-width: 600px;
     min-width : 500px;
+    text-align: top;
 }
+
 
 table.tasks tr td:nth-child(1)
 {
@@ -530,15 +532,22 @@ table.show_card tr td {
 }
 
 table.admin {
-    width : 80%;
     min-width : 500px;
-    max-width : 90%;
+    max-width : var(--maxwidth);
+    /* width : 80%; */
+}
+
+table.admin tr:nth-of-type( odd ) {
+
 }
 
 table.admin tr td {
     width : 50%;
     background-color: var( --tabletdcolor );
+    vertical-align: top;
+    /* border: 1px dotted; */
 }
+
 
 .goback {
 }
@@ -685,6 +694,14 @@ a.link_as_button {
     -moz-appearance: button;
     appearance: button;
     padding: 5px;
+}
+
+a.clickable {
+    font-size: x-large;
+    font-weight: bold;
+    border-bottom: 2px dotted;
+    text-decoration: none;
+    font-variant: small-caps;
 }
 
 a {

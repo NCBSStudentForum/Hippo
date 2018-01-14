@@ -528,7 +528,7 @@ function initialize( $db  )
             , vendor VARCHAR(200)
             , description TEXT
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
-            , last_modified_on DATETIME -- DEFAULT NOW()
+            , last_modified_on DATETIME
             , edited_by VARCHAR(100) default 'HIPPO'
             , owner VARCHAR(50) NOT NULL
             , UNIQUE KEY (owner,common_name,vendor,status)

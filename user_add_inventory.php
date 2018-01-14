@@ -13,12 +13,13 @@ $myList = getMyInvetory( );
 // Show user inventory here.
 
 
-echo ' <h1>Add new item</h1> ';
+echo ' <h1>Add new item to inventory</h1> ';
 
-$editables = 'common_name,exact_name,vendor,description,edited_by';
-
-$default = array( 'edited_by' => whoAmI(), 'last_modified_on' => dbDateTime( 'now' )
+$editables = 'common_name,exact_name,vendor,description';
+$default = array( 'edited_by' => whoAmI()
+    , 'last_modified_on' => dbDateTime( 'now' )
     , 'id' => getUniqueID( 'inventory' )
+    , 'owner' => whoAmI( )
     );
 
 // This button is for show/hide form. It must not be part of form below.

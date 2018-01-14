@@ -526,6 +526,7 @@ function initialize( $db  )
             , common_name VARCHAR(50) NOT NULL
             , exact_name VARCHAR(100)
             , vendor VARCHAR(200)
+            , quantity_with_units VARCHAR(40) NOT NULL
             , description TEXT
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
             , last_modified_on DATETIME

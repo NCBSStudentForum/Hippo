@@ -150,6 +150,23 @@ function AreYouSure( button )
 }
 </script>
 
+<!-- toggle  show hide -->
+<script type="text/javascript" charset="utf-8">
+function ToggleShowHide( button )
+{
+    var div = document.getElementById( "show_hide" );
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+        button.innerHTML = 'Show form';
+    }
+    else {
+        div.style.display = 'block';
+        button.innerHTML = 'Hide form';
+    }
+}
+</script>
+
+
 <script type="text/javascript">
   (function() {
     var blinks = document.getElementsByTagName('blink');

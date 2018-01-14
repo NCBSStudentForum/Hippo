@@ -343,6 +343,15 @@ button.courseInfo {
     font-weight: bold;
 }
 
+button.show_as_link {
+    background:none;
+    color:inherit;
+    border: none;
+    padding:0;
+    border-bottom: 1px solid;
+    cursor: pointer;
+}
+
 /*button.courseInfo:hover {*/
     /*border : 1px dotted;*/
     /*text-decoration: none;*/

@@ -123,7 +123,8 @@ echo '<table class="admin">
             You can browse inventory. Items listed here can be borrowed.
         </td>
         <td>
-            <a class="clickable" href="user_add_inventory.php">Add/Update your item</a> <br />
+            <a class="clickable" href="user_add_inventory.php">My Inventry Items</a>
+            <br /> <br />
             Add items to inventory.
             By adding item here, you are letting others know that
             they can borrow this item from you.

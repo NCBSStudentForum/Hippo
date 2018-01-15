@@ -1301,12 +1301,11 @@ function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = t
     if( is_string( $where) && strlen( $where ) > 0 )
         $query .= " WHERE $where ";
 
+    if( strlen($orderby) > 0 )
+        $query .=  " ORDER BY $orderby";
+
     $res = $db->query( $query );
     $entries = fetchEntries( $res );
-
-
-    if( strlen($orderby) > 0 )
-        sortByKey( $entries, $orderby );
 
     return $entries;
 }

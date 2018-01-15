@@ -20,12 +20,13 @@ function fixJCSchedule( $login, $data )
     $data[ 'title' ] = '';
     $data[ 'status' ] = 'VALID';
     $data[ 'id' ] = getUniqueID( 'jc_presentations' );
+    $data[ 'presenter' ] = $login;
 
     $entry = insertOrUpdateTable( 'jc_presentations'
         , 'id,presenter,jc_id,date,title', 'status'
         , $data );
 
-    echo printInfo( 'Assigned user ' . $data[ 'presenter' ] .
+    echo printInfo( 'Assigned user ' . $login .
         ' to present a paper on ' . dbDate( $data['date' ] )
         );
 

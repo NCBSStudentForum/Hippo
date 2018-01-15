@@ -35,12 +35,19 @@ foreach( $jcs as $jc )
             error_log( "Finding speaker" );
             // Else find someone and assign.
             $presenter = pickPresenter( $jcID );
-            $res = fixJCSchedule( $presenter
-                    , array( 'date' => dbDate( $nWeeksFromjcDay ), 'jc_id' => $jcID )
-                );
+            if( $presenter )
+            {
+                $res = fixJCSchedule( $presenter
+                        , array( 'date' => dbDate( $nWeeksFromjcDay ), 'jc_id' => $jcID )
+                    );
 
-            if( $res )
-                echo printInfo( "Success! " );
+                if( $res )
+                    echo printInfo( "Success! " );
+            }
+            else
+            {
+                echo printWarning( "Failed to find a presenter" );
+            }
         }
     }
 }

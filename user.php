@@ -151,7 +151,7 @@ if( anyOfTheseRoles( 'ADMIN,BOOKMYVENUE_ADMIN,JOURNALCLUB_ADMIN,AWS_ADMIN' ) )
    echo "<h1> <i class=\"fa fa-cogs\"></i>   Admin</h1>";
    $roles =  getRoles( $_SESSION['user'] );
 
-   $html = "<table class=\"tasks\">";
+   $html = "<table class=\"admin\">";
 
    if( in_array( "ADMIN", $roles ) )
        $html .= '<tr><td> All mighty ADMIN </td>

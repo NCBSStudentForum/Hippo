@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-function printErrorSevere($msg) 
+function printErrorSevere($msg)
 {
     $err = "<font size=\"4\" color=\"blue\">".$msg."</font><br>";
     error_log( $msg );
@@ -8,7 +8,7 @@ function printErrorSevere($msg)
 }
 
 
-function printWarning($msg) 
+function printWarning($msg)
 {
     $warn ="<p class=\"warn\">".$msg."</p>";
     error_log( $msg );
@@ -36,6 +36,11 @@ function minionEmbarrassed( $msg, $info = '' )
     echo "I have logged this error!. ";
     error_log( "FAILED : " . $msg );
     echo "</p>";
+}
+
+function printNote( $msg )
+{
+    return "<p class='note'> $msg </p>";
 }
 
 

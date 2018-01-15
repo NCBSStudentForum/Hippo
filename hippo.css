@@ -479,8 +479,10 @@ table.editable_faculty {
 }
 
 table.sortable thead {
-    background-color: #eee;
+    background-color: rgba(100,100,100,0.8);
     cursor: default;
+    /* cursor:s-resize; */
+    /* text-decoration: underline; */
 }
 
 table.editable_faculty tr td
@@ -615,6 +617,12 @@ p.note_to_user {
     max-width : 80%;
 }
 
+p.note {
+    font-size : small;
+    color : darkred;
+    max-width : 80%;
+}
+
 
 div.alert_user {
    max-width : var(--maxwidth);
@@ -726,10 +734,12 @@ a.clickable {
     border-bottom: 2px dotted;
     text-decoration: none;
     font-variant: small-caps;
+    cursor: url;
 }
 
 a {
     max-width : var(--maxwidth);
+    cursor: url;
 }
 
 footer {

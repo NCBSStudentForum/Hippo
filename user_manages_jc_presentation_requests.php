@@ -74,7 +74,7 @@ foreach( $requests as $i => $req )
 {
     echo '<tr>';
     echo '<td colspan="2">';
-    $req['votes'] = count( getVotes( 'jc_requests', $req['id'] ) );
+    $req['votes'] = count( getVotes( 'jc_requests.' . $req['id'] ) );
 
     echo ' <form action="#" method="post" accept-charset="utf-8">';
     // set last argument to true to has hidden value in table.

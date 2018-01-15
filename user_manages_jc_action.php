@@ -18,6 +18,16 @@ if( $_POST[ 'response' ] == 'Unsubscribe' )
     );
     if( $res )
     {
+        // Send email to jc-admins.
+        $jcAdmins = getJCAdmins( $_POST[ 'jc_id' ] );
+        $tos = implode( ","
+            , array_map( function( $x ) { return $x[ 'email' ]; }, $jcAdmins )
+        );
+        $user = whoAmI( );
+        $to = $jcAdm[ 'email' ];
+        $subject = $_POST[ 'jc_id' ] . " | $user has unsubscribed ";
+        $body = "<p> Above user has unsubscribed from your JC. </p>";
+        sendHTMLEmail( $body, $subject, $to, 'jccoords@ncbs.res.in' );
         echo printInfo( 'Successfully unsubscribed from ' . $_POST['jc_id'] );
         goToPage( 'user_manages_jc.php', 1 );
         exit;

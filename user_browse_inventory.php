@@ -16,10 +16,12 @@ if (count( $items ) < 1)
 }
 else
 {
+    $hide = 'id,status,last_modified_on,edited_by';
+    echo ' <table class="info sorttabe">';
+    echo arrayHeaderRow( $items[0], 'info sorttable', $hide );
     foreach( $items  as $item )
-    {
-        echo arrayToTableHTML( $item, 'entry_long' );
-    }
+        echo arrayToRowHTML( $item, 'info sorttable', $hide );
+    echo '</table>';
 }
 
 echo " <br /> ";

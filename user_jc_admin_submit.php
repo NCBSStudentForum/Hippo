@@ -41,6 +41,7 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
         $_POST[ 'login' ] = $login;
         $res = insertOrUpdateTable( 'jc_subscriptions'
             , 'jc_id,login', 'status', $_POST );
+
         if( ! $res )
             $anyWarning = true;
         else
@@ -52,8 +53,8 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
 
     if( ! $anyWarning )
     {
-        goToPage( "user_jc_admin.php", 1 );
-        exit;
+        //goToPage( "user_jc_admin.php", 1 );
+        //exit;
     }
 }
 else if( $_POST['response'] == 'DO_NOTHING' )
@@ -76,6 +77,7 @@ else if( $_POST['response'] == 'delete' )
 }
 else if( $_POST['response'] == 'Assign Presentation' )
 {
+    $anyError = false;
     if( strtotime( $_POST[ 'date' ]) < strtotime( 'today' ) )
     {
         echo printWarning( "You cannot assign JC presentation in past." );
@@ -83,15 +85,29 @@ else if( $_POST['response'] == 'Assign Presentation' )
     }
     else
     {
-        $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
-        if( $res )
+        $loginInfo = getLoginInfo( $_POST[ 'presenter' ] );
+        if( ! $loginInfo )
         {
-            echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
-                ' to present a paper on ' . dbDate( $_POST['date' ] )
-            );
-            goToPage( 'user_jc_admin.php', 1 );
-            exit;
+            $presenter = $_POST[ 'presenter' ];
+            echo printWarning( "I could not find $presenter in database. Invalid user?" );
+            $anyError = true;
         }
+        else
+        {
+            $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
+            if( $res )
+            {
+                echo printInfo( 'Assigned user ' . $_POST[ 'presenter' ] .
+                    ' to present a paper on ' . dbDate( $_POST['date' ] )
+                );
+            }
+        }
+    }
+
+    if( ! $anyError )
+    {
+        goToPage( 'user_jc_admin.php', 1 );
+        exit;
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )

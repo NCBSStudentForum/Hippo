@@ -30,16 +30,18 @@ foreach( $jcs as $jc )
             echo printInfo( "$jcID already have a schedule on " . humanReadableDate( $nWeeksFromjcDay) );
             continue;
         }
+        else
+        {
+            error_log( "Finding speaker" );
+            // Else find someone and assign.
+            $presenter = pickPresenter( $jcID );
+            $res = fixJCSchedule( $presenter
+                    , array( 'date' => dbDate( $nWeeksFromjcDay ), 'jc_id' => $jcID )
+                );
 
-        error_log( "Finding speaker" );
-        // Else find someone and assign.
-        $presenter = pickPresenter( $jcID );
-        $res = fixJCSchedule( $presenter
-                , array( 'date' => dbDate( $nWeeksFromjcDay ), 'jc_id' => $jcID )
-            );
-
-        if( $res )
-            echo printInfo( "Success! " );
+            if( $res )
+                echo printInfo( "Success! " );
+        }
     }
 }
 

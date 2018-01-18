@@ -419,14 +419,11 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 
 function changeStatusOfEvent( $gid, $eid, $user, $status )
 {
-    global $db;
-    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE
-        gid=:gid AND eid=:eid created_by=:created_by" );
-    $stmt->bindValue( ':status', $status );
-    $stmt->bindValue( ':gid', $gid );
-    $stmt->bindValue( ':gid', $eid );
-    $stmt->bindValue( ':created_by', $user );
-    return $stmt->execute( );
+    $res = updateTable( 'events', 'gid,eid,created_by', 'status'
+        , array( 'gid' => $gid, 'eid' => $eid, 'status' => $status
+        , 'created_by' => $created_by )
+        );
+    return $res;
 }
 
 /**

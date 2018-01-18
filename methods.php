@@ -190,6 +190,7 @@ function appURL( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
+    echo alertUser( "Moving to $page in $delay seconds" );
     try {
         header("Refresh: $delay, url=$page");
 

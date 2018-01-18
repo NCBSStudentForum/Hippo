@@ -2984,7 +2984,7 @@ function getUpcomingJCPresentations( $jcID = '', $date = 'today' )
     if( $jcID )
         $whereExpr .= " AND jc_id='$jcID' ";
 
-    $whereExpr .= " AND status='VALID'";
+    $whereExpr .= " AND status='VALID' AND CHAR_LENGTH(presenter) > 1";
     $jcs = getTableEntries( 'jc_presentations' , 'date', $whereExpr );
     return $jcs;
 }

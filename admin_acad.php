@@ -32,70 +32,57 @@ $(function() {
 echo userHTML( );
 
 echo '<h1>ANNUAL WORK SEMINAR</h1>';
-
-echo "<h2>Upcoming AWS</h2>";
-echo '
-  <table border="0" class="admin">
+echo '<table border="0" class="tasks">
     <tr>
-      <td>Manage upcoming AWS</td>
       <td>
         <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
-        <a href="admin_acad_manages_upcoming_aws.php">
+        <a class="clickable" href="admin_acad_manages_upcoming_aws.php">
         Manage upcoming AWSes</a>
         </td>
-    </tr>
-    <tr>
-        <td>Manage AWS scheduling requests</td>
-        <td> <a href="admin_acad_manages_scheduling_request.php">
+        <td> <a class="clickable" href="admin_acad_manages_scheduling_request.php">
             Manage ' . count( $pendingScheduleRequest ) .
             ' pending scheduling requests</a> </td>
     </tr>
   </table>';
 
-echo '<h2>Edit and update AWS</h2>';
-
-echo '<table class="admin">
+echo ' <br /> ';
+echo '<table class="tasks">
     <tr>
-        <td>Add AWS entry</td>
-        <td> <a href="admin_acad_add_aws_entry.php">Add AWS entry</td>
-    </tr>
-    <tr>
-        <td> Enter a login and optionally AWS date and you can delete that AWS entry
-        from my database.</td>
-        <td> <form method="post" action="">
+        <td> <a class="clickable" href="admin_acad_add_aws_entry.php">Add Missing AWS entry</td>
+        <td>
+         <form method="post" action="">
             <input id="autocomplete_user1" name="login" placeholder="AWS Speaker" type="text" />
             <input class="datepicker" name="date" placeholder="date(optional)" value="" >
             <button name="response" value="Select">' . $symbCheck . '</button>
             </form>
+            Enter a login and optionally AWS date and you can delete that AWS entry
+            from my database.
         </td>
     </tr>
     <tr>
-        <td><strong>Update AWS list</strong><br>
-            <small>Type a login name and press the button.</small>
-        </td>
         <td>
             <form method="post" action="admin_acad_update_user.php">
-                <i fa class="fa fa-graduation-cap"></i>
+                <i fa class="fa fa-graduation-cap fa-2x"></i>
                 <input id="autocomplete_user" name="login"
                     placeholder="student login" >
                 <button title="Add or remove speakers from AWS list"
                     name="response" value="edit">' . $symbUpdate .
                 '</button>
             </form>
+            <strong>Update AWS list</strong><br>
         </td>
+        <td></td>
     </tr>
     </table>';
 
-echo '<br>';
-echo '<table class="admin">
+echo '<br />';
+echo '<table class="tasks">
     <tr>
-        <td>Manage AWS edit requests</td>
-        <td> <a href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) .
-            ' pending requests</a> </td>
-    </tr>
-    <tr>
-        <td>Generate emails and documents</td>
-        <td> <a href="admin_acad_email_and_docs.php">Emails and Documents</td>
+        <td> <a class="clickable"
+            href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) .
+            ' pending requests</a>
+        </td>
+        <td> <a class="clickable" href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
     <tr>
     </table>';
@@ -163,33 +150,32 @@ if( isset( $_POST[ 'response' ] ))
  */
 echo '<h1>COURSES</h1>';
 echo '
-  <table border="0" class="admin">
+  <table class="tasks">
     <tr>
-        <td>Add/Delete or update slots </td>
-        <td> <a href="admin_acad_manages_slots.php">Slots</a> </td>
-    </tr>
-    <tr>
-        <td>Add new courses, or update course description.</td>
-        <td> <a href="admin_acad_manages_courses.php">Courses</a> </td>
-    </tr>
-    <tr> </tr>
-    <tr>
-        <td>Manage running courses</td>
         <td>
-            <a href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
+            <a class="clickable"
+                 href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
+        </td>
+        <td>
+            <a class="clickable" href="admin_acad_manages_enrollments.php">Manage Current Enrollment</a>
+            <p>Add/Remove student enrollments from currently running courses.</p>
         </td>
     </tr>
     <tr>
-        <td>Manage course registration and submit grades.</td>
         <td>
-            <a href="admin_acad_manages_enrollments.php">Manage Enrollment</a>
+            <a class="clickable"
+                href="./admin_acad_schedule_upcoming_courses.php">Schedule Upcoming Courses</a>
+            <p> Compute the best possible schedule for course (NOT: Not complete).  </p>
         </td>
+        <td></td>
     </tr>
     <tr>
-        <td>Schedule upcoming courses .</td>
-        <td>
-            <a href="./admin_acad_schedule_upcoming_courses.php">Schedule Upcoming Courses</a>
+        <td> <a class="clickable"
+             href="admin_acad_manages_slots.php">Update Slots</a> <br />
+            Add/Delete or update slots
         </td>
+        <td> <a class="clickable" href="admin_acad_manages_courses.php">All Courses</a>  <br />
+        Add new courses, or update course description.</td>
     </tr>
   </table>
   ';
@@ -197,14 +183,10 @@ echo '
 // Journal clubs.
 echo '<h1>Journal Clubs</h1>';
 echo '
-  <table border="0" class="admin">
+  <table class="tasks">
     <tr>
-        <td>Add/Update Journal Club </td>
-        <td> <a href="admin_acad_manages_jc.php">Add/Update Journal Clubs</a> </td>
-    </tr>
-    <tr>
-        <td>Manage Journal Club Admins</td>
-        <td><a href="admin_acad_manages_jc_admins.php">Manage Journal Club Admins</a></td>
+        <td><a class="clickable" href="admin_acad_manages_jc.php">Add/Update Journal Clubs</a> </td>
+        <td><a class="clickable" href="admin_acad_manages_jc_admins.php">Manage Journal Club Admins</a></td>
     </tr>
   </table>
   ';
@@ -238,7 +220,7 @@ else
 
 echo "<h2>Information</h2>";
 echo '
-  <table border="0" class="admin">
+  <table border="0" class="tasks">
     <tr>
         <td>AWS summary <small>
             See the summary of all AWSs. You may be able to spot missing AWS entry
@@ -256,18 +238,13 @@ echo '
     </tr>
   </table>';
 
-echo '<h2>Manage talks and seminars</h2>';
-echo '<table class="admin">';
-echo '
-    <tr>
-        <td>Manage talks and seminars. </td>
-        <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
-    </tr>
-    <tr>
-        <td>Add or update speakers. </td>
-        <td> <a href="admin_acad_manages_speakers.php">Manage talk/seminar speakers</td>
-    </tr>
-    </table>';
+echo '<h1>Manage talks and seminars</h1>';
+echo '<table class="tasks">';
+echo '<tr>
+        <td> <a class="clickable" href="admin_acad_manages_talks.php">Manage talks/seminar</td>
+        <td> <a class="clickable" href="admin_acad_manages_speakers.php">Manage talk/seminar speakers</td>
+    </tr>';
+echo '</table>';
 
 echo goBackToPageLink( 'user.php', 'Go back' );
 

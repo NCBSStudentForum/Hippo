@@ -145,12 +145,13 @@ echo alertUser(
     <tr>
         <td> <i class="fa fa-flag-o fa-2x"></i>
         To enroll, visit <a class="clickable" href="user_manages_courses.php">My Courses</a>
-        link in your home page after. </td>
+        link in your home page after login. </td>
     </tr>
     <tr>
         <td>
             <i class="fa fa-flag-o fa-2x"></i>
-            To see enrolled students, click on <button disabled> ' . $showEnrollText . '</button>.
+            To see enrolled students, click on <button disabled> ' . $showEnrollText . '</button>
+            in front of the course and scroll down at the bottom of the page.
         </td>
     </tr>
     <tr>
@@ -210,7 +211,7 @@ if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
     $rows = [ ];
     $allEmails = array( );
 
-    echo '<h3>Enrollment list for "' . $courseName .'"</h3>';
+    echo '<h2>Enrollment list for <tt>' . $courseName .'</tt></h2>';
     foreach( __get__($enrollments, $cid, array()) as $r )
     {
         $studentId = $r[ 'student_id' ];

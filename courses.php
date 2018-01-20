@@ -140,11 +140,29 @@ echo $table;
 echo "<h1>Running courses in " . __ucwords__( $sem) . ", $year semester</h1>";
 
 $showEnrollText = 'Show Enrollement';
-echo printInfo(
-    "Click on the button <button disabled>$showEnrollText</button>to see the
-    list of enrolled students"
+echo alertUser(
+    '<table class="show_info">
+    <tr>
+        <td> <i class="fa fa-flag-o fa-2x"></i>
+        To enroll, visit <a class="clickable" href="user_manages_courses.php">My Courses</a>
+        link in your home page after. </td>
+    </tr>
+    <tr>
+        <td>
+            <i class="fa fa-flag-o fa-2x"></i>
+            To see enrolled students, click on <button disabled> ' . $showEnrollText . '</button>.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <i class="fa fa-flag-checkered fa-2x"></i>
+            Registration on <tt>Hippo</tt> is mandatory;
+            <a href="https://moodle.ncbs.res.in" target="_blank">MOODLE</a> registration
+            does not qualify as course registration.
+        </td>
+    </tr>
+    </table>'
     );
-
 
 /**
     * @name Show the courses.

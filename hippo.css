@@ -245,8 +245,8 @@ table.timetable {
 }
 
 table.timetable tr td {
-    /*border: 1px dotted;*/
-    min-width : 10px;
+    /* border: 1px dotted; */
+    min-width : 5px;
     max-width : 100px;
     background-color:var(--tabletdcolor);
     vertical-align: top;
@@ -602,8 +602,8 @@ p.justify {
 
 
 p.info {
-    min-width : 500px;
-    width: var(--maxwidth);
+    min-width : 700px;
+    max-width: var(--maxwidth);
 }
 
 p.warn {

@@ -1816,14 +1816,10 @@ function slotTable( $width = "15px" )
 {
 
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
+
     $html = '<table class="timetable">';
-
     // Generate columns. Each one is 15 min long. Starting from 9am to 6:00pm
-    $maxCols = intval( ( 17.5 - 9 ) * 4 );
-
-    //for ($i = 0; $i < $maxCols; $i++)
-    //    $html .= '<th> </th>';
-
+    $maxNumCols = intval( ( 18 - 9 ) * 4 );
 
     // Check which slot is here.
     $slots = getTableEntries('slots' );
@@ -1831,9 +1827,11 @@ function slotTable( $width = "15px" )
     foreach( $days as $day )
     {
         $html .= "<tr>";
-        $html .= "<tr> <td>$day</td> ";
+        $html .= "<tr> <td>$day ($maxNumCols)</td> ";
 
-        for ($i = 0; $i < $maxCols; $i++)
+        $counter = 0;
+        $i = 0;
+        while( $i < $maxNumCols )
         {
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
             $slot = getSlotAtThisTime( $day, $slotTime, $slots );
@@ -1850,23 +1848,24 @@ function slotTable( $width = "15px" )
                 $id = $slot[ 'id' ];
                 $gid = $slot[ 'groupid' ];
 
+                // Invalid slot.
                 if( ! is_numeric( $id[0] ) )
                     $bgColor = 'red';
 
-
-                $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
+                $ncols = intval( $duration / 60 / 15 ); // Each column is 15 minutes.
 
                 $html .= "<td id=\"slot_$id\" style=\"background:$bgColor\" colspan=\"$ncols\">
                          <button onClick=\"showRunningCourse(this)\"
                           id=\"slot_$gid\" value=\"$id\" class=\"invisible\"> $id </button>
-                         <br> <small> <tt>$text</tt> </small> </td>";
+                         <br> <small> <tt>$text</tt> </small> $ncols </td>";
 
-                // Increase $i by ncols - 1. 1 is increased by loop.
-                if( $ncols > 1 )
-                    $i += $ncols - 1;
+                $i += $ncols;
             }
             else
-                $html .= "<td> </td>";
+            {
+                $i += 1;
+                $html .= ' <td> </td> ';
+            }
         }
         $html .= "</tr>";
     }

@@ -151,7 +151,7 @@ echo alertUser(
         <td>
             <i class="fa fa-flag-o fa-2x"></i>
             To see enrolled students, click on <button disabled> ' . $showEnrollText . '</button>
-            in front of the course and scroll down at the bottom of the page.
+            in front of the course and scroll down to the bottom of the page.
         </td>
     </tr>
     <tr>
@@ -159,7 +159,7 @@ echo alertUser(
             <i class="fa fa-flag-checkered fa-2x"></i>
             Registration on <tt>Hippo</tt> is mandatory;
             <a href="https://moodle.ncbs.res.in" target="_blank">MOODLE</a> registration
-            does not qualify as course registration.
+            does not qualify as  official registration.
         </td>
     </tr>
     </table>'

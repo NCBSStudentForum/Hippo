@@ -2251,5 +2251,26 @@ function addClickabelURLToMail( $html, $clickable )
     return $html;
 }
 
+function awsAssignmentForm( $date = null )
+{
+   $form = '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">
+    <table class="standout">';
+    if( ! $date )
+    {
+        $form .= '<tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>';
+        $form .= '<tr> <td> <input class="datepicker"  name="date" value="" > </td>';
+    }
+    else
+    {
+        $form .= '<input type="hidden"  name="date" value="' . $date . '" >';
+        $form .= '<th>Select speaker</th> <th></th> </tr>';
+        $form .= '<tr>';
+    }
 
+    $form .= '<td> <input class="autocomplete_speaker" name="speaker" placeholder="speaker login id" /></td>
+            <td> <button name="response" value="Assign">Assign</button> </td>';
+    $form .= '</tr>';
+    $form .= '</table></form>';
+    return $form;
+}
 ?>

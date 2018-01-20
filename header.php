@@ -207,6 +207,7 @@ $symbEdit = "&#x270d";                // Writing hand
 $symbCalendar = "&#128197";          // Does not work on chromium
 $symbCalendar = "Schedule It";
 $symbDelete = "&#10008";
+$symbDelete = '<i class="fa fa-trash-o"></i>';
 $symbCancel = "&#10008";
 
 $symbReject = "Reject";

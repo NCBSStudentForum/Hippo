@@ -14,12 +14,13 @@ $speakers = getLoginIds( );
 <script type="text/javascript" charset="utf-8">
 $(function() {
     var speakers = <?php echo json_encode( $speakers ); ?>;
-    $( "#autocomplete_speaker" ).autocomplete( { source : speakers });
+    $( ".autocomplete_speaker" ).autocomplete( { source : speakers });
 });
 </script>
 
 
 <?php
+
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 echo userHTML( );
@@ -63,28 +64,14 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
 }
 
 
-echo '<h3>Manually assign AWS</h3>';
+echo '<h1>Manually assign AWS</h1>';
 echo printInfo(
     'Here you can manually assign speakers to an AWS slot After assignment,
     ' );
 
-echo '
-    <form method="post" action="admin_acad_manages_upcoming_aws_submit.php">
-    <table class="standout">
-    <tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>
-    <tr>
-        <td> <input class="datepicker"  name="date" value="" > </td>
-        <td>
-            <input id="autocomplete_speaker" name="speaker"
-                placeholder="I will autocomplete" />
-        </td>
-        <td> <button name="response" value="Assign">Assign</button> </td>
-    </tr>
-    </table>
-    </form>
-    ';
+echo awsAssignmentForm( );
 
-echo "<h3>Upcoming approved AWSs</h3>";
+echo "<h1>Upcoming approved AWSs</h1>";
 // Show the rest of entries grouped by date.
 if( count(  $upcomingAWSs ) > 0 )
 {
@@ -93,15 +80,23 @@ if( count(  $upcomingAWSs ) > 0 )
     echo '<tr> <td>' . humanReadableDate( $upcomingAWSs[0]['date'] ) . '</td>';
 }
 
+$awsThisWeek = 0;
 foreach( $upcomingAWSs as $aws )
 {
     echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
         method="post" accept-charset="utf-8">';
+
     if( strtotime( $aws['date']) != $groupDate )
     {
+        if( $awsThisWeek < 3 )
+            echo '<td>' . awsAssignmentForm( $aws['date'] ) . '</td>';
+        $awsThisWeek = 0;
+
         $groupDate = strtotime( $aws['date'] );
         echo '</tr>';
         echo '<tr><td>' . humanReadableDate( $aws['date'] ) . '</td>';
+
+
     }
     echo '<td>';
 
@@ -110,9 +105,9 @@ foreach( $upcomingAWSs as $aws )
 
     $pi = getPIOrHost( $aws[ 'speaker' ] );
     $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
+
     // Speaker PI if any.
     echo piSpecializationHTML( $pi, $specialization );
-
 
     // Check if user has requested AWS schedule and has it been approved.
     $request = getTableEntry( 'aws_scheduling_request'
@@ -133,6 +128,8 @@ foreach( $upcomingAWSs as $aws )
             >' . $symbDelete . '</button>';
     echo '</td>';
     echo '</form>';
+
+    $awsThisWeek += 1;
 }
 echo '</tr></table>';
 

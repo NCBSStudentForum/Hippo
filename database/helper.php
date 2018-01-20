@@ -1852,6 +1852,10 @@ function acceptScheduleOfAWS( $speaker, $date )
 {
     global $db;
 
+    // If date is invalid, return.
+    if( strtotime( $date ) < 0 )
+        return 0;
+
     // If there is already a schedule for this person.
     $res = getTableEntry( 'upcoming_aws', 'speaker,date'
         , array( 'speaker' => $speaker, 'date' => dbDate( $date ) )

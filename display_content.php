@@ -10,7 +10,8 @@ function printErrorSevere($msg)
 
 function printWarning($msg)
 {
-    $warn ="<p class=\"warn\">".$msg."</p>";
+    $warn ="<p class=\"warn\">
+        <i class='fa fa-exclamation-circle fa-2x'></i> ".$msg."</p>";
     error_log( $msg );
     return $warn;
 }

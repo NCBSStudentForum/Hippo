@@ -4,9 +4,6 @@ include_once 'header.php';
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
-include_once 'check_access_permissions.php';
-
-mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 echo "<h3>Annual Work Seminars Summary</h3>";
 
@@ -82,7 +79,7 @@ foreach( $awsGroupedBySpeaker as $speaker => $awses )
         continue;
 
     $piOrHost = $speaker[ 'pi_or_host'];
-    $table .= "<tr> <td>$i</td> <td> " . $fname . ' ' . $lname 
+    $table .= "<tr> <td>$i</td> <td> " . $fname . ' ' . $lname
                 . "<br><small> PI: $piOrHost </small>" . "</td>";
     $when = array( );
     foreach( $awses as $aws )

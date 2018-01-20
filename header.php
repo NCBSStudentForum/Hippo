@@ -97,7 +97,9 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <!-- sort table. -->
 <script src="./node_modules/sorttable/sorttable.js"></script>
-
+<script type="text/javascript" charset="utf-8">
+    $(".sortable").sortable( );
+</script>
 
 
 <script>

@@ -6,7 +6,11 @@ include_once "tohtml.php";
 include_once 'database.php';
 include_once "check_access_permissions.php";
 
-$speakers = getLoginIds( );
+$allSpeakers = array_map( function( $x ) { return $x['login']; }, getAWSSpeakers( ) );
+$upcomingAWSs = getUpcomingAWS( );
+
+$alreadyHaveAWS = array_map( function( $x ) { return $x['speaker']; }, $upcomingAWSs );
+$speakers = array_values( array_diff( $allSpeakers, $alreadyHaveAWS ) );
 
 ?>
 
@@ -54,9 +58,8 @@ foreach( $upcomingAwsNextWeek as $upcomingAWS )
     echo '<button name="response" title="Edit/fromat the abstract"
                 value="format_abstract">' . $symbEdit . '</button>';
     echo '<br>';
-    echo '<button onclick="AreYouSure(this)"
-            name="response" title="Remove this entry from schedule"
-            value="delete">' . $symbCancel . '</button>';
+    echo '<button onclick="AreYouSure(this)" name="response"
+            title="Remove this entry from schedule" value="delete">' . $symbCancel . '</button>';
     echo '</td></tr>';
     echo '</table>';
     echo '</form>';
@@ -83,13 +86,10 @@ if( count(  $upcomingAWSs ) > 0 )
 $awsThisWeek = 0;
 foreach( $upcomingAWSs as $aws )
 {
-    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
-        method="post" accept-charset="utf-8">';
-
     if( strtotime( $aws['date']) != $groupDate )
     {
         if( $awsThisWeek < 3 )
-            echo '<td>' . awsAssignmentForm( $aws['date'] ) . '</td>';
+            echo '<td>' . awsAssignmentForm( dbDate( $groupDate ) ) . '</td>';
         $awsThisWeek = 0;
 
         $groupDate = strtotime( $aws['date'] );
@@ -122,13 +122,14 @@ foreach( $upcomingAWSs as $aws )
     if( $aws[ 'acknowledged' ] == 'NO'  )
         echo "<p class=\"note_to_user\">Acknowledged: " . $aws[ 'acknowledged' ] . "</p>";
 
+    echo '<form action="admin_acad_manages_upcoming_aws_submit.php" method="post" accept-charset="utf-8">';
     echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
     echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
-    echo '<button name="response" value="delete" title="Delete this entry"
-            >' . $symbDelete . '</button>';
-    echo '</td>';
+    echo '<button name="response" onclick="AreYouSure(this)"
+        title="Delete this entry" >' . $symbDelete . '</button>';
     echo '</form>';
 
+    echo '</td>';
     $awsThisWeek += 1;
 }
 echo '</tr></table>';

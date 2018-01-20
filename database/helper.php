@@ -1838,6 +1838,13 @@ function getUpcomingAWSById( $id )
     return  $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
+function getUpcomingAWSOfSpeaker( $speaker )
+{
+    return getTableEntry( 'upcoming_aws', 'speaker,status'
+        , array( 'speaker'=> $speaker , 'status' => 'VALID' )
+        );
+}
+
 /**
     * @brief Accept a auto generated schedule. We put the entry into table
     * upcoming_aws and delete this entry from aws_temp_schedule tables. In case
@@ -1853,7 +1860,7 @@ function acceptScheduleOfAWS( $speaker, $date )
     global $db;
 
     // If date is invalid, return.
-    if( strtotime( $date ) < 0 )
+    if( strtotime( $date ) < 0  or strtotime( $date ) < strtotime( '-7 day' ) )
         return 0;
 
     // If there is already a schedule for this person.

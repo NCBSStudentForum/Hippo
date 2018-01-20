@@ -20,33 +20,44 @@ else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )
 {
     $speaker = explode( '@', $_POST[ 'speaker' ] )[0];
     $date = $_POST[ 'date' ];
-    if(  $speaker && getLoginInfo( $speaker ) )
+    if(  $speaker && getLoginInfo( $speaker ) && strtotime( $date ) > strtotime( '-7 day' ) )
     {
-        $awsID = acceptScheduleOfAWS( $speaker, $date );
-        if( $awsID >= 0 )
+        $aws = getUpcomingAWSOfSpeaker( $speaker );
+        if( $aws )
         {
-            echo printInfo( "Successfully assigned" );
-
-            // When accepting the computed schedule, we don't want to run the
-            // rescheduling algo.
-            if( $_POST[ 'response' ] == 'Assign' )
-                rescheduleAWS( );
-
-            // Send email to user.
-            $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ], $awsID );
-            if( $res )
-            {
-                goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
-                exit;
-            }
-            else
-                echo printWarning( "Failed to send email to user" );
+            echo printWarning( "$speaker already has AWS scheduled. Doing nothing." );
+            echo arrayToVerticalTableHTML( $aws, 'aws' );
         }
         else
-            echo printWarning( "Invalid entry. Probably date '$date' is wrong" );
+        {
+            $awsID = acceptScheduleOfAWS( $speaker, $date );
+            if( $awsID > 0 )
+            {
+                echo printInfo( "Successfully assigned" );
+
+                // When accepting the computed schedule, we don't want to run the
+                // rescheduling algo.
+                if( $_POST[ 'response' ] == 'Assign' )
+                    rescheduleAWS( );
+
+                // Send email to user.
+                $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ], $awsID );
+                if( $res )
+                {
+                    goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
+                    exit;
+                }
+                else
+                    echo printWarning( "Failed to send email to user" );
+            }
+            else
+                echo printWarning( "Invalid entry. Probably date ('$date') is in past." );
+        }
     }
     else
-        echo printWarning( "Invalid speaker '$speaker'. Could not assign AWS." );
+        echo printWarning( "Invalid speaker '$speaker' or date '$date' is in past.
+                Could not assign AWS."
+            );
 }
 else if( $_POST[ 'response' ] == 'format_abstract' )
 {
@@ -117,7 +128,7 @@ else if( $_POST[ 'response' ] == 'delete' )
             ";
 
         $data = array( );
-        $data[ 'id' ] = $_POST[ 'id' ];
+
         $data[ 'speaker' ] = $_POST[ 'speaker' ];
         $data[ 'date' ] = $_POST[ 'date' ];
 

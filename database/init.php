@@ -128,7 +128,7 @@ function initialize( $db  )
             , rid INT NOT NULL
             , class VARCHAR(20) DEFAULT 'UNKNOWN'
             , created_by VARCHAR(50) NOT NULL
-            , title VARCHAR(100) NOT NULL
+            , title VARCHAR(300) NOT NULL
             , external_id VARCHAR(50)
             , description TEXT
             , venue VARCHAR(80) NOT NULL
@@ -180,7 +180,7 @@ function initialize( $db  )
             -- If yes, this entry will be put on google calendar.
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO'
             , class VARCHAR(20) NOT NULL DEFAULT 'UNKNOWN'
-            , title VARCHAR(200) NOT NULL
+            , title VARCHAR(300) NOT NULL
             , description TEXT
             , date DATE NOT NULL
             , venue VARCHAR(80) NOT NULL

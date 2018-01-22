@@ -124,12 +124,6 @@ function showRunningCourse( x )
 echo '<h1>Slots </h1>';
 
 echo printInfo(
-    "Some courses may modify these slot timings. In case of any discrepency
-    please notify " . mailto( 'acadoffice@ncbs.res.in', 'Academic Office' ) . "."
-);
-
-
-echo printInfo(
     "Click on tile <button class=\"invisible\" disabled>1A</button> etc to see the
     list of courses running at this time.
     ");
@@ -141,7 +135,7 @@ echo "<h1>Running courses in " . __ucwords__( $sem) . ", $year semester</h1>";
 
 $showEnrollText = 'Show Enrollement';
 echo alertUser(
-    '<table class="show_info">
+    '<table class="show_info sortable">
     <tr>
         <td> <i class="fa fa-flag-o fa-2x"></i>
         To enroll, visit <a class="clickable" href="user_manages_courses.php">My Courses</a>
@@ -150,8 +144,8 @@ echo alertUser(
     <tr>
         <td>
             <i class="fa fa-flag-o fa-2x"></i>
-            To see enrolled students, click on <button disabled> ' . $showEnrollText . '</button>
-            in front of the course and scroll down to the bottom of the page.
+            To see enrolled students, click on <i class="fa fa-list-alt fa-1x"></i>
+            and scroll down to the bottom of the page.
         </td>
     </tr>
     <tr>
@@ -159,7 +153,7 @@ echo alertUser(
             <i class="fa fa-flag-checkered fa-2x"></i>
             Registration on <tt>Hippo</tt> is mandatory;
             <a href="https://moodle.ncbs.res.in" target="_blank">MOODLE</a> registration
-            does not qualify as  official registration.
+            is independent!
         </td>
     </tr>
     </table>'
@@ -171,7 +165,7 @@ echo alertUser(
 /**  @} */
 
 $table = '<table class="info">';
-$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot Tiles</th><th>Venue</th>
+$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot <br /> Venue</th>
     <th>Enrollments</th><th>URL</th> </tr>';
 
 // Go over courses and populate the entrollment array.
@@ -184,11 +178,6 @@ foreach( $slotCourses as $slot => $courses )
         $cid = $c[ 'course_id' ];
         $table .= '<tr>';
         $table .= courseToHTMLRow( $c, $slot, $sem, $year, $enrollments );
-        $table .= '<form method="post" action="#">';
-        $table .= '<td> <button name="response" value="show_enrollment">
-                  <small>' . $showEnrollText . '</small></button></td>';
-        $table .= '<input type="hidden" name="course_id" value="' . $cid . '">';
-        $table .= '</form>';
         $table .= '</tr>';
 
         $data = getEnrollmentTableAndEmails( $cid, $enrollments );
@@ -219,7 +208,7 @@ if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
     $rows = [ ];
     $allEmails = array( );
 
-    echo '<h2>Enrollment list for <tt>' . $courseName .'</tt></h2>';
+    echo '<h2>Enrollment list for "' . $courseName .'"</h2>';
 
     $data = getEnrollmentTableAndEmails( $cid, $enrollments );
     $table = $data[ 'html_table'];
@@ -257,9 +246,7 @@ foreach( $slotUpcomingCourses as $slot => $ucs )
         $slot = $uc[ 'slot' ];
         $sem = getSemester( $uc[ 'end_date' ] );
         $year = getYear( $uc[ 'end_date' ] );
-
         $newTab .= courseToHTMLRow( $uc, $slot, $sem, $year, $upcomingEnrollments);
-
         $newTab .= '</tr>';
     }
 }

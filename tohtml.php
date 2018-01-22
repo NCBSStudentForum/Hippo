@@ -1827,7 +1827,7 @@ function slotTable( $width = "15px" )
     foreach( $days as $day )
     {
         $html .= "<tr>";
-        $html .= "<tr> <td>$day ($maxNumCols)</td> ";
+        $html .= "<tr> <td>$day</td> ";
 
         $counter = 0;
         $i = 0;
@@ -1992,12 +1992,11 @@ function getCourseInstructors( $c )
                 if( $i )
                 {
                     $name = arrayToName( findAnyoneWithEmail( $i ) );
-                    $instructors[ ] = "<small><a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
-                        $name </a></small>";
+                    $instructors[ ] = "<a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
+                        $name </a>";
                 }
             }
     }
-
     $instructors = implode( '<br>', $instructors );
     return $instructors;
 
@@ -2033,6 +2032,7 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'
                 AND type!='DROPPED'";
+
     $registrations = getTableEntries(
         'course_registration', 'student_id', $whereExpr
     );
@@ -2049,31 +2049,48 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
 
-    $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - '
+    $schedule = humanReadableDate( $c[ 'start_date' ] ) . '<br /> to <br />'
         . humanReadableDate( $c[ 'end_date' ] );
 
     $slotInfo = getCourseSlotTiles( $c, $slot );
     $instructors = getCourseInstructors( $cid );
+    $venue = $c[ 'venue' ];
+    $nReg = count( $registrations );
 
     $row = '<tr>
-        <td> <button id="$cid" onclick="showCourseInfo(this)" class="courseInfo"
-        value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>'
-        . $instructors . '</td>
+        <td><font style="font-variant:small-caps">' . $cname . '</font>
+            <button id="$cid" onclick="showCourseInfo(this)"
+                class="show_as_link" value="' . $cinfo . '"
+                title="' . $cname . '" > <i class="fa fa-info-circle"></i>
+            </button>
+        <br />' . $instructors . " <br /> $note " . '</td>
         <td>' .  $schedule . '</td>
-        <td>' . "<strong> $slotInfo </strong> <br>"
-        .  '<strong>' . $note . '</strong></td><td>'
-        .  $c[ 'venue' ] . '</td>
-        <td>' . count( $registrations ) . '</td>'
-        ;
+        <td>' . "$slotInfo <br /><strong> $venue </strong> </td>" .
+        "<td> $nReg " . '
+            <form action="#" method="post" accept-charset="utf-8">
+                <input type="hidden" name="course_id" value="' . $cid . '" />
+                <button name="response" value="show_enrollment"
+                    title="Show registrations" class="show_as_link">
+                    <i class="fa fa-list-alt fa-1x"></i>
+                </button>
+            </form>
+            </td>';
 
     // If url is found, put it in page.
-    if( $c['url'] )
+    if( __get__( $c, 'url', '' ) )
+    {
+        $url = $c['url'];
+        if( __substr__( 'moodle', $url ) )
+            $text = 'MOODLE';
+        else
+            $text = 'Webpage';
         $row .= '<td>
         <a target="_blank" href="' . $c['url'] . '">
-            <i class="fa fa-external-link fa-2x"></i>Webpage (MOODLE)
-        </a></td>';
+            <i class="fa fa-external-link fa-2x"></i>' . $text . '</a></td>';
+    }
     else
         $row .= '<td></td>';
+
 
     return $row;
 }

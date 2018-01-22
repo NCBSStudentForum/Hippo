@@ -351,16 +351,16 @@ button.submit {
 }
 
 button.courseInfo {
-    /*border: 1px solid;*/
+    border: none;
+    background: none;
     min-width : 200px;
-    font-variant: small-caps;
+    /* font-variant: small-caps; */
     text-align : left;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 button.show_as_link {
     background:none;
-    color:inherit;
     border: none;
     padding:0;
     border-bottom: 1px solid;
@@ -693,15 +693,14 @@ address {
 
 
 a[href^="mailto:"] {
-
   text-decoration: none;
   font-family : monospace;
-  font-size: small;
+  font-size: x-small;
 }
 
 a[href^="mailto:"]::before {
     content: "\2709";
-    font-size: x-large;
+    font-size: large;
 }
 
 a:link {
@@ -741,6 +740,7 @@ a {
     max-width : var(--maxwidth);
     cursor: url;
 }
+
 
 footer {
     position: fixed;

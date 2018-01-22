@@ -2045,7 +2045,7 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     $note = '';
     if( $c[ 'note' ] )
-        $note = colored( '* ' . $c[ 'note' ], 'blue' );
+        $note = colored( '* ' . $c[ 'note' ], 'brown' );
 
     $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
 

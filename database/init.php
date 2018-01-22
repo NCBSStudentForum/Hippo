@@ -392,7 +392,7 @@ function initialize( $db  )
             , last_modified_on DATETIME
             , grade VARCHAR(2)
             , grade_is_given_on DATETIME  -- Do not show till feedback is given.
-            , UNIQUE KEY (student_id,course_id,type)
+            , UNIQUE KEY (student_id,course_id,year,semester)
             , PRIMARY KEY (student_id,semester,year,course_id)
             ) "
         );

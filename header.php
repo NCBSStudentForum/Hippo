@@ -120,6 +120,8 @@ $(function(){
             minTime : '8am'
             , scrollDefault : 'now'
             , timeFormat : 'H:mm', interval : '15'
+            , startTime : '8am'
+            , dynamic : false
     });
 });
 </script>

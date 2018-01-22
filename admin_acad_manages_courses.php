@@ -66,7 +66,7 @@ echo '<button type="submit" name="response" value="show">Edit Course</button>';
 echo '</form>';
 
 $buttonVal = 'Add';
-if( __get__( $_POST, 'reponse', 'Edit' ) )
+if( __get__( $_POST, 'reponse', 'Edit' ) && __get__( $_POST, 'id', false ) )
 {
     $course = __get__( $coursesMap, $_POST['id'], null );
     if( $course )

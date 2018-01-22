@@ -1879,7 +1879,7 @@ function slotTable( $width = "15px" )
 function coursesTable( $editable = false, $with_form = true )
 {
     $courses = getTableEntries( 'courses_metadata', 'name,id' );
-    $html = '<table class="info">';
+    $html = '<table class="info sortable">';
     $html .= '<th>ID</th> <th>Credit</th> <th>Name</th> <th> Description </th>
         <th> Instructors </th> <th></th> ';
     foreach( $courses as $c )

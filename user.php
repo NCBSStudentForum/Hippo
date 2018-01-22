@@ -29,21 +29,24 @@ $html .= '<tr>
         </td>
     </tr>';
 
+$html .= '<tr>';
 if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
 {
-    $html .=  '<tr>
-        <td> <i class="fa fa-graduation-cap fa-3x"></i>
+    $html .=  '<td> <i class="fa fa-graduation-cap fa-3x"></i>
         <a class="clickable" href="user_aws.php">My AWS</a> <br />
         List of your Annual Work Seminar <br />
         <small> See your previous AWSs and update them. Check
         the details about upcoming AWS and provide preferred dates.
         </small> <br />
         <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a>
-        </td>
-        <td></td>
-         </tr>';
+        </td>';
 }
-$html .= '</table>';
+$html .= '<td> 
+    <i class="fa fa-hand-pointer-o fa-3x"></i>
+    <a class="clickable" href="quickbook.php">Quickbook</a> 
+    </td>';
+
+$html .= '</tr></table>';
 echo $html;
 
 // Journal club entry.
@@ -87,9 +90,10 @@ $html .= '
     <tr>
     <td>
         <i class="fa fa-hand-pointer-o fa-3x"></i>
-         <a class="clickable" href="quickbook.php">Book for local events</a>
+         <a class="clickable" href="quickbook.php">Quickbook</a>
          <br />
-        Book non-public events i.e. no email needs to be sent to Academic community.
+         Book non-public events i.e. no email needs to be sent to Academic community. 
+         Otherwise use <tt>BOOK TALK/SEMINAR</tt> link below.
     </td>
     <td>
         <a href="user_show_requests.php" class="clickable">My booking requests</a> <br />

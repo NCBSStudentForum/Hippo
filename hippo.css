@@ -212,22 +212,18 @@ table.show_schedule th
 
 table.tasks
 {
-    max-width: 600px;
+    width: 600px;
+    max-width: 700px;
     min-width : 500px;
     text-align: top;
 }
 
 
-table.tasks tr td:nth-child(1)
+table.tasks tr td
 {
-    width:60%;
     background-color: var(--tabletdcolor);
-}
-
-table.tasks tr td:nth-child(2)
-{
-    width:40%;
-    background-color: var(--tabletdcolor);
+    width: 50%;
+    text-align: top;
 }
 
 table.standout {

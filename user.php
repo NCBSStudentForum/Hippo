@@ -41,9 +41,9 @@ if( $userInfo[ 'eligible_for_aws' ] == 'YES' )
         <a href="user_update_supervisors.php">Update TCM Members/Supervisors</a>
         </td>';
 }
-$html .= '<td> 
+$html .= '<td>
     <i class="fa fa-hand-pointer-o fa-3x"></i>
-    <a class="clickable" href="quickbook.php">Quickbook</a> 
+    <a class="clickable" href="quickbook.php">Quickbook</a>
     </td>';
 
 $html .= '</tr></table>';
@@ -92,7 +92,7 @@ $html .= '
         <i class="fa fa-hand-pointer-o fa-3x"></i>
          <a class="clickable" href="quickbook.php">Quickbook</a>
          <br />
-         Book non-public events i.e. no email needs to be sent to Academic community. 
+         Book non-public events i.e. no email needs to be sent to Academic community.
          Otherwise use <tt>BOOK TALK/SEMINAR</tt> link below.
     </td>
     <td>
@@ -158,8 +158,9 @@ if( anyOfTheseRoles( 'ADMIN,BOOKMYVENUE_ADMIN,JOURNALCLUB_ADMIN,AWS_ADMIN' ) )
    $html = "<table class=\"admin\">";
 
    if( in_array( "ADMIN", $roles ) )
-       $html .= '<tr><td> All mighty ADMIN </td>
-       <td><a class="clickable" href="admin.php">Admin</a></td> </td>
+       $html .= '<tr>
+           <td> All mighty ADMIN </td>
+           <td><a class="clickable" href="admin.php">Admin</a> </td>
        </tr>';
 
    if( in_array( "BOOKMYVENUE_ADMIN", $roles ) )

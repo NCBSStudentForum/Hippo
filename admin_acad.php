@@ -32,7 +32,7 @@ $(function() {
 echo userHTML( );
 
 echo '<h1>ANNUAL WORK SEMINAR</h1>';
-echo '<table border="0" class="tasks">
+echo '<table class="tasks">
     <tr>
       <td>
         <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
@@ -69,7 +69,7 @@ echo '<table class="tasks">
                     name="response" value="edit">' . $symbUpdate .
                 '</button>
             </form>
-            <strong>Update AWS list</strong><br>
+            Update AWS list <br />
         </td>
         <td></td>
     </tr>
@@ -84,7 +84,6 @@ echo '<table class="tasks">
         </td>
         <td> <a class="clickable" href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
-    <tr>
     </table>';
 
 $login = null;
@@ -153,6 +152,7 @@ echo '
   <table class="tasks">
     <tr>
         <td>
+            <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
             <a class="clickable"
                  href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
         </td>
@@ -171,10 +171,10 @@ echo '
     </tr>
     <tr>
         <td> <a class="clickable"
-             href="admin_acad_manages_slots.php">Update Slots</a> <br />
-            Add/Delete or update slots
+             href="admin_acad_manages_slots.php">Manage Slots</a> <br />
+            Add/Delete or update slot.
         </td>
-        <td> <a class="clickable" href="admin_acad_manages_courses.php">All Courses</a>  <br />
+        <td> <a class="clickable" href="admin_acad_manages_courses.php">Manage all courses</a>  <br />
         Add new courses, or update course description.</td>
     </tr>
   </table>

@@ -113,9 +113,9 @@ function eventToICALLink( $event )
     $link = '.';
     if( file_exists( $filename ) )
         $link = downloadTextFile( $filename
-                        , '<i class="fa fa-calendar"> <strong>iCal</strong></i>'
-                        , 'link_as_button'
-                    );
+        , '<i class="fa fa-calendar"> <strong>iCal</strong></i>'
+        , 'link_as_button'
+    );
 
     return $link;
 }
@@ -1876,11 +1876,12 @@ function slotTable( $width = "15px" )
 
 }
 
-function coursesTable( $editable = false )
+function coursesTable( $editable = false, $with_form = true )
 {
-    $courses = getTableEntries( 'courses_metadata' );
-    $html = '<div style="font-size:small">';
-    $html .= '<table class="show_aws">';
+    $courses = getTableEntries( 'courses_metadata', 'name,id' );
+    $html = '<table class="info">';
+    $html .= '<th>ID</th> <th>Credit</th> <th>Name</th> <th> Description </th>
+        <th> Instructors </th> <th></th> ';
     foreach( $courses as $c )
     {
         $instructors = array( );
@@ -1892,19 +1893,27 @@ function coursesTable( $editable = false )
         $html .= "<td>" . $c[ 'id' ] . "</td>";
         $html .= "<td>" . $c[ 'credits' ] . "</td>";
         $html .= "<td>" . $c[ 'name' ] . "</td>";
-        $html .= "<td>" . $c[ 'description' ] . "</td>";
-        $html .= "<td>" . implode('<br>', $instructors) . "</td>";
+        $html .= "<td><div class=\"cell_content\">" . $c[ 'description' ] . "</div></td>";
+        $html .= "<td><div class=\"cell_content\">" . implode('<br>', $instructors)
+            . "</div></td>";
+
         if( $editable )
         {
-            $html .= '<td> <button name="response" value="Edit">Edit</button> </td>';
+            if( $with_form )
+                $html .= ' <form action="#" method="post" accept-charset="utf-8">';
+
+            $html .= '<td> <button name="response" value="Edit">Edit</button>';
             $html .= '<input type="hidden" name="id" value="' . $c['id'] . '">';
+            $html .= '</td>';
+
+            if( $with_form )
+                $html .= '</form>';
         }
 
         $html .= "</tr>";
 
     }
     $html .= '</table>';
-    $html .= '</div>';
     return $html;
 }
 
@@ -1974,7 +1983,6 @@ function getCourseShortInfoText( $course )
         $course = getCourseById( $course );
 
     $text = $course[ 'name' ];
-
     return $text;
 }
 

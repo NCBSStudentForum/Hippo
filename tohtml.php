@@ -2273,4 +2273,38 @@ function awsAssignmentForm( $date = null )
     $form .= '</table></form>';
     return $form;
 }
+
+function getEnrollmentTableAndEmails( $cid, $enrollments )
+{
+    $courseName = getCourseName( $cid );
+    $rows = [ ];
+
+    $allEmails = array( );
+
+    foreach( __get__($enrollments, $cid, array()) as $r )
+    {
+        $studentId = $r[ 'student_id' ];
+        $info = getUserInfo( $studentId );
+        $row = '';
+        $row .= '<td>' . loginToText( $info, false) . '</td>';
+        $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
+        $row .= '<td>' . $r[ 'type' ] . "</td>";
+        $rows[ $info[ 'first_name'] ] = $row;
+        $allEmails[ ] = $info[ 'email'];
+    }
+
+    ksort( $rows );
+    $count = 0;
+
+    // Construct enrollment table.
+    $table = '<table id="show_enrollmenents" class="info">';
+    foreach( $rows as $fname => $row )
+    {
+        $count ++;
+        $table .= "<tr><td>$count</td>" . $row . '</tr>';
+    }
+    $table .= '</table>';
+    return array( 'html_table' => $table, 'enrolled_emails' => $allEmails );
+}
+
 ?>

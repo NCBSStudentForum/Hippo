@@ -190,6 +190,14 @@ foreach( $slotCourses as $slot => $courses )
         $table .= '<input type="hidden" name="course_id" value="' . $cid . '">';
         $table .= '</form>';
         $table .= '</tr>';
+
+        $data = getEnrollmentTableAndEmails( $cid, $enrollments );
+        $enTable = $data[ 'html_table'];
+        $allEmails = $data[ 'enrolled_emails' ];
+
+        $table .= '<div class="HideAndShow">';
+        $table .= "<tr><td colspan=\"7\"> $enTable </td> </tr>";
+        $table .= "</div>";
     }
 }
 
@@ -212,29 +220,10 @@ if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
     $allEmails = array( );
 
     echo '<h2>Enrollment list for <tt>' . $courseName .'</tt></h2>';
-    foreach( __get__($enrollments, $cid, array()) as $r )
-    {
-        $studentId = $r[ 'student_id' ];
-        $info = getUserInfo( $studentId );
-        $row = '';
-        $row .= '<td>' . loginToText( $info, false) . '</td>';
-        $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
-        $row .= '<td>' . $r[ 'type' ] . "</td>";
-        $rows[ $info[ 'first_name'] ] = $row;
-        $allEmails[ ] = $info[ 'email'];
-    }
 
-    ksort( $rows );
-    $count = 0;
-
-    // Construct enrollment table.
-    $table = '<table id="show_enrollmenents" class="info">';
-    foreach( $rows as $fname => $row )
-    {
-        $count ++;
-        $table .= "<tr><td>$count</td>" . $row . '</tr>';
-    }
-    $table .= '</table>';
+    $data = getEnrollmentTableAndEmails( $cid, $enrollments );
+    $table = $data[ 'html_table'];
+    $allEmails = $data[ 'enrolled_emails' ];
 
     // Display it.
     echo '<div style="font-size:small">';

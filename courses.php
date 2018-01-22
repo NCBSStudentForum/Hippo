@@ -195,9 +195,9 @@ foreach( $slotCourses as $slot => $courses )
         $enTable = $data[ 'html_table'];
         $allEmails = $data[ 'enrolled_emails' ];
 
-        $table .= '<div class="HideAndShow">';
-        $table .= "<tr><td colspan=\"7\"> $enTable </td> </tr>";
-        $table .= "</div>";
+        //$table .= '<div class="HideAndShow">';
+        //$table .= "<tr><td colspan=\"7\"> $enTable </td> </tr>";
+        //$table .= "</div>";
     }
 }
 

@@ -2068,8 +2068,10 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     // If url is found, put it in page.
     if( $c['url'] )
-        $row .= '<td><a target="_blank" href="' . $c['url']
-        . '">Course page</a></td>';
+        $row .= '<td>
+        <a target="_blank" href="' . $c['url'] . '">
+            <i class="fa fa-external-link fa-2x"></i>Webpage (MOODLE)
+        </a></td>';
     else
         $row .= '<td></td>';
 

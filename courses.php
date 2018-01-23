@@ -18,6 +18,23 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
 <script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <link rel="stylesheet" type="text/css" href="./node_modules/sweetalert2/dist/sweetalert.css">
 
+<!-- toggle  show hide -->
+<script type="text/javascript" charset="utf-8">
+function toggleShowHide( button, eid )
+{
+    var div = document.getElementById( eid );
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+        button.innerHTML = 'Show Enrollments';
+    }
+    else {
+        div.style.display = 'inline';
+        button.innerHTML = 'Hide Enrollments';
+    }
+};
+</script>
+
+
 
 <?php
 /* get this semester and next semester courses */
@@ -164,68 +181,59 @@ echo alertUser(
     * @{ */
 /**  @} */
 
-$table = '<table class="info">';
-$table .= '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot <br /> Venue</th>
+
+$header = '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot <br /> Venue</th>
     <th>Enrollments</th><th>URL</th> </tr>';
+
 
 // Go over courses and populate the entrollment array.
 $enrollments = array( );
 ksort( $slotCourses );
+
+$table = '<table class="show_info sortable">';
 foreach( $slotCourses as $slot => $courses )
 {
     foreach( $courses as $c )
     {
         $cid = $c[ 'course_id' ];
-        $table .= '<tr>';
-        $table .= courseToHTMLRow( $c, $slot, $sem, $year, $enrollments );
-        $table .= '</tr>';
+        $courseTable = '<table class="info">';
+        $courseTable .= $header;
+        $courseTable .= "<tr>";
+        $courseTable .= courseToHTMLRow( $c, $slot, $sem, $year, $enrollments );
+        $courseTable .= '</tr>';
+        $courseTable .= '</table>';
 
-        $data = getEnrollmentTableAndEmails( $cid, $enrollments );
+        $data = getEnrollmentTableAndEmails( $cid, $enrollments, 'info' );
         $enTable = $data[ 'html_table'];
         $allEmails = $data[ 'enrolled_emails' ];
 
-        //$table .= '<div class="HideAndShow">';
-        //$table .= "<tr><td colspan=\"7\"> $enTable </td> </tr>";
-        //$table .= "</div>";
+        $tid = "show_hide_$cid";
+
+        $regTable = '';
+        if( count( $allEmails ) > 0 )
+        {
+            $mailtext = implode( ",", $allEmails );
+            $enTable .= '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
+
+            $regTable = '<table>';
+            $regTable .= '<tr>';
+            $regTable .= '<td> <button class="show_as_link"
+                    onclick="toggleShowHide( this, \'' . $tid . '\' )">Show Enrollments</button>
+                </td></tr>';
+            $regTable .= "<tr><td id=\"$tid\" style=\"display:none\"> $enTable </td></tr>";
+            $regTable .= '</table>';
+        }
+
+        $table .= '<table class="show_info">';
+        $table .= "<tr> <td> $courseTable </td>";
+        $table .= "<td> $regTable </td></tr>";
     }
 }
 
-$table .= '</table><br/>';
-
+$table .= "</table>";
 echo '<div style="font-size:small">';
 echo $table;
 echo '</div>';
-
-/**
-    * @name Show enrollment.
-    * @{ */
-/**  @} */
-
-if( __get__( $_POST, 'response', '' ) == 'show_enrollment' )
-{
-    $cid = $_POST[ 'course_id'];
-    $courseName = getCourseName( $cid );
-    $rows = [ ];
-    $allEmails = array( );
-
-    echo '<h2>Enrollment list for "' . $courseName .'"</h2>';
-
-    $data = getEnrollmentTableAndEmails( $cid, $enrollments );
-    $table = $data[ 'html_table'];
-    $allEmails = $data[ 'enrolled_emails' ];
-
-    // Display it.
-    echo '<div style="font-size:small">';
-    echo $table;
-    echo '</div>';
-
-    // Put a link to email to all.
-    if( count( $allEmails ) > 0 )
-    {
-        $mailtext = implode( ",", $allEmails );
-        echo '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
-    }
-}
 
 
 /*******************************************************************************

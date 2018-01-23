@@ -2034,7 +2034,7 @@ function smallCaps( $text )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
+function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments, $with_form = false )
 {
     $cid = $c[ 'id' ];
 
@@ -2074,15 +2074,18 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
         <br />' . $instructors . " <br /> $note " . '</td>
         <td>' .  $schedule . '</td>
         <td>' . "$slotInfo <br /><strong> $venue </strong> </td>" .
-        "<td> $nReg " . '
-            <form action="#" method="post" accept-charset="utf-8">
+        "<td> $nReg ";
+
+    if( $with_form )
+       $row .= '<form action="#" method="post" accept-charset="utf-8">
                 <input type="hidden" name="course_id" value="' . $cid . '" />
                 <button name="response" value="show_enrollment"
                     title="Show registrations" class="show_as_link">
                     <i class="fa fa-list-alt fa-1x"></i>
                 </button>
-            </form>
-            </td>';
+            </form>';
+
+    $row .= '</td>';
 
     // If url is found, put it in page.
     if( __get__( $c, 'url', '' ) )
@@ -2157,7 +2160,7 @@ function presentationToHTML( $presentation )
 
     // Add URL and PRESENTATION URL in table.
     $html .= ' <br /> ';
-    $html .= '<table class="info">';
+    $html .= '<table class="info sortable">';
     $html .= '<tr><td>URL(s)</td><td>'
                 .  linkify( $presentation['url'] ) . '</td></tr>';
     $html .= '<tr><td>Presention URL</td><td>'
@@ -2301,7 +2304,7 @@ function awsAssignmentForm( $date = null )
     return $form;
 }
 
-function getEnrollmentTableAndEmails( $cid, $enrollments )
+function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
 {
     $courseName = getCourseName( $cid );
     $rows = [ ];
@@ -2324,7 +2327,7 @@ function getEnrollmentTableAndEmails( $cid, $enrollments )
     $count = 0;
 
     // Construct enrollment table.
-    $table = '<table id="show_enrollmenents" class="info">';
+    $table = '<table id="show_enrollmenents" class="' . $table_class . '">';
     foreach( $rows as $fname => $row )
     {
         $count ++;

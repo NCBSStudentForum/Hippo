@@ -112,6 +112,7 @@ table.show_user tr td
     min-width : 20%;
 }
 
+
 table.public_links {
     max-width: var(--maxwidth);
     min-width: 80%;
@@ -244,7 +245,7 @@ table.timetable tr td {
     /* border: 1px dotted; */
     min-width : 5px;
     max-width : 100px;
-    background-color:var(--tabletdcolor);
+    /* background-color:var(--tabletdcolor); */
     vertical-align: top;
 }
 

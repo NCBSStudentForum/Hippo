@@ -3044,7 +3044,7 @@ function getJCPresentation( $jc, $presenter = '', $date = 'today' )
 
 function getJCPresentations( $jc, $date = '', $presenter = '' )
 {
-    $whereExpr = "status='VALUD' AND jc_id='$jc' ";
+    $whereExpr = "status='VALID' AND jc_id='$jc' ";
     if( $date )
     {
         $date = dbDate( $date );

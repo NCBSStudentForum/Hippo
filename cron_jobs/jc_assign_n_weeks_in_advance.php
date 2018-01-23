@@ -22,9 +22,10 @@ foreach( $jcs as $jc )
         echo printInfo( "JcID is $jcID with $jcDay." );
         error_log( "Scheduling for $jcID" );
         echo printInfo( "Scheduling for $jcID" );
+
         // check if there is anyone scheduled on nWeeksFromjcDay
-        $schedule = getJCPresentations( $jcID, $nWeeksFromjcDay, '' );
-        if( count( $schedule ) > 0 )
+        $schedule = getJCPresentations( $jcID, dbDate( $nWeeksFromjcDay ), '' );
+        if( $schedule && count( $schedule ) > 0 )
         {
             error_log( "$jcID alreay have a schedule on " . humanReadableDate( $nWeeksFromjcDay ) );
             echo printInfo( "$jcID already have a schedule on " . humanReadableDate( $nWeeksFromjcDay) );

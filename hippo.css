@@ -136,6 +136,23 @@ table.show_info tr td
     background-color: var(--tabletdcolor);
 }
 
+/* Show course */
+table.show_course {
+    max-width: var(--maxwidth);
+    width: 600px;
+}
+
+table.show_course tr td:nth-child(1)
+{
+    width : 50%;
+}
+table.show_course tr td
+{
+    background-color: var(--tabletdcolor);
+    width: 20%;
+}
+
+
 table.show_db_entry_long {
     max-width: var(--maxwidth);
     min-width: 500px;

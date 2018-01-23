@@ -2034,7 +2034,7 @@ function smallCaps( $text )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments, $with_form = false )
+function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 {
     $cid = $c[ 'id' ];
 
@@ -2073,34 +2073,19 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments, $with_form = fa
             </button>
         <br />' . $instructors . " <br /> $note " . '</td>
         <td>' .  $schedule . '</td>
-        <td>' . "$slotInfo <br /><strong> $venue </strong> </td>" .
-        "<td> $nReg ";
-
-    if( $with_form )
-       $row .= '<form action="#" method="post" accept-charset="utf-8">
-                <input type="hidden" name="course_id" value="' . $cid . '" />
-                <button name="response" value="show_enrollment"
-                    title="Show registrations" class="show_as_link">
-                    <i class="fa fa-list-alt fa-1x"></i>
-                </button>
-            </form>';
-
-    $row .= '</td>';
+        <td>' . "$slotInfo <br /><strong> $venue </strong> </td>";
 
     // If url is found, put it in page.
     if( __get__( $c, 'url', '' ) )
     {
+        $text = '';
         $url = $c['url'];
-        if( __substr__( 'moodle', $url ) )
-            $text = 'MOODLE';
-        else
-            $text = 'Webpage';
         $row .= '<td>
         <a target="_blank" href="' . $c['url'] . '">
             <i class="fa fa-external-link fa-2x"></i>' . $text . '</a></td>';
     }
     else
-        $row .= '<td></td>';
+        $row .= '<td><i class="fa fa-external-link fa-2x"></i></td>';
 
 
     return $row;

@@ -182,21 +182,20 @@ echo alertUser(
 /**  @} */
 
 
-$header = '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot <br /> Venue</th>
-    <th>Enrollments</th><th>URL</th> </tr>';
+$header = '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot <br /> Venue</th><th>URL</th></tr>';
 
 
 // Go over courses and populate the entrollment array.
 $enrollments = array( );
 ksort( $slotCourses );
 
-$table = '<table class="show_info sortable">';
+$table = '<table border="1">';
 foreach( $slotCourses as $slot => $courses )
 {
     foreach( $courses as $c )
     {
         $cid = $c[ 'course_id' ];
-        $courseTable = '<table class="info">';
+        $courseTable = '<table class="show_course">';
         $courseTable .= $header;
         $courseTable .= "<tr>";
         $courseTable .= courseToHTMLRow( $c, $slot, $sem, $year, $enrollments );
@@ -209,22 +208,25 @@ foreach( $slotCourses as $slot => $courses )
 
         $tid = "show_hide_$cid";
 
-        $regTable = '';
+        $regTable = '<table class=""></table>';
         if( count( $allEmails ) > 0 )
         {
+            // Apend user email at the end of registration table.
             $mailtext = implode( ",", $allEmails );
             $enTable .= '<div>' .  mailto( $mailtext, 'Send email to all students' ) . "</div>";
 
-            $regTable = '<table>';
+            $regTable = '<table border="1">';
             $regTable .= '<tr>';
-            $regTable .= '<td> <button class="show_as_link"
+            $regTable .= '<td>
+                <button class="show_as_link"
                     onclick="toggleShowHide( this, \'' . $tid . '\' )">Show Enrollments</button>
-                </td></tr>';
+                </td>';
+            $regTable .= '</tr>';
             $regTable .= "<tr><td id=\"$tid\" style=\"display:none\"> $enTable </td></tr>";
             $regTable .= '</table>';
         }
 
-        $table .= '<table class="show_info">';
+        $table .= '<table border="0" class="course">';
         $table .= "<tr> <td> $courseTable </td>";
         $table .= "<td> $regTable </td></tr>";
     }

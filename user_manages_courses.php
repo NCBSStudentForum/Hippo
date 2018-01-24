@@ -142,12 +142,15 @@ if( count( $myCourses ) > 0 )
         );
 }
 
-// Dropping policy
-echo noteWithFAIcon( " <strong>Policy for dropping courses </strong> <br />
-    Upto 30 days from starting of course, you are free to drop a course.
-    After that, you need to write to your course instructor and academic office.
-    ", "fa-bell-o" );
-
+if( count( $myCourses ) > 0 )
+{
+    echo ' <br />';
+    // Dropping policy
+    echo noteWithFAIcon( " <strong>Policy for dropping courses </strong> <br />
+        Upto 30 days from starting of course, you are free to drop a course.
+        After that, you need to write to your course instructor and academic office.
+        ", "fa-bell-o" );
+}
 
 $count = 0;
 foreach( $myCourses as $c )
@@ -185,24 +188,53 @@ foreach( $myCourses as $c )
 echo '</tr></table>';
 echo '</div>';
 
-if( $runningCourses )
+// if( $runningCourses )
+// {
+//     echo '<h1> Running courses </h1>';
+//     echo '<div style="font-size:small">';
+//     echo '<table class="info">';
+//     $ignore = 'id,semester,year,comment,ignore_tiles,slot';
+//     $cs = array_values( $runningCourses );
+//     echo arrayHeaderRow( $cs[0], 'info', $ignore );
+//     foreach( $cs as $rc )
+//         echo arrayToRowHTML( $rc, 'info', $ignore );
+//     echo '</table>';
+//     echo '</div>';
+// }
+//
+//
+// echo '<h1>Slots </h1>';
+// echo slotTable( );
+
+echo goBackToPageLink( "user.php", "Go back" );
+
+echo '<h1> My courses </h1>';
+
+$user = whoAmI( );
+$myAllCourses = getTableEntries( 'course_registration'
+    , 'year, semester'
+    , "student_id='$user' AND status='VALID'"
+    );
+
+$hide = 'student_id,status,last_modified_on';
+
+if( count( $myAllCourses ) > 0 )
 {
-    echo '<h1> Running courses </h1>';
-
-    echo '<div style="font-size:small">';
-    echo '<table class="info">';
-    $ignore = 'id,semester,year,comment,ignore_tiles,slot';
-    $cs = array_values( $runningCourses );
-    echo arrayHeaderRow( $cs[0], 'info', $ignore );
-    foreach( $cs as $rc )
-        echo arrayToRowHTML( $rc, 'info', $ignore );
-    echo '</table>';
-    echo '</div>';
+    echo '<table class="info sorttable">';
+    echo arrayToTHRow( $myAllCourses[0], 'info', $hide );
+    foreach( $myAllCourses as $course )
+    {
+        $cid = $course[ 'course_id' ];
+        $cname = getCourseName( $cid );
+        $course[ 'course_id' ] .= " <br /> $cname";
+        echo arrayToRowHTML( $course, 'info', $hide );
+    }
+    echo "</table>";
 }
-
-
-echo '<h1>Slots </h1>';
-echo slotTable( );
+else
+{
+    echo printInfo( "I could not find any course belonging to '$user' in my database." );
+}
 
 echo goBackToPageLink( "user.php", "Go back" );
 

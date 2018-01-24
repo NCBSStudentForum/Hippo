@@ -157,8 +157,8 @@ echo '
                  href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
         </td>
         <td>
-            <a class="clickable" href="admin_acad_manages_enrollments.php">Manage Current Enrollment</a>
-            <p>Add/Remove student enrollments from currently running courses.</p>
+            <a class="clickable" href="admin_acad_manages_enrollments.php">Manage Enrollments and Grades</a>
+            <p>Add/Remove student enrollments from  courses and assign grades.</p>
         </td>
     </tr>
     <tr>
@@ -167,7 +167,8 @@ echo '
                 href="./admin_acad_schedule_upcoming_courses.php">Schedule Upcoming Courses</a>
             <p> Compute the best possible schedule for course (NOT: Not complete).  </p>
         </td>
-        <td></td>
+        <td>
+        </td>
     </tr>
     <tr>
         <td> <a class="clickable"

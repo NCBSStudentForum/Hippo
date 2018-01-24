@@ -206,6 +206,7 @@ echo '</div>';
 // echo '<h1>Slots </h1>';
 // echo slotTable( );
 
+echo ' <br /> ';
 echo goBackToPageLink( "user.php", "Go back" );
 
 echo '<h1> My courses </h1>';

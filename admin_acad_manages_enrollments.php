@@ -106,11 +106,7 @@ echo '</form>';
 
 // Handle request here.
 
-if( ! $_POST )
-    exit;
-
 $taskSelected = __get__( $_POST, 'task', '' );
-echo '<div style="font-size:small">';
 $_POST[ 'semester' ] = $sem;
 $_POST[ 'year' ] = $year;
 
@@ -221,7 +217,6 @@ else if( $_POST[ 'task' ] == 'Add enrollment' )
     echo printInfo( "Add valid student emails. One email each line." );
 
     $form = '<form method="post" action="admin_acad_manages_enrollments_action.php">';
-
     $form .= '<table>';
     $form .= '<tr><td>';
     $form .= '<textarea cols="30" rows="4" name="logins" placeholder="gabbar@ncbs.res.in"></textarea>';
@@ -240,8 +235,42 @@ else
     echo printInfo( "Unsupported task " . $_POST[ 'task' ] );
 
 
-echo "</div>";
-
 echo goBackToPageLink( 'admin_acad.php', 'Go back' );
+
+echo "<h1>All enrollments for $sem/$year</h1>";
+$enrolls = getTableEntries( 'course_registration', 'course_id'
+        , "status='VALID' AND year='$year' AND semester='$sem'"
+    );
+$courseMap = array( );
+foreach( $enrolls as $e )
+    $courseMap[$e['course_id']][] = $e;
+
+foreach( $courseMap as $cid => $enrolls )
+{
+    if( ! $cid )
+        continue;
+
+    $cname = getCourseName( $cid );
+    echo "<h2>$cid: $cname </h2>";
+    echo '<table class="info">';
+    echo '<tr>';
+    foreach( $enrolls as $i => $e )
+    {
+        $student = $e[ 'student_id'];
+        $sname = arrayToName( getLoginInfo( $student ) );
+        $grade = $e[ 'grade' ];
+        $type = $e[ 'type'];
+        echo "<td> $sname <br /> $type <br /> $grade </td>";
+        if( ($i+1) % 5 == 0 )
+            echo '</tr><tr>';
+
+    }
+    echo '</tr>';
+    echo '</table>';
+}
+
+echo '<br />';
+echo goBackToPageLink( 'admin_acad.php', 'Go back' );
+
 
 ?>

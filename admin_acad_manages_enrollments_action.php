@@ -9,10 +9,12 @@ include_once 'methods.php';
 
 echo userHTML( );
 
+
 // Manage courses. Add into course_registration.
 if( $_POST[ 'response' ] == 'submit' )
 {
     $_POST[ 'last_modified_on' ] = dbDateTime( 'now' );
+    $_POST[ 'registered_on'] = dbDateTime( 'now' );
     $res = insertIntoTable( 'course_registration'
                 , 'student_id,semester,year,type,course_id,registered_on,last_modified_on'
                 , $_POST );
@@ -87,12 +89,14 @@ else if( $_POST[ 'response' ] == 'enroll_new' )
 
         $user = getLoginByEmail( $email );
         $res = insertIntoTable( 'course_registration'
-            , 'student_id,course_id,semester,year,type'
+            , 'student_id,registered_on,course_id,semester,year,type'
             , array( 'student_id' => $user
                 , 'course_id' => $_POST[ 'course_id' ]
                 , 'type' => $_POST[ 'type' ]
                 , 'semester' => getCurrentSemester( )
-                , 'year' => getCurrentYear( )) 
+                , 'year' => getCurrentYear( ) 
+                , 'registered_on' => dbDateTime( 'now' )
+            )
             );
         if( $res )
             echo printInfo( "Successfully enrolled $user" );

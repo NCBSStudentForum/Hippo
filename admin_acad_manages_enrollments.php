@@ -14,12 +14,17 @@ echo userHTML( );
 $year = __get__( $_POST, 'year', getCurrentYear( ) );
 $sem = __get__( $_POST, 'semester', getCurrentSemester( ) );
 
-
 $springChecked = ''; $autumnChecked = '';
 if( $sem == 'AUTUMN' )
+{
     $springChecked = 'checked';
+    $autumnChecked = '';
+}
 else
+{
     $autumnChecked = 'checked';
+    $springChecked = '';
+}
 
 echo '<form action="#" method="post" accept-charset="utf-8">';
 
@@ -82,6 +87,8 @@ $taskSelect = arrayToSelectList( 'task'
 //
 
 echo '<h1>Manage grades/enrollement</h1>';
+echo alertUser( "Selected semester $sem, $year" );
+
 echo '<form method="post" action="">'; echo
 "<table>
     <tr>

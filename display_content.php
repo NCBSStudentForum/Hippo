@@ -26,8 +26,15 @@ function printInfo( $msg )
 
 function alertUser( $msg )
 {
-   $info ="<div class=\"alert_user\"><p>".$msg."</p></div>";
-   return $info;
+    $info ="<div class=\"alert_user\"><p> ".$msg."</p></div>";
+    return $info;
+}
+
+function noteWithFAIcon( $msg, $fa )
+{
+    $icon = '<i class="fa ' . $fa . '"></i>';
+    $info ="<div class=\"fa_note\"><p> $icon ".$msg."</p></div>";
+    return $info;
 }
 
 function minionEmbarrassed( $msg, $info = '' )

@@ -640,8 +640,18 @@ p.note {
 
 div.alert_user {
    max-width : var(--maxwidth);
-   min-width : 100%;
-   padding-bottom : 10px;
+   min-width: 500px;
+   max-width : 600px;
+   width: 80%;
+   margin: 10px;
+}
+
+div.fa_note {
+   max-width : var(--maxwidth);
+   border: 1px dotted;
+   min-width: 500px;
+   width: 80%;
+   padding-left: 10px;
 }
 
 td.db_table_fieldname {

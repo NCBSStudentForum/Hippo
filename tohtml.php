@@ -2326,4 +2326,17 @@ function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
     return array( 'html_table' => $table, 'enrolled_emails' => $allEmails );
 }
 
+function selectYearSemesterForm( $defaultYear = '', $defaultSem = '' )
+{
+    $years = range( intval(getCurrentYear( )) + 1, 2010 );
+    $yearSelect = arrayToSelectList( 'year', $years, array(), false, $defaultYear );
+    $semSelect = arrayToSelectList( 'semester', array( 'SPRING', 'AUTUMN' ), array(), false, $defaultSem );
+
+    $form = '<form action="" method="get" accept-charset="utf-8">' . $yearSelect
+        . $semSelect .
+        ' <button type="submit" name="select_year_sem">Select</button></form>';
+
+    return $form;
+}
+
 ?>

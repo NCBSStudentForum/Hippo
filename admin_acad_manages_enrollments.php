@@ -26,12 +26,7 @@ else
     $springChecked = '';
 }
 
-echo '<form action="#" method="get" accept-charset="utf-8">';
-echo ' <input type="radio" name="semester" value="SPRING" ' . $springChecked . ' /> SPRING ';
-echo ' <input type="radio" name="semester" value="AUTUMN" ' . $autumnChecked . ' /> AUTUMN ';
-echo ' <input type="test" name="year" value="' . $year . '" />';
-echo ' <button name="response" value="submit">Select Year/Semester</button>';
-echo '</form>';
+echo selectYearSemesterForm( $year, $sem );
 
 echo  noteWithFAIcon( "Selected semester $sem/$year", 'fa-bell-o' );
 

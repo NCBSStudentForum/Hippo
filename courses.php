@@ -158,16 +158,8 @@ if( $sem == 'AUTUMN' )
 else
     $springSelected = 'selected';
 
-$years = range( intval(getCurrentYear( )) + 1, 2010 );
-$yearSelect = arrayToSelectList( 'year', $years, array(), false, $year );
-$semSelect = arrayToSelectList( 'semester', array( 'SPRING', 'AUTUMN' ), array(), false, $sem );
-
-$form = '<form action="" method="get" accept-charset="utf-8">' . $yearSelect
-    . $semSelect .
-    ' <button type="submit" name="select_year_sem">Select</button></form>';
-$form .= '</div>';
-
 // Show select semester/year.
+$form = selectYearSemesterForm( $year, $sem );
 echo $form;
 
 /* Enrollment table. */

@@ -39,8 +39,9 @@ function toggleShowHide( button, eid )
 <?php
 /* get this semester and next semester courses */
 
-$year = getCurrentYear( );
-$sem = getCurrentSemester( );
+$year = __get__( $_GET, 'year', getCurrentYear( ) );
+$sem = __get__( $_GET, 'semester', getCurrentSemester( ) );
+
 $slotCourses = array( );
 $tileCourses = array( );
 $runningCourses = getSemesterCourses( $year, $sem );
@@ -137,18 +138,40 @@ function showRunningCourse( x )
 
 <?php
 
-
-echo '<h1>Slots </h1>';
-
-echo printInfo(
+echo alertUser(
     "Click on tile <button class=\"invisible\" disabled>1A</button> etc to see the
-    list of courses running at this time.
-    ");
+    list of courses running at this time.");
+
 $table = slotTable(  );
 echo $table;
 
+/* Select year and semester */
+
+echo ' <br /> ';
+echo horizontalLine( );
+echo printInfo( "Select year/semester to see courses" );
+
+$autumnSelected = '';
+$springSelected = '';
+if( $sem == 'AUTUMN' )
+    $autumnSelected = 'selected';
+else
+    $springSelected = 'selected';
+
+$years = range( intval(getCurrentYear( )) + 1, 2010 );
+$yearSelect = arrayToSelectList( 'year', $years, array(), false, $year );
+$semSelect = arrayToSelectList( 'semester', array( 'SPRING', 'AUTUMN' ), array(), false, $sem );
+
+$form = '<form action="" method="get" accept-charset="utf-8">' . $yearSelect
+    . $semSelect .
+    ' <button type="submit" name="select_year_sem">Select</button></form>';
+$form .= '</div>';
+
+// Show select semester/year.
+echo $form;
+
 /* Enrollment table. */
-echo "<h1>Running courses in " . __ucwords__( $sem) . ", $year semester</h1>";
+echo "<h1>Courses in " . __ucwords__( $sem) . ", $year semester</h1>";
 
 $showEnrollText = 'Show Enrollement';
 echo alertUser(
@@ -157,13 +180,6 @@ echo alertUser(
         <td> <i class="fa fa-flag-o fa-2x"></i>
         To enroll, visit <a class="clickable" href="user_manages_courses.php">My Courses</a>
         link in your home page after login. </td>
-    </tr>
-    <tr>
-        <td>
-            <i class="fa fa-flag-o fa-2x"></i>
-            To see enrolled students, click on <i class="fa fa-list-alt fa-1x"></i>
-            and scroll down to the bottom of the page.
-        </td>
     </tr>
     <tr>
         <td>

@@ -108,6 +108,13 @@ $( function() {
   } );
 </script>
 
+<script type="text/javascript" charset="utf-8">
+for( i = new Date( ).getFullYear( ) + 1; i > 2000; i-- )
+{
+    $( "#yearpicker" ).append( $('<option />').val(i).html(i));
+}
+</script>
+
 <script>
 $( function() {
     $( "input.datetimepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );

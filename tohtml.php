@@ -2299,6 +2299,9 @@ function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
     foreach( __get__($enrollments, $cid, array()) as $r )
     {
         $studentId = $r[ 'student_id' ];
+        if( ! $studentId )
+            continue;
+
         $info = getUserInfo( $studentId );
         $row = '';
         $row .= '<td>' . loginToText( $info, false) . '</td>';
@@ -2312,7 +2315,8 @@ function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
     $count = 0;
 
     // Construct enrollment table.
-    $table = '<table id="show_enrollmenents" class="' . $table_class . '">';
+    $table = '<table id="show_enrollmenents" class="' . $table_class . ' sortable">';
+    $table .= '<tr> <th></th> <th>Name</th> <th>Email</th> <th>Type</th>  </tr>';
     foreach( $rows as $fname => $row )
     {
         $count ++;

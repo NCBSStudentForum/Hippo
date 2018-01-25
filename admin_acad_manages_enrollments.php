@@ -15,7 +15,7 @@ $year = __get__( $_POST, 'year', getCurrentYear( ) );
 $sem = __get__( $_POST, 'semester', getCurrentSemester( ) );
 
 $springChecked = ''; $autumnChecked = '';
-if( $sem == 'AUTUMN' )
+if( $sem == 'SPRING' )
 {
     $springChecked = 'checked';
     $autumnChecked = '';
@@ -34,7 +34,7 @@ echo ' <input type="test" name="year" value="' . $year . '" />';
 echo ' <button name="response" value="select_year_sem">Select Year/Semester</button>';
 echo '</form>';
 
-echo  noteWithFAIcon( "<blink>Selected semester $sem/$year </blink>", 'fa-bell-o' );
+echo  noteWithFAIcon( "Selected semester $sem/$year", 'fa-bell-o' );
 
 // Select semester and year here.
 

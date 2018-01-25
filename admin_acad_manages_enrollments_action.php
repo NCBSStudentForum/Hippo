@@ -22,8 +22,9 @@ if( $_POST[ 'response' ] == 'submit' )
     if( $res )
     {
         echo printInfo( "You are successfully registered for the course" );
-        goBack( 'user_manages_courses.php', 1 );
-        exit;
+        echo arrayToTableHTML( $_POST, 'info' );
+        //goBack( 'user_manages_courses.php', 1 );
+        //exit;
     }
     else
     {

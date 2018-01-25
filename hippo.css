@@ -764,10 +764,11 @@ a.link_as_button {
 a.clickable {
     font-size: x-large;
     font-weight: bold;
-    border-bottom: 2px dotted;
-    text-decoration: none;
+    text-decoration: underline;
     font-variant: small-caps;
     cursor: url;
+    padding-bottom: 50 px;
+    margin-bottom: 20px;
 }
 
 a {

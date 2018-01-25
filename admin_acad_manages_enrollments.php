@@ -215,6 +215,8 @@ foreach( $courseMap as $cid => $enrolls )
     if( ! $cid )
         continue;
 
+    sortByKey( $enrolls, 'student_id' );
+
     $cname = getCourseName( $cid );
     echo "<h2>$cid: $cname </h2>";
     echo '<table class="tiles">';

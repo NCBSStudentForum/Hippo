@@ -87,7 +87,7 @@ else if( $_POST[ 'response' ] == 'enroll_new' )
             continue;
         }
 
-        $_POST[ 'student_id' ] = $user;
+        $_POST[ 'student_id' ] = $user[ 'login'];
         $_POST[ 'registered_on' ] = dbDateTime( 'now' );
         $_POST[ 'last_modified_on' ] = dbDateTime( 'now' );
         $user = getLoginByEmail( $email );

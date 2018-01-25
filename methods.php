@@ -71,7 +71,7 @@ function sortByKey( &$arr, $key, $ascending = true )
             if( $key == 'date' or $key == 'time' )
                 return strtotime( $x[$key] ) < strtotime( $y[$key] );
             else
-                return __get__( $x, $key) < __get__($y, $key, '' );
+                return __get__( $x, $key, '') < __get__($y, $key, '' );
         }
     );
     else
@@ -80,7 +80,7 @@ function sortByKey( &$arr, $key, $ascending = true )
             if( $key == 'date' or $key == 'time' )
                 return strtotime( $x[$key] ) >= strtotime( $y[$key] );
             else
-                return __get__( $x, $key) >= __get__($y, $key, '' );
+                return __get__( $x, $key, '') >= __get__($y, $key, '' );
         }
     );
 

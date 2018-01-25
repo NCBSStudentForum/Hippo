@@ -1588,9 +1588,9 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     global $db;
     $query = "UPDATE $tablename SET ";
 
-    if( gettype( $wherekeys ) == "string" ) // Only one key
+    if( is_string( $wherekeys ) )
         $wherekeys = explode( ",", $wherekeys );
-    if( gettype( $keys ) == "string" )
+    if( is_string( $keys ) )
         $keys = explode(",",  $keys );
 
     $whereclause = array( );

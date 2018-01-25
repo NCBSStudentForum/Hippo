@@ -387,7 +387,7 @@ function initialize( $db  )
             -- CHECK contraints are ignored by MYSQL.
             , course_id VARCHAR(8) NOT NULL CHECK ( course_id <> '' )
             , type ENUM( 'AUDIT', 'CREDIT' ) NOT NULL DEFAULT 'CREDIT'
-            , status ENUM ( 'VALID', 'INVLALID', 'DROPPED' ) NOT NULL DEFAULT 'VALID'
+            , status ENUM ( 'VALID', 'INVALID', 'DROPPED' ) NOT NULL DEFAULT 'VALID'
             , registered_on DATETIME NOT NULL
             , last_modified_on DATETIME
             , grade VARCHAR(2)

@@ -217,7 +217,7 @@ foreach( $courseMap as $cid => $enrolls )
 
     $cname = getCourseName( $cid );
     echo "<h2>$cid: $cname </h2>";
-    echo '<table class="info">';
+    echo '<table class="tiles">';
     echo '<tr>';
     foreach( $enrolls as $i => $e )
     {

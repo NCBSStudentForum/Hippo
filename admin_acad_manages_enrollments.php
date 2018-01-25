@@ -11,8 +11,8 @@ include_once 'methods.php';
 echo userHTML( );
 
 
-$year = __get__( $_POST, 'year', getCurrentYear( ) );
-$sem = __get__( $_POST, 'semester', getCurrentSemester( ) );
+$year = __get__( $_GET, 'year', getCurrentYear( ) );
+$sem = __get__( $_GET, 'semester', getCurrentSemester( ) );
 
 $springChecked = ''; $autumnChecked = '';
 if( $sem == 'SPRING' )
@@ -26,12 +26,11 @@ else
     $springChecked = '';
 }
 
-echo '<form action="#" method="post" accept-charset="utf-8">';
-
+echo '<form action="#" method="get" accept-charset="utf-8">';
 echo ' <input type="radio" name="semester" value="SPRING" ' . $springChecked . ' /> SPRING ';
 echo ' <input type="radio" name="semester" value="AUTUMN" ' . $autumnChecked . ' /> AUTUMN ';
 echo ' <input type="test" name="year" value="' . $year . '" />';
-echo ' <button name="response" value="select_year_sem">Select Year/Semester</button>';
+echo ' <button name="response" value="submit">Select Year/Semester</button>';
 echo '</form>';
 
 echo  noteWithFAIcon( "Selected semester $sem/$year", 'fa-bell-o' );
@@ -59,35 +58,8 @@ $taskSelect = arrayToSelectList( 'task'
         );
 
 
-// /**
-//     * @brief A single button should be able to enable or disable the course
-//     * registration.
-//  */
-// echo '<h1>Enable/disable enrollement</h1>';
-//
-// $schedule = getTableEntry( 'conditional_tasks', 'id', array( 'id' => 'COURSE_REGISTRATION' ) );
-// if( strtotime( $schedule[ 'end_date' ] ) >= strtotime( 'today' ) )
-// {
-//     echo printInfo( "Course registration is OPEN." );
-//     echo arrayToTableHTML( $schedule, 'info', '', 'id,status' );
-// }
-// else
-//     echo printInfo( "Course registration is CLOSED." );
-//
-//
-//
-// echo '<h3>Update registration dates </h3>';
-// echo '
-//     <form method="post" action="#">
-//         Opens on <input class="datepicker" name="start_date" />
-//         Ends on <input class="datepicker" name="end_date" />
-//         <button name="task" value="update_registration_date"> Update </button>
-//     </form>
-//     ';
-//
-
 echo '<h1>Manage grades/enrollement</h1>';
-echo alertUser( "Selected semester $sem, $year" );
+echo alertUser( "Your are working with semester $sem-$year" );
 
 echo '<form method="post" action="">'; echo
 "<table>
@@ -105,7 +77,6 @@ echo '<form method="post" action="">'; echo
 echo '</form>';
 
 // Handle request here.
-
 $taskSelected = __get__( $_POST, 'task', '' );
 $_POST[ 'semester' ] = $sem;
 $_POST[ 'year' ] = $year;
@@ -114,18 +85,11 @@ $whereExpr = '';
 if( __get__( $_POST, 'course_id', '' ) )
     $whereExpr = whereExpr( 'semester,year,course_id', $_POST  );
 
-// Even when students have dropped the course, show it here. Admin
-// should be aware of it.
-// $whereExpr .= " AND type != 'DROPPED'";
 $enrollments = getTableEntries( 'course_registration' ,'student_id', $whereExpr);
-
-//usort( $enrollments
-//    , function( $x, $y ) { strcasecmp($x['student_id'], $y['student_id']); }
-//);
 
 if( $taskSelected == '' )
 {
-    echo printWarning( "No task is selected" );
+    echo printWarning( "No task has been selected yet!" );
 }
 else if( $_POST[ 'task' ] == 'Change enrollment' )
 {
@@ -168,6 +132,30 @@ else if( $_POST[ 'task' ] == 'Change enrollment' )
     echo '</table>';
 
 }
+else if( $_POST[ 'task' ] == 'Add enrollment' )
+{
+    $course = $_POST[ 'course_id' ] ;
+    $cname = getCourseName( $course );
+
+    echo "<h2> Adding new enrollments to $cname ($sem/$year) </h2>";
+    $form = '<form method="post" action="admin_acad_manages_enrollments_action.php">';
+    $form .= '<table>';
+    $form .= '<tr><td>';
+    $form .= '<textarea cols="30" rows="4" name="logins" placeholder="gabbar@ncbs.res.in kalia@instem.res.in"></textarea>';
+    $form .= '</td><td>';
+    $form .= arrayToSelectList( 'type', array( 'CREDIT', 'AUDIT' )
+                , array( 'CREDIT' ,'AUDIT' ), false, 'CREDIT'  );
+    // Add semester and year as hidden input.
+    $form .= ' <input type="hidden" name="year" id="" value="' . $year . '" />';
+    $form .= ' <input type="hidden" name="semester" id="" value="' . $sem . '" />';
+    $form .= '</td><td>';
+    $form .= '<button type="submit" name="response" value="enroll_new">Enroll</button>';
+    $form .= '</td></tr>';
+    $form .= '</table>';
+    $form .= '<input type="hidden" name="course_id" value="' . $course .  '">';
+    $form .= '</form>';
+    echo $form;
+}
 else if( $_POST[ 'task' ] == 'Grade' )
 {
     if( count( $enrollments ) > 0 )
@@ -207,29 +195,6 @@ else if( $_POST[ 'task' ] == 'Grade' )
     {
         echo printInfo( "No enrollment found for this course" );
     }
-}
-else if( $_POST[ 'task' ] == 'Add enrollment' )
-{
-    $course = $_POST[ 'course_id' ] ;
-    $cname = getCourseName( $course );
-    echo "<h2> Adding new enrollments to $cname </h2>";
-
-    echo printInfo( "Add valid student emails. One email each line." );
-
-    $form = '<form method="post" action="admin_acad_manages_enrollments_action.php">';
-    $form .= '<table>';
-    $form .= '<tr><td>';
-    $form .= '<textarea cols="30" rows="4" name="logins" placeholder="gabbar@ncbs.res.in"></textarea>';
-    $form .= '</td><td>';
-    $form .= arrayToSelectList( 'type', array( 'CREDIT', 'AUDIT' )
-                , array( 'CREDIT' ,'AUDIT' ), false, 'CREDIT'  );
-    $form .= '</td><td>';
-    $form .= '<button type="submit" name="response" value="enroll_new">Enroll</button>';
-    $form .= '</td></tr>';
-    $form .= '</table>';
-    $form .= '<input type="hidden" name="course_id" value="' . $course .  '">';
-    $form .= '</form>';
-    echo $form;
 }
 else
     echo printInfo( "Unsupported task " . $_POST[ 'task' ] );

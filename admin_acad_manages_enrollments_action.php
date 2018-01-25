@@ -9,7 +9,6 @@ include_once 'methods.php';
 
 echo userHTML( );
 
-
 // Manage courses. Add into course_registration.
 if( $_POST[ 'response' ] == 'submit' )
 {
@@ -31,15 +30,15 @@ if( $_POST[ 'response' ] == 'submit' )
         echo minionEmbarrassed( "Failed to register you for the course." );
         echo printWarning( "Most likely you are already registered for this course" );
     }
-    
+
 }
 else if( in_array( $_POST[ 'response' ], getTableColumnTypes( 'course_registration', 'type' ) ) )
 {
     // Drop this course for given user.
     $_POST[ 'type' ] = $_POST[ 'response' ];
     $res = updateTable( 'course_registration'
-        , 'student_id,semester,year,course_id', 'type', $_POST 
-    ); 
+        , 'student_id,semester,year,course_id', 'type', $_POST
+    );
     if( $res )
         echo printInfo( "Successfully changed enrollment." );
     else
@@ -55,14 +54,14 @@ else if( $_POST[ 'response' ] == 'grade' )
                         , 'semester' => $_POST[ 'semester' ]
                         , 'year' => $_POST[ 'year' ]
                         , 'course_id' => $_POST[ 'course_id' ]
-                        , 'grade' => $grade 
+                        , 'grade' => $grade
                         , 'grade_is_given_on' => dbDate( 'now ' )
                     );
 
         $res = updateTable( 'course_registration'
                         , 'student_id,semester,year,course_id'
                         , 'grade,grade_is_given_on'
-                        , $data 
+                        , $data
                     );
 
         if( $res )
@@ -76,29 +75,26 @@ else if( $_POST[ 'response' ] == 'grade' )
 }
 else if( $_POST[ 'response' ] == 'enroll_new' )
 {
-    $emails = preg_split( "/[\s,]+/", $_POST[ 'logins'] );
+    $emails = splitAtCommonDelimeters( $_POST[ 'logins'] );
     foreach( $emails as $email )
     {
         $user = findAnyoneWithEmail( $email );
         if( ! $user )
         {
-            echo printWarning( "$email is not found in my database. Probably 
-                a mistake. I am ignoring this candidate. " 
+            echo printWarning( "$email is not found in my database. Probably
+                a mistake. I am ignoring this candidate. "
                 );
             continue;
         }
 
+        $_POST[ 'student_id' ] = $user;
+        $_POST[ 'registered_on' ] = dbDateTime( 'now' );
+        $_POST[ 'last_modified_on' ] = dbDateTime( 'now' );
         $user = getLoginByEmail( $email );
         $res = insertIntoTable( 'course_registration'
             , 'student_id,registered_on,course_id,semester,year,type'
-            , array( 'student_id' => $user
-                , 'course_id' => $_POST[ 'course_id' ]
-                , 'type' => $_POST[ 'type' ]
-                , 'semester' => getCurrentSemester( )
-                , 'year' => getCurrentYear( ) 
-                , 'registered_on' => dbDateTime( 'now' )
-            )
-            );
+            , $_POST
+        );
         if( $res )
             echo printInfo( "Successfully enrolled $user" );
     }

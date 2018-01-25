@@ -1507,3 +1507,18 @@ function isHTML( $text )
 
     return true;
 }
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Split text on any white space (space, tab, comma, newline, * etc.)
+    *
+    * @Param $text
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function splitAtCommonDelimeters( $text )
+{
+    $res = preg_split( "/[\s,]+/", $text );
+    return $res;
+}

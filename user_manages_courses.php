@@ -96,9 +96,9 @@ foreach( $runningCourses as $c )
 
 // Get the list of valid courses.
 echo noteWithFAIcon(
-    "Course will be visible in registration form from -2 weeks to +2 weeks from the
-    <tt>start_date</tt> of the course."
-    , "fa-bell-o"
+    "Courses will be visible in registration form from -2 weeks to +2 weeks from the
+    <tt>start date</tt>."
+    , "fa-bell"
     );
 
 echo "<h2>Registration form</h2>";
@@ -108,6 +108,8 @@ $default = array( 'student_id' => $_SESSION[ 'user' ]
                 , 'year' => $year
                 , 'course_id' => $courseSelect
                 );
+
+// TODO: Custom table for registration.
 echo '<form method="post" action="user_manages_courses_action.php">';
 echo dbTableToHTMLTable( 'course_registration'
     , $default

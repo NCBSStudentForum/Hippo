@@ -457,9 +457,8 @@ table[class*='editable_'] {
 
 table[class*='editable_'] tr td {
     text-align: left;
-    background: rgba(0,100,150, 0.3);
     padding:2px;
-    border : 1px blue dotted;
+    border : 1px rgba(200,100,200,1) dotted;
 }
 
 table.editable_events {

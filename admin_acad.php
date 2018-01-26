@@ -152,22 +152,24 @@ echo '
   <table class="tasks">
     <tr>
         <td>
-            <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
-            <a class="clickable"
-                 href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
+            <a class="clickable" href="admin_acad_manages_enrollments.php">Manage Enrollments</a>
+            <p>Add/Remove student enrollments from  courses and assign grades.</p>
         </td>
         <td>
-            <a class="clickable" href="admin_acad_manages_enrollments.php">Manage Enrollments and Grades</a>
+            <a class="clickable" href="admin_acad_manages_grades.php">Manage Grades</a>
             <p>Add/Remove student enrollments from  courses and assign grades.</p>
         </td>
     </tr>
     <tr>
         <td>
+            <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+            <a class="clickable"
+                 href="admin_acad_manages_current_courses.php">Manage this semester courses</a>
+        </td>
+        <td>
             <a class="clickable"
                 href="./admin_acad_schedule_upcoming_courses.php">Schedule Upcoming Courses</a>
             <p> Compute the best possible schedule for course (NOT: Not complete).  </p>
-        </td>
-        <td>
         </td>
     </tr>
     <tr>

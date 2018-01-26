@@ -132,8 +132,6 @@ echo $table;
 
 echo ' <br /> ';
 echo horizontalLine( );
-echo printInfo( "Select year/semester to see courses" );
-
 $autumnSelected = '';
 $springSelected = '';
 if( $sem == 'AUTUMN' )
@@ -149,9 +147,8 @@ echo $form;
 echo "<h1>Courses in " . __ucwords__( $sem) . ", $year semester</h1>";
 
 $showEnrollText = 'Show Enrollement';
-echo alertUser(
-    '<table class="show_info sortable">
-    <tr>
+echo '<div style="font-size:small">
+    <table border="1"> <tr>
         <td> <i class="fa fa-flag-o fa-2x"></i>
         To enroll, visit <a class="clickable" href="user_manages_courses.php">My Courses</a>
         link in your home page after login. </td>
@@ -164,8 +161,8 @@ echo alertUser(
             is independent!
         </td>
     </tr>
-    </table>'
-    );
+    </table></div>';
+echo '<br />';
 
 /**
     * @name Show the courses.

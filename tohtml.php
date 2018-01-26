@@ -2338,7 +2338,7 @@ function selectYearSemesterForm( $defaultYear = '', $defaultSem = '' )
 
     $form = '<form action="" method="get" accept-charset="utf-8">' . $yearSelect
         . $semSelect .
-        ' <button type="submit" name="select_year_sem">Select</button></form>';
+        ' <button type="submit" name="select_year_sem">Select Year/Semester</button></form>';
 
     return $form;
 }

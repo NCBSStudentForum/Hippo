@@ -177,6 +177,21 @@ function ToggleShowHide( button )
 }
 </script>
 
+<!-- toggle  show hide -->
+<script type="text/javascript" charset="utf-8">
+function toggleShowHide( button, eid )
+{
+    var div = document.getElementById( eid );
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+        button.innerHTML = 'Show Enrollments';
+    }
+    else {
+        div.style.display = 'inline';
+        button.innerHTML = 'Hide Enrollments';
+    }
+};
+</script>
 
 <script type="text/javascript">
   (function() {

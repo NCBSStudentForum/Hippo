@@ -18,23 +18,6 @@ if( ! (isIntranet() || isAuthenticated( ) ) )
 <script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <link rel="stylesheet" type="text/css" href="./node_modules/sweetalert2/dist/sweetalert.css">
 
-<!-- toggle  show hide -->
-<script type="text/javascript" charset="utf-8">
-function toggleShowHide( button, eid )
-{
-    var div = document.getElementById( eid );
-    if (div.style.display !== 'none') {
-        div.style.display = 'none';
-        button.innerHTML = 'Show Enrollments';
-    }
-    else {
-        div.style.display = 'inline';
-        button.innerHTML = 'Hide Enrollments';
-    }
-};
-</script>
-
-
 
 <?php
 /* get this semester and next semester courses */

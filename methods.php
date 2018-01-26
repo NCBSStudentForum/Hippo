@@ -1513,12 +1513,13 @@ function isHTML( $text )
     * @Synopsis  Split text on any white space (space, tab, comma, newline, * etc.)
     *
     * @Param $text
+    * @Param $ext : extra delimiters
     *
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function splitAtCommonDelimeters( $text )
+function splitAtCommonDelimeters( $text, $ext = '')
 {
-    $res = preg_split( "/[\s,]+/", $text );
+    $res = preg_split( "/[\s,$ext]+/", $text );
     return $res;
 }

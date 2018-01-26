@@ -70,6 +70,63 @@ else if( $_POST[ 'response' ] == 'enroll_new' )
             echo printInfo( "Successfully enrolled $user" );
     }
 }
+else if( $_POST[ 'response' ] == 'quick_enroll' )
+{
+    $enrolls = explode( PHP_EOL, $_POST[ 'enrollments' ] );
+    foreach( $enrolls as $i => $en )
+    {
+        $l = splitAtCommonDelimeters( $en, ':' );
+        if( count( $l ) < 2 )
+        {
+            echo printWarning( "<tt>$en</tt> is not properly formatted. Ignoring.." );
+            continue;
+        }
+
+        $email = $l[0];
+        $etype = $l[1];
+
+        if( ! in_array( $etype, array( 'AUDIT', 'CREDIT' ) ) )
+        {
+            echo printWarning( "Unknown registration type: '$etype'. Ignoring ..." );
+            continue;
+        }
+
+
+        $login = getLoginByEmail( $email );
+        if( ! $login )
+        {
+            echo printWarning( "No valid login found for $email. Ignoring ... " );
+            continue;
+        }
+
+        $data = array( );
+
+        $data[ 'registered_on' ] = dbDateTime( 'now' );
+        $data[ 'last_modified_on' ] = dbDateTime( 'now' );
+        $data[ 'student_id' ] = $login;
+        $data[ 'type' ] = $etype;
+        $courseId = $_POST[ 'course_id' ];
+
+        $data = array_merge( $data, $_POST );
+
+        try {
+            $res = insertOrUpdateTable( 'course_registration'
+                , 'student_id,course_id,year,semester'
+                , 'student_id,course_id,type,year,semester,registered_on,last_modified_on'
+                , $data
+            );
+        } catch (Exception $e) {
+            echo printWarning( "failed to update table. Error was " . $e->getMessage( ) );
+            continue;
+        }
+
+        if( $res )
+            echo printInfo( "Successfully enrolled $login to $courseId with type $etype." );
+        else
+            echo printWarning( "Failed to enroll $login to $courseId." );
+
+    }
+}
 else
     echo alertUser( 'Unknown type of request ' . $_POST[ 'response' ] );
 

@@ -167,13 +167,39 @@ foreach( $enrolls as $e )
 
 foreach( $courseMap as $cid => $enrolls )
 {
+
     if( ! $cid )
         continue;
 
     $cname = getCourseName( $cid );
-    echo "<h2>$cid: $cname </h2>";
+    echo "<h2> ($cid) $cname </h2>";
+
+    // Create a form to add new registration.
+    $table = ' <table border="0">';
+    $table .= '<tr>
+            <td> <textarea cols="40" rows="3" name="enrollments"
+                placeholder="gabbar@ncbs.res.in:CREDIT&#10kalia@instem.res.in:AUDIT"></textarea> </td>
+            <td> <button name="response" value="quick_enroll"
+                title=\'Use "email:CREDIT" or "email:AUDIT" or "email:DROPPED" format.\'
+                >Quick Enroll</button> </td>
+        </tr>';
+    $table .= '</table>';
+
+    // Display form
+    $form = '<div id="show_hide_div">';
+    $form .= '<form action="admin_acad_manages_enrollments_action.php" method="post" accept-charset="utf-8">';
+    $form .= $table;
+    $form .= '<input type="hidden" name="course_id" value="' . $cid . '" />';
+    $form .= '<input type="hidden" name="year" value="' . $year . '" />';
+    $form .= '<input type="hidden" name="semester" value="' . $sem . '" />';
+    $form .= '</form>';
+    $form .= '</div>';
+    echo $form;
+
+    echo ' <br /> ';
     echo '<table class="tiles">';
     echo '<tr>';
+    echo ' <strong>Enrollement Table</strong> ';
     foreach( $enrolls as $i => $e )
     {
         $student = $e[ 'student_id'];

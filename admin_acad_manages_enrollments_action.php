@@ -44,35 +44,6 @@ else if( in_array( $_POST[ 'response' ], getTableColumnTypes( 'course_registrati
     else
         echo minionEmbarrassed( "Failed to change enrollment for this." );
 }
-else if( $_POST[ 'response' ] == 'grade' )
-{
-    $_POST[ 'grade_is_given_on' ] = dbDate( 'now' );
-    foreach( explode( ',', $_POST[ 'student_ids'] ) as $student )
-    {
-        $grade = $_POST[ $student ];
-        $data = array( 'student_id' => $student
-                        , 'semester' => $_POST[ 'semester' ]
-                        , 'year' => $_POST[ 'year' ]
-                        , 'course_id' => $_POST[ 'course_id' ]
-                        , 'grade' => $grade
-                        , 'grade_is_given_on' => dbDate( 'now ' )
-                    );
-
-        $res = updateTable( 'course_registration'
-                        , 'student_id,semester,year,course_id'
-                        , 'grade,grade_is_given_on'
-                        , $data
-                    );
-
-        if( $res )
-            echo printInfo( "Successfully assigned grade for " . $student );
-        else
-            echo alertUser( "Could not assign grade for " . $student );
-
-        ob_flush( );
-
-    }
-}
 else if( $_POST[ 'response' ] == 'enroll_new' )
 {
     $emails = splitAtCommonDelimeters( $_POST[ 'logins'] );

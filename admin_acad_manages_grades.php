@@ -68,40 +68,65 @@ $enrollments = getTableEntries( 'course_registration' ,'student_id', $whereExpr)
 
 if( count( $enrollments ) > 0 )
 {
-    if( ! $_POST[ 'course_id' ] )
+    if( ! __get__($_POST, 'course_id', '' ) )
         echo alertUser( "No course is selected" );
     else
     {
         echo alertUser( "Grading for course " . $_POST[ 'course_id' ] );
-        $form = '<form method="post" action="admin_acad_manages_enrollments_action.php">';
+
+        echo '<h2>Quick Grading</h2>';
+        echo printNote( "Each line must contain <tt>student_email grade</tt> e.g.
+            <tt> gabbar@ncbs.res.in,A+ </tt>" );
+
+        $allForm = '<form method="post" action="admin_acad_manages_grades_action.php">';
+        $allForm .= '<table class="show_info">';
+        $allForm .= '<tr><td>';
+        $allForm .= ' <textarea rows="5" cols="50" name="grades_csv"
+            placeholder="gabbar@ncbs.res.in,A+ &#10kalia@ncbs.res.in,F"
+            value=""></textarea>';
+        $allForm .= '</td><td>';
+        $allForm .= '<button class="submit" name="response" value="Assign All">Assign All</button>';
+        $allForm .= '<input type="hidden" name="course_id" id="" value="' . $_POST[ 'course_id' ] . '" />';
+        $allForm .= '<input type="hidden" name="year" id="" value="' . $year . '" />';
+        $allForm .= '<input type="hidden" name="semester" id="" value="' . $sem . '" />';
+        $allForm .= '</td></tr>';
+        $allForm .= '</table>';
+        $allForm .= '</form>';
+
+        echo $allForm;
+        echo ' <br /> ';
 
         $hide = 'registered_on,last_modified_on,status,grade_is_given_on';
         $table = '<table class="info sortable">';
-        $ids = array( ); /* Collect all student ids.  */
+
+        $ids = array( );                    /* Collect all student ids.  */
         $grades = array( );
+        $allGradesHTML = '';                // Add all grades to table.
+
         $table .= arrayToTHRow( $enrollments[0], 'info', $hide );
         foreach( $enrollments as $enrol )
         {
+            $ids[ ] =  $enrol[ 'student_id' ];
+
             $table .= '<tr>';
+            $table .= '<form action="admin_acad_manages_grades_action.php" method="post" accept-charset="utf-8">';
             $table .= arrayToRowHTML( $enrol, 'info', $hide, true, false );
             $table .= "<td>" . gradeSelect( $enrol['student_id'], $enrol[ 'grade' ] ) . "</td>";
-            $table .= "<td> <button response='Assign'>Assign</button> </td>";
-            $table .= '</tr>';
-            $ids[ ] =  $enrol[ 'student_id' ];
+            $table .= "<td> <button name='response' value='Assign One'>Assign</button> </td>";
+
             $table .= '<input type="hidden" name="student_id" value="' . $enrol['student_id'] . '" >';
+            $table .= '<input type="hidden" name="year" value="' . $enrol[ 'year'] . '" >';
+            $table .= '<input type="hidden" name="semester" value="' . $enrol['semester'] . '" >';
+            $table .= '<input type="hidden" name="course_id" value="' . $enrol['course_id'] . '" >';
+            $table .= '</form>';
+
+            $table .= '</tr>';
         }
 
-        $table .= '<input type="hidden" name="course_id" value="' . $enrol['course_id'] . '" >';
-        $table .= '<input type="hidden" name="year" value="' . $enrol[ 'year'] . '" >';
-        $table .= '<input type="hidden" name="semester" value="' . $enrol['semester'] . '" >';
         $table .= '<input type="hidden" name="student_ids" value="' . implode(',', $ids) . '" >';
         $table .= '</table>';
+        echo $table;
 
-        $form .= $table;
-        $form .= '<button class="submit" name="response" value="grade">Assign All</button>';
-        $form .= '</form>';
-
-        echo "<div style='border:1px'> $form </div>";
     }
 }
 

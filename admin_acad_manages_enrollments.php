@@ -48,12 +48,12 @@ $runningCoursesSelect = arrayToSelectList(
         );
 
 $taskSelect = arrayToSelectList( 'task'
-                , array( 'Add enrollment', 'Change enrollment', 'Grade' )
+                , array( 'Add enrollment', 'Change enrollment' )
                 , array( ), false, $taskSelected
         );
 
 
-echo '<h1>Manage grades/enrollement</h1>';
+echo '<h1>Manage Enrollements</h1>';
 echo alertUser( "Your are working with semester $sem-$year" );
 
 echo '<form method="post" action="">'; echo
@@ -151,46 +151,6 @@ else if( $_POST[ 'task' ] == 'Add enrollment' )
     $form .= '</form>';
     echo $form;
 }
-else if( $_POST[ 'task' ] == 'Grade' )
-{
-    if( count( $enrollments ) > 0 )
-    {
-        if( ! $_POST[ 'course_id' ] )
-            echo alertUser( "No course is selected" );
-        else
-        {
-            echo alertUser( "Grading for course " . $_POST[ 'course_id' ] );
-            echo '<form method="post"
-                action="admin_acad_manages_enrollments_action.php">';
-
-            echo '<table>';
-            $ids = array( );
-            $grades = array( );
-            foreach( $enrollments as $enrol )
-            {
-                echo '<tr><td>';
-                echo arrayToTableHTML( $enrol, 'enrollment', ''
-                    , 'registered_on,last_modified_on,status,grade_is_given_on' );
-                echo "</td>";
-                echo "<td>" . gradeSelect( $enrol['student_id'], $enrol[ 'grade' ] ) . "</td>";
-                echo '</tr>';
-                $ids[ ] =  $enrol[ 'student_id' ];
-            }
-
-            echo '<input type="hidden" name="course_id" value="' . $enrol['course_id'] . '" >';
-            echo '<input type="hidden" name="year" value="' . $enrol[ 'year'] . '" >';
-            echo '<input type="hidden" name="semester" value="' . $enrol['semester'] . '" >';
-            echo '<input type="hidden" name="student_ids" value="' . implode(',', $ids) . '" >';
-            echo '<tr><td></td><td><button name="response" value="grade">Assign</button></td></tr>';
-            echo '</table>';
-            echo '</form>';
-        }
-    }
-    else
-    {
-        echo printInfo( "No enrollment found for this course" );
-    }
-}
 else
     echo printInfo( "Unsupported task " . $_POST[ 'task' ] );
 
@@ -210,8 +170,6 @@ foreach( $courseMap as $cid => $enrolls )
     if( ! $cid )
         continue;
 
-    sortByKey( $enrolls, 'student_id' );
-
     $cname = getCourseName( $cid );
     echo "<h2>$cid: $cname </h2>";
     echo '<table class="tiles">';
@@ -222,8 +180,8 @@ foreach( $courseMap as $cid => $enrolls )
         $sname = arrayToName( getLoginInfo( $student ) );
         $grade = $e[ 'grade' ];
         $type = $e[ 'type'];
-        echo "<td> $sname <br /> $type <br /> $grade </td>";
-        if( ($i+1) % 5 == 0 )
+        echo "<td> $sname  ($student) <br /> $type <br /> $grade </td>";
+        if( ($i+1) % 4 == 0 )
             echo '</tr><tr>';
 
     }

@@ -2340,6 +2340,22 @@ function updateBookings( $course )
     return $res;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Get all the registrations beloning to course.
+    *
+    * @Param $cid Course ID.
+    *
+    * @Returns  Array containing registrations.
+ */
+/* ----------------------------------------------------------------------------*/
+function getCourseRegistrations( string $cid, int $year, string $semester ) : array
+{
+    return getTableEntries( 'course_registration'
+        , 'student_id'
+        , "status='VALID' AND type != 'DROPPED' AND course_id='$cid' AND year='$year' AND semester='$semester'"
+    );
+}
 
 function getMyCourses( $sem, $year, $user  )
 {

@@ -127,6 +127,24 @@ else if( $_POST[ 'response' ] == 'quick_enroll' )
 
     }
 }
+else if( $_POST[ 'response' ] == 'drop_course' )
+{
+    $_POST[ 'status' ] = 'DROPPED';
+
+    $user = $_POST[ 'student_id' ];
+    $course = $_POST[ 'course_id' ];
+    $sem = $_POST[ 'semester' ];
+    $year = $_POST[ 'year' ];
+
+    $res = updateTable( 'course_registration'
+        , 'student_id,course_id,year,semester', 'status', $_POST
+    );
+
+    if( $res )
+        echo printInfo( "Successfully dropped $user from $course $sem/$year " );
+    else
+        echo printInfo( "Failed to drop $user from $course $sem/$year " );
+}
 else
     echo alertUser( 'Unknown type of request ' . $_POST[ 'response' ] );
 

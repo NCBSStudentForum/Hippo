@@ -203,13 +203,30 @@ foreach( $courseMap as $cid => $enrolls )
     foreach( $enrolls as $i => $e )
     {
         $student = $e[ 'student_id'];
+
+        $dropForm = '
+            <form action="admin_acad_manages_enrollments_action.php" method="post" accept-charset="utf-8">
+                <button class="show_as_link" name="response" value="drop_course"
+                    title="Drop course"> <i class="fa fa-tint fa-1x"></i>
+                </button>
+                <input type="hidden" name="course_id" id="" value="' . $cid . '" />
+                <input type="hidden" name="year" value="' . $year . '" />
+                <input type="hidden" name="semester" value="' . $sem . '" />
+                <input type="hidden" name="student_id" value="' . $student . '" />
+            </form>
+        ';
+
         $sname = arrayToName( getLoginInfo( $student ) );
         $grade = $e[ 'grade' ];
         $type = $e[ 'type'];
-        echo "<td> $sname  ($student) <br /> $type <br /> $grade </td>";
+
+        // If grade is assigned, you can't drop the course.
+        if( $grade )
+            $dropForm = '';
+
+        echo "<td> $sname  ($student) <br /> $type <br /> $grade $dropForm </td>";
         if( ($i+1) % 4 == 0 )
             echo '</tr><tr>';
-
     }
     echo '</tr>';
     echo '</table>';

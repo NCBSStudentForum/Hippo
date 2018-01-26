@@ -38,12 +38,25 @@ $taskSelected = 'Grade';
 
 $runningCourses = array();
 
+$nonGradable = array( );
 foreach( getSemesterCourses( $year, $sem ) as $c )
-    $runningCourses[ $c[ 'course_id' ] ] = $c;
+{
+    $cid = $c[ 'course_id' ];
+    $endDate = strtotime( $c['end_date'] );
 
-$runningCoursesSelect = arrayToSelectList(
-            'course_id'
-            , array_keys( $runningCourses ), array( )
+    if( $endDate < strtotime( 'today' ) + 7 * 24 * 3600 )
+        $runningCourses[ $cid ] = getCourseName( $cid );
+    else
+        $nonGradable[] = $cid;
+}
+
+if( count( $nonGradable ) > 0 )
+    echo printInfo( "Following courses can not be graded yet: <br /> "
+        . implode( ", ", $nonGradable ) );
+
+$runningCoursesSelect = arrayToSelectList( 'course_id'
+            , array_keys( $runningCourses )
+            , $runningCourses
             , false, $courseSelected
         );
 

@@ -26,7 +26,8 @@ function printInfo( $msg )
 
 function alertUser( $msg )
 {
-    $info ="<div class=\"alert_user\"><p> ".$msg."</p></div>";
+    $info ="<div class=\"alert_user\">
+            <i class=\"fa fa-exclamation-circle fa-1x\"></i> " . $msg . "</div>";
     return $info;
 }
 

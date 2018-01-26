@@ -1095,25 +1095,29 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     * @param $multiple_select If true then allow user to select multiple
     * entries.
     * @param $selected If not '' then select this one by default.
+    * @param $header If false, don't show -- Select one -- etc.
     *
     * @return HTML <select>
  */
-function arrayToSelectList( $name, $options
+function arrayToSelectList( string $name, array $options
         , $display = array()
         , $multiple_select = false
         , $selected = ''
-    )
+        , bool $header = true
+    ) : string
 {
     $html = '';
     if( ! $multiple_select )
     {
         $html .= "<select class=\"$name\" name=\"$name\">";
-        $html .= "<option selected value=\"\">-- Select one --</option>";
+        if( $header )
+            $html .= "<option selected value=\"\">-- Select one --</option>";
     }
     else
     {
         $html .= "<select class=\"$name\" multiple size=\"4\" name=\"$name\">";
-        $html .= "<option selected disabled>-- Select multiple --</option>";
+        if( $header )
+            $html .= "<option selected disabled>-- Select multiple --</option>";
     }
 
     foreach( $options as $option )
@@ -1932,7 +1936,7 @@ function gradeSelect( $name, $default = 'X' )
     $select = arrayToSelectList(
             $name
             , array( 'A+', 'A', 'B+', 'B', 'C+', 'C', 'F', 'X' )
-            , array( ), false, $default
+            , array( ), false, $default, false
         );
     return $select;
 }

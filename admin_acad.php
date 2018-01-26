@@ -78,11 +78,11 @@ echo '<table class="tasks">
 echo '<br />';
 echo '<table class="tasks">
     <tr>
-        <td> <a class="clickable"
+        <td> <a class="clickable_small"
             href="admin_acad_manages_requests.php">Manage ' . count( $pendingRequests) .
             ' pending requests</a>
         </td>
-        <td> <a class="clickable" href="admin_acad_email_and_docs.php">Emails and Documents</td>
+        <td> <a class="clickable_small" href="admin_acad_email_and_docs.php">Emails and Documents</td>
     </tr>
     </table>';
 

@@ -2145,7 +2145,7 @@ function presentationToHTML( $presentation )
 
     // Add URL and PRESENTATION URL in table.
     $html .= ' <br /> ';
-    $html .= '<table class="info sortable">';
+    $html .= '<table class="sortable">';
     $html .= '<tr><td>URL(s)</td><td>'
                 .  linkify( $presentation['url'] ) . '</td></tr>';
     $html .= '<tr><td>Presention URL</td><td>'

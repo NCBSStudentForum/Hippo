@@ -100,7 +100,7 @@ echo '<br />';
 
 if( isAuthenticated( ) )
 {
-    echo '<a style="float:right" class="clickable" href="quickbook.php">Create New Booking</a>';
+    echo '<a style="float:left;padding-left:500px"  class="clickable" href="quickbook.php">Create New Booking</a>';
     echo '<br />';
 }
 

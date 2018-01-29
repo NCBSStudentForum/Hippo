@@ -27,6 +27,13 @@ function fixJCSchedule( $login, $data )
         , 'id,presenter,jc_id,date,title', 'status'
         , $data );
 
+    if( ! $entry  )
+    {
+        $date = $data[ 'date'] ;
+        echo printInfo( "Failed to assign $presenter on $date. " );
+        return array( );
+    }
+
     echo printInfo( 'Assigned user ' . $login .
         ' to present a paper on ' . dbDate( $data['date' ] )
         );

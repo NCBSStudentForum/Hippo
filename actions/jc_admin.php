@@ -21,6 +21,7 @@ function fixJCSchedule( $login, $data )
     $data[ 'status' ] = 'VALID';
     $data[ 'id' ] = getUniqueID( 'jc_presentations' );
     $data[ 'presenter' ] = $login;
+    $data[ 'title' ] = 'Not yet available';
 
     $entry = insertOrUpdateTable( 'jc_presentations'
         , 'id,presenter,jc_id,date,title', 'status'

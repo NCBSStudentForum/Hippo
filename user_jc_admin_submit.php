@@ -106,8 +106,8 @@ else if( $_POST['response'] == 'Assign Presentation' )
 
     if( ! $anyError )
     {
-        goToPage( 'user_jc_admin.php', 1 );
-        exit;
+        //goToPage( 'user_jc_admin.php', 1 );
+        //exit;
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )

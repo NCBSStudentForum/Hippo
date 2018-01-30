@@ -161,6 +161,9 @@ def get_images_from_dropbox( ):
         author = img['author']
         url = img[ 'photo_url']
         caption = img[ 'title' ]
+        if float( img[ 'average_votes'] ) < 3.0:
+            print( '[INFO] Not enough votes. Ignoring' )
+            continue
         if is_image_and_ready( url ):
             download_url( url, caption, '(c) %s' % author )
 

@@ -1007,7 +1007,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     global $db;
 
     if( ! $ldapInfo )
-        $ldapInfo = getUserInfoFromLdap( $userid );
+        $ldapInfo = @getUserInfoFromLdap( $userid );
 
     if( $ldapInfo[ 'last_name' ] == 'NA' )
         $ldapInfo[ 'last_name' ] = '';
@@ -1085,7 +1085,7 @@ function getUserInfo( $user )
         $res = array( );
 
     // Fetch ldap as well.
-    $ldap = getUserInfoFromLdap( $user );
+    $ldap = @getUserInfoFromLdap( $user );
     if( is_array($ldap) && is_array( $res ) && $ldap  )
     {
         foreach( $ldap as $key => $val )
@@ -1127,7 +1127,7 @@ function getLoginEmail( $login )
 
     if( strlen( trim($res[ 'email' ]) < 1 ) )
     {
-        $info = getUserInfoFromLdap( $login );
+        $info = @getUserInfoFromLdap( $login );
         if( $info && array_key_exists( 'email', $info) && $info['email'] )
         {
             // Update user in database.

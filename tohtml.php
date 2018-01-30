@@ -1168,7 +1168,7 @@ function loginToText( $login, $withEmail = true, $autofix = true )
         $email = __get__( $user, 'email', '' );
         if( $email )
         {
-            $ldap = getUserInfoFromLdap( $user[ 'email'] );
+            $ldap = @getUserInfoFromLdap( $user[ 'email'] );
             if( $ldap )
                 $user = array_merge( $user, $ldap );
         }

@@ -2,11 +2,11 @@
 
 set_include_path( '..' );
 
+require_once 'vendor/autoload.php';
 include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
-require_once 'vendor/autoload.php';
 
 function date3339($date)
 {

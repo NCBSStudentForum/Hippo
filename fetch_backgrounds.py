@@ -59,7 +59,6 @@ def writeOnImage( img, caption, copyright = '(c) NCBS Photography Club' ):
     # get mean color of box.
     nI = np.asarray( img )
     color = np.mean( nI[10:300,15:100, :] )
-    print( 'mean color %s' % color )
     if color > 125:
         writeColor = (0,0,0)
     else:
@@ -147,9 +146,9 @@ def get_images_from_intranet( ):
             download_url( url, caption )
 
 def img_to_fname( img ):
-    fname = '%s_%s.jpg' % (img['author'], img[ 'title'])
-    fname = re.sub( r'\s', '', fname )
-    return fname
+    fname = '%s_%s' % (img['author'], img[ 'title'])
+    fname = re.sub( r'\W+|(\s+)', '', fname )
+    return fname + '.jpg'
 
 def get_images_from_dropbox( ):
     global useJSON_

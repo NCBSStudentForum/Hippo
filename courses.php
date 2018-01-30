@@ -170,7 +170,7 @@ echo '<br />';
 /**  @} */
 
 
-$header = '<tr><th>Course <br> Instructors</th><th>Schedule</th><th>Slot <br /> Venue</th><th>URL</th></tr>';
+$header = '<tr><th>Course/Instructors</th><th>Schedule</th><th>Slot/Venue</th><th>URL</th></tr>';
 
 
 // Go over courses and populate the entrollment array.

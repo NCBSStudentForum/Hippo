@@ -147,7 +147,7 @@ def get_images_from_intranet( ):
             download_url( url, caption )
 
 def img_to_fname( img ):
-    fname = '%s_%s.png' % (img['author'], img[ 'title'])
+    fname = '%s_%s.jpg' % (img['author'], img[ 'title'])
     fname = re.sub( r'\s', '', fname )
     return fname
 

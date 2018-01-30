@@ -84,10 +84,11 @@ def crop_surrounding_whitespace(image):
         return image
     return image.crop(bbox)
 
-def download_url( url, caption, copyright = '(c) NCBS Photography Club' ):
+def download_url( url, caption, copyright = '(c) NCBS Photography Club', outpath = None):
     # Download URL.
-    outfile = os.path.basename( url )
-    outpath = os.path.join( background_dir_, outfile + '.jpg' )
+    if outpath is None:
+        outfile = os.path.basename( url )
+        outpath = os.path.join( background_dir_, outfile + '.jpg' )
     print( '[INFO] Downloading %s -> %s' % (url, outpath) )
     if not os.path.exists( outpath ):
         try:
@@ -145,6 +146,11 @@ def get_images_from_intranet( ):
         if is_image_and_ready( url ):
             download_url( url, caption )
 
+def img_to_fname( img ):
+    fname = '%s_%s.png' % (img['author'], img[ 'title'])
+    fname = re.sub( r'\s', '', fname )
+    return fname
+
 def get_images_from_dropbox( ):
     global useJSON_
     log( 'Fetching from dropbox' )
@@ -161,11 +167,17 @@ def get_images_from_dropbox( ):
         author = img['author']
         url = img[ 'photo_url']
         caption = img[ 'title' ]
+        fname = img_to_fname( img )
+        outfile = os.path.join( background_dir_, fname )
         if float( img[ 'average_votes'] ) < 3.0:
             print( '[INFO] Not enough votes. Ignoring' )
+            # Delete this if it was already there.
+            if os.path.exists( outfile ):
+                print( ' ... deleting' )
+                os.remove( outfile )
             continue
         if is_image_and_ready( url ):
-            download_url( url, caption, '(c) %s' % author )
+            download_url( url, caption, '(c) %s' % author, outfile )
 
 def main( ):
     global useJSON_

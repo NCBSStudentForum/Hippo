@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
 <?php
-include_once 'database.php';
+@include_once 'database.php';
 
 function venueText( $venue )
 {
@@ -76,8 +74,8 @@ usort( $events, "cmp" );
 
 $feed =  '<rss version="2.0"> <channel>';
 $feed .= "<title>Events over next 60 days</title>";
-$feed .= "<link>" . appURL( ) . "</link>";
-$feed .= "<description>NCB events list </description>";
+$feed .= trim( "<link>" . appURL( ) . "</link>" );
+$feed .= "<description>NCB events list</description>";
 
 foreach( $events as $e )
 {
@@ -116,7 +114,8 @@ $feed .= '</channel>';
 $feed .= '</rss>';
 
 // Display it now.
-header( 'Content-Type: application/xhtml+xml' );
+header( 'Content-Type: application/rss+xml' );
+echo '<?xml version="1.0" encoding="UTF-8" ?>';
 echo $feed;
 
 ?>

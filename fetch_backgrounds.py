@@ -12,7 +12,7 @@ import PIL.Image
 import PIL.ImageChops
 from PIL import ImageDraw
 from PIL import ImageFont
-
+import numpy as np
 import lxml.html
 
 os.environ[ 'http_proxy' ] = 'http://proxy.ncbs.res.in:3128'
@@ -56,13 +56,16 @@ def writeOnImage( img, caption, copyright = '(c) NCBS Photography Club' ):
     # font = ImageFont.truetype(<font-file>, <font-size>)
     font = ImageFont.truetype("./data/OpenSans-Regular.ttf", 12 )
     fontCaption = ImageFont.truetype("./data/OpenSans-Regular.ttf", 20 )
-    draw.text((10, 15) , caption[0:80]
-            , (255,255,255) , font=fontCaption
-            )
-    draw.text((10, 50) , copyright
-            , (255,255,255)
-            , font=font
-            )
+    # get mean color of box.
+    nI = np.asarray( img )
+    color = np.mean( nI[10:300,15:100, :] )
+    print( 'mean color %s' % color )
+    if color > 125:
+        writeColor = (0,0,0)
+    else:
+        writeColor = (255,255,255)
+    draw.text((10, 15) , caption[0:80], writeColor, font=fontCaption)
+    draw.text((10, 50) , copyright, writeColor, font=font)
     return img
 
 def crop_surrounding_whitespace(image):

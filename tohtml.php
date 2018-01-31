@@ -1207,7 +1207,8 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     return $text;
 }
 
-function loginToHTML( $login, $withEmail = true ) {
+function loginToHTML( $login, $withEmail = true )
+{
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )
@@ -1222,8 +1223,10 @@ function loginToHTML( $login, $withEmail = true ) {
     $text = fixName( arrayToName( $user ) );
 
     if( $withEmail )
+    {
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
             $text = "<a href=\"mailto:" . $user['email'] . "\"> $text </a>";
+    }
 
     if( strlen( trim($text) ) < 1 )
         return $login;
@@ -1534,7 +1537,7 @@ function talkToHTML( $talk, $with_picture = false )
 
     $title = '(' . __ucwords__($talk[ 'class' ]) . ') ' . $talk[ 'title' ];
 
-    $html = '<div style="width:600px">';
+    $html = '<div style="width:700px">';
     $html .= '<table border="0"><tr>';
     $html .= '<td colspan="2"><h1>' . $title . '</h1></td>';
     $html .= "</tr><tr>";
@@ -1551,24 +1554,24 @@ function talkToHTML( $talk, $with_picture = false )
     else
         $speakerHMTL = speakerToHTML( $speakerArr );
 
-    $html .= '<td> <br />' . $speakerHMTL ;
+    $html .= '<td>' . $speakerHMTL ;
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )
-        $html .= '<br /><br /><strong>Supervisor:</strong>' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br />Supervisor: ' . loginToHTML( $talk[ 'host' ], false );
     else
-        $html .= '<br /><br /><strong>Host:</strong> ' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br />Host: ' . loginToHTML( $talk[ 'host' ], false );
 
     $html .= '<br /><br />';
-    $html .= '<div style="text-decoration:none;">';
+    $html .= '<div style="text-decoration:none;font-size:small">';
     $html .= '<table><tr>
-                <td class="when"> <i class="fa fa-clock-o fs-spin"></i> ' . $when . '</td>
+                <td class="when"><small>When: </small> ' . $when . '</td>
             </tr><tr>
-                <td class="where"> <i class="fa fa-globe"></i> ' . $where . '</td>
+                <td class="where"> <small>Where: </small> ' . $where . '</td>
             </tr>
             <tr></tr>
             <tr>
-                <td><strong>Coordinator: </strong>'
+                <td><small>Coordinator: </small>'
                 .  loginToText( $talk[ 'coordinator' ], false, true ) . '</td>';
     $html .= '</tr>';
 
@@ -1587,6 +1590,7 @@ function talkToHTML( $talk, $with_picture = false )
 
     $html .= '</table>';
     $html .= '</div>';
+
     $html .= '</td>';
     $html .= '</tr></table>';
 

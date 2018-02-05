@@ -338,7 +338,7 @@ def construct_flow_graph(  ):
             g_.add_edge( 'source', speaker, capacity = 1, weight = 0 )
 
     # Compute totalWeeks of schedule starting today.
-    totalWeeks = 50
+    totalWeeks = 35
     today = datetime.date.today()
     nextMonday = today + datetime.timedelta( days = -today.weekday(), weeks=1)
     slots = []
@@ -430,7 +430,9 @@ def construct_flow_graph(  ):
     # Each slot node must have at least 3 nodes.
     for slot in slots:
         inDegree = g_.in_degree( slot )
-        assert inDegree >= 3, "Each slot must have 3 options"
+        if inDegree < 3:
+            _logger.warn( "Each slot must have 3 options. Got %d" % inDegree )
+            _logger.warn( ' Slot is %s' % slot )
 
     _logger.info( 'Constructed flow graph' )
 
@@ -698,11 +700,8 @@ def main( outfile ):
     _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )
     ans = None
-    try:
-        construct_flow_graph( )
-        ans = computeSchedule( )
-    except Exception as e:
-        _logger.warn( "Failed to schedule. Error was %s" % e )
+    construct_flow_graph( )
+    ans = computeSchedule( )
     try:
         print_schedule( ans, outfile )
     except Exception as e:

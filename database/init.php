@@ -264,6 +264,7 @@ function initialize( $db  )
             , status ENUM( 'VALID', 'INVALID' ) DEFAULT 'VALID'
             , comment TEXT
             , acknowledged ENUM( 'YES', 'NO' ) DEFAULT 'NO'
+            , is_presynopsis_seminar ENUM( 'YES', 'NO' ) default 'NO'
             , FOREIGN KEY (speaker) REFERENCES logins(login)
             , UNIQUE (speaker, date) )"
         );

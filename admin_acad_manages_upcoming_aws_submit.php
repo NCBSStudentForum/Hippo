@@ -71,7 +71,7 @@ else if( $_POST[ 'response' ] == 'format_abstract' )
     else
     {
         echo '<form method="post" action="admin_acad_manages_upcoming_aws_reformat.php">';
-        echo dbTableToHTMLTable( 'upcoming_aws', $aws, 'abstract' );
+        echo dbTableToHTMLTable( 'upcoming_aws', $aws, 'abstract,is_presynopsis_seminar' );
         echo '</form>';
     }
 }

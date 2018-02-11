@@ -1317,6 +1317,16 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
         $html .= '</tr>';
 
     }
+
+    // Check if AWS is pre-synopsis seminar.
+    $selected = __get__( $default, 'is_presynopsis_seminar', "NO" );
+    $html .= '
+             <tr>
+             <td>Is Pre-synopsis Seminar? <br></td>
+             <td>' . arrayToSelectList( 'is_presynopsis_seminar', array('YES', 'NO') , array(), false, $selected) . '</td>';
+    $html .= '</tr>';
+
+
     $html .= '
              <tr>
              <td>Date</td>

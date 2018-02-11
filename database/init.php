@@ -240,6 +240,7 @@ function initialize( $db  )
             , tcm_member_4 VARCHAR( 200 ) -- optional
             , title VARCHAR( 1000 )
             , abstract MEDIUMTEXT
+            , is_presynopsis_seminar ENUM( 'YES', 'NO' ) default 'NO'
             , FOREIGN KEY (speaker) REFERENCES logins(login)
             , UNIQUE KEY (speaker, date)
             , FOREIGN KEY (supervisor_1) REFERENCES faculty(email)

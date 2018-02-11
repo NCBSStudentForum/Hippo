@@ -106,23 +106,10 @@ function doAWSHouseKeeping( )
             continue;
         }
 
-        // First copy the entry to AWS table.
-        // id           | int(11)       | NO   | PRI | NULL     | auto_increment
-        // | speaker      | varchar(200)  | NO   | MUL | NULL     |
-        // | date         | date          | NO   |     | NULL     |
-        // | time         | time          | NO   |     | 16:00:00 |
-        // | supervisor_1 | varchar(200)  | NO   | MUL | NULL     |
-        // | supervisor_2 | varchar(200)  | YES  |     | NULL     |
-        // | tcm_member_1 | varchar(200)  | YES  |     | NULL     |
-        // | tcm_member_2 | varchar(200)  | YES  |     | NULL     |
-        // | tcm_member_3 | varchar(200)  | YES  |     | NULL     |
-        // | tcm_member_4 | varchar(200)  | YES  |     | NULL     |
-        // | title        | varchar(1000) | YES  |     | NULL     |
-        // | abstract     | text
         $res1 = insertIntoTable( 'annual_work_seminars'
             , 'speaker,date,time,supervisor_1,supervisor_2' .
                 ',tcm_member_1,tcm_member_2,tcm_member_3,tcm_member_4' .
-                ',title,abstract', $aws
+                ',title,abstract,is_presynopsis_seminar', $aws
             );
 
         if( $res1 )

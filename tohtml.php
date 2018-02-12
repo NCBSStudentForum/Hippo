@@ -1429,6 +1429,10 @@ function awsToHTML( $aws, $with_picture = false )
     if( strlen( $title ) == 0 )
         $title = "Not yet disclosed!";
 
+
+    if( __get__( $aws, 'is_presynopsis_seminar', 'NO' ) == 'YES' )
+        $title = '(Presynopsis Seminar)' . ' ' . $title;
+
     $abstract = $aws[ 'abstract' ];
     if( strlen( $abstract ) == 0 )
         $abstract = "Not yet disclosed!";

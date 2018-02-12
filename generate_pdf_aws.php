@@ -76,8 +76,17 @@ function awsToTex( $aws )
     //$head .= '\node[] (logo) at ([yshift=-15mm,xshift=30mm]current page.north west) 
     //    { \includegraphics[height=1cm]{' . $logo . '}};';
     $head .= '\node[] (logo) at ([yshift=-15mm,xshift=30mm]current page.north west) { }; ';
+
+    // Is presynopsis seminar?
+    if( __get__( $aws, 'is_presynopsis_seminar', 'NO' ) == 'YES' )
+        $awsType = 'Presynopsis Seminar';
+    else
+        $awsType = 'Annual Work Seminar';
+
+    
     $head .= '\node[yshift=0mm,align=right,above right=of logo,text width=0.65\linewidth]
-             (aws) at (0.3\linewidth,0) {\Huge \textsc{Annual Work Seminar} };';
+             (aws) at (0.3\linewidth,0) {\Huge \textsc{' . $awsType . '} };';
+
     $head .= '\node[below=of aws,text width=0.65\linewidth,align=right] 
         (dateAndPlace) { ' . $dateAndPlace . ' }; ';
     $head .= '\end{tikzpicture}';

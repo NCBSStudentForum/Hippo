@@ -80,7 +80,7 @@ function initialize( $db  )
         ( id INT NOT NULL
             -- This will be prefixed in title of event. e.g. Thesis Seminar by
             -- , Public Lecture by, seminar by etc.
-            , class VARCHAR(20) NOT NULL DEFAULT "TALK"
+            , class VARCHAR(30) NOT NULL DEFAULT "TALK"
             , speaker VARCHAR(100) NOT NULL -- This can change a little.
             , speaker_id INT NOT NULL
             , host VARCHAR(100) NOT NULL
@@ -126,7 +126,7 @@ function initialize( $db  )
         CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
             gid INT NOT NULL
             , rid INT NOT NULL
-            , class VARCHAR(20) DEFAULT 'UNKNOWN'
+            , class VARCHAR(30) DEFAULT 'UNKNOWN'
             , created_by VARCHAR(50) NOT NULL
             , title VARCHAR(300) NOT NULL
             , external_id VARCHAR(50)
@@ -179,7 +179,7 @@ function initialize( $db  )
             , external_id VARCHAR(50)
             -- If yes, this entry will be put on google calendar.
             , is_public_event ENUM( 'YES', 'NO' ) DEFAULT 'NO'
-            , class VARCHAR(20) NOT NULL DEFAULT 'UNKNOWN'
+            , class VARCHAR(30) NOT NULL DEFAULT 'UNKNOWN'
             , title VARCHAR(300) NOT NULL
             , description TEXT
             , date DATE NOT NULL

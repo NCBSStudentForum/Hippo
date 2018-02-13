@@ -52,8 +52,6 @@ if( array_key_exists( 'external_id', $_GET ) )
     $defaults[ 'speaker' ] = $entry[ 'speaker' ];
     $defaults[ 'class' ] = $entry[ 'class' ];
 
-
-
     // Update the title of booking request.
     $defaults[ 'title' ] = __ucwords__( $defaults[ 'class' ] ) . ' by '
             . $defaults[ 'speaker' ] . " on '" . $defaults[ 'title' ] . "'";

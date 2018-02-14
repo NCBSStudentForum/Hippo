@@ -1375,10 +1375,6 @@ function insertIntoTable( $tablename, $keys, $data )
         if( is_array( $value ) )
             $value = implode( ',', $value );
 
-        if( isHTML( $value ) )
-        {
-            $value = purifyHTML( $value );
-        }
         $stmt->bindValue( ":$k", $value );
     }
 

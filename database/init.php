@@ -275,6 +275,7 @@ function initialize( $db  )
             , speaker VARCHAR(200) NOT NULL -- user
             , date DATE -- final date
             , time TIME DEFAULT '16:00'
+            , is_presynopsis_seminar ENUM( 'YES', 'NO' ) DEFAULT 'NO'
             , supervisor_1 VARCHAR( 200 ) -- first superviser must be from NCBS
             , supervisor_2 VARCHAR( 200 ) -- superviser 2, optional
             , tcm_member_1 VARCHAR( 200 ) -- Can be null at the time of inserting a query.

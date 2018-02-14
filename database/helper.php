@@ -1459,9 +1459,6 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
         if( is_array( $value ) )
             $value = implode( ',', $value );
 
-        if( isHTML( $value ) )
-            $value = purifyHTML( $value );
-
         $stmt->bindValue( ":$k", $value );
     }
 
@@ -1602,9 +1599,6 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
         $value = $data[$k];
         if( gettype( $value ) == 'array' )
             $value = implode( ',', $value );
-
-        if( isHTML( $value ) )
-            $value = purifyHTML( $value );
 
         $stmt->bindValue( ":$k", $value );
     }

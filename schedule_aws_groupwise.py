@@ -107,6 +107,20 @@ def init( cur ):
 
     _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
+def getPrevisousAWS( cur, student ):
+    cur.execute( """
+        SELECT * FROM annual_work_seminars WHERE speaker='%s' 
+        ORDER BY DATE""" % student )
+
+    res = cur.fetchall( )
+    if not res or res is None:
+        return None
+
+    dates= [ ]
+    for e in res:
+        dates.append( e['date'] )
+    return dates[-1]
+
 def getAllAWSPlusUpcoming( ):
     global aws_, db_
     global upcoming_aws_
@@ -154,7 +168,6 @@ def getAllAWSPlusUpcoming( ):
             if specialization and specialization != 'UNSPECIFIED':
                 speakersSpecialization_[ a['speaker'] ] = spec[ 'specialization' ]
 
-
     for a in aws_:
         # Sort a list in place.
         aws_[a].sort( key = lambda x : x['date'] )
@@ -170,6 +183,14 @@ def getAllAWSPlusUpcoming( ):
     # IMP: This will overwrite the specialization fetched from previous AWS. It
     # is required.
     for st in speakers_:
+        # If  this speaker has given AWS in less than 6 months, do not count her
+        # when computing frequencies.
+        prevAWSDate = getPrevisousAWS( cur, st )
+        if prevAWSDate is not None:
+            if diffInDays( prevAWSDate, datetime.date.today( ) ) < 200:
+                _logger.warn( 'Not counting %s. Recently given AWS' % a )
+                continue
+
         cur.execute( "SELECT specialization FROM logins WHERE login='%s'" % st )
         a = cur.fetchone( )
         if not a[ 'specialization' ]:
@@ -185,7 +206,7 @@ def getAllAWSPlusUpcoming( ):
 
     ## Compute the frequencies of specialization.
     ## Print specialization
-    print( len( speakersSpecialization_ ) )
+    _logger.debug( 'Total speakers %d' % len( speakersSpecialization_ ) )
     for i, s in enumerate( speakersSpecialization_ ):
         print( i, s, speakersSpecialization_[s] )
     freq = Counter( speakersSpecialization_.values( ) )
@@ -194,10 +215,6 @@ def getAllAWSPlusUpcoming( ):
 
     _logger.info( specializationFreqs_ )
     print( specializationFreqs_ )
-
-    #for s in speakersSpecialization_:
-    #    print( s, speakersSpecialization_[s] )
-
 
 
 def computeCost( speaker, slot_date, last_aws ):
@@ -430,9 +447,9 @@ def construct_flow_graph(  ):
     # Each slot node must have at least 3 nodes.
     for slot in slots:
         inDegree = g_.in_degree( slot )
+        inedges = g_.predecessors( slot )
         if inDegree < 3:
-            _logger.warn( "Each slot must have 3 options. Got %d" % inDegree )
-            _logger.warn( ' Slot is %s' % slot )
+            _logger.warn( "slot %s must have 3 options. Got %d" % (slot,inDegree))
 
     _logger.info( 'Constructed flow graph' )
 

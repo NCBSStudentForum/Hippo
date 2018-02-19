@@ -62,10 +62,10 @@ if( array_key_exists( 'external_id', $_GET ) )
 else
 {
     echo alertUser( '<p style="font-size:large;width:700px;">
-        <i class="fa fa-flag fa-3x"></i>
-        If email are to be sent to Academic community for your event
-        such as various <strong><tt>TALK</tt>s, <tt>SEMINAR/THESIS SEMINAR</tt>s, <tt>LECTURE</tt>s</strong> etc.,
+        <i class="fa fa-flag fa-2x"></i>
+        For booking <strong><tt>TALK</tt>s, <tt>SEMINAR</tt>, <tt>THESIS SEMINAR</tt>s, <tt>LECTURE</tt>s</strong> etc.,
         <a href="user_register_talk.php"> <i class="fa fa-spinner fa-spin"></i> click here</a>.
+        Otherwise NO EMAIL will be sent to <tt>Academic</tt> community.
         </p>'
     );
 }

@@ -564,7 +564,6 @@ def print_schedule( schedule, outfile ):
     with open( outfile, 'w' ) as f:
         f.write( "This is what is got \n" )
 
-
     cost = 0
     for date in  sorted(schedule):
         line = "%s :" % date

@@ -136,13 +136,14 @@ echo '</tr></table>';
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );
 
-echo "<h3>Temporary assignments </h3>";
-echo '
-    <p> Following table shows the best possible schedule I could
-    come up with for next 12 months starting today. Pressing <button
-    disabled>' . $symbAccept . '</button> will put them into upcoming
-    AWS list.
-    </p>';
+echo "<h1>Temporary assignments</h1>";
+echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
+echo '<button type="submit" name="response" value="Reschedule">Recompute Schedule</button>';
+echo "</form>";
+
+echo alertUser( 'Following is the best possible schedule I was able to
+    come up. Press <button disabled>' . $symbAccept . '</button> to accept the 
+    schedule.' );
 
 $schedule = getTentativeAWSSchedule( );
 
@@ -155,9 +156,6 @@ $header = "<tr>
     </tr>";
 echo $header;
 
-echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
-echo '<button type="submit" name="response" value="Reschedule">Reschedule All</button>';
-echo "</form>";
 
 echo '<br>';
 

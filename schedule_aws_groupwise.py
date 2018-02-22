@@ -448,8 +448,9 @@ def construct_flow_graph(  ):
     for slot in slots:
         inDegree = g_.in_degree( slot )
         inedges = g_.predecessors( slot )
-        if inDegree < 3:
-            _logger.warn( "slot %s must have 3 options. Got %d" % (slot,inDegree))
+        speci = g_.node[ slot ]['specialization'] 
+        if inDegree < 1:
+            _logger.warn( "slot %s [%s] have no options" % (slot, speci ))
 
     _logger.info( 'Constructed flow graph' )
 

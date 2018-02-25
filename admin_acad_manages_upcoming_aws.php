@@ -108,7 +108,7 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
         $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
 
         // Speaker PI if any.
-        $table .=  '<br />' . piSpecializationHTML( $pi, $specialization );
+        $table .=  '<br/>' . piSpecializationHTML( $pi, $specialization );
 
         // Check if user has requested AWS schedule and has it been approved.
         // If user request for rescheduling was approved, print it here.
@@ -226,7 +226,7 @@ foreach( $scheduleMap as $date => $schedule )
         $table .= $speakerInfo;
 
         // Add PI and specialization info.
-        $table .= piSpecializationHTML( $pi, $specialization );
+        $table .= '<br />' . piSpecializationHTML( $pi, $specialization );
 
         $intranetLink = getIntranetLink( $speaker );
 

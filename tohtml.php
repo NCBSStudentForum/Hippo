@@ -2125,7 +2125,7 @@ function mailto( $email, $text = '' )
 
 function piSpecializationHTML( $pi, $specialization )
 {
-    return "<small> $specialization <br />PI: $pi</small>";
+    return "$specialization <br /> PI OR HOST: $pi";
 }
 
 function goBackToPageLink( $url, $title = "Go back" )

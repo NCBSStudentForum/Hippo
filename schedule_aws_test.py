@@ -1,14 +1,5 @@
 #!/usr/bin/env python2.7
 
-"""schedule_aws.py: 
-
-Query the database and schedule AWS.
-
-TODO:
-    Add summary of policy here.
-
-"""
-
 from __future__ import print_function 
     
 __author__           = "Dilawar Singh"

@@ -195,7 +195,7 @@ foreach( $scheduleMap as $date => $schedule )
     $table = '<table class="show_schedule">';
     foreach( $schedule as $i => $upcomingAWS )
     {
-        $table .= $header;
+        //$table .= $header;
 
         $table .= '<tr>';
         $csvLine = '';
@@ -257,7 +257,6 @@ foreach( $scheduleMap as $date => $schedule )
 
         $csvLine .= $upcomingAWS['date'] . ',';
 
-        $table .= "</td><td>";
         $table .= $lastAwsDate;
         $csvLine .= $lastAwsDate . ',';
 

@@ -14,8 +14,9 @@ __status__           = "Development/Production"
 import sys
 import os
 import math
+import itertools
 import numpy as np
-from collections import defaultdict, OrderedDict
+from collections import defaultdict, OrderedDict, Counter
 import datetime 
 import copy
 import tempfile 
@@ -53,10 +54,13 @@ specialization_ = { }
 # List of holidays.
 holidays_ = {}
 
+def spec_short( spec ):
+    return  ''.join( [ x.strip()[0] for x in spec.split( ) ] )
+
 def getSpecialization( cur, piOrHost ):
     cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % piOrHost )
     a = cur.fetchone( )
-    return a
+    return a['specialization']
 
 def init( cur ):
     """
@@ -84,11 +88,12 @@ def init( cur ):
     for a in cur.fetchall( ):
         speakers_[ a['login'].lower() ] = a
         spec = a['specialization']
-        if a is None:
+        if spec is None:
             pi = a['pi_or_host']
             if pi is None:
                 continue
             spec = getSpecialization( cur, pi )
+
         spec = spec or 'UNSPECIFIED'
         specialization_[ a['login'] ] = spec
     
@@ -570,6 +575,8 @@ def computeSchedule( ):
 
 def print_schedule( schedule, outfile ):
     global g_, aws_
+    global specialization_
+
     with open( outfile, 'w' ) as f:
         f.write( "This is what is got \n" )
 
@@ -578,10 +585,11 @@ def print_schedule( schedule, outfile ):
         line = "%s :" % date
         totalFreshers = 0
         for speaker in schedule[ date ]:
-            line += '%13s (%10s, %1d)' % (speaker
-                , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
-                , len( aws_[ speaker ] )
-                )
+            line += '%13s %s (%10s, %1d)' % ( speaker
+                    , spec_short( specialization_.get(speaker, 'UNSPECIFIED') )
+                    , g_.node[speaker]['last_date'].strftime('%Y-%m-%d') 
+                    , len( aws_[ speaker ] )
+                    )
             if len( aws_[speaker] ) == 0:
                 totalFreshers += 1
             cost += totalFreshers
@@ -591,6 +599,25 @@ def print_schedule( schedule, outfile ):
             f.write( '%s\n' % line )
             print( line )
     print( 'Total freshers %d' % cost )
+
+def group_schedule_helper( schedule, result ):
+    return schedule
+
+def group_schedule( schedule ):
+    global specialization_ 
+    newsch = OrderedDict( )
+
+    sch = [ ]
+    for date in sorted( schedule ):
+        vals = schedule[ date ]
+        for x in vals:
+            sch.append((date,x,specialization_.get(x,'UNSPECIFIED')))
+
+    result = [ ]
+    group_schedule_helper( sch, result )
+    print( result )
+    quit()
+
 
 def commit_schedule( schedule ):
     global db_
@@ -623,6 +650,7 @@ def main( outfile ):
     except Exception as e:
         _logger.error( "Could not print schedule. %s" % e )
 
+    group_schedule( ans )
     if ans:
         commit_schedule( ans )
     else:

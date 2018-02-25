@@ -2125,7 +2125,7 @@ function mailto( $email, $text = '' )
 
 function piSpecializationHTML( $pi, $specialization )
 {
-    return "<br><small><tt> $specialization <br>PI: $pi</tt></small>";
+    return "<small> $specialization <br />PI: $pi</small>";
 }
 
 function goBackToPageLink( $url, $title = "Go back" )
@@ -2288,25 +2288,37 @@ function addClickabelURLToMail( $html, $clickable )
     return $html;
 }
 
-function awsAssignmentForm( $date = null )
+function awsAssignmentForm( $date = null, $small = false )
 {
-   $form = '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">
-    <table class="standout">';
+    $form = '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">';
+
+    $class = '';
+    if( ! $small )
+        $class = 'standout';
+
+    $form .= "<table class=\"$class\" >";
     if( ! $date )
     {
-        $form .= '<tr> <th>Pick a date</th> <th>Select speaker</th> <th></th> </tr>';
-        $form .= '<tr> <td> <input class="datepicker"  name="date" value="" > </td>';
+        $form .= '<tr><td> 
+            <input class="datepicker"  name="date" value="" placeholder="Select monday" >
+            </td>';
     }
     else
     {
         $form .= '<input type="hidden"  name="date" value="' . $date . '" >';
-        $form .= '<th>Select speaker</th> <th></th> </tr>';
         $form .= '<tr>';
     }
 
-    $form .= '<td> <input class="autocomplete_speaker" name="speaker" placeholder="speaker login id" /></td>
-            <td> <button name="response" value="Assign">Assign</button> </td>';
-    $form .= '</tr>';
+    $form .= '<td> <input class="autocomplete_speaker" name="speaker" 
+        placeholder="Login id" /></td>';
+
+    if( $small )
+        $form .= '</tr><tr><td><button name="response" value="Assign">Assign</button> </td></tr>';
+    else
+    {
+        $form .= '<td> <button name="response" value="Assign">Assign</button> </td>';
+        $form .= '</tr>';
+    }
     $form .= '</table></form>';
     return $form;
 }

@@ -91,6 +91,15 @@ div.justify {
     text-align: justify;
 }
 
+table {
+    font-family : 'Ubuntu';
+}
+
+table tr td {
+    border: 0px;
+}
+
+
 table.user_float {
     position : fixed;
     top : 1%;
@@ -246,8 +255,7 @@ table.tasks tr td
 }
 
 table.standout {
-    max-width : 800px;
-    min-width : 80%;
+    max-width : var(--maxwidth);
 }
 
 table.standout tr td
@@ -256,7 +264,8 @@ table.standout tr td
     background-color:var(--tabletdcolor);
 }
 
-table.timetable {
+table.timetable 
+{
 }
 
 table.timetable tr td {
@@ -285,14 +294,6 @@ table.chart {
 
 table.chart tr dt  {
     max-width: 50%;
-}
-
-table {
-    font-family : 'Ubuntu';
-}
-
-table tr td {
-    border: 0px;
 }
 
 
@@ -577,6 +578,25 @@ table.info tr td {
 }
 
 table.info tr:nth-of-type( odd ) {
+    background-color: #eee;
+}
+
+table.infolarge {
+    max-width : var(--maxwidth);
+    min-width : 800px;
+}
+
+table.infolarge tr td 
+{
+    font-family : 'Fira Sans';
+    font-size: 12px;
+    padding-bottom: 10px;
+    vertical-align:top;
+    min-width : 100px;
+}
+
+table.infolarge tr:nth-of-type( odd )
+{
     background-color: #eee;
 }
 

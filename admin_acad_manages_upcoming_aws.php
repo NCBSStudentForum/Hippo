@@ -6,6 +6,9 @@ include_once "tohtml.php";
 include_once 'database.php';
 include_once "check_access_permissions.php";
 
+mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
+echo userHTML( );
+
 $allSpeakers = array_map( function( $x ) { return $x['login']; }, getAWSSpeakers( ) );
 $upcomingAWSs = getUpcomingAWS( );
 
@@ -25,127 +28,138 @@ $(function() {
 
 <?php
 
-
-mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
-echo userHTML( );
-
-echo '<h3>AWS for next week</h3>';
-
 $upcomingAWSs = getUpcomingAWS( );
 $upcomingAwsNextWeek = array( );
 foreach( $upcomingAWSs as $aws )
     if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
         array_push( $upcomingAwsNextWeek, $aws );
 
-foreach( $upcomingAwsNextWeek as $upcomingAWS )
+echo '<h1>Next week Annual Work Seminar</h1>';
+if( count( $upcomingAwsNextWeek ) < 1 )
+    echo alertUser( "No AWS found." );
+else
 {
-    echo '<div style="font-size:small">';
-    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
-        method="post" accept-charset="utf-8">';
-    echo '<table>';
-    echo '<tr><td>';
+    $table = '<div style="font-size:small">';
+    foreach( $upcomingAwsNextWeek as $upcomingAWS )
+    {
+        $table .= '<form action="admin_acad_manages_upcoming_aws_submit.php"
+            method="post" accept-charset="utf-8">';
+        $table .= '<table>';
+        $table .= '<tr><td>';
 
-    echo arrayToVerticalTableHTML( $upcomingAWS, 'aws'
-        , '', array( 'id', 'status', 'comment' )
-    );
+        $table .= arrayToVerticalTableHTML( $upcomingAWS, 'aws'
+            , '', array( 'id', 'status', 'comment' )
+        );
 
-    echo '<input type="hidden", name="date" , value="' .  $upcomingAWS[ 'date' ] . '"/>';
-    echo '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
-    echo '<input type="hidden", name="id" , value="' . $upcomingAWS[ 'id' ] . '"/>';
-    echo '</td><td>';
-    echo '<button name="response" value="Reassign">Reassign</button>';
-    echo "<br>";
-    echo '<button name="response" title="Edit/fromat the abstract"
-                value="format_abstract">' . $symbEdit . '</button>';
-    echo '<br>';
-    echo '<button onclick="AreYouSure(this)" name="response"
-            title="Remove this entry from schedule" value="delete">' . $symbCancel . '</button>';
-    echo '</td></tr>';
-    echo '</table>';
-    echo '</form>';
-    echo '</div>';
+        $table .= '<input type="hidden", name="date" , value="' .  $upcomingAWS[ 'date' ] . '"/>';
+        $table .= '<input type="hidden", name="speaker" , value="' . $upcomingAWS[ 'speaker' ] . '"/>';
+        $table .= '<input type="hidden", name="id" , value="' . $upcomingAWS[ 'id' ] . '"/>';
+        $table .= '</td><td>';
+        $table .= '<button name="response" value="Reassign">Reassign</button>';
+        $table .= "<br>";
+        $table .= '<button name="response" title="Edit/fromat the abstract"
+               .     value="format_abstract">' . $symbEdit . '</button>';
+        $table .= '<br>';
+        $table .= '<button onclick="AreYouSure(this)" name="response"
+               . title="Remove this entry from schedule" value="delete">' . $symbCancel . '</button>';
+        $table .= '</td></tr>';
+        $table .= '</table>';
+        $table .= '</form>';
+    }
+
+    $table .= '</div>';
+    echo $table;
 }
-
-
-echo '<h1>Manually assign AWS</h1>';
-echo printInfo(
-    'Here you can manually assign speakers to an AWS slot After assignment,
-    ' );
-
-echo awsAssignmentForm( );
 
 echo "<h1>Upcoming approved AWSs</h1>";
-// Show the rest of entries grouped by date.
-if( count(  $upcomingAWSs ) > 0 )
-{
-    $groupDate = strtotime( $upcomingAWSs[0]['date'] );
-    echo '<table class="show_schedule">';
-    echo '<tr> <td>' . humanReadableDate( $upcomingAWSs[0]['date'] ) . '</td>';
-}
+
+echo '<div style="font-size:small">';
+echo awsAssignmentForm( );
+echo "</div>";
+
+echo '<br /><br />';
 
 $awsThisWeek = 0;
+$awsGroupedByDate = array( );
 foreach( $upcomingAWSs as $aws )
 {
-    if( strtotime( $aws['date']) != $groupDate )
-    {
-        if( $awsThisWeek < 3 )
-            echo '<td>' . awsAssignmentForm( dbDate( $groupDate ) ) . '</td>';
-        $awsThisWeek = 0;
-
-        $groupDate = strtotime( $aws['date'] );
-        echo '</tr>';
-        echo '<tr><td>' . humanReadableDate( $aws['date'] ) . '</td>';
-
-
-    }
-    echo '<td>';
-
-    // Speaker name and email
-    echo $aws['speaker'] . '<br>' . loginToText( $aws['speaker'], $withEmail = false );
-
-    $pi = getPIOrHost( $aws[ 'speaker' ] );
-    $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
-
-    // Speaker PI if any.
-    echo piSpecializationHTML( $pi, $specialization );
-
-    // Check if user has requested AWS schedule and has it been approved.
-    $request = getTableEntry( 'aws_scheduling_request'
-                        , 'speaker,status'
-                        , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
-                        );
-
-    // If user request for rescheduling was approved, print it here.
-    if( $request )
-        echo preferenceToHtml( $request );
-
-    if( $aws[ 'acknowledged' ] == 'NO'  )
-        echo "<p class=\"note_to_user\">Acknowledged: " . $aws[ 'acknowledged' ] . "</p>";
-
-    echo '<form action="admin_acad_manages_upcoming_aws_submit.php" method="post" accept-charset="utf-8">';
-    echo '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
-    echo '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
-    echo '<button name="response" onclick="AreYouSure(this)"
-        title="Delete this entry" >' . $symbDelete . '</button>';
-    echo '</form>';
-
-    echo '</td>';
-    $awsThisWeek += 1;
+    $groupDate = strtotime( $aws['date'] );
+    $awsGroupedByDate[ $groupDate ][] = $aws;
 }
-echo '</tr></table>';
+
+// AWS grouped by date.
+$table = '<table class="infolarge">';
+foreach( $awsGroupedByDate as $groupDate => $awses )
+{
+    $awsThisWeek = count( $awses );
+
+    $table .= '<tr>';
+    $table .= '<td>' . humanReadableDate( $groupDate ) . '</td>';
+
+    // Show AWSes
+    foreach( $awses as $countAWS => $aws )
+    {
+        // Speaker name and email
+        $table .= '<td>';
+        $table .= loginToText( $aws['speaker'], $withEmail = false ) . 
+            ' (' .  $aws['speaker'] . ')<br />' ;
+
+        $pi = getPIOrHost( $aws[ 'speaker' ] );
+        $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
+
+        // Speaker PI if any.
+        $table .=  '<br />' . piSpecializationHTML( $pi, $specialization );
+
+        // Check if user has requested AWS schedule and has it been approved.
+        // If user request for rescheduling was approved, print it here.
+        $request = getTableEntry(
+            'aws_scheduling_request'
+            , 'speaker,status'
+            , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
+        );
+
+        if( $request )
+            $table .= preferenceToHtml( $request );
+
+        $table .= '<form action="admin_acad_manages_upcoming_aws_submit.php" method="post" accept-charset="utf-8">';
+        $table .= '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
+        $table .= '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
+        $table .= '<button name="response" onclick="AreYouSure(this)"
+                    title="Delete this entry" >' . $symbDelete . '</button>';
+        $table .= '</form>';
+
+        if( $aws[ 'acknowledged' ] == 'NO'  )
+            $table .= "<blink><p class=\"note_to_user\">Acknowledged: " 
+                . $aws[ 'acknowledged' ] . "</p></blink>";
+
+        $table .= '</td>';
+    }
+
+    if( $awsThisWeek < 3 )
+        $table .= '<td>' . awsAssignmentForm( dbDate( $groupDate ), true ) . '</td>';
+
+    $table .= '</tr>';
+}
+$table .= '</table>';
+echo $table;
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 echo "<h1>Temporary assignments</h1>";
+
 echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
-echo '<button type="submit" name="response" value="Reschedule">Recompute Schedule</button>';
+echo '<button name="response" value="Reschedule">Recompute Schedule</button>';
 echo "</form>";
+
 
 echo alertUser( 'Following is the best possible schedule I was able to
     come up. Press <button disabled>' . $symbAccept . '</button> to accept the 
-    schedule.' );
+    a speaker for given slot.' );
 
 $schedule = getTentativeAWSSchedule( );
+$scheduleMap = array( );
+foreach( $schedule as $sch )
+    $scheduleMap[ $sch['date'] ][ ] = $sch;
 
 echo "<table class=\"show_schedule\">";
 $header = "<tr>
@@ -156,109 +170,125 @@ $header = "<tr>
     </tr>";
 echo $header;
 
-
 echo '<br>';
 
 // This is used to group slots.
 $weekDate = $schedule[0]['date'];
 
 $csvdata = array( "Speaker,Scheduled on,Last AWS on,Days since last AWS,Total AWS so far" );
-foreach( $schedule as $upcomingAWS )
+
+$allDates = array( );
+foreach( $scheduleMap as $date => $schedule )
 {
-    $csvLine = '';
-    // When a new group of AWS starts, create a new table.
-    if( $weekDate != $upcomingAWS['date'] )
+    // check if this date is one week away from previous date.
+    if( count( $allDates ) > 0 )
     {
-        // New wee starts.
-        echo "</table>";
-        echo "<br>";
-        echo "<table class=\"show_schedule\">";
-        $weekDate = $upcomingAWS[ 'date' ];
-        echo $header;
+        $prevDate = end( $allDates );
+        $noAWSWeeks =  (strtotime( $date ) -  strtotime( $prevDate )) / 7 / 24 / 3600;
+        for( $i = $noAWSWeeks - 1; $i > 0; $i-- )
+        {
+            $nextDate = humanReadableDate( strtotime( $date ) - $i*7*24*3600 );
+            echo printWarning( "No AWS is found for $nextDate" );
+        }
     }
-
-    $speaker = $upcomingAWS[ 'speaker' ];
-    $speakerInfo = getLoginInfo( $speaker );
-
-    $pastAWSes = getAwsOfSpeaker( $speaker );
-
-    // Get PI/HOST and speaker specialization.
-    $pi = getPIOrHost( $speaker );
-    $specialization = getSpecialization( $speaker, $pi );
-
-    // This user may have not given any AWS in the past. We consider their
-    // joining date as last AWS date.
-    if( count( $pastAWSes ) > 0 )
+    $allDates[ ] = $date;
+    
+    $table = '<table class="show_schedule">';
+    foreach( $schedule as $i => $upcomingAWS )
     {
-        $lastAws = $pastAWSes[0];
-        $lastAwsDate = $lastAws[ 'date' ];
-    }
-    else
-        $lastAwsDate = date( 'Y-m-d', strtotime($speakerInfo[ 'joined_on']));
+        $table .= '<tr>';
+        $csvLine = '';
 
-    $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
-    $nDays = $nSecs / (3600 * 24 );
-    $speakerInfo = $speaker . '<br>'. loginToText( $speaker, $withEmail = false );
+        $speaker = $upcomingAWS[ 'speaker' ];
+        $speakerInfo = getLoginInfo( $speaker );
 
-    $csvLine .= loginToText( $speaker, true ) . ',';
+        $pastAWSes = getAwsOfSpeaker( $speaker );
 
-    echo "<tr><td>";
-    echo $speakerInfo;
+        // Get PI/HOST and speaker specialization.
+        $pi = getPIOrHost( $speaker );
+        $specialization = getSpecialization( $speaker, $pi );
 
-    // Add PI and specialization info.
-    echo piSpecializationHTML( $pi, $specialization );
+        // This user may have not given any AWS in the past. We consider their
+        // joining date as last AWS date.
+        if( count( $pastAWSes ) > 0 )
+        {
+            $lastAws = $pastAWSes[0];
+            $lastAwsDate = $lastAws[ 'date' ];
+        }
+        else
+            $lastAwsDate = date( 'Y-m-d', strtotime($speakerInfo[ 'joined_on']));
 
-    $intranetLink = getIntranetLink( $speaker );
-    echo "<br>$intranetLink ";
-    echo '<form action="admin_acad_manages_upcoming_aws_submit.php"
+        $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
+        $nDays = $nSecs / (3600 * 24 );
+        $speakerInfo = $speaker . '<br>'. loginToText( $speaker, $withEmail = false );
+
+        $csvLine .= loginToText( $speaker, true ) . ',';
+
+        $table .= "<tr><td>";
+        $table .= $speakerInfo;
+
+        // Add PI and specialization info.
+        $table .= '<br />' . piSpecializationHTML( $pi, $specialization );
+
+        $intranetLink = getIntranetLink( $speaker );
+        $table .= "<br /> $intranetLink ";
+        $table .= '<form action="admin_acad_manages_upcoming_aws_submit.php"
             method="post" accept-charset="utf-8">
-          <input type="hidden" name="speaker" value="' . $speaker . '" />
-          <button name="response"  value="RemoveSpeaker"
+            <input type="hidden" name="speaker" value="' . $speaker . '" />
+            <button name="response"  value="RemoveSpeaker" 
                 title="Remove this speaker from AWS speaker list" >'
                 . $symbDelete . '</button>';
-    echo '</form>';
-    // Check if user has requested AWS schedule and has it been approved.
-    $request = getTableEntry( 'aws_scheduling_request'
-                        , 'speaker,status'
-                        , array( 'status' => 'APPROVED', 'speaker' => $upcomingAWS[ 'speaker' ])
-                        );
-    // If user request for rescheduling was approved, print it here.
-    if( $request )
-        echo preferenceToHtml( $request );
-    echo "</td><td>";
-    echo humanReadableDate( $upcomingAWS[ 'date' ] );
+        $table .= '</form>';
 
-    $csvLine .= $upcomingAWS['date'] . ',';
+        // Check if user has requested AWS schedule and has it been approved.
+        $request = getTableEntry( 'aws_scheduling_request'
+            , 'speaker,status'
+            , array( 'status' => 'APPROVED', 'speaker' => $upcomingAWS[ 'speaker' ])
+        );
 
-    echo "</td><td>";
-    echo $lastAwsDate;
-    $csvLine .= $lastAwsDate . ',';
+        // If user request for rescheduling was approved, print it here.
+        if( $request )
+            $table .= preferenceToHtml( $request );
 
-    if( count( $pastAWSes) == 0 )
-        echo "<br><small>Joining date</small>";
-    echo "</td><td>";
-    echo "<font color=\"blue\"> $nDays </font>";
-    $csvLine .= $nDays;
+        $table .= "</td><td>";
+        $table .= humanReadableDate( $upcomingAWS[ 'date' ] );
 
-    echo "</td><td>";
-    echo count( $pastAWSes);
+        $csvLine .= $upcomingAWS['date'] . ',';
 
-    echo "</td>";
+        $table .= "</td><td>";
+        $table .= $lastAwsDate;
+        $csvLine .= $lastAwsDate . ',';
 
-    // Create a form to approve the schedule.
-    echo '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">';
-    echo '<input type="hidden" name="speaker" value="' . $speaker . '" >';
-    echo '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
-    echo '<td style="background:white;border:0px;">
-        <button name="response" title="Confirm this slot"
+        if( count( $pastAWSes) == 0 )
+            $table .= "<br><small>Joining date</small>";
+        $table .= "</td><td>";
+        $table .= "<font color=\"blue\"> $nDays </font>";
+        $csvLine .= $nDays;
+
+        $table .= "</td><td>";
+        $table .= count( $pastAWSes);
+
+        $table .= "</td>";
+
+        // Create a form to approve the schedule.
+        $table .= '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">';
+        $table .= '<input type="hidden" name="speaker" value="' . $speaker . '" >';
+        $table .= '<input type="hidden" name="date" value="' . $upcomingAWS['date'] . '" >';
+        $table .= '<td style="background:white;border:0px;">
+            <button name="response" title="Confirm this slot"
             value="Accept" >' . $symbAccept . '</button>
-        </td>';
-    echo "</tr>";
-    echo '</form>';
+            </td>';
+        $table .= "</tr>";
+        $table .= '</form>';
 
-    array_push( $csvdata, $csvLine );
+        array_push( $csvdata, $csvLine );
+
+        $table .= '</tr>';
+    }
+    $table .= '</table>';
+    echo $table;
+    echo '<br />';
 }
-echo "</table>";
 
 $csvText = implode( "\n", $csvdata );
 
@@ -271,4 +301,5 @@ if( $res )
 
 echo '<br><br>';
 echo goBackToPageLink( "admin_acad.php", "Go back" );
+
 ?>

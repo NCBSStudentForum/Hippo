@@ -195,8 +195,6 @@ foreach( $scheduleMap as $date => $schedule )
     $table = '<table class="show_schedule">';
     foreach( $schedule as $i => $upcomingAWS )
     {
-        //$table .= $header;
-
         $table .= '<tr>';
         $csvLine = '';
 
@@ -257,18 +255,23 @@ foreach( $scheduleMap as $date => $schedule )
 
         $csvLine .= $upcomingAWS['date'] . ',';
 
-        $table .= $lastAwsDate;
+
         $csvLine .= $lastAwsDate . ',';
 
+        $info = '<table border="0" style="">';
         if( count( $pastAWSes) == 0 )
-            $table .= "<br><small>Joining date</small>";
-        $table .= "</td><td>";
-        $table .= "<font color=\"blue\"> $nDays </font>";
+            $info .= "<tr><td>Joining Date</td><td> $lastAwsDate </td></tr>";
+        else
+            $info .= "<tr><td>Last AWS on</td><td> $lastAwsDate </td></td>";
+
+        $info .= "<tr><td>Days since last AWS</td><td> $nDays </td></td>";
+        $info .= "<tr><td>Number of past AWSs</td><td>" . count( $pastAWSes ) 
+            . " </td></tr>";
+        $info .= '</table>';
+
         $csvLine .= $nDays;
 
-        $table .= "</td><td>";
-        $table .= count( $pastAWSes);
-
+        $table .= $info;
         $table .= "</td>";
 
         // Create a form to approve the schedule.

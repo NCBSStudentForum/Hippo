@@ -220,7 +220,8 @@ table.show_aws_summary tr td
 }
 
 table.show_schedule {
-    min-width : 700px;
+    min-width : 600px;
+    width : 800px;
     max-width : 80%;
 }
 
@@ -228,7 +229,7 @@ table.show_schedule tr td
 {
     background-color: var(--tabletdcolor);
     border : 1px dotted;
-    min-width: 10%;
+    width: 50%;
     font-size: x-small;
 }
 

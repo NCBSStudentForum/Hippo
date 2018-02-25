@@ -92,10 +92,7 @@ def init( cur ):
         spec = spec or 'UNSPECIFIED'
         specialization_[ a['login'] ] = spec
     
-    print( specialization_ )
-    quit( )
     cur.execute( """SELECT * FROM holidays ORDER BY date""")
-
     for a in cur.fetchall( ):
         if a[ 'schedule_talk_or_aws' ] == 'NO':
             holidays_[ a['date'] ] = a

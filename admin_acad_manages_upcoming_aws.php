@@ -196,6 +196,7 @@ foreach( $scheduleMap as $date => $schedule )
     foreach( $schedule as $i => $upcomingAWS )
     {
         $table .= $header;
+
         $table .= '<tr>';
         $csvLine = '';
 
@@ -220,17 +221,17 @@ foreach( $scheduleMap as $date => $schedule )
 
         $nSecs = strtotime( $upcomingAWS['date'] ) - strtotime( $lastAwsDate );
         $nDays = $nSecs / (3600 * 24 );
-        $speakerInfo = $speaker . '<br>'. loginToText( $speaker, $withEmail = false );
-
+        $speakerInfo = loginToText( $speaker, false ) . " ($speaker)";
         $csvLine .= loginToText( $speaker, true ) . ',';
 
         $table .= "<tr><td>";
         $table .= $speakerInfo;
 
         // Add PI and specialization info.
-        $table .= '<br />' . piSpecializationHTML( $pi, $specialization );
+        $table .= piSpecializationHTML( $pi, $specialization );
 
         $intranetLink = getIntranetLink( $speaker );
+
         $table .= "<br /> $intranetLink ";
         $table .= '<form action="admin_acad_manages_upcoming_aws_submit.php"
             method="post" accept-charset="utf-8">
@@ -241,7 +242,8 @@ foreach( $scheduleMap as $date => $schedule )
         $table .= '</form>';
 
         // Check if user has requested AWS schedule and has it been approved.
-        $request = getTableEntry( 'aws_scheduling_request'
+        $request = getTableEntry(
+            'aws_scheduling_request'
             , 'speaker,status'
             , array( 'status' => 'APPROVED', 'speaker' => $upcomingAWS[ 'speaker' ])
         );

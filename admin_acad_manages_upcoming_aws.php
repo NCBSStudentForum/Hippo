@@ -161,14 +161,12 @@ $scheduleMap = array( );
 foreach( $schedule as $sch )
     $scheduleMap[ $sch['date'] ][ ] = $sch;
 
-echo "<table class=\"show_schedule\">";
 $header = "<tr>
     <th>Speaker</th>
     <th>Scheduled On</th>
     <th>Last AWS on</th><th># Day</th>
     <th>#AWS</th>
     </tr>";
-echo $header;
 
 echo '<br>';
 
@@ -188,14 +186,16 @@ foreach( $scheduleMap as $date => $schedule )
         for( $i = $noAWSWeeks - 1; $i > 0; $i-- )
         {
             $nextDate = humanReadableDate( strtotime( $date ) - $i*7*24*3600 );
-            echo printWarning( "No AWS is found for $nextDate" );
+            echo printWarning( "No AWS is scheduled for '$nextDate'." );
         }
     }
     $allDates[ ] = $date;
     
+    // Show table.
     $table = '<table class="show_schedule">';
     foreach( $schedule as $i => $upcomingAWS )
     {
+        $table .= $header;
         $table .= '<tr>';
         $csvLine = '';
 
@@ -286,6 +286,8 @@ foreach( $scheduleMap as $date => $schedule )
         $table .= '</tr>';
     }
     $table .= '</table>';
+
+    // show table.
     echo $table;
     echo '<br />';
 }

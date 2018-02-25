@@ -215,19 +215,20 @@ table.show_aws_summary {
 
 table.show_aws_summary tr td
 {
-    border : 1px dotted;
     background-color:var(--tabletdcolor);
+    border : 1px dotted;
 }
 
 table.show_schedule {
-    min-width : 500px;
+    min-width : 600px;
     max-width : 80%;
 }
 
 table.show_schedule tr td
 {
+    background-color: var(--tabletdcolor);
     border : 1px dotted;
-    background-color:var(--tabletdcolor);
+    min-width: 5%;
 }
 
 

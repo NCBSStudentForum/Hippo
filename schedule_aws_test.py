@@ -48,9 +48,15 @@ aws_scheduling_requests_ = {}
 
 # These speakers must give AWS.
 speakers_ = { }
+specialization_ = { }
 
 # List of holidays.
 holidays_ = {}
+
+def getSpecialization( cur, piOrHost ):
+    cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % piOrHost )
+    a = cur.fetchone( )
+    return a
 
 def init( cur ):
     """
@@ -59,6 +65,8 @@ def init( cur ):
 
     global db_, speakers_
     global holidays_
+    global specialization_ 
+
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute( 
             '''
@@ -75,6 +83,17 @@ def init( cur ):
         )
     for a in cur.fetchall( ):
         speakers_[ a['login'].lower() ] = a
+        spec = a['specialization']
+        if a is None:
+            pi = a['pi_or_host']
+            if pi is None:
+                continue
+            spec = getSpecialization( cur, pi )
+        spec = spec or 'UNSPECIFIED'
+        specialization_[ a['login'] ] = spec
+    
+    print( specialization_ )
+    quit( )
     cur.execute( """SELECT * FROM holidays ORDER BY date""")
 
     for a in cur.fetchall( ):
@@ -86,6 +105,8 @@ def init( cur ):
 def getAllAWSPlusUpcoming( ):
     global aws_, db_
     global upcoming_aws_
+    global specialization_
+
     # cur = db_.cursor( cursor_class = MySQLCursorDict )
     try:
         cur = db_.cursor( dictionary = True )

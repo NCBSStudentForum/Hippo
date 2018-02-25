@@ -197,6 +197,7 @@ def getAllAWSPlusUpcoming( ):
         if not a[ 'specialization' ]:
             # Ok. Not specified; use faculty specialization.
             piOrHost = speakers_[ st ]['pi_or_host']
+
             if piOrHost:
                 cur.execute( "SELECT specialization FROM faculty WHERE email='%s'" % piOrHost )
                 a = cur.fetchone( )

@@ -24,26 +24,45 @@ def find_elem_in_vec( vec, pivot ):
             return i
     return None
 
+def print_result( result ):
+    for r in result:
+        try:
+            print( [ (x[1], x[2]) or x for x in r ] )
+        except Exception as e:
+            print( 'INCOMPLETE' )
+
 def cluster_data( vec, result ):
     if len( vec ) < 1:
         return result
 
-    cluster, vec = head_and_tail( vec )
+    cluster, rest = head_and_tail( vec )
+    vec = rest
     specs = [ x[2] for x in cluster ]
     pivotSpec, pivotSpecCount = Counter( specs ).most_common( 1 )[0]
     newcluster = [ None ] * len(cluster)
+    prevN = len( vec )
+
     for i, e in enumerate(cluster):
+        clusterDate = e[0]
         if e[2] == pivotSpec:
             newcluster[i] = e
             continue
 
         fromI = find_elem_in_vec( vec, pivotSpec )
+
         if fromI is None:
             continue
 
+        #print( 'Replacing %s from %s' % (e, vec[fromI]) )
+        # update its date.
+        vec[fromI][0], e[0] = e[0], vec[fromI][0]
         newcluster[ i ] = vec[ fromI ]
-        vec.insert( fromI, e )
         del vec[ fromI ]
+        vec.insert( fromI, e )
+        assert vec[fromI] == e, 'failed to insert'
+
+    assert len( vec ) == prevN, "Length is still the same"
+    print( ' %s\n  %s' % (cluster, newcluster) )
 
     result.append( newcluster )
     return cluster_data( vec, result )
@@ -57,12 +76,11 @@ def test( ):
     data = []
     with open( sys.argv[1], 'r' ) as f:
         for line in f:
-            data.append( tuple(line.strip().split( ',' )) )
+            data.append( line.strip().split( ',' ) )
 
     result = [ ]
     cluster_data( data, result )
-    for l in result:
-        print( l )
+    #print_result( result )
 
 if __name__ == '__main__':
     test( )

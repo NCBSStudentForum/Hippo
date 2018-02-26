@@ -15,8 +15,11 @@ foreach( $jcs as $jc )
     $jcID = $jc[ 'id' ];
 
     $jcDay =  'This ' . $jc[ 'day' ];
-    $nWeeksFromjcDay = strtotime($jcDay) + 3 * 7 * 24 * 3600;  // Three weeks from this monday.
 
+    // Three weeks from JC day.
+    $nWeeksFromjcDay = strtotime($jcDay) + 3 * 7 * 24 * 3600; 
+
+    // At JC time.
     if( isNowEqualsGivenDayAndTime( $jcDay, dbTime( $jc['time'] ) ) )
     {
         echo printInfo( "JcID is $jcID with $jcDay." );

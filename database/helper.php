@@ -3202,8 +3202,7 @@ function pickPresenter( $jcID, $picker = 'random', $gap_between_presentations_in
     }
 
     // Else return a random sample.
-    array_rand( $suitable, 1 );
-    return $suitable[0];
+    return $suitable[ mt_rand(0, count($suitable) - 1) ];
 }
 
 

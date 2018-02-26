@@ -725,10 +725,17 @@ function getSpeakerPicturePathById( $id )
     *
     * @return
  */
-function rescheduleAWS( )
+function rescheduleAWS( $method = 'reschedule_group_greedy' )
 {
-    echo printInfo( "Rescheduling ...." );
-    $scriptPath = __DIR__ . '/schedule.sh';
+    echo printInfo( "Rescheduling with $method ...." );
+
+    if( $method == 'reschedule_group' )
+        $scriptPath = __DIR__ . '/schedule_aws_groupwise.py';
+    else if( $method == 'reschedule_group_greedy' )
+        $scriptPath = __DIR__ . '/schedule_aws_greedy_groupwise.py';
+    else
+        $scriptPath = __DIR__ . '/schedule_aws.py';
+
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
     $command = "timeout 30 bash $scriptPath";
     exec( $command, $output, $return );

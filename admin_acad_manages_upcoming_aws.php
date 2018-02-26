@@ -147,8 +147,12 @@ echo goBackToPageLink( "admin_acad.php", "Go back" );
 
 echo "<h1>Temporary assignments</h1>";
 
+echo printInfo("Three methods are available for scheduling AWS. First one is default.");
+
 echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
-echo '<button name="response" value="Reschedule">Recompute Schedule</button>';
+echo '<button name="response" value="reschedule_group_greedy">Recompute  (group.greedy)</button>';
+echo '<button name="response" value="reschedule_group">Recompute (group)</button>';
+echo '<button name="response" value="reschedule">Recompute</button>';
 echo "</form>";
 
 

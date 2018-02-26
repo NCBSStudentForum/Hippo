@@ -9,9 +9,9 @@ include_once 'mail.php';
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 
-if( $_POST['response'] == "Reschedule" )
+if( __substr__( "reschedule", $_POST['response'] ) )
 {
-    rescheduleAWS( );
+    rescheduleAWS( $_POST[ 'response' ] );
     goToPage( 'admin_acad_manages_upcoming_aws.php', 1);
     exit;
 }

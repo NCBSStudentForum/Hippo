@@ -24,6 +24,7 @@ from logger import _logger
 from db_connect import db_
 import networkx as nx
 import compute_cost
+import cluster_aws
 
 fmt_ = '%Y-%m-%d'
 
@@ -600,8 +601,10 @@ def print_schedule( schedule, outfile ):
             print( line )
     print( 'Total freshers %d' % cost )
 
+
 def group_schedule_helper( schedule, result ):
-    return schedule
+    result = cluster_aws.cluster_data( schedule, result )
+    return result
 
 def group_schedule( schedule ):
     global specialization_ 
@@ -614,10 +617,7 @@ def group_schedule( schedule ):
             sch.append((date,x,specialization_.get(x,'UNSPECIFIED')))
 
     result = [ ]
-    group_schedule_helper( sch, result )
-    print( result )
-    quit()
-
+    return group_schedule_helper( sch, result )
 
 def commit_schedule( schedule ):
     global db_
@@ -650,7 +650,9 @@ def main( outfile ):
     except Exception as e:
         _logger.error( "Could not print schedule. %s" % e )
 
-    group_schedule( ans )
+    ans = group_schedule( ans )
+    print( ans )
+    quit( )
     if ans:
         commit_schedule( ans )
     else:

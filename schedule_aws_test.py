@@ -307,7 +307,7 @@ def construct_flow_graph(  ):
             slots.append( dateSlot )
     
     # Now for each student, add potential edges.
-    idealGap = 357
+    idealGap = 7*60
 
     # Keep edges from freshers to dates here. We allow maximum of 2 out of 3
     # slots to be taken by freshers (maximum ).
@@ -601,10 +601,15 @@ def print_schedule( schedule, outfile ):
             print( line )
     print( 'Total freshers %d' % cost )
 
-
 def group_schedule_helper( schedule, result ):
-    result = cluster_aws.cluster_data( schedule, result )
-    return result
+    cluster = cluster_aws.cluster_data( schedule, result )
+    res = defaultdict( list )
+    for awses in cluster:
+        for x in awses:
+            if x is None:
+                continue
+            res[x[0]].append( x[1] )
+    return res
 
 def group_schedule( schedule ):
     global specialization_ 
@@ -645,19 +650,19 @@ def main( outfile ):
         ans = computeSchedule( )
     except Exception as e:
         _logger.warn( "Failed to schedule. Error was %s" % e )
-    try:
-        print_schedule( ans, outfile )
-    except Exception as e:
-        _logger.error( "Could not print schedule. %s" % e )
 
     ans = group_schedule( ans )
-    print( ans )
-    quit( )
     if ans:
         commit_schedule( ans )
     else:
         print( 'Failed to compute schedule' )
         return -1
+
+    try:
+        print_schedule( ans, outfile )
+    except Exception as e:
+        _logger.error( "Could not print schedule. %s" % e )
+
     try:
         write_graph( )
     except Exception as e:

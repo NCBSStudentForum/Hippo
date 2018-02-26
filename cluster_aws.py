@@ -35,6 +35,8 @@ def cluster_data( vec, result ):
     if len( vec ) < 1:
         return result
 
+    vec = [ list(x) for x in vec ]
+
     cluster, rest = head_and_tail( vec )
     vec = rest
     specs = [ x[2] for x in cluster ]
@@ -62,7 +64,7 @@ def cluster_data( vec, result ):
         assert vec[fromI] == e, 'failed to insert'
 
     assert len( vec ) == prevN, "Length is still the same"
-    print( ' %s\n  %s' % (cluster, newcluster) )
+    #print( ' %s\n  %s' % (cluster, newcluster) )
 
     result.append( newcluster )
     return cluster_data( vec, result )

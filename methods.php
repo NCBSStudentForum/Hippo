@@ -292,12 +292,16 @@ function validateDate($date, $format = 'Y-m-d H:i:s')
     return $d && $d->format($format) == $date;
 }
 
-function humanReadableDate( $date )
+function humanReadableDate( $date, $with_day = true )
 {
-    if( is_int( $date ) )
-        return date( 'l, M d, Y', $date );
+    $fmt = 'l, M d, Y';
+    if(! $with_day )
+        $fmt = 'M d, Y';
 
-    return date( 'l, M d Y', strtotime($date) );
+    if( is_int( $date ) )
+        return date( $fmt, $date );
+
+    return date( $fmt, strtotime($date) );
 }
 
 function humanReadableShortDate( $date )

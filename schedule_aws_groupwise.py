@@ -33,6 +33,8 @@ from db_connect import db_
 import networkx as nx
 import random
 import compute_cost
+from global_data import *
+import aws_helper
 
 fmt_ = '%Y-%m-%d'
 
@@ -44,32 +46,6 @@ sys.path.insert(0, networkxPath )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Started on %s' % datetime.date.today( ) )
-
-g_ = nx.DiGraph( )
-
-# All AWS entries in the past.
-aws_ = defaultdict( list )
-
-# Upcoming AWS
-upcoming_aws_ = { }
-upcoming_aws_slots_ = defaultdict( list )
-
-# AWS scheduling requests are kept in this dict.
-aws_scheduling_requests_ = {}
-
-# These speakers must give AWS.
-speakers_ = { }
-
-# List of holidays.
-holidays_ = {}
-
-# Specialization
-specialization_ = [ ]
-speakersSpecialization_ = { }
-specializationFreqs_ = { }
-
-# freshers
-freshers_ = set( )
 
 def short( line, maxchars = 4 ):
     words = list( filter( lambda x: x.split( ), line.split( ) ) )
@@ -731,26 +707,6 @@ def computeSchedule( ):
     sch = getMatches( res )
     return sch
 
-def findReplacement( speaker, date, specialization, piH, schedule ):
-    global g_
-    global aws_
-    for dateA in sorted( schedule ):
-        if dateA <= date:
-            continue
-        for i, speakerA in enumerate( schedule[dateA] ):
-            if speakerA == speaker:
-                continue
-            slot = '%s,%d' % (dateA,i)
-            spec = g_.node[slot]['specialization']
-            if spec != specialization:
-                continue
-            thisPI = speakers_[ speakerA ]['pi_or_host']
-
-            if thisPI == piH:
-                continue
-
-            return speakerA, dateA
-    return None
 
 def findSpeakerWithSpecialization( specialization, after_date, not_in_these_labs, schedule ):
     global g_
@@ -769,45 +725,6 @@ def findSpeakerWithSpecialization( specialization, after_date, not_in_these_labs
                 continue
             return speakerA, dateA
     return None
-
-
-def fix_schedule( schedule ):
-    global speakers_
-    global speakersSpecialization_
-    global g_
-
-    ## if the first two weeks have less that 3 entries, sweep from other places.
-    #for date in sorted(schedule)[:4]:
-    #    speakers = schedule[date]
-    #    spec = g_.node[ '%s,0' % date ]['specialization']
-    #    piHS = [ speakers_[speaker]['pi_or_host'] for speaker in speakers ]
-    #    for i in range( 3, len( speakers ), -1):
-    #        addThisOne = findSpeakerWithSpecialization( spec, date, piHS, schedule )
-    #        if addThisOne is not None:
-    #            speakerB, dateB = addThisOne
-    #            schedule[ date ].append( speakerB )
-    #            schedule[ dateB ].remove( speakerB )
-
-    # Make sure that first 2 week entries have different PIs.
-    for date in sorted(schedule)[:2]:
-        labs = []
-        for i, speaker in enumerate(schedule[ date ]):
-            spec = g_.node['%s,%d'%(date,i)]['specialization']
-            piH = speakers_[speaker]['pi_or_host']
-            if piH in labs:
-                spec = speakersSpecialization_[ speaker ]
-                replaceWith = findReplacement( speaker, date, spec, piH, schedule )
-                if replaceWith is not None:
-                    speakerB, dateB = replaceWith
-                    speakerA, dateA = speaker, date
-                    schedule[dateA].append( speakerB )
-                    schedule[dateA].remove( speakerA )
-                    schedule[dateB].append( speakerA )
-                    schedule[dateB].remove( speakerB )
-                    _logger.warn( 'Swapping %s and %s' % (speakerA, speakerB))
-            else:
-                labs.append( piH )
-    return schedule
 
 def print_schedule( schedule, outfile ):
     global g_, aws_
@@ -858,7 +775,7 @@ def main( outfile ):
     ans = None
     construct_flow_graph( )
     ans = computeSchedule( )
-    ans = fix_schedule( ans )
+    ans = aws_helper.no_common_labs( ans )
     try:
         print_schedule( ans, outfile )
     except Exception as e:

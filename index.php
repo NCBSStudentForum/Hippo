@@ -32,7 +32,7 @@ $thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
 if( strpos( $thisPage, 'index.php' ) !== false )
 {
     /*
-     * NOTE: Fetch using cron.
+     * NOTE: Fetch using cron
     // Select one background picture.
     $command = 'nohup python '
         . __DIR__ . '/fetch_backgrounds.py > /dev/null 2>&1 &'

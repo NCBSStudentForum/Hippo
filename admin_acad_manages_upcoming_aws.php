@@ -79,6 +79,13 @@ echo "</div>";
 
 echo '<br /><br />';
 
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Group AWS by date here. Once we have them grouped, later
+    * processing is much easier.
+ */
+/* ----------------------------------------------------------------------------*/
 $awsThisWeek = 0;
 $awsGroupedByDate = array( );
 foreach( $upcomingAWSs as $aws )
@@ -87,28 +94,42 @@ foreach( $upcomingAWSs as $aws )
     $awsGroupedByDate[ $groupDate ][] = $aws;
 }
 
-// AWS grouped by date.
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Show upcoming schedule. Show a table.
+ */
+/* ----------------------------------------------------------------------------*/
 $table = '<table class="infolarge">';
 foreach( $awsGroupedByDate as $groupDate => $awses )
 {
     $awsThisWeek = count( $awses );
 
     $table .= '<tr>';
-    $table .= '<td>' . humanReadableDate( $groupDate ) . '</td>';
+    $table .= '<td style="font-size:large">' . humanReadableDate( $groupDate, $with_day = false ) 
+        . '</td>';
 
     // Show AWSes
     foreach( $awses as $countAWS => $aws )
     {
-        // Speaker name and email
         $table .= '<td>';
-        $table .= loginToText( $aws['speaker'], $withEmail = false ) . 
-            ' (' .  $aws['speaker'] . ')<br />' ;
+
+        // Each speaker can be a table as well.
+        $speakerTable = '<table class="sticker" border=0> <tr> ';
+
+        $speaker = smallCaps( loginToText( $aws['speaker'], $withEmail = false ) . 
+            ' (' .  $aws['speaker'] . ')' );
+
+        if( $request )
+            $speaker .= '<br />' . preferenceToHtml( $request );
+
+        $speakerTable .= '<td>' . $speaker . '</td>';
 
         $pi = getPIOrHost( $aws[ 'speaker' ] );
         $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
 
         // Speaker PI if any.
-        $table .=  '<br/>' . piSpecializationHTML( $pi, $specialization );
+        $speakerTable .=  '<td>' . piSpecializationHTML( $pi, $specialization ) . '</td>';
 
         // Check if user has requested AWS schedule and has it been approved.
         // If user request for rescheduling was approved, print it here.
@@ -118,22 +139,27 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
             , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
         );
 
-        if( $request )
-            $table .= preferenceToHtml( $request );
 
-        $table .= '<form action="admin_acad_manages_upcoming_aws_submit.php" method="post" accept-charset="utf-8">';
-        $table .= '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
-        $table .= '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
-        $table .= '<button name="response" onclick="AreYouSure(this)"
+        $form = '<form action="admin_acad_manages_upcoming_aws_submit.php" method="post" accept-charset="utf-8">';
+        $form .= '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
+        $form .= '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';
+        $form .= '<button name="response" onclick="AreYouSure(this)"
                     title="Delete this entry" >' . $symbDelete . '</button>';
-        $table .= '</form>';
+        $form .= '</form>';
+
+        $speakerTable .= '<td>' . $form . '</td>';
+
+
+        $speakerTable .= '</td>';
+        $speakerTable .=  '</tr></table>';
+
+        $table .= $speakerTable;
 
         if( $aws[ 'acknowledged' ] == 'NO'  )
             $table .= "<blink><p class=\"note_to_user\">Acknowledged: " 
                 . $aws[ 'acknowledged' ] . "</p></blink>";
-
-        $table .= '</td>';
     }
+    
 
     if( $awsThisWeek < 3 )
         $table .= '<td>' . awsAssignmentForm( dbDate( $groupDate ), true ) . '</td>';

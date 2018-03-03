@@ -36,8 +36,6 @@ import compute_cost
 from global_data import *
 import aws_helper
 
-fmt_ = '%Y-%m-%d'
-
 
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
@@ -57,8 +55,7 @@ def init( cur ):
     Create a temporaty table for scheduling AWS
     """
 
-    global db_, speakers_
-    global holidays_
+    global db_
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute(
             '''
@@ -80,7 +77,7 @@ def init( cur ):
 
     cur.execute( """SELECT DISTINCT(specialization) FROM faculty""")
     for a in cur.fetchall( ):
-        specialization_.append( a['specialization'] )
+        specialization_list_.append( a['specialization'] )
 
     _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
@@ -99,9 +96,7 @@ def getPrevisousAWS( cur, student ):
     return dates[-1]
 
 def getAllAWSPlusUpcoming( ):
-    global aws_, db_
-    global upcoming_aws_
-    global speakers_
+    global db_
     # cur = db_.cursor( cursor_class = MySQLCursorDict )
     try:
         cur = db_.cursor( dictionary = True )
@@ -197,7 +192,6 @@ def computeCost( speaker, slot_date, last_aws ):
     """ Here we are working with integers. With float the solution takes
     incredible large amount of time.
     """
-    global g_, aws_
     idealGap = 364
     nDays = ( slot_date - last_aws ).days
     nAws = len( aws_[speaker] )
@@ -237,10 +231,6 @@ def diffInDays( date1, date2, absolute = False ):
 
 
 def get_prev_aws_date( speaker ):
-    global speakers_
-    global speakersSpecialization_
-    global aws_
-    global freshers_
 
     lastDate = None
 
@@ -313,7 +303,6 @@ def afterNDays( date, ndays ):
     return date + datetime.timedelta( days = ndays )
 
 def chooseSpecialization( n, seed = 0 ):
-    global specializationFreqs_
     random.seed( seed )
     np.random.seed( seed )
     ps = specializationFreqs_.values( )
@@ -323,10 +312,6 @@ def chooseSpecialization( n, seed = 0 ):
             )
 
 def construct_graph( validSlots ):
-    global speakers_
-    global g_
-    global speakerSpecialization_
-    global aws_scheduling_requests_
 
     lastDate = None
     for i, speaker in enumerate( speakers_ ):
@@ -429,14 +414,6 @@ def construct_flow_graph( seed = 0 ):
 
     4 slots every monday and all belong to one specialization.
     """
-    global g_
-    global aws_
-    global speakers_
-    global holidays_
-    global specialization_
-    global speakersSpecialization_
-    global specializationFreqs_
-    global freshers_
 
     g_.clear( )
 
@@ -556,7 +533,6 @@ def potentialSpeakerToSwap( speaker, date, candidates
     already_swapped list contains the list of speaker who are already swapped
     with someone else.
     """
-    global fmt_
 
     swapWith = [ ]
     for speaker2, date2 in candidates.iteritems( ):
@@ -622,7 +598,6 @@ def avoidClusteringOfFreshers( schedule ):
     to same date.
 
     """
-    global aws_, speakers_
 
     _logger.info( "Before swapping %f" % fresherIndex( schedule ) )
 
@@ -698,7 +673,6 @@ def getMatches( res ):
     return result
 
 def computeSchedule( ):
-    global g_
     _logger.info( 'Scheduling AWS now' )
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
@@ -709,7 +683,6 @@ def computeSchedule( ):
 
 
 def findSpeakerWithSpecialization( specialization, after_date, not_in_these_labs, schedule ):
-    global g_
     for dateA in sorted( schedule ):
         if dateA <= after_date:
             continue
@@ -727,8 +700,6 @@ def findSpeakerWithSpecialization( specialization, after_date, not_in_these_labs
     return None
 
 def print_schedule( schedule, outfile ):
-    global g_, aws_
-    global speakersSpecialization_
     with open( outfile, 'w' ) as f:
         f.write( "This is what we got \n" )
 
@@ -768,7 +739,6 @@ def commit_schedule( schedule ):
     _logger.info( "Committed to database" )
 
 def main( outfile ):
-    global aws_
     global db_
     _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )

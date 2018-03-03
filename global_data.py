@@ -42,10 +42,14 @@ speakers_ = { }
 holidays_ = {}
 
 # Specialization
-specialization_ = [ ]
+specialization_ = { }
+specialization_list_ = [ ]
 speakersSpecialization_ = { }
 specializationFreqs_ = { }
 
 # freshers
 freshers_ = set( )
+
+
+fmt_ = '%Y-%m-%d'
 

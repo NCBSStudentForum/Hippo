@@ -620,6 +620,16 @@ def main( outfile ):
     except Exception as e:
         _logger.warn( "Failed to schedule. Error was %s" % e )
 
+    # update specialization on g_ nodes.
+    for date in ans:
+        specs = [ specialization_.get(x, 'UNSPECIFIED') for x in ans[date] ]
+        mostCommonSpec = Counter( specs ).most_common(1)[0]
+        for slot in range( 3 ):
+            slot = '%s,%d' % (date,slot)
+            if slot in g_:
+                g_.node[ slot ]['specialization'] = mostCommonSpec
+        print( date, specs, end = ' ' )
+
     ans = group_schedule( ans )
     ans = aws_helper.no_common_labs( ans )
 

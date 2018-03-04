@@ -54,7 +54,7 @@ def no_common_labs( schedule ):
             spec = g_.node['%s,%d'%(date,i)]['specialization']
             piH = speakers_[speaker]['pi_or_host']
             if piH in labs:
-                spec = speakersSpecialization_[ speaker ]
+                spec = specialization_[ speaker ]
                 replaceWith = findReplacement( speaker, date, spec, piH, schedule )
                 if replaceWith is not None:
                     speakerB, dateB = replaceWith

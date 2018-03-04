@@ -120,6 +120,14 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
         $speaker = smallCaps( loginToText( $aws['speaker'], $withEmail = false ) . 
             ' (' .  $aws['speaker'] . ')' );
 
+
+        // Check if user has requested AWS schedule and has it been approved.
+        $request = getTableEntry( 
+            'aws_scheduling_request'
+            , 'speaker,status'
+            , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
+        );
+
         if( $request )
             $speaker .= '<br />' . preferenceToHtml( $request );
 

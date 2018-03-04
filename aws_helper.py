@@ -46,8 +46,11 @@ def findReplacement( speaker, date, specialization, piH, schedule ):
     return None
 
 
-def no_common_labs( schedule, nweeks = 2 ):
+def no_common_labs( schedule, nweeks = 2, ncalls = 0 ):
     # Make sure that first 2 week entries have different PIs.
+    if ncalls > 100:
+        _logger.warn( "Terminated after 100 calls" )
+        return schedule
     failedDates = [ ]
     sortedDates = sorted( schedule )
     for ix, date in enumerate(sortedDates[:nweeks]):
@@ -56,7 +59,7 @@ def no_common_labs( schedule, nweeks = 2 ):
             spec = g_.node['%s,%d'%(date,i)]['specialization']
             piH = speakers_[speaker]['pi_or_host']
             if piH in labs:
-                spec = specialization_[ speaker ]
+                spec = specialization_.get( speaker, 'UNSPECIFIED' )
                 replaceWith = findReplacement( speaker, date, spec, piH, schedule )
                 if replaceWith is not None:
                     speakerB, dateB = replaceWith
@@ -77,7 +80,7 @@ def no_common_labs( schedule, nweeks = 2 ):
                             temp = schedule[ datey ]
                             schedule[ datey ] = schedule[ date ]
                             schedule[ date ] = temp
-                            return no_common_labs( schedule, nweeks )
+                            return no_common_labs( schedule, nweeks, ncalls + 1)
             else:
                 labs.append( piH )
 

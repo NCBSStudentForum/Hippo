@@ -227,17 +227,13 @@ table.show_schedule {
 
 table.show_schedule tr td
 {
+    font-family: Fira Sans;
     background-color: var(--tabletdcolor);
     border : 1px dotted;
     width: 50%;
-    font-size: x-small;
+    font-size: small;
 }
 
-
-table.show_schedule th
-{
-    font-size : xx-small;
-}
 
 table.tasks
 {

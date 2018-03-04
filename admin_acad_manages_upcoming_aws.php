@@ -171,20 +171,29 @@ echo $table;
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Temporary schedule.
+ */
+/* ----------------------------------------------------------------------------*/
 echo "<h1>Temporary assignments</h1>";
 
 echo printInfo("Three methods are available for scheduling AWS. First one is default.");
 
-echo "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
-echo '<button name="response" value="reschedule_group_greedy">Recompute  (group.greedy)</button>';
-echo '<button name="response" value="reschedule_group">Recompute (group)</button>';
-echo '<button name="response" value="reschedule">Recompute</button>';
-echo "</form>";
+$methodTable = "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
+$methodTable .= ' <table border="0"> ';
+$methodTable .= '<tr><td>';
+$methodTable .= '<button name="response" value="reschedule_group_greedy">
+    <strong>Recompute (DEFAULT)</strong></button>';
+$methodTable .= "</td><td>";
+$methodTable .= '<button name="response" value="reschedule_group">Recompute (NotSoGood)</button>';
+$methodTable .= "</td><td>";
+$methodTable .= '<button name="response" value="reschedule">Recompute (DoNotGroupAWS)</button>';
+$methodTable .= "</td></tr>";
+$methodTable .= '</table>'; 
+$methodTable .= "</form>";
+echo $methodTable;
 
-
-echo alertUser( 'Following is the best possible schedule I was able to
-    come up. Press <button disabled>' . $symbAccept . '</button> to accept the 
-    a speaker for given slot.' );
 
 $schedule = getTentativeAWSSchedule( );
 $scheduleMap = array( );
@@ -253,7 +262,7 @@ foreach( $scheduleMap as $date => $schedule )
         $csvLine .= loginToText( $speaker, true ) . ',';
 
         $table .= "<tr><td>";
-        $table .= $speakerInfo;
+        $table .= '<font style="font-size:large">' . $speakerInfo . '</font>';
 
         // Add PI and specialization info.
         $table .= '<br />' . piSpecializationHTML( $pi, $specialization );
@@ -264,9 +273,9 @@ foreach( $scheduleMap as $date => $schedule )
         $table .= '<form action="admin_acad_manages_upcoming_aws_submit.php"
             method="post" accept-charset="utf-8">
             <input type="hidden" name="speaker" value="' . $speaker . '" />
-            <button name="response"  value="RemoveSpeaker" 
-                title="Remove this speaker from AWS speaker list" >'
-                . $symbDelete . '</button>';
+            <button name="response" class="show_as_link" value="RemoveSpeaker" 
+                title="Remove this speaker from AWS speaker list" >
+                <i class="fa fa-trash fa-x"></i> </button>';
         $table .= '</form>';
 
         // Check if user has requested AWS schedule and has it been approved.
@@ -281,7 +290,7 @@ foreach( $scheduleMap as $date => $schedule )
             $table .= preferenceToHtml( $request );
 
         $table .= "</td><td>";
-        $table .= humanReadableDate( $upcomingAWS[ 'date' ] );
+        $table .= fontWithStyle( humanReadableDate( $upcomingAWS[ 'date' ] ), 'font-size:large' );
 
         $csvLine .= $upcomingAWS['date'] . ',';
 

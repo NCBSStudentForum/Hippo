@@ -39,6 +39,11 @@ function purifyHTML( $html )
     return $html;
 }
 
+function fontWithStyle( $msg, $style = "" )
+{
+    return "<font style=\"$style;\">$msg</font>";
+}
+
 function fixHTML( $html, bool $strip_tags = false ) : string
 {
     if( ! $html )

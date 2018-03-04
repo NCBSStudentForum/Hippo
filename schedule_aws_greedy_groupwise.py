@@ -81,6 +81,7 @@ def init( cur ):
     for a in cur.fetchall( ):
         if a[ 'schedule_talk_or_aws' ] == 'NO':
             holidays_[ a['date'] ] = a
+
     _logger.info( 'Total speakers %d' % len( speakers_ ) )
 
 
@@ -604,7 +605,6 @@ def commit_schedule( schedule ):
                 INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}') 
                 ON DUPLICATE KEY UPDATE date='{1}'
                 """.format( speaker, date ) 
-            # _logger.debug( query )
             cur.execute( query )
     db_.commit( )
     _logger.info( "Committed to database" )
@@ -623,12 +623,11 @@ def main( outfile ):
     # update specialization on g_ nodes.
     for date in ans:
         specs = [ specialization_.get(x, 'UNSPECIFIED') for x in ans[date] ]
-        mostCommonSpec = Counter( specs ).most_common(1)[0]
+        mostCommonSpec, freq = Counter( specs ).most_common(1)[0]
         for slot in range( 3 ):
             slot = '%s,%d' % (date,slot)
             if slot in g_:
                 g_.node[ slot ]['specialization'] = mostCommonSpec
-        print( date, specs, end = ' ' )
 
     ans = group_schedule( ans )
     ans = aws_helper.no_common_labs( ans )
@@ -636,7 +635,7 @@ def main( outfile ):
     if ans:
         commit_schedule( ans )
     else:
-        print( 'Failed to compute schedule' )
+        print( 'Failed to compute/commit schedule' )
         return -1
 
     try:

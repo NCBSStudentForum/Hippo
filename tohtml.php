@@ -2342,12 +2342,15 @@ function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
             continue;
 
         $info = getUserInfo( $studentId );
-        $row = '';
-        $row .= '<td>' . loginToText( $info, false) . '</td>';
-        $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
-        $row .= '<td>' . $r[ 'type' ] . "</td>";
-        $rows[ $info[ 'first_name'] ] = $row;
-        $allEmails[ ] = $info[ 'email'];
+        if( $info )
+        {
+            $row = '';
+            $row .= '<td>' . loginToText( $info, false) . '</td>';
+            $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
+            $row .= '<td>' . $r[ 'type' ] . "</td>";
+            $rows[ $info[ 'first_name'] ] = $row;
+            $allEmails[ ] = $info[ 'email'];
+        }
     }
 
     ksort( $rows );

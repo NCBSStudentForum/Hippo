@@ -3,4 +3,4 @@
 	url = https://github.com/dilawar/hippo-ai
 [submodule "PhotographyCompetition"]
 	path = PhotographyCompetition
-	url = git@github.com:dilawar/PhotographyCompetition
+	url = https://github.com/dilawar/PhotographyCompetition

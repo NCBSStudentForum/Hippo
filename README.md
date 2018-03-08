@@ -4,13 +4,14 @@ AWS scheduler cum even manager for NCBS.
 
 # Dependencies 
 
-- Requires PHP >= 5.6 
-- php5, php5-imap, php5-ldap, php5-imagick
+- Requires PHP >= 7.x 
+- php7, php7-imap, php7-ldap, php7-imagick
 - mysql 
-- python-pypandoc, pandoc (>=1.12) or python-html2text
+- python-pypandoc
 - sudo pip install mysql-connector-python-rf
 - pandoc >= 1.19.2.1
 - python-PIL (for background image processing).
+- python > 3.6 (Photography club scripts require it)
 
 ## Optional 
 

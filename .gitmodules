@@ -1,3 +1,6 @@
 [submodule "hippo-ai"]
 	path = hippo-ai
 	url = https://github.com/dilawar/hippo-ai
+[submodule "PhotographyCompetition"]
+	path = PhotographyCompetition
+	url = git@github.com:dilawar/PhotographyCompetition

@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import re
 import mimetypes
+import subprocess
 import urllib
 import random
 import json
@@ -19,19 +20,6 @@ os.environ[ 'http_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 os.environ[ 'https_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 
 base_url_ = 'https://intranet.ncbs.res.in/photography'
-
-# check if JSON url is fine. It yes, use it else go to intranet.
-useJSON_ = False
-
-try:
-    r = requests.get( json_url_ )
-    if r.status_code == 200:
-        useJSON_ = True
-        print( '[INFO] Using JSON' )
-except Exception as e:
-    useJSON_ = False
-    pass
-
 
 background_dir_ = './data/_backgrounds'
 if not os.path.exists( background_dir_ ):
@@ -150,12 +138,16 @@ def img_to_fname( img ):
     return fname + '.jpg'
 
 def get_images_from_dropbox( ):
-    global useJSON_
     log( 'Fetching from dropbox' )
     data = None
+
+    # Run submodule to get the data.
     try:
-        r = requests.get( json_url_ )
-        data =  r.json( )
+        subprocess.run( [ 'python3', 'main.py', '-t', 'json' ], shell = False
+                , cwd = './PhotographyCompetition/'
+                )
+        with open( os.path.join( './PhotographyCompetition', 'output.json' )) as f:
+            data = json.load( f )
     except Exception as e:
         log( 'Failed to read JSON' )
         print( e )
@@ -167,7 +159,7 @@ def get_images_from_dropbox( ):
         caption = img[ 'title' ]
         fname = img_to_fname( img )
         outfile = os.path.join( background_dir_, fname )
-        if float( img[ 'average_votes'] ) < 3.0:
+        if img['average_votes'] is None and float( img[ 'average_votes'] ) < 3.0:
             print( '[INFO] Not enough votes. Ignoring' )
             # Delete this if it was already there.
             if os.path.exists( outfile ):
@@ -178,8 +170,7 @@ def get_images_from_dropbox( ):
             download_url( url, caption, '(c) %s' % author, outfile )
 
 def main( ):
-    global useJSON_
-    if useJSON_:
+    if True:
         log( 'using json' )
         get_images_from_dropbox( )
     else:

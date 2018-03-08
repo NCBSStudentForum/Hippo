@@ -17,7 +17,11 @@ import sys
 import os
 import mysql.connector
 import mysql
-import ConfigParser
+try:
+    import ConfigParser 
+except ImportError as e:
+    import configparser as ConfigParser
+
 from logger import _logger
 
 config = ConfigParser.ConfigParser( )

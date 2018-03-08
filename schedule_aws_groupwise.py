@@ -305,11 +305,8 @@ def afterNDays( date, ndays ):
 def chooseSpecialization( n, seed = 0 ):
     random.seed( seed )
     np.random.seed( seed )
-    ps = specializationFreqs_.values( )
-    return np.random.choice( specializationFreqs_.keys( )
-            , size = n
-            , p=specializationFreqs_.values( ) 
-            )
+    ps = list(specializationFreqs_.values( ))
+    return np.random.choice( list(specializationFreqs_.keys( )), size = n, p=ps)
 
 def construct_graph( validSlots ):
 

@@ -19,7 +19,6 @@ os.environ[ 'http_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 os.environ[ 'https_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 
 base_url_ = 'https://intranet.ncbs.res.in/photography'
-json_url_ = 'https://www.dropbox.com/sh/juqqlthnu74qzp8/AAD43iy7JenaMDu7-8c_B9MOa/output.json?dl=1'
 
 # check if JSON url is fine. It yes, use it else go to intranet.
 useJSON_ = False

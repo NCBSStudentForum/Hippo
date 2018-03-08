@@ -104,9 +104,7 @@ foreach( $upcomingJCs as $jcID => $upcomings )
         echo arrayToRowHTML( $upcoming, 'show_info', $tofilter,  false, false );
         echo '<td> <button name="response" value="Remove Presentation"
             title="Remove this schedule" >' . $symbDelete . '</button></td>';
-
-        echo "<input type='hidden' name='id' value='"
-            . $upcoming['id'] . "' />";
+        echo "<input type='hidden' name='id' value='" . $upcoming['id'] . "' />";
         echo '</form>';
         echo '</tr>';
     }
@@ -258,8 +256,7 @@ foreach( $jcIds as $currentJC )
 // Rate tasks.
 echo '<h1>Rare tasks</h1>';
 echo '
-    <form action="user_jc_admin_edit_jc_request.php"
-        method="post" accept-charset="utf-8">
+    <form action="user_jc_admin_edit_jc_request.php" method="post" accept-charset="utf-8">
 
     <table border="0">
         <tr>
@@ -271,12 +268,10 @@ echo '
             '</td>
             <td>
                 <button type="submit" name="response"
-                value="transfer_admin">
-                    Transfer Admin Rights</button>
+                    value="transfer_admin">Transfer Admin Rights</button>
             </td>
         </tr>
     </table>
-
     </form>';
 
 echo '<br />';

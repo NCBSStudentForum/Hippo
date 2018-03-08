@@ -59,7 +59,6 @@ if( __get__( $_POST, 'response', '' ) == 'submit' )
 
 
 echo " <br /> <br /> ";
-echo "<strong>Afer your are finished editing </strong>";
-echo goBackToPageLink( 'user_jc_admin.php', 'Go Back' );
+echo goBackToPageLink( 'user_jc_admin.php', 'Done editing, Go Back' );
 
 ?>

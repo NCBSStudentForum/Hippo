@@ -13,32 +13,37 @@ $jcs = getJournalClubs( );
 echo '<h1>Table of All Journal Clubs</h1>';
 $table = '<table class="info">';
 
-foreach( $jcs as $jc )
+$table .= '<tr>';
+foreach( $jcs as $i => $jc )
 {
     $jcInfo = getJCInfo( $jc );
-
     $buttonVal = 'Subscribe';
     if( isSubscribedToJC( $_SESSION['user'], $jc['id'] ) )
         $buttonVal = 'Unsubscribe';
 
-    $table .= '<tr>';
-    $table .= '<td>' . $jc['id'] . '</td>';
-    $table .= '<td>' . $jcInfo[ 'title' ] . '</td>';
+    $table .= '<td>' . $jc['id'];
+    $table .= ' (' . $jcInfo[ 'title' ] . ')';
     $table .=  '<form action="user_manages_jc_action.php"
         method="post" accept-charset="utf-8">';
-    $table .= "<td> <button name=\"response\"
-        value=\"$buttonVal\">$buttonVal</button></td>";
+    $table .= "<button name=\"response\"
+        value=\"$buttonVal\">$buttonVal</button>";
     $table .= '<input type="hidden" name="jc_id" value="' . $jc['id'] . '" />';
     $table .= '<input type="hidden" name="login" value="'
                 .  $_SESSION['user'] . '" />';
     $table .= '</form>';
-    $table .= '</tr>';
+    $table .= '</td>';
+
+    if( ($i + 1 ) % 4 == 0 )
+        $table .= '</tr><tr>';
 }
+$table .= '</tr>';
 $table .= '</table>';
 echo $table;
 
+
+// Get all upcoming JCs in my JC.
 $mySubs = getUserJCs( $login = $_SESSION[ 'user' ] );
-foreach( $mySubs as $mySub )
+foreach( $mySubs as $i => $mySub )
 {
     echo "<h1>Upcoming presentations for " . $mySub[ 'jc_id' ] . "</h1>";
     $jcID = $mySub['jc_id' ];
@@ -92,13 +97,20 @@ else
 }
 
 
-echo '<h1>JC presentation requests </h1>';
+echo '<h1>JC presentation requests in your JCs</h1>';
 
 $today = dbDate( 'today' );
-$requests = getTableEntries( 'jc_requests', 'date'
-    , "status='VALID' AND date >= '$today'"
-    );
-if( count( $requests ) > 0 )
+
+$allreqs = array( );
+foreach( $mySubs as $sub )
+{
+    $jcID = $sub[ 'jc_id' ];
+    $allreqs = array_merge( $allreqs
+        , getTableEntries( 'jc_requests', 'date' , "status='VALID' AND date >= '$today' AND jc_id='$jcID'")
+        );
+}
+
+if( count( $allreqs ) > 0 )
 {
     echo printInfo(
         "Following presentation requests have been made. If you like any paper to
@@ -108,7 +120,7 @@ if( count( $requests ) > 0 )
     );
 
     echo '<table>';
-    foreach( $requests as $req )
+    foreach( $allreqs as $req )
     {
         echo '<tr>';
         echo '<td>';

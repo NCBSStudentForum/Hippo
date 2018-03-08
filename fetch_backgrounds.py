@@ -159,7 +159,7 @@ def get_images_from_dropbox( ):
         caption = img[ 'title' ]
         fname = img_to_fname( img )
         outfile = os.path.join( background_dir_, fname )
-        if img['average_votes'] is None and float( img[ 'average_votes'] ) < 3.0:
+        if img['average_votes'] is None or float( img[ 'average_votes'] ) < 3.0:
             print( '[INFO] Not enough votes. Ignoring' )
             # Delete this if it was already there.
             if os.path.exists( outfile ):

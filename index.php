@@ -52,10 +52,10 @@ if( strpos( $thisPage, 'index.php' ) !== false )
     }
 }
 
-echo '<br>';
-echo '<div class="public_calendar">';
-echo calendarIFrame( );
-echo '</div>';
+//echo '<br>';
+//echo '<div class="public_calendar">';
+//echo calendarIFrame( );
+//echo '</div>';
 
 include_once 'footer.php';
 

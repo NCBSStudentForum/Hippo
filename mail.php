@@ -4,7 +4,7 @@ include_once 'database.php';
 include_once 'methods.php';
 
 // Directory to store the mdsum of sent emails.
-$maildir = getDataDir( ) . '/_mails';
+$maildir = __DIR__ . '/_mails';
 if( ! file_exists( $maildir ) )
     mkdir( $maildir, 0777, true );
 

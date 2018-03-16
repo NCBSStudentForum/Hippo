@@ -31,3 +31,8 @@ LOG_FILE=/var/log/hippo.log
         log_msg "Status of previous command $?"
     done
 )
+
+# cleaup data folder.
+(
+    cd $SCRIPT_DIR/data && git clean -fxd -e "_mails*" .
+)

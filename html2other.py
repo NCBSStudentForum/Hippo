@@ -80,7 +80,7 @@ def fixInlineImage( msg ):
 
 def toTex( infile ):
     outfile = tempfile.mktemp(  prefix = 'hippo', suffix = 'tex'  )
-    msg = _cmd( 'pandoc -f html -t latex -s -o %s %s' % (outfile, infile ))
+    msg = _cmd( 'pandoc -f html -t latex -o %s %s' % (outfile, infile ))
     if os.path.isfile( outfile ):
         with open( outfile ) as f:
             msg = fixInlineImage( f.read( ) )

@@ -87,10 +87,10 @@ function eventToTex( $event, $talk = null )
 
     $head .= '\node[align=left] (tclass) at ([xshift=-40mm,yshift=-15mm]current page.north east)
                      {\color{blue} \Huge ' . $talk['class'] . ' };';
-    $head .= '\node[below=of tclass.south west,yshift=3mm,align=right,text width=0.5\linewidth] 
-        (date) {\small \emph ' . $date . ' };';
-    $head .= '\node[below=of date,yshift=3mm,align=right,text width=0.5\linewidth] 
-        (place) {\small \emph ' . $place . ' };';
+    $head .= '\node[below=of tclass.south east, anchor=east,yshift=2mm] 
+        (date) {\small \textsc{' . $date . '}};';
+    $head .= '\node[below=of date.south east, anchor=east, yshift=2mm,] 
+        (place) {\small \textsc{' . $place . '}};';
     $head .= '\end{tikzpicture}';
     $head .= '\vspace{0cm} ';
 
@@ -229,7 +229,7 @@ if( file_exists( $pdfFile ) )
 
 file_put_contents( $texFile,  $TeX );
 echo "Current directory " . __DIR__;
-$cmd = "pdflatex --shell-escape --output-directory $outdir $texFile";
+$cmd = __DIR__ . "/tex2pdf.sh $texFile";
 if( file_exists( $texFile ) )
     $res = `$cmd`;
 

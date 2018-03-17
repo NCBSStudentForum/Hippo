@@ -101,8 +101,7 @@ foreach( $upcomingTalks as $t )
         if( $event )
         {
             // If event is already approved, show it here.
-            echo "<strong>Above talk has been confirmed and event detail is shown 
-                below.</strong>";
+            echo alertUser( "<strong>This talk is confirmed.</strong>" );
 
             $html = arrayToVerticalTableHTML( $event, 'events', 'lightyellow'
                 , 'eid,class,url,modified_by,timestamp,calendar_id' . 
@@ -143,9 +142,9 @@ foreach( $upcomingTalks as $t )
         // Else there might be a pending request.
         else if( $request )
         {
-            echo "<strong>Shown below is the booking request pending review for 
-                    above talk. </strong>
-                ";
+            echo alertUser( "Shown below is the booking request pending review for 
+                    above talk." );
+
             $gid = $request[ 'gid' ];
 
             echo arrayToVerticalTableHTML( $request, 'requests', ''

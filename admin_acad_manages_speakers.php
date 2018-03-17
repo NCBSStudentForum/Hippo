@@ -29,7 +29,10 @@ function speakerKey( $x )
 $speakersMap = array( );
 foreach( $speakers as $x )
     if( intval( $x[ 'id' ] ) > 0 )
-        $speakersMap[ speakerKey( $x ) ] = $x;
+    {
+        $speakersMap[ speakerKey($x) ] = $x;
+        $speakersMap[ intval($x['id']) ] = $x;
+    }
 
 // This must not be a key => value array else autocomplete won't work. Or have
 // any null value,
@@ -99,6 +102,9 @@ $talk = array( 'created_by' => $_SESSION[ 'user' ]
 
 echo "<h1>Speaker details</h1>";
 
+echo alertUser( "If you know the speaker id, use the id (its an interger value), else I'll
+    try to find the speaker." 
+    );
 echo '<form method="post" action="">';
 echo '<input id="speakers_id" name="id" type="text" value="" >';
 echo '<button type="submit" name="response" value="show">Show details</button>';

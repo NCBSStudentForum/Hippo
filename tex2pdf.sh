@@ -25,6 +25,5 @@ EXTRA=""
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ( 
     cd /tmp
-    latexmk -pdf $EXTRA -silent \
-        --output-directory=$SCRIPT_DIR/data/ "$INFILE"
+    pdflatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
 )

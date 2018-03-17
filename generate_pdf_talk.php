@@ -39,7 +39,7 @@ function eventToTex( $event, $talk = null )
 
     // Add user image.
     $imagefile = getThumbnail( $imagefile );
-    $speakerImg = '\includegraphics[height=4.5cm]{' . $imagefile . '}';
+    $speakerImg = '\includegraphics[width=4cm]{' . $imagefile . '}';
 
     if( $talk )
     {
@@ -85,19 +85,23 @@ function eventToTex( $event, $talk = null )
     $head .= '\node[] (logo) at ([xshift=30mm,yshift=-20mm]current page.north west) 
         { ' . $logo . '};';
 
-    $head .= '\node[align=left] (tclass) at ([xshift=-40mm,yshift=-15mm]current page.north east)
+    $head .= '\node[align=left] (tclass) at ([xshift=-30mm,yshift=-15mm]current page.north east)
                      {\color{blue} \Huge ' . $talk['class'] . ' };';
     $head .= '\node[below=of tclass.south east, anchor=east,yshift=2mm] 
         (date) {\small \textsc{' . $date . '}};';
     $head .= '\node[below=of date.south east, anchor=east, yshift=2mm,] 
         (place) {\small \textsc{' . $place . '}};';
+    $head .= '\node[fit=(current page.north east) (current page.north west) (place)
+                    , fill=red, opacity=0.3, rectangle, inner sep=1mm] (fit_node) {};';
     $head .= '\end{tikzpicture}';
     $head .= '\vspace{0cm} ';
 
-    $head .= '\begin{tikzpicture}[ every node/.style={rectangle
-            ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
-    $head .= '\node[text width=5cm,minimum height=5cm,yshift=-10mm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image, yshift=-25mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
+    $head .= '\begin{tikzpicture}[
+                 every node/.style={rectangle ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
+    $head .= '\node[inner sep=0, text width=5cm, minimum height=5cm] 
+        (image) at (current page.north west) {' . $speakerImg . '};';
+    $head .= '\node[right=of image.north east, anchor=north west] (title) 
+                { ' .  '\textsc{\LARGE ' . $title . '} };';
     $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $head .= ' '; // So tikzpicture don't overlap.
@@ -144,7 +148,8 @@ function eventToTex( $event, $talk = null )
 // Intialize pdf template.
 //////////////////////////////////////////////////////////////////////////////
 // Institute 
-$tex = array( "\documentclass[12pt]{article}"
+$tex = array( 
+    "\documentclass[12pt]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{wrapfig}"
@@ -162,11 +167,14 @@ $tex = array( "\documentclass[12pt]{article}"
     , '\pagenumbering{gobble}'
     //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
     //    TATA Institute of Fundamental Research, Mumbai}'
-    , '\usetikzlibrary{calc,positioning,arrows}'
+    , '\usetikzlibrary{fit,calc,positioning,arrows,backgrounds}'
     //, '\usepackage[sfdefault,book]{FiraSans}'
     //, '\usepackage[]{ebgaramond}'
     , '\usepackage{libertine}'
     , '\usepackage[T1]{fontenc}'
+    //, '\pgfdeclarelayer{background}'
+    //, '\pgfdeclarelayer{foreground}'
+    //, '\pgfsetlayers{main,background}'
     , '\begin{document}'
     );
 

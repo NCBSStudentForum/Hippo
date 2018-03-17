@@ -39,7 +39,7 @@ function initialize( $db  )
             , department VARCHAR(500)
             , institute VARCHAR(1000) NOT NULL CHECK( institute <> "" )
             , homepage VARCHAR(500)
-            , UNIQUE KEY (first_name,last_name)
+            , UNIQUE KEY (email,first_name,last_name)
         )' );
 
     // Other tables.

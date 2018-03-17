@@ -34,15 +34,12 @@ foreach( $talks as $t )
     array_push( $upcomingTalks, $t );
 }
 
-if( count( $upcomingTalks ) < 1 )
-    echo alertUser( "Rejoice! There is no upcoming talk/seminar." );
-else
-    echo "<h1>Upcoming talks</h1>";
+echo "<h1>Upcoming talks</h1>";
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 echo '<div style="font-size:x-small">';
 // Outer table
-echo '<table border="1">';
+echo '<table class="table_in_table">';
 foreach( $upcomingTalks as $t )
 {
     echo '<tr>';
@@ -50,6 +47,7 @@ foreach( $upcomingTalks as $t )
      * FIRST COLUMN: Speaker picture.
      */
     echo '<td>';
+    echo "Speaker ID: " . $t['speaker_id'] . '<br />';
     echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
     echo '</td>';
 

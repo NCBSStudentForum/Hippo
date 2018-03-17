@@ -144,6 +144,15 @@ table.show_info tr td
     background-color: var(--tabletdcolor);
 }
 
+table.table_in_table tr td
+{
+    border: 1pt dotted lightblue;
+    vertical-align: bottom;
+    font-size: small;
+    font-family: "Fira Sans";
+
+}
+
 /* Show course */
 table.show_course {
     max-width: var(--maxwidth);

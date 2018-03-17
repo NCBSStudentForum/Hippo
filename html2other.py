@@ -79,7 +79,7 @@ def fixInlineImage( msg ):
 def toTex( infile ):
     outfile = '/tmp/_out.tex' 
     try:
-        _cmd( 'pandoc -f html -t ltex --parse-raw -o %s %s' % (outfile, infile ))
+        _cmd( 'pandoc -f html -t latex --parse-raw -o %s %s' % (outfile, infile ))
     except Exception as e:
         msg = 'Failed to convert to TeX due to "%s"' % e
         return msg

@@ -21,7 +21,7 @@ os.environ[ 'https_proxy' ] = 'http://proxy.ncbs.res.in:3128'
 
 base_url_ = 'https://intranet.ncbs.res.in/photography'
 
-background_dir_ = './data/_backgrounds'
+background_dir_ = './_backgrounds'
 if not os.path.exists( background_dir_ ):
     os.makedirs( background_dir_ )
 

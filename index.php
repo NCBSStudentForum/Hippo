@@ -42,7 +42,7 @@ if( strpos( $thisPage, 'index.php' ) !== false )
      */
 
     // Select one image from directory _backgrounds.
-    $background = random_jpeg( "data/_backgrounds" );
+    $background = random_jpeg( "./_backgrounds" );
     if( $background )
     {
         echo "<body style=\" background-image:url($background);

@@ -28,7 +28,9 @@ def _cmd( cmd ):
 def fix( msg ):
     return msg
 
-def tomd( msg ):
+def tomd( htmlfile ):
+    with open( htmlfile ) as f:
+        msg = f.read( )
     msg = fix( msg )
     # remove <div class="strip_from_md"> </div>
     pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
@@ -37,18 +39,18 @@ def tomd( msg ):
     msg = msg.replace( '</div>', '' )
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
 
-    htmlfile = '/tmp/_from_.html' 
-    txtfile = '/tmp/_msg.txt'
+    # Write back to original file.
+    htmlfile = tempfile.mktemp( prefix = 'hippo', suffix='.html' )
+    txtfile = '%s.txt' % htmlfile
     with open( htmlfile, 'w' ) as f:
         f.write( msg )
 
-    _cmd( 'pandoc --atx-headers -t plain -o %s %s' % (txtfile, htmlfile) )
+    _cmd( 'pandoc -t plain -o %s %s' % (txtfile, htmlfile) )
     with open( txtfile ) as f:
         return f.read( )
-
     # else return html.
     msg = re.sub( r'\\+\n', '\n', msg )
-    return msg.decode( 'utf-8' )
+    return msg
 
 def fixInlineImage( msg ):
     """Convert inline images to given format and change the includegraphics text
@@ -77,23 +79,17 @@ def fixInlineImage( msg ):
     return msg
 
 def toTex( infile ):
-    outfile = '/tmp/_out.tex' 
-    try:
-        _cmd( 'pandoc -f html -t latex --parse-raw -o %s %s' % (outfile, infile ))
-    except Exception as e:
-        msg = 'Failed to convert to TeX due to "%s"' % e
-        return msg
-
-    with open( outfile ) as f:
-        msg = fixInlineImage( f.read( ) )
+    outfile = tempfile.mktemp(  prefix = 'hippo', suffix = 'tex'  )
+    msg = _cmd( 'pandoc -f html -t latex -s -o %s %s' % (outfile, infile ))
+    if os.path.isfile( outfile ):
+        with open( outfile ) as f:
+            msg = fixInlineImage( f.read( ) )
+    else:
+        msg = "Could not covert to TeX";
     return msg
 
 def htmlfile2md( filename ):
-    with open( filename, 'r' ) as f:
-        text = f.read( )
-
-    md = tomd( text )
-
+    md = tomd( filename )
     # Style ect.
     pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )
     md = pat.sub( '', md )

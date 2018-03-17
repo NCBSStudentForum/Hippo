@@ -70,9 +70,9 @@ function eventToTex( $event, $talk = null )
 
     $logo = '';
     if( $isInstem )
-        $logo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
+        $logo = '\includegraphics[height=1.5cm]{' . __DIR__  . '/data/inStem_logo.png}';
     else
-        $logo = '\includegraphics[height=1.5cm]{./data/ncbs_logo.png}';
+        $logo = '\includegraphics[height=1.5cm]{' . __DIR__ . '/data/ncbs_logo.png}';
 
 
     // Logo etc.
@@ -221,13 +221,14 @@ $TeX = implode( "\n", $tex );
 
 // Generate PDF now.
 $outdir = __DIR__ . "/data";
-$texFile = $outdir . '/' . $outfile . ".tex";
 $pdfFile = $outdir . '/' . $outfile . ".pdf";
+$texFile = sys_get_temp_dir() . '/' . $outfile . ".tex";
 
 if( file_exists( $pdfFile ) )
     unlink( $pdfFile );
 
 file_put_contents( $texFile,  $TeX );
+echo "Current directory " . __DIR__;
 $cmd = "pdflatex --shell-escape --output-directory $outdir $texFile";
 if( file_exists( $texFile ) )
     $res = `$cmd`;
@@ -237,7 +238,7 @@ if( file_exists( $pdfFile ) )
     echo printInfo( "PDF is successfully generated: " . basename( $pdfFile ) );
 
     // Remove tex file.
-    unlink( $texFile );
+    //unlink( $texFile );
 
     // Download only if called from browser.
     if( ! isset( $argv ) )

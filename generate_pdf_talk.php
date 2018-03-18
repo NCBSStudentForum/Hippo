@@ -37,7 +37,6 @@ function eventToTex( $event, $talk = null )
     $title = $event[ 'title' ];
     $desc = $event[ 'description' ];
 
-    $speaker = '';
 
     // Prepare speaker image.
     $imagefile = getSpeakerPicturePath( $talk[ 'speaker_id' ] );
@@ -48,6 +47,7 @@ function eventToTex( $event, $talk = null )
     $imagefile = getThumbnail( $imagefile );
     $speakerImg = '\includegraphics[width=4cm]{' . $imagefile . '}';
 
+    $speaker = '';
     if( $talk )
     {
         $title = $talk['title'];
@@ -59,9 +59,7 @@ function eventToTex( $event, $talk = null )
         else 
             $speakerHTML = speakerToHTML( getSpeakerByName( $talk[ 'speaker' ]));
 
-        $speakerTex = html2Tex( $speakerHTML );
-
-        $speaker = $speakerTex;
+        $speaker = html2Tex( $speakerHTML );
     }
 
 
@@ -87,17 +85,13 @@ function eventToTex( $event, $talk = null )
     $place = ' \faHome \,' . $where;
 
     $head .= '\begin{tikzpicture}[remember picture,overlay
-        ,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
+        , every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
 
-    $head .= '\node[] (logo) at ([xshift=30mm,yshift=-20mm]current page.north west) 
-        { ' . $logo . '};';
+    $head .= '\node[below=of current page.north west,anchor=west,shift=(-45:1cm)] (logo) { ' . $logo . '};';
 
-    $head .= '\node[align=left] (tclass) at ([xshift=-30mm,yshift=-15mm]current page.north east)
-                     {\color{blue} \Huge ' . $talk['class'] . ' };';
-    $head .= '\node[below=of tclass.south east, anchor=east,yshift=2mm] 
-        (date) {\small \textsc{' . $date . '}};';
-    $head .= '\node[below=of date.south east, anchor=east, yshift=2mm,] 
-        (place) {\small \textsc{' . $place . '}};';
+    $head .= '\node[below=of current page.north east,anchor=south east,shift=(-135:1cm)] (tclass) {\Huge ' . $talk['class'] . ' };';
+    $head .= '\node[below=of tclass.south east, anchor=east] (date) {\small \textsc{' . $date . '}};';
+    $head .= '\node[below=of date.south east, anchor=south east] (place) {\small \textsc{' . $place . '}};';
     $head .= '\node[fit=(current page.north east) (current page.north west) (place)
                     , fill=red, opacity=0.3, rectangle, inner sep=1mm] (fit_node) {};';
     $head .= '\end{tikzpicture}';
@@ -108,7 +102,7 @@ function eventToTex( $event, $talk = null )
         (image) at (current page.north west) {' . $speakerImg . '};';
     $head .= '\node[right=of image.north east, align=justify, anchor=north west
          , xshift=-5mm, yshift=-5mm, text width=0.6\linewidth] (title) 
-                { ' .  '\textsc{\Large ' . $title . '} };';
+                { ' .  '{\Large ' . $title . '} };';
     $head .= '\node[below=of title, text width=0.6\linewidth,yshift=10mm] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $head .= ' '; // So tikzpicture don't overlap.

@@ -1,4 +1,4 @@
-#!/bin/bash -
+#/bin/bash -
 #===============================================================================
 #
 #          FILE: tex2pdf.sh
@@ -26,6 +26,6 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ( 
     cd /tmp
     # Run the command two times. Sometimes it does not add images.
-    pdflatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
-    pdflatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
+    lualatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
+    lualatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
 )

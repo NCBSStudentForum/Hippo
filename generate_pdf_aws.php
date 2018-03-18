@@ -92,7 +92,7 @@ function awsToTex( $aws )
     $head .= '\begin{tikzpicture}[ ]';
     $head .= '\node[ ] (img) { ' . $speakerImg . '};';
     $head .= '\node[right=of img,text width=0.65\linewidth] (title) {{\LARGE ' . $title . '}};';
-    $head .= '\node[below=of title,text width=0.65\linewidth] (author) {\textbf{' . $speaker . '}};';
+    $head .= '\node[below=of title.south west, anchor=west] (author) {\textbf{' . $speaker . '}};';
     $head .= '\end{tikzpicture}';
 
     // Header
@@ -154,8 +154,7 @@ $tex = array( "\documentclass[]{article}"
     , '\pagenumbering{gobble}'
     , '\linespread{1.15}'
     , '\usetikzlibrary{calc,positioning,arrows,fit}'
-    , '\usepackage[T1]{fontenc}'
-    , '\usepackage[]{palatino}'
+    , '\usepackage[sfdefault,light]{FiraSans}'
     , '\usepackage{tcolorbox}'
     , '\tcbuselibrary{fitting}'
     , '\begin{document}'

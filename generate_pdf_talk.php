@@ -154,10 +154,9 @@ $tex = array(
     , '\linespread{1.15}'
     , '\pagenumbering{gobble}'
     , '\usetikzlibrary{fit,calc,positioning,arrows,backgrounds}'
-    , '\usepackage{palatino}'
+    , '\usepackage[sfdefault,light]{FiraSans}'
     , '\usepackage{tcolorbox}'          // Fit text in one page.
     , '\tcbuselibrary{fitting}'
-    , '\usepackage[T1]{fontenc}'
     , '\begin{document}'
     );
 

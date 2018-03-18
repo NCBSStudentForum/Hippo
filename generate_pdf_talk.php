@@ -102,7 +102,7 @@ function eventToTex( $event, $talk = null )
     $head .= '\begin{tikzpicture}[ ]';
     $head .= '\node[inner sep=0, inner sep=0pt] (image) {' . $speakerImg . '};';
     $head .= '\node[right=of image.north east, anchor=north west, text width=0.6\linewidth] (title) { ' .  '{\Large ' . $title . '} };';
-    $head .= '\node[right=of image.south east, anchor=south west, text width=0.6\linewidth] (author) { ' .  '{' . $speaker . '} };';
+    $head .= '\node[below=of title,text width=0.6\linewidth,yshift=10mm] (author) { ' .  '{\small ' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $head .= '\par'; // So tikzpicture don't overlap.
 

@@ -91,8 +91,8 @@ function awsToTex( $aws )
     // $head .= '\node[yshift=-25mm] (img) { ' . $speakerImg . '};';
     $head .= '\begin{tikzpicture}[ ]';
     $head .= '\node[ ] (img) { ' . $speakerImg . '};';
-    $head .= '\node[right=of img,text width=0.7\linewidth] (title) {{\Large ' . $title . '}};';
-    $head .= '\node[below=of title,text width=0.7\linewidth] (author) {\textbf{' . $speaker . '}};';
+    $head .= '\node[right=of img,text width=0.65\linewidth] (title) {{\LARGE ' . $title . '}};';
+    $head .= '\node[below=of title,text width=0.65\linewidth] (author) {\textbf{' . $speaker . '}};';
     $head .= '\end{tikzpicture}';
 
     // Header
@@ -110,12 +110,14 @@ function awsToTex( $aws )
         $abstract = $texAbstract;
 
     // Title and abstract
-    $tex[] = '{\large ' . $abstract . '}';
-    $extra .= '\begin{tabular}{ll}';
+    $extra = '\begin{tabular}{ll}';
     $extra .= '\textbf{Supervisor(s)} & ' . implode( ",", $supervisors) . '\\\\';
     $extra .= '\textbf{Thesis Committee Member(s)} & ' . implode( ", ", $tcm ) . '\\\\';
     $extra .= '\end{tabular}';
-    $tex[] = '\vspace{5mm}' .  $extra ;
+
+    $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
+        , fit to height=18 cm, fit basedim=16pt
+        ]' . $abstract . '\vspace{5mm}' . '{\normalsize ' . $extra . '} \end{tcolorbox}';
 
     return implode( "\n", $tex );
 
@@ -155,6 +157,7 @@ $tex = array( "\documentclass[]{article}"
     , '\usepackage[T1]{fontenc}'
     , '\usepackage[]{palatino}'
     , '\usepackage{tcolorbox}'
+    , '\tcbuselibrary{fitting}'
     , '\begin{document}'
     );
 

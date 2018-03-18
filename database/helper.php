@@ -1068,9 +1068,9 @@ function getUserInfo( $user, $query_ldap = false )
     return $res;
 }
 
-function getLoginInfo( $login_name )
+function getLoginInfo( $login_name, $query_ldap = false )
 {
-    return getUserInfo( $login_name );
+    return getUserInfo( $login_name, $query_ldap );
 }
 
 function getLoginByEmail( $email )

@@ -1,9 +1,9 @@
 <?php
 
-include_once 'header.php';
-include_once 'database.php';
-include_once 'tohtml.php';
-include_once 'methods.php';
+require_once 'header.php';
+require_once 'database.php';
+require_once 'tohtml.php';
+require_once 'methods.php';
 
 echo userHTML( );
 
@@ -194,7 +194,13 @@ foreach( $jcIds as $currentJC )
         if( ! $login )
             continue;
 
-        $info = getLoginInfo( $login );
+        $info = getLoginInfo( $login, true );
+        if( ! $info )
+        {
+            echo printWarning( "No info found for $login. Is it a valid/active id?" );
+            continue;
+        }
+
         $email = mailto( $info[ 'email' ] );
         $allEmails[] = $info['email'];
 

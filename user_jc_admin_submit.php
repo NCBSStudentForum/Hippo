@@ -23,6 +23,7 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
     // Add new members
     $logins = $_POST[ 'logins'];
     $logins = preg_replace( '/\s+/', ',', $logins );
+
     $logins = explode( ',', $logins );
 
     $anyWarning = false;
@@ -85,7 +86,9 @@ else if( $_POST['response'] == 'Assign Presentation' )
     }
     else
     {
-        $loginInfo = getLoginInfo( $_POST[ 'presenter' ] );
+        $login = getLoginID( $_POST[ 'presenter' ] );
+
+        $loginInfo = getLoginInfo( $login );
         if( ! $loginInfo )
         {
             $presenter = $_POST[ 'presenter' ];

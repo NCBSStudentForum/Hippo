@@ -41,6 +41,23 @@ function extract_emails_from( $text )
     return $res;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Return login id if email is given. This is  a helper function.
+    *
+    * @Param $text
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getLoginID( $text )
+{
+    if( __substr__( '@', $text ) )
+        return explode( '@', $text )[0];
+
+    return $text;
+}
+
 
 
 // Form HERE: https://stackoverflow.com/a/25879953/180512://stackoverflow.com/a/25879953/1805129

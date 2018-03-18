@@ -89,23 +89,22 @@ function eventToTex( $event, $talk = null )
 
     $head .= '\node[below=of current page.north west,anchor=west,shift=(-45:1cm)] (logo) { ' . $logo . '};';
 
-    $head .= '\node[below=of current page.north east,anchor=south east,shift=(-135:1cm)] (tclass) {\Huge ' . $talk['class'] . ' };';
+    $head .= '\node[below=of current page.north east,anchor=south east,shift=(-135:1cm)] (tclass) 
+            {\LARGE \textsc{\textbf{' . $talk['class'] . '}}};';
     $head .= '\node[below=of tclass.south east, anchor=east] (date) {\small \textsc{' . $date . '}};';
     $head .= '\node[below=of date.south east, anchor=south east] (place) {\small \textsc{' . $place . '}};';
-    $head .= '\node[fit=(current page.north east) (current page.north west) (place)
+    $head .= '\node[below=of place] (place1) {};';
+    $head .= '\node[fit=(current page.north east) (current page.north west) (place1)
                     , fill=red, opacity=0.3, rectangle, inner sep=1mm] (fit_node) {};';
     $head .= '\end{tikzpicture}';
-    $head .= '\vspace{0cm} ';
+    $head .= '\par \vspace{5mm} ';
 
     $head .= '\begin{tikzpicture}[ ]';
-    $head .= '\node[inner sep=0, text width=0.3\linewidth, minimum height=5cm] 
-        (image) at (current page.north west) {' . $speakerImg . '};';
-    $head .= '\node[right=of image.north east, align=justify, anchor=north west
-         , xshift=-5mm, yshift=-5mm, text width=0.6\linewidth] (title) 
-                { ' .  '{\Large ' . $title . '} };';
-    $head .= '\node[below=of title, text width=0.6\linewidth,yshift=10mm] (author) { ' .  '{' . $speaker . '} };';
+    $head .= '\node[inner sep=0, inner sep=0pt] (image) {' . $speakerImg . '};';
+    $head .= '\node[right=of image.north east, anchor=north west, text width=0.6\linewidth] (title) { ' .  '{\Large ' . $title . '} };';
+    $head .= '\node[right=of image.south east, anchor=south west, text width=0.6\linewidth] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
-    $head .= ' '; // So tikzpicture don't overlap.
+    $head .= '\par'; // So tikzpicture don't overlap.
 
     $tex = array( $head );
 
@@ -120,9 +119,9 @@ function eventToTex( $event, $talk = null )
     {
         $extra .= '\vspace{1cm}';
         $extra .= "\begin{tabular}{ll}\n";
-        $extra .= 'Host & ' . fixName( $talk[ 'host' ] ) . '\\\\';
+        $extra .= '{\bf Host} & ' . fixName( $talk[ 'host' ] ) . '\\\\';
         if( $talk[ 'coordinator' ] )
-            $extra .= 'Coordinator & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
+            $extra .= '{\bf Coordinator} & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
         $extra .= '\end{tabular}';
     }
 

@@ -78,15 +78,17 @@ function awsToTex( $aws )
         , every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
     $head .= '\node[below=of current page.north west, anchor=north west, xshift=10mm] (logo) 
         {\includegraphics[height=1cm]{' . $logo . '}};';
-    $head .= '\node[below=of current page.north east, anchor=north east,xshift=-10mm] (aws) {\LARGE \textsc{' . $awsType . '} };';
+    $head .= '\node[below=of current page.north east, anchor=north east,xshift=-10mm] (aws) 
+            {\LARGE \textbf{\textsc{' . $awsType . '}}};';
     $head .= '\node[below=of aws.south west,anchor=north west] (date) { ' . $date . ' }; ';
     $head .= '\node[below=of date.west,anchor=west] (place) { ' . $place . ' }; ';
-    $head .= '\node[fit=(current page.north east) (current page.north west) (place)
+    $head .= '\node[below=of place] (place1) {};';
+    $head .= '\node[fit=(current page.north east) (current page.north west) (place1)
             , rectangle, fill=blue, opacity=0.2] (header) { };';
     $head .= '\end{tikzpicture}';
 
     $speakerImg = '\includegraphics[height=45mm,trim=2 2 2 2,clip]{' . $imagefile . '}';
-    $head .= '\par';
+    $head .= '\par \vspace{10mm} \par ';
     // $head .= '\begin{tikzpicture}[overlay, every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
     // $head .= '\node[yshift=-25mm] (img) { ' . $speakerImg . '};';
     $head .= '\begin{tikzpicture}[ ]';

@@ -8,6 +8,14 @@ include_once 'tohtml.php';
 if( isset($argv) )
     parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
 
+function get_suitable_font_size( $desc )
+{
+    $nchar = strlen( $desc );
+    if( $nchar > 1900 )
+        return '14pt';
+    return '12pt';
+}
+
 function eventToTex( $event, $talk = null )
 {
     // First sanities the html before it can be converted to pdf.
@@ -24,16 +32,15 @@ function eventToTex( $event, $talk = null )
 
     // Crate date and plate.
     $where = venueSummary( $event[ 'venue' ] );
-    $when = humanReadableDate( $event['date'] ) . ', ' . 
-        humanReadableTime( $event[ 'start_time' ] );
+    $when = humanReadableDate( $event['date'] ) . ' | ' . humanReadableTime( $event[ 'start_time' ] );
 
     $title = $event[ 'title' ];
     $desc = $event[ 'description' ];
+
     $speaker = '';
 
     // Prepare speaker image.
     $imagefile = getSpeakerPicturePath( $talk[ 'speaker_id' ] );
-    echo "<pre> $imagefile </pre>";
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
 
@@ -99,44 +106,35 @@ function eventToTex( $event, $talk = null )
     $head .= '\begin{tikzpicture}[ ]';
     $head .= '\node[inner sep=0, text width=0.3\linewidth, minimum height=5cm] 
         (image) at (current page.north west) {' . $speakerImg . '};';
-    $head .= '\node[right=of image.north east
-        , anchor=north west, yshift=-5mm, text width=0.7\linewidth] (title) 
-                { ' .  '\textsc{\LARGE ' . $title . '} };';
-    $head .= '\node[below=of title, text width=0.7\linewidth,yshift=10mm] (author) { ' .  '{' . $speaker . '} };';
+    $head .= '\node[right=of image.north east, align=justify, anchor=north west
+         , xshift=-5mm, yshift=-5mm, text width=0.6\linewidth] (title) 
+                { ' .  '\textsc{\Large ' . $title . '} };';
+    $head .= '\node[below=of title, text width=0.6\linewidth,yshift=10mm] (author) { ' .  '{' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
     $head .= ' '; // So tikzpicture don't overlap.
 
     $tex = array( $head );
 
-    //// Put talk class in header.
-    //if( $talk )
-    //    $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
-
-
-
     $tex[] = '\par';
-
     file_put_contents( '/tmp/desc.html', $desc );
-
     $texDesc = html2Tex( $desc ); 
     if( strlen(trim($texDesc)) > 10 )
         $desc = $texDesc;
 
-    // Extra.
-    $tex[] = '{\large ' . $desc . '}';
+    $extra = '';
     if( $talk )
     {
-        $extra = '\vspace{1cm}';
-        $extra = '\begin{table}[ht!]';
+        $extra .= '\vspace{1cm}';
         $extra .= "\begin{tabular}{ll}\n";
-        //$extra .= "\\toprule\n";
         $extra .= 'Host & ' . fixName( $talk[ 'host' ] ) . '\\\\';
         if( $talk[ 'coordinator' ] )
             $extra .= 'Coordinator & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
-        //$extra .= '\bottomrule';
-        $extra .= '\end{tabular} \end{table}';
-        $tex[] = $extra;
+        $extra .= '\end{tabular}';
     }
+
+    $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
+        , fit to height=19 cm, fit basedim=20pt
+        ]' . $desc . $extra . '\end{tcolorbox}';
 
     $texText = implode( "\n", $tex );
     return $texText;
@@ -154,27 +152,18 @@ $tex = array(
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{wrapfig}"
     , "\usepackage[]{grffile}"
-    //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[colorlinks=true]{hyperref}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"
-    // Old version may not work.
     , "\usepackage{fontawesome}"
-    //, '\usepackage{fancyhdr}'
-    , '\linespread{1.2}'
-    //, '\pagestyle{fancy}'
+    , '\linespread{1.15}'
     , '\pagenumbering{gobble}'
-    //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
-    //    TATA Institute of Fundamental Research, Mumbai}'
     , '\usetikzlibrary{fit,calc,positioning,arrows,backgrounds}'
-    //, '\usepackage[sfdefault,book]{FiraSans}'
-    //, '\usepackage[]{ebgaramond}'
-    , '\usepackage{libertine}'
+    , '\usepackage{palatino}'
+    , '\usepackage{tcolorbox}'          // Fit text in one page.
+    , '\tcbuselibrary{fitting}'
     , '\usepackage[T1]{fontenc}'
-    //, '\pgfdeclarelayer{background}'
-    //, '\pgfdeclarelayer{foreground}'
-    //, '\pgfsetlayers{main,background}'
     , '\begin{document}'
     );
 
@@ -213,10 +202,9 @@ else
 $outfile = 'EVENTS';
 if( $date )
     $outfile .= '_' . $date;
-echo printInfo( "Following events " . implode( ', ', $ids ) );
+
 foreach( $ids as $id )
 {
-    echo printInfo( "Generating pdf for id $id" );
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
     $tex[] = eventToTex( $event, $talk );
@@ -236,17 +224,14 @@ if( file_exists( $pdfFile ) )
     unlink( $pdfFile );
 
 file_put_contents( $texFile,  $TeX );
-echo "Current directory " . __DIR__;
 $cmd = __DIR__ . "/tex2pdf.sh $texFile";
 if( file_exists( $texFile ) )
     $res = `$cmd`;
 
 if( file_exists( $pdfFile ) )
 {
-    echo printInfo( "PDF is successfully generated: " . basename( $pdfFile ) );
-
     // Remove tex file.
-    //unlink( $texFile );
+    // unlink( $texFile );
 
     // Download only if called from browser.
     if( ! isset( $argv ) )

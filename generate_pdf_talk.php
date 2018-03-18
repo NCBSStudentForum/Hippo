@@ -133,7 +133,7 @@ function eventToTex( $event, $talk = null )
     }
 
     $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
-        , fit to height=19 cm, fit basedim=20pt
+        , fit to height=18 cm, fit basedim=14pt
         ]' . $desc . $extra . '\end{tcolorbox}';
 
     $texText = implode( "\n", $tex );

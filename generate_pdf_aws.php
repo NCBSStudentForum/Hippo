@@ -65,7 +65,7 @@ function awsToTex( $aws )
 
     // Two columns here.
     $head = '';
-    $logo = './data/ncbs_logo.png';
+    $logo = __DIR__ . '/data/ncbs_logo.png';
 
     // Is presynopsis seminar?
     if( __get__( $aws, 'is_presynopsis_seminar', 'NO' ) == 'YES' )
@@ -77,7 +77,7 @@ function awsToTex( $aws )
     $head .= '\begin{tikzpicture}[remember picture, overlay
         , every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
     $head .= '\node[below=of current page.north west, anchor=north west, xshift=10mm] (logo) 
-        {\includegraphics[height=1cm]{./data/ncbs_logo.png}};';
+        {\includegraphics[height=1cm]{' . $logo . '}};';
     $head .= '\node[below=of current page.north east, anchor=north east,xshift=-10mm] (aws) {\LARGE \textsc{' . $awsType . '} };';
     $head .= '\node[below=of aws.south west,anchor=north west] (date) { ' . $date . ' }; ';
     $head .= '\node[below=of date.west,anchor=west] (place) { ' . $place . ' }; ';
@@ -190,7 +190,7 @@ if( file_exists( $pdfFile ) )
 
 file_put_contents( $texFile,  $TeX );
 if( file_exists( $texFile ) )
-    $res = `pdflatex --output-directory $outdir $texFile`;
+    $res = `./tex2pdf.sh $texFile`;
 
 if( file_exists( $pdfFile ) )
 {

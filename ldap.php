@@ -39,6 +39,9 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     }
 
     $ds = @ldap_connect($ldap_ip, $port );
+
+    ldap_set_option( $ds, LDAP_OPT_TIMELIMIT, 1 );
+
     $r = @ldap_bind($ds);
 
     if( ! $r )

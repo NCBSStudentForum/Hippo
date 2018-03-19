@@ -1796,12 +1796,7 @@ function getUpcomingAWS( $monday = null )
         $whereExpr = "date = '$monday'";
     }
 
-    $stmt = $hippoDB->query(
-        "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date"
-        );
-
-    $stmt->execute( );
-    return fetchEntries( $stmt );
+    return executeQuery( "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date" );
 }
 
 function getUpcomingAWSById( $id )

@@ -1,10 +1,10 @@
 <?php
 
-include_once "header.php";
-include_once "methods.php";
-include_once "tohtml.php";
-include_once 'database.php';
-include_once "check_access_permissions.php";
+require_once "header.php";
+require_once "methods.php";
+require_once "tohtml.php";
+require_once 'database.php';
+require_once "check_access_permissions.php";
 
 mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 echo userHTML( );

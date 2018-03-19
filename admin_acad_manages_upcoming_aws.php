@@ -139,15 +139,6 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
         // Speaker PI if any.
         $speakerTable .=  '<td>' . piSpecializationHTML( $pi, $specialization ) . '</td>';
 
-        // Check if user has requested AWS schedule and has it been approved.
-        // If user request for rescheduling was approved, print it here.
-        $request = getTableEntry(
-            'aws_scheduling_request'
-            , 'speaker,status'
-            , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
-        );
-
-
         $form = '<form action="admin_acad_manages_upcoming_aws_submit.php" method="post" accept-charset="utf-8">';
         $form .= '<input type="hidden", name="date" , value="' . $aws[ 'date' ] . '"/>';
         $form .= '<input type="hidden", name="speaker" , value="' . $aws[ 'speaker' ] . '"/>';

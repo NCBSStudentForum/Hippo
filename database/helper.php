@@ -1326,9 +1326,15 @@ function getTableEntry( $tablename, $whereKeys, $data )
     foreach( $whereKeys as $key )
         $stmt->bindValue( ":$key", $data[ $key ] );
 
-
-    $stmt->execute( );
-    return $stmt->fetch( PDO::FETCH_ASSOC );
+    try {
+        $stmt->execute( );
+        return $stmt->fetch( PDO::FETCH_ASSOC );
+        
+    } catch (Exception $e) 
+    {
+        echo printWarning( "Failed to fetch. Error was " . $e->getMessage( ) );
+        return false;
+    }
 }
 
 

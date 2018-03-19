@@ -67,7 +67,7 @@ def main( args ):
             msg.add_attachment( f.read()
                     , maintype=maintype
                     , subtype=subtype
-                    , filename = attach 
+                    , filename = os.path.basename( attach )
                     )
 
     s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )

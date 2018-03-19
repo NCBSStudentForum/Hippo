@@ -1538,7 +1538,6 @@ function deleteFromTable( $tablename, $keys, $data )
 
     $query .= implode( " AND ", $whereClause );
 
-
     $stmt = $db->prepare( $query );
     foreach( $cols as $k )
     {
@@ -1742,6 +1741,18 @@ function getAWSFromPast( $from  )
     return fetchEntries( $stmt );
 }
 
+function isEligibleForAWS( $speaker )
+{
+    $res = executeQuery( "SELECT login FROM logins WHERE login='$speaker' AND eligible_for_aws='YES' AND status='ACTIVE'" );
+    if( ! $res )
+        return false;
+
+    if( count( $res ) == 0 )
+        return false;
+
+    return true;
+}
+
 
 /**
     * @brief Get AWS users.
@@ -1820,8 +1831,8 @@ function getUpcomingAWSById( $id )
 function getUpcomingAWSOfSpeaker( $speaker )
 {
     return getTableEntry( 'upcoming_aws', 'speaker,status'
-        , array( 'speaker'=> $speaker , 'status' => 'VALID' )
-        );
+        , array( 'speaker'=> $speaker , 'status' => 'VALID' ) 
+    );
 }
 
 /**
@@ -2415,6 +2426,11 @@ function getSpeakerByName( $name )
 
     $res = $db->query( "SELECT * FROM speakers WHERE $whereExpr " );
     return $res->fetch( PDO::FETCH_ASSOC );
+}
+
+function getSpeakerByID( $id )
+{
+    return getTableEntry( 'speakers', 'id', array( 'id' => $id ) );
 }
 
 function getWeeklyEventByClass( $classes )

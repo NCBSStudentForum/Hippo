@@ -29,6 +29,7 @@ def fix( msg ):
     return msg
 
 def tomd( htmlfile ):
+    # This function is also used by sendemail.py file.
     with open( htmlfile ) as f:
         msg = f.read( )
     msg = fix( msg )
@@ -48,8 +49,7 @@ def tomd( htmlfile ):
     _cmd( 'pandoc -t plain -o %s %s' % (txtfile, htmlfile) )
     with open( txtfile ) as f:
         return f.read( )
-    # else return html.
-    msg = re.sub( r'\\+\n', '\n', msg )
+
     return msg
 
 def fixInlineImage( msg ):

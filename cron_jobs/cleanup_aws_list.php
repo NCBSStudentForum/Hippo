@@ -14,12 +14,12 @@ function changeAWSEligibility( $speaker )
 }
 
 /* Every monday, check students who are not eligible for AWS anymore */
-if( trueOnGivenDayAndTime( 'this monday', '16:45' ) )
+if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
 {
     echo printInfo( 'Monday, removing students who have given PRE_SYNOPSIS SEMINAR and thesis SEMINAR' );
 
     // In last two weeks.
-    $cutoff = strtotime( 'today' ) - 14 * 24 * 2600;
+    $cutoff = dbDate( strtotime( 'today' ) - 14 * 24 * 3600 );
 
     $presynAWS = getTableEntries( 'annual_work_seminars', 'date'
         , "IS_PRESYNOPSIS_SEMINAR='YES' AND date > '$cutoff'" );
@@ -44,11 +44,7 @@ if( trueOnGivenDayAndTime( 'this monday', '16:45' ) )
             if( isEligibleForAWS( $login ) )
                 changeAWSEligibility( $login );
         }
-
     }
-
-
-
 }
 
 ?>

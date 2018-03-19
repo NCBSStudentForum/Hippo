@@ -1,6 +1,6 @@
 <?php
 
-include_once( '../ldap.php' );
+require_once './ldap.php';
 
 var_dump( getUserInfoFromLdap( 'dilawars' ) );
 var_dump( getUserInfoFromLdap( 'bhalla' ) );

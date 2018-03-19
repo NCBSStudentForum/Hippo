@@ -1154,6 +1154,7 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     if( ! $login )
         return '';
 
+
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )
@@ -1167,13 +1168,12 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     else
         $user = $login;
 
-
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
         $email = __get__( $user, 'email', '' );
         if( $email )
         {
-            $ldap = @getUserInfoFromLdap( $user[ 'email'] );
+            $ldap = getUserInfoFromLdap( $user[ 'email'] );
             if( $ldap )
                 $user = array_merge( $user, $ldap );
         }

@@ -29,6 +29,7 @@ $(function() {
 <?php
 
 $upcomingAWSs = getUpcomingAWS( );
+
 $upcomingAwsNextWeek = array( );
 foreach( $upcomingAWSs as $aws )
     if( strtotime( $aws['date'] ) - strtotime( 'today' )  < 7 * 24 * 3600 )
@@ -89,10 +90,7 @@ echo '<br /><br />';
 $awsThisWeek = 0;
 $awsGroupedByDate = array( );
 foreach( $upcomingAWSs as $aws )
-{
-    $groupDate = strtotime( $aws['date'] );
-    $awsGroupedByDate[ $groupDate ][] = $aws;
-}
+    $awsGroupedByDate[ $aws['date'] ][] = $aws;
 
 
 /* --------------------------------------------------------------------------*/
@@ -117,10 +115,11 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
         // Each speaker can be a table as well.
         $speakerTable = '<table class="sticker" border=0> <tr> ';
 
-        $speaker = smallCaps( loginToText( $aws['speaker'], $withEmail = false ) . 
+        $speakerHTML = smallCaps( loginToText( $aws['speaker'], $withEmail = false ) .
             ' (' .  $aws['speaker'] . ')' );
+//
 
-
+        /*
         // Check if user has requested AWS schedule and has it been approved.
         $request = getTableEntry( 
             'aws_scheduling_request'
@@ -130,8 +129,9 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
 
         if( $request )
             $speaker .= '<br />' . preferenceToHtml( $request );
+         */
 
-        $speakerTable .= '<td>' . $speaker . '</td>';
+        $speakerTable .= '<td>' . $speakerHTML . '</td>';
 
         $pi = getPIOrHost( $aws[ 'speaker' ] );
         $specialization = getSpecialization( $aws[ 'speaker' ], $pi );
@@ -167,6 +167,8 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
 }
 $table .= '</table>';
 echo $table;
+exit( 1 );
+
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );
 

@@ -122,7 +122,8 @@ function doAWSHouseKeeping( )
 function getVenues( $sortby = 'total_events DESC, id' )
 {
     // Sort according to total_events hosted by venue
-    return executeQuery( "SELECT * FROM venues ORDER BY $sortby" );
+    $res = executeQuery( "SELECT * FROM venues ORDER BY $sortby" );
+    return $res;
 }
 
 /* --------------------------------------------------------------------------*/
@@ -1482,10 +1483,11 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
 
 function getTableUniqueIndices( $tableName )
 {
-    return executeQuery( "SELECT DISTINCT CONSTRAINT_NAME
+    $res = executeQuery( "SELECT DISTINCT CONSTRAINT_NAME
         FROM information_schema.TABLE_CONSTRAINTS
         WHERE table_name = '$tableName' AND constraint_type = 'UNIQUE'"
     );
+    return $res;
 }
 
 /**
@@ -1787,16 +1789,18 @@ function getTentativeAWSSchedule( $monday = null )
  */
 function getUpcomingAWS( $monday = null )
 {
-    global $hippoDB;
     if( ! $monday )
-        $whereExpr = 'date > CURDATE( ) ';
+    {
+        $date = dbDate( 'this monday' );
+        $whereExpr = "date >= '$date'";
+    }
     else
     {
-        $monday = dbDate( $monday );
-        $whereExpr = "date = '$monday'";
+        $date = dbDate( $monday );
+        $whereExpr = "date >= '$date'";
     }
-
-    return executeQuery( "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date" );
+    $res = executeQuery( "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date" );
+    return $res;
 }
 
 function getUpcomingAWSById( $id )

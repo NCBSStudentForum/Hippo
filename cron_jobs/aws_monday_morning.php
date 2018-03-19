@@ -1,7 +1,7 @@
 <?php
 require_once 'cron_jobs/helper.php';
 
-if( trueOnGivenDayAndTime( 'this monday', '10:30 am' ) )
+if( trueOnGivenDayAndTime( 'this monday', '11:00 am' ) )
 {
     error_log( "Monday 10amm. Notify about AWS" );
     echo printInfo( "Today is Monday. Send out emails for AWS" );

@@ -1534,3 +1534,31 @@ function splitAtCommonDelimeters( $text, $ext = '')
     $res = preg_split( "/[\s,$ext]+/", $text );
     return $res;
 }
+
+function removeAWSSpeakerFromList( $speaker )
+{
+    $data = array( 'eligible_for_aws' => 'NO', 'login' => $speaker );
+    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data );
+    if( $res )
+    {
+        echo printInfo(
+            "Successfully removed user $speaker from AWS list.
+            Recomputing schedule ... "
+            );
+
+
+        // Send email to speaker.
+        $subject = "Your name has been removed from AWS list";
+        $msg = "<p>Dear " . loginToText( $speaker ) . " </p>";
+        $msg .= "<p>
+            Your name has been removed from the Annual Work Seminar (AWS) roaster.  
+            If this is a mistake, please inform Academic Office.
+            </p>";
+
+        $to = getLoginEmail( $speaker );
+        $res = sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+        if( ! $res )
+            echo printWarning( "Could not notify user" );
+    }
+}
+

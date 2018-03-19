@@ -2,19 +2,8 @@
 
 require_once 'cron_jobs/helper.php';
 
-function changeAWSEligibility( $speaker )
-{
-    echo printInfo( "$speaker is eligible for AWS. removing from list" );
-    $res = updateTable( 'logins', 'login', 'eligible_for_aws'
-        , array( 'login' => $speaker, 'eligible_for_aws' => 'NO' )
-    );
-    if( $res )
-        echo printInfo( "Successfully removed" );
-
-}
-
 /* Every monday, check students who are not eligible for AWS anymore */
-if( trueOnGivenDayAndTime( 'this monday', '16:45' ) )
+if( trueOnGivenDayAndTime( 'this monday', '17:15' ) )
 {
     echo printInfo( 'Monday, removing students who have given PRE_SYNOPSIS SEMINAR and thesis SEMINAR' );
 
@@ -28,7 +17,7 @@ if( trueOnGivenDayAndTime( 'this monday', '16:45' ) )
     {
         $speaker = $aws[ 'speaker' ];
         if( isEligibleForAWS( $speaker ) )
-            changeAWSEligibility( $speaker );
+            removeAWSSpeakerFromList( $speaker );
     }
 
     /* Now removing students with THESIS SEMINAR */
@@ -42,13 +31,26 @@ if( trueOnGivenDayAndTime( 'this monday', '16:45' ) )
         {
             $login = $login[ 'login'];
             if( isEligibleForAWS( $login ) )
-                changeAWSEligibility( $login );
+                removeAWSSpeakerFromList( $login );
         }
 
     }
 
+    // Also cleanup the AWS preferences.
+    $today = dbDate( 'today' );
+    $prefs = getTableEntries( 'aws_scheduling_request'
+        , 'id'
+        , "first_preference < '$today' AND 'second_preference' < '$today' AND status='APPROVED'"
+    );
 
+    foreach( $prefs as $p )
+    {
+        echo printInfo( "Removing preferences " . $p['id'] );
 
+        // Since we don't have expired field.
+        $p[ 'status' ] = 'CANCELLED';
+        updateTable( 'aws_scheduling_request', 'id', 'status', $p );
+    }
 }
 
 ?>

@@ -77,34 +77,11 @@ else if( $_POST[ 'response' ] == 'format_abstract' )
 }
 else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
 {
-    $data = array( 'eligible_for_aws' => 'NO', 'login' => $_POST[ 'speaker' ] );
-    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data );
-    if( $res )
-    {
-        echo printInfo(
-            "Successfully removed user " . $_POST[ 'speaker' ] . " from AWS list.
-            Recomputing schedule ... "
-            );
-
-        // And reschedule AWS entry.
-        rescheduleAWS( );
-
-        // Send email to speaker.
-        $subject = "Your name has been removed from AWS list";
-        $msg = "<p>Dear " . loginToText( $_POST[ 'speaker' ] ) . " </p>";
-        $msg .= "<p>
-            Your name has been removed from the list of potential AWS
-            speaker. If this is a mistake, please write to Academic Office.
-            </p>";
-
-        $to = getLoginEmail( $_POST[ 'speaker' ] );
-        $res = sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
-        if( ! $res )
-            echo printWarning( "Could not notify user" );
-
-        goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
-        exit(1);
-    }
+    $res = removeAWSSpeakerFromList( $_POST[ 'speaker' ] );
+    // And reschedule AWS entry.
+    rescheduleAWS( );
+    goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
+    exit(1);
 }
 
 else if( $_POST[ 'response' ] == 'delete' )

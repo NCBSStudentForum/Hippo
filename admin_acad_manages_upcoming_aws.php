@@ -124,7 +124,7 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
         // Check if user has requested AWS schedule and has it been approved.
         $request = getTableEntry( 
             'aws_scheduling_request'
-            , 'speaker, status'
+            , 'speaker,status'
             , array( 'status' => 'APPROVED', 'speaker' => $aws[ 'speaker' ])
         );
 

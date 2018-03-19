@@ -34,7 +34,6 @@ if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
                 removeAWSSpeakerFromList( $login );
         }
     }
-<<<<<<< HEAD:cron_jobs/cleanup_database.php
 
     // Also cleanup the AWS preferences.
     $today = dbDate( 'today' );
@@ -51,8 +50,6 @@ if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
         $p[ 'status' ] = 'CANCELLED';
         updateTable( 'aws_scheduling_request', 'id', 'status', $p );
     }
-=======
->>>>>>> fac97b966264d5924ccefffaa71ecdaf419dd0c5:cron_jobs/cleanup_aws_list.php
 }
 
 ?>

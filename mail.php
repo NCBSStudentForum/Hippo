@@ -142,6 +142,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     if( file_exists( $archivefile ) )
     {
         echo printWarning( "This email has already been sent. Doing nothing" );
+        echo printWarning( "-> archive file $archivefile " );
         return false;
     }
 

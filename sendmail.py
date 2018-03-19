@@ -53,7 +53,11 @@ def main( args ):
     msg[ 'Subject' ] = subject
     msg[ 'From' ] = fromAddr
 
-    msg.attach( MIMEText( html2other.tomd( body ), 'plain' ) );
+    bodyfile = tempfile.mkstemp( prefix = 'hippo', suffix = '.html' )
+    with open( bodyfile, 'w' ) as f:
+        f.write( body )
+
+    msg.attach( MIMEText( html2other.tomd( bodyfile ), 'plain' ) );
     msg.attach( MIMEText( body, 'html' ) );
 
     # Now attach files Only PDF are allowed.

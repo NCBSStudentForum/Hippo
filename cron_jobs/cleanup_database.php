@@ -3,12 +3,12 @@
 require_once 'cron_jobs/helper.php';
 
 /* Every monday, check students who are not eligible for AWS anymore */
-if( trueOnGivenDayAndTime( 'this monday', '17:15' ) )
+if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
 {
     echo printInfo( 'Monday, removing students who have given PRE_SYNOPSIS SEMINAR and thesis SEMINAR' );
 
     // In last two weeks.
-    $cutoff = strtotime( 'today' ) - 14 * 24 * 2600;
+    $cutoff = dbDate( strtotime( 'today' ) - 14 * 24 * 3600 );
 
     $presynAWS = getTableEntries( 'annual_work_seminars', 'date'
         , "IS_PRESYNOPSIS_SEMINAR='YES' AND date > '$cutoff'" );
@@ -33,8 +33,8 @@ if( trueOnGivenDayAndTime( 'this monday', '17:15' ) )
             if( isEligibleForAWS( $login ) )
                 removeAWSSpeakerFromList( $login );
         }
-
     }
+<<<<<<< HEAD:cron_jobs/cleanup_database.php
 
     // Also cleanup the AWS preferences.
     $today = dbDate( 'today' );
@@ -51,6 +51,8 @@ if( trueOnGivenDayAndTime( 'this monday', '17:15' ) )
         $p[ 'status' ] = 'CANCELLED';
         updateTable( 'aws_scheduling_request', 'id', 'status', $p );
     }
+=======
+>>>>>>> fac97b966264d5924ccefffaa71ecdaf419dd0c5:cron_jobs/cleanup_aws_list.php
 }
 
 ?>

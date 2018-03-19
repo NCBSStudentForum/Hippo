@@ -1106,10 +1106,12 @@ function getLoginEmail( $login )
 
 function getRoles( $user )
 {
+    global $hippoDB;
+
     if( ! trim( $user ) )
         return array( );
 
-    global $hippoDB;
+
     $stmt = $hippoDB->prepare( 'SELECT roles FROM logins WHERE login=:login' );
     $stmt->bindValue( ':login', $user );
     $stmt->execute( );

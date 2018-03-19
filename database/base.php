@@ -30,17 +30,15 @@ class BMVPDO extends PDO
                 "failed to connect to database: ".  $e->getMessage()
             );
             $this->error = $e->getMessage( );
-            echo goBackToPageLink( 'index.php', 0 );
-            exit;
         }
 
     }
 }
 
 // Construct the PDO
-$db = new BMVPDO( "localhost" );
+$hippoDB = new BMVPDO( "localhost" );
 
 // And initiaze the database.
-initialize( $db  );
+initialize( $hippoDB  );
 
 ?>

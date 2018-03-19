@@ -1,8 +1,8 @@
 <?php
 
-include_once 'database/base.php';
-include_once "methods.php";
-include_once 'ldap.php';
+require_once 'database/base.php';
+require_once "methods.php";
+require_once 'ldap.php';
 
 // Option values for event/request.
 $dbChoices = array(
@@ -63,8 +63,6 @@ function getChoicesFromGlobalArray( $choices, $key, $default = 'UNKNOWN', $sorte
 
 function getEventsOfTalkId( $talkId )
 {
-    global $db;
-
     $externalId = getTalkExternalId( $talkId );
 
     $entry = getTableEntry( 'events', 'external_id,status'
@@ -75,7 +73,6 @@ function getEventsOfTalkId( $talkId )
 
 function getBookingRequestOfTalkId( $talkId )
 {
-    global $db;
     $externalId = getTalkExternalId( $talkId );
     $entry = getTableEntry( 'bookmyvenue_requests', 'external_id,status'
         , array( 'external_id' => "$externalId", 'status' => 'PENDING' )
@@ -91,14 +88,9 @@ function getBookingRequestOfTalkId( $talkId )
  */
 function doAWSHouseKeeping( )
 {
-    global $db;
-    $oldAwsOnUpcomingTable = getTableEntries( 'upcoming_aws'
-        , $orderby = 'date'
-        , $where = "status='VALID' AND date < NOW( )"
-        );
-
+    $oldAws = getTableEntries( 'upcoming_aws' , 'date', "status='VALID' AND date < NOW( )");
     $badEntries = array( );
-    foreach( $oldAwsOnUpcomingTable as $aws )
+    foreach( $oldAws as $aws )
     {
         if( strlen( $aws[ 'title' ]) < 1 || strlen( $aws[ 'abstract' ] ) < 1)
         {
@@ -120,20 +112,17 @@ function doAWSHouseKeeping( )
         }
         else
         {
-            array_push( $badEntries, $aws );
-            $html .=  printWarning( "Could not move entry to main AWS list" );
+            $badEntries[] =  $aws;
+            echo printWarning( "Could not move entry to main AWS list" );
         }
-
     }
     return $badEntries;
 }
 
 function getVenues( $sortby = 'total_events DESC, id' )
 {
-    global $db;
     // Sort according to total_events hosted by venue
-    $res = $db->query( "SELECT * FROM venues ORDER BY $sortby" );
-    return fetchEntries( $res );
+    return executeQuery( "SELECT * FROM venues ORDER BY $sortby" );
 }
 
 /* --------------------------------------------------------------------------*/
@@ -147,15 +136,15 @@ function getVenues( $sortby = 'total_events DESC, id' )
 /* ----------------------------------------------------------------------------*/
 function executeQuery( $query )
 {
-    global $db;
-    $res = $db->query( $query );
+    global $hippoDB;
+    $res = $hippoDB->query( $query );
     return fetchEntries( $res );
 }
 
 function executeURlQueries( $query )
 {
-    global $db;
-    $res = $db->query( $query );
+    global $hippoDB;
+    $res = $hippoDB->query( $query );
     return $res;
 }
 
@@ -166,16 +155,14 @@ function getVenuesByType( $type )
 
 function getTableSchema( $tableName )
 {
-    global $db;
-    $stmt = $db->prepare( "DESCRIBE $tableName" );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "DESCRIBE $tableName" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
 
 function getVenuesGroupsByType(  )
 {
-    global $db;
-
     // Sort according to total_events hosted by venue
     $venues = getVenues( );
     $newVenues = Array( );
@@ -192,9 +179,9 @@ function getVenuesGroupsByType(  )
 // Return the row representing venue for given venue id.
 function getVenueById( $venueid )
 {
-    global $db;
+    global $hippoDB;
     $venueid = trim( $venueid );
-    $stmt = $db->prepare( "SELECT * FROM venues WHERE id=:id" );
+    $stmt = $hippoDB->prepare( "SELECT * FROM venues WHERE id=:id" );
     $stmt->bindValue( ':id', $venueid );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
@@ -217,8 +204,8 @@ function getPendingRequestsGroupedByGID( )
 // Get all requests with given status.
 function getRequestsGroupedByGID( $status  )
 {
-    global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'SELECT * FROM bookmyvenue_requests
         WHERE status=:status  GROUP BY gid ORDER BY date,start_time' );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
@@ -228,12 +215,12 @@ function getRequestsGroupedByGID( $status  )
 // Get all events with given status.
 function getEventsByGroupId( $gid, $status = NULL  )
 {
-    global $db;
+    global $hippoDB;
     $query = "SELECT * FROM events WHERE gid=:gid";
     if( $status )
         $query .= " AND status=:status ";
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':gid', $gid );
     if( $status )
         $stmt->bindValue( ':status', $status );
@@ -244,8 +231,8 @@ function getEventsByGroupId( $gid, $status = NULL  )
 //  Get a event of given gid and eid. There is only one such event.
 function getEventsById( $gid, $eid )
 {
-    global $db;
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE gid=:gid AND eid=:eid' );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'SELECT * FROM events WHERE gid=:gid AND eid=:eid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':eid', $eid );
     $stmt->execute( );
@@ -263,8 +250,8 @@ function getEventsById( $gid, $eid )
  */
 function getRequestOfUser( $userid, $status = 'PENDING' )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         'SELECT * FROM bookmyvenue_requests WHERE created_by=:created_by
         AND status=:status AND date >= NOW() - INTERVAL 2 DAY
         GROUP BY gid ORDER BY date,start_time' );
@@ -276,9 +263,9 @@ function getRequestOfUser( $userid, $status = 'PENDING' )
 
 function getEventsOfUser( $userid, $from = 'today', $status = 'VALID' )
 {
-    global $db;
+    global $hippoDB;
     $from = dbDate( $from );
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE created_by=:created_by
+    $stmt = $hippoDB->prepare( 'SELECT * FROM events WHERE created_by=:created_by
         AND date >= :from
         AND status=:status
         GROUP BY gid ORDER BY date,start_time' );
@@ -300,15 +287,10 @@ function getEventsOfUser( $userid, $from = 'today', $status = 'VALID' )
  */
 function getEventsBeteen( $from , $duration )
 {
-    global $db;
     $startDate = dbDate( $from );
     $endDate = dbDate( strtotime( $duration, strtotime( $from ) ) );
-
-    $nowTime = dbTime( 'now' );
-
     $whereExpr = "date >= '$startDate' AND date <= '$endDate'";
     $whereExpr .= " AND status='VALID' ";
-
     return getTableEntries( 'events', 'date,start_time', $whereExpr );
 }
 
@@ -327,8 +309,8 @@ function fetchEntries( $res, $how = PDO::FETCH_ASSOC )
 // Get the request when group id and request id is given.
 function getRequestById( $gid, $rid )
 {
-    global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND rid=:rid' );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND rid=:rid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':rid', $rid );
     $stmt->execute( );
@@ -338,8 +320,8 @@ function getRequestById( $gid, $rid )
 // Return a list of requested with same group id.
 function getRequestByGroupId( $gid )
 {
-    global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid' );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -348,8 +330,8 @@ function getRequestByGroupId( $gid )
 // Return a list of requested with same group id and status
 function getRequestByGroupIdAndStatus( $gid, $status )
 {
-    global $db;
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND status=:status' );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'SELECT * FROM bookmyvenue_requests WHERE gid=:gid AND status=:status' );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':status', $status );
     $stmt->execute( );
@@ -366,8 +348,8 @@ function getRequestByGroupIdAndStatus( $gid, $status )
  */
 function changeRequestStatus( $gid, $rid, $status )
 {
-    global $db;
-    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "UPDATE bookmyvenue_requests SET
         status=:status,last_modified_on=NOW() WHERE gid=:gid AND rid=:rid"
     );
     $stmt->bindValue( ':status', $status );
@@ -386,8 +368,8 @@ function changeRequestStatus( $gid, $rid, $status )
  */
 function changeStatusOfRequests( $gid, $status )
 {
-    global $db;
-    $stmt = $db->prepare( "UPDATE bookmyvenue_requests SET status=:status WHERE gid=:gid" );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "UPDATE bookmyvenue_requests SET status=:status WHERE gid=:gid" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
     return $stmt->execute( );
@@ -395,8 +377,8 @@ function changeStatusOfRequests( $gid, $status )
 
 function changeStatusOfEventGroup( $gid, $user, $status )
 {
-    global $db;
-    $stmt = $db->prepare( "UPDATE events SET status=:status WHERE
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "UPDATE events SET status=:status WHERE
         gid=:gid AND created_by=:created_by" );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':gid', $gid );
@@ -407,8 +389,7 @@ function changeStatusOfEventGroup( $gid, $user, $status )
 function changeStatusOfEvent( $gid, $eid, $user, $status )
 {
     $res = updateTable( 'events', 'gid,eid,created_by', 'status'
-        , array( 'gid' => $gid, 'eid' => $eid, 'status' => $status
-        , 'created_by' => $created_by )
+        , array( 'gid' => $gid, 'eid' => $eid, 'status' => $status, 'created_by' => $user )
         );
     return $res;
 }
@@ -418,9 +399,9 @@ function changeStatusOfEvent( $gid, $eid, $user, $status )
  */
 function getEvents( $from = 'today', $status = 'VALID' )
 {
-    global $db;
+    global $hippoDB;
     $from = dbDate( $from );
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND
+    $stmt = $hippoDB->prepare( "SELECT * FROM events WHERE date >= :date AND
         status=:status ORDER BY date,start_time " );
     $stmt->bindValue( ':date', $from );
     $stmt->bindValue( ':status', $status );
@@ -434,7 +415,7 @@ function getEvents( $from = 'today', $status = 'VALID' )
  */
 function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
 {
-    global $db;
+    global $hippoDB;
     $sortExpr = '';
 
     $sortby = explode( ',', $sortby );
@@ -442,7 +423,7 @@ function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
         $sortExpr = 'ORDER BY ' . implode( ', ', $sortby);
 
     $nowTime = dbTime( $from );
-    $stmt = $db->prepare(
+    $stmt = $hippoDB->prepare(
         "SELECT * FROM events WHERE date >= :date
             AND status=:status GROUP BY gid $sortExpr"
         );
@@ -457,10 +438,10 @@ function getEventsGrouped( $sortby = '', $from = 'today', $status = 'VALID' )
  */
 function getPublicEvents( $from = 'today', $status = 'VALID', $ndays = 1 )
 {
-    global $db;
+    global $hippoDB;
     $from = dbDate( $from );
     $end = dbDate( strtotime( $from . " +$ndays day" ) );
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date >= :date AND
+    $stmt = $hippoDB->prepare( "SELECT * FROM events WHERE date >= :date AND
         date <= :end_date AND
         status=:status AND is_public_event='YES' ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $from );
@@ -480,9 +461,8 @@ function getPublicEvents( $from = 'today', $status = 'VALID', $ndays = 1 )
  */
 function getPublicEventsOnThisDay( $date = 'today', $status = 'VALID' )
 {
-    global $db;
-    $from = date( 'Y-m-d', strtotime( 'today' ));
-    $stmt = $db->prepare( "SELECT * FROM events WHERE date = :date AND
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SELECT * FROM events WHERE date = :date AND
         status=:status AND is_public_event='YES' ORDER BY date,start_time"
         );
     $stmt->bindValue( ':date', $date );
@@ -493,8 +473,8 @@ function getPublicEventsOnThisDay( $date = 'today', $status = 'VALID' )
 
 function getEventsOn( $day, $status = 'VALID')
 {
-    global $db;
-    $stmt = $db->prepare( "SELECT * FROM events
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SELECT * FROM events
         WHERE status=:status AND date = :date ORDER BY date,start_time" );
     $stmt->bindValue( ':date', $day );
     $stmt->bindValue( ':status', $status );
@@ -504,8 +484,8 @@ function getEventsOn( $day, $status = 'VALID')
 
 function getEventsOnThisVenueOnThisday( $venue, $date, $status = 'VALID' )
 {
-    global $db;
-    $stmt = $db->prepare( "SELECT * FROM events
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SELECT * FROM events
         WHERE venue=:venue AND status=:status AND date=:date ORDER
             BY date,start_time" );
     $stmt->bindValue( ':date', $date );
@@ -530,8 +510,8 @@ function getEventsOnThisVenueBetweenTime( $venue, $date
     , $start_time, $end_time
    ,  $status = 'VALID' )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         "SELECT * FROM events
         WHERE venue=:venue AND status=:status AND date=:date AND status='VALID'
         AND ( (start_time < :start_time AND end_time > :start_time )
@@ -551,8 +531,8 @@ function getEventsOnThisVenueBetweenTime( $venue, $date
 
 function getRequestsOnThisVenueOnThisday( $venue, $date, $status = 'PENDING' )
 {
-    global $db;
-    $stmt = $db->prepare( "SELECT * FROM bookmyvenue_requests
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SELECT * FROM bookmyvenue_requests
         WHERE venue=:venue AND status=:status AND date=:date" );
     $stmt->bindValue( ':date', $date );
     $stmt->bindValue( ':status', $status );
@@ -565,8 +545,8 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
     , $start_time, $end_time
     , $status = 'PENDING' )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         "SELECT * FROM bookmyvenue_requests
         WHERE venue=:venue AND status=:status AND date=:date
         AND ( (start_time < :start_time AND end_time > :start_time )
@@ -593,15 +573,15 @@ function getRequestsOnThisVenueBetweenTime( $venue, $date
  */
 function getNumberOfEntries( $tablename, $column = 'id' )
 {
-    global $db;
-    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    global $hippoDB;
+    $res = $hippoDB->query( "SELECT MAX($column) AS $column FROM $tablename" );
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
 function getUniqueFieldValue( $tablename, $column = 'id' )
 {
-    global $db;
-    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    global $hippoDB;
+    $res = $hippoDB->query( "SELECT MAX($column) AS $column FROM $tablename" );
     $res = $res->fetch( PDO::FETCH_ASSOC );
     return __get__( $res, $column , 0 );
 }
@@ -618,8 +598,8 @@ function getUniqueFieldValue( $tablename, $column = 'id' )
 function getUniqueID( $tablename )
 {
     $column = 'id';
-    global $db;
-    $res = $db->query( "SELECT MAX($column) AS $column FROM $tablename" );
+    global $hippoDB;
+    $res = $hippoDB->query( "SELECT MAX($column) AS $column FROM $tablename" );
     $res = $res->fetch( PDO::FETCH_ASSOC );
     return intval( __get__( $res, $column , 0  )) + 1;
 }
@@ -633,14 +613,13 @@ function getUniqueID( $tablename )
  */
 function submitRequest( $request )
 {
-    global $db;
+    global $hippoDB;
     $collision = false;
 
     if( ! array_key_exists( 'user', $_SESSION ) )
     {
         echo printErrorSevere( "Error: I could not determine the name of user" );
-        goToPage( "user.php", 3 );
-        exit;
+        return false;
     }
 
     $request[ 'created_by' ] = $_SESSION[ 'user' ];
@@ -658,7 +637,7 @@ function submitRequest( $request )
     }
 
     $rid = 0;
-    $res = $db->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
+    $res = $hippoDB->query( 'SELECT MAX(gid) AS gid FROM bookmyvenue_requests' );
     $prevGid = $res->fetch( PDO::FETCH_ASSOC);
     $gid = intval( $prevGid['gid'] ) + 1;
     foreach( $days as $day )
@@ -701,8 +680,8 @@ function submitRequest( $request )
 
 function increaseEventHostedByVenueByOne( $venueId )
 {
-    global $db;
-    $stmt = $db->prepare( 'UPDATE venues SET total_events = total_events + 1 WHERE id=:id' );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'UPDATE venues SET total_events = total_events + 1 WHERE id=:id' );
     $stmt->bindValue( ':id', $venueId );
     $res = $stmt->execute( );
     return $res;
@@ -755,7 +734,7 @@ function checkCollision( $request )
 function approveRequest( $gid, $rid )
 {
     $request = getRequestById( $gid, $rid );
-    global $db;
+    global $hippoDB;
 
     $collideWith = checkCollision( $request );
     if( ! $collideWith )
@@ -767,7 +746,7 @@ function approveRequest( $gid, $rid )
         return false;
     }
 
-    $stmt = $db->prepare( 'INSERT INTO events (
+    $stmt = $hippoDB->prepare( 'INSERT INTO events (
         gid, eid, class, external_id, title, description, date, venue, start_time, end_time
         , created_by, last_modified_on
     ) VALUES (
@@ -816,8 +795,8 @@ function actOnRequest( $gid, $rid, $status )
 
 function changeIfEventIsPublic( $gid, $eid, $status )
 {
-    global $db;
-    $stmt = $db->prepare( "UPDATE events SET is_public_event=:status
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "UPDATE events SET is_public_event=:status
         WHERE gid=:gid AND eid=:eid" );
     $stmt->bindValue( ':gid', $gid );
     $stmt->bindValue( ':status', $status );
@@ -832,14 +811,14 @@ function eventsAtThisVenue( $venue, $date, $time )
     $date = trim( $date );
     $time = trim( $time );
 
-    global $db;
+    global $hippoDB;
     // Database reads in ISO format.
     $hDate = dbDate( $date );
     $clockT = date('H:i', $time );
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE
+    $stmt = $hippoDB->prepare( 'SELECT * FROM events WHERE
         status=:status AND date=:date AND
         venue=:venue AND start_time <= :time AND end_time > :time' );
     $stmt->bindValue( ':date', $hDate );
@@ -857,7 +836,7 @@ function requestsForThisVenue( $venue, $date, $time )
     $date = trim( $date );
     $time = trim( $time );
 
-    global $db;
+    global $hippoDB;
     // Database reads in ISO format.
     $hDate = dbDate( $date );
     $clockT = date('H:i', $time );
@@ -865,7 +844,7 @@ function requestsForThisVenue( $venue, $date, $time )
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM bookmyvenue_requests WHERE
+    $stmt = $hippoDB->prepare( 'SELECT * FROM bookmyvenue_requests WHERE
         status=:status
         AND date=:date AND venue=:venue
         AND start_time <= :time AND end_time > :time'
@@ -891,14 +870,14 @@ function publicEvents( $date, $time )
     $date = trim( $date );
     $time = trim( $time );
 
-    global $db;
+    global $hippoDB;
     // Database reads in ISO format.
     $hDate = dbDate( $date );
     $clockT = date('H:i', $time );
 
     // NOTE: When people say 5pm to 7pm they usually don't want to keep 7pm slot
     // booked.
-    $stmt = $db->prepare( 'SELECT * FROM events WHERE
+    $stmt = $hippoDB->prepare( 'SELECT * FROM events WHERE
         date=:date AND start_time <= :time AND end_time > :time' );
     $stmt->bindValue( ':date', $hDate );
     $stmt->bindValue( ':time', $clockT );
@@ -918,11 +897,11 @@ function publicEvents( $date, $time )
  */
 function updateRequestGroup( $gid, $options )
 {
-    global $db;
+    global $hippoDB;
     $editable = Array( "title", "description", "is_public_event" );
     $fields = Array( );
     $placeholder = Array( );
-    foreach( $options as $key => $val )
+    foreach( array_keys($options) as $key )
     {
         if( in_array( $key, $editable ) )
         {
@@ -934,7 +913,7 @@ function updateRequestGroup( $gid, $options )
     $placeholder = implode( ",", $placeholder );
     $query = "UPDATE bookmyvenue_requests SET $placeholder WHERE gid=:gid";
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
 
     foreach( $fields as $f )
         $stmt->bindValue( ":$f", $options[ $f ] );
@@ -945,12 +924,12 @@ function updateRequestGroup( $gid, $options )
 
 function updateEventGroup( $gid, $options )
 {
-    global $db;
     $events = getEventsByGroupId( $gid );
     $results = Array( );
     foreach( $events as $event )
     {
         $res = updateEvent( $gid, $event['eid'], $options );
+        $eid = $event[ 'eid' ];
         if( ! $res )
             echo printWarning( "I could not update sub-event $eid" );
         array_push( $results, $res );
@@ -961,12 +940,12 @@ function updateEventGroup( $gid, $options )
 
 function updateEvent( $gid, $eid, $options )
 {
-    global $db;
+    global $hippoDB;
     $editable = Array( "title", "description", "is_public_event"
         , "status", "class" );
     $fields = Array( );
     $placeholder = Array( );
-    foreach( $options as $key => $val )
+    foreach( array_keys($options) as $key )
     {
         if( in_array( $key, $editable ) )
         {
@@ -978,7 +957,7 @@ function updateEvent( $gid, $eid, $options )
     $placeholder = implode( ",", $placeholder );
     $query = "UPDATE events SET $placeholder WHERE gid=:gid AND eid=:eid";
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
 
     foreach( $fields as $f )
         $stmt->bindValue( ":$f", $options[ $f ] );
@@ -989,9 +968,9 @@ function updateEvent( $gid, $eid, $options )
 }
 
 // Create user if does not exists and fill information form LDAP server.
-function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
+function createUserOrUpdateLogin( $userid, $ldapInfo = Array() )
 {
-    global $db;
+    global $hippoDB;
 
     if( ! $ldapInfo )
         $ldapInfo = @getUserInfoFromLdap( $userid );
@@ -999,7 +978,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     if( $ldapInfo[ 'last_name' ] == 'NA' )
         $ldapInfo[ 'last_name' ] = '';
 
-    $stmt = $db->prepare(
+    $stmt = $hippoDB->prepare(
        "INSERT IGNORE INTO logins
         (id, login, first_name, last_name, email, created_on, institute, laboffice)
             VALUES
@@ -1020,7 +999,7 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
     $stmt->bindValue( ':institute', $institute );
     $stmt->execute( );
 
-    $stmt = $db->prepare( "UPDATE logins SET last_login=NOW() WHERE login=:login" );
+    $stmt = $hippoDB->prepare( "UPDATE logins SET last_login=NOW() WHERE login=:login" );
     $stmt->bindValue( ':login', $userid );
     return $stmt->execute( );
 }
@@ -1032,25 +1011,26 @@ function createUserOrUpdateLogin( $userid, $ldapInfo = Array(), $type = null )
  */
 function getLogins( $status = ''  )
 {
-    global $db;
+    global $hippoDB;
     $where = '';
     if( $status )
         $where = " WHERE status='$status' ";
     $query = "SELECT * FROM logins $where ORDER BY joined_on DESC";
-    $stmt = $db->query( $query );
+    $stmt = $hippoDB->query( $query );
     $stmt->execute( );
     return  fetchEntries( $stmt );
 }
 
 function getLoginIds( )
 {
-    global $db;
-    $stmt = $db->query( 'SELECT login FROM logins' );
+    global $hippoDB;
+    $stmt = $hippoDB->query( 'SELECT login FROM logins' );
     $stmt->execute( );
     $results =  fetchEntries( $stmt );
     $logins = Array();
-    foreach( $results as $key => $val )
-        array_push( $logins, $val['login'] );
+    foreach( array_values($results) as $val )
+        $logins[] = $val['login'];
+
     return $logins;
 }
 
@@ -1063,8 +1043,6 @@ function getLoginIds( )
  */
 function getUserInfo( $user )
 {
-    global $db;
-
     $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
     $title = __get__( $res, 'title', '' );
 
@@ -1093,8 +1071,8 @@ function getLoginInfo( $login_name )
 
 function getLoginByEmail( $email )
 {
-    global $db;
-    $stmt = $db->prepare( "SELECT login FROM logins WHERE email=:email" );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SELECT login FROM logins WHERE email=:email" );
     $stmt->bindValue( ":email", $email );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
@@ -1106,8 +1084,8 @@ function getLoginByEmail( $email )
 
 function getLoginEmail( $login )
 {
-    global $db;
-    $stmt = $db->prepare( "SELECT email FROM logins WHERE login=:login" );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SELECT email FROM logins WHERE login=:login" );
     $stmt->bindValue( ":login", $login );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
@@ -1131,8 +1109,8 @@ function getRoles( $user )
     if( ! trim( $user ) )
         return array( );
 
-    global $db;
-    $stmt = $db->prepare( 'SELECT roles FROM logins WHERE login=:login' );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( 'SELECT roles FROM logins WHERE login=:login' );
     $stmt->bindValue( ':login', $user );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
@@ -1141,11 +1119,11 @@ function getRoles( $user )
 
 function getMyAws( $user )
 {
-    global $db;
+    global $hippoDB;
 
     $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker
         ORDER BY date DESC ";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':speaker', $user );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -1154,24 +1132,23 @@ function getMyAws( $user )
 
 function getMyAwsOn( $user, $date )
 {
-    global $db;
+    global $hippoDB;
 
     $query = "SELECT * FROM annual_work_seminars
         WHERE speaker=:speaker AND date=:date ORDER BY date DESC ";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':speaker', $user );
     $stmt->bindValue( ':date', $date );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
-function getAwsById( $id )
+function getAwsById( $awsID )
 {
-    global $db;
-
+    global $hippoDB;
     $query = "SELECT * FROM annual_work_seminars WHERE id=:id";
-    $stmt = $db->prepare( $query );
-    $stmt->bindValue( ':id', $id );
+    $stmt = $hippoDB->prepare( $query );
+    $stmt->bindValue( ':id', $awsID );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
@@ -1185,10 +1162,10 @@ function getAwsById( $id )
  */
 function getLastAwsOfSpeaker( $speaker )
 {
-    global $db;
+    global $hippoDB;
     $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker
         ORDER BY date DESC LIMIT 1";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':speaker', $speaker );
     $stmt->execute( );
     # Only return the last one.
@@ -1205,10 +1182,10 @@ function getLastAwsOfSpeaker( $speaker )
  */
 function getAwsOfSpeaker( $speaker )
 {
-    global $db;
+    global $hippoDB;
     $query = "SELECT * FROM annual_work_seminars WHERE speaker=:speaker
         ORDER BY date DESC" ;
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':speaker', $speaker );
     $stmt->execute( );
     return fetchEntries( $stmt );
@@ -1216,12 +1193,12 @@ function getAwsOfSpeaker( $speaker )
 
 function getSupervisors( )
 {
-    global $db;
+    global $hippoDB;
     // First get all faculty members
-    $faculty = getFaculty( $status = 'ACTIVE' );
+    $faculty = getFaculty( 'ACTIVE' );
 
     // And then all supervisors.
-    $stmt = $db->query( 'SELECT * FROM supervisors ORDER BY first_name' );
+    $stmt = $hippoDB->query( 'SELECT * FROM supervisors ORDER BY first_name' );
     $stmt->execute( );
     $supervisors = fetchEntries( $stmt );
     foreach( $supervisors as $super )
@@ -1277,9 +1254,9 @@ function whereExpr( $keys, $data )
     *
     * @return
  */
-function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = true )
+function getTableEntries( $tablename, $orderby = '', $where = '' )
 {
-    global $db;
+    global $hippoDB;
     $query = "SELECT * FROM $tablename";
 
     if( is_string( $where) && strlen( $where ) > 0 )
@@ -1290,7 +1267,7 @@ function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = t
         $query .= " ORDER BY $orderby ";
     }
 
-    $res = $db->query( $query );
+    $res = $hippoDB->query( $query );
     $entries = fetchEntries( $res );
 
     return $entries;
@@ -1309,7 +1286,7 @@ function getTableEntries( $tablename, $orderby = '', $where = '', $ascending = t
 /* ----------------------------------------------------------------------------*/
 function getTableEntry( $tablename, $whereKeys, $data )
 {
-    global $db;
+    global $hippoDB;
     if( is_string( $whereKeys ) )
         $whereKeys = explode( ",", $whereKeys );
 
@@ -1321,7 +1298,7 @@ function getTableEntry( $tablename, $whereKeys, $data )
 
     $query = "SELECT * FROM $tablename WHERE $where";
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
 
     foreach( $whereKeys as $key )
         $stmt->bindValue( ":$key", $data[ $key ] );
@@ -1349,7 +1326,7 @@ function getTableEntry( $tablename, $whereKeys, $data )
  */
 function insertIntoTable( $tablename, $keys, $data )
 {
-    global $db;
+    global $hippoDB;
 
     if( is_string( $keys ) )
         $keys = explode( ',', $keys );
@@ -1373,7 +1350,7 @@ function insertIntoTable( $tablename, $keys, $data )
     $values = implode( ",", $values );
 
     $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values )";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
 
     foreach( $cols as $k )
     {
@@ -1399,7 +1376,7 @@ function insertIntoTable( $tablename, $keys, $data )
     if( $res )
     {
         // When created return the id of table else return null;
-        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
+        $stmt = $hippoDB->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
         $stmt->execute( );
         return $stmt->fetch( PDO::FETCH_ASSOC );
     }
@@ -1418,7 +1395,7 @@ function insertIntoTable( $tablename, $keys, $data )
  */
 function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
 {
-    global $db;
+    global $hippoDB;
 
     if( is_string( $keys ) )
         $keys = explode( ',', $keys );
@@ -1458,7 +1435,7 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
     }
 
     $query = "INSERT INTO $tablename ( $keysT ) VALUES ( $values ) $updateExpr";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     foreach( $cols as $k )
     {
         $value = $data[$k];
@@ -1485,7 +1462,7 @@ function insertOrUpdateTable( $tablename, $keys, $updatekeys, $data )
     if( array_key_exists( 'id', $data) && $res )
     {
         // When created return the id of table else return null;
-        $stmt = $db->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
+        $stmt = $hippoDB->query( "SELECT LAST_INSERT_ID() FROM $tablename" );
         $stmt->execute( );
         $res = $stmt->fetch( PDO::FETCH_ASSOC );
         $lastInsertId = intval( __get__($res, 'LAST_INSERT_ID()', 0 ) );
@@ -1520,7 +1497,7 @@ function getTableUniqueIndices( $tableName )
  */
 function deleteFromTable( $tablename, $keys, $data )
 {
-    global $db;
+    global $hippoDB;
 
     if( gettype( $keys ) == "string" )
         $keys = explode( ',', $keys );
@@ -1534,7 +1511,6 @@ function deleteFromTable( $tablename, $keys, $data )
             array_push( $values, ":$k" );
         }
 
-    $keysT = implode( ",", $cols );
     $values = implode( ",", $values );
     $query = "DELETE FROM $tablename WHERE ";
 
@@ -1544,7 +1520,7 @@ function deleteFromTable( $tablename, $keys, $data )
 
     $query .= implode( " AND ", $whereClause );
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     foreach( $cols as $k )
     {
         $value = $data[$k];
@@ -1570,7 +1546,7 @@ function deleteFromTable( $tablename, $keys, $data )
  */
 function updateTable( $tablename, $wherekeys, $keys, $data )
 {
-    global $db;
+    global $hippoDB;
     $query = "UPDATE $tablename SET ";
 
     if( is_string( $wherekeys ) )
@@ -1598,7 +1574,7 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
     $values = implode( ",", $values );
     $query .= " $values WHERE $whereclause";
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     foreach( $cols as $k )
     {
         $value = $data[$k];
@@ -1627,8 +1603,8 @@ function updateTable( $tablename, $wherekeys, $keys, $data )
  */
 function  scheduledAWSInFuture( $speaker )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         "SELECT * FROM upcoming_aws WHERE
         speaker=:speaker AND date > NOW()
         " );
@@ -1646,8 +1622,8 @@ function  scheduledAWSInFuture( $speaker )
  */
 function temporaryAwsSchedule( $speaker )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         "SELECT * FROM aws_temp_schedule WHERE
         speaker=:speaker AND date > NOW()
         " );
@@ -1665,7 +1641,7 @@ function temporaryAwsSchedule( $speaker )
  */
 function getFaculty( $status = '', $order_by = 'first_name' )
 {
-    global $db;
+    global $hippoDB;
     $query = 'SELECT * FROM faculty';
     $whereExpr = " WHERE affiliation != 'OTHER' ";
     if( $status )
@@ -1676,7 +1652,7 @@ function getFaculty( $status = '', $order_by = 'first_name' )
     if( $order_by )
         $query .= " ORDER BY  '$order_by' ";
 
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
 
     if( $status )
         $stmt->bindValue( ':status', $status );
@@ -1695,9 +1671,9 @@ function getFaculty( $status = '', $order_by = 'first_name' )
  */
 function getAwsRequestsByUser( $user, $status = 'PENDING' )
 {
-    global $db;
+    global $hippoDB;
     $query = "SELECT * FROM aws_requests WHERE status=:status AND speaker=:speaker";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':status', $status );
     $stmt->bindValue( ':speaker', $user );
     $stmt->execute( );
@@ -1706,9 +1682,9 @@ function getAwsRequestsByUser( $user, $status = 'PENDING' )
 
 function getAwsRequestById( $id )
 {
-    global $db;
+    global $hippoDB;
     $query = "SELECT * FROM aws_requests WHERE id=:id";
-    $stmt = $db->prepare( $query );
+    $stmt = $hippoDB->prepare( $query );
     $stmt->bindValue( ':id', $id );
     $stmt->execute( );
     return $stmt->fetch( PDO::FETCH_ASSOC );
@@ -1716,16 +1692,16 @@ function getAwsRequestById( $id )
 
 function getPendingAWSRequests( )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM aws_requests WHERE status='PENDING'" );
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM aws_requests WHERE status='PENDING'" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
 
 function getAllAWS( )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM annual_work_seminars ORDER BY date DESC"  );
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM annual_work_seminars ORDER BY date DESC"  );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1739,8 +1715,8 @@ function getAllAWS( )
  */
 function getAWSFromPast( $from  )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM annual_work_seminars
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM annual_work_seminars
         WHERE date >= '$from' ORDER BY date DESC, speaker
     " );
     $stmt->execute( );
@@ -1767,7 +1743,7 @@ function isEligibleForAWS( $speaker )
  */
 function getAWSSpeakers( $sortby = '', $where_extra = '' )
 {
-    global $db;
+    global $hippoDB;
 
     $sortExpr = '';
     if( $sortby )
@@ -1777,7 +1753,7 @@ function getAWSSpeakers( $sortby = '', $where_extra = '' )
     if( $where_extra )
         $whereExpr .= " AND $where_extra";
 
-    $stmt = $db->query( "SELECT * FROM logins WHERE $whereExpr $sortExpr " );
+    $stmt = $hippoDB->query( "SELECT * FROM logins WHERE $whereExpr $sortExpr " );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1789,7 +1765,7 @@ function getAWSSpeakers( $sortby = '', $where_extra = '' )
  */
 function getTentativeAWSSchedule( $monday = null )
 {
-    global $db;
+    global $hippoDB;
 
     $whereExpr = '';
     if( $monday )
@@ -1797,7 +1773,7 @@ function getTentativeAWSSchedule( $monday = null )
         $date = dbDate( $monday );
         $whereExpr = " WHERE date='$date' ";
     }
-    $stmt = $db->query( "SELECT * FROM aws_temp_schedule $whereExpr ORDER BY date" );
+    $stmt = $hippoDB->query( "SELECT * FROM aws_temp_schedule $whereExpr ORDER BY date" );
     $stmt->execute( );
     return fetchEntries( $stmt );
 }
@@ -1809,7 +1785,7 @@ function getTentativeAWSSchedule( $monday = null )
  */
 function getUpcomingAWS( $monday = null )
 {
-    global $db;
+    global $hippoDB;
     if( ! $monday )
         $whereExpr = 'date > CURDATE( ) ';
     else
@@ -1818,7 +1794,7 @@ function getUpcomingAWS( $monday = null )
         $whereExpr = "date = '$monday'";
     }
 
-    $stmt = $db->query(
+    $stmt = $hippoDB->query(
         "SELECT * FROM upcoming_aws WHERE $whereExpr ORDER BY date"
         );
 
@@ -1828,8 +1804,8 @@ function getUpcomingAWS( $monday = null )
 
 function getUpcomingAWSById( $id )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM upcoming_aws WHERE id = $id " );
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM upcoming_aws WHERE id = $id " );
     $stmt->execute( );
     return  $stmt->fetch( PDO::FETCH_ASSOC );
 }
@@ -1853,7 +1829,7 @@ function getUpcomingAWSOfSpeaker( $speaker )
  */
 function acceptScheduleOfAWS( $speaker, $date )
 {
-    global $db;
+    global $hippoDB;
 
     // If date is invalid, return.
     if( strtotime( $date ) < 0  or strtotime( $date ) < strtotime( '-7 day' ) )
@@ -1872,9 +1848,9 @@ function acceptScheduleOfAWS( $speaker, $date )
 
     // Else add to table.
 
-    $db->beginTransaction( );
+    $hippoDB->beginTransaction( );
 
-    $stmt = $db->prepare(
+    $stmt = $hippoDB->prepare(
         'INSERT INTO upcoming_aws ( speaker, date ) VALUES ( :speaker, :date )'
     );
 
@@ -1886,7 +1862,7 @@ function acceptScheduleOfAWS( $speaker, $date )
 
         $res = $stmt->execute( );
         // delete this row from temp table.
-        $stmt = $db->prepare( 'DELETE FROM aws_temp_schedule WHERE
+        $stmt = $hippoDB->prepare( 'DELETE FROM aws_temp_schedule WHERE
             speaker=:speaker AND date=:date
             ' );
         $stmt->bindValue( ':speaker', $speaker );
@@ -1896,7 +1872,7 @@ function acceptScheduleOfAWS( $speaker, $date )
         // If this happens, I must not commit the previous results into table.
         if( ! $res )
         {
-            $db->rollBack( );
+            $hippoDB->rollBack( );
             return False;
         }
 
@@ -1910,14 +1886,14 @@ function acceptScheduleOfAWS( $speaker, $date )
     }
     catch (Exception $e)
     {
-        $db->rollBack( );
+        $hippoDB->rollBack( );
         echo minionEmbarrassed(
             "Failed to insert $speaker, $date into database: " . $e->getMessage()
         );
         return False;
     }
 
-    $db->commit( );
+    $hippoDB->commit( );
     return $awsID;
 }
 
@@ -1980,8 +1956,8 @@ function queryAWS( $query )
         return array( );
     }
 
-    global $db;
-    $stmt = $db->query( "SELECT * FROM annual_work_seminars
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM annual_work_seminars
         WHERE LOWER(abstract) LIKE LOWER('%$query%')"
     );
     $stmt->execute( );
@@ -1998,8 +1974,8 @@ function queryAWS( $query )
  */
 function clearUpcomingAWS( $speaker, $date )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         "DELETE FROM upcoming_aws WHERE speaker=:speaker AND date=:date"
     );
 
@@ -2018,8 +1994,8 @@ function clearUpcomingAWS( $speaker, $date )
  */
 function deleteAWSEntry( $speaker, $date )
 {
-    global $db;
-    $stmt = $db->prepare(
+    global $hippoDB;
+    $stmt = $hippoDB->prepare(
         "DELETE FROM annual_work_seminars WHERE speaker=:speaker AND date=:date"
     );
     $stmt->bindValue( ':speaker', $speaker );
@@ -2029,10 +2005,10 @@ function deleteAWSEntry( $speaker, $date )
 
 function getHolidays( $from = NULL )
 {
-    global $db;
+    global $hippoDB;
     if( ! $from )
         $from = date( 'Y-m-d', strtotime( 'today' ) );
-    $stmt = $db->query( "SELECT * FROM holidays WHERE date >= '$from' ORDER BY date" );
+    $stmt = $hippoDB->query( "SELECT * FROM holidays WHERE date >= '$from' ORDER BY date" );
     return fetchEntries( $stmt );
 }
 
@@ -2043,22 +2019,22 @@ function getHolidays( $from = NULL )
  */
 function getEmailTemplates( )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM email_templates" );
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM email_templates" );
     return fetchEntries( $stmt );
 }
 
 function getEmailTemplateById( $id )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM email_templates where id='$id'" );
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM email_templates where id='$id'" );
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
 function getEmailsByStatus( $status = 'PENDING' )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM emails where status = '$status'
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM emails where status = '$status'
         ORDER BY when_to_send DESC
         " );
     return fetchEntries( $stmt );
@@ -2066,8 +2042,8 @@ function getEmailsByStatus( $status = 'PENDING' )
 
 function getEmailById( $id )
 {
-    global $db;
-    $stmt = $db->query( "SELECT * FROM emails where id = '$id'" );
+    global $hippoDB;
+    $stmt = $hippoDB->query( "SELECT * FROM emails where id = '$id'" );
     return $stmt->fetch( PDO::FETCH_ASSOC );
 }
 
@@ -2098,18 +2074,18 @@ function getEmailByName( $name )
 
 function getUpcomingEmails( $from = null )
 {
-    global $db;
+    global $hippoDB;
     if( ! $from )
         $from = dbDateTime( strtotime( 'today' ) );
 
-    $stmt = $db->query( "SELECT *k FROM emails where when_to_send>='$from'" );
+    $stmt = $hippoDB->query( "SELECT *k FROM emails where when_to_send>='$from'" );
     return fetchEntries( $stmt );
 }
 
 function getSpeakers( )
 {
-    global $db;
-    $res = $db->query( 'SELECT * FROM speakers' );
+    global $hippoDB;
+    $res = $hippoDB->query( 'SELECT * FROM speakers' );
     return fetchEntries( $res );
 }
 
@@ -2122,9 +2098,9 @@ function getSpeakers( )
  */
 function addNewTalk( $data )
 {
-    global $db;
+    global $hippoDB;
     // Get the max id
-    $res = $db->query( 'SELECT MAX(id) AS id FROM talks' );
+    $res = $hippoDB->query( 'SELECT MAX(id) AS id FROM talks' );
     $maxid = $res->fetch( PDO::FETCH_ASSOC);
     $id = intval( $maxid['id'] ) + 1;
 
@@ -2196,8 +2172,8 @@ function getSemesterCourses( $year, $sem )
         $eDate = dbDate( strtotime( "$year-12-31" )  );
     }
 
-    global $db;
-    $res = $db->query( "SELECT * FROM courses WHERE
+    global $hippoDB;
+    $res = $hippoDB->query( "SELECT * FROM courses WHERE
                     start_date >= '$sDate' AND end_date <= '$eDate' " );
 
     return fetchEntries( $res );
@@ -2367,12 +2343,12 @@ function getMyCourses( $sem, $year, $user  )
  */
 function getActiveRecurrentEvents( $day )
 {
-    global $db;
+    global $hippoDB;
 
     $from = dbDate( $day );
 
     // We get gid of events which are still valid.
-    $res = $db->query( "SELECT gid FROM events WHERE
+    $res = $hippoDB->query( "SELECT gid FROM events WHERE
                 date >= '$from' AND status='VALID' ORDER BY date"
             );
     $gids = fetchEntries( $res );
@@ -2403,18 +2379,18 @@ function getActiveRecurrentEvents( $day )
  */
 function getLoginByName( $name )
 {
-    global $db;
+    global $hippoDB;
     $name = explode( ' ', $name );
     $fname = $name[ 0 ];
     $lname = end( $name );
-    $res = $db->query( "SELECT * FROM logins WHERE
+    $res = $hippoDB->query( "SELECT * FROM logins WHERE
         first_name='$fname' AND last_name='$lname'" );
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
 function getSpeakerByName( $name )
 {
-    global $db;
+    global $hippoDB;
 
     $name = splitName( $name );
     $fname = $name[ 'first_name' ];
@@ -2430,7 +2406,7 @@ function getSpeakerByName( $name )
         $where[] = "middle_name='$mname'";
     $whereExpr = implode( ' AND ', $where );
 
-    $res = $db->query( "SELECT * FROM speakers WHERE $whereExpr " );
+    $res = $hippoDB->query( "SELECT * FROM speakers WHERE $whereExpr " );
     return $res->fetch( PDO::FETCH_ASSOC );
 }
 
@@ -2441,7 +2417,7 @@ function getSpeakerByID( $id )
 
 function getWeeklyEventByClass( $classes )
 {
-    global $db;
+    global $hippoDB;
 
     $classes = explode( ',', $classes );
     $where = array( );
@@ -2453,7 +2429,7 @@ function getWeeklyEventByClass( $classes )
     $today = dbDate( 'today' );
     $query = "SELECT * FROM events WHERE
                 ( $whereExp ) AND status='VALID' AND date > '$today' GROUP BY gid";
-    $res = $db->query( $query );
+    $res = $hippoDB->query( $query );
     $entries = fetchEntries( $res );
 
     // Add which day these events happening.
@@ -2530,7 +2506,7 @@ function getOccupiedSlots( $year = null, $sem = null )
     if( ! $sem )
         $sem = getCurrentSemester( );
 
-    $res = $db->query(
+    $res = $hippoDB->query(
         "SELECT slot FROM courses WHERE year='$year' AND semester='$sem'"
     );
 
@@ -2544,7 +2520,7 @@ function getOccupiedSlots( $year = null, $sem = null )
 
 function getRunningCoursesOnThisVenue( $venue, $date )
 {
-    global $db;
+    global $hippoDB;
 
     $year = getYear( $date );
     $sem = getSemester( $date );
@@ -2558,7 +2534,7 @@ function getRunningCoursesOnThisVenue( $venue, $date )
 
 function getRunningCoursesOnTheseSlotTiles( $date, $tile )
 {
-    global $db;
+    global $hippoDB;
 
     $year = getCurrentYear( );
     $sem = getCurrentSemester(  );
@@ -2624,7 +2600,7 @@ function runningCoursesOnThisVenueSlot( $venue, $date, $startTime, $endTime )
 
 function getSlotInfo( $id, $ignore = '' )
 {
-    global $db;
+    global $hippoDB;
 
     $ignore = str_replace( ' ', ',', $ignore );
     $ignoreTiles = explode( ',', $ignore );
@@ -2654,7 +2630,7 @@ function getSlotInfo( $id, $ignore = '' )
  */
 function getCourseSlot( $cid )
 {
-    global $db;
+    global $hippoDB;
     $slot = getTableEntry( 'courses', 'slot', "course_id='$cid'" );
     return $slots[ 'slot' ];
 }
@@ -2759,8 +2735,8 @@ function totalClassEvents( )
 /* ----------------------------------------------------------------------------*/
 function getTableColumnTypes( $tableName, $columnName )
 {
-    global $db;
-    $stmt = $db->prepare( "SHOW COLUMNS FROM $tableName LIKE '$columnName'" );
+    global $hippoDB;
+    $stmt = $hippoDB->prepare( "SHOW COLUMNS FROM $tableName LIKE '$columnName'" );
     $stmt->execute( );
     $column = $stmt->fetch( PDO::FETCH_ASSOC );
     $type = $column[ "Type" ];
@@ -2784,7 +2760,7 @@ function getTableColumnTypes( $tableName, $columnName )
 function getPIOrHost( $login )
 {
     // A. Search in table logins.
-    global $db;
+    global $hippoDB;
     $row = getTableEntry( 'logins', "login", array( 'login' => $login ) );
     if( __get__($row, 'pi_or_host', '' ) )
         return $row[ 'pi_or_host' ];
@@ -2839,8 +2815,8 @@ function getCoursesAtThisVenueSlotBetweenDates( $venue, $slot, $start, $end )
 /* ----------------------------------------------------------------------------*/
 function getAllSpecialization( )
 {
-    global $db;
-    $res = $db->query( 'SELECT DISTINCT(specialization) FROM faculty' );
+    global $hippoDB;
+    $res = $hippoDB->query( 'SELECT DISTINCT(specialization) FROM faculty' );
     return fetchEntries( $res );
 }
 
@@ -2855,16 +2831,16 @@ function getAllSpecialization( )
 /* ----------------------------------------------------------------------------*/
 function getLoginSpecialization( $login )
 {
-    global $db;
-    $res = $db->query( "SELECT specialization FROM logins WHERE login='$login'");
+    global $hippoDB;
+    $res = $hippoDB->query( "SELECT specialization FROM logins WHERE login='$login'");
     $res = $res->fetch( PDO::FETCH_ASSOC );
     return trim( $res[ 'specialization' ] );
 }
 
 function getFacultySpecialization( $email )
 {
-    global $db;
-    $res = $db->query( "SELECT specialization FROM faculty WHERE email='$email'");
+    global $hippoDB;
+    $res = $hippoDB->query( "SELECT specialization FROM faculty WHERE email='$email'");
     $res = $res->fetch( PDO::FETCH_ASSOC );
     return trim( $res[ 'specialization' ] );
 }

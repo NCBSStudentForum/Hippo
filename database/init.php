@@ -1,14 +1,8 @@
 <?php
 
-/**
-    * @brief Create all tables.
-    *
-    * @return
- */
-
-function initialize( $db  )
+function initialize( $hippoDB  )
 {
-    $res = $db->query(
+    $res = $hippoDB->query(
         'CREATE TABLE IF NOT EXISTS holidays (
             date DATE NOT NULL PRIMARY KEY
             , description VARCHAR(100) NOT NULL
@@ -17,7 +11,7 @@ function initialize( $db  )
         ' );
 
     // Configuration
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS config (
             id VARCHAR(100) PRIMARY KEY
             , value VARCHAR(1000) NOT NULL
@@ -27,7 +21,7 @@ function initialize( $db  )
         );
 
     // Since deleting is allowed from speaker, id should not AUTO_INCREMENT
-    $res = $db->query(
+    $res = $hippoDB->query(
         'CREATE TABLE IF NOT EXISTS speakers
         (   id INT NOT NULL PRIMARY KEY
             , honorific ENUM( "Dr", "Prof", "Mr", "Ms" ) DEFAULT "Dr"
@@ -43,7 +37,7 @@ function initialize( $db  )
         )' );
 
     // Other tables.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS logins (
             id VARCHAR( 200 )
             , login VARCHAR(100)
@@ -74,7 +68,7 @@ function initialize( $db  )
             , PRIMARY KEY (login))"
         );
 
-    $res = $db->query(
+    $res = $hippoDB->query(
         'CREATE TABLE IF NOT EXISTS talks
         -- id should not be auto_increment.
         ( id INT NOT NULL
@@ -98,7 +92,7 @@ function initialize( $db  )
         )' );
 
     // This table holds the email template.
-    $res = $db->query(
+    $res = $hippoDB->query(
         'CREATE TABLE IF NOT EXISTS email_templates
         ( id VARCHAR(100) NOT NULL
         , when_to_send VARCHAR(200)
@@ -108,7 +102,7 @@ function initialize( $db  )
         );
 
     // Save the emails here. A bot should send these emails.
-    $res = $db->query(
+    $res = $hippoDB->query(
         'CREATE TABLE IF NOT EXISTS emails
         ( id INT NOT NULL AUTO_INCREMENT
             , recipients VARCHAR(1000) NOT NULL
@@ -122,7 +116,7 @@ function initialize( $db  )
             , PRIMARY KEY (id) )'
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS bookmyvenue_requests (
             gid INT NOT NULL
             , rid INT NOT NULL
@@ -145,7 +139,7 @@ function initialize( $db  )
             , UNIQUE KEY (gid,rid,external_id)
             )
            " );
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         -- venues must created before events because events refer to venues key as
         -- foreign key.
         CREATE TABLE IF NOT EXISTS venues (
@@ -167,7 +161,7 @@ function initialize( $db  )
         );
 
     // All events are put on this table.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS events (
             -- Sub event will be parent.children format.
             gid INT NOT NULL -- This is group id of events.
@@ -198,7 +192,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS supervisors (
             email VARCHAR(200) PRIMARY KEY NOT NULL
             , first_name VARCHAR( 200 ) NOT NULL
@@ -208,7 +202,7 @@ function initialize( $db  )
             , url VARCHAR(300) ) "
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS faculty (
             email VARCHAR(200) PRIMARY KEY NOT NULL
             , first_name VARCHAR( 200 ) NOT NULL
@@ -226,7 +220,7 @@ function initialize( $db  )
 
     // This table keeps the archive. We only move complete AWS entry in to this
     // table. Ideally this should not be touched manually.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS annual_work_seminars (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
             , speaker VARCHAR(200) NOT NULL -- user
@@ -247,7 +241,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS upcoming_aws (
             id INT AUTO_INCREMENT PRIMARY KEY
             , speaker VARCHAR(200) NOT NULL -- user
@@ -269,7 +263,7 @@ function initialize( $db  )
             , UNIQUE (speaker, date) )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS aws_requests (
             id INT AUTO_INCREMENT PRIMARY KEY
             , speaker VARCHAR(200) NOT NULL -- user
@@ -292,7 +286,7 @@ function initialize( $db  )
 
     // This table keeps request for scheduling AWS. Do not allow deleting a
     // request. It can be rejected or marked expired.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS aws_scheduling_request (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
             , created_on DATETIME
@@ -305,7 +299,7 @@ function initialize( $db  )
         );
 
     // Generic table for making some task appear in some time interval.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS conditional_tasks (
             id VARCHAR(50) PRIMARY KEY NOT NULL
             , start_date DATE NOT NULL
@@ -316,12 +310,12 @@ function initialize( $db  )
         );
     // This entry keeps track if course registraction should be open/closed for
     // current semester.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         INSERT IGNORE INTO conditional_tasks (id) VALUES ('COURSE_REGISTRATION')
         ");
 
     // Slots
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS slots (
             id VARCHAR(4) NOT NULL
             , groupid INT NOT NULL
@@ -334,7 +328,7 @@ function initialize( $db  )
         );
 
     // list of courses.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS courses_metadata  (
             id VARCHAR(8) NOT NULL PRIMARY KEY
             , credits INT NOT NULL DEFAULT 3
@@ -352,7 +346,7 @@ function initialize( $db  )
         ");
 
     // Instance of running courses.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS courses (
              -- Combination of course code, semester and year
             id VARCHAR(30) PRIMARY KEY
@@ -371,7 +365,7 @@ function initialize( $db  )
 
 
     // Timetable
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS course_timetable  (
             course VARCHAR(20) NOT NULL
             , start_date DATE NOT NULL
@@ -382,7 +376,7 @@ function initialize( $db  )
         );
 
     // course registration.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         create TABLE IF NOT EXISTS course_registration  (
              student_id VARCHAR(50) NOT NULL
             , semester ENUM ( 'AUTUMN', 'SPRING' ) NOT NULL
@@ -400,7 +394,7 @@ function initialize( $db  )
         );
 
     // DEPRECATED: TOLET.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS apartments (
             id INT PRIMARY KEY
             , type ENUM( 'SHARE', 'SINGLE', '1BHK', '2BHK', '3BHK', '3+BHK' )
@@ -419,7 +413,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS apartment_comments (
                 id INT PRIMARY KEY AUTO_INCREMENT
                 , login VARCHAR(20)
@@ -429,7 +423,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS alerts (
             login VARCHAR(50) NOT NULL
             , on_table VARCHAR(50) NOT NULL
@@ -441,7 +435,7 @@ function initialize( $db  )
 
 
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS upcoming_course_schedule (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
             , course_id VARCHAR(100) NOT NULL
@@ -457,7 +451,7 @@ function initialize( $db  )
         );
 
     // This table keep journal club subscription
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS journal_clubs (
             id VARCHAR(100) NOT NULL PRIMARY KEY
             , title VARCHAR(200) NOT NULL
@@ -470,7 +464,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS jc_subscriptions (
             login VARCHAR(100) NOT NULL
             , jc_id VARCHAR(100) NOT NULL
@@ -481,7 +475,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS jc_presentations (
             id INT NOT NULL PRIMARY KEY
             , jc_id VARCHAR(100) NOT NULL
@@ -497,7 +491,7 @@ function initialize( $db  )
         );
 
     // Not put many contraints.
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS jc_requests (
             id INT NOT NULL PRIMARY KEY
             , jc_id VARCHAR(100) NOT NULL
@@ -511,7 +505,7 @@ function initialize( $db  )
             )"
         );
 
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS votes (
             id VARCHAR(50) NOT NULL  -- table.id
             , voter VARCHAR(20) NOT NULL
@@ -522,7 +516,7 @@ function initialize( $db  )
         );
 
     // inventroy
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS inventory (
             id INT PRIMARY KEY
             , common_name VARCHAR(50) NOT NULL
@@ -539,7 +533,7 @@ function initialize( $db  )
         );
 
     // Clickable queries
-    $res = $db->query( "
+    $res = $hippoDB->query( "
         CREATE TABLE IF NOT EXISTS queries (
             id INT PRIMARY KEY
             , external_id VARCHAR(50) DEFAULT 'NONE.-1' -- associated table.id in some other table

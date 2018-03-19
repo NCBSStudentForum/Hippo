@@ -48,7 +48,7 @@ def main( args ):
         f.write( body )
 
     msg.set_content( html2other.tomd( bodyfile ) )
-    msg.add_alternative( body, subtyle='html' )
+    msg.add_alternative( body, subtype='html' )
 
     # Now attach files Only PDF are allowed.
     for attach in args.attach:

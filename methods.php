@@ -741,7 +741,7 @@ function rescheduleAWS( $method = 'reschedule_group_greedy' )
         $scriptPath = __DIR__ . '/schedule_aws.py';
 
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
-    $command = "timeout 60 ./$scriptPath";
+    $command = "timeout 60 $scriptPath";
     exec( $command, $output, $return );
     return $output;
 }

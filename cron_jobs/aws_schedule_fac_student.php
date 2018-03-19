@@ -93,7 +93,7 @@ if( trueOnGivenDayAndTime( 'this monday', '11:30' ) )
         $res = acceptScheduleOfAWS( $speaker, $date );
         if( $res )
         {
-            echo printInfo( "Successfully assigned" );
+            echo printInfo( "Successfully assigned $speaker for $date" );
             $res = notifyUserAboutUpcomingAWS( $speaker, $date );
         }
     }

@@ -32,6 +32,7 @@ def tomd( htmlfile ):
     # This function is also used by sendemail.py file.
     with open( htmlfile ) as f:
         msg = f.read( )
+
     msg = fix( msg )
     # remove <div class="strip_from_md"> </div>
     pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
@@ -45,12 +46,8 @@ def tomd( htmlfile ):
     txtfile = '%s.txt' % htmlfile
     with open( htmlfile, 'w' ) as f:
         f.write( msg )
-
     _cmd( 'pandoc -t plain -o %s %s' % (txtfile, htmlfile) )
-    with open( txtfile ) as f:
-        return f.read( )
-
-    return msg
+    return msg, txtfile.strip()
 
 def fixInlineImage( msg ):
     """Convert inline images to given format and change the includegraphics text
@@ -65,7 +62,7 @@ def fixInlineImage( msg ):
         outfmt = m.group( 1 )
         data = m.group( 2 )
         fp = tempfile.NamedTemporaryFile( delete = False, suffix='.'+outfmt )
-        fp.write( base64.b64decode( data ) )
+        fp.write( data )
         fp.close( )
         # Replace the inline image with file name.
         msg = msg.replace( m.group(0), "{%s}" % fp.name )
@@ -85,32 +82,25 @@ def toTex( infile ):
         with open( outfile ) as f:
             msg = fixInlineImage( f.read( ) )
     else:
-        msg = "Could not covert to TeX";
-    return msg
+        with open( outfile, 'w' ) as f:
+            f.write( "Could not covert to TeX" );
+    return outfile
 
 def htmlfile2md( filename ):
-    md = tomd( filename )
-    # Style ect.
-    pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )
-    md = pat.sub( '', md )
-    md = md.replace( '\\', '' )
-    return md
+    md, mdfile = tomd( filename )
+    return mdfile
 
 def main( infile, outfmt ):
     # Print is neccessary since we are reading stdout in PHP.
+    # Force proper encoding
     if outfmt in [ 'md', 'markdown', 'text', 'txt' ]:
-        md = htmlfile2md( infile )
-        md = md.replace( '\\', '' )
-        print( md, file=sys.stdout )
-        return md
+        mdfile = htmlfile2md( infile )
+        print( mdfile )
+        return mdfile
     elif outfmt == 'tex':
-        print( toTex( infile ) )
-        return toTex( infile )
-    elif outfmt == "html2text":
-        with open( infile, 'r' ) as f:
-            res = html2text.html2text( fix( f.read( ) ) )
-            print( res )
-            return res
+        texfile = toTex( infile ) 
+        print( texfile )
+        return texfile
 
 if __name__ == '__main__':
     infile = sys.argv[1]

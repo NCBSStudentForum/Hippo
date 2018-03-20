@@ -27,6 +27,20 @@ function whoAmI( )
     return $_SESSION[ 'user' ];
 }
 
+// Form HERE: https://stackoverflow.com/a/25879953/180512://stackoverflow.com/a/25879953/1805129
+function hippo_shell_exec($cmd, &$stdout=null, &$stderr=null)
+{
+    $proc = proc_open($cmd,[
+        1 => ['pipe','w'],
+        2 => ['pipe','w'],
+    ],$pipes);
+    $stdout = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[2]);
+    return proc_close($proc);
+}
+
 function authenticate( $ldap, $pass )
 {
     $auth = null;
@@ -746,7 +760,7 @@ function rescheduleAWS( $method = 'reschedule_group_greedy' )
     return $output;
 }
 
-function html2Markdown( $html, $strip_inline_image = false )
+function html2Markdown( $html, $strip_inline_image = false ) : string
 {
     if( $strip_inline_image )
     {
@@ -754,16 +768,17 @@ function html2Markdown( $html, $strip_inline_image = false )
         $html = preg_replace( '/<img[^>]+\>/i', '', $html );
     }
 
-    $outfile = '/tmp/_html.html';
-
+    $outfile = tempnam( "/tmp", "HIPPO" );
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
         $cmd = __DIR__ . "/html2other.py $outfile md ";
         echo printInfo( "Executing $cmd" );
-        $md = exec( $cmd, $output, $return );
-        var_dump( $md, $output, $return );
-        echo "<tt> Content: $md </tt>";
+        hippo_shell_exec( $cmd, $md, $stderr );
+        if( $stderr )
+            echo printErrorSevere( "Error was $stderr" );
+
+        echo "<tt> $md </tt>";
         return $md;
     }
     return $html;

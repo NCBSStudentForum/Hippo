@@ -54,7 +54,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
 
     for( $s=0; $s < $info['count']; $s++)
     {
-        ei = $info[$s];
+        $i = $info[$s];
 
         //var_dump( $i );
         $laboffice = __get__( $i, 'profilelaboffice', array( 'NA') );

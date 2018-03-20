@@ -28,8 +28,7 @@ foreach( $speakers as $x )
     if( $x[ 'email' ] )
         $speakersIds[] = $x[ 'email' ];
 
-$faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
-
+// $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
 // $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 
 ?>
@@ -105,8 +104,6 @@ echo '<td class="db_table_fieldname">Speaker picture</td><td>';
 echo '<input type="file" name="picture" id="picture" value="" />';
 echo '</td></tr></table>';
 
-exit( );
-
 echo dbTableToHTMLTable( 'speakers', $speaker
     , 'honorific,email,homepage,first_name:required,middle_name,last_name'
         . ',designation,department,institute:required'
@@ -150,8 +147,7 @@ echo '<tr>
         <td><input name="end_time" class="timepicker" type=\"time\" ></td>
     </tr>';
 echo "</table>";
-echo '<button class="submit" title="Submit talk"
-    name="response" value="submit">Register (and Book)</button>"';
+echo '<button class="submit" title="Submit talk" name="response" value="submit">Register (and Book)</button>';
 echo '</form>';
 
 echo "<br/><br/>";

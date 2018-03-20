@@ -32,11 +32,11 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     // Search on all ports.
     $info = array( 'count' => 0 );
 
-    if( 0 == serviceping( $ldap_ip, $port, 2 ) )
-    {
-        error_log( "Could not connect to $ldap_ip : $port . Timeout ... " );
-        return NULL;
-    }
+    // if( 0 == serviceping( $ldap_ip, $port, 2 ) )
+    // {
+        // error_log( "Could not connect to $ldap_ip : $port . Timeout ... " );
+        // return NULL;
+    // }
 
     $ds = @ldap_connect($ldap_ip, $port );
 
@@ -89,6 +89,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
                 , 'is_active' => $active
             );
     }
+
 
     if( count( $result ) > 0 )
         return $result[0];

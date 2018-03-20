@@ -1154,16 +1154,13 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
     if( ! $login )
         return '';
 
-    if( is_array( $login ) )
-        $login = $login['login'];
-
     // Find email in text. Sometimes people write the whole name with email. So 
     // stupid.
-    if( __substr__( '@', $login) && ! filter_var( $login, FILTER_VALIDATE_EMAIL ) )
+    if( __substr__( '@', $login) )
     {
-        // echo printWarning( "Not a valid email: $login" );
         $email = extract_emails_from( $login );
         $login = explode( '@', $email )[0];
+        // echo printWarning( "Found email $login. Extracted $email -> $login" );
     }
 
 
@@ -1180,10 +1177,11 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
     else
         $user = $login;
 
-    /*
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
-        $email = __get__( $user, 'email', '' );
+        if( ! $email )
+            $email = __get__( $user, 'email', '' );
+
         if( $email )
         {
             $ldap = getUserInfoFromLdap( $email );
@@ -1191,7 +1189,6 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
                 $user = array_merge( $user, $ldap );
         }
     }
-    */
 
     if( is_bool( $user ) and is_string( $login ) )
         return $login;

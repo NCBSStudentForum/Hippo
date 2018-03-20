@@ -50,8 +50,8 @@ def main( args ):
     # Read md file and get the data.
     html, mdfile = html2other.tomd( bodyfile )
     md = html
-    with open( mdfile, 'r' ) as f:
-        md = f.read( )
+    with open( mdfile, 'rb' ) as f:
+        md = f.read( ).decode( 'utf-8' )
     msg.set_content( md )
     msg.add_alternative( body, subtype='html' )
 

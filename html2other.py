@@ -101,7 +101,7 @@ def main( infile, outfmt ):
     if outfmt in [ 'md', 'markdown', 'text', 'txt' ]:
         md = htmlfile2md( infile )
         md = md.replace( '\\', '' )
-        print( md )
+        print( md, file=sys.stdout )
         return md
     elif outfmt == 'tex':
         print( toTex( infile ) )

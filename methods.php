@@ -754,14 +754,16 @@ function html2Markdown( $html, $strip_inline_image = false )
         $html = preg_replace( '/<img[^>]+\>/i', '', $html );
     }
 
-    $outfile = __DIR__ . '/data/_html.html';
+    $outfile = '/tmp/_html.html';
 
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
         $cmd = __DIR__ . "/html2other.py $outfile md ";
-        $md = `$cmd`;
-        unlink( $outfile );
+        echo printInfo( "Executing $cmd" );
+        $md = exec( $cmd, $output, $return );
+        var_dump( $md, $output, $return );
+        echo "<tt> Content: $md </tt>";
         return $md;
     }
     return $html;

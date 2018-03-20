@@ -1179,7 +1179,7 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
                 $user = array_merge( $user, $ldap );
         }
     }
-     */
+    */
 
     if( is_bool( $user ) and is_string( $login ) )
         return $login;

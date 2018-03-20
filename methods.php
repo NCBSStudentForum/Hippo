@@ -776,9 +776,10 @@ function html2Markdown( $html, $strip_inline_image = false ) : string
         echo printInfo( "Executing $cmd" );
         hippo_shell_exec( $cmd, $md, $stderr );
         if( $stderr )
-            echo printErrorSevere( "Error was $stderr" );
-
-        echo "<tt> $md </tt>";
+        {
+            echo printErrorSevere( "Error: $stderr" );
+            return false;
+        }
         return $md;
     }
     return $html;

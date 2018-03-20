@@ -171,17 +171,22 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
             $cmd .= " -a \"$f\" ";
     }
 
-    //echo ( "<tt>Executing $cmd </tt>" );
-    $out = `$cmd`;
+    hippo_shell_exec( $cmd, $out, $stderr );
+    if(  $stderr )
+    {
+        echo printWarning( "Failed to send email. Error $stderr" );
+        return false;
+
+    }
 
     error_log( "<pre> $cmd </pre>" );
     error_log( '... $out' );
     error_log( "Saving the mail in archive" . $archivefile );
 
+
     // generate md5 of email. And store it in archive.
     file_put_contents( $archivefile, "SENT" );
     unlink( $msgfile );
-
     echo printInfo( "Email is sent! <br />" );
     return true;
 }

@@ -36,8 +36,7 @@ echo '<table class="tasks">
     <tr>
       <td>
         <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
-        <a class="clickable" href="admin_acad_manages_upcoming_aws.php">
-        Manage upcoming AWSes</a>
+        <a class="clickable" href="admin_acad_manages_upcoming_aws.php">Manage upcoming AWSes</a>
         </td>
         <td> <a class="clickable" href="admin_acad_manages_scheduling_request.php">
             Manage ' . count( $pendingScheduleRequest ) .

@@ -117,9 +117,7 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
 
         $speakerHTML = smallCaps( loginToText( $aws['speaker'], $withEmail = false ) .
             ' (' .  $aws['speaker'] . ')' );
-//
 
-        /*
         // Check if user has requested AWS schedule and has it been approved.
         $request = getTableEntry( 
             'aws_scheduling_request'
@@ -128,8 +126,7 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
         );
 
         if( $request )
-            $speaker .= '<br />' . preferenceToHtml( $request );
-         */
+            $speakerHTML .= '<br />' . preferenceToHtml( $request );
 
         $speakerTable .= '<td>' . $speakerHTML . '</td>';
 
@@ -167,7 +164,6 @@ foreach( $awsGroupedByDate as $groupDate => $awses )
 }
 $table .= '</table>';
 echo $table;
-exit( 1 );
 
 
 echo goBackToPageLink( "admin_acad.php", "Go back" );

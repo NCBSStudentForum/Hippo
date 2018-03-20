@@ -107,7 +107,7 @@ $html .= '
    <tr>
     <td>
         <i class="fa fa-comments fa-3x"></i>
-        <a class="clickable" href="user_register_talk.php">Book talk/seminar</a>
+        <a class="clickable" href="user_register_talk.php">Book Talk/Seminar</a>
         <br />
         Register a new talk, seminar, or a thesis seminar.
         <small>Keep the email and photograph of speaker handy, not neccessary but highly recommended.</small>

@@ -1053,7 +1053,7 @@ function getUserInfo( $user, $query_ldap = false )
     // Fetch ldap as well.
     $ldap = null;
     if( $query_ldap )
-        $ldap = @getUserInfoFromLdap( $user );
+        $ldap = getUserInfoFromLdap( $user );
 
     if( is_array($ldap) && is_array( $res ) && $ldap  )
     {

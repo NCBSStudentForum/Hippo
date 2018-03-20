@@ -32,16 +32,14 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     // Search on all ports.
     $info = array( 'count' => 0 );
 
-    if( 0 == serviceping( $ldap_ip, $port, 2 ) )
-    {
-        error_log( "Could not connect to $ldap_ip : $port . Timeout ... " );
-        return NULL;
-    }
+    // if( 0 == serviceping( $ldap_ip, $port, 2 ) )
+    // {
+        // error_log( "Could not connect to $ldap_ip : $port . Timeout ... " );
+        // return NULL;
+    // }
 
     $ds = @ldap_connect($ldap_ip, $port );
-
-    ldap_set_option( $ds, LDAP_OPT_TIMELIMIT, 1 );
-
+    @ldap_set_option( $ds, LDAP_OPT_TIMELIMIT, 1 );
     $r = @ldap_bind($ds);
 
     if( ! $r )
@@ -54,10 +52,9 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     $sr = @ldap_search($ds, $base_dn, "uid=$login");
     $info = @ldap_get_entries($ds, $sr);
 
-    $result = array();
     for( $s=0; $s < $info['count']; $s++)
     {
-        $i = $info[$s];
+        ei = $info[$s];
 
         //var_dump( $i );
         $laboffice = __get__( $i, 'profilelaboffice', array( 'NA') );
@@ -73,8 +70,8 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
         $profileidentification = $profileId[0];
         $title = $i[ 'profilecontracttype'][0];
         $designation = $i[ 'profiledesignation'][0];
-
         $active = $i[ 'profileactive' ][0];
+
         $result[ ] =  array( "fname" => $i['profilefirstname'][0]
                 , "first_name" => $i['profilefirstname'][0]
                 , "lname" => $i['profilelastname'][0]
@@ -89,6 +86,7 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
                 , 'is_active' => $active
             );
     }
+
 
     if( count( $result ) > 0 )
         return $result[0];
@@ -116,11 +114,8 @@ function authenticateUsingLDAP( $user, $pass )
     $ports = array( "ncbs" => 389, "instem" => 18288, "ccamp" => 19554 );
     foreach(  $ports as $dc => $port )
     {
-        $res = @ldap_connect( "ldap.ncbs.res.in", $port ) or
-            die( "Could not connect to ldap on port $port" );
-
+        $res = @ldap_connect( "ldap.ncbs.res.in", $port );
         $ldapQuery = "uid=$user,ou=People,dc=$dc,dc=res,dc=in";
-
         if( $res )
         {
             $bind = @ldap_bind( $res, $ldapQuery, $pass );

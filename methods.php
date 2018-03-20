@@ -53,8 +53,7 @@ function extract_emails_from( $text )
 function getLoginID( $text )
 {
     if( __substr__( '@', $text ) )
-        return explode( '@', $text )[0];
-
+        return explode( '@', extract_emails_from($text) )[0];
     return $text;
 }
 

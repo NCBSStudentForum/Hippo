@@ -1222,18 +1222,14 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
     return $text;
 }
 
-function loginToHTML( $login, $withEmail = true )
+function loginToHTML( string $login, bool $withEmail = true ) : string
 {
+
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
-    if( is_string( $login ) )
-    {
-        $login = getLoginId( $login );
-        $user = getUserInfo( $login, true );
-    }
-    else
-        $user = $login;
+    $login = getLoginID( $login );
 
+    $user = getUserInfo( $login, true );
     if( ! $user )
         return $login;
 

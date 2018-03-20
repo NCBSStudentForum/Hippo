@@ -1168,6 +1168,7 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     else
         $user = $login;
 
+    /*
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
         $email = __get__( $user, 'email', '' );
@@ -1178,6 +1179,7 @@ function loginToText( $login, $withEmail = true, $autofix = true )
                 $user = array_merge( $user, $ldap );
         }
     }
+     */
 
     if( is_bool( $user ) )
         return $login;

@@ -8,7 +8,6 @@ include_once 'check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
-
 echo userHTML( );
 
 // Javascript.

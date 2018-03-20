@@ -720,6 +720,7 @@ div.alert_user {
    max-width : var(--maxwidth);
    min-width: inherit;
    max-width : inherit;
+   width: 80%;
    margin: 10px;
 }
 

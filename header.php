@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-
 <?php
 ob_start();
-set_include_path( __DIR__ . '/actions' );
-
-/**
- * @brief Return link to calendar.
- * @return
- */
-function calendarURL( )
-{
-    $conf = getConfigFromDB( );
-    return __get__( $conf, 'CALENDAR_URL', '' );
-}
-
 
 if(!isset($_SESSION))
     session_start();
@@ -24,8 +10,51 @@ if( ! $_SERVER['PHP_SELF'] == 'index.php' )
 
 ini_set( 'date.timezone', 'Asia/Kolkata' );
 
+// Always parse the config file and save it in the session.
+$inifile = '/etc/hipporc';
+if(file_exists($inifile))
+{
+    $conf = parse_ini_file($inifile, $process_section = true );
+    if( ! $conf )
+    {
+        echo "Could not parse cofiguration file. Wake up the admin of this site." ;
+        exit;
+    }
+    $_SESSION[ 'conf' ] = $conf;
+}
+else
+{
+    die( "Config file is not found. Can't continue" );
+    exit;
+}
+
+$symbEdit           = "&#x270d";                // Writing hand
+$symbCalendar       = "&#128197";          // Does not work on chromium
+$symbCalendar       = "Schedule It";
+$symbDelete         = "&#10008";
+$symbDelete         = '<i class="fa fa-trash-o"></i>';
+$symbCancel         = "&#10008";
+
+$symbReject         = "Reject";
+$symbApprove        = "Approve";
+$symbAccept         = "Accept";
+
+$symbScan           = "&#8981";
+$symbThumbsDown     = "&#128078";
+$symbPerfect        = "&#128076";
+$symbReview         = 'Review';
+$symbUpload         = "&#8682";
+$symbWarn           = "&#9888";
+$symbCheck          = "&#10003";
+$symbSubmit         = $symbCheck;
+$symbUpdate         = $symbCheck;
+$symbRupee          = '&#8377';
+$symbStuckOutTounge = "&#9786";
+$symbBell           = '&#128365';
+
 ?>
 
+<!DOCTYPE html>
 <html>
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 
@@ -201,57 +230,8 @@ function toggleShowHide( button, eid )
       for (var i = blinks.length - 1; i >= 0; i--) {
         blinks[i].style.visibility = visibility;
       }
-      visibility = (visibility === 'visible') ? 'hidden' : 'visible';
-    }, 1000);
+      visibility = (visibility === 'visible') ? 'hidden' : 'visible'; }, 1000);
   })();
 </script>
 
-<!-- load basic unicode chara -->
-<?php
 
-// Always parse the config file and save it in the session.
-$inifile = '/etc/hipporc';
-if(file_exists($inifile))
-{
-    $conf = parse_ini_file($inifile, $process_section = TRUE );
-    if( ! $conf )
-    {
-        echo "Could not parse cofiguration file. Wake up the admin of this site." ;
-        exit;
-    }
-    $_SESSION[ 'conf' ] = $conf;
-}
-else
-{
-    die( "Config file is not found. Can't continue" );
-    exit;
-}
-
-
-//$symbEdit = "&#9998";              // pencil
-$symbEdit = "&#x270d";                // Writing hand
-$symbCalendar = "&#128197";          // Does not work on chromium
-$symbCalendar = "Schedule It";
-$symbDelete = "&#10008";
-$symbDelete = '<i class="fa fa-trash-o"></i>';
-$symbCancel = "&#10008";
-
-$symbReject = "Reject";
-$symbApprove = "Approve";
-$symbAccept = "Accept";
-
-$symbScan = "&#8981";
-$symbThumbsDown = "&#128078";
-$symbPerfect = "&#128076";
-//$symbReview = "&#128065";
-$symbReview = 'Review';
-$symbUpload = "&#8682";
-$symbWarn = "&#9888";
-$symbCheck = "&#10003";
-$symbSubmit = $symbCheck;
-$symbUpdate = $symbCheck;
-$symbRupee = '&#8377';
-$symbStuckOutTounge = "&#9786";
-$symbBell = '&#128365';
-
-?>

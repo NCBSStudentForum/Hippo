@@ -1,9 +1,9 @@
 <?php
 
-include_once 'methods.php';
-include_once 'database.php';
-include_once 'ICS.php';
-include_once 'linkify.php';
+require_once 'methods.php';
+require_once 'database.php';
+require_once 'ICS.php';
+require_once 'linkify.php';
 
 $useCKEditor = false;
 

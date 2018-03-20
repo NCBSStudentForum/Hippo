@@ -1,14 +1,11 @@
 <?php
 
-include_once 'display_content.php';
-include_once 'logger.php' ;
-include_once 'html2text.php';
-include_once 'helper/imap.php';
-include_once 'ldap.php';
-include_once 'mail.php';
-
-date_default_timezone_set('Asia/Kolkata');
-
+require_once 'display_content.php';
+require_once 'logger.php' ;
+require_once 'html2text.php';
+require_once 'helper/imap.php';
+require_once 'ldap.php';
+require_once 'mail.php';
 
 // Error code when uploading images.
 $phpFileUploadErrors = array(
@@ -1343,7 +1340,7 @@ function getNextSemester( $sem = null, $year = null )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function __substr__( string $needle, string $haystack, $case_insensitive = false ) : bool
+function __substr__( string $needle, string $haystack, bool $case_insensitive = false ) 
 {
     if( ! $needle )
         return false;

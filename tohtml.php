@@ -1149,7 +1149,7 @@ function arrayToSelectList( string $name, array $options
     *
     * @return A string of length.
  */
-function loginToText( $login, $withEmail = true, $autofix = true )
+function loginToText( $login, $withEmail = true, $autofix = true ) : string
 {
     if( ! $login )
         return '';
@@ -1179,9 +1179,9 @@ function loginToText( $login, $withEmail = true, $autofix = true )
                 $user = array_merge( $user, $ldap );
         }
     }
-     */
+    */
 
-    if( is_bool( $user ) )
+    if( is_bool( $user ) and is_string( $login ) )
         return $login;
 
     // Return first name + middle name + last name.
@@ -1203,9 +1203,6 @@ function loginToText( $login, $withEmail = true, $autofix = true )
 
     if( $autofix )
         $text = fixName( $text );
-
-    if( strlen( trim($text) ) < 1 )
-        return $login;
 
     // If honorific exits in login/speaker; then prefix it.
     if( __get__( $user, 'honorific', '' ) )

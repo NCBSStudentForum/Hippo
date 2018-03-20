@@ -30,7 +30,8 @@ foreach( $speakers as $x )
         $speakersIds[] = $x[ 'email' ];
 
 $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
-$logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
+
+// $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 
 ?>
 

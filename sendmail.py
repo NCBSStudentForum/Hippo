@@ -47,7 +47,12 @@ def main( args ):
     with open( bodyfile, 'w' ) as f:
         f.write( body )
 
-    msg.set_content( html2other.tomd( bodyfile ) )
+    # Read md file and get the data.
+    html, mdfile = html2other.tomd( bodyfile )
+    md = html
+    with open( mdfile, 'r' ) as f:
+        md = f.read( )
+    msg.set_content( md )
     msg.add_alternative( body, subtype='html' )
 
     # Now attach files Only PDF are allowed.

@@ -1,13 +1,13 @@
 <?php
 
 include_once 'header.php';
-
-include_once 'check_access_permissions.php';
-mustHaveAnyOfTheseRoles( array( 'USER' ) );
-
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
+include_once 'check_access_permissions.php';
+
+mustHaveAnyOfTheseRoles( array( 'USER' ) );
+
 
 echo userHTML( );
 
@@ -15,6 +15,7 @@ echo userHTML( );
 $faculty = getFaculty( );
 $speakers = getTableEntries( 'speakers' );
 $logins = getTableEntries( 'logins' );
+
 
 $speakersMap = array( );
 foreach( $speakers as $visitor )
@@ -103,6 +104,8 @@ echo '<table><tr>';
 echo '<td class="db_table_fieldname">Speaker picture</td><td>';
 echo '<input type="file" name="picture" id="picture" value="" />';
 echo '</td></tr></table>';
+
+exit( );
 
 echo dbTableToHTMLTable( 'speakers', $speaker
     , 'honorific,email,homepage,first_name:required,middle_name,last_name'

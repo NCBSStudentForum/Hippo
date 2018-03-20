@@ -334,9 +334,9 @@ function eventSummaryHTML( $event, $talk = null)
     if( $talk )
     {
         $speaker = $talk[ 'speaker' ];
-        $html .= "<tr><td> Host </td><td>" . loginToText( $talk[ 'host' ] ) ."</td></tr>";
+        $html .= "<tr><td> Host </td><td>" . loginToHTML( $talk[ 'host' ] ) ."</td></tr>";
         $html .= "<tr><td> Coordinator </td><td>" .
-                     loginToText( $talk[ 'coordinator' ] ) ."</td></tr>";
+                     loginToHTML( $talk[ 'coordinator' ] ) ."</td></tr>";
     }
 
     $html .= "<tr><td> Where </td><td>  $venue </td></tr>";
@@ -1227,7 +1227,10 @@ function loginToHTML( $login, $withEmail = true )
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )
-        $user = getUserInfo( $login );
+    {
+        $login = getLoginId( $login );
+        $user = getUserInfo( $login, true );
+    }
     else
         $user = $login;
 
@@ -1592,7 +1595,8 @@ function talkToHTML( $talk, $with_picture = false )
         $html .= '<br />Host: ' . loginToHTML( $talk[ 'host' ], false );
 
     $html .= '<br /><br />';
-    $html .= '<div style="text-decoration:none;font-size:small">';
+
+    $html .= '<div style="text-decoration:none;">';
     $html .= '<table><tr>
                 <td class="when"><small>When: </small> ' . $when . '</td>
             </tr><tr>
@@ -1600,8 +1604,7 @@ function talkToHTML( $talk, $with_picture = false )
             </tr>
             <tr></tr>
             <tr>
-                <td><small>Coordinator: </small>'
-                .  loginToText( $talk[ 'coordinator' ], false, true ) . '</td>';
+                <td><small>Coordinator: </small>' .  loginToHTML( $talk[ 'coordinator' ], true ) . '</td>';
     $html .= '</tr>';
 
 

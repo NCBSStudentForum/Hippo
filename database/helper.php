@@ -1806,6 +1806,13 @@ function getUpcomingAWS( $monday = null )
     return $res;
 }
 
+function getUpcomingAWSOnThisMonday( $monday )
+{
+    $date = dbDate( $monday );
+    $res = executeQuery( "SELECT * FROM upcoming_aws WHERE date='$date'" );
+    return $res;
+}
+
 function getUpcomingAWSById( $id )
 {
     global $hippoDB;

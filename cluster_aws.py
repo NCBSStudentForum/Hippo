@@ -13,6 +13,10 @@ from collections import Counter
 import itertools
 import numpy as np
 import re
+import random
+
+random.seed( 1 )
+np.random.seed( 1 )
 
 def head_and_tail( vec ):
     head = list(itertools.takewhile(lambda x: x[0] == vec[0][0], vec))

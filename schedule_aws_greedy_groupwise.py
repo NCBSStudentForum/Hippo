@@ -37,9 +37,8 @@ _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Started on %s' % datetime.date.today( ) )
 
-# Fix seed to 0.
-random.seed( 0 )
-np.random.seed( 0 )
+random.seed( 1 )
+np.random.seed( 1 )
 
 def spec_short( spec ):
     return  ''.join( [ x.strip()[0] for x in spec.split( ) ] )

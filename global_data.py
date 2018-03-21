@@ -15,7 +15,6 @@ import networkx as nx
 from collections import defaultdict
 import datetime
 
-
 g_ = nx.DiGraph( )
 
 # All AWS entries in the past.

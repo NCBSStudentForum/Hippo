@@ -53,10 +53,12 @@ if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
 }
 
 /* Every monday, check students who are not eligible for AWS anymore */
-if( trueOnGivenDayAndTime( 'this wednesday', '12:00' ) )
+if( trueOnGivenDayAndTime( 'this wednesday', '15:45' ) )
 {
     echo printInfo( "Cleanup login" );
-    $badLogins = getTableEntries( 'logins', 'login', "(first_name IS NULL OR first_name='') AND status='ACTIVE'" );
+    $badLogins = getTableEntries( 'logins', 'login'
+        , "(first_name IS NULL OR first_name='') OR first_name=last_name AND status='ACTIVE'" 
+    );
 
     // foreach( $badLogins as $l )
     // {
@@ -79,6 +81,7 @@ if( trueOnGivenDayAndTime( 'this wednesday', '12:00' ) )
             $res = updateTable( 'logins', 'login', 'first_name,last_name,email', $ldap );
             if( $res )
             {
+                var_dump( $ldap );
                 echo printInfo( " ... $login is fixed" );
             }
         }

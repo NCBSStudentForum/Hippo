@@ -11,12 +11,11 @@ __status__           = "Development/Production"
 
 import sys
 import os
-import math
 import datetime 
-import copy
-import tempfile 
 from db_connect import db_
 from global_data import *
+import itertools
+import networkx as nx
 
 def spec_short( spec ):
     return  ''.join( [ x.strip()[0] for x in spec.split( ) ] )
@@ -76,7 +75,6 @@ def get_data( ):
         using easy_install'''
         )
         quit( )
-
     init( cur )
 
     # Entries in this table are usually in future.
@@ -103,29 +101,64 @@ def get_data( ):
         aws_scheduling_requests_[ a[ 'speaker' ].lower( ) ] = a
 
     # Now pepare output file.
-    text = [ ]
-    text.append( 'login,pi_or_host,specialization,#aws,last_aws_on')
+    speakers = speaker_data( )
+    slots = slots_data( )
+
+    graph = nx.DiGraph( )
+    graph.add_node( 'source' )
+    graph.add_node( 'sink' )
+    for s in speakers:
+        graph.add_node( s, **speakers[s] )
+        graph.add_edge( 'source', s, weight = 0, capacity = 1, cost = 0 )
+
+    for date, i in slots:
+        graph.add_node( (date,i), date = '%s' % date, index = i )
+        graph.add_edge( (date,i), 'sink', weight=0, capacity = 1, cost = 0 )
+
+    return graph 
+
+def slots_data( ):
+    today = datetime.date.today( )
+    monday0 = today + datetime.timedelta( days = 7 - today.weekday( ) )
+    validSlots = [ ]
+    for dayi in range( 60 ):
+        monday = monday0 + datetime.timedelta( days = 7 * dayi )
+        if monday in holidays_:
+            print( 'Monday %s is holiday' % monday  )
+            continue
+        nSlots = 3
+        if monday in upcoming_aws_slots_:
+            nAWS = len( upcoming_aws_slots_[monday] )
+            print( '%d AWSs are scheduled on this date %s' % (nAWS, monday ))
+            nSlots -= nAWS
+
+        for sloti in range(0, nSlots ):
+            validSlots.append( (monday,sloti) )
+    return validSlots
+
+def speaker_data( ):
+    speakers = { }
+    keys = tuple( 'login,pi_or_host,specialization,nAWS,last_aws_on'.split( ','))
     for l in speakers_:
         if l in upcoming_aws_:
             print( '-> Name is in upcoming AWS. Ignoring', file = sys.stderr )
             continue
 
         piOrHost = speakers_[l].get('pi_or_host', 'UNKNOWN')
-        line = [ ]
-        line.append(l)
-        line.append( '%s' % piOrHost )
+        vals = [ ]
+        vals.append(l)
+        vals.append( '%s' % piOrHost )
         spec = spec_short( specialization_.get( l, 'UNKNOWN' ) )
-        line.append( spec )
+        vals.append( spec )
 
         nAws = len( aws_.get( l, [] ) )
-        line.append( '%d' % nAws )
+        vals.append( '%d' % nAws )
+        vals.append( '%s' % lastAwsDate( l ) )
+        d = dict( zip(keys, vals) )
+        speakers[ l ] = d 
 
-        line.append( '%s' % lastAwsDate( l ) )
+    return speakers
 
-        text.append( ','.join( line ) )
-
-    text = '\n'.join( text )
-    print( text, file = sys.stdout )
     
 def lastAwsDate( speaker ):
     if speaker in aws_:
@@ -135,28 +168,15 @@ def lastAwsDate( speaker ):
         # joined date.
         return speakers_[speaker][ 'joined_on' ]
 
-# From  http://stackoverflow.com/a/3425124/1805129
-def monthdelta(date, delta):
-    m, y = (date.month+delta) % 12, date.year + ((date.month)+delta-1) // 12
-    if not m: m = 12
-    d = min(date.day, [31,
-        29 if y%4==0 and not y%400==0 else 28,31,30,31,30,31,31,30,31,30,31][m-1])
-    dt = date.replace(day=d,month=m, year=y)
-    return dt
-
-def diffInDays( date1, date2, absolute = False ):
-    ndays = ( date1 - date2 ).days
-    if absolute:
-        ndays = abs( ndays )
-    return ndays
-
-def main( outfile ):
+def main( ):
     global db_
-    get_data( )
+    data = get_data( )
     db_.close( )
-
-if __name__ == '__main__':
-    outfile = tempfile.NamedTemporaryFile( ).name
+    outfile = '_aws_data.pickle'
     if len( sys.argv ) > 1:
         outfile = sys.argv[1]
-    main( outfile )
+    nx.write_gpickle( data, outfile )
+    print( 'Wrote data to %s' % outfile )
+
+if __name__ == '__main__':
+    main( )

@@ -23,6 +23,7 @@ __status__           = "Development/Production"
 import sys
 import os
 import math
+import random
 import numpy as np
 from collections import defaultdict, OrderedDict
 import datetime 
@@ -42,6 +43,9 @@ fmt_ = '%Y-%m-%d'
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
 sys.path.insert(0, networkxPath )
+
+random.seed( 0 )
+np.random.seed( 0 )
 
 def init( cur ):
     """

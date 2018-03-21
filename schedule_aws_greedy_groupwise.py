@@ -17,6 +17,7 @@ import math
 import itertools
 import networkx as nx
 import numpy as np
+import random
 import datetime 
 import copy
 import tempfile 
@@ -35,6 +36,10 @@ sys.path.insert(0, networkxPath )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Using networkx from %s' % nx.__file__ )
 _logger.info( 'Started on %s' % datetime.date.today( ) )
+
+# Fix seed to 0.
+random.seed( 0 )
+np.random.seed( 0 )
 
 def spec_short( spec ):
     return  ''.join( [ x.strip()[0] for x in spec.split( ) ] )
@@ -585,13 +590,11 @@ def group_schedule_helper( schedule, result ):
 
 def group_schedule( schedule ):
     newsch = OrderedDict( )
-
     sch = [ ]
     for date in sorted( schedule ):
         vals = schedule[ date ]
         for x in vals:
             sch.append((date,x,specialization_.get(x,'UNSPECIFIED')))
-
     result = [ ]
     return group_schedule_helper( sch, result )
 

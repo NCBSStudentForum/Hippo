@@ -70,7 +70,6 @@ def cluster_data( vec, result ):
     return cluster_data( vec, result )
 
 def cluster_aws( vec ):
-    print( vec )
     result = [ ]
     return cluster_data( vec, result )
 
@@ -82,7 +81,7 @@ def test( ):
 
     result = [ ]
     cluster_data( data, result )
-    #print_result( result )
+    print_result( result )
 
 if __name__ == '__main__':
     test( )

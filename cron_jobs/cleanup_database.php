@@ -52,4 +52,37 @@ if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
     }
 }
 
+/* Every monday, check students who are not eligible for AWS anymore */
+if( trueOnGivenDayAndTime( 'this wednesday', '12:00' ) )
+{
+    echo printInfo( "Cleanup login" );
+    $badLogins = getTableEntries( 'logins', 'login', "(first_name IS NULL OR first_name='') AND status='ACTIVE'" );
+
+    // foreach( $badLogins as $l )
+    // {
+        // var_dump( $l );
+        // echo " <br />";
+    // }
+
+    echo printInfo( "Total " . count( $badLogins) . " are found" );
+    foreach( $badLogins as $l )
+    {
+        $login = __get__($l, 'login', '' );
+        if( ! $login )
+            continue;
+
+        echo printWarning( "Login $login is bad" );
+        $ldap = getUserInfoFromLdap( $login );
+        if( $ldap )
+        {
+            $ldap[ 'login' ] = $login;
+            $res = updateTable( 'logins', 'login', 'first_name,last_name,email', $ldap );
+            if( $res )
+            {
+                echo printInfo( " ... $login is fixed" );
+            }
+        }
+    }
+}
+
 ?>

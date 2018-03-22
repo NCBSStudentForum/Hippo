@@ -72,6 +72,8 @@ function fixJCSchedule( $login, $data )
 
 function assignJCPresentationToLogin( $login, $data )
 {
+    // Make sure the only valid login is used and not the email id.
+    $login = explode( '@', $login )[0];
     return fixJCSchedule( $login, $data );
 }
 

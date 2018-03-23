@@ -28,6 +28,6 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     # Run the command two times. Sometimes it does not add images.
     kpsewhich --var-value=TEXMFVAR
     export TEXMFVAR=/var/www/.texlive2016/texmf-var/
-    xelatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
-    xelatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
+    pdflatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
+    pdflatex $EXTRA --output-directory=$SCRIPT_DIR/data/ "$INFILE"
 )

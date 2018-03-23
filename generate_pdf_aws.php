@@ -60,8 +60,8 @@ function awsToTex( $aws )
 
 
     // Date and plate
-    $date = '\textsc{ \faCalendarCheckO \, ' . humanReadableDate( $aws[ 'date' ] ) .  '| 4:00 pm' . '}';
-    $place = '\faHome \, \textsc{Haapus (LH1), Eastern Lab Complex}';
+    $date = '\faCalendarCheckO\, \textsc{\bf \textcolor{red}{ ' . humanReadableDate( $aws[ 'date' ] ) .  ' | 4:00 pm' . '}}';
+    $place = '\faHome\, \textsc{\bf \textcolor{red}{Haapus (LH1), Eastern Lab Complex}}';
 
     // Two columns here.
     $head = '';

@@ -104,8 +104,17 @@ function awsToTex( $aws )
     // remove html formating before converting to tex.
     $tempFile = tempnam( "/tmp", "hippo_abstract" );
     file_put_contents( $tempFile, $abstract );
+
     $cmd = __DIR__ . '/html2other.py';
-    $texAbstract = `$cmd $tempFile tex`;
+    $texAbstractFile = hippo_shell_exec( "$cmd $tempFile tex", $stdout, $stderr );
+    if( $stderr )
+    {
+        echo printErrorSevere( "Could not execute command " . $stderr );
+        return;
+    }
+
+    $texAbstract = file_get_contents( trim($texAbstractFile) );
+
     unlink( $tempFile );
 
     if( strlen(trim($texAbstract)) > 10 )

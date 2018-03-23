@@ -20,7 +20,7 @@
 set -e
 set -x
 set -o nounset                                  # Treat unset variables as an error
-INFILE="$1"
+INFILE=$(readlink -f $1)
 EXTRA=""
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ( 

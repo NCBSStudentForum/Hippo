@@ -17,7 +17,7 @@ function generateAWSEmail( $monday )
     // collects all AWS entries which not filled by AWS. Ideally such is never
     // be a  situation.
     $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
-    $upcomingAws = array_merge( $upcomingAws, getUpcomingAWS( $monday ) );
+    $upcomingAws = array_merge( $upcomingAws, getUpcomingAWSOnThisMonday( $monday ) );
 
     $html = '';
 

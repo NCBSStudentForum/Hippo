@@ -8,7 +8,7 @@ if( trueOnGivenDayAndTime( 'this friday', '15:00' ) )
     if( $awayFrom >= -1 && $awayFrom < 15 * 60 )
     {
         error_log( 'Try notifying TCM and PI about AWS' );
-        $awses = getUpcomingAWS( dbDate( 'next monday' ) );
+        $awses = getUpcomingAWSOnThisMonday( dbDate( 'next monday' ) );
         foreach( $awses as $aws )
         {
             $speaker = loginToText( $aws[ 'speaker' ] );

@@ -106,13 +106,7 @@ function awsToTex( $aws )
     file_put_contents( $tempFile, $abstract );
 
     $cmd = __DIR__ . '/html2other.py';
-    $texAbstractFile = hippo_shell_exec( "$cmd $tempFile tex", $stdout, $stderr );
-    if( $stderr )
-    {
-        echo printErrorSevere( "Could not execute command " . $stderr );
-        return;
-    }
-
+    hippo_shell_exec( "$cmd $tempFile tex", $texAbstractFile, $stderr );
     $texAbstract = file_get_contents( trim($texAbstractFile) );
 
     unlink( $tempFile );
@@ -128,7 +122,7 @@ function awsToTex( $aws )
 
     $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
         , fit to height=18 cm, fit basedim=16pt
-        ]' . $abstract . '\vspace{5mm}' . '{\normalsize ' . $extra . '} \end{tcolorbox}';
+        ]' . $abstract . '\vspace{5mm}' . '{\normalsize \vfill ' . $extra . '} \end{tcolorbox}';
 
     return implode( "\n", $tex );
 
@@ -221,10 +215,10 @@ else
     echo "<pre> $res </pre>";
 }
 
-if( file_exists( $texFile ) )
-{
-    //unlink( $texFile );
-}
+// if( file_exists( $texFile ) )
+// {
+    // unlink( $texFile );
+// }
 
 echo "<br/>";
 echo closePage( );

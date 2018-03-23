@@ -38,6 +38,10 @@ function hippo_shell_exec($cmd, &$stdout=null, &$stderr=null)
     fclose($pipes[1]);
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[2]);
+
+    if( trim( $stderr ) )
+        echo printWarning( "There was an error executing <pre>$cmd</pre> $stderr. " );
+
     return proc_close($proc);
 }
 

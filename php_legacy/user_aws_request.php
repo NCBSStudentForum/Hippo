@@ -83,7 +83,15 @@ if( $_POST['response'] == 'edit' )
             .  '</td>
         </tr>';
     }
-        echo '
+
+    echo '
+        <tr>
+            <td>Is Presynopsis Seminar?</td>
+            <td>' .  arrayToSelectList( 'is_presynopsis_seminar', array( 'YES', 'NO') ) 
+            . '</td>
+        </tr>';
+
+    echo '
         <tr>
             <td>Date</td>
             <td><input class="datepicker"  name="date" id="" value="' . 

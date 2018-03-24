@@ -4,8 +4,6 @@ include_once 'methods.php';
 include_once 'database.php';
 include_once 'ICS.php';
 include_once 'linkify.php';
-require_once './vendor/htmlpurifier-4.9.3/library/HTMLPurifier.auto.php';
-
 
 $useCKEditor = false;
 
@@ -18,6 +16,7 @@ function displayEvent( button )
 {
     alert( button.value );
 };
+
 function displayRequest( button )
 {
     alert( button.value );
@@ -26,16 +25,30 @@ function displayRequest( button )
 
 <?php
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  This does nothing (now).
+    *
+    * @Param $html
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
 function purifyHTML( $html )
 {
-    $config = HTMLPurifier_Config::createDefault();
-    $purifier = new HTMLPurifier($config);
-    $clean_html = $purifier->purify($html);
-    return $clean_html;
+    return $html;
 }
 
-function fixHTML( $html, $strip_tags = false )
+function fontWithStyle( $msg, $style = "" )
 {
+    return "<font style=\"$style;\">$msg</font>";
+}
+
+function fixHTML( $html, bool $strip_tags = false ) : string
+{
+    if( ! $html )
+        return '';
+
     $res = $html;
     if( $strip_tags )
         $res = strip_tags(  $res, '<br><p><a><strong><tt>' );
@@ -44,13 +57,11 @@ function fixHTML( $html, $strip_tags = false )
     $res = str_replace( '<br />', ' ', $res );
     $res = str_replace( '<br/>', ' ', $res );
     $res = str_replace( '<br>', ' ', $res );
-
-
     return $res;
 }
 
 
-function addToGoogleCalLink( $event )
+function addToGoogleCalLink( array $event )
 {
     $location = venueToText( $event[ 'venue' ] );
     $date = dateTimeToGOOGLE( $event[ 'date' ], $event[ 'start_time' ] )
@@ -82,7 +93,7 @@ function addToGoogleCalLink( $event )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function eventToICAL( $event )
+function eventToICAL( array $event ) : string
 {
     $ics = new ICS( $event );
     return $ics;
@@ -107,9 +118,9 @@ function eventToICALLink( $event )
     $link = '.';
     if( file_exists( $filename ) )
         $link = downloadTextFile( $filename
-                        , '<i class="fa fa-calendar"> <strong>iCal</strong></i>'
-                        , 'link_as_button'
-                    );
+        , '<i class="fa fa-calendar"> <strong>iCal</strong></i>'
+        , 'link_as_button'
+    );
 
     return $link;
 }
@@ -125,7 +136,16 @@ function eventToICALLink( $event )
 function speakerToHTML( $speaker )
 {
     if( ! $speaker )
+    {
         return alertUser( "Error: Speaker not found" );
+    }
+
+    // Most likely speaker id.
+    if( is_string( $speaker ) )
+    {
+        $speaker = getTableEntry( 'speakers', 'id', array( 'id' => $speaker ) );
+        return speakerToHTML( $speaker );  // call recursively
+    }
 
     // Get name of the speaker.
     $name = array( );
@@ -141,13 +161,16 @@ function speakerToHTML( $speaker )
     // If there is url. create a clickable link.
     if( $speaker )
     {
-        if( array_key_exists('homepage', $speaker) && $speaker[ 'homepage' ] )
-            $html .=  '<br><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+        if( __get__( $speaker, 'homepage', '' ) )
+            $html .=  '<br /><a target="_blank" href="' . $speaker['homepage'] . '">Homepage</a>';
+
+        if( __get__( $speaker, 'designation', '' ) )
+            $html .= "<br /><small><strong>" . $speaker[ 'designation' ] . "</strong></small>";
 
         if( $speaker[ 'department' ] )
-            $html .= "<small><br>" . $speaker[ 'department' ];
+            $html .= "<br />" . $speaker[ 'department' ];
 
-        $html .= "<br>" . $speaker[ 'institute' ] . "</small>";
+        $html .= "<br />" . $speaker[ 'institute' ];
     }
 
     return $html;
@@ -1077,25 +1100,29 @@ function eventToEditableTableHTML( $event, $editables = Array( ) )
     * @param $multiple_select If true then allow user to select multiple
     * entries.
     * @param $selected If not '' then select this one by default.
+    * @param $header If false, don't show -- Select one -- etc.
     *
     * @return HTML <select>
  */
-function arrayToSelectList( $name, $options
+function arrayToSelectList( string $name, array $options
         , $display = array()
         , $multiple_select = false
         , $selected = ''
-    )
+        , bool $header = true
+    ) : string
 {
     $html = '';
     if( ! $multiple_select )
     {
         $html .= "<select class=\"$name\" name=\"$name\">";
-        $html .= "<option selected value=\"\">-- Select one --</option>";
+        if( $header )
+            $html .= "<option selected value=\"\">-- Select one --</option>";
     }
     else
     {
         $html .= "<select class=\"$name\" multiple size=\"4\" name=\"$name\">";
-        $html .= "<option selected disabled>-- Select multiple --</option>";
+        if( $header )
+            $html .= "<option selected disabled>-- Select multiple --</option>";
     }
 
     foreach( $options as $option )
@@ -1122,10 +1149,11 @@ function arrayToSelectList( $name, $options
     *
     * @return A string of length.
  */
-function loginToText( $login, $withEmail = true, $autofix = true )
+function loginToText( $login, $withEmail = true, $autofix = true ) : string
 {
     if( ! $login )
         return '';
+
 
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
@@ -1140,19 +1168,20 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     else
         $user = $login;
 
-
+    /*
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
         $email = __get__( $user, 'email', '' );
         if( $email )
         {
-            $ldap = getUserInfoFromLdap( $user[ 'email'] );
+            $ldap = getUserInfoFromLdap( $email );
             if( $ldap )
                 $user = array_merge( $user, $ldap );
         }
     }
+    */
 
-    if( is_bool( $user ) )
+    if( is_bool( $user ) and is_string( $login ) )
         return $login;
 
     // Return first name + middle name + last name.
@@ -1166,24 +1195,24 @@ function loginToText( $login, $withEmail = true, $autofix = true )
     if( is_array( $name ) )
         $text = implode( ' ', $name );
 
+    if( $withEmail )
+    {
+        if( __get__( $user, 'email', '' ) )
+            $text .= " (" . $user['email'] . ")";
+    }
+
     if( $autofix )
         $text = fixName( $text );
 
-    if( $withEmail )
-        if( array_key_exists( 'email', $user) && $user[ 'email' ] )
-            $text .= " (" . $user['email'] . ")";
-
-    if( strlen( trim($text) ) < 1 )
-        return $login;
-
     // If honorific exits in login/speaker; then prefix it.
-    if( is_array( $user) && array_key_exists( 'honorific', $user ) )
+    if( __get__( $user, 'honorific', '' ) )
         $text = trim( $user[ 'honorific' ] . ' ' . $text );
 
     return $text;
 }
 
-function loginToHTML( $login, $withEmail = true ) {
+function loginToHTML( $login, $withEmail = true )
+{
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )
@@ -1198,8 +1227,10 @@ function loginToHTML( $login, $withEmail = true ) {
     $text = fixName( arrayToName( $user ) );
 
     if( $withEmail )
+    {
         if( array_key_exists( 'email', $user) && $user[ 'email' ] )
             $text = "<a href=\"mailto:" . $user['email'] . "\"> $text </a>";
+    }
 
     if( strlen( trim($text) ) < 1 )
         return $login;
@@ -1290,6 +1321,16 @@ function editableAWSTable( $awsId = -1,  $default = NULL )
         $html .= '</tr>';
 
     }
+
+    // Check if AWS is pre-synopsis seminar.
+    $selected = __get__( $default, 'is_presynopsis_seminar', "NO" );
+    $html .= '
+             <tr>
+             <td>Is Pre-synopsis Seminar? <br></td>
+             <td>' . arrayToSelectList( 'is_presynopsis_seminar', array('YES', 'NO') , array(), false, $selected) . '</td>';
+    $html .= '</tr>';
+
+
     $html .= '
              <tr>
              <td>Date</td>
@@ -1392,6 +1433,10 @@ function awsToHTML( $aws, $with_picture = false )
     if( strlen( $title ) == 0 )
         $title = "Not yet disclosed!";
 
+
+    if( __get__( $aws, 'is_presynopsis_seminar', 'NO' ) == 'YES' )
+        $title = '(Presynopsis Seminar)' . ' ' . $title;
+
     $abstract = $aws[ 'abstract' ];
     if( strlen( $abstract ) == 0 )
         $abstract = "Not yet disclosed!";
@@ -1414,7 +1459,7 @@ function awsToHTML( $aws, $with_picture = false )
         $html .= "</table>";
     }
     else
-        $html .= "<h1 class=\"title\">$speaker on '$title' </h1>";
+        $html .= "<h1>$speaker on '$title' </h1>";
 
 
     $html .=  '<table class="email" style="width:500px">';
@@ -1446,12 +1491,12 @@ function speakerName( $speaker, $with_email = false )
     if( $name )
         $name .= ' ';
 
-    $name .= $speaker[ 'first_name' ];
+    $name .= __ucwords__( $speaker[ 'first_name' ] );
 
     if( __get__( $speaker, 'middle_name', '' ) )
-        $name .= ' ' . $speaker[ 'middle_name' ];
+        $name .= ' ' . __ucwords__( $speaker[ 'middle_name' ] );
 
-    $name .= ' ' . $speaker[ 'last_name' ];
+    $name .= ' ' . __ucwords__( $speaker[ 'last_name' ] );
 
     if( $with_email )
     {
@@ -1510,15 +1555,15 @@ function talkToHTML( $talk, $with_picture = false )
 
     $title = '(' . __ucwords__($talk[ 'class' ]) . ') ' . $talk[ 'title' ];
 
-    $html = '<div style="width:600px">';
+    $html = '<div style="width:700px">';
     $html .= '<table border="0"><tr>';
-    $html .= '<td colspan="2"><h1 class="title">' . $title . '</h1></td>';
+    $html .= '<td colspan="2"><h1>' . $title . '</h1></td>';
     $html .= "</tr><tr>";
 
     if( $with_picture )
     {
         $imgpath = getSpeakerPicturePath( $speakerId );
-        $html .= '<td>' . showImage( $imgpath, 'auto', '200px' ) . '</td>';
+        $html .= '<td>' . showImage( $imgpath, 'auto', '250px' ) . '</td>';
     }
 
     // Speaker info
@@ -1527,22 +1572,25 @@ function talkToHTML( $talk, $with_picture = false )
     else
         $speakerHMTL = speakerToHTML( $speakerArr );
 
-    $html .= '<td> <br>' . $speakerHMTL ;
+    $html .= '<td>' . $speakerHMTL ;
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
     if( $talk['class'] == 'THESIS SEMINAR' )
-        $html .= '<br><br><strong>Supervisor:</strong>' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br />Supervisor: ' . loginToHTML( $talk[ 'host' ], false );
     else
-        $html .= '<br><br><strong>Host:</strong> ' . loginToHTML( $talk[ 'host' ] );
+        $html .= '<br />Host: ' . loginToHTML( $talk[ 'host' ], false );
 
-    $html .= '<br><br>';
-    $html .= '<div style="font-variant:small-caps;text-decoration:none;">';
+    $html .= '<br /><br />';
+    $html .= '<div style="text-decoration:none;font-size:small">';
     $html .= '<table><tr>
-                <td class="when"> <i class="fa fa-clock-o fs-spin"></i>' . $when . '</td>
+                <td class="when"><small>When: </small> ' . $when . '</td>
             </tr><tr>
-                <td class="where"> <i class="fa fa-thumb-tack fs-spin fa-fw"></i>' . $where . '</td>
-            </tr><tr>
-                <td>Coordinator: ' . loginToText( $talk[ 'coordinator' ] ) . '</td>';
+                <td class="where"> <small>Where: </small> ' . $where . '</td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td><small>Coordinator: </small>'
+                .  loginToText( $talk[ 'coordinator' ], false, true ) . '</td>';
     $html .= '</tr>';
 
 
@@ -1560,6 +1608,7 @@ function talkToHTML( $talk, $with_picture = false )
 
     $html .= '</table>';
     $html .= '</div>';
+
     $html .= '</td>';
     $html .= '</tr></table>';
 
@@ -1793,14 +1842,10 @@ function slotTable( $width = "15px" )
 {
 
     $days = array( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' );
+
     $html = '<table class="timetable">';
-
     // Generate columns. Each one is 15 min long. Starting from 9am to 6:00pm
-    $maxCols = intval( ( 17.5 - 9 ) * 4 );
-
-    //for ($i = 0; $i < $maxCols; $i++)
-    //    $html .= '<th> </th>';
-
+    $maxNumCols = intval( ( 18 - 9 ) * 4 );
 
     // Check which slot is here.
     $slots = getTableEntries('slots' );
@@ -1810,7 +1855,9 @@ function slotTable( $width = "15px" )
         $html .= "<tr>";
         $html .= "<tr> <td>$day</td> ";
 
-        for ($i = 0; $i < $maxCols; $i++)
+        $counter = 0;
+        $i = 0;
+        while( $i < $maxNumCols )
         {
             $slotTime = dbTime( strtotime( '9:00 am' . ' +' . ( $i * 15 ) . ' minute' ) );
             $slot = getSlotAtThisTime( $day, $slotTime, $slots );
@@ -1827,23 +1874,24 @@ function slotTable( $width = "15px" )
                 $id = $slot[ 'id' ];
                 $gid = $slot[ 'groupid' ];
 
+                // Invalid slot.
                 if( ! is_numeric( $id[0] ) )
                     $bgColor = 'red';
 
-
-                $ncols = intval( $duration / (60 * 15) ); // Each column is 15 minutes.
+                $ncols = intval( $duration / 60 / 15 ); // Each column is 15 minutes.
 
                 $html .= "<td id=\"slot_$id\" style=\"background:$bgColor\" colspan=\"$ncols\">
                          <button onClick=\"showRunningCourse(this)\"
                           id=\"slot_$gid\" value=\"$id\" class=\"invisible\"> $id </button>
                          <br> <small> <tt>$text</tt> </small> </td>";
 
-                // Increase $i by ncols - 1. 1 is increased by loop.
-                if( $ncols > 1 )
-                    $i += $ncols - 1;
+                $i += $ncols;
             }
             else
-                $html .= "<td> </td>";
+            {
+                $i += 1;
+                $html .= ' <td> </td> ';
+            }
         }
         $html .= "</tr>";
     }
@@ -1854,11 +1902,12 @@ function slotTable( $width = "15px" )
 
 }
 
-function coursesTable( $editable = false )
+function coursesTable( $editable = false, $with_form = true )
 {
-    $courses = getTableEntries( 'courses_metadata' );
-    $html = '<div style="font-size:small">';
-    $html .= '<table class="show_aws">';
+    $courses = getTableEntries( 'courses_metadata', 'name,id' );
+    $html = '<table class="info sortable">';
+    $html .= '<th>ID</th> <th>Credit</th> <th>Name</th> <th> Description </th>
+        <th> Instructors </th> <th></th> ';
     foreach( $courses as $c )
     {
         $instructors = array( );
@@ -1870,19 +1919,27 @@ function coursesTable( $editable = false )
         $html .= "<td>" . $c[ 'id' ] . "</td>";
         $html .= "<td>" . $c[ 'credits' ] . "</td>";
         $html .= "<td>" . $c[ 'name' ] . "</td>";
-        $html .= "<td>" . $c[ 'description' ] . "</td>";
-        $html .= "<td>" . implode('<br>', $instructors) . "</td>";
+        $html .= "<td><div class=\"cell_content\">" . $c[ 'description' ] . "</div></td>";
+        $html .= "<td><div class=\"cell_content\">" . implode('<br>', $instructors)
+            . "</div></td>";
+
         if( $editable )
         {
-            $html .= '<td> <button name="response" value="Edit">Edit</button> </td>';
+            if( $with_form )
+                $html .= ' <form action="#" method="post" accept-charset="utf-8">';
+
+            $html .= '<td> <button name="response" value="Edit">Edit</button>';
             $html .= '<input type="hidden" name="id" value="' . $c['id'] . '">';
+            $html .= '</td>';
+
+            if( $with_form )
+                $html .= '</form>';
         }
 
         $html .= "</tr>";
 
     }
     $html .= '</table>';
-    $html .= '</div>';
     return $html;
 }
 
@@ -1901,7 +1958,7 @@ function gradeSelect( $name, $default = 'X' )
     $select = arrayToSelectList(
             $name
             , array( 'A+', 'A', 'B+', 'B', 'C+', 'C', 'F', 'X' )
-            , array( ), false, $default
+            , array( ), false, $default, false
         );
     return $select;
 }
@@ -1952,7 +2009,6 @@ function getCourseShortInfoText( $course )
         $course = getCourseById( $course );
 
     $text = $course[ 'name' ];
-
     return $text;
 }
 
@@ -1970,12 +2026,11 @@ function getCourseInstructors( $c )
                 if( $i )
                 {
                     $name = arrayToName( findAnyoneWithEmail( $i ) );
-                    $instructors[ ] = "<small><a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
-                        $name </a></small>";
+                    $instructors[ ] = "<a id=\"emaillink\" href=\"mailto:$v\" target=\"_top\">
+                        $name </a>";
                 }
             }
     }
-
     $instructors = implode( '<br>', $instructors );
     return $instructors;
 
@@ -1989,55 +2044,6 @@ function getCourseInfo( $cid )
 }
 
 
-function bookmyVenueAdminTaskTable( )
-{
-    $html = '<table class="tasks">
-        <tr>
-        <td>
-            Book using old interface
-        </td>
-        <td>
-            <a href="bookmyvenue_browse.php">OLD BOOKING INTERFACE</a>
-        </td>
-        </tr>
-        </table>'
-    ;
-
-    $html .= '<br>';
-    $html .= '<table class="tasks">
-        <tr>
-        <td>
-           <strong>Make sure you are logged-in using correct google account </strong>
-            </strong>
-        </td>
-            <td>
-                <a href="bookmyvenue_admin_synchronize_events_with_google_calendar.php">
-                Synchronize public calendar </a>
-            </td>
-        </tr>
-        <tr>
-        <td>
-            Add/Update/Delete venues
-        </td>
-            <td>
-                <a href="bookmyvenue_admin_manages_venues.php"> Manage venues </a>
-            </td>
-        </tr>
-        <tr>
-            <td>Send emails manually (and generate documents)</td>
-            <td> <a href="admin_acad_email_and_docs.php">Send emails</td>
-        </tr>
-        <tr>
-            <td>Manage talks and seminars. </td>
-            <td> <a href="admin_acad_manages_talks.php">Manage talks/seminar</td>
-        </tr>
-        <tr>
-            <td>Add or update speakers. </td>
-            <td> <a href="admin_acad_manages_speakers.php">Manage speakers</td>
-        </tr>
-        </table>' ;
-    return $html;
-}
 
 function smallCaps( $text )
 {
@@ -2060,6 +2066,7 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     $whereExpr = "year='$year' AND semester='$sem' AND course_id='$cid'
                 AND type!='DROPPED'";
+
     $registrations = getTableEntries(
         'course_registration', 'student_id', $whereExpr
     );
@@ -2072,33 +2079,40 @@ function courseToHTMLRow( $c, $slot, $sem, $year, &$enrollments )
 
     $note = '';
     if( $c[ 'note' ] )
-        $note = colored( '* ' . $c[ 'note' ], 'blue' );
+        $note = colored( '* ' . $c[ 'note' ], 'brown' );
 
     $cinfo = "<p><strong>Credits: $cr </strong></p>" . $cinfo;
 
-    $schedule = humanReadableDate( $c[ 'start_date' ] ) . ' - '
+    $schedule = humanReadableDate( $c[ 'start_date' ] ) . '<br /> to <br />'
         . humanReadableDate( $c[ 'end_date' ] );
 
     $slotInfo = getCourseSlotTiles( $c, $slot );
     $instructors = getCourseInstructors( $cid );
+    $venue = $c[ 'venue' ];
+    $nReg = count( $registrations );
 
     $row = '<tr>
-        <td> <button id="$cid" onclick="showCourseInfo(this)" class="courseInfo"
-        value="' . $cinfo . '" title="' . $cname . '" >' . $cname . '</button><br>'
-        . $instructors . '</td>
+        <td><font style="font-variant:small-caps">' . $cname . '</font>
+            <button id="$cid" onclick="showCourseInfo(this)"
+                class="show_as_link" value="' . $cinfo . '"
+                title="' . $cname . '" > <i class="fa fa-info-circle"></i>
+            </button>
+        <br />' . $instructors . " <br /> $note " . '</td>
         <td>' .  $schedule . '</td>
-        <td>' . "<strong> $slotInfo </strong> <br>"
-        .  '<strong>' . $note . '</strong></td><td>'
-        .  $c[ 'venue' ] . '</td>
-        <td>' . count( $registrations ) . '</td>'
-        ;
+        <td>' . "$slotInfo <br /><strong> $venue </strong> </td>";
 
     // If url is found, put it in page.
-    if( $c['url'] )
-        $row .= '<td><a target="_blank" href="' . $c['url']
-        . '">Course page</a></td>';
+    if( __get__( $c, 'url', '' ) )
+    {
+        $text = '';
+        $url = $c['url'];
+        $row .= '<td>
+        <a target="_blank" href="' . $c['url'] . '">
+            <i class="fa fa-external-link fa-2x"></i>' . $text . '</a></td>';
+    }
     else
-        $row .= '<td></td>';
+        $row .= '<td><i class="fa fa-external-link fa-2x"></i></td>';
+
 
     return $row;
 }
@@ -2115,7 +2129,7 @@ function mailto( $email, $text = '' )
 
 function piSpecializationHTML( $pi, $specialization )
 {
-    return "<br><small><tt> $specialization <br>PI: $pi</tt></small>";
+    return "$specialization <br /> PI OR HOST: $pi";
 }
 
 function goBackToPageLink( $url, $title = "Go back" )
@@ -2157,7 +2171,7 @@ function presentationToHTML( $presentation )
 
     // Add URL and PRESENTATION URL in table.
     $html .= ' <br /> ';
-    $html .= '<table class="info">';
+    $html .= '<table class="sortable">';
     $html .= '<tr><td>URL(s)</td><td>'
                 .  linkify( $presentation['url'] ) . '</td></tr>';
     $html .= '<tr><td>Presention URL</td><td>'
@@ -2191,14 +2205,15 @@ function getPresentationTitle( $presentation )
 function jcToHTML( $jc )
 {
     $jcInfo = getJCInfo( $jc[ 'jc_id' ] );
-    $html = '<h3>' . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
+    $html = '<h3 style="width:600px">'
+        . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
 
     $presenter = getLoginInfo( $jc[ 'presenter' ] );
     $pName = arrayToName( $presenter );
 
     $html .= "<strong> $pName </strong>";
     $html .= presentationToHTML( $jc );
-    $html .= "<div width=600px><hr width=600px align=left> </div>";
+    $html .= "<div width=600px><hr width=800px align=left> </div>";
 
     return $html;
 }
@@ -2264,9 +2279,9 @@ function showConfigTableHTML( $configs = null )
 function queryToClickableURL( $qid, $msg = 'Click here' )
 {
     $url = appURL( ) . '/execute.php?id=' . $qid;
-    return '<a
+    return '<p>' . $msg . ': <a
         style="border:1px solid;border-radius:5px;background-color:#cc0000;padding:10px 10px 10px 10px;"
-        href="' . $url . '" target="_blank">' . $msg . '</a>';
+        href="' . $url . '" target="_blank">' . $url . '</a> </p>';
 }
 
 function addClickabelURLToMail( $html, $clickable )
@@ -2275,6 +2290,94 @@ function addClickabelURLToMail( $html, $clickable )
     $html .= $clickable;
     $html .= ' <br />';
     return $html;
+}
+
+function awsAssignmentForm( $date = null, $small = false )
+{
+    $form = '<form method="post" action="admin_acad_manages_upcoming_aws_submit.php">';
+
+    $class = '';
+    if( ! $small )
+        $class = 'standout';
+
+    $form .= "<table class=\"$class\" >";
+    if( ! $date )
+    {
+        $form .= '<tr><td> 
+            <input class="datepicker"  name="date" value="" placeholder="Select monday" >
+            </td>';
+    }
+    else
+    {
+        $form .= '<input type="hidden"  name="date" value="' . $date . '" >';
+        $form .= '<tr>';
+    }
+
+    $form .= '<td> <input class="autocomplete_speaker" name="speaker" 
+        placeholder="Login id" /></td>';
+
+    if( $small )
+        $form .= '</tr><tr><td><button name="response" value="Assign">Assign</button> </td></tr>';
+    else
+    {
+        $form .= '<td> <button name="response" value="Assign">Assign</button> </td>';
+        $form .= '</tr>';
+    }
+    $form .= '</table></form>';
+    return $form;
+}
+
+function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
+{
+    $courseName = getCourseName( $cid );
+    $rows = [ ];
+
+    $allEmails = array( );
+
+    foreach( __get__($enrollments, $cid, array()) as $r )
+    {
+        $studentId = $r[ 'student_id' ];
+        if( ! $studentId )
+            continue;
+
+        $info = getUserInfo( $studentId );
+        if( $info )
+        {
+            $row = '';
+            $row .= '<td>' . loginToText( $info, false) . '</td>';
+            $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
+            $row .= '<td>' . $r[ 'type' ] . "</td>";
+            $rows[ $info[ 'first_name'] ] = $row;
+            $allEmails[ ] = $info[ 'email'];
+        }
+    }
+
+    ksort( $rows );
+    $count = 0;
+
+    // Construct enrollment table.
+    $table = '<table id="show_enrollmenents" class="' . $table_class . ' sortable">';
+    $table .= '<tr> <th></th> <th>Name</th> <th>Email</th> <th>Type</th>  </tr>';
+    foreach( $rows as $fname => $row )
+    {
+        $count ++;
+        $table .= "<tr><td>$count</td>" . $row . '</tr>';
+    }
+    $table .= '</table>';
+    return array( 'html_table' => $table, 'enrolled_emails' => $allEmails );
+}
+
+function selectYearSemesterForm( $defaultYear = '', $defaultSem = '' )
+{
+    $years = range( intval(getCurrentYear( )) + 1, 2010 );
+    $yearSelect = arrayToSelectList( 'year', $years, array(), false, $defaultYear );
+    $semSelect = arrayToSelectList( 'semester', array( 'SPRING', 'AUTUMN' ), array(), false, $defaultSem );
+
+    $form = '<form action="" method="get" accept-charset="utf-8">' . $yearSelect
+        . $semSelect .
+        ' <button type="submit" name="select_year_sem">Select Year/Semester</button></form>';
+
+    return $form;
 }
 
 

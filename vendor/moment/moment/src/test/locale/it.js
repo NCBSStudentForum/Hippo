@@ -40,11 +40,11 @@ test('format', function (assert) {
             ['L',                                  '14/02/2010'],
             ['LL',                                 '14 febbraio 2010'],
             ['LLL',                                '14 febbraio 2010 15:25'],
-            ['LLLL',                               'domenica, 14 febbraio 2010 15:25'],
+            ['LLLL',                               'domenica 14 febbraio 2010 15:25'],
             ['l',                                  '14/2/2010'],
             ['ll',                                 '14 feb 2010'],
             ['lll',                                '14 feb 2010 15:25'],
-            ['llll',                               'dom, 14 feb 2010 15:25']
+            ['llll',                               'dom 14 feb 2010 15:25']
         ],
         b = moment(new Date(2010, 1, 14, 15, 25, 50, 125)),
         i;
@@ -205,4 +205,3 @@ test('weeks year starting sunday formatted', function (assert) {
     assert.equal(moment([2012, 0,  9]).format('w ww wo'),  '2 02 2º', 'Jan  9 2012 should be week 2');
     assert.equal(moment([2012, 0, 15]).format('w ww wo'),  '2 02 2º', 'Jan 15 2012 should be week 2');
 });
-

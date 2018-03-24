@@ -1,4 +1,5 @@
 <?php
+
 include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'methods.php';
@@ -44,20 +45,6 @@ foreach( $runningCourses as $x )
     $runningCourseMapForAutoCompl[ $x['id'] . ': '
         . getCourseName( $x[ 'course_id' ] ) ] = $x['id'];
 
-?>
-
-<script type="text/javascript" charset="utf-8">
-// Autocomplete running course. Append course name for better searching.
-$( function() {
-    var courses = <?php echo json_encode( array_keys($runningCourseMapForAutoCompl) ); ?>;
-    $( "#running_course" ).autocomplete({ source : courses } );
-    $( "#running_course" ).attr( "placeholder", "Type course code/name" );
-});
-
-</script>
-
-<?php
-
 // Array to hold runnig course.
 $default = array(
     'venue' => $venueSelect
@@ -81,11 +68,8 @@ if( $_POST && array_key_exists( 'running_course', $_POST ) )
     $action = 'Edit';
 }
 
-
-$runningCoursesHTML = '';
-$runningCoursesHTML .= "<h1>Running courses</h1>";
-$runningCoursesHTML .= printInfo( "Current semester is $sem, $year." );
-$runningCoursesHTML .= '<table class="info">';
+$runningCoursesHTML = "<h1>Running courses in $sem, $year</h1>";
+$runningCoursesHTML .= '<table class="info sortable">';
 $tobefilterd = 'id,semester,year';
 $runningCoursesHTML .= arrayHeaderRow( $runningCourses[0], 'info', $tobefilterd );
 foreach( $runningCourses as $course )
@@ -96,10 +80,19 @@ foreach( $runningCourses as $course )
     if( isCourseActive( $course ) )
         $course[ 'course_id' ] = "<blink> $symbBell </blink>" . $course[ 'course_id' ];
 
-    $runningCoursesHTML .= arrayToRowHTML( $course, 'aws', $tobefilterd );
+    $runningCoursesHTML .= '<tr>';
+    $runningCoursesHTML .= arrayToRowHTML( $course, 'aws', $tobefilterd, true, false );
+    $runningCoursesHTML .=  '<td>
+        <form action="#" method="post" accept-charset="utf-8">
+        <button type="submit" value="Edit">Edit</button>
+        <input type="hidden" name="running_course" value="' .
+            $course[ 'id' ] . ': ' . $cname .  '" />
+        </form>
+        </td>';
+    $runningCoursesHTML .= '</tr>';
 }
 $runningCoursesHTML .= '</table>';
-
+echo $runningCoursesHTML;
 
 
 /* --------------------------------------------------------------------------*/
@@ -108,29 +101,15 @@ $runningCoursesHTML .= '</table>';
  */
 /* ----------------------------------------------------------------------------*/
 echo "</br>";
-echo '<form method="post" action="#">';
-echo '<table class="">';
-echo '<tr>
-        <td>
-            <input id="running_course" name="running_course" type="text" >
-        </td>
-        <td>
-            <button name="response" value="search" style="float:left" >Edit this course</button>
-        </td>
-    </tr>';
 
-// If a course has been selected then add its id to a hidden field. This entry
-// in invalid when adding a new course to current semester courses.
-if( $action != 'Add' )
-    echo '<input type="hidden" name="id" value="' . $course['course_id'] . '">';
+if( $action == 'Add' )
+{
+    echo "<h1>Add a course to running courses list</h1>";
+}
+else
+    echo "<h1>Edit following course </h1>";
 
-echo '</table>';
-echo '</form>';
-
-echo "<h1>Add/edit runnuing courses </h1>";
 echo '<form method="post" action="admin_acad_manages_current_courses_action.php">';
-
-// We will figure out the semester by start_date .
 $default[ 'slot' ] = $slotSelect;
 $default[ 'venue' ] = $venueSelect;
 $default[ 'semester' ] = $sem;
@@ -173,8 +152,6 @@ if( $action == 'Update' )
 
 echo '</form>';
 
-// Finally show running courses.
-echo $runningCoursesHTML;
 
 echo "<br/><br/>";
 echo goBackToPageLink( 'admin_acad.php', 'Go back' );

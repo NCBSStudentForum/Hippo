@@ -5,8 +5,6 @@ include_once 'tohtml.php' ;
 include_once 'methods.php' ;
 include_once 'calendar/calendar.php' ;
 
-session_save_path("/tmp/");
-
 // If user is already authenticated, redirect him to user.php
 // NOTE: DO NOT put this block before loading configuration files.
 if( array_key_exists( 'AUTHENTICATED', $_SESSION) && $_SESSION[ 'AUTHENTICATED' ] )
@@ -33,15 +31,18 @@ echo "</table>";
 $thisPage = basename( $_SERVER[ 'PHP_SELF' ] );
 if( strpos( $thisPage, 'index.php' ) !== false )
 {
+    /*
+     * NOTE: Fetch using cron
     // Select one background picture.
     $command = 'nohup python '
         . __DIR__ . '/fetch_backgrounds.py > /dev/null 2>&1 &'
         ;
     // Run command.
     shell_exec( $command );
+     */
 
     // Select one image from directory _backgrounds.
-    $background = random_jpeg( "data/_backgrounds" );
+    $background = random_jpeg( "./_backgrounds" );
     if( $background )
     {
         echo "<body style=\" background-image:url($background);
@@ -51,10 +52,10 @@ if( strpos( $thisPage, 'index.php' ) !== false )
     }
 }
 
-echo '<br>';
-echo '<div class="public_calendar">';
-echo calendarIFrame( );
-echo '</div>';
+//echo '<br>';
+//echo '<div class="public_calendar">';
+//echo calendarIFrame( );
+//echo '</div>';
 
 include_once 'footer.php';
 

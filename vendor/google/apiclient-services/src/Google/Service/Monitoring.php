@@ -53,7 +53,7 @@ class Google_Service_Monitoring extends Google_Service
   public $projects_timeSeries;
   public $projects_uptimeCheckConfigs;
   public $uptimeCheckIps;
-  
+
   /**
    * Constructs the internal representation of the Monitoring service.
    *
@@ -136,6 +136,10 @@ class Google_Service_Monitoring extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'childrenOfGroup' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'descendantsOfGroup' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -149,10 +153,6 @@ class Google_Service_Monitoring extends Google_Service
                   'type' => 'integer',
                 ),
                 'ancestorsOfGroup' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'childrenOfGroup' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -302,10 +302,6 @@ class Google_Service_Monitoring extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'filter' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -313,6 +309,10 @@ class Google_Service_Monitoring extends Google_Service
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -344,34 +344,6 @@ class Google_Service_Monitoring extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'orderBy' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'aggregation.crossSeriesReducer' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'filter' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'aggregation.perSeriesAligner' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'interval.startTime' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'view' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'aggregation.groupByFields' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -388,6 +360,34 @@ class Google_Service_Monitoring extends Google_Service
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'orderBy' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'aggregation.crossSeriesReducer' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'aggregation.perSeriesAligner' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'interval.startTime' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'view' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),

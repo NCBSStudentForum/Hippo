@@ -66,6 +66,7 @@ export default moment.defineLocale('fa', {
         future : 'در %s',
         past : '%s پیش',
         s : 'چند ثانیه',
+        ss : 'ثانیه d%',
         m : 'یک دقیقه',
         mm : '%d دقیقه',
         h : 'یک ساعت',
@@ -94,4 +95,3 @@ export default moment.defineLocale('fa', {
         doy : 12 // The week that contains Jan 1st is the first week of the year.
     }
 });
-

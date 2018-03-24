@@ -1,11 +1,10 @@
 <?php
 
 include_once 'database.php';
-include_once 'tohtml.php';
 include_once 'methods.php';
 
 // Directory to store the mdsum of sent emails.
-$maildir = getDataDir( ) . '/_mails';
+$maildir = __DIR__ . '/_mails';
 if( ! file_exists( $maildir ) )
     mkdir( $maildir, 0777, true );
 
@@ -18,7 +17,7 @@ function generateAWSEmail( $monday )
     // collects all AWS entries which not filled by AWS. Ideally such is never
     // be a  situation.
     $upcomingAws = getTableEntries( 'annual_work_seminars', "date" , "date='$monday'" );
-    $upcomingAws = array_merge( $upcomingAws, getUpcomingAWS( $monday ) );
+    $upcomingAws = array_merge( $upcomingAws, getUpcomingAWSOnThisMonday( $monday ) );
 
     $html = '';
 
@@ -143,6 +142,7 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
     if( file_exists( $archivefile ) )
     {
         echo printWarning( "This email has already been sent. Doing nothing" );
+        echo printWarning( "-> archive file $archivefile " );
         return false;
     }
 
@@ -171,17 +171,22 @@ function sendHTMLEmail( $msg, $sub, $to, $cclist = '', $attachment = null )
             $cmd .= " -a \"$f\" ";
     }
 
-    //echo ( "<tt>Executing $cmd </tt>" );
-    $out = `$cmd`;
+    hippo_shell_exec( $cmd, $out, $stderr );
+    if(  $stderr )
+    {
+        echo printWarning( "Failed to send email. Error $stderr" );
+        return false;
+
+    }
 
     error_log( "<pre> $cmd </pre>" );
     error_log( '... $out' );
     error_log( "Saving the mail in archive" . $archivefile );
 
+
     // generate md5 of email. And store it in archive.
     file_put_contents( $archivefile, "SENT" );
     unlink( $msgfile );
-
     echo printInfo( "Email is sent! <br />" );
     return true;
 }

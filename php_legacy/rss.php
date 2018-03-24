@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
 <?php
-
-include_once 'database.php';
+@include_once 'database.php';
 
 function venueText( $venue )
 {
@@ -35,7 +32,7 @@ function todayTomorrow( $date, $venue )
 
 function sanitize( $title )
 {
-    $title = preg_replace('/[^A-Za-z0-9\-\ \'\",]/', '', $title);
+    $title = preg_replace('/[^A-Za-z0-9\-\ \'\",\<\>]/', '', $title);
     return $title;
 }
 
@@ -77,8 +74,8 @@ usort( $events, "cmp" );
 
 $feed =  '<rss version="2.0"> <channel>';
 $feed .= "<title>Events over next 60 days</title>";
-$feed .= "<link>" . appURL( ) . "</link>";
-$feed .= "<description>NCB events list </description>";
+$feed .= trim( "<link>" . appURL( ) . "</link>" );
+$feed .= "<description>NCB events list</description>";
 
 foreach( $events as $e )
 {
@@ -86,34 +83,39 @@ foreach( $events as $e )
         if( strtotime( $e['end_time'] ) < strtotime( 'now' ) )
             continue;
 
-    $feed .= "<item>";
+    $eventXML = "<item>";
 
     $date =  feedDate( $e[ 'date' ] );
 
     if( strlen( $e[ 'title' ] ) < 2 )
         continue;
 
-    $feed .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
+    $eventXML .= "<title>" . todayTomorrow( $e['date'], $e['venue'] ) . ' : ' . 
                     sanitize( $e[ 'title'] ) . "</title>";
 
-    $feed .= "<link> https://ncbs.res.in/hippo/events.php?date=" . $e['date'] . 
+    $eventXML .= "<link> https://ncbs.res.in/hippo/events.php?date=" . $e['date'] . 
                 "</link>";
 
-    $feed .= "<description>" 
+    $eventXML .= "<description>" 
                     .  feedDate( $e[ 'date' ] ) . ", " 
                     . humanReadableTime( $e['start_time' ] ) 
                     .  " to " . humanReadableTime( $e[ 'end_time' ] )
                     . ', ' . venueText( $e[ 'venue' ], false )
                     . "</description>";
 
-    $feed .= "<pubDate> " . date( 'r', strtotime($e['date'] . ' ' . $e['start_time'] ) ) . "</pubDate>";
-    $feed .= "</item>";
+    $eventXML .= "<pubDate> " . date( 'r', strtotime($e['date'] . ' ' . $e['start_time'] ) ) . "</pubDate>";
+    $eventXML .= "</item>";
+
+    $feed .= $eventXML;
+
 }
 
 $feed .= '</channel>';
 $feed .= '</rss>';
-header( 'Content-Type: application/xhtml+xml' );
 
+// Display it now.
+header( 'Content-Type: application/rss+xml' );
+echo '<?xml version="1.0" encoding="UTF-8" ?>';
 echo $feed;
 
 ?>

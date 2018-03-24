@@ -43,7 +43,7 @@ class Google_Service_Fusiontables extends Google_Service
   public $table;
   public $task;
   public $template;
-  
+
   /**
    * Constructs the internal representation of the Fusiontables service.
    *
@@ -416,6 +416,16 @@ class Google_Service_Fusiontables extends Google_Service
                 'replaceViewDefinition' => array(
                   'location' => 'query',
                   'type' => 'boolean',
+                ),
+              ),
+            ),'refetchSheet' => array(
+              'path' => 'tables/{tableId}/refetch',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'tableId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
                 ),
               ),
             ),'replaceRows' => array(

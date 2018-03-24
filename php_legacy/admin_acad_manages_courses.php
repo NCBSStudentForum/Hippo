@@ -1,7 +1,5 @@
 <?php
-
 include_once 'header.php';
-
 include_once 'check_access_permissions.php';
 mustHaveAnyOfTheseRoles( array( 'AWS_ADMIN' ) );
 
@@ -61,15 +59,14 @@ $( function() {
 // Logic for POST requests.
 $course = array( 'id' => '', 'day' => '', 'start_time' => '', 'end_time' => '' );
 
-$buttonVal = 'Add';
 
 echo '<form method="post" action="#">';
 echo '<input id="course" name="id" type="text" value="" >';
 echo '<button type="submit" name="response" value="show">Edit Course</button>';
 echo '</form>';
 
-
-if( array_key_exists( 'id', $_POST ) )
+$buttonVal = 'Add';
+if( __get__( $_POST, 'reponse', 'Edit' ) && __get__( $_POST, 'id', false ) )
 {
     $course = __get__( $coursesMap, $_POST['id'], null );
     if( $course )
@@ -79,7 +76,6 @@ if( array_key_exists( 'id', $_POST ) )
 echo '<h3>Add/Edit course details</h3>';
 
 echo '<form method="post" action="admin_acad_manages_courses_action.php">';
-
 
 echo dbTableToHTMLTable( 'courses_metadata', $course
     , 'id,credits:required,name:required,description,'
@@ -104,10 +100,7 @@ echo '<br>';
 
 
 echo "<h1>All courses</h1>";
-
-echo '<form action="#" method="post" accept-charset="utf-8">';
-echo coursesTable( $editable = true );
-echo '</form>';
+echo coursesTable( $editable = true, $with_form = true );
 
 
 ?>

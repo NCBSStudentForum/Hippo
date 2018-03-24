@@ -10,7 +10,7 @@ namespace GuzzleHttp\Promise;
  *
  *     GuzzleHttp\Promise\queue()->run();
  */
-class TaskQueue implements TaskQueueInterface
+class TaskQueue 
 {
     private $enableShutdown = true;
     private $queue = [];

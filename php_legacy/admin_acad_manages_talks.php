@@ -34,15 +34,12 @@ foreach( $talks as $t )
     array_push( $upcomingTalks, $t );
 }
 
-if( count( $upcomingTalks ) < 1 )
-    echo alertUser( "Rejoice! There is no upcoming talk/seminar." );
-else
-    echo "<h1>Upcoming talks</h1>";
+echo "<h1>Upcoming talks</h1>";
 
 // Show upcoming talks to user. She has edit, delete or schedule them.
 echo '<div style="font-size:x-small">';
 // Outer table
-echo '<table border="1">';
+echo '<table class="table_in_table">';
 foreach( $upcomingTalks as $t )
 {
     echo '<tr>';
@@ -50,6 +47,7 @@ foreach( $upcomingTalks as $t )
      * FIRST COLUMN: Speaker picture.
      */
     echo '<td>';
+    echo "Speaker ID: " . $t['speaker_id'] . '<br />';
     echo inlineImageOfSpeakerId( $t['speaker_id'], $height = '100px', $width = '100px' );
     echo '</td>';
 
@@ -103,8 +101,7 @@ foreach( $upcomingTalks as $t )
         if( $event )
         {
             // If event is already approved, show it here.
-            echo "<strong>Above talk has been confirmed and event detail is shown 
-                below.</strong>";
+            echo alertUser( "<strong>This talk is confirmed.</strong>" );
 
             $html = arrayToVerticalTableHTML( $event, 'events', 'lightyellow'
                 , 'eid,class,url,modified_by,timestamp,calendar_id' . 
@@ -145,9 +142,9 @@ foreach( $upcomingTalks as $t )
         // Else there might be a pending request.
         else if( $request )
         {
-            echo "<strong>Shown below is the booking request pending review for 
-                    above talk. </strong>
-                ";
+            echo alertUser( "Shown below is the booking request pending review for 
+                    above talk." );
+
             $gid = $request[ 'gid' ];
 
             echo arrayToVerticalTableHTML( $request, 'requests', ''

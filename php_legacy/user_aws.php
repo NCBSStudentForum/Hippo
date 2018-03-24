@@ -23,7 +23,7 @@ if( $scheduledAWS )
     $disabled = '';
     if( $scheduledAWS[ 'acknowledged' ] == 'YES' )
     {
-        echo "You have already confirmed your schedule. Be sure to mark your calendar as well.";
+        echo "You've acknowledged your AWS schedule.";
         $disabled = 'disabled';
     }
     else
@@ -166,8 +166,7 @@ if( $scheduledAWS )
     echo arrayToVerticalTableHTML( $scheduledAWS, 'aws', NULL
         , Array( 'speaker', 'id' ));
     echo "<button class=\"submit\" name=\"response\"
-        title=\"Update this entry\" value=\"update\">"
-            . $symbEdit . "</button>";
+        title=\"Update this entry\" value=\"update\">Edit</button>";
     echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
     echo "</form>";
 }
@@ -187,8 +186,12 @@ foreach( $awsRequests as $awsr )
     echo "</form>";
 }
 
-echo '<h2><i class="fa fa-leanpub"></i> I have learnt \'deeply\' from AWS</h2>';
-echo "<p>I have been trained using Artificial Intelligence algorithms to write 
+echo ' <br /> <br />';
+echo goBackToPageLink( "user.php", "Go back" );
+
+echo '<h2><i class="fa fa-leanpub"></i> I have learnt \'deeply\' from previous AWSs</h2>';
+
+echo "<p>I have been trained using Artificial Intelligence algorithms to write
     AWS abstract. Ask me to write your AWS abstract by pressing the button below (puny human)!</p>
     ";
 echo ' <form action="" method="post" accept-charset="utf-8">

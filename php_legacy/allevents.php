@@ -15,6 +15,10 @@ if( ! (isIntranet( ) || isAuthenticated( ) ) )
     exit;
 }
 
+if( isAuthenticated( ) )
+{
+}
+
 // This page displays all events on campus. Select all venues.
 $venues = getVenues( $sortby = 'id' );
 $venuesDict = array( );
@@ -92,8 +96,15 @@ foreach( $events as $ev )
 $table .= '</tr>';
 $table .= '</table>';
 echo $table;
+echo '<br />';
 
-echo '</br>';
+if( isAuthenticated( ) )
+{
+    echo '<a style="float:left;padding-left:500px"  class="clickable" href="quickbook.php">Create New Booking</a>';
+    echo '<br />';
+}
+
+echo '<br />';
 
 echo '<h2>Classes</h2>';
 /*******************************************************************************

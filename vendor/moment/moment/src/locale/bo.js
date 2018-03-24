@@ -55,6 +55,7 @@ export default moment.defineLocale('bo', {
         future : '%s ལ་',
         past : '%s སྔན་ལ',
         s : 'ལམ་སང',
+        ss : '%d སྐར་ཆ།',
         m : 'སྐར་མ་གཅིག',
         mm : '%d སྐར་མ',
         h : 'ཆུ་ཚོད་གཅིག',
@@ -107,4 +108,3 @@ export default moment.defineLocale('bo', {
         doy : 6  // The week that contains Jan 1st is the first week of the year.
     }
 });
-

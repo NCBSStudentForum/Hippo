@@ -1,26 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
-import html2other
+import tempfile
 import smtplib
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email import Encoders
-import unicodedata
+import html2other
 import re
+
+import mimetypes
+from email.message import EmailMessage
+
 from logger import _logger
-
-# Function to remove unprintable characters from email.
-
-all_chars = (unichr(i) for i in range(0x110000))
-# or equivalently and much more efficiently
-control_chars = ''.join(map(unichr, range(0,32) + range(127,160)))
-control_char_re = re.compile('[%s]' % re.escape(control_chars))
-
-def remove_control_chars(s):
-    return control_char_re.sub('', s)
 
 def main( args ):
     _logger.debug( "Got command line params %s" % vars(args) )
@@ -43,7 +33,7 @@ def main( args ):
         _logger.error( "I could not read file %s. Error was %s" % (args.msgfile, e))
         return False
 
-    msg = MIMEMultipart( 'alternative' )
+    msg = EmailMessage( )
     msg[ 'To' ] = ",".join( args.to )
 
     if args.cc:
@@ -53,8 +43,17 @@ def main( args ):
     msg[ 'Subject' ] = subject
     msg[ 'From' ] = fromAddr
 
-    msg.attach( MIMEText( html2other.tomd( body ), 'plain' ) );
-    msg.attach( MIMEText( body, 'html' ) );
+    h, bodyfile = tempfile.mkstemp( prefix = 'hippo', suffix = '.html' )
+    with open( bodyfile, 'w' ) as f:
+        f.write( body )
+
+    # Read md file and get the data.
+    html, mdfile = html2other.tomd( bodyfile )
+    md = html
+    with open( mdfile, 'rb' ) as f:
+        md = f.read( ).decode( 'utf-8' )
+    msg.set_content( md )
+    msg.add_alternative( body, subtype='html' )
 
     # Now attach files Only PDF are allowed.
     for attach in args.attach:
@@ -68,14 +67,13 @@ def main( args ):
             continue
 
         with open( attach, 'rb' ) as f:
-            data = MIMEBase( 'application', 'pdf' )
-            data.set_payload( f.read( ) )
-            Encoders.encode_base64( data )
-            data.add_header(
-                    'Content-Disposition', 'attachment'
-                    , filename= os.path.basename( attach )
+            ctype, encoding = mimetypes.guess_type( attach )
+            maintype, subtype = ctype.split( '/', 1 )
+            msg.add_attachment( f.read()
+                    , maintype=maintype
+                    , subtype=subtype
+                    , filename = os.path.basename( attach )
                     )
-            msg.attach(data)
 
     s = smtplib.SMTP( 'mail.ncbs.res.in', 587 )
     # s.set_debuglevel( 1 )

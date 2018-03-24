@@ -35,6 +35,7 @@ export default moment.defineLocale('pt', {
         future : 'em %s',
         past : 'há %s',
         s : 'segundos',
+        ss : '%d segundos',
         m : 'um minuto',
         mm : '%d minutos',
         h : 'uma hora',
@@ -53,4 +54,3 @@ export default moment.defineLocale('pt', {
         doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

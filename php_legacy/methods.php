@@ -1,11 +1,11 @@
 <?php
 
 include_once 'display_content.php';
-include_once 'methods.php';
 include_once 'logger.php' ;
 include_once 'html2text.php';
 include_once 'helper/imap.php';
 include_once 'ldap.php';
+include_once 'mail.php';
 
 date_default_timezone_set('Asia/Kolkata');
 
@@ -25,6 +25,24 @@ $phpFileUploadErrors = array(
 function whoAmI( )
 {
     return $_SESSION[ 'user' ];
+}
+
+// Form HERE: https://stackoverflow.com/a/25879953/180512://stackoverflow.com/a/25879953/1805129
+function hippo_shell_exec($cmd, &$stdout=null, &$stderr=null)
+{
+    $proc = proc_open($cmd,[
+        1 => ['pipe','w'],
+        2 => ['pipe','w'],
+    ],$pipes);
+    $stdout = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[2]);
+
+    if( trim( $stderr ) )
+        echo printWarning( "There was an error executing <pre>$cmd</pre> $stderr. " );
+
+    return proc_close($proc);
 }
 
 function authenticate( $ldap, $pass )
@@ -57,21 +75,30 @@ function venueToText( $venue, $show_strength = true )
     return $txt;
 }
 
-function sortByKey( &$array, $key, $ascending = true )
+function sortByKey( &$arr, $key, $ascending = true )
 {
-    if( ! $array )
+    if( ! $arr )
+        return false;
+
+    if( ! array_key_exists( $key, $arr[0] ) )
         return false;
 
     if( $ascending )
-        usort( $array , function( $x, $y ) {
+        usort( $arr , function( $x, $y ) {
             global $key;
-            return __get__( $x, $key, '') < __get__($y, $key, '' );
+            if( $key == 'date' or $key == 'time' )
+                return strtotime( $x[$key] ) < strtotime( $y[$key] );
+            else
+                return __get__( $x, $key, '') < __get__($y, $key, '' );
         }
     );
     else
-        usort( $array , function( $x, $y ) {
+        usort( $arr , function( $x, $y ) {
             global $key;
-            return __get__( $x, $key, '') > __get__($y, $key, '' );
+            if( $key == 'date' or $key == 'time' )
+                return strtotime( $x[$key] ) >= strtotime( $y[$key] );
+            else
+                return __get__( $x, $key, '') >= __get__($y, $key, '' );
         }
     );
 
@@ -108,7 +135,7 @@ function getDataDir( )
  */
 function venuesToHTMLSelect( $venues = null, $ismultiple = false
     , $selectName = 'venue', $preSelected = array()
-    )
+    ) : string
 {
     if( ! $venues )
         $venues = getVenues( );
@@ -181,6 +208,7 @@ function appURL( )
 /* Go to a page relative to base dir. */
 function goToPage($page="index.php", $delay = 3)
 {
+    echo alertUser( "Moving to $page in $delay seconds" );
     try {
         header("Refresh: $delay, url=$page");
 
@@ -282,12 +310,16 @@ function validateDate($date, $format = 'Y-m-d H:i:s')
     return $d && $d->format($format) == $date;
 }
 
-function humanReadableDate( $date )
+function humanReadableDate( $date, $with_day = true )
 {
-    if( is_int( $date ) )
-        return date( 'l, M d, Y', $date );
+    $fmt = 'l, M d, Y';
+    if(! $with_day )
+        $fmt = 'M d, Y';
 
-    return date( 'l, M d Y', strtotime($date) );
+    if( is_int( $date ) )
+        return date( $fmt, $date );
+
+    return date( $fmt, strtotime($date) );
 }
 
 function humanReadableShortDate( $date )
@@ -715,17 +747,24 @@ function getSpeakerPicturePathById( $id )
     *
     * @return
  */
-function rescheduleAWS( )
+function rescheduleAWS( $method = 'reschedule_group_greedy' )
 {
-    echo printInfo( "Rescheduling ...." );
-    $scriptPath = __DIR__ . '/schedule.sh';
+    echo printInfo( "Rescheduling with $method ...." );
+
+    if( $method == 'reschedule_group' )
+        $scriptPath = __DIR__ . '/schedule_aws_groupwise.py';
+    else if( $method == 'reschedule_group_greedy' )
+        $scriptPath = __DIR__ . '/schedule_aws_greedy_groupwise.py';
+    else
+        $scriptPath = __DIR__ . '/schedule_aws.py';
+
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
-    $command = "timeout 30 bash $scriptPath";
+    $command = "timeout 60 $scriptPath";
     exec( $command, $output, $return );
     return $output;
 }
 
-function html2Markdown( $html, $strip_inline_image = false )
+function html2Markdown( $html, $strip_inline_image = false ) : string
 {
     if( $strip_inline_image )
     {
@@ -733,14 +772,18 @@ function html2Markdown( $html, $strip_inline_image = false )
         $html = preg_replace( '/<img[^>]+\>/i', '', $html );
     }
 
-    $outfile = __DIR__ . '/data/_html.html';
-
+    $outfile = tempnam( "/tmp", "HIPPO" );
     file_put_contents( $outfile, $html );
     if( file_exists( $outfile ) )
     {
         $cmd = __DIR__ . "/html2other.py $outfile md ";
-        $md = `$cmd`;
-        unlink( $outfile );
+        echo printInfo( "Executing $cmd" );
+        hippo_shell_exec( $cmd, $md, $stderr );
+        if( $stderr )
+        {
+            echo printErrorSevere( "Error: $stderr" );
+            return false;
+        }
         return $md;
     }
     return $html;
@@ -813,7 +856,7 @@ function uploadImage( $pic, $filename )
     $type = explode( '/', $pic[ 'type' ] );
     $ext = $type[1];
 
-    if( strlen( count( $tmpfile ) ) < 1 )
+    if( strlen( $tmpfile ) < 1 )
         return false;
 
     $conf = getConf( );
@@ -1021,7 +1064,7 @@ function verifyRequest( $request )
         $error = "
             You did not select appropriate <tt>CLASS</tt> for your booking
             request. By default it is set to <tt>UNKNOWN</tt> which is not
-            acceptable.
+            acceptable. If you are not sure, select <tt>OTHER</tt>.
             ";
         return $error;
     }
@@ -1497,3 +1540,47 @@ function isHTML( $text )
 
     return true;
 }
+
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Split text on any white space (space, tab, comma, newline, * etc.)
+    *
+    * @Param $text
+    * @Param $ext : extra delimiters
+    *
+    * @Returns
+ */
+/* ----------------------------------------------------------------------------*/
+function splitAtCommonDelimeters( $text, $ext = '')
+{
+    $res = preg_split( "/[\s,$ext]+/", $text );
+    return $res;
+}
+
+function removeAWSSpeakerFromList( $speaker )
+{
+    $data = array( 'eligible_for_aws' => 'NO', 'login' => $speaker );
+    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data );
+    if( $res )
+    {
+        echo printInfo(
+            "Successfully removed user $speaker from AWS list.
+            Recomputing schedule ... "
+            );
+
+
+        // Send email to speaker.
+        $subject = "Your name has been removed from AWS list";
+        $msg = "<p>Dear " . loginToText( $speaker ) . " </p>";
+        $msg .= "<p>
+            Your name has been removed from the Annual Work Seminar (AWS) roaster.  
+            If this is a mistake, please inform Academic Office.
+            </p>";
+
+        $to = getLoginEmail( $speaker );
+        $res = sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
+        if( ! $res )
+            echo printWarning( "Could not notify user" );
+    }
+}
+

@@ -3,9 +3,9 @@
 include_once 'database.php';
 include_once './check_access_permissions.php';
 
-mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) ); 
+mustHaveAllOfTheseRoles( array( "AWS_ADMIN" ) );
 
-$res = updateTable( 'upcoming_aws', 'id', 'abstract', $_POST );
+$res = updateTable( 'upcoming_aws', 'id', 'abstract,is_presynopsis_seminar', $_POST );
 if( $res )
 {
     echo printInfo( "Successfully updated abstract of upcoming AWS entry" );

@@ -5,6 +5,7 @@
 import moment from '../moment';
 
 var units = {
+    'ss' : 'sekundė_sekundžių_sekundes',
     'm' : 'minutė_minutės_minutę',
     'mm': 'minutės_minučių_minutes',
     'h' : 'valanda_valandos_valandą',
@@ -85,6 +86,7 @@ export default moment.defineLocale('lt', {
         future : 'po %s',
         past : 'prieš %s',
         s : translateSeconds,
+        ss : translate,
         m : translateSingular,
         mm : translate,
         h : translateSingular,
@@ -105,4 +107,3 @@ export default moment.defineLocale('lt', {
         doy : 4  // The week that contains Jan 4th is the first week of the year.
     }
 });
-

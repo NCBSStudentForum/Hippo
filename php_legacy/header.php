@@ -97,13 +97,22 @@ ini_set( 'date.timezone', 'Asia/Kolkata' );
 
 <!-- sort table. -->
 <script src="./node_modules/sorttable/sorttable.js"></script>
-
+<script type="text/javascript" charset="utf-8">
+    $(".sortable").sortable( );
+</script>
 
 
 <script>
 $( function() {
     $( "input.datepicker" ).datepicker( { dateFormat: "yy-mm-dd" } );
   } );
+</script>
+
+<script type="text/javascript" charset="utf-8">
+for( i = new Date( ).getFullYear( ) + 1; i > 2000; i-- )
+{
+    $( "#yearpicker" ).append( $('<option />').val(i).html(i));
+}
 </script>
 
 <script>
@@ -118,6 +127,8 @@ $(function(){
             minTime : '8am'
             , scrollDefault : 'now'
             , timeFormat : 'H:mm', interval : '15'
+            , startTime : '8am'
+            , dynamic : false
     });
 });
 </script>
@@ -150,6 +161,38 @@ function AreYouSure( button )
 }
 </script>
 
+<!-- toggle  show hide -->
+<script type="text/javascript" charset="utf-8">
+function ToggleShowHide( button )
+{
+    var div = document.getElementById( "show_hide" );
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+        button.innerHTML = 'Show form';
+    }
+    else {
+        div.style.display = 'block';
+        button.innerHTML = 'Hide form';
+    }
+}
+</script>
+
+<!-- toggle  show hide -->
+<script type="text/javascript" charset="utf-8">
+function toggleShowHide( button, eid )
+{
+    var div = document.getElementById( eid );
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+        button.innerHTML = 'Show Enrollments';
+    }
+    else {
+        div.style.display = 'inline';
+        button.innerHTML = 'Hide Enrollments';
+    }
+};
+</script>
+
 <script type="text/javascript">
   (function() {
     var blinks = document.getElementsByTagName('blink');
@@ -162,10 +205,6 @@ function AreYouSure( button )
     }, 1000);
   })();
 </script>
-
-<script type="text/javascript" charset="utf-8" src="./template/clean_html.js">
-</script>
-
 
 <!-- load basic unicode chara -->
 <?php
@@ -194,6 +233,7 @@ $symbEdit = "&#x270d";                // Writing hand
 $symbCalendar = "&#128197";          // Does not work on chromium
 $symbCalendar = "Schedule It";
 $symbDelete = "&#10008";
+$symbDelete = '<i class="fa fa-trash-o"></i>';
 $symbCancel = "&#10008";
 
 $symbReject = "Reject";

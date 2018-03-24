@@ -9,15 +9,16 @@ require_once 'cron_jobs/helper.php';
  */
 /* ----------------------------------------------------------------------------*/
 $intMonth = intval( date( 'm', strtotime( 'today' ) ) );
+echo $intMonth;
+
 // Nothing to do on odd months.
 if( $intMonth % 2 == 0 )
 {
     $year = getCurrentYear( );
     $month = date( 'M', strtotime( 'today' ));
-    $firstSat = strtotime( 'first Saturday', strtotime( "$month $year" ) );
-
     if( trueOnGivenDayAndTime( 'first Saturday', '10:00 am' ) )
     {
+        error_log( "First saturday of even month. Update PIs about AWS list" );
         $speakers = getAWSSpeakers( );
         $facultyMap = array( );
         foreach( $speakers as $speaker )

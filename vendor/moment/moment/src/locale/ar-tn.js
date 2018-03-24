@@ -31,6 +31,7 @@ export default moment.defineLocale('ar-tn', {
         future: 'في %s',
         past: 'منذ %s',
         s: 'ثوان',
+        ss : '%d ثانية',
         m: 'دقيقة',
         mm: '%d دقائق',
         h: 'ساعة',
@@ -47,4 +48,3 @@ export default moment.defineLocale('ar-tn', {
         doy: 4 // The week that contains Jan 4th is the first week of the year.
     }
 });
-

@@ -20,12 +20,21 @@ function fixJCSchedule( $login, $data )
     $data[ 'title' ] = '';
     $data[ 'status' ] = 'VALID';
     $data[ 'id' ] = getUniqueID( 'jc_presentations' );
+    $data[ 'presenter' ] = $login;
+    $data[ 'title' ] = 'Not yet available';
 
     $entry = insertOrUpdateTable( 'jc_presentations'
         , 'id,presenter,jc_id,date,title', 'status'
         , $data );
 
-    echo printInfo( 'Assigned user ' . $data[ 'presenter' ] .
+    if( ! $entry  )
+    {
+        $date = $data[ 'date'] ;
+        echo printInfo( "Failed to assign $presenter on $date. " );
+        return array( );
+    }
+
+    echo printInfo( 'Assigned user ' . $login .
         ' to present a paper on ' . dbDate( $data['date' ] )
         );
 
@@ -63,6 +72,8 @@ function fixJCSchedule( $login, $data )
 
 function assignJCPresentationToLogin( $login, $data )
 {
+    // Make sure the only valid login is used and not the email id.
+    $login = explode( '@', $login )[0];
     return fixJCSchedule( $login, $data );
 }
 

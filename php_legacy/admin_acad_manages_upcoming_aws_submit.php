@@ -9,40 +9,55 @@ include_once 'mail.php';
 mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 
-if( $_POST['response'] == "Reschedule" )
+if( __substr__( "reschedule", $_POST['response'] ) )
 {
-    rescheduleAWS( );
+    rescheduleAWS( $_POST[ 'response' ] );
     goToPage( 'admin_acad_manages_upcoming_aws.php', 1);
     exit;
 }
 
 else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )
 {
-    $speaker = $_POST[ 'speaker' ];
+    $speaker = explode( '@', $_POST[ 'speaker' ] )[0];
     $date = $_POST[ 'date' ];
-    $awsID = acceptScheduleOfAWS( $speaker, $date );
-
-    if( $awsID >= 0 )
+    if(  $speaker && getLoginInfo( $speaker ) && strtotime( $date ) > strtotime( '-7 day' ) )
     {
-        echo printInfo( "Successfully assigned" );
-
-        // When accepting the computed schedule, we don't want to run the
-        // rescheduling algo.
-        if( $_POST[ 'response' ] == 'Assign' )
-            rescheduleAWS( );
-
-        // Send email to user.
-        $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ], $awsID );
-        if( $res )
+        $aws = getUpcomingAWSOfSpeaker( $speaker );
+        if( $aws )
         {
-            goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
-            exit;
+            echo printWarning( "$speaker already has AWS scheduled. Doing nothing." );
+            echo arrayToVerticalTableHTML( $aws, 'aws' );
         }
         else
         {
-            printInfo( "Failed to send email to user" );
+            $awsID = acceptScheduleOfAWS( $speaker, $date );
+            if( $awsID > 0 )
+            {
+                echo printInfo( "Successfully assigned" );
+
+                // When accepting the computed schedule, we don't want to run the
+                // rescheduling algo.
+                if( $_POST[ 'response' ] == 'Assign' )
+                    rescheduleAWS( );
+
+                // Send email to user.
+                $res = notifyUserAboutUpcomingAWS( $_POST[ 'speaker' ], $_POST[ 'date' ], $awsID );
+                if( $res )
+                {
+                    goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
+                    exit;
+                }
+                else
+                    echo printWarning( "Failed to send email to user" );
+            }
+            else
+                echo printWarning( "Invalid entry. Probably date ('$date') is in past." );
         }
     }
+    else
+        echo printWarning( "Invalid speaker '$speaker' or date '$date' is in past.
+                Could not assign AWS."
+            );
 }
 else if( $_POST[ 'response' ] == 'format_abstract' )
 {
@@ -56,40 +71,17 @@ else if( $_POST[ 'response' ] == 'format_abstract' )
     else
     {
         echo '<form method="post" action="admin_acad_manages_upcoming_aws_reformat.php">';
-        echo dbTableToHTMLTable( 'upcoming_aws', $aws, 'abstract' );
+        echo dbTableToHTMLTable( 'upcoming_aws', $aws, 'abstract,is_presynopsis_seminar' );
         echo '</form>';
     }
 }
 else if( $_POST[ 'response' ] == 'RemoveSpeaker' )
 {
-    $data = array( 'eligible_for_aws' => 'NO', 'login' => $_POST[ 'speaker' ] );
-    $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data );
-    if( $res )
-    {
-        echo printInfo(
-            "Successfully removed user " . $_POST[ 'speaker' ] . " from AWS list.
-            Recomputing schedule ... "
-            );
-
-        // And reschedule AWS entry.
-        rescheduleAWS( );
-
-        // Send email to speaker.
-        $subject = "Your name has been removed from AWS list";
-        $msg = "<p>Dear " . loginToText( $_POST[ 'speaker' ] ) . " </p>";
-        $msg .= "<p>
-            Your name has been removed from the list of potential AWS
-            speaker. If this is a mistake, please write to Academic Office.
-            </p>";
-
-        $to = getLoginEmail( $_POST[ 'speaker' ] );
-        $res = sendHTMLEmail( $msg, $subject, $to, 'hippo@lists.ncbs.res.in' );
-        if( ! $res )
-            echo printWarning( "Could not notify user" );
-
-        goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
-        exit(1);
-    }
+    $res = removeAWSSpeakerFromList( $_POST[ 'speaker' ] );
+    // And reschedule AWS entry.
+    rescheduleAWS( );
+    goToPage( "admin_acad_manages_upcoming_aws.php", 1 );
+    exit(1);
 }
 
 else if( $_POST[ 'response' ] == 'delete' )
@@ -113,7 +105,7 @@ else if( $_POST[ 'response' ] == 'delete' )
             ";
 
         $data = array( );
-        $data[ 'id' ] = $_POST[ 'id' ];
+
         $data[ 'speaker' ] = $_POST[ 'speaker' ];
         $data[ 'date' ] = $_POST[ 'date' ];
 

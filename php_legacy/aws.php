@@ -5,8 +5,17 @@ include_once 'database.php';
 include_once 'tohtml.php';
 include_once 'html2text.php';
 
-echo '<a href="user_aws_search.php" target="_blank">
-    <small>Click to search AWS database.</small></a>';
+echo '<table class="info">
+<tr>
+    <td>
+        <a href="user_aws_search.php" target="_blank">Click to search AWS database.</a>
+    </td>
+    <td>
+        <a href="summary_aws.php" target="_blank">List of AWS speakers</a>
+    </td>
+</tr>
+</table>';
+echo '<br />';
 
 if( strtotime( 'today' ) == strtotime( 'this monday' ) )
     $today = dbDate( 'this monday' );

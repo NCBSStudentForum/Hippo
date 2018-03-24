@@ -32,7 +32,7 @@ $courseSelect = arrayToSelectList( 'courses', $options, $courseMap );
 
 // Manage courses. Add into course_registration.
 
-if( $_POST[ 'response' ] == 'submit' )
+if( strtolower($_POST[ 'response' ]) == 'submit' )
 {
     $_POST[ 'last_modified_on' ] = dbDateTime( 'now' );
     $_POST[ 'registered_on' ] = dbDateTime( 'now' );
@@ -52,7 +52,7 @@ if( $_POST[ 'response' ] == 'submit' )
         echo minionEmbarrassed( "Failed to register you for the course." );
         echo printWarning( "Most likely you are already registered for this course" );
     }
-    
+
 }
 else if( $_POST[ 'response' ] == 'drop' )
 {
@@ -63,11 +63,11 @@ else if( $_POST[ 'response' ] == 'drop' )
 
     $res = deleteFromTable( 'course_registration'
                         , 'student_id,semester,year,course_id'
-                        , $_POST ); 
+                        , $_POST );
 
     $course = getTableEntry( 'course_registration'
                         , 'student_id,semester,year,course_id'
-                        , $_POST ); 
+                        , $_POST );
 
     if( ! $course )
         echo printInfo( "Successfully dropped course." );

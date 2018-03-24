@@ -29,7 +29,7 @@ else
     $auth = authenticateUsingIMAP( $ldap, $pass );
     if( ! $auth )
     {
-        echo printErrorSevere("FATAL : Username or password is incorrect.");
+        echo printErrorSevere("Error: Username/password is incorrect. Try again...");
         goToPage( 'index.php', 2 );
         $auth = null;
     }
@@ -58,12 +58,15 @@ if( $auth )
 
     // If user title is unspecified then redirect him/her to edit user info
     $userInfo = getUserInfo( $ldap );
-    if( $userInfo['title'] == 'UNSPECIFIED' )
-    {
-       echo printInfo( "Please review your details " );
-       goToPage( "user_info.php", 1 );
-       exit;
-    }
+
+    // NOTE: This is not NEEDED. Un-neccessary for sending user to info page.
+    // They should be sent directly to their HOME ASAP.
+    //if( $userInfo['title'] == 'UNSPECIFIED' )
+    //{
+    //   echo printInfo( "Please review your details " );
+    //   goToPage( "user_info.php", 1 );
+    //   exit;
+    //}
 
     goToPage( "user.php", 0 );
     exit;

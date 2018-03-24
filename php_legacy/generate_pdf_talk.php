@@ -8,6 +8,14 @@ include_once 'tohtml.php';
 if( isset($argv) )
     parse_str( implode( '&' , array_slice( $argv, 1 )), $_GET );
 
+function get_suitable_font_size( $desc )
+{
+    $nchar = strlen( $desc );
+    if( $nchar > 1900 )
+        return '14pt';
+    return '12pt';
+}
+
 function eventToTex( $event, $talk = null )
 {
     // First sanities the html before it can be converted to pdf.
@@ -24,23 +32,22 @@ function eventToTex( $event, $talk = null )
 
     // Crate date and plate.
     $where = venueSummary( $event[ 'venue' ] );
-    $when = humanReadableDate( $event['date'] ) . ', ' . 
-        humanReadableTime( $event[ 'start_time' ] );
+    $when = humanReadableDate( $event['date'] ) . ' | ' . humanReadableTime( $event[ 'start_time' ] );
 
     $title = $event[ 'title' ];
     $desc = $event[ 'description' ];
-    $speaker = '';
+
 
     // Prepare speaker image.
     $imagefile = getSpeakerPicturePath( $talk[ 'speaker_id' ] );
-    echo "<pre> $imagefile </pre>";
     if( ! file_exists( $imagefile ) )
         $imagefile = nullPicPath( );
 
     // Add user image.
     $imagefile = getThumbnail( $imagefile );
-    $speakerImg = '\includegraphics[height=4.5cm]{' . $imagefile . '}';
+    $speakerImg = '\includegraphics[width=4cm]{' . $imagefile . '}';
 
+    $speaker = '';
     if( $talk )
     {
         $title = $talk['title'];
@@ -52,9 +59,7 @@ function eventToTex( $event, $talk = null )
         else 
             $speakerHTML = speakerToHTML( getSpeakerByName( $talk[ 'speaker' ]));
 
-        $speakerTex = html2Tex( $speakerHTML );
-
-        $speaker = $speakerTex;
+        $speaker = html2Tex( $speakerHTML );
     }
 
 
@@ -70,9 +75,9 @@ function eventToTex( $event, $talk = null )
 
     $logo = '';
     if( $isInstem )
-        $logo = '\includegraphics[height=1.5cm]{./data/inStem_logo.png}';
+        $logo = '\includegraphics[height=1.5cm]{' . __DIR__  . '/data/inStem_logo.png}';
     else
-        $logo = '\includegraphics[height=1.5cm]{./data/ncbs_logo.png}';
+        $logo = '\includegraphics[height=1.5cm]{' . __DIR__ . '/data/ncbs_logo.png}';
 
 
     // Logo etc.
@@ -80,59 +85,49 @@ function eventToTex( $event, $talk = null )
     $place = ' \faHome \,' . $where;
 
     $head .= '\begin{tikzpicture}[remember picture,overlay
-        ,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
+        , every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
 
-    $head .= '\node[] (logo) at ([xshift=30mm,yshift=-20mm]current page.north west) 
-        { ' . $logo . '};';
+    $head .= '\node[below=of current page.north west,anchor=west,shift=(-45:1cm)] (logo) { ' . $logo . '};';
 
-    $head .= '\node[align=left] (tclass) at ([xshift=-40mm,yshift=-15mm]current page.north east)
-                     {\color{blue} \Huge ' . $talk['class'] . ' };';
-    $head .= '\node[below=of tclass.south west,yshift=3mm,align=right,text width=0.5\linewidth] 
-        (date) {\small \emph ' . $date . ' };';
-    $head .= '\node[below=of date,yshift=3mm,align=right,text width=0.5\linewidth] 
-        (place) {\small \emph ' . $place . ' };';
+    $head .= '\node[below=of current page.north east,anchor=south east,shift=(-135:1cm)] (tclass) 
+            {\LARGE \textsc{\textbf{' . $talk['class'] . '}}};';
+    $head .= '\node[below=of tclass.south east, anchor=east] (date) {\small \textsc{' . $date . '}};';
+    $head .= '\node[below=of date.south east, anchor=south east] (place) {\small \textsc{' . $place . '}};';
+    $head .= '\node[below=of place] (place1) {};';
+    $head .= '\node[fit=(current page.north east) (current page.north west) (place1)
+                    , fill=red, opacity=0.3, rectangle, inner sep=1mm] (fit_node) {};';
     $head .= '\end{tikzpicture}';
-    $head .= '\vspace{0cm} ';
+    $head .= '\par \vspace{5mm} ';
 
-    $head .= '\begin{tikzpicture}[ every node/.style={rectangle
-            ,inner sep=1pt,node distance=5mm,text width=0.65\textwidth} ]';
-    $head .= '\node[text width=5cm,minimum height=5cm,yshift=-10mm] (image) at (0,0) {' . $speakerImg . '};';
-    $head .= '\node[above right=of image, yshift=-25mm] (title) { ' .  '\textsc{\LARGE ' . $title . '} };';
-    $head .= '\node[below=of title] (author) { ' .  '{' . $speaker . '} };';
+    $head .= '\begin{tikzpicture}[ ]';
+    $head .= '\node[inner sep=0, inner sep=0pt] (image) {' . $speakerImg . '};';
+    $head .= '\node[right=of image.north east, anchor=north west, text width=0.6\linewidth] (title) { ' .  '{\Large ' . $title . '} };';
+    $head .= '\node[below=of title,text width=0.6\linewidth,yshift=10mm] (author) { ' .  '{\small ' . $speaker . '} };';
     $head .= '\end{tikzpicture}';
-    $head .= ' '; // So tikzpicture don't overlap.
+    $head .= '\par'; // So tikzpicture don't overlap.
 
     $tex = array( $head );
 
-    //// Put talk class in header.
-    //if( $talk )
-    //    $tex[ ] = '\lhead{\textsc{\color{blue}' . $talk['class'] . '}}';
-
-
-
     $tex[] = '\par';
-
     file_put_contents( '/tmp/desc.html', $desc );
-
     $texDesc = html2Tex( $desc ); 
     if( strlen(trim($texDesc)) > 10 )
         $desc = $texDesc;
 
-    // Extra.
-    $tex[] = '{\large ' . $desc . '}';
+    $extra = '';
     if( $talk )
     {
-        $extra = '\vspace{1cm}';
-        $extra = '\begin{table}[ht!]';
+        $extra .= '\vspace{1cm}';
         $extra .= "\begin{tabular}{ll}\n";
-        //$extra .= "\\toprule\n";
-        $extra .= 'Host & ' . fixName( $talk[ 'host' ] ) . '\\\\';
+        $extra .= '{\bf Host} & ' . fixName( $talk[ 'host' ] ) . '\\\\';
         if( $talk[ 'coordinator' ] )
-            $extra .= 'Coordinator & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
-        //$extra .= '\bottomrule';
-        $extra .= '\end{tabular} \end{table}';
-        $tex[] = $extra;
+            $extra .= '{\bf Coordinator} & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
+        $extra .= '\end{tabular}';
     }
+
+    $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
+        , fit to height=18 cm, fit basedim=14pt
+        ]' . $desc . $extra . '\end{tcolorbox}';
 
     $texText = implode( "\n", $tex );
     return $texText;
@@ -144,29 +139,23 @@ function eventToTex( $event, $talk = null )
 // Intialize pdf template.
 //////////////////////////////////////////////////////////////////////////////
 // Institute 
-$tex = array( "\documentclass[12pt]{article}"
+$tex = array( 
+    "\documentclass[12pt]{article}"
     , "\usepackage[margin=25mm,top=3cm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{wrapfig}"
     , "\usepackage[]{grffile}"
-    //, "\usepackage[]{booktabs}"
     , "\usepackage[]{amsmath,amssymb}"
     , "\usepackage[colorlinks=true]{hyperref}"
     , "\usepackage[]{color}"
     , "\usepackage{tikz}"
-    // Old version may not work.
     , "\usepackage{fontawesome}"
-    //, '\usepackage{fancyhdr}'
-    , '\linespread{1.2}'
-    //, '\pagestyle{fancy}'
+    , '\linespread{1.15}'
     , '\pagenumbering{gobble}'
-    //, '\rhead{National Center for Biological Sciences, Bangalore \\\\ 
-    //    TATA Institute of Fundamental Research, Mumbai}'
-    , '\usetikzlibrary{calc,positioning,arrows}'
-    //, '\usepackage[sfdefault,book]{FiraSans}'
-    //, '\usepackage[]{ebgaramond}'
-    , '\usepackage{libertine}'
-    , '\usepackage[T1]{fontenc}'
+    , '\usetikzlibrary{fit,calc,positioning,arrows,backgrounds}'
+    , '\usepackage[sfdefault,light]{FiraSans}'
+    , '\usepackage{tcolorbox}'          // Fit text in one page.
+    , '\tcbuselibrary{fitting}'
     , '\begin{document}'
     );
 
@@ -205,10 +194,9 @@ else
 $outfile = 'EVENTS';
 if( $date )
     $outfile .= '_' . $date;
-echo printInfo( "Following events " . implode( ', ', $ids ) );
+
 foreach( $ids as $id )
 {
-    echo printInfo( "Generating pdf for id $id" );
     $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
     $event = getEventsOfTalkId( $id );
     $tex[] = eventToTex( $event, $talk );
@@ -221,23 +209,21 @@ $TeX = implode( "\n", $tex );
 
 // Generate PDF now.
 $outdir = __DIR__ . "/data";
-$texFile = $outdir . '/' . $outfile . ".tex";
 $pdfFile = $outdir . '/' . $outfile . ".pdf";
+$texFile = sys_get_temp_dir() . '/' . $outfile . ".tex";
 
 if( file_exists( $pdfFile ) )
     unlink( $pdfFile );
 
 file_put_contents( $texFile,  $TeX );
-$cmd = "pdflatex --shell-escape --output-directory $outdir $texFile";
+$cmd = __DIR__ . "/tex2pdf.sh $texFile";
 if( file_exists( $texFile ) )
     $res = `$cmd`;
 
 if( file_exists( $pdfFile ) )
 {
-    echo printInfo( "PDF is successfully generated: " . basename( $pdfFile ) );
-
     // Remove tex file.
-    unlink( $texFile );
+    // unlink( $texFile );
 
     // Download only if called from browser.
     if( ! isset( $argv ) )

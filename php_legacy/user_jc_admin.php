@@ -35,7 +35,6 @@ foreach( $jcIds as $jc_id )
     $upcoming = getTableEntries( 'jc_presentations'
         , 'date', "date >= '$today' AND status='VALID' AND jc_id='$jc_id'"
         );
-    sortByKey( $upcoming, 'date' );
     $upcomingJCs[ $jc_id ] = $upcoming;
 }
 
@@ -46,12 +45,10 @@ echo printInfo( 'Assign a presentation manually.' );
 
 $table = '<table>';
 $table .= '<tr>';
-$table .= '<td> <input class="datepicker" name="date"
-    placeholder="pick date" /> </td>';
+$table .= '<td> <input class="datepicker" name="date" placeholder="pick date" /> </td>';
 $table .= '<td> <input name="presenter" placeholder="login id" /> </td>';
 $table .= "<td> $jcSelect </td>";
-$table .= '<td><button name="response" value="Assign Presentation">
-    Assign</button></td>';
+$table .= '<td><button name="response" value="Assign Presentation">Assign</button></td>';
 $table .= '</tr></table>';
 
 // Manage ADMIN.
@@ -105,9 +102,7 @@ foreach( $upcomingJCs as $jcID => $upcomings )
         echo arrayToRowHTML( $upcoming, 'show_info', $tofilter,  false, false );
         echo '<td> <button name="response" value="Remove Presentation"
             title="Remove this schedule" >' . $symbDelete . '</button></td>';
-
-        echo "<input type='hidden' name='id' value='"
-            . $upcoming['id'] . "' />";
+        echo "<input type='hidden' name='id' value='" . $upcoming['id'] . "' />";
         echo '</form>';
         echo '</tr>';
     }
@@ -259,8 +254,7 @@ foreach( $jcIds as $currentJC )
 // Rate tasks.
 echo '<h1>Rare tasks</h1>';
 echo '
-    <form action="user_jc_admin_edit_jc_request.php"
-        method="post" accept-charset="utf-8">
+    <form action="user_jc_admin_edit_jc_request.php" method="post" accept-charset="utf-8">
 
     <table border="0">
         <tr>
@@ -272,12 +266,10 @@ echo '
             '</td>
             <td>
                 <button type="submit" name="response"
-                value="transfer_admin">
-                    Transfer Admin Rights</button>
+                    value="transfer_admin">Transfer Admin Rights</button>
             </td>
         </tr>
     </table>
-
     </form>';
 
 echo '<br />';

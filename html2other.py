@@ -1,8 +1,4 @@
-#!/usr/bin/env python2.7
-
-"""html2markdown.py:
-
-"""
+#!/usr/bin/env python3
 
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh"
@@ -14,13 +10,8 @@ __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
 import sys
-
-PYMAJOR = sys.version_info[0]
-if PYMAJOR == 2:
-    reload( sys )
-    sys.setdefaultencoding( 'utf-8' )
-
 import os
+import subprocess
 import re
 import html2text
 import string
@@ -29,52 +20,34 @@ import base64
 from logger import _logger
 
 pandoc_ = True
-try:
-    if not os.path.isfile( '/usr/bin/pandoc' ):
-        os.environ.setdefault( 'PYPANDOC_PANDOC', '/usr/local/bin/pandoc' )
-    import pypandoc
-except Exception as e:
-    _logger.warn( 'Failed to convert to html using pandoc.  %s' % e )
-    pandoc_ = False
 
-# Wrap stdout so we can write to unicode
-# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+def _cmd( cmd ):
+    output = subprocess.check_output( cmd.split( ), shell = False )
+    return output.decode( 'utf-8' )
 
 def fix( msg ):
-    if PYMAJOR == 2:
-        msg = msg.decode( 'ascii', 'ignore' )
     return msg
 
-def tomd( msg ):
+def tomd( htmlfile ):
+    # This function is also used by sendemail.py file.
+    with open( htmlfile ) as f:
+        msg = f.read( )
+
     msg = fix( msg )
     # remove <div class="strip_from_md"> </div>
     pat = re.compile( r'\<div\s+class\s*\=\s*"strip_from_md"\s*\>.+?\</div\>', re.DOTALL )
-
     for s in pat.findall( msg ):
         msg = msg.replace( s, '' )
-
-
-    if PYMAJOR == 2:
-        msg = filter( lambda x: x in string.printable, msg )
-
     msg = msg.replace( '</div>', '' )
     msg = re.sub( r'\<div\s+.+?\>', '', msg )
 
-    if pandoc_:
-        md = pypandoc.convert_text( msg, 'md', format = 'html'
-                , extra_args = [ '--atx-headers' ]
-                )
-        return md.encode( 'ascii', 'ignore' )
-    else:
-        _logger.info( 'Trying html2text ' )
-        try:
-            import html2text
-            msg = html2text.html2text( msg )
-        except Exception as e:
-            _logger.warn( 'Failed to convert to html using html2text. %s' % e )
-
-    msg = re.sub( r'\\+\n', '\n', msg )
-    return msg.decode( 'utf-8' )
+    # Write back to original file.
+    htmlfile = tempfile.mktemp( prefix = 'hippo', suffix='.html' )
+    txtfile = '%s.txt' % htmlfile
+    with open( htmlfile, 'w' ) as f:
+        f.write( msg )
+    _cmd( 'pandoc -t plain -o %s %s' % (txtfile, htmlfile) )
+    return msg, txtfile.strip()
 
 def fixInlineImage( msg ):
     """Convert inline images to given format and change the includegraphics text
@@ -89,7 +62,7 @@ def fixInlineImage( msg ):
         outfmt = m.group( 1 )
         data = m.group( 2 )
         fp = tempfile.NamedTemporaryFile( delete = False, suffix='.'+outfmt )
-        fp.write( base64.b64decode( data ) )
+        fp.write( data )
         fp.close( )
         # Replace the inline image with file name.
         msg = msg.replace( m.group(0), "{%s}" % fp.name )
@@ -103,44 +76,31 @@ def fixInlineImage( msg ):
     return msg
 
 def toTex( infile ):
-    with open( infile, 'r' ) as f:
-        msg = fix( f.read( ) )
-        try:
-            msg = pypandoc.convert_text( msg, 'tex', format = 'html'
-                    , extra_args = [ '--parse-raw' ])
-            msg = fixInlineImage( msg )
-        except Exception as e:
-            msg = 'Failed to convert to TeX %s' % e
-    return msg
+    outfile = tempfile.mktemp(  prefix = 'hippo', suffix = 'tex'  )
+    msg = _cmd( 'pandoc -f html -t latex -o %s %s' % (outfile, infile ))
+    if os.path.isfile( outfile ):
+        with open( outfile ) as f:
+            msg = fixInlineImage( f.read( ) )
+    else:
+        with open( outfile, 'w' ) as f:
+            f.write( "Could not covert to TeX" );
+    return outfile
 
 def htmlfile2md( filename ):
-    with open( filename, 'r' ) as f:
-        text = f.read( )
-
-    md = tomd( text )
-    md = md.decode( 'utf-8' )
-
-    # Style ect.
-    pat = re.compile( r'{(style|lang=).+?}', re.DOTALL )
-    md = pat.sub( '', md )
-    md = md.replace( '\\', '' )
-    return md
+    md, mdfile = tomd( filename )
+    return mdfile
 
 def main( infile, outfmt ):
+    # Print is neccessary since we are reading stdout in PHP.
+    # Force proper encoding
     if outfmt in [ 'md', 'markdown', 'text', 'txt' ]:
-        md = htmlfile2md( infile )
-        md = md.replace( '\\', '' )
-        print( md )
-        return md
+        mdfile = htmlfile2md( infile )
+        print( mdfile )
+        return mdfile
     elif outfmt == 'tex':
-        print( toTex( infile ) )
-        return toTex( infile )
-    elif outfmt == "html2text":
-        with open( infile, 'r' ) as f:
-            res = html2text.html2text( fix( f.read( ) ) )
-            print( res )
-            return res
-
+        texfile = toTex( infile ) 
+        print( texfile )
+        return texfile
 
 if __name__ == '__main__':
     infile = sys.argv[1]

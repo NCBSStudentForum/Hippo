@@ -17,10 +17,12 @@ if( trueOnGivenDayAndTime( 'this monday', '10:00 am' ) )
 
         $mail = $res[ 'email' ]['email_body'];
 
+        $pdffile = $res[ 'pdffile' ];
+        $cclist = $res[ 'email']['cc' ];
+        $to = $res[ 'email']['recipients'];
+
         error_log( "Sending to $to, $cclist with subject $subject" );
         echo( "Sending to $to, $cclist with subject $subject" );
-
-        $pdffile = $res[ 'pdffile' ];
         $ret = sendHTMLEmail( $mail, $subject, $to, $cclist, $pdffile );
         ob_flush( );
     }

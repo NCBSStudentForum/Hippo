@@ -1,12 +1,11 @@
 <?php
-
-include_once 'check_access_permissions.php';
-mustHaveAnyOfTheseRoles( array( 'USER' ) );
-
+include_once 'header.php';
 include_once 'database.php';
-include_once 'tohtml.php';
 include_once 'methods.php';
+include_once 'tohtml.php';
+include_once 'check_access_permissions.php';
 
+mustHaveAnyOfTheseRoles('USER' );
 echo userHTML( );
 
 $sem = getCurrentSemester( );
@@ -37,7 +36,7 @@ foreach( $myCourses as $c )
     else
     {
         // This course is no longer running. Drop it.
-        updateTable( 
+        updateTable(
             'course_registration'
             , 'student_id,year,semester,course_id'
             , 'status'
@@ -71,7 +70,9 @@ $blockedCourses = array( );
 foreach( $runningCourses as $c )
 {
     $cstart = strtotime( $c[ 'start_date' ] );
-    if( $today > strtotime( '-7 day', $cstart) && $today <= strtotime( '+7 day', $cstart ) )
+
+    // Registration is allowed within 4 weeks.
+    if( $today > strtotime( '-14 day', $cstart) && $today <= strtotime( '+14 day', $cstart ) )
     {
         // Ignore any course which is colliding with any registered course.
         $cid = $c[ 'course_id' ];
@@ -92,7 +93,14 @@ foreach( $runningCourses as $c )
     }
 }
 
+
 // Get the list of valid courses.
+echo noteWithFAIcon(
+    "Courses will be visible in registration form from -2 weeks to +2 weeks from the
+    <tt>start date</tt>."
+    , "fa-bell"
+    );
+
 echo "<h2>Registration form</h2>";
 $courseSelect = arrayToSelectList( 'course_id', $options, $courseMap );
 $default = array( 'student_id' => $_SESSION[ 'user' ]
@@ -100,11 +108,13 @@ $default = array( 'student_id' => $_SESSION[ 'user' ]
                 , 'year' => $year
                 , 'course_id' => $courseSelect
                 );
+
+// TODO: Custom table for registration.
 echo '<form method="post" action="user_manages_courses_action.php">';
 echo dbTableToHTMLTable( 'course_registration'
     , $default
     , 'course_id:required,type'
-    , 'submit'
+    , 'Submit'
     , 'status,registered_on,last_modified_on,grade,grade_is_given_on'
 );
 echo '</form>';
@@ -134,13 +144,15 @@ if( count( $myCourses ) > 0 )
         );
 }
 
-// Dropping policy
-echo printInfo( "
-    <h3>Policy for dropping courses </h3>
-    Upto 30 days from starting of course, you are free to drop a course.
-    After that, you need to write to your course instructor and academic office.
-    " );
-
+if( count( $myCourses ) > 0 )
+{
+    echo ' <br />';
+    // Dropping policy
+    echo noteWithFAIcon( " <strong>Policy for dropping courses </strong> <br />
+        Upto 30 days from starting of course, you are free to drop a course.
+        After that, you need to write to your course instructor and academic office.
+        ", "fa-bell-o" );
+}
 
 $count = 0;
 foreach( $myCourses as $c )
@@ -159,7 +171,7 @@ foreach( $myCourses as $c )
         continue;
 
     // If more than 30 days have passed, do not allow dropping courses.
-    if( strtotime( 'today' ) > 
+    if( strtotime( 'today' ) >
         strtotime( '+30 day',strtotime($runningCourses[ $cid][ 'start_date' ])))
         $action = '';
 
@@ -178,24 +190,54 @@ foreach( $myCourses as $c )
 echo '</tr></table>';
 echo '</div>';
 
-if( $runningCourses )
+// if( $runningCourses )
+// {
+//     echo '<h1> Running courses </h1>';
+//     echo '<div style="font-size:small">';
+//     echo '<table class="info">';
+//     $ignore = 'id,semester,year,comment,ignore_tiles,slot';
+//     $cs = array_values( $runningCourses );
+//     echo arrayHeaderRow( $cs[0], 'info', $ignore );
+//     foreach( $cs as $rc )
+//         echo arrayToRowHTML( $rc, 'info', $ignore );
+//     echo '</table>';
+//     echo '</div>';
+// }
+//
+//
+// echo '<h1>Slots </h1>';
+// echo slotTable( );
+
+echo ' <br /> ';
+echo goBackToPageLink( "user.php", "Go back" );
+
+echo '<h1> My courses </h1>';
+
+$user = whoAmI( );
+$myAllCourses = getTableEntries( 'course_registration'
+    , 'year, semester'
+    , "student_id='$user' AND status='VALID'"
+    );
+
+$hide = 'student_id,status,last_modified_on';
+
+if( count( $myAllCourses ) > 0 )
 {
-    echo '<h1> Running courses </h1>';
-
-    echo '<div style="font-size:small">';
-    echo '<table class="info">';
-    $ignore = 'id,semester,year,comment,ignore_tiles,slot';
-    $cs = array_values( $runningCourses );
-    echo arrayHeaderRow( $cs[0], 'info', $ignore );
-    foreach( $cs as $rc )
-        echo arrayToRowHTML( $rc, 'info', $ignore );
-    echo '</table>';
-    echo '</div>';
+    echo '<table class="info sorttable">';
+    echo arrayToTHRow( $myAllCourses[0], 'info', $hide );
+    foreach( $myAllCourses as $course )
+    {
+        $cid = $course[ 'course_id' ];
+        $cname = getCourseName( $cid );
+        $course[ 'course_id' ] .= " <br /> $cname";
+        echo arrayToRowHTML( $course, 'info', $hide );
+    }
+    echo "</table>";
 }
-
-
-echo '<h1>Slots </h1>';
-echo slotTable( );
+else
+{
+    echo printInfo( "I could not find any course belonging to '$user' in my database." );
+}
 
 echo goBackToPageLink( "user.php", "Go back" );
 

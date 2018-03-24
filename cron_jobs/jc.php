@@ -60,6 +60,9 @@ if( trueOnGivenDayAndTime( 'today', '9:00' ) )
     $upcomingPresentations = getUpcomingJCPresentations( );
     foreach( $upcomingPresentations as $i => $presentation )
     {
+        if( ! trim( $presentation[ 'presenter' ] ) )
+            continue;
+
         if( diffDates( $presentation[ 'date' ], 'today', 'day' ) == 0 )
         {
             $jcID = $presentation['jc_id'];
@@ -69,6 +72,10 @@ if( trueOnGivenDayAndTime( 'today', '9:00' ) )
             $tableOfJCCoords = arraysToTable( $listOfAdmins );
 
             $title = getPresentationTitle( $presentation );
+
+            if( ! trim($title) )
+                continue;
+
             $day = date( 'l', strtotime( $jcInfo[ 'day' ] ) );
 
             $macro = array( 'VENUE' => venueSummary( $jcInfo[ 'venue' ] )

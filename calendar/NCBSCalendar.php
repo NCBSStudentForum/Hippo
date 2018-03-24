@@ -2,11 +2,11 @@
 
 set_include_path( '..' );
 
+require_once 'vendor/autoload.php';
 include_once 'header.php';
 include_once 'methods.php';
 include_once 'database.php';
 include_once 'tohtml.php';
-require_once 'vendor/autoload.php';
 
 function date3339($date)
 {
@@ -170,10 +170,8 @@ class NCBSCalendar
         // allowed in any case.
         $gevent->setSummary( $event['title' ] );
 
-        $gevent->setDescription(
-                fixHTML( substr($event['description'],0,200 )
-                    , $strip_inline_image = true
-                ) );
+        $desc = __get__( $event, 'description', '' );
+        $gevent->setDescription( fixHTML( $desc , $strip_inline_image = true) );
         $gevent->setHtmlLink( $event['url'] );
 
         $startTimeUTC = strtotime(
@@ -247,7 +245,8 @@ class NCBSCalendar
 
         // We need to clean up the description.
         // A. Remove inline images. And put only first paragram.
-        $event[ 'description' ] = fixHTML( $event[ 'description' ], true );
+        $desc = __get__( $event, 'description', '' );
+        $event[ 'description' ] = fixHTML( $desc, true );
 
         $entry = array(
                      "summary" => $event['title']

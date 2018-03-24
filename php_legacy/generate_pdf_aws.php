@@ -58,41 +58,44 @@ function awsToTex( $aws )
     $imagefile = getLoginPicturePath( $aws['speaker'], 'hippo' );
     $imagefile = getThumbnail( $imagefile );
 
-    $speakerImg = '\includegraphics[height=5cm]{' . $imagefile . '}';
 
     // Date and plate
-    $dateAndPlace =  humanReadableDate( $aws[ 'date' ] ) .  
-            ', 4:00 pm \faHome \, \textbf{Haapus (LH1), ELC, NCBS}';
-    $dateAndPlace = '\faClockO \, ' . $dateAndPlace;
+    $date = '\faCalendarCheckO\, \textsc{\bf \textcolor{red}{ ' . humanReadableDate( $aws[ 'date' ] ) .  ' | 4:00 pm' . '}}';
+    $place = '\faHome\, \textsc{\bf \textcolor{red}{Haapus (LH1), Eastern Lab Complex}}';
 
     // Two columns here.
     $head = '';
-    $head .= '\begin{minipage}[b][6cm][b]{\linewidth} ';
+    $logo = __DIR__ . '/data/ncbs_logo.png';
 
-    $logo = './data/ncbs_logo.png';
+    // Is presynopsis seminar?
+    if( __get__( $aws, 'is_presynopsis_seminar', 'NO' ) == 'YES' )
+        $awsType = 'Presynopsis Seminar';
+    else
+        $awsType = 'Annual Work Seminar';
 
     // Header 
-    $head .= '\begin{tikzpicture}[remember picture,overlay,every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
-    //$head .= '\node[] (logo) at ([yshift=-15mm,xshift=30mm]current page.north west) 
-    //    { \includegraphics[height=1cm]{' . $logo . '}};';
-    $head .= '\node[] (logo) at ([yshift=-15mm,xshift=30mm]current page.north west) { }; ';
-    $head .= '\node[yshift=0mm,align=right,above right=of logo,text width=0.65\linewidth]
-             (aws) at (0.3\linewidth,0) {\Huge \textsc{Annual Work Seminar} };';
-    $head .= '\node[below=of aws,text width=0.65\linewidth,align=right] 
-        (dateAndPlace) { ' . $dateAndPlace . ' }; ';
+    $head .= '\begin{tikzpicture}[remember picture, overlay
+        , every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
+    $head .= '\node[below=of current page.north west, anchor=north west, xshift=10mm] (logo) 
+        {\includegraphics[height=1cm]{' . $logo . '}};';
+    $head .= '\node[below=of current page.north east, anchor=north east,xshift=-10mm] (aws) 
+            {\LARGE \textbf{\textsc{' . $awsType . '}}};';
+    $head .= '\node[below=of aws.south west,anchor=north west] (date) { ' . $date . ' }; ';
+    $head .= '\node[below=of date.west,anchor=west] (place) { ' . $place . ' }; ';
+    $head .= '\node[below=of place] (place1) {};';
+    $head .= '\node[fit=(current page.north east) (current page.north west) (place1)
+            , rectangle, fill=blue, opacity=0.2] (header) { };';
     $head .= '\end{tikzpicture}';
 
-    $head .= '\par';
-    $head .= '\begin{tikzpicture}[every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
-    $head .= '\node (align) at (0,0) {};';
-    $head .= '\node[left=of align] (img) { ' . $speakerImg . '};';
-    $head .= '\node[above right=of img] (date) { };';
-
-
-    $head .= '\node[right=of img,text width=0.65\linewidth] (title) {{\Large ' . $title . '}};';
-    $head .= '\node[below=of title,text width=0.65\linewidth] (author) {\textbf{' . $speaker . '}};';
+    $speakerImg = '\includegraphics[height=45mm,trim=2 2 2 2,clip]{' . $imagefile . '}';
+    $head .= '\par \vspace{10mm} \par ';
+    // $head .= '\begin{tikzpicture}[overlay, every node/.style={rectangle, node distance=5mm,inner sep=0mm} ]';
+    // $head .= '\node[yshift=-25mm] (img) { ' . $speakerImg . '};';
+    $head .= '\begin{tikzpicture}[ ]';
+    $head .= '\node[ ] (img) { ' . $speakerImg . '};';
+    $head .= '\node[right=of img,text width=0.65\linewidth] (title) {{\LARGE ' . $title . '}};';
+    $head .= '\node[below=of title.south west, anchor=west] (author) {\textbf{' . $speaker . '}};';
     $head .= '\end{tikzpicture}';
-    $head .= '\end{minipage}';
 
     // Header
     $tex = array( $head );
@@ -101,22 +104,25 @@ function awsToTex( $aws )
     // remove html formating before converting to tex.
     $tempFile = tempnam( "/tmp", "hippo_abstract" );
     file_put_contents( $tempFile, $abstract );
+
     $cmd = __DIR__ . '/html2other.py';
-    $texAbstract = `$cmd $tempFile tex`;
+    hippo_shell_exec( "$cmd $tempFile tex", $texAbstractFile, $stderr );
+    $texAbstract = file_get_contents( trim($texAbstractFile) );
+
     unlink( $tempFile );
 
     if( strlen(trim($texAbstract)) > 10 )
         $abstract = $texAbstract;
 
     // Title and abstract
-    $tex[] = '{\large ' . $abstract . '}';
-    $extra = '\begin{table}[ht!]';
-    $extra .= '\begin{tabular}{ll}';
+    $extra = '\begin{tabular}{ll}';
     $extra .= '\textbf{Supervisor(s)} & ' . implode( ",", $supervisors) . '\\\\';
     $extra .= '\textbf{Thesis Committee Member(s)} & ' . implode( ", ", $tcm ) . '\\\\';
     $extra .= '\end{tabular}';
-    $extra .= '\end{table}';
-    $tex[] = $extra;
+
+    $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
+        , fit to height=18 cm, fit basedim=16pt
+        ]' . $abstract . '\vspace{5mm}' . '{\normalsize \vfill ' . $extra . '} \end{tcolorbox}';
 
     return implode( "\n", $tex );
 
@@ -141,7 +147,7 @@ else
 }
 
 // Intialize pdf template.
-$tex = array( "\documentclass[10pt]{article}"
+$tex = array( "\documentclass[]{article}"
     , "\usepackage[margin=25mm,top=20mm,a4paper]{geometry}"
     , "\usepackage[]{graphicx}"
     , "\usepackage[]{grffile}"
@@ -151,16 +157,11 @@ $tex = array( "\documentclass[10pt]{article}"
     , "\usepackage{wrapfig}"
     , "\usepackage{fontawesome}"
     , '\pagenumbering{gobble}'
-    //, '\usepackage{fancyhdr}'
-    , '\linespread{1.2}'
-    //, '\pagestyle{fancy}'
-    , '\usetikzlibrary{calc,positioning,arrows}'
-    , '\usepackage[T1]{fontenc}'
-    //, '\usepackage[]{ebgaramond}'
-    , '\usepackage[]{libertine}'
-    //, '\usepackage[sfdefault,light]{FiraSans}'
-    //, '\rhead{ \includegraphics[height=15 mm]{./data/ncbs_logo.png} }'
-    //, '\lhead { \includegraphics[height=15 mm]{./data/inStem_logo.png}}'
+    , '\linespread{1.15}'
+    , '\usetikzlibrary{calc,positioning,arrows,fit}'
+    , '\usepackage[sfdefault,light]{FiraSans}'
+    , '\usepackage{tcolorbox}'
+    , '\tcbuselibrary{fitting}'
     , '\begin{document}'
     );
 
@@ -193,7 +194,7 @@ if( file_exists( $pdfFile ) )
 
 file_put_contents( $texFile,  $TeX );
 if( file_exists( $texFile ) )
-    $res = `pdflatex --output-directory $outdir $texFile`;
+    $res = `./tex2pdf.sh $texFile`;
 
 if( file_exists( $pdfFile ) )
 {
@@ -214,10 +215,10 @@ else
     echo "<pre> $res </pre>";
 }
 
-if( file_exists( $texFile ) )
-{
-    //unlink( $texFile );
-}
+// if( file_exists( $texFile ) )
+// {
+    // unlink( $texFile );
+// }
 
 echo "<br/>";
 echo closePage( );

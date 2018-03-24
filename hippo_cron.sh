@@ -6,7 +6,6 @@ if [ -d /opt/rh/rh-php56 ]; then
     PHP=/opt/rh/rh-php56/root/usr/bin/php
 fi
 
-
 function log_msg
 {
     echo $1
@@ -31,4 +30,9 @@ LOG_FILE=/var/log/hippo.log
         $PHP -f $_file
         log_msg "Status of previous command $?"
     done
+)
+
+# cleaup data folder.
+(
+    cd $SCRIPT_DIR/data && git clean -fxd -e "_mails*" .
 )

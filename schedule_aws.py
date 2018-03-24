@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 
 """schedule_aws.py: 
 
@@ -23,50 +23,36 @@ __status__           = "Development/Production"
 import sys
 import os
 import math
+import random
 import numpy as np
 from collections import defaultdict, OrderedDict
 import datetime 
 import copy
 import tempfile 
-from logger import _logger
 from db_connect import db_
 import networkx as nx
 import compute_cost
+from global_data import *
 
+from logger import _logger
+_logger.info( 'Using networkx from %s' % nx.__file__ )
+_logger.info( 'Using networkx from %s' % nx.__file__ )
+_logger.info( 'Started on %s' % datetime.date.today( ) )
 fmt_ = '%Y-%m-%d'
 
 cwd = os.path.dirname( os.path.realpath( __file__ ) )
 networkxPath = os.path.join( '%s/networkx' % cwd )
 sys.path.insert(0, networkxPath )
 
-_logger.info( 'Using networkx from %s' % nx.__file__ )
-_logger.info( 'Using networkx from %s' % nx.__file__ )
-_logger.info( 'Started on %s' % datetime.date.today( ) )
-
-g_ = nx.DiGraph( )
-
-# All AWS entries in the past.
-aws_ = defaultdict( list )
-
-# Upcoming AWS
-upcoming_aws_ = { }
-upcoming_aws_slots_ = defaultdict( list )
-
-# AWS scheduling requests are kept in this dict.
-aws_scheduling_requests_ = {}
-
-# These speakers must give AWS.
-speakers_ = { }
-
-# List of holidays.
-holidays_ = {}
+random.seed( 1 )
+np.random.seed( 1 )
 
 def init( cur ):
     """
     Create a temporaty table for scheduling AWS
     """
 
-    global db_, speakers_
+    global db_
     global holidays_
     cur.execute( 'DROP TABLE IF EXISTS aws_temp_schedule' )
     cur.execute( 
@@ -187,9 +173,6 @@ def construct_flow_graph(  ):
     For others we let them fill all three slots.
     """
     global g_
-    global aws_
-    global speakers_
-    global holidays_
 
     g_.add_node( 'source', pos = (0,0) )
     g_.add_node( 'sink', pos = (10, 10) )
@@ -474,7 +457,6 @@ def avoidClusteringOfFreshers( schedule ):
     to same date.
 
     """
-    global aws_, speakers_
 
     _logger.info( "Before swapping %f" % fresherIndex( schedule ) )
 
@@ -550,7 +532,6 @@ def getMatches( res ):
     return result
 
 def computeSchedule( ):
-    global g_
     _logger.info( 'Scheduling AWS now' )
     test_graph( g_ )
     _logger.info( 'Computing max-flow, min-cost' )
@@ -560,10 +541,8 @@ def computeSchedule( ):
     return sch
 
 def print_schedule( schedule, outfile ):
-    global g_, aws_
     with open( outfile, 'w' ) as f:
         f.write( "This is what is got \n" )
-
 
     cost = 0
     for date in  sorted(schedule):
@@ -600,7 +579,6 @@ def commit_schedule( schedule ):
     _logger.info( "Committed to database" )
 
 def main( outfile ):
-    global aws_
     global db_
     _logger.info( 'Scheduling AWS' )
     getAllAWSPlusUpcoming( )

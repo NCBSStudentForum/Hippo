@@ -15,7 +15,7 @@ if( $today > $startDay && $today <= $endDay )
     {
         printInfo( 'Annoy AWS speakers' );
         // Every day 10 am. Annoy.
-        $upcomingAws = getUpcomingAWS( 'next monday' );
+        $upcomingAws = getUpcomingAWSOnThisMonday( 'next monday' );
         foreach( $upcomingAws as $aws )
         {
             if( $aws[ 'title' ] && $aws['abstract'] )

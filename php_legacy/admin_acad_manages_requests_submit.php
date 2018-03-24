@@ -65,9 +65,13 @@ elseif( $_POST['response'] == 'Accept' )
     $aws = getMyAwsOn( $speaker, $date );
     $req = getAwsRequestById( $rid );
 
+    $req[ 'is_presynopsis_seminar' ] = __get__( $_POST, 'is_presynopsis_seminar', 'NO' );
+
     $res = updateTable( 'annual_work_seminars'
             , 'speaker,date' 
-            , array( 'abstract', 'title'
+            , array( 'abstract'
+                , 'title'
+                , 'is_presynopsis_seminar'
                 , 'supervisor_1', 'supervisor_2'
                 , 'tcm_member_1', 'tcm_member_2', 'tcm_member_3', 'tcm_member_4' 
                 )

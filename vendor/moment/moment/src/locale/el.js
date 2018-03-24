@@ -67,6 +67,7 @@ export default moment.defineLocale('el', {
         future : 'σε %s',
         past : '%s πριν',
         s : 'λίγα δευτερόλεπτα',
+        ss : '%d δευτερόλεπτα',
         m : 'ένα λεπτό',
         mm : '%d λεπτά',
         h : 'μία ώρα',
@@ -85,4 +86,3 @@ export default moment.defineLocale('el', {
         doy : 4  // The week that contains Jan 4st is the first week of the year.
     }
 });
-

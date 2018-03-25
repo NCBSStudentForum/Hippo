@@ -22,6 +22,15 @@ np.random.seed( 0 )
 def toDate( datestr ):
     return datetime.datetime.strptime( datestr, fmt_ )
 
+# This is from stackoverflow.
+def unique( seq ):
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
+
+def spk2str( s ):
+    return '%s(%s)' % (s['speaker'], s['lab'] )
+
 def findReplacement( speaker, date, specialization, piH, schedule ):
     for dateA in sorted( schedule ):
         if dateA <= date:
@@ -128,7 +137,7 @@ def no_common_labs_a( schedule, nweeks = 2, ncalls = 0 ):
         vals = schedule[ date ]
         print( '[INFO] Fixing AWS schedule for %s' % date )
         pis = [ s['lab'] for s in vals ]
-        for i, p in enumerate( pis ):
+        for i, p in enumerate( unique(pis) ):
             picount = pis.count( p )
             if picount == 1:
                 continue
@@ -137,6 +146,6 @@ def no_common_labs_a( schedule, nweeks = 2, ncalls = 0 ):
                 x, date2, i2 = find_replacement( frm, date, schedule, pis )
                 replaceWith = schedule[date2][i2]
                 schedule[date][i+j] = replaceWith
-                schedule[date2][2] = frm
-                print( 'Replacing %s -> %s', str(frm), str(replaceWith) )
+                schedule[date2][i2] = frm
+                print( 'Replaced %s -> %s' % (spk2str(frm), spk2str(replaceWith)))
     return schedule

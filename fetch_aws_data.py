@@ -141,7 +141,7 @@ def speaker_data( ):
     keys = tuple( 'login,pi_or_host,specialization,nAWS,last_aws_on'.split( ','))
     for l in speakers_:
         if l in upcoming_aws_:
-            print( '-> Name is in upcoming AWS. Ignoring', file = sys.stderr )
+            print( '-> Name is in upcoming AWS. Ignoring' )
             continue
 
         piOrHost = speakers_[l].get('pi_or_host', 'UNKNOWN')

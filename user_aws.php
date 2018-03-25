@@ -42,49 +42,9 @@ if( $scheduledAWS )
         </form>
         ";
 
-
-    /*
-    echo printWarning( "
-        <x-small>
-        This date is very unlikely to change without your approval.
-        In rare case if we cancel the AWS altogether for this day (happens once
-        or twice a year), we'll schedule you to nearest possible available slot.
-        </x-small>
-        "
-    );
-     */
-
 }
 else
 {
-
-    /*
-     * DO NOT SHOW THE TEMPORARY SCHEDULE
-     */
-
-    //if( $tempScheduleAWS )
-    //{
-    //    echo printInfo( "<font color=\"blue\">&#x2620 Your AWS is most likely to be on " .
-    //        humanReadableDate( $tempScheduleAWS[ 'date' ] ) .". Note that this is not
-    //        a confirmed schedule. Just a heads-up!</font>" .
-    //        ".<br>Once confirmed, I will notify you immediately,
-    //        and once more, at least 28 days in advance." );
-
-    //    echo printWarning(
-    //        "This date likely to change if any other speaker's
-    //        request to change his/her AWS schedule is approved and/or
-    //        new speakers are added.  Once your schedule is confirmed,
-    //        it does not change without your approval.
-    //        "
-    //    );
-    //}
-    //else
-    //    echo printInfo(
-    //        "You don't have any AWS scheduled in next 12 months. This happens if
-    //        you already given 3 AWS or more. If this is not the case, you should
-    //        write to academic office.
-    //    " );
-
 
     // Here user can submit preferences.
     $prefs = getTableEntry( 'aws_scheduling_request', 'speaker,status'
@@ -201,8 +161,8 @@ echo ' <form action="" method="post" accept-charset="utf-8">
 
 if( __get__( $_POST, 'response', '' ) == 'write_my_aws' )
 {
-    $cmd = __DIR__ . '/write_aws.sh';
-    $awsText = `$cmd`;
+    $cmd = __DIR__ . '/write_aws_using_ai.py';
+    hippo_shell_exec( $cmd, $awsText, $stderr );
     echo "<p> $awsText </p>";
     echo "<br>";
     echo "<p> I will only get better! </p>";

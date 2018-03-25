@@ -209,17 +209,19 @@ def compute_solution( ):
     global g_
     flow = nx.max_flow_min_cost( g_, 'source', 'sink' )
     scheduled, notScheduled = flow_to_solution( flow )
-    ndays = print_solution( scheduled )
+    daysToAWS = print_solution( scheduled )
     cost = nx.cost_of_flow( g_, flow )
     print( 'Cost of solution = %d' % cost )
     print( 
-        'Mean gap=%d, Min gap=%d, Max Gap=%d' % (np.mean(ndays), min(ndays), max(ndays))
+        'Mean gap=%d, Min gap=%d, Max Gap=%d' % (np.mean(daysToAWS),
+            min(daysToAWS), max(daysToAWS))
         )
+    return scheduled
 
 def schedule_aws( args ):
     init( )
     construct_flow_graph( args.method )
-    compute_solution( )
+    return compute_solution( )
 
 def main( args ):
     global g_
@@ -227,7 +229,16 @@ def main( args ):
     g_ = nx.read_graphml( infile )
     mapping = { k : eval(k) for k in g_.predecessors( 'sink' ) }
     nx.relabel_nodes( g_, mapping, copy = False )
-    schedule_aws( args )
+    schedule = schedule_aws( args )
+    text = []
+    for s in schedule:
+        vals = schedule[s]
+        text.append( '%s,%s' % (s, ','.join([ x['speaker'] for x in vals ])) )
+
+    print( '[INFO] Writing schedule to %s' % args.output, end = '' )
+    with open( args.output, 'w' ) as f:
+        f.write( '\n'.join( text ) )
+    print( ' ... [DONE]' )
 
 if __name__ == '__main__':
     import argparse
@@ -238,7 +249,7 @@ if __name__ == '__main__':
         , help = 'Graph file (gml)'
         )
     parser.add_argument('--output', '-o'
-        , required = False
+        , required = False, default = '/tmp/_hippo_aws_schedule.csv'
         , help = 'Output file'
         )
     parser.add_argument( '--method', '-m'

@@ -159,6 +159,7 @@ def get_images_from_dropbox( ):
         caption = img[ 'title' ]
         fname = img_to_fname( img )
         outfile = os.path.join( background_dir_, fname )
+        #  print( img[ 'author' ] )
         if img['author'] in [ 'N/A', 'NA', None ]:
             print( '[WARN] No author or hidden' )
             continue

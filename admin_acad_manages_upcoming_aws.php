@@ -198,10 +198,7 @@ foreach( $schedule as $sch )
     $scheduleMap[ $sch['date'] ][ ] = $sch;
 
 $header = "<tr>
-    <th>Speaker</th>
-    <th>Scheduled On</th>
-    <th>Last AWS on</th><th># Day</th>
-    <th>#AWS</th>
+    <th>Speaker</th><th>Scheduled On</th><th>Last AWS on</th><th># Day</th><th>#AWS</th>
     </tr>";
 
 echo '<br>';
@@ -214,6 +211,8 @@ $csvdata = array( "Speaker,Scheduled on,Last AWS on,Days since last AWS,Total AW
 $allDates = array( );
 foreach( $scheduleMap as $date => $schedule )
 {
+    $allDates[ ] = $date;
+
     // check if this date is one week away from previous date.
     if( count( $allDates ) > 0 )
     {
@@ -225,7 +224,6 @@ foreach( $scheduleMap as $date => $schedule )
             echo printWarning( "No AWS is scheduled for '$nextDate'." );
         }
     }
-    $allDates[ ] = $date;
     
     // Show table.
     $table = '<table class="show_schedule">';

@@ -8,11 +8,13 @@ import datetime
 import itertools
 import numpy as np
 import random
+import aws_helper
+from db_connect import db_
 from collections import defaultdict, Counter
 from collections import OrderedDict
 
-random.seed( 1 )
-np.random.seed( 1 )
+random.seed( 'HIPPO' )
+np.random.seed( 10 )
 
 g_ = None
 ideal_gap_ = 7 * 55
@@ -35,6 +37,19 @@ def prune( p ):
     if (slotDate - lastAWS).days < ideal_gap_:
         return False
     return True 
+
+def commit_schedule( schedule ):
+    global db_
+    cur = db_.cursor( )
+    for date in sorted(schedule):
+        for s in schedule[ date ]:
+            query = """
+                INSERT INTO aws_temp_schedule (speaker, date) VALUES ('{0}', '{1}')
+                ON DUPLICATE KEY UPDATE date='{1}'
+                """.format( s[ 'speaker' ], date )
+            cur.execute( query )
+    db_.commit( )
+    print( '[INFO] Committed to database' )
 
 def number_of_valid_speakers( date, sp ):
     speakers = filter( 
@@ -80,10 +95,6 @@ def init( ):
     slots = g_.predecessors( 'sink' )
     for s in slots:
         g_.node[s]['date'] = strToDate( g_.node[s]['date'] )
-
-    #  freqs = Counter( specs )
-    #  freqs_ = { x : v / sum( freqs.values() ) for x, v in freqs.items() }
-    #  print( 'Computed frequencies for speakers: %s' % freqs_ )
 
 def assign_weight_method_a( edges ):
     global g_
@@ -141,6 +152,8 @@ def construct_flow_graph( method = 'b' ):
         assign_weight_method_a( edges )
     elif method == 'b':
         specs = assign_weight_method_b( edges )
+    else:
+        raise RuntimeWarning('No method is specified' )
 
     print( 'Flow graph is constructed' )
 
@@ -164,10 +177,10 @@ def flow_to_solution( flow ):
             ndays = (date - g_.node[s]['last_aws_on']).days
             cost.append( ndays )
             lab = short( g_.node[s]['pi_or_host'] )
-            extra = g_.node[s]['specialization']
+            _spec = g_.node[s]['specialization']
             n = g_.node[s]['nAWS']
-            ss = '%20s %4s %s (%d)' % (s+'.'+lab, extra,n,ndays)
-            speakers.append( dict(speaker=s,lab=lab,extra=extra,ndays=ndays) )
+            ss = '%20s %4s %s (%d)' % (s+'.'+lab, _spec,n,ndays)
+            speakers.append( dict(speaker=s,lab=lab,spec=_spec,ndays=ndays) )
         solution[ date ] = speakers
 
     # Who are left 
@@ -212,8 +225,7 @@ def compute_solution( ):
     daysToAWS = print_solution( scheduled )
     cost = nx.cost_of_flow( g_, flow )
     print( 'Cost of solution = %d' % cost )
-    print( 
-        'Mean gap=%d, Min gap=%d, Max Gap=%d' % (np.mean(daysToAWS),
+    print( 'Mean gap=%d, Min gap=%d, Max Gap=%d' % (np.mean(daysToAWS),
             min(daysToAWS), max(daysToAWS))
         )
     return scheduled
@@ -230,6 +242,7 @@ def main( args ):
     mapping = { k : eval(k) for k in g_.predecessors( 'sink' ) }
     nx.relabel_nodes( g_, mapping, copy = False )
     schedule = schedule_aws( args )
+    schedule = aws_helper.no_common_labs_a( schedule )
     text = []
     for s in schedule:
         vals = schedule[s]
@@ -239,6 +252,8 @@ def main( args ):
     with open( args.output, 'w' ) as f:
         f.write( '\n'.join( text ) )
     print( ' ... [DONE]' )
+    print_solution( schedule )
+    commit_schedule( schedule )
 
 if __name__ == '__main__':
     import argparse

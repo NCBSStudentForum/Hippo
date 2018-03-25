@@ -154,6 +154,7 @@ def speaker_data( ):
         nAws = len( aws_.get( l, [] ) )
         vals.append( '%d' % nAws )
         vals.append( '%s' % lastAwsDate( l ) )
+
         d = dict( zip(keys, vals) )
         speakers[ l ] = d 
 

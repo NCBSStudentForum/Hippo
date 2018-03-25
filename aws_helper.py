@@ -13,6 +13,11 @@ __status__           = "Development"
 import datetime
 from logger import _logger
 from global_data import *
+import random
+import numpy as np
+
+random.seed( 0 )
+np.random.seed( 0 )
 
 def toDate( datestr ):
     return datetime.datetime.strptime( datestr, fmt_ )
@@ -88,4 +93,50 @@ def no_common_labs( schedule, nweeks = 2, ncalls = 0 ):
         _logger.warn( 'Entry for date %s has multiple speakers from same lab' % fd )
         _logger.warn( 'Moving whole row down to more than %d positions' % nweeks)
 
+    return schedule
+
+def find_replacement( s1, d1, schedule, nolabs ):
+    """Find another speaker with same specification and lab.
+    """
+    print( 'Finding repalcement for', s1 )
+    potentialCandidates = [ ]
+    for d in schedule:
+        diffDays = (d-d1).days
+        if diffDays < 1:
+            continue
+        
+        for i, s2 in enumerate(schedule[d]):
+            # Do not select from different specialization 
+            if s1['spec'] != s2['spec']:
+                continue
+
+            # Don't select from same lab.
+            if s2['lab'] in nolabs:
+                continue
+
+            ndays = s2['ndays'] - diffDays
+            potentialCandidates.append( (ndays,d,i) )
+
+    # sorted
+    potentialCandidates = sorted( potentialCandidates, key = lambda x: x[0] )
+    return potentialCandidates[-1]
+
+def no_common_labs_a( schedule, nweeks = 2, ncalls = 0 ):
+    # Make sure that first 2 week entries have different PIs.
+    dates = sorted( schedule.keys( ) )
+    for date in dates[:4]:
+        vals = schedule[ date ]
+        print( '[INFO] Fixing AWS schedule for %s' % date )
+        pis = [ s['lab'] for s in vals ]
+        for i, p in enumerate( pis ):
+            picount = pis.count( p )
+            if picount == 1:
+                continue
+            for j in range(picount-1):
+                frm = vals[i+j]
+                x, date2, i2 = find_replacement( frm, date, schedule, pis )
+                replaceWith = schedule[date2][i2]
+                schedule[date][i+j] = replaceWith
+                schedule[date2][2] = frm
+                print( 'Replacing %s -> %s', str(frm), str(replaceWith) )
     return schedule

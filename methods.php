@@ -1570,7 +1570,7 @@ function removeAWSSpeakerFromList( $speaker )
         $subject = "Your name has been removed from AWS list";
         $msg = "<p>Dear " . loginToText( $speaker ) . " </p>";
         $msg .= "<p>
-            Your name has been removed from the Annual Work Seminar (AWS) roaster.  
+            Your name has been removed from the Annual Work Seminar (AWS) roster.  
             If this is a mistake, please inform Academic Office.
             </p>";
 

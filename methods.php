@@ -1564,11 +1564,7 @@ function removeAWSSpeakerFromList( $speaker )
     $res = updateTable( 'logins', 'login', 'eligible_for_aws', $data );
     if( $res )
     {
-        echo printInfo(
-            "Successfully removed user $speaker from AWS list.
-            Recomputing schedule ... "
-            );
-
+        echo printInfo( "Successfully removed user $speaker from AWS list." );
 
         // Send email to speaker.
         $subject = "Your name has been removed from AWS list";
@@ -1584,4 +1580,5 @@ function removeAWSSpeakerFromList( $speaker )
             echo printWarning( "Could not notify user" );
     }
 }
+
 

@@ -88,4 +88,20 @@ if( trueOnGivenDayAndTime( 'this wednesday', '15:45' ) )
     }
 }
 
+if( trueOnGivenDayAndTime( 'this sunday', '17:00' ) )
+{
+    echo printInfo( "Removing all MSc students with at-least 1 aws" );
+    $logins = getTableEntries( 'logins', 'login', "title='MSC' AND eligible_for_aws='YES'" );
+    foreach( $logins as $i => $msc )
+    {
+        $speaker = $msc['login'];
+        $aws = getAWSSpeakers( $msc[ 'login' ] );
+        if( count( $aws ) > 0 )
+        {
+            echo printInfo( "MSc student $speaker has given AWS. Remove him/her" );
+            removeAWSSpeakerFromList( $speaker );
+        }
+    }
+}
+
 ?>

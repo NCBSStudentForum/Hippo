@@ -11,9 +11,12 @@ mustHaveAllOfTheseRoles( array( 'AWS_ADMIN' ) );
 
 if( __substr__( "reschedule", $_POST['response'] ) )
 {
-    rescheduleAWS( $_POST[ 'response' ] );
-    goToPage( 'admin_acad_manages_upcoming_aws.php', 1);
-    exit;
+    $err = rescheduleAWS( $_POST[ 'response' ] );
+    if( ! $err )
+    {
+        goToPage( 'admin_acad_manages_upcoming_aws.php', 1);
+        exit;
+    }
 }
 
 else if( $_POST[ 'response' ] == 'Accept' or $_POST[ 'response' ] == 'Assign' )

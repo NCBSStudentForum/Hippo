@@ -180,10 +180,10 @@ echo printInfo("Three methods are available for scheduling AWS. First one is def
 $methodTable = "<form method=\"post\" action=\"admin_acad_manages_upcoming_aws_submit.php\">";
 $methodTable .= ' <table border="0"> ';
 $methodTable .= '<tr><td>';
-$methodTable .= '<button name="response" value="reschedule_group_greedy">
+$methodTable .= '<button name="response" value="reschedule_default">
     <strong>Recompute (DEFAULT)</strong></button>';
 $methodTable .= "</td><td>";
-$methodTable .= '<button name="response" value="reschedule_group">Recompute (NotSoGood)</button>';
+$methodTable .= '<button name="response" value="reschedule_group_greedy">Recompute (NotSoGood)</button>';
 $methodTable .= "</td><td>";
 $methodTable .= '<button name="response" value="reschedule">Recompute (DoNotGroupAWS)</button>';
 $methodTable .= "</td></tr>";

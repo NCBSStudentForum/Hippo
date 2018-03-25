@@ -34,12 +34,14 @@ function hippo_shell_exec($cmd, &$stdout=null, &$stderr=null)
         1 => ['pipe','w'],
         2 => ['pipe','w'],
     ],$pipes);
+
     $stdout = stream_get_contents($pipes[1]);
     fclose($pipes[1]);
+
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[2]);
 
-    if( trim( $stderr ) )
+    if( $stderr && trim( $stderr ) )
         echo printWarning( "There was an error executing <pre>$cmd</pre> $stderr. " );
 
     return proc_close($proc);
@@ -751,8 +753,8 @@ function rescheduleAWS( $method = 'reschedule_group_greedy' )
 {
     echo printInfo( "Rescheduling with $method ...." );
 
-    if( $method == 'reschedule_group' )
-        $scriptPath = __DIR__ . '/schedule_aws_groupwise.py';
+    if( $method == 'reschedule_default' )
+        $scriptPath = __DIR__ . '/schedule.sh';
     else if( $method == 'reschedule_group_greedy' )
         $scriptPath = __DIR__ . '/schedule_aws_greedy_groupwise.py';
     else
@@ -760,8 +762,7 @@ function rescheduleAWS( $method = 'reschedule_group_greedy' )
 
     echo("<pre>Executing $scriptPath with timeout 30 secs</pre>");
     $command = "timeout 60 $scriptPath";
-    exec( $command, $output, $return );
-    return $output;
+    return hippo_shell_exec( $command, $output, $err );
 }
 
 function html2Markdown( $html, $strip_inline_image = false ) : string

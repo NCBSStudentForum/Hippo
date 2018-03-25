@@ -24,16 +24,26 @@ def parabola( x0, offset, x ):
     ys = offset + offset * (x-minX) ** 2.0
     return ys
 
+def linear( nAWS, x ):
+    if nAWS <= 2:
+        return max(0, x - 1 )
+    elif nAWS == 3:
+        m, c = 0.8, 0.7
+    elif nAWS == 4:
+        m, c = 0.7, 0.5
+    else:
+        m, c = 0.63333, 0.3333
+    return max(0, m * x - c )
+
 def computeCost( slot_date, lastDate, nAWS ):
     ndays = ( slot_date - lastDate ).days
     nyears = ndays / 365.0
     cost = 0
     if ndays < 365.0:
-        cost = 15
+        cost = 5
     else:
-        cost = parabola( nAWS, nAWS + 1, nyears )
-    return int(10 * cost)
-
+        cost = linear( nAWS, nyears )
+    return int( 100.0 * cost )
 
 def random_date(start, end):
     """
@@ -48,9 +58,6 @@ def random_date(start, end):
 def test( ):
     import matplotlib as mpl
     import matplotlib.pyplot as plt
-    mpl.style.use( 'bmh' )
-    mpl.rcParams['axes.linewidth'] = 0.2
-    mpl.rcParams['lines.linewidth'] = 1.0
     mpl.rcParams['text.usetex'] = False
     # Generate random test data.
     start = datetime.datetime.strptime( '2017-03-18', __fmt__ )
@@ -61,13 +68,13 @@ def test( ):
             date = start + datetime.timedelta( days = i * 7 )
             xval.append( (date - start).days / 365.0 )
             yval.append( computeCost( date, start, naws ) )
+
         plt.xlabel( 'Gap in years between slot and last AWS' )
         plt.ylabel( 'Cost' )
-        plt.plot( xval, yval, alpha = 0.7, label = '#AWS = %d' % naws )
-        plt.legend( framealpha = 0.4, fontsize = 8 )
+        plt.plot( xval, yval, label = '#AWS = %d' % naws )
+        plt.legend( )
 
     plt.savefig( "%s.png" % sys.argv[0] )
-
 
 if __name__ == '__main__':
     test()

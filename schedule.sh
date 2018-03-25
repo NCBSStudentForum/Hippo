@@ -24,5 +24,5 @@ set -o nounset                              # Treat unset variables as an error
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 GRAPHMLFILE="/tmp/__aws_data.graphml"
 $DIR/fetch_aws_data.py "$GRAPHMLFILE"
-$DIR/schedule_aws.py --gml "$GRAPHMLFILE"
+$DIR/schedule_aws_clean.py --gml "$GRAPHMLFILE"
 

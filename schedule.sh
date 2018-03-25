@@ -17,16 +17,12 @@
 #      REVISION:  ---
 #===============================================================================
 
+set -e
+set -x
 set -o nounset                              # Treat unset variables as an error
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+GRAPHMLFILE="/tmp/__aws_data.graphml"
+$DIR/fetch_aws_data.py "$GRAPHMLFILE"
+$DIR/schedule_aws.py --gml "$GRAPHMLFILE"
 
-#if [ -f /opt/rh/python27/enable ]; then
-#    source /opt/rh/python27/enable
-#fi
-
-python2.7  $DIR/schedule_aws_greedy_groupwise.py
-
-# Following algorithm does not honour groupwise AWS. This has been deprecated on
-# Dec 12, 2017. 
-#python2.7  $DIR/schedule_aws.py

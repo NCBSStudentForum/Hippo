@@ -176,7 +176,7 @@ def main( ):
     if len( sys.argv ) > 1:
         outfile = sys.argv[1]
     nx.write_graphml( data, outfile )
-    print( 'Wrote data to %s' % outfile )
+    print( 'Wrote graphml to %s' % outfile )
 
 if __name__ == '__main__':
     main( )

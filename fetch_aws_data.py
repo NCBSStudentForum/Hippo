@@ -172,10 +172,10 @@ def main( ):
     global db_
     data = get_data( )
     db_.close( )
-    outfile = '_aws_data.pickle'
+    outfile = '_aws_data.gml'
     if len( sys.argv ) > 1:
         outfile = sys.argv[1]
-    nx.write_gpickle( data, outfile )
+    nx.write_graphml( data, outfile )
     print( 'Wrote data to %s' % outfile )
 
 if __name__ == '__main__':

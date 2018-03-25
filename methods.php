@@ -749,7 +749,7 @@ function getSpeakerPicturePathById( $id )
     *
     * @return
  */
-function rescheduleAWS( $method = 'reschedule_group_greedy' )
+function rescheduleAWS( $method = 'reschedule_default' )
 {
     echo printInfo( "Rescheduling with $method ...." );
 

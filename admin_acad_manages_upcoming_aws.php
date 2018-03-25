@@ -183,7 +183,7 @@ $methodTable .= '<tr><td>';
 $methodTable .= '<button name="response" value="reschedule_default">
     <strong>Recompute (DEFAULT)</strong></button>';
 $methodTable .= "</td><td>";
-$methodTable .= '<button name="response" value="reschedule_group_greedy">Recompute (NotSoGood)</button>';
+$methodTable .= '<button name="response" value="reschedule_group_greedy">Recompute (GroupAndGreedily)</button>';
 $methodTable .= "</td><td>";
 $methodTable .= '<button name="response" value="reschedule">Recompute (DoNotGroupAWS)</button>';
 $methodTable .= "</td></tr>";

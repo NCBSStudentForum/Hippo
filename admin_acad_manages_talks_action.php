@@ -28,7 +28,7 @@ else if( $_POST[ 'response' ] == 'delete' )
         $success = true;
         $externalId = getTalkExternalId( $_POST );
 
-        echo( "External id for bookings: $externalId <br>" );
+        // echo( "External id for bookings: $externalId <br>" );
 
         $events = getTableEntries( 'events'
             , 'external_id', "external_id='$externalId' AND status='VALID'" 
@@ -39,7 +39,7 @@ else if( $_POST[ 'response' ] == 'delete' )
 
         foreach( $events as $e )
         {
-            echo printInfo( "Cancelling following event" );
+            echo printInfo( "Cancelling associated booking." );
             echo arrayToTableHTML( $e, 'info' );
             $e[ 'status' ] = 'CANCELLED';
             // Now cancel this talk in requests, if there is any.
@@ -48,29 +48,24 @@ else if( $_POST[ 'response' ] == 'delete' )
 
         foreach( $requests as $r )
         {
-            echo printInfo( "Cancelling following booking request " );
+            echo printInfo( "Cancelling associated booking request " );
             echo arrayToTableHTML( $r, 'info' );
 
             $r[ 'status' ] = 'CANCELLED';
-            $res = updateTable( 
-                'bookmyvenue_requests', 'external_id', 'status', $r
-                );
+            $res = updateTable( 'bookmyvenue_requests', 'external_id', 'status', $r);
         }
 
         // /* VALIDATION: Check the bookings are deleted  */
-
-        // $events = getTableEntries( 'events'
-        //     , 'external_id', "external_id='$externalId' AND status='VALID'" 
-        // );
-        // $requests = getTableEntries( 'bookmyvenue_requests'
-        //     , 'external_id', "external_id='$externalId' AND status='VALID'" 
-        // );
-        // assert( ! $events );
-        // assert( ! $requests );
+        $events = getTableEntries( 'events'
+            , 'external_id', "external_id='$externalId' AND status='VALID'"
+        );
+        $requests = getTableEntries( 'bookmyvenue_requests'
+            , 'external_id', "external_id='$externalId' AND status='VALID'"
+        );
+        assert( ! $events );
+        assert( ! $requests );
         
-        echo "Successfully deleted related events/requests";
-        goBack( );
-        exit;
+        echo printInfo( "Successfully deleted related events/requests." );
     }
     else
         echo printWarning( "Failed to delete the talk " );

@@ -104,4 +104,25 @@ if( trueOnGivenDayAndTime( 'this sunday', '17:00' ) )
     }
 }
 
+if( trueOnGivenDayAndTime( 'today', '10:15' ) )
+{
+    echo "Cleaning up orphaned events";
+    $today = dbDate( 'today' );
+    $events = getTableEntries( 'events', 'date', "date>'$date' AND status='VALID' AND external_id !='SELF.-1'" );
+    foreach( $events as $ev )
+    {
+        $talkID = explode( '.', $ev[ 'external_id' ])[1];
+        $talk = getTableEntries( 'talks', 'id', "id='$talkID' AND status='VALID'" );
+        if( ! $talk )
+        {
+            echo printWarning( "Associated talk with this event has been cancelled. 
+                Cancelling this event as well." );
+            echo printInfo( $ev['title'] );
+
+            $ev['status'] = 'INVALID';
+            $res = updateTable( 'events', 'gid,eid', "status", $ev );
+        }
+    }
+}
+
 ?>

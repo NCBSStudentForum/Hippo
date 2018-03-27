@@ -156,7 +156,7 @@ class NCBSCalendar
      */
     public function updateEvent( $event )
     {
-        echo printInfo( "- Updating event: " . eventToText( $event ) );
+        echo printInfo( "- Updating event: <tt>" . eventToText( $event ) . '</tt>' );
         if( trim($event['calendar_event_id']) == '' )
         {
             echo printWarning( "+ You tried to update an event without valid event id");

@@ -1155,6 +1155,18 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
         return '';
 
 
+
+
+    // Find email in text. Sometimes people write the whole name with email. So 
+    // stupid.
+    if( __substr__( '@', $login) && ! filter_var( $login, FILTER_VALIDATE_EMAIL ) )
+    {
+        // echo printWarning( "Not a valid email: $login" );
+        $email = extract_emails_from( $login );
+        $login = explode( '@', $email )[0];
+    }
+
+
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
     if( is_string( $login ) )

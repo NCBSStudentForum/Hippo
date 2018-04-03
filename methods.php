@@ -27,6 +27,22 @@ function whoAmI( )
     return $_SESSION[ 'user' ];
 }
 
+/**
+    * @brief Find valid email in text.
+    *
+    * @param $text
+    *
+    * @return 
+ */
+function extract_emails_from( $text )
+{
+    preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $text, $matches);
+    $res =  implode( ',', $matches[0] );
+    return $res;
+}
+
+
+
 // Form HERE: https://stackoverflow.com/a/25879953/180512://stackoverflow.com/a/25879953/1805129
 function hippo_shell_exec($cmd, &$stdout=null, &$stderr=null)
 {

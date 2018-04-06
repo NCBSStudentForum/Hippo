@@ -7,7 +7,7 @@ require_once 'cron_jobs/helper.php';
 */
 $today = dbDate( strtotime( 'today' ) );
 echo printInfo( "Today is " . humanReadableDate( $today ) );
-if( trueOnGivenDayAndTime( 'this friday', '4:00 pm' ) )
+if( trueOnGivenDayAndTime( 'this friday', '16:00' ) )
 {
     echo printInfo( "Today is Friday 4pm. Send out emails for AWS" );
     $nextMonday = dbDate( strtotime( 'next monday' ) );

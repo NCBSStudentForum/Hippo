@@ -1154,37 +1154,39 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
     if( ! $login )
         return '';
 
-    // Find email in text. Sometimes people write the whole name with email. So 
-    // stupid.
-    if( __substr__( '@', $login) )
-    {
-        $email = extract_emails_from( $login );
-        $login = explode( '@', $email )[0];
-        // echo printWarning( "Found email $login. Extracted $email -> $login" );
-    }
-
-
     // If only login name is give, query database to get the array. Otherwise
     // assume that an array has been given to use.
+    // Find email in text. Sometimes people write the whole name with email. So 
+    // stupid.
     if( is_string( $login ) )
     {
+        if( __substr__( '@', $login) )
+        {
+            $email = extract_emails_from( $login );
+            if( $email )
+                $login = explode( '@', $email )[0];
+            // echo printWarning( "Found email $login. Extracted $email -> $login" );
+        }
         if( strlen( trim($login) ) < 1 )
             return '';
         $user = getUserInfo( $login );
     }
     else if( is_array( $login ) )
+    {
+        $email = __get__( $login, 'email', '' );
         $user = $login;
+    }
     else
+    {
         $user = $login;
+        $email = '';
+    }
 
     if( __get__( $user, 'first_name', '' ) == __get__( $user, 'last_name', ''))
     {
-        if( ! $email )
-            $email = __get__( $user, 'email', '' );
-
         if( $email )
         {
-            $ldap = getUserInfoFromLdap( $email );
+            $ldap = @getUserInfoFromLdap( $email );
             if( $ldap )
                 $user = array_merge( $user, $ldap );
         }

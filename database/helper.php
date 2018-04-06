@@ -1045,7 +1045,10 @@ function getLoginIds( )
 function getUserInfo( $user, $query_ldap = false )
 {
     $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
-    $title = __get__( $res, 'title', '' );
+
+    $title = '';
+    if( is_array($res) )
+        $title = __get__( $res, 'title', '' );
 
     if( ! $res )
         $res = array( );

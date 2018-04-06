@@ -8,16 +8,11 @@ include_once 'html2text.php';
 $today = dbDate( 'today' );
 $default = array( 'date' => $today );
 
-if( $_GET )
-{
-    if( array_key_exists( 'date', $_GET ) )
-        $default[ 'date' ] = $_GET[  'date' ];
-    else
-        $default = array( 'date' => $today );
-}
+if( __get__($_GET, 'date', '' ) )
+    $default[ 'date' ] = $_GET[  'date' ];
 
 
-echo '
+$form = '
     <form method="get" action="">
     <table border="0">
         <tr>
@@ -32,7 +27,7 @@ echo '
     </form>
     ';
 
-echo ' <br /> <br />';
+echo "$form <br /> <br />";
 
 $whichDay = $default[ 'date' ];
 $eventTalks = getTableEntries( 'events', 'date,start_time' , "date='$whichDay'

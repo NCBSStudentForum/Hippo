@@ -1550,6 +1550,8 @@ function talkToHTML( $talk, $with_picture = false )
         $speakerName = speakerName( $speakerArr );
     }
 
+    $coordinator = __get__( $talk, 'coordinator', '' );
+
 
     $hostEmail = $talk[ 'host' ];
 
@@ -1600,7 +1602,7 @@ function talkToHTML( $talk, $with_picture = false )
             </tr>
             <tr></tr>
             <tr>
-                <td><small>Coordinator: </small>' .  loginToHTML( $talk[ 'coordinator' ], true ) . '</td>';
+                <td><small>Coordinator: </small>' .  loginToHTML( $coordinator, true ) . '</td>';
     $html .= '</tr>';
 
 

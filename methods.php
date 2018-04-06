@@ -248,19 +248,21 @@ function goToPage($page="index.php", $delay = 3)
 
     } catch (Exception $e) {
         echo printWarning( "Failed to redirect" );
-        return;
     }
 }
 
-function __get__( $arr, $what, $default = NULL )
+function __get__( array $arr, $what, $default = NULL )
 {
     if( ! $arr )
         return $default;
 
     if( array_key_exists( $what, $arr ) )
-        return $arr[$what];
-    else
-        return $default;
+    {
+       $val = $arr[$what];
+       if( $val )
+           return $val;
+    }
+    return $default;
 }
 
 /**

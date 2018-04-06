@@ -1,4 +1,4 @@
-<?php
+ return<?php
 
 include_once 'methods.php';
 include_once 'database.php';
@@ -51,6 +51,8 @@ function getUserInfoFromLdap( $query, $ldap_ip="ldap.ncbs.res.in" )
     $base_dn = "dc=ncbs,dc=res,dc=in";
     $sr = @ldap_search($ds, $base_dn, "uid=$login");
     $info = @ldap_get_entries($ds, $sr);
+
+    $result = array();
 
     for( $s=0; $s < $info['count']; $s++)
     {

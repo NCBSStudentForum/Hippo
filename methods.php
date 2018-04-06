@@ -1342,8 +1342,13 @@ function getNextSemester( $sem = null, $year = null )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function __substr__( $needle, $haystack, $case_insensitive = false )
+function __substr__( string $needle, string $haystack, $case_insensitive = false ) : bool
 {
+    if( ! $needle )
+        return false;
+    if( ! $haystack )
+        return false;
+
     if( $case_insensitive )
     {
         $needle = strtolower( $needle );

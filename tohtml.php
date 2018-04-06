@@ -1154,8 +1154,8 @@ function loginToText( $login, $withEmail = true, $autofix = true ) : string
     if( ! $login )
         return '';
 
-
-
+    if( is_array( $login ) )
+        $login = $login['login'];
 
     // Find email in text. Sometimes people write the whole name with email. So 
     // stupid.

@@ -117,7 +117,7 @@ function eventToTex( $event, $talk = null )
     $extra = '';
     if( $talk )
     {
-        $extra .= '\vspace{1cm}';
+        $extra .= '\newline \vspace{1.5cm} \vfill ';
         $extra .= "\begin{tabular}{ll}\n";
         $extra .= '{\bf Host} & ' . html2Tex( loginToHTML($talk[ 'host' ]) ) . '\\\\';
         if( $talk[ 'coordinator' ] )

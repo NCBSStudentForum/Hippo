@@ -119,9 +119,9 @@ function eventToTex( $event, $talk = null )
     {
         $extra .= '\vspace{1cm}';
         $extra .= "\begin{tabular}{ll}\n";
-        $extra .= '{\bf Host} & ' . fixName( $talk[ 'host' ] ) . '\\\\';
+        $extra .= '{\bf Host} & ' . html2Tex( loginToHTML($talk[ 'host' ]) ) . '\\\\';
         if( $talk[ 'coordinator' ] )
-            $extra .= '{\bf Coordinator} & ' . fixName( $talk[ 'coordinator' ] ) . '\\\\';
+            $extra .= '{\bf Coordinator} & ' . html2Tex( loginToHTML($talk[ 'coordinator' ])) . '\\\\';
         $extra .= '\end{tabular}';
     }
 

@@ -833,8 +833,9 @@ function html2Tex( $html, $strip_inline_image = false )
     if( file_exists( $outfile ) )
     {
         $cmd = __DIR__ . "/html2other.py $outfile tex ";
-        $tex = `$cmd`;
+        hippo_shell_exec( $cmd, $texfile, $stderr );
         unlink( $outfile );
+        $tex = file_get_contents( trim($texfile) );
     }
     else
         $tex = 'FILE NOT FOUND';

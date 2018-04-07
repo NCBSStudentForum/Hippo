@@ -1263,7 +1263,7 @@ function whereExpr( $keys, $data )
     *
     * @return
  */
-function getTableEntries( $tablename, $orderby = '', $where = '' )
+function getTableEntries( $tablename, $orderby = '', $where = '' ) : array
 {
     global $hippoDB;
     $query = "SELECT * FROM $tablename";
@@ -1272,12 +1272,12 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
         $query .= " WHERE $where ";
 
     if( strlen($orderby) > 0 )
-    {
         $query .= " ORDER BY $orderby ";
-    }
 
     $res = $hippoDB->query( $query );
     $entries = fetchEntries( $res );
+    if( ! $entries )
+        return array();
 
     return $entries;
 }
@@ -1293,7 +1293,7 @@ function getTableEntries( $tablename, $orderby = '', $where = '' )
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function getTableEntry( $tablename, $whereKeys, $data )
+function getTableEntry( $tablename, $whereKeys, $data ) : array
 {
     global $hippoDB;
     if( is_string( $whereKeys ) )
@@ -1314,13 +1314,17 @@ function getTableEntry( $tablename, $whereKeys, $data )
 
     try {
         $stmt->execute( );
-        return $stmt->fetch( PDO::FETCH_ASSOC );
-        
+        $res = $stmt->fetch( PDO::FETCH_ASSOC );
+        if( $res )
+            return $res;
+
     } catch (Exception $e) 
     {
         echo printWarning( "Failed to fetch. Error was " . $e->getMessage( ) );
-        return false;
+        return array();
     }
+
+    return array();
 }
 
 
@@ -2341,7 +2345,7 @@ function getCourseRegistrations( string $cid, int $year, string $semester ) : ar
     );
 }
 
-function getMyCourses( $sem, $year, $user  )
+function getMyCourses( $sem, $year, $user  ) : array
 {
     $whereExpr = "status='VALID' AND semester='$sem' AND year='$year' AND student_id='$user'";
     $courses = getTableEntries( 'course_registration', 'course_id', $whereExpr );

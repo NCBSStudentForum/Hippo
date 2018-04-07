@@ -138,6 +138,8 @@ $thesisSeminars = getTableEntries( 'talks', 'class', "class='THESIS SEMINAR'" );
 $thesisSemPerYear = array( );
 $thesisSemPerMonth = array( );
 
+$timeToThesisSeminar = array( );
+
 for( $i = 1; $i <= 12; $i ++ )
     $thesisSemPerMonth[ date( 'F', strtotime( "2000/$i/01" ) )] = 0;
 
@@ -146,9 +148,32 @@ foreach( $thesisSeminars as $ts )
     // Get event of this seminar.
     $event = getEventsOfTalkId( $ts[ 'id' ] );
 
+    if( ! __get__( $event, 'date', false ) )
+    {
+        // echo printInfo( "No date found for event. Stale event? " . $ts['title'] );
+        // Probably a stale event. Ignore.
+        continue;
+    }
+
+    // Find whose thesis seminar it is.
+    $speaker = $ts[ 'speaker' ];
+    $loginInfo = getLoginInfoByName( $speaker );
+
+    $joinedOn = __get__( $loginInfo, 'joined_on', false );
+    if( $joinedOn )
+    {
+        $gapInSecs = strtotime( $event[ 'date' ] ) - strtotime( $joinedOn );
+        $gapInYear = $gapInSecs / 3600 / 24 / 365.25;
+        if( $gapInYear < 2 )
+        {
+            // Definately a bad entry
+            $timeToThesisSeminar[] = $gapInYear;
+        }
+    }
+    
+
     $year = intval( date( 'Y', strtotime( $event['date'] )  ));
     $month = date( 'F', strtotime( $event['date'] ) );
-
 
     if( $year > 2000 )
         $thesisSemPerYear[ $year ] = __get__( $thesisSemPerYear, $year, 0 ) + 1;

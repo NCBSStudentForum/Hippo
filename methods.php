@@ -1619,3 +1619,32 @@ function removeAWSSpeakerFromList( $speaker )
 }
 
 
+/* --------------------------------------------------------------------------*/
+/**
+    * @Synopsis  Find a personal by name.
+    *
+    * @Param name
+    *
+    * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
+function getLoginInfoByName( string $name ) : array
+{
+    $name = trim( $name );
+    if( ! $name )
+        return array();
+
+    preg_match( 
+        '/^((Mr|Ms|Mrs|Dr|Prof)\.?\s+)?(?P<first_name>\S+)\s+(?P<middle_name>\S+)?\s+(?P<last_name>\S+)$/i'
+        , $name 
+        , $match
+    );
+
+    $info = getTableEntry( 'logins', 'first_name,last_name', $match );
+
+    $login = __get__( $info, 'login', '' );
+    if( ! $login )
+        return array();
+
+    return getLoginInfo( $login, true );
+}

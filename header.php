@@ -1,6 +1,20 @@
 <?php
 ob_start();
 
+// calendar url.
+
+/**
+ *  * @brief Return link to calendar.
+ *  * @return
+ *    
+ */
+function calendarURL( )
+{
+    $conf = getConfigFromDB( );
+    return __get__( $conf, 'CALENDAR_URL', '' );
+}
+
+
 if(!isset($_SESSION))
     session_start();
 

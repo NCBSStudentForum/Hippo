@@ -1,10 +1,10 @@
 <?php
 
-include_once 'header.php';
-include_once 'database.php';
-include_once 'tohtml.php';
-include_once 'methods.php';
-include_once 'check_access_permissions.php';
+require_once 'header.php';
+require_once 'database.php';
+require_once 'tohtml.php';
+require_once 'methods.php';
+require_once 'check_access_permissions.php';
 
 mustHaveAnyOfTheseRoles( array( 'USER' ) );
 
@@ -28,8 +28,8 @@ foreach( $speakers as $x )
     if( $x[ 'email' ] )
         $speakersIds[] = $x[ 'email' ];
 
-// $faculty = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
-// $logins = array_map( function( $x ) { return loginToText( $x ); }, $logins );
+$facultyForAutoComplete = array_map( function( $x ) { return loginToText( $x ); }, $faculty );
+$loginsForAutoComplete = array_map( function( $x ) { return loginToText( $x ); }, $logins );
 
 ?>
 
@@ -37,12 +37,14 @@ foreach( $speakers as $x )
 // Autocomplete speaker.
 $( function() {
     var speakersDict = <?php echo json_encode( $speakersMap ) ?>;
-    var host = <?php echo json_encode( $faculty ); ?>;
-    var logins = <?php echo json_encode( $logins ); ?>;
+
+    var host = <?php echo json_encode( $facultyForAutoComplete ); ?>;
+    var logins = <?php echo json_encode( $loginsForAutoComplete ); ?>;
+
+    console.log( host );
 
     // These emails must not be key value array.
     var emails = <?php echo json_encode( $speakersIds ); ?>;
-    //console.log( emails );
 
     $( "#talks_host" ).autocomplete( { source : host });
     $( "#talks_host" ).attr( "placeholder", "email of speaker" );

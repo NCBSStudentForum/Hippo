@@ -614,8 +614,14 @@ function arrayHeaderRow( $array, $tablename, $tobefilterd = '', $sort_button = f
     return $hrow;
 }
 
-function arrayToTHRow( $array, $tablename, $tobefilterd = '', $sort_button  = false )
-{
+function arrayToTHRow( array $array
+    , string $tablename
+    , $tobefilterd = ''
+    , bool $sort_button  = false ) : string
+{ 
+    if( ! $array )
+        return '';
+
     return arrayHeaderRow( $array, $tablename, $tobefilterd , $sort_button);
 }
 

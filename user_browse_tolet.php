@@ -1,4 +1,3 @@
-<!--
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places" type="text/javascript">
 </script>
 
@@ -19,7 +18,6 @@
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 </script>
--->
 
 <?php
 
@@ -57,18 +55,21 @@ echo '<div style="font-size:small;">';
 echo '<table class="sortable info">';
 
 $hide = 'status,last_modified_on,id';
-echo arrayToTHRow( $myApartments[0], 'info', $hide );
-foreach( $myApartments as $apt )
+if( count( $myApartments ) > 0 )
 {
-    echo '<tr>';
-    echo ' <form method="post" action=""> ';
-    echo arrayToRowHTML( $apt, 'info', $hide, true, false );
-    echo '<td>';
-    echo ' <button name="response" value="Email me" > Email me </button> ';
-    echo '</td>';
-    echo '<input type="hidden" name="id" value="' . $apt[ 'id' ] . '" />';
-    echo ' </form> ';
-    echo '</tr>';
+    echo arrayToTHRow( $myApartments[0], 'info', $hide );
+    foreach( $myApartments as $apt )
+    {
+        echo '<tr>';
+        echo ' <form method="post" action=""> ';
+        echo arrayToRowHTML( $apt, 'info', $hide, true, false );
+        echo '<td>';
+        echo ' <button name="response" value="Email me" > Email me </button> ';
+        echo '</td>';
+        echo '<input type="hidden" name="id" value="' . $apt[ 'id' ] . '" />';
+        echo ' </form> ';
+        echo '</tr>';
+    }
 }
 echo '</table>';
 echo '</div>';

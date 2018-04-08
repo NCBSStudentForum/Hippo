@@ -1,3 +1,5 @@
+all : serve
+
 install: 
 	./env/bin/pip install -e .
 

@@ -5,10 +5,7 @@
 <h1> Welcome {{ user }} </h1>
 
 <table class="admin">
-    {% for row in [ 
-            [ "My Profile", "My NCBS" ],
-            ["My Courses", "My AWS"],
-        ] %}
+    {% for row in [ [ 'My Profile', 'My NCBS' ], [ 'My Courses', 'My AWS' ] ] %}
         <tr>
             {% for v in row %}
                 <td> <a href="user/{{ v }}">{{ v }}</a></td>

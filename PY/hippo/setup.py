@@ -13,6 +13,7 @@ requires = [
     'pyramid',
     'pyramid_jinja2',
     'pyramid_debugtoolbar',
+    'pyramid_sqlalchemy',
     'waitress',
     'networkx',
     'bcrypt',

@@ -33,7 +33,7 @@ def login(request):
         login = request.params['login']
         password = request.params['password']
         if authenticate( login, password ):
-            headers = remember(request, login
+            headers = remember(request, login)
             return HTTPFound(location=came_from, headers=headers)
         message = 'Failed login'
 

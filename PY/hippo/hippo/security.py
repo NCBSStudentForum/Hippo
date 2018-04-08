@@ -1,3 +1,14 @@
+"""security.py: 
+
+"""
+    
+__author__           = "Dilawar Singh"
+__copyright__        = "Copyright 2018-, Dilawar Singh"
+__version__          = "1.0.0"
+__maintainer__       = "Dilawar Singh"
+__email__            = "dilawars@ncbs.res.in"
+__status__           = "Development"
+
 import bcrypt
 
 def hash_password(pw):
@@ -17,12 +28,10 @@ def groupfinder(userid, request):
         return GROUPS.get(userid, [])
 
 
-
-
 def authenticate( login, password ):
-    import hippo_ldap
+    from . import hippo_ldap
     auth = hippo_ldap.authenticate_using_ldap( login, password )
     if not auth:
-        import hippo_imap
+        from . import hippo_imap
         auth = hippo_imap.authenticate_using_imap( login, password ) 
     return auth

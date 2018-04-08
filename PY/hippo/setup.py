@@ -16,7 +16,7 @@ requires = [
     'waitress',
     'networkx',
     'bcrypt',
-    'ldap',
+    'ldap3',
 ]
 
 tests_require = [

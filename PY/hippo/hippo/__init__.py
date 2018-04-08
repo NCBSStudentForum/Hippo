@@ -23,9 +23,7 @@ def add_global( event ):
             event[x] = _globals.get( x )
 
 def main(global_config, **settings):
-    config = Configurator(settings=settings
-            , root_factory='.resources.Root'
-            )
+    config = Configurator(settings=settings)
     config.add_notfound_view(notfound)
     #  config.add_forbidden_view(forbidden)
     config.include('pyramid_jinja2')

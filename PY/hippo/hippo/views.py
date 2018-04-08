@@ -5,6 +5,7 @@ from pyramid.view import (view_config, view_defaults, forbidden_view_config)
 
 from .security import groupfinder
 from .authenticate import authenticate
+from .resources import assertAuthentication
 from . import _globals
 
 
@@ -77,7 +78,10 @@ def logout(request):
 # User 
 @view_config( route_name='user', renderer='templates/user.jinja2' )
 def user(request):
-    if not _globals.is_authenticated( ):
-        return HTTPFound( location = 'login' )
+    assertAuthentication( )
+    #  if not _globals.is_authenticated( ):
+        #  return HTTPFound( location = 'login'
+                     #  , explanation = 'You are not authenticated'
+                    #  )
 
     return { 'project' : 'Hippo' }

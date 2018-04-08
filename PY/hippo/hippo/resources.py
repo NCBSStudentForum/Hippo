@@ -1,12 +1,25 @@
-from pyramid.security import Allow, Everyone
+"""resources.py: 
 
-class Root( object ):
+"""
+    
+__author__           = "Dilawar Singh"
+__copyright__        = "Copyright 2017-, Dilawar Singh"
+__version__          = "1.0.0"
+__maintainer__       = "Dilawar Singh"
+__email__            = "dilawars@ncbs.res.in"
+__status__           = "Development"
 
-    __acl__ = [ (Allow, Everyone, 'view' )
-            , (Allow, 'group:users', 'view' )
-            , (Allow, 'group:deansoffice', 'edit' )
-            , (Allow, 'group:acadoffice', 'edit' )
-            ]
+import sys
+import os
+import logging
+from pyramid.httpexceptions import HTTPFound 
 
-    def __init__( self, request ):
-        pass
+from . import _globals
+
+def assertAuthentication(  ):
+    if _globals.get( "AUTHENTICATED" ):
+        return True
+
+    logging.warn( "Is not authenticated" )
+    raise HTTPFound( location = "login" )
+

@@ -15,7 +15,7 @@ def hippo(request):
 
 if __name__ == '__main__':
     with Configurator() as config:
-        config.add_route('hippo', '/hippo/{name}')
+        config.add_route('hippo', '/{name}')
         config.add_view(hippo, route_name='hippo')
         app = config.make_wsgi_app()
     server = make_server('0.0.0.0', 8081, app)

@@ -42,7 +42,11 @@ def main(global_config, **settings):
 
     config.add_route('home', '/')
     config.add_route('login', '/login')
+
+    # User views
     config.add_route('user', '/user')
+    config.add_route('user_myprofile', '/user/MyProfile')
+
     config.add_route('logout', '/logout')
     config.add_route('events', '/events')
     config.add_route('AWSs', '/AWSs')

@@ -4,9 +4,9 @@
     <head>
         {% block head %}
 
-        <link href="../../../node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" 
+        <link href="/../../../node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" 
             type="text/css" />
-        <link href="static/hippo.css" rel="stylesheet" type="text/css" />
+        <link href="/static/hippo.css" rel="stylesheet" type="text/css" />
 
         <title> Hippo - {% block title %}{% endblock %} </title>
         {% endblock %}
@@ -27,20 +27,18 @@
             </tr>
         </table>
 
-        {% if AUTHENTICATED %}
-	    <table class="user_float">
-		<tr colspan="2">
-		    <th>Hi  {{ user }} </th>
-		    <th><a href="logout"><i class="fa fa-sign-out"></i>SignOut</a></th> 
-		</tr>
-		<tr>
-		    <td><a href="quickbook"><i class="fa fa-hand-pointer-o"></i>QuickBook</a> </td>
-		    <td><a href="user"><i class=\fa fa-home\></i>My Home</a> </td>
-		</tr>
-	    </table>
-        {% else %}
-            <!-- <p class="warn">Not authenticated!</p> -->
-	{% endif %}
+        {% if user != "UNKNOWN" %}
+            <table class="user_float">
+                <tr colspan="2">
+                    <th>Hi  {{ user }} </th>
+                    <th><a href="/logout"><i class="fa fa-sign-out"></i>SignOut</a></th> 
+                </tr>
+                <tr>
+                    <td><a href="/quickbook"><i class="fa fa-hand-pointer-o"></i>QuickBook</a> </td>
+                    <td><a href="/user"><i class=\fa fa-home\></i>My Home</a> </td>
+                </tr>
+            </table>
+        {% endif %}
 
 	<div id="content">{% block content %}{% endblock %}</div>
     </body>

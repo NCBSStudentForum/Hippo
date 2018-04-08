@@ -8,7 +8,7 @@
     {% for row in [ [ 'My Profile', 'My NCBS' ], [ 'My Courses', 'My AWS' ] ] %}
         <tr>
             {% for v in row %}
-                <td> <a href="user/{{ v }}">{{ v }}</a></td>
+                <td> <a href="user/{{ v|replace(' ', '') }}">{{ v }}</a></td>
             {% endfor %}
         </tr>
     {% endfor %}

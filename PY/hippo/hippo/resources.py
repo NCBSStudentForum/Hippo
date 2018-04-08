@@ -21,5 +21,5 @@ def assertAuthentication(  ):
         return True
 
     logging.warn( "Is not authenticated" )
-    raise HTTPFound( location = "login" )
+    raise HTTPFound( location = "/login" )
 

@@ -53,10 +53,10 @@ def login(request):
         password = request.params['password']
         if authenticate( login, password ):
             headers = remember(request, login)
-            return HTTPFound(location='user', headers=headers)
+            return HTTPFound(location='/user', headers=headers)
         else:
             message = 'Failed login'
-            return HTTPFound( localtion='login', headers=headers )
+            return HTTPFound( location='/login', headers=headers )
 
     return dict(
         name='Login',
@@ -75,13 +75,22 @@ def logout(request):
     _globals.set( "user", "UNKNOWN" )
     return HTTPFound(location=url, headers=headers)
 
-# User 
-@view_config( route_name='user', renderer='templates/user.jinja2' )
-def user(request):
-    assertAuthentication( )
-    #  if not _globals.is_authenticated( ):
-        #  return HTTPFound( location = 'login'
-                     #  , explanation = 'You are not authenticated'
-                    #  )
+# User views
+@view_defaults( renderer = 'templates/user.jinja2' )
+class UserView( object ):
 
-    return { 'project' : 'Hippo' }
+    def __init__( self, request ):
+        self.request = request
+        assertAuthentication( )
+
+    @view_config( route_name='user', renderer='templates/user.jinja2' )
+    def user( self ):
+        request = self.request 
+        return { 'project' : 'Hippo' }
+
+    @view_config( route_name = 'user_myprofile'
+            , renderer='templates/user_myprofile.jinja2' )
+    def user_myprofile( self ):
+        request = self.request
+        return { 'project' : 'Hippo' }
+

@@ -18,11 +18,18 @@ def authenticate( login, password ):
         logging.info( 'Alreading authenticated' )
         return True
 
-    auth = hippo_ldap.authenticate_using_ldap( login, password )
+    auth = False
+    try:
+        auth = hippo_ldap.authenticate_using_ldap( login, password )
+    except Exception as e:
+        pass
+
     if not auth:
         from . import hippo_imap
-        auth = hippo_imap.authenticate_using_imap( login, password ) 
-
+        try:
+            auth = hippo_imap.authenticate_using_imap( login, password ) 
+        except Exception as e:
+            pass
     if auth:
         _globals.set( 'AUTHENTICATED', True )
         _globals.set( 'user',  login )

@@ -12,8 +12,40 @@ __status__           = "Development"
 import sys
 import os
 import logging
+import ldap3
 
-ldap_ports_ = dict( ncbs=389, instem=18288, ccamp=19554 ) #, query = 8862 )
+ldap_ports_      = dict( ncbs=389, instem=18288, ccamp=19554 )
+ldap_query_port_ = 8862
+default_attribs_ = [ 
+        'sn', 'mail'
+        , 'profilefirstname', 'profilelastname', 'profiledateofjoin'
+        , 'profileidentification', 'profilelaboffice', 'profiledesignation'
+        , 'profileactive'
+        ]
+
+def readable( entry ):
+    ldap = { }
+    for k in default_attribs_:
+        v = getattr( entry, k )
+        ldap[ k.replace( 'profile', '' ) ] = v.value
+    return ldap
+
+def query( user: str, attribs = [] ):
+    attribs = attribs or default_attribs_
+    url = 'ldap.ncbs.res.in:%d' % ldap_query_port_
+    basedn  = 'dc=ncbs,dc=res,dc=in'
+    server = ldap3.Server( url, get_info=ldap3.ALL )
+    conn = ldap3.Connection( server, user='', password='', auto_bind = True )
+    if not conn.bind():
+        logging.warn( "Failed to bind to ldap server. %s" % conn.result)
+        return { }
+
+    conn.search( basedn, "(uid=%s)" % user 
+            , attributes = attribs 
+            )
+    e = conn.entries[0]
+    return readable( e )
+
 
 def authenticate_using_ldap( user:str, password:str) -> bool:
     import ldap3
@@ -37,11 +69,16 @@ def authenticate_using_ldap( user:str, password:str) -> bool:
 
     return authenticated
 
-def test( ):
+def test_authenticate( ):
     import getpass
     password = getpass.getpass( prompt = 'Passowrd?' )
     res = authenticate_using_ldap( 'dilawars', password )
-    print( res )
+
+def test_query( ):
+    for x in 'dilawars,anushreen,bhalla,farris'.split(','):
+        r = query(x)
+        print( r )
 
 if __name__ == '__main__':
-    test()
+    #  test_authenticate()
+    test_query( )

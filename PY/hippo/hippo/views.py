@@ -2,10 +2,17 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import (remember, forget,)
 from pyramid.view import (view_config, view_defaults) 
-from .security import (authenticate, USERS, check_password)
+
+from .security import (authenticate,)
+from . import _globals
 
 @view_config(route_name='home', renderer='templates/home.jinja2')
 def my_view(request):
+    if _globals.get( "AUTHENTICATED" ):
+        return HTTPFound( location = "user" )
+    else:
+        return HTTPFound( location = "/login" )
+
     return {'project': 'Hippo'}
 
 @view_config(route_name='events', renderer='templates/events.jinja2')
@@ -26,16 +33,27 @@ def login(request):
     if referrer == login_url:
         referrer = '/'  # never use login form itself as came_from
     came_from = request.params.get('came_from', referrer)
-    message = ''
-    login = ''
-    password = ''
+    message, login, password = '', '', ''
+
+    if _globals.get( 'AUTHENTICATED' ):
+        logging.info( "User is already authenticated" )
+        return dict( message = "Already authenticated"
+                , url = request.application_url + '/user' 
+                , came_from = came_from 
+                , login = login
+                , password = password 
+                , AUTHENTICATED = True
+                )
+
     if 'form.submitted' in request.params:
         login = request.params['login']
         password = request.params['password']
         if authenticate( login, password ):
             headers = remember(request, login)
-            return HTTPFound(location=came_from, headers=headers)
-        message = 'Failed login'
+            return HTTPFound(location='user', headers=headers)
+        else:
+            message = 'Failed login'
+            return HTTPFound( localtion='login', headers=headers )
 
     return dict(
         name='Login',
@@ -52,3 +70,7 @@ def logout(request):
     url = request.route_url('home')
     return HTTPFound(location=url, headers=headers)
 
+# User 
+@view_config(route_name='user', renderer='templates/user.jinja2')
+def user(request):
+    return { 'project' : 'Hippo' }

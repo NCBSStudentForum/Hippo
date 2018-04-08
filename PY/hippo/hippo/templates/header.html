@@ -3,13 +3,18 @@
 
     <head>
         {% block head %}
+
+        <link href="node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" 
+            type="text/css" />
         <link href="static/hippo.css" rel="stylesheet" type="text/css" />
+
         <title> Hippo - {% block title %}{% endblock %} </title>
         {% endblock %}
     </head>
 
     <body>
     <h1><a href="/">NCBS Hippo</a></h1>
+
         <table class="public_links">
             <tr>
             <td> <a href="events" target="hippo_popup">Bookings</a></td>
@@ -21,6 +26,14 @@
             <td> <a href="map" target="hippo_popup" >Map</a></td>
             </tr>
         </table>
+
+        {% if AUTHENTICATED %}
+            <p>Authenticated</p>
+        {% else %}
+
+        {% endif %}
+
         <div id="content">{% block content %}{% endblock %}</div>
     </body>
 </html>
+

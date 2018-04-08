@@ -2,26 +2,26 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 
-from .security import groupfinder
+from . import _globals
 
+# Make sure values from _globals passes to the rendered
+from pyramid.events import subscriber
+from pyramid.events import BeforeRender
+
+@subscriber(BeforeRender)
+def add_global( event ):
+    for x in _globals.keys( ):
+        if x not in event:
+            event[x] = _globals.get( x )
 
 def main(global_config, **settings):
     config = Configurator(settings=settings)
     config.include('pyramid_jinja2')
     config.add_static_view('static', 'static', cache_max_age=3600)
 
-    # security policies
-    authn_policy = AuthTktAuthenticationPolicy(
-            settings['hippo.secret'], callback=groupfinder,
-            hashalg='sha512'
-            )
-    authz_policy = ACLAuthorizationPolicy()
-    config.set_authentication_policy(authn_policy)
-    config.set_authorization_policy(authz_policy)
-
-
     config.add_route('home', '/')
     config.add_route('login', '/login')
+    config.add_route('user', '/user')
     config.add_route('logout', '/logout')
     config.add_route('events', '/events')
     config.add_route('AWSs', '/AWSs')

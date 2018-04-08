@@ -1,10 +1,12 @@
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import (remember, forget,)
-from pyramid.view import (view_config, view_defaults) 
+from pyramid.view import (view_config, view_defaults, forbidden_view_config) 
 
-from .security import (authenticate,)
+from .security import groupfinder
+from .authenticate import authenticate
 from . import _globals
+
 
 @view_config(route_name='home', renderer='templates/home.jinja2')
 def my_view(request):
@@ -67,10 +69,15 @@ def login(request):
 @view_config(route_name='logout')
 def logout(request):
     headers = forget(request)
-    url = request.route_url('home')
+    url = request.route_url('login')
+    _globals.set( "AUTHENTICATED", False )
+    _globals.set( "user", "UNKNOWN" )
     return HTTPFound(location=url, headers=headers)
 
 # User 
-@view_config(route_name='user', renderer='templates/user.jinja2')
+@view_config( route_name='user', renderer='templates/user.jinja2' )
 def user(request):
+    if not _globals.is_authenticated( ):
+        return HTTPFound( location = 'login' )
+
     return { 'project' : 'Hippo' }

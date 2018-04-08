@@ -11,18 +11,9 @@ __status__           = "Development"
 
 from . import _globals
 from . import hippo_ldap
+from . import _globals
 
-def authenticate( login, password ):
+def groupfinder( ):
+    print( _globals )
+    return 'USER'
 
-    if _globals.get( 'AUTHENTICATED' ) == True:
-        logging.info( 'Alreading authenticated' )
-        return True
-
-    auth = hippo_ldap.authenticate_using_ldap( login, password )
-    if not auth:
-        from . import hippo_imap
-        auth = hippo_imap.authenticate_using_imap( login, password ) 
-
-    if auth:
-        _globals.set( 'AUTHENTICATED', True )
-    return auth

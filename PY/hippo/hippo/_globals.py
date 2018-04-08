@@ -4,6 +4,7 @@
 session_ = dict( 
         calendar_url = "https://calendar.google.com/calendar/embed?src=d2jud2r7bsj0i820k0f6j702qo%40group.calendar.google.com&ctz=Asia/Calcutta"
         , AUTHENTICATED = False 
+        , user = 'UNKNOWN'
         )
 
 def set( key, val ):
@@ -14,3 +15,6 @@ def get( key ):
 
 def keys( ):
     return session_.keys()
+
+def is_authenticated( ):
+    return get( 'AUTHENTICATED' )

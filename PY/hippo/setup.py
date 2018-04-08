@@ -15,6 +15,8 @@ requires = [
     'pyramid_debugtoolbar',
     'waitress',
     'networkx',
+    'bcrypt',
+    'ldap',
 ]
 
 tests_require = [

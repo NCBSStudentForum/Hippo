@@ -27,7 +27,6 @@ def groupfinder(userid, request):
     if userid in USERS:
         return GROUPS.get(userid, [])
 
-
 def authenticate( login, password ):
     from . import hippo_ldap
     auth = hippo_ldap.authenticate_using_ldap( login, password )

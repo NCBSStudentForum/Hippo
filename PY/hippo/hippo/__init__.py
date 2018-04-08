@@ -2,6 +2,9 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 
+from sqlalchemy import engine_from_config
+from sqlalchemy.orm import sessionmaker
+
 from . import _globals
 from .security import groupfinder
 
@@ -11,10 +14,24 @@ from pyramid.events import BeforeRender
 from pyramid.response import Response
 
 def notfound( request ):
-    return Response( 'Not found', status = '404 Not Found' )
+    return Response( 'Not found.', status = '404 Not Found' )
 
 def forbidden( request ):
     return Response( 'Forbidden.' )
+
+def db(request):
+    maker = request.registry.dbmaker
+    session = maker()
+
+    def cleanup(request):
+        if request.exception is not None:
+            session.rollback()
+        else:
+            session.commit()
+        session.close()
+    request.add_finished_callback(cleanup)
+
+    return session
 
 @subscriber(BeforeRender)
 def add_global( event ):
@@ -25,6 +42,13 @@ def add_global( event ):
 def main(global_config, **settings):
     config = Configurator(settings=settings)
     config.add_notfound_view(notfound)
+
+
+    # sql
+    engine = engine_from_config(settings, prefix='sqlalchemy.')
+    config.registry.dbmaker = sessionmaker(bind=engine)
+    config.add_request_method(db, reify=True)
+
     #  config.add_forbidden_view(forbidden)
     config.include('pyramid_jinja2')
     config.add_static_view('static', 'static', cache_max_age=3600)

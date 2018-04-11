@@ -125,8 +125,8 @@ if( isset( $_POST[ 'response' ] ))
 
         $speaker = $aws[ 'speaker' ];
         $date = $aws['date'];
-        echo "<a>Entry for $speaker (" . loginToText( $speaker ) . ") on " .
-            date( 'D M d, Y', strtotime( $date ) ) . "</a>";
+        echo printInfo( "<a>Entry for $speaker (" . loginToText( $speaker ) . ") on " .
+            date( 'D M d, Y', strtotime( $date ) ) . "</a>" );
 
         echo arrayToVerticalTableHTML( $aws, 'annual_work_seminars' );
         echo '<br>';

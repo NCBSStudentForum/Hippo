@@ -21,7 +21,7 @@ $rid = $_POST[ 'rid' ];
 
 if( $_POST['response'] = 'edit' )
 {
-    $_POST[ 'id' ] = $rid;
+    $data[ 'id' ] = $rid;
     $res = updateTable( 'aws_requests', 'id', $columns, $data );
     if( $res )
     {

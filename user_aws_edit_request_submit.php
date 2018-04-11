@@ -8,7 +8,7 @@ $_POST[ 'speaker' ] =  $_SESSION[ 'user' ];
 $res = insertIntoTable( 'aws_requests'
         , array( 'speaker', 'title', 'abstract', 'supervisor_1', 'supervisor_2'
         , 'tcm_member_1', 'tcm_member_2', 'tcm_member_3', 'tcm_member_4' 
-        , 'date', 'time' 
+        , 'date', 'time' , 'is_presynopsis_seminar'
     ) , $_POST 
     );
 

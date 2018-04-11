@@ -121,7 +121,7 @@ function awsToTex( $aws )
     $extra .= '\end{tabular}';
 
     $tex[] = '\begin{tcolorbox}[colframe=black!0,colback=red!0
-        , fit to height=18 cm, fit basedim=16pt
+        , fit to height=18 cm, fit basedim=14pt
         ]' . $abstract . '\vspace{5mm}' . '{\normalsize \vfill ' . $extra . '} \end{tcolorbox}';
 
     return implode( "\n", $tex );
@@ -157,7 +157,7 @@ $tex = array( "\documentclass[]{article}"
     , "\usepackage{wrapfig}"
     , "\usepackage{fontawesome}"
     , '\pagenumbering{gobble}'
-    , '\linespread{1.15}'
+    , '\linespread{1.5}'
     , '\usetikzlibrary{calc,positioning,arrows,fit}'
     , '\usepackage[sfdefault,light]{FiraSans}'
     , '\usepackage{tcolorbox}'

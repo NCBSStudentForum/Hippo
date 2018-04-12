@@ -150,7 +150,7 @@ function speakerToHTML( $speaker )
     // Get name of the speaker.
     $name = array( );
     foreach( explode( ',', 'honorific,first_name,middle_name,last_name' ) as $k )
-        if( $speaker[ $k ] )
+        if( isset($speaker[$k] ))
             array_push( $name, $speaker[ $k ] );
 
     $name = implode( ' ', $name );
@@ -167,7 +167,7 @@ function speakerToHTML( $speaker )
         if( __get__( $speaker, 'designation', '' ) )
             $html .= "<br /><small><strong>" . $speaker[ 'designation' ] . "</strong></small>";
 
-        if( $speaker[ 'department' ] )
+        if( isset($speaker['department']))
             $html .= "<br />" . $speaker[ 'department' ];
 
         $html .= "<br />" . $speaker[ 'institute' ];
@@ -2227,7 +2227,7 @@ function jcToHTML( $jc )
         . $jc['jc_id'] . ' | ' . $jc['title'] . '</h3>';
 
     $presenter = getLoginInfo( $jc[ 'presenter' ] );
-    $pName = arrayToName( $presenter );
+    $pName = speakerToHTML( $presenter );
 
     $html .= "<strong> $pName </strong>";
     $html .= presentationToHTML( $jc );

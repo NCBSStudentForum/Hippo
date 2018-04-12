@@ -13,14 +13,13 @@ include_once 'tohtml.php';
     * @Returns
  */
 /* ----------------------------------------------------------------------------*/
-function fixJCSchedule( $login, $data )
+function fixJCSchedule( $loginOrEmail, $data )
 {
-
     $newId = getUniqueID( 'jc_presentations' );
     $data[ 'title' ] = '';
     $data[ 'status' ] = 'VALID';
     $data[ 'id' ] = getUniqueID( 'jc_presentations' );
-    $data[ 'presenter' ] = $login;
+    $data[ 'presenter' ] = $loginOrEmail;
     $data[ 'title' ] = 'Not yet available';
 
     $entry = insertOrUpdateTable( 'jc_presentations'
@@ -34,7 +33,7 @@ function fixJCSchedule( $login, $data )
         return array( );
     }
 
-    echo printInfo( 'Assigned user ' . $login .
+    echo printInfo( 'Assigned user ' . $loginOrEmail .
         ' to present a paper on ' . dbDate( $data['date' ] )
         );
 
@@ -59,22 +58,24 @@ function fixJCSchedule( $login, $data )
     $clickableURL = queryToClickableURL( $qid, 'Click Here To Acknowledge' );
     $mail = emailFromTemplate( 'NOTIFY_PRESENTER_JC_ASSIGNMENT', $macros );
 
-    $to = getLoginEmail( $login );
-    $cclist = $mail['cc'];
-    $subject = $data[ 'jc_id' ] . ' | Your presentation date has been fixed';
+    $to = getLoginEmail( $loginOrEmail );
+    if( $to )
+    {
+        $cclist = $mail['cc'];
+        $subject = $data[ 'jc_id' ] . ' | Your presentation date has been fixed';
 
-    // Add clickableQuery to outgoing mail.
-    $body = $mail[ 'email_body' ];
-    $body = addClickabelURLToMail( $body, $clickableURL );
-    $res = sendHTMLEmail( $body, $subject, $to, $cclist );
+        // Add clickableQuery to outgoing mail.
+        $body = $mail[ 'email_body' ];
+        $body = addClickabelURLToMail( $body, $clickableURL );
+        $res = sendHTMLEmail( $body, $subject, $to, $cclist );
+    }
     return $res;
 }
 
-function assignJCPresentationToLogin( $login, $data )
+function assignJCPresentationToLogin( $loginOrEmail, $data )
 {
     // Make sure the only valid login is used and not the email id.
-    $login = explode( '@', $login )[0];
-    return fixJCSchedule( $login, $data );
+    return fixJCSchedule( $loginOrEmail, $data );
 }
 
 ?>

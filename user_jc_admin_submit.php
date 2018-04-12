@@ -27,13 +27,13 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
     $logins = explode( ',', $logins );
 
     $anyWarning = false;
-    foreach( $logins as $login )
+    foreach( $logins as $emailOrLogin )
     {
-        $login = explode( '@', $login )[0];
+        $login = explode( '@', $emailOrLogin )[0];
 
         if( ! getLoginInfo( $login ) )
         {
-            echo printWarning( "$login is not a valid id. Ignoring " );
+            echo printWarning( "$login is not a valid Hippo id. Searching for others... " );
             $anyWarning = true;
             continue;
         }
@@ -54,8 +54,8 @@ if( __get__( $_POST, 'response', '' ) == 'Add' )
 
     if( ! $anyWarning )
     {
-        //goToPage( "user_jc_admin.php", 1 );
-        //exit;
+        goToPage( "user_jc_admin.php", 1 );
+        exit;
     }
 }
 else if( $_POST['response'] == 'DO_NOTHING' )
@@ -87,15 +87,22 @@ else if( $_POST['response'] == 'Assign Presentation' )
     else
     {
         $login = getLoginID( $_POST[ 'presenter' ] );
-
         $loginInfo = getLoginInfo( $login );
+
         if( ! $loginInfo )
         {
+            echo printWarning( "I could not find $presenter in database. Searching for speaker database." );
+
+            // Probably a special speaker.
             $presenter = $_POST[ 'presenter' ];
-            echo printWarning( "I could not find $presenter in database. Invalid user?" );
-            $anyError = true;
+            $someone = findAnyoneWithEmail( $presenter );
+            if( $someone )
+                echo print( "Found a valid person with this email. Assinging ..." );
+            else
+                $anyError = true;
         }
-        else
+
+        if( ! $anyError )
         {
             $res = assignJCPresentationToLogin( $_POST['presenter'],  $_POST );
             if( $res )
@@ -109,8 +116,8 @@ else if( $_POST['response'] == 'Assign Presentation' )
 
     if( ! $anyError )
     {
-        //goToPage( 'user_jc_admin.php', 1 );
-        //exit;
+        goToPage( 'user_jc_admin.php', 1 );
+        exit;
     }
 }
 else if( $_POST[ 'response' ] == 'Remove Presentation' )

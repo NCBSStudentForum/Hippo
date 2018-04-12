@@ -1089,13 +1089,16 @@ function getLoginByEmail( $email )
 }
 
 
-function getLoginEmail( $login )
+function getLoginEmail( $login ) : string
 {
     global $hippoDB;
     $stmt = $hippoDB->prepare( "SELECT email FROM logins WHERE login=:login" );
     $stmt->bindValue( ":login", $login );
     $stmt->execute( );
     $res = $stmt->fetch( PDO::FETCH_ASSOC );
+
+    if( ! $res )
+        return '';
 
     if( strlen( trim($res[ 'email' ]) < 1 ) )
     {

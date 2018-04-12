@@ -73,9 +73,11 @@ if( isJCAdmin( $_SESSION[ 'user' ] ) )
     $table .= '<tr>
         <td>
         <i class="fa fa-cogs fa-3x"></i>
-        <a class="clickable" href="user_jc_admin.php">JC Admin</a> <br />
-        Journal club admin</td>
-        <td></td>
+            <a class="clickable" href="user_jc_admin.php">JC Admin</a> <br />
+            Journal club admin
+        </td>
+        <td>
+        </td>
     </tr>';
 }
 

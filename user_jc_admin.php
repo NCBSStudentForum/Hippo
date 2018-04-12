@@ -46,7 +46,7 @@ echo printInfo( 'Assign a presentation manually.' );
 $table = '<table>';
 $table .= '<tr>';
 $table .= '<td> <input class="datepicker" name="date" placeholder="pick date" /> </td>';
-$table .= '<td> <input name="presenter" placeholder="login id" /> </td>';
+$table .= '<td> <input name="presenter" placeholder="login id or email" /> </td>';
 $table .= "<td> $jcSelect </td>";
 $table .= '<td><button name="response" value="Assign Presentation">Assign</button></td>';
 $table .= '</tr></table>';

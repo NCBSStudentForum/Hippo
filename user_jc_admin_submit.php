@@ -91,7 +91,7 @@ else if( $_POST['response'] == 'Assign Presentation' )
 
         if( ! $loginInfo )
         {
-            echo printWarning( "I could not find $presenter in database. Searching for speaker database." );
+            echo printWarning( "I could not find $login in database. Searching for speaker database." );
 
             // Probably a special speaker.
             $presenter = $_POST[ 'presenter' ];
@@ -111,6 +111,10 @@ else if( $_POST['response'] == 'Assign Presentation' )
                     ' to present a paper on ' . dbDate( $_POST['date' ] )
                 );
             }
+        }
+        else
+        {
+            echo printWarning("Failed to assign anyone.");
         }
     }
 

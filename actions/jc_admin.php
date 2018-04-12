@@ -15,6 +15,7 @@ include_once 'tohtml.php';
 /* ----------------------------------------------------------------------------*/
 function fixJCSchedule( $loginOrEmail, $data )
 {
+    $login = explode( '@', $loginOrEmail)[0];
     $newId = getUniqueID( 'jc_presentations' );
     $data[ 'title' ] = '';
     $data[ 'status' ] = 'VALID';

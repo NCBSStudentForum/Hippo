@@ -1228,11 +1228,15 @@ function getSupervisors( )
  */
 function findAnyoneWithEmail( $email )
 {
-    $res = getTableEntry( 'faculty', 'email', array( 'email' => $email ) );
-    if( ! $res )
-        $res = getTableEntry( 'supervisors', 'email', array('email' => $email));
-    if( ! $res )
-        $res = getTableEntry( 'logins', 'email', array('email' => $email));
+    $tables = array( "faculty", "speakers", "supervisors", "logins" );
+
+    $res = array( );
+    foreach( $tables as $table )
+    {
+        $res = getTableEntry( $table, 'email', array( 'email' => $email ) );
+        if( $res )
+            break;
+    }
     return $res;
 }
 

@@ -1042,8 +1042,9 @@ function getLoginIds( )
     *
     * @return Array.
  */
-function getUserInfo( $user, $query_ldap = false )
+function getUserInfo( $loginOrEmail, $query_ldap = false )
 {
+    $user =  explode( '@', $loginOrEmail )[0];
     $res = getTableEntry( 'logins', 'login', array( 'login' => $user ) );
 
     $title = '';
@@ -1068,12 +1069,15 @@ function getUserInfo( $user, $query_ldap = false )
     if( $title )
         $res[ 'title' ] = $title;
 
+    if( !$res )
+        $res = findAnyoneWithEmail( $loginOrEmail );
+
     return $res;
 }
 
-function getLoginInfo( $login_name, $query_ldap = false )
+function getLoginInfo( $loginOrEmail, $query_ldap = false )
 {
-    return getUserInfo( $login_name, $query_ldap );
+    return getUserInfo( $loginOrEmail, $query_ldap );
 }
 
 function getLoginByEmail( $email )

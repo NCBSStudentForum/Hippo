@@ -60,6 +60,8 @@ function fixJCSchedule( $loginOrEmail, $data )
     $mail = emailFromTemplate( 'NOTIFY_PRESENTER_JC_ASSIGNMENT', $macros );
 
     $to = getLoginEmail( $loginOrEmail );
+
+    $res = true;
     if( $to )
     {
         $cclist = $mail['cc'];

@@ -2,7 +2,7 @@
 
 require_once 'cron_jobs/helper.php';
 
-if( trueOnGivenDayAndTime( 'this sunday', '7:00 pm' ) )
+if( trueOnGivenDayAndTime( 'this sunday', '18:00' ) )
 {
     echo printInfo( "Today is Sunday 7pm. Send out emails for week events." );
     $thisMonday = dbDate( strtotime( 'this monday' ) );
@@ -18,22 +18,23 @@ if( trueOnGivenDayAndTime( 'this sunday', '7:00 pm' ) )
     );
 
     $events = getEventsBeteen( $from = 'today', $duration = '+6 day' );
+    $events = array_filter( $events
+        , function($x) { return $x['is_public_event'] == 'YES' && $x['external_id'] ; } 
+    );
 
+    echo( "Total public events" . count( $events ) );
     if( count( $events ) > 0 )
     {
         foreach( $events as $event )
         {
-            if( $event[ 'is_public_event' ] == 'NO' )
-                continue;
-
             $externalId = $event[ 'external_id'];
-            if( ! $externalId )
-                continue;
-
             $id = explode( '.', $externalId);
             $id = $id[1];
             if( intval( $id ) < 0 )
+            {
+                echo printWarning( "Invalid id for this event" );
                 continue;
+            }
 
             $talk = getTableEntry( 'talks', 'id', array( 'id' => $id ) );
 
@@ -45,17 +46,13 @@ if( trueOnGivenDayAndTime( 'this sunday', '7:00 pm' ) )
         $html .= "<br><br>";
 
         // Generate email
-        // getEmailTemplates
-        $templ = emailFromTemplate( 'this_week_events'
-            , array( "EMAIL_BODY" => $html )
-        );
-
+        $templ = emailFromTemplate( 'this_week_events' , array( "EMAIL_BODY" => $html ));
         sendHTMLEmail( $templ[ 'email_body'], $subject, $to, $cclist );
     }
     else
     {
-        $html .= "<p> I could not find any event in my database! </p>";
-        $html .=  "<p> -- Hippo </p>";
+        $html .= "<p>Sigh! I could not find any event scheduled for upcoming week.</p>";
+        $html .=  "<p> -- NCBS Hippo </p>";
         sendHTMLEmail( $html, $subject, $to, $cclist );
     }
 }

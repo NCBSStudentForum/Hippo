@@ -95,22 +95,6 @@ if( isset( $_POST[ 'response' ] ))
         $date = $_POST[ 'date' ];
     }
 
-    else if( $_POST[ 'response' ] == 'DO_NOTHING' )
-    {
-
-    }
-    else if( $_POST[ 'response' ] == 'delete' )
-    {
-        echo "Deleting this AWS entry.";
-        $res = deleteAWSEntry( $_POST['speaker'], $_POST['date' ] );
-        if( $res )
-        {
-            echo printInfo( "Successfully deleted" );
-            goToPage( 'admin_acad.php', 0);
-            exit;
-        }
-    }
-
     $awss = array( );
     if( $login and $date )
         $awss = array( getMyAwsOn( $login, $date ) );

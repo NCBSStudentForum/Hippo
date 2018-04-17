@@ -38,6 +38,12 @@ if( $_POST[ 'response' ] == 'delete' )
     }
 }
 
+if( $_POST[ 'response' ] == 'DO_NOTHING' )
+{
+    echo goBack( "admin_acad.php", 0);
+}
+
+
 echo goBackToPageLink( "admin_acad.php", "Go Back" );
 
 

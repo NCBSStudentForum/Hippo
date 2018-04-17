@@ -54,8 +54,7 @@ echo '<table class="tasks">
             <input class="datepicker" name="date" placeholder="date(optional)" value="" >
             <button name="response" value="Select">' . $symbCheck . '</button>
             </form>
-            Enter a login and optionally AWS date and you can delete that AWS entry
-            from my database.
+            Enter a login and optionally AWS date to delete or edit AWS entry.
         </td>
     </tr>
     <tr>

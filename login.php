@@ -14,7 +14,7 @@ $login = $_POST['username'];
 $ldap = explode( '@', $login);
 $ldap = $ldap[0];
 
-$pass = utf8_decode($_POST['pass']);
+$pass = htmlspecialchars($_POST['pass']);
 
 $_SESSION['AUTHENTICATED'] = FALSE;
 

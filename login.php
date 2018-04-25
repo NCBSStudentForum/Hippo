@@ -23,7 +23,10 @@ $_SESSION['AUTHENTICATED'] = FALSE;
 $auth = null;
 if( ldapAlive( 'ldap.ncbs.res.in' ) )
     $auth = authenticateUsingLDAP( $ldap, $pass );
-else
+
+// If somehow LDAP has not authenticated use IMAP to authenticate as last ditch
+// effort.
+if( ! $auth )
 {
     // Try login using IMAP.
     $auth = authenticateUsingIMAP( $ldap, $pass );

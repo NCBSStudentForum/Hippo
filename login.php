@@ -14,9 +14,8 @@ $login = $_POST['username'];
 $ldap = explode( '@', $login);
 $ldap = $ldap[0];
 
-$pass = htmlspecialchars($_POST['pass']);
-
-$_SESSION['AUTHENTICATED'] = FALSE;
+$pass = $_POST['pass'];
+$_SESSION['AUTHENTICATED'] = false;
 
 // Check if ldap is available. If it is use LDAP else fallback to imap based 
 // authentication.

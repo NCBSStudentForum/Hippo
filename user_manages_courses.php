@@ -19,7 +19,8 @@ foreach( $semCourses as $rc )
     $cid = $rc[ 'course_id' ];
     $rc[ 'name' ] = getCourseName( $cid );
     $rc[ 'slot_tiles' ] = getCourseSlotTiles( $rc );
-    $runningCourses[ $cid ] = $rc;
+    if( strtotime( 'today') < strtotime( $rc['end_date'] ) )
+        $runningCourses[ $cid ] = $rc;
 }
 
 // User courses and slots.

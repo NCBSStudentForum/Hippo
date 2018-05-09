@@ -72,7 +72,7 @@ foreach( $runningCourses as $c )
     $cstart = strtotime( $c[ 'start_date' ] );
 
     // Registration is allowed within 4 weeks.
-    if( $today > strtotime( '-14 day', $cstart) && $today <= strtotime( '+14 day', $cstart ) )
+    if( $today <= strtotime( '+28 day', $cstart ) )
     {
         // Ignore any course which is colliding with any registered course.
         $cid = $c[ 'course_id' ];
@@ -96,8 +96,7 @@ foreach( $runningCourses as $c )
 
 // Get the list of valid courses.
 echo noteWithFAIcon(
-    "Courses will be visible in registration form from -2 weeks to +2 weeks from the
-    <tt>start date</tt>."
+    "Courses will be visible in registration form upto 4 weeks from the <tt>start date</tt>."
     , "fa-bell"
     );
 

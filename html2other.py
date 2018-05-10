@@ -21,6 +21,8 @@ from logger import _logger
 
 pandoc_ = True
 
+
+
 def _cmd( cmd ):
     output = subprocess.check_output( cmd.split( ), shell = False )
     return output.decode( 'utf-8' )
@@ -79,8 +81,8 @@ def toTex( infile ):
     outfile = tempfile.mktemp(  prefix = 'hippo', suffix = 'tex'  )
     msg = _cmd( 'pandoc -f html -t latex -o %s %s' % (outfile, infile ))
     if os.path.isfile( outfile ):
-        with open( outfile ) as f:
-            msg = fixInlineImage( f.read( ) )
+        with open( outfile, 'rb' ) as f:
+            msg = fixInlineImage( f.read( ).decode('utf-8') )
     else:
         with open( outfile, 'w' ) as f:
             f.write( "Could not covert to TeX" );

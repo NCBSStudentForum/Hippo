@@ -76,7 +76,11 @@ $symbBell           = '&#128365';
 
 <title>NCBS Hippo</title>
 
-<h1><a href="index.php">NCBS Hippo</a></h1>
+<h1><a href="index.php">NCBS Hippo</a>
+<font style="font-size:small;float=right;">
+<a href="https://intranet.ncbs.res.in/HippoIgnited/index.php/welcome">Try beta version.</a>
+</font>
+</h1>
 
 <div style="font-size:small">
 <table class="public_links">
@@ -109,11 +113,6 @@ $symbBell           = '&#128365';
     </tr>
 </table>
 </div>
-</div>
-
-<div style="right:50px; top:20px; position:absolute">
-<small><a href="https://intranet.ncbs.res.in/HippoIgnited/index.php/welcome">Try beta version.</a>
-Requires intranet.</small>
 </div>
 
 <br />

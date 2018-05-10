@@ -109,8 +109,13 @@ $symbBell           = '&#128365';
     </tr>
 </table>
 </div>
-
 </div>
+
+<div style="right:50px; top:20px; position:absolute">
+<small><a href="https://intranet.ncbs.res.in/HippoIgnited/index.php/welcome">Try beta version.</a>
+Requires intranet.</small>
+</div>
+
 <br />
 <br />
 </html>

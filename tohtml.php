@@ -2364,6 +2364,7 @@ function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
             $row = '';
             $row .= '<td>' . loginToText( $info, false) . '</td>';
             $row.= '<td><tt>' . mailto( $info[ 'email' ] ) . '</tt></td>';
+            $row .= '<td>' . $r[ 'registered_on' ] . "</td>";
             $row .= '<td>' . $r[ 'type' ] . "</td>";
             $rows[ $info[ 'first_name'] ] = $row;
             $allEmails[ ] = $info[ 'email'];
@@ -2375,7 +2376,7 @@ function getEnrollmentTableAndEmails( $cid, $enrollments, $table_class='info' )
 
     // Construct enrollment table.
     $table = '<table id="show_enrollmenents" class="' . $table_class . ' sortable">';
-    $table .= '<tr> <th></th> <th>Name</th> <th>Email</th> <th>Type</th>  </tr>';
+    $table .= '<tr> <th></th> <th>Name</th> <th>Email</th> <th>Timestamp</th><th>Type</th>  </tr>';
     foreach( $rows as $fname => $row )
     {
         $count ++;

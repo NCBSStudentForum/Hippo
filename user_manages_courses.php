@@ -176,7 +176,7 @@ foreach( $myCourses as $c )
         $action = '';
 
     // TODO: Don't show grades unless student has given feedback.
-    $tofilter = 'student_id,registered_on,last_modified_on';
+    $tofilter = 'student_id';
     if( strlen( $c[ 'grade' ] ) == 0 )
         $tofilter .= ',grade,grade_is_given_on';
 

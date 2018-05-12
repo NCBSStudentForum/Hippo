@@ -76,7 +76,8 @@ $symbBell           = '&#128365';
 
 <title>NCBS Hippo</title>
 
-<h1><a href="index.php">NCBS Hippo</a></h1>
+<h1><a href="index.php">
+<img src="data/hippo.svg" width="40px" alt="" /> NCBS Hippo</a></h1>
 
 <div style="font-size:small">
 <table class="public_links">

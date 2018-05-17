@@ -296,7 +296,7 @@ function eventToShortHTML( $event )
     $html = '<tt>' .  __get__( $event, 'title', '' ) . ' (' . $event['class'] . ')</tt>';
     $html .= '<br>' . $startT . ' to ' . $endT;
     $html .= ' </tt> @ <strong>' . $event['venue'] . '</strong>, ';
-    $html .= '</br><small>Booked by ' . $event['created_by'] . '</small><br/>';
+    $html .= '</br><small>Booked by ' . mailto( getLoginEmail( $event['created_by'])) . '</small><br/>';
     return $html;
 }
 

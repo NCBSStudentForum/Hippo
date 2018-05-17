@@ -133,7 +133,7 @@ $action = 'drop';
 
 if( count( $myCourses ) > 0 )
 {
-    echo "<h1>You are registered for following courses for $sem $year</h1>";
+    echo "<h1>You are registered for following courses for $sem, $year</h1>";
 
     // Show user which slots have been blocked.
     echo alertUser(

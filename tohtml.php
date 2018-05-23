@@ -1593,7 +1593,7 @@ function talkToHTML( $talk, $with_picture = false )
     $html .= '<td>' . $speakerHMTL ;
 
     // Hack: If talk is a THESIS SEMINAR then host is thesis advisor.
-    if( $talk['class'] == 'THESIS SEMINAR' )
+    if( __substr__( 'THESIS SEMINAR', $talk['class'] ) )
         $html .= '<br />Supervisor: ' . loginToHTML( $talk[ 'host' ], false );
     else
         $html .= '<br />Host: ' . loginToHTML( $talk[ 'host' ], false );

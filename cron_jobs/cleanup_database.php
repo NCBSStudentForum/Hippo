@@ -9,20 +9,19 @@ if( trueOnGivenDayAndTime( 'this monday', '17:00' ) )
 
     // In last two weeks.
     $cutoff = dbDate( strtotime( 'today' ) - 14 * 24 * 3600 );
-
     $presynAWS = getTableEntries( 'annual_work_seminars', 'date'
-        , "IS_PRESYNOPSIS_SEMINAR='YES' AND date > '$cutoff'" );
+       , "IS_PRESYNOPSIS_SEMINAR='YES' AND date > '$cutoff'" );
 
     foreach( $presynAWS as $aws )
     {
-        $speaker = $aws[ 'speaker' ];
-        if( isEligibleForAWS( $speaker ) )
-            removeAWSSpeakerFromList( $speaker );
+       $speaker = $aws[ 'speaker' ];
+       if( isEligibleForAWS( $speaker ) )
+           removeAWSSpeakerFromList( $speaker );
     }
 
     /* Now removing students with THESIS SEMINAR */
-    echo printInfo( "Removing students who have given thesis seminar" );
-    $thesisSeminars = getTableEntries( 'talks', 'id' , "class='THESIS SEMINAR'" );
+    echo printInfo( "Removing students who have given thesis seminar or PRESYNPOSIS THESIS SEMINAR" );
+    $thesisSeminars = getTableEntries( 'talks', 'id' , "class='THESIS SEMINAR' OR class='PRESYNOPSIS THESIS SEMINAR'" );
     foreach( $thesisSeminars as $talk )
     {
         $speaker = getSpeakerByID( $talk['speaker_id'] ) or getSpeakerByName( $talk[ 'speaker' ] );

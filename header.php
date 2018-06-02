@@ -78,7 +78,6 @@ $symbBell           = '&#128365';
 
 <h1><a href="index.php">
 <img src="data/hippo.svg" width="40px" alt="" /> NCBS Hippo</a></h1>
-<a href="https://intranet.ncbs.res.in/HippoIgnited/index.php/welcome">Try beta version.</a>
 </font>
 </h1>
 

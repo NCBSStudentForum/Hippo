@@ -1,4 +1,6 @@
-#NCBS Hippo
+__This project has been moved to https://github.com/dilawar/HippoIgnited . This is  read-only repository.__
+
+# NCBS Hippo
 
 AWS scheduler cum even manager for NCBS. 
 
